@@ -270,6 +270,10 @@ pub struct Citation {
     pub format: Option<Format>,
     /// The citation core: `2016 SCC 27`, `RSC 1985, c C-46`, `Ibid`.
     pub span: Span,
+    /// An introductory signal in front of the citation (`See`, `See also`,
+    /// `Cf`, `But see`, `Voir`), normalized to lowercase without punctuation.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub signal: Option<Span>,
     /// Style, core, pinpoints, parentheticals and a bracketed short form.
     pub full_span: Span,
     /// The style of cause, statute title or author/title in front of the core.
