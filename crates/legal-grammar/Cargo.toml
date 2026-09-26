@@ -1,0 +1,15 @@
+[package]
+name = "legal-grammar"
+description = "The shared legal citation, pinpoint, reference and provision grammar corpus with its test vectors"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+include = ["src/**", "data/**", "Cargo.toml"]
+
+[dependencies]
+fancy-regex.workspace = true
+regex.workspace = true
+serde.workspace = true
+serde_json.workspace = true
