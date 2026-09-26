@@ -3258,6 +3258,113 @@
           ]
         }
       ]
+    },
+    "styles": {
+      "description": "The styled part of a citation in front of its core: a style of cause, a statute or treaty title, an author and work title, and the delimiters no style reaches back across. Letter classes are the uc/lc/letter/mark defs.",
+      "defs": {
+        "uc": "A-ZÀ-ÖØ-ÞĀĂĄĆĈĊČĎĐĒĔĖĘĚĜĞĠĢĤĦĨĪĬĮİĲĴĶĹĻĽĿŁŃŅŇŊŌŎŐŒŔŖŘŚŜŞŠŢŤŦŨŪŬŮŰŲŴŶŸŹŻŽ",
+        "lc": "a-zµß-öø-ÿāăąćĉċčďđēĕėęěĝğġģĥħĩīĭįıĳĵķĸĺļľŀłńņňŉŋōŏőœŕŗřśŝşšţťŧũūŭůűųŵŷźżžſ",
+        "letter": "A-Za-zªµºÀ-ÖØ-öø-ſ",
+        "mark": "̀-ͯ"
+      },
+      "entries": [
+        {
+          "id": "style.case-name",
+          "pattern": "(?:^|[^{{letter}}])(?:R\\.|[A-Z][{{letter}}{{mark}}'’.&-]*(?:\\s+(?:of|the|and|&|[A-Z][{{letter}}{{mark}}'’.&-]*)){0,6})\\s+v(?:\\.|ersus)?\\s+[A-Z][{{letter}}{{mark}}'’.&-]*",
+          "flags": "m",
+          "canonical": {},
+          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_NAME, a two-party case name with no citation (has_citation's fallback).",
+          "vectors": [
+            {"input": "Éditions Écosociété Inc. v. Banro Corp.", "groups": {}},
+            {"input": "R. v. Jordan", "groups": {}},
+            {"input": "no citation here at all", "groups": null}
+          ]
+        },
+        {
+          "id": "style.case-left",
+          "pattern": "(?<left>[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&()-]*(?:\\s+(?:[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&()-]*|\\([{{uc}}][^()\\n]{0,80}\\)|of|the|and|for|de|la|du)){0,12})\\s*$",
+          "flags": "m",
+          "canonical": {},
+          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_LEFT, the party in front of the versus token; a balanced uppercase-first parenthetical ('Quebec (Attorney General)') is one party token, while '(1998)', '(2d)' and '(see below)' are not.",
+          "vectors": [
+            {"input": "See Quebec (Attorney General) ", "groups": {"left": "See Quebec (Attorney General)"}},
+            {"input": "the court held that 40 Days for Life ", "groups": {"left": "40 Days for Life"}},
+            {"input": "see below ", "groups": null}
+          ]
+        },
+        {
+          "id": "style.case-lead-in",
+          "pattern": "^(?:(?:\\d{1,4}\\.|\\[\\d{1,4}\\]|\\((?:\\d{1,4}|[{{lc}}]{1,4})\\))\\s+)?(?:In\\s+)?",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_LEAD_IN, a numbered paragraph's own label ('12.', '[12]', '(a)') and a leading 'In' in front of the first party.",
+          "vectors": [
+            {"input": "1. In R v Oakes", "groups": {}},
+            {"input": "(b) In Smith v Jones", "groups": {}}
+          ]
+        },
+        {
+          "id": "style.floor",
+          "pattern": "(?:;|(?:[^\\s.][{{letter}}]{2,}|\\d)(?:[”’\\\"')\\]]*\\.[”’\\\"')\\]]*|[!?]))\\s",
+          "flags": "s",
+          "canonical": {},
+          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): STYLED_FLOOR, the hard delimiters between two authorities: a semicolon, or a sentence end that is not an abbreviation or an initial; a question or exclamation mark inside a closing quote is part of a title. The engine also ignores delimiters inside quotes and brackets and corporate-suffix periods (boundary.corporate-suffix).",
+          "vectors": [
+            {"input": "Smith, supra note 3; R v Jones", "groups": {}},
+            {"input": "the court held. R v Jones", "groups": {}},
+            {"input": "per Smith J. R v Jones", "groups": null}
+          ]
+        },
+        {
+          "id": "style.case-single-party",
+          "pattern": "(?<name>(?:Reference\\s+re|In\\s+re|In\\s+the\\s+[Mm]atter\\s+of|Re|Ex\\s+parte)\\s+[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&()-]*(?:\\s+(?:[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&()-]*|\\([{{uc}}][^()\\n]{0,80}\\)|of|the|and|for|de|la|du|des|aux|en)){0,12}|Renvoi\\s+relatif\\s+(?:à\\s+la|à\\s+l['’]|à|au|aux)\\s*[{{letter}}{{mark}}0-9'’ -]{1,120}?|[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&-]*(?:\\s+(?:[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&-]*|of|the|and|de|la|du|des)){0,8}\\s+\\((?:Re|Renvoi)\\))(?:,\\s*(?:1[6-9]|20)\\d{2})?\\s*,?\\s*$",
+          "flags": "m",
+          "canonical": {},
+          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_RE_STYLE, a style of cause with one party ('Re Moore', 'Reference re Secession of Quebec'), widened by legal-citations to 'Ex parte', the sentence-case French 'Renvoi relatif à ...' and the modern 'Moore (Re)'.",
+          "vectors": [
+            {"input": "Re Moore, ", "groups": {"name": "Re Moore"}},
+            {"input": "Renvoi relatif à la sécession du Québec, ", "groups": {"name": "Renvoi relatif à la sécession du Québec"}},
+            {"input": "Moore (Re), ", "groups": {"name": "Moore (Re)"}},
+            {"input": "Re Residential Tenancies Act, 1979, ", "groups": {"name": "Re Residential Tenancies Act"}},
+            {"input": "the parties agreed, ", "groups": null}
+          ]
+        },
+        {
+          "id": "style.statute-title",
+          "pattern": "(?<title>[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&()-]*(?:\\s+(?:[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&()-]*|of|the|and|to|for|in|on|de|la|du|des|et)){0,12}\\s+(?:Acts?|Codes?|Rules?|Regulations?|Charter|Convention|Treaty|Protocol|Declaration|Covenant|Agreement|Statute)|(?:[{{uc}}][{{letter}}{{mark}}'’-]*\\s+){0,4}(?:Acts?|Codes?|Rules?|Regulations?|Charte?r?|Loi|Règlement|Convention|Treaty|Protocol|Declaration|Covenant|Agreement|Pacte|Traité|Statute)(?:\\s+[{{lc}}]+)?\\s+(?:of|on|respecting|concerning|sur|de|du|des|pour|relatif|relative|between|for|to)(?:\\s+(?:[{{letter}}{{mark}}0-9.'’&()-]+)){1,12})(?:,\\s*(?:1[6-9]|20)\\d{2})?(?:\\s*\\([{{uc}}][^()\\n]{0,20}\\))?\\s*,?\\s*$",
+          "flags": "m",
+          "canonical": {},
+          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): STATUTE_TITLE, the title a statute or treaty citation is styled with: the instrument word ends it ('Criminal Code') or opens it ('Loi sur la protection'), optionally with its year and jurisdiction; widened by legal-citations to Covenant/Agreement/Statute/Pacte/Traité and up to four capitalized words before an opening instrument word ('International Covenant on Civil and Political Rights').",
+          "vectors": [
+            {"input": "Criminal Code, ", "groups": {"title": "Criminal Code"}},
+            {"input": "International Covenant on Civil and Political Rights, ", "groups": {"title": "International Covenant on Civil and Political Rights"}},
+            {"input": "Constitution Act, 1867 (UK), ", "groups": {"title": "Constitution Act"}},
+            {"input": "the parties agreed, ", "groups": null}
+          ]
+        },
+        {
+          "id": "style.quoted-work",
+          "pattern": "(?<work>[{{uc}}][{{letter}}{{mark}}0-9.'’&-]*(?:,?\\s+(?:[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&-]*|&|et|al|eds?|de|la|du|des|van|von|di|le|of|the|and|for|in|on)){0,15},?\\s*[\\\"“][^\\\"“”\\n]{1,300}[\\\"”][^\\\"“”\\n]{0,120})\\s*$",
+          "flags": "s",
+          "canonical": {},
+          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): QUOTED_WORK, an author list and quoted title (with any 'in Editor, ed,' lead-in) in front of a publication block; the lead-in is an author list, never arbitrary prose.",
+          "vectors": [
+            {"input": "Jane Doe, “A Title; With a Subtitle” ", "groups": {"work": "Jane Doe, “A Title; With a Subtitle” "}},
+            {"input": "the court said “no” and ", "groups": null}
+          ]
+        },
+        {
+          "id": "style.plain-work",
+          "pattern": "(?<work>[{{uc}}0-9][{{letter}}{{mark}}0-9.:'’&()-]*(?:,?\\s+(?:[{{uc}}0-9][{{letter}}{{mark}}0-9.:'’&()-]*|&|of|the|and|to|for|in|on|de|la|du|des|et|al|eds?)){0,24})\\s*,?\\s*$",
+          "flags": "m",
+          "canonical": {},
+          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): PLAIN_WORK, the styled part of a work with no quoted title: a monograph, a debate record, a dictionary.",
+          "vectors": [
+            {"input": "Peter Hogg, Constitutional Law of Canada, ", "groups": {"work": "Peter Hogg, Constitutional Law of Canada"}},
+            {"input": "as the court held, ", "groups": null}
+          ]
+        }
+      ]
     }
   }
 }

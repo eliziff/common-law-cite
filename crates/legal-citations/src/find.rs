@@ -35,13 +35,9 @@ fn backtracking(id: &str) -> CompiledGrammar {
 
 static CITATION_PATTERN: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.in-text"));
-// Unicode letter classes cannot be written portably (the corpus bans \p{}),
-// so the case-name and style-of-cause shapes below stay Rust-only.
-static CASE_NAME: LazyLock<Result<Regex, regex::Error>> = LazyLock::new(|| {
-    Regex::new(
-        r"(?m)(?:^|[^\p{L}])(?:R\.|[A-Z][\p{L}\p{M}'’.&-]*(?:\s+(?:of|the|and|&|[A-Z][\p{L}\p{M}'’.&-]*)){0,6})\s+v(?:\.|ersus)?\s+[A-Z][\p{L}\p{M}'’.&-]*",
-    )
-});
+// The style grammars spell Unicode letter classes with the corpus's Latin
+// letter defs, since the corpus bans \p{} classes.
+static CASE_NAME: LazyLock<Regex> = LazyLock::new(|| linear("style.case-name"));
 static ROUTING_PATTERN: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.provider-routing"));
 static SIGNAL_PREFIX: LazyLock<CompiledEcmascriptGrammar> =
@@ -106,79 +102,37 @@ static JOURNAL_ARTICLE: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("cite.journal.article"));
 static ONLINE_SOURCE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.url"));
 static CASE_VERSUS: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("party.versus"));
-static CASE_LEFT: LazyLock<Regex> = LazyLock::new(|| {
-    // A balanced, uppercase-first parenthetical ("Quebec (Attorney General)")
-    // counts as one party token. Bounded (<=80 chars), non-nested, never
-    // line-spanning, so "(1998)", "(2d)" and "(see below)" stay rejected.
-    Regex::new(
-        r"(?m)(?<left>[\p{Lu}\p{N}][\p{L}\p{M}\p{N}.'\u{2019}&()-]*(?:\s+(?:[\p{Lu}\p{N}][\p{L}\p{M}\p{N}.'\u{2019}&()-]*|\([\p{Lu}][^()\n]{0,80}\)|of|the|and|for|de|la|du)){0,12})\s*$",
-    )
-    .unwrap()
-});
+// A balanced, uppercase-first parenthetical ("Quebec (Attorney General)")
+// counts as one party token; "(1998)", "(2d)" and "(see below)" do not.
+static CASE_LEFT: LazyLock<Regex> = LazyLock::new(|| linear("style.case-left"));
 // What can open a numbered paragraph ahead of its first case: the paragraph's
 // own label ("12.", "[12]", "(a)") and a leading "In". Neither is part of a
 // party name, although the party grammar accepts numbers and capitals.
-static CASE_LEAD_IN: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"^(?:(?:\d{1,4}\.|\[\d{1,4}\]|\((?:\d{1,4}|\p{Ll}{1,4})\))\s+)?(?:In\s+)?").unwrap()
-});
+static CASE_LEAD_IN: LazyLock<Regex> = LazyLock::new(|| linear("style.case-lead-in"));
 // The hard delimiters between two authorities in one footnote: a semicolon,
 // or a sentence period that is not an abbreviation or an initial. No styled
 // span reaches back across one, so widening a span can never swallow the
 // boundary the next authority is split on. Only top-level delimiters count
 // (see `top_level`), and a corporate suffix's period is not a sentence end.
-static STYLED_FLOOR: LazyLock<Regex> =
-    LazyLock::new(|| {
-        Regex::new(
-            // A question or exclamation mark closes a sentence only when
-            // nothing follows it: inside a closing quote it is part of an
-            // article title ("What is Speciesism?").
-            "(?s)(?:;|(?:[^\\s.][\\p{L}]{2,}|\\d)(?:[\u{201d}\u{2019}\"')\\]]*\\.[\u{201d}\u{2019}\"')\\]]*|[!?]))\\s",
-        )
-        .unwrap()
-    });
+static STYLED_FLOOR: LazyLock<Regex> = LazyLock::new(|| linear("style.floor"));
 static CORPORATE_SUFFIX: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("boundary.corporate-suffix"));
 // "Reference re Secession of Quebec" / "Re Residential Tenancies Act" /
 // "Renvoi relatif à la sécession du Québec" / "Moore (Re)": a style of cause
 // with one party instead of two.
-static CASE_RE_STYLE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
-        r"(?m)(?<name>(?:Reference\s+re|In\s+re|In\s+the\s+[Mm]atter\s+of|Re|Ex\s+parte)\s+[\p{Lu}\p{N}][\p{L}\p{M}\p{N}.'\u{2019}&()-]*(?:\s+(?:[\p{Lu}\p{N}][\p{L}\p{M}\p{N}.'\u{2019}&()-]*|\([\p{Lu}][^()\n]{0,80}\)|of|the|and|for|de|la|du|des|aux|en)){0,12}|Renvoi\s+relatif\s+(?:à\s+la|à\s+l['\u{2019}]|à|au|aux)\s*[\p{L}\p{M}\p{N}'\u{2019} -]{1,120}?|[\p{Lu}\p{N}][\p{L}\p{M}\p{N}.'\u{2019}&-]*(?:\s+(?:[\p{Lu}\p{N}][\p{L}\p{M}\p{N}.'\u{2019}&-]*|of|the|and|de|la|du|des)){0,8}\s+\((?:Re|Renvoi)\))(?:,\s*(?:1[6-9]|20)\d{2})?\s*,?\s*$",
-    )
-    .unwrap()
-});
+static CASE_RE_STYLE: LazyLock<Regex> = LazyLock::new(|| linear("style.case-single-party"));
 // The title a statute or treaty citation is styled with, ending in the
 // instrument word and optionally carrying its own regnal year and jurisdiction.
-static STATUTE_TITLE: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
-        // The instrument word ends the title ("Criminal Code") or opens it
-        // ("Charter of the French language", "Loi sur la protection",
-        // "International Covenant on Civil and Political Rights").
-        r"(?m)(?<title>[\p{Lu}\p{N}][\p{L}\p{M}\p{N}.'\u{2019}&()-]*(?:\s+(?:[\p{Lu}\p{N}][\p{L}\p{M}\p{N}.'\u{2019}&()-]*|of|the|and|to|for|in|on|de|la|du|des|et)){0,12}\s+(?:Acts?|Codes?|Rules?|Regulations?|Charter|Convention|Treaty|Protocol|Declaration|Covenant|Agreement|Statute)|(?:[\p{Lu}][\p{L}\p{M}'\u{2019}-]*\s+){0,4}(?:Acts?|Codes?|Rules?|Regulations?|Charte?r?|Loi|R\u{e8}glement|Convention|Treaty|Protocol|Declaration|Covenant|Agreement|Pacte|Trait\u{e9}|Statute)(?:\s+\p{Ll}+)?\s+(?:of|on|respecting|concerning|sur|de|du|des|pour|relatif|relative|between|for|to)(?:\s+(?:[\p{L}\p{M}\p{N}.'\u{2019}&()-]+)){1,12})(?:,\s*(?:1[6-9]|20)\d{2})?(?:\s*\([\p{Lu}][^()\n]{0,20}\))?\s*,?\s*$",
-    )
-    .unwrap()
-});
+static STATUTE_TITLE: LazyLock<Regex> = LazyLock::new(|| linear("style.statute-title"));
 static TRAILING_DATE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("style.trailing-date"));
 // "Author, \u{201c}Article Title\u{201d}" (and any "in Editor, ed," lead-in):
 // the styled part of a secondary source sitting in front of its publication
 // block.
-static QUOTED_WORK: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
-        // The lead-in is an author list, never arbitrary prose: a sentence
-        // that happens to end in a quoted title is not a styled citation.
-        "(?s)(?<work>[\\p{Lu}][\\p{L}\\p{M}\\p{N}.'\u{2019}&-]*(?:,?\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\u{2019}&-]*|&|et|al|eds?|de|la|du|des|van|von|di|le|of|the|and|for|in|on)){0,15},?\\s*[\"\u{201c}][^\"\u{201c}\u{201d}\n]{1,300}[\"\u{201d}][^\"\u{201c}\u{201d}\n]{0,120})\\s*$",
-    )
-    .unwrap()
-});
+static QUOTED_WORK: LazyLock<Regex> = LazyLock::new(|| linear("style.quoted-work"));
 // The same styled part when the work carries no quoted title: a monograph, a
 // debate record, a dictionary.
-static PLAIN_WORK: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(
-        r"(?m)(?<work>[\p{Lu}\p{N}][\p{L}\p{M}\p{N}.:'\u{2019}&()-]*(?:,?\s+(?:[\p{Lu}\p{N}][\p{L}\p{M}\p{N}.:'\u{2019}&()-]*|&|of|the|and|to|for|in|on|de|la|du|des|et|al|eds?)){0,24})\s*,?\s*$",
-    )
-    .unwrap()
-});
+static PLAIN_WORK: LazyLock<Regex> = LazyLock::new(|| linear("style.plain-work"));
 static RESIDUAL_CUE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.us.fallback-cue"));
 static COMMON_US_LAW: LazyLock<AsciiBoundedGrammar> = LazyLock::new(|| {
@@ -1339,8 +1293,5 @@ pub(crate) fn has_core_citation(text: &str) -> bool {
 
 /// Whether `text` holds a citation core or a two-party case name.
 pub fn has_citation(text: &str) -> bool {
-    has_core_citation(text)
-        || CASE_NAME
-            .as_ref()
-            .is_ok_and(|pattern| pattern.is_match(text))
+    has_core_citation(text) || CASE_NAME.is_match(text)
 }

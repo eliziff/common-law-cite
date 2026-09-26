@@ -31,7 +31,7 @@ item closes only when a test or recorded evidence covers it.
 | 23 | Engine/key | No keys for constitutions, treaties, or titled acts without a chapter | downstream agent | Open |
 | 24 | Engine/parallel | Grouping refuses pairs eyecite would group: different neutral identities, same reporter at different volume/page, different courts, years >2 apart | downstream agent | Open: deliberate stricter rule; needs conformance cases and user sign-off |
 | 25 | Engine/parallel | `preferred` ranks CanLII below specialty reporters and above databases | downstream agent | Open: confirm against AuthoritiesHelper keep-one policy |
-| 26 | Engine/url | CanLII legislation URLs built from registry only, never checked against legal-pinpointer's 91,670-row `canlii-legislation.tsv`; may produce URLs for pages that do not exist | downstream agent | Open: that index (and the 32k-row `canlii-case-aliases.tsv`) are existing stores and must be combined into the engine's data |
+| 26 | Engine/url | CanLII legislation URLs are built from the registry alone and are not checked against an index of existing pages; a URL may point to a page that does not exist | downstream agent | Open |
 | 27 | Engine/url | French legislation URL shape `/fr/.../laws/...` copied from legal-pinpointer, not confirmed against CanLII | downstream agent | Open |
 | 28 | Engine/url | UK Find Case Law coverage is a fixed table; EWHC without division, UKHL, EAT abstain | downstream agent | Open |
 | 29 | Engine/format | Beaver renders a section range as `s 7(2)–(4)`; engine emits McGill `ss 7(2)-(4)` (user-visible change in Beaver) | downstream agent | Open: user decision at review gate |
@@ -58,3 +58,5 @@ item closes only when a test or recorded evidence covers it.
 | 50 | Bindings | `version` reports `null` for grammar sha256 and upstream pins (not embedded yet) | bindings agent | Open |
 | 51 | CI | GitHub workflows not executed (YAML parse only); no real browser/extension run | bindings agent | Open: runs after push |
 | 52 | CI | `upstream.yml` flag mismatch with `sync-upstream.py` (`--update`/`--check` vs `--write`) | bindings agent | Open: fix at integration |
+| 53 | Aliases | 26,546 A2AJ-observed reporter aliases from ALR-Verifier `data/a2aj_reporter_aliases.json` being added to the engine; completeness test required | coordinator | Open: alias agent |
+| 54 | Scope | ALR-Verifier (AlbertaLawReview) added to the migration; push needs the Claude GitHub App on that account | coordinator | Open: waiting on access; migration prepared locally meanwhile |
