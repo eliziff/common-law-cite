@@ -60,3 +60,4 @@ item closes only when a test or recorded evidence covers it.
 | 52 | CI | Reported flag mismatch between `upstream.yml` and `sync-upstream.py` | bindings agent | Closed: not a defect. Without `--check` the script writes; `--update` moves pins then writes |
 | 53 | Aliases | 26,546 A2AJ-observed reporter aliases from ALR-Verifier `data/a2aj_reporter_aliases.json` being added to the engine; completeness test required | coordinator | Open: alias agent |
 | 54 | Scope | ALR-Verifier (AlbertaLawReview) added to the migration; push needs the Claude GitHub App on that account | coordinator | Open: waiting on access; migration prepared locally meanwhile |
+| 55 | Process | Commit 1dc6bd5 ("Report corpus hash…") used `git add -A` and also captured the coverage agent's in-progress fixture edits (tests/fixtures/sources/*), which its message does not describe | coordinator | Closed: explicit path staging from here on |
