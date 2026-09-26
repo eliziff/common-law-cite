@@ -1,0 +1,96 @@
+# Weekly: move the reporters-db/courts-db pins and the eyecite pin to upstream
+# HEAD, regenerate the registry and the eyecite-derived conformance cases, run
+# the differential harness, and open a pull request when anything changed.
+name: upstream
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: registry from reporters-db / courts-db HEAD
+        run: python tools/sync-upstream.py --update
+
+      - name: latest eyecite
+        id: eyecite
+        run: |
+          git clone --quiet https://github.com/freelawproject/eyecite /tmp/eyecite
+          python -m venv /tmp/ec
+          /tmp/ec/bin/pip install --quiet -e /tmp/eyecite
+          echo "commit=$(git -C /tmp/eyecite rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: build the CLI
+        run: cargo build --release -p legal-citations-cli
+
+      - name: re-port eyecite's tests into conformance cases
+        run: |
+          (cd /tmp/eyecite && /tmp/ec/bin/python "$GITHUB_WORKSPACE/conformance/tools/port-eyecite.py" --eyecite /tmp/eyecite) | tee port.log
+          # New cases arrive pending; mark those the engine already satisfies.
+          python conformance/run.py --cli target/release/legal-citations --promote | tee conformance.log || true
+
+      - name: differential run against eyecite
+        id: diff
+        run: |
+          set +e
+          /tmp/ec/bin/python tools/eyecite-diff.py --conformance --cli target/release/legal-citations \
+            --baseline tools/eyecite-diff-baseline.json --report eyecite-diff.json 2> diff.log
+          echo "drift=$?" >> "$GITHUB_OUTPUT"
+          /tmp/ec/bin/python tools/eyecite-diff.py --conformance --cli target/release/legal-citations \
+            --write-baseline tools/eyecite-diff-baseline.json 2>/dev/null
+          cat diff.log
+
+      - name: engine tests against the new data
+        id: tests
+        run: |
+          set +e
+          cargo test -p legal-citations -p legal-citations-cli > tests.log 2>&1
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          tail -40 tests.log
+
+      - name: pull request body
+        run: |
+          {
+            echo "Automated weekly upstream sync."
+            echo
+            echo "* reporters-db / courts-db pins moved to HEAD (\`upstream.lock\`), registry regenerated."
+            echo "* eyecite tests re-ported at freelawproject/eyecite@${{ steps.eyecite.outputs.commit }} (\`conformance/tools/eyecite.lock.json\`)."
+            echo
+            echo "### Conformance"
+            echo '```'; cat conformance.log; echo '```'
+            echo "### eyecite differential (drift exit status: ${{ steps.diff.outputs.drift }})"
+            echo '```'; cat diff.log; echo '```'
+            echo "### cargo test (exit status: ${{ steps.tests.outputs.status }})"
+            echo '```'; tail -30 tests.log; echo '```'
+            echo
+            echo "Review new pending cases and any regression before merging; see CONTRIBUTING.md > Staying current with upstream."
+          } > pr-body.md
+
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/upstream-sync
+          delete-branch: true
+          commit-message: "Sync upstream: reporters-db, courts-db, eyecite"
+          title: "Weekly upstream sync (reporters-db, courts-db, eyecite)"
+          body-path: pr-body.md
+          add-paths: |
+            upstream.lock
+            crates/legal-citations/registry/upstream/**
+            conformance/cases/**
+            conformance/tools/eyecite.lock.json
+            tools/eyecite-diff-baseline.json
+          labels: upstream

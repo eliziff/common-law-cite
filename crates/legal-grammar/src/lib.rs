@@ -27,6 +27,8 @@ impl std::error::Error for Error {}
 
 pub type Result<T> = std::result::Result<T, Error>;
 pub type CompiledGrammar = FancyRegex;
+/// The named-group captures of a [`CompiledGrammar`] match.
+pub type GrammarCaptures<'t> = fancy_regex::Captures<'t, str>;
 pub type CompiledEcmascriptGrammar = Regex;
 
 pub struct AsciiBoundedGrammar {
@@ -752,6 +754,19 @@ fn canonicalize(groups: &mut HashMap<String, Option<String>>, rules: &Value) -> 
     Ok(())
 }
 
+/// Apply an entry's `canonical` rules (lowercase, strip, map) to one named
+/// group's value: `canonical_group("cite.neutral", "court", "CSC")` is `scc`.
+/// `None` when the entry is unknown.
+pub fn canonical_group(entry_id: &str, group: &str, value: &str) -> Option<String> {
+    static EVIDENCE: OnceLock<std::result::Result<BTreeMap<String, GrammarEvidenceEntry>, String>> =
+        OnceLock::new();
+    let evidence = EVIDENCE.get_or_init(load_static_evidence).as_ref().ok()?;
+    let rules = &evidence.get(entry_id)?.canonical;
+    let mut groups = HashMap::from([(group.to_owned(), Some(value.to_owned()))]);
+    canonicalize(&mut groups, rules).ok()?;
+    groups.remove(group).flatten()
+}
+
 pub fn run_vectors() -> Result<Vec<String>> {
     let mut failures = Vec::new();
     let tables = load_tables()?;
@@ -834,6 +849,16 @@ mod tests {
     fn frozen_tables_compile_and_pass_every_oracle_vector() {
         let failures = run_vectors().unwrap();
         assert!(failures.is_empty(), "{}", failures.join("\n"));
+    }
+
+    #[test]
+    fn canonical_group_applies_the_entry_rules() {
+        assert_eq!(canonical_group("cite.neutral", "court", "CSC").as_deref(), Some("scc"));
+        assert_eq!(
+            canonical_group("cite.neutral.bracketed", "court", "EWCA Civ").as_deref(),
+            Some("ewcaciv")
+        );
+        assert_eq!(canonical_group("no.such.entry", "court", "SCC"), None);
     }
 
     #[test]

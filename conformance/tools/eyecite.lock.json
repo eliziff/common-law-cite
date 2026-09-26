@@ -1,0 +1,8 @@
+{
+  "comment": "The eyecite checkout conformance/cases/eyecite-*.json were ported from (conformance/tools/port-eyecite.py) and tools/eyecite-diff.py runs against. .github/workflows/upstream.yml moves it weekly.",
+  "repository": "freelawproject/eyecite",
+  "commit": "047af17e13806a437e75f2ea85cb9615f69516c3",
+  "eyecite": "2.7.8",
+  "reporters-db": "3.2.66",
+  "courts-db": "0.10.27"
+}

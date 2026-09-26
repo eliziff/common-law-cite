@@ -3,8 +3,27 @@
 //! The registry is data, not code: every table lives as JSON under
 //! `crates/legal-citations/registry/` so non-Rust consumers can read the same
 //! files. Canadian, Commonwealth and international entries are authored here;
-//! US entries are generated from Free Law Project's reporters-db and courts-db
-//! by `tools/sync-upstream.py` at the versions pinned in `upstream.lock`.
+//! US entries (courts, reporters, code and session-law series, journals) are
+//! generated into `registry/upstream/` from Free Law Project's reporters-db and
+//! courts-db by `tools/sync-upstream.py` at the versions pinned in
+//! `upstream.lock`. `journals.json` holds the McGill Guide abbreviation
+//! inventory that is not a reporter.
+//!
+//! # Verified and unverified entries
+//!
+//! Every [`Reporter`] and [`Journal`] carries `verified` (JSON default `true`;
+//! only `"verified": false` is ever written). An unverified entry is an
+//! abbreviation from an inventory that does not say what it abbreviates: the
+//! McGill list entries that neither a name cue (`Rep`, `Cas`, `LJ`, `Rev`, ...)
+//! nor a manual identification classified. They are kept so a surface is
+//! recognised at all, but they are not evidence of kind:
+//!
+//! * Lookups prefer a verified entry over an unverified one sharing a surface.
+//! * Consumers (the classify stage) must ignore an unverified journal or
+//!   reporter whenever it conflicts with grammar evidence, e.g. a
+//!   `(1979) 2 EHRR 245` or `[1990] 1 Xyz 12` shape is a case report even if
+//!   `Xyz` is only known as an unverified journal, and an unverified entry
+//!   alone never turns a citation into a journal article.
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -76,6 +95,10 @@ pub struct Court {
     pub aliases: Vec<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub canlii: Option<CanLiiRoute>,
+    /// The route CanLII uses for decisions cited by the court's French neutral
+    /// identifier (`2019 CSC 5` lives under `fr/ca/csc`, not `ca/scc`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub canlii_fr: Option<CanLiiRoute>,
     /// First and last year the court issued decisions under this identity.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub start: Option<u16>,
@@ -131,8 +154,20 @@ pub struct Reporter {
     /// Commonwealth year-as-volume series: `[1932] AC 562`, `[2016] 1 SCR 631`.
     #[serde(default)]
     pub year_volume: bool,
-    /// Where the data came from: `authored`, `reporters-db`.
+    /// Where the data came from: `authored`, `reporters-db`, `mcgill`.
     pub source: String,
+    /// `false` when the source does not establish that this is a law report
+    /// (see the module documentation).
+    #[serde(default = "verified_default", skip_serializing_if = "is_verified")]
+    pub verified: bool,
+}
+
+fn verified_default() -> bool {
+    true
+}
+
+fn is_verified(verified: &bool) -> bool {
+    *verified
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -163,22 +198,52 @@ pub struct Series {
     pub canlii: Option<CanLiiRoute>,
 }
 
+/// A law journal or other periodical: `McGill LJ`, `Harv. L. Rev.`.
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct Journal {
+    pub id: String,
+    /// Full title, when the source gives one (the McGill inventory does not).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    pub abbreviation: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub variations: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub jurisdiction: Option<String>,
+    /// Where the data came from: `mcgill`, `reporters-db`.
+    pub source: String,
+    /// `false` when the source does not establish that this is a periodical
+    /// (see the module documentation).
+    #[serde(default = "verified_default", skip_serializing_if = "is_verified")]
+    pub verified: bool,
+}
+
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Registry {
     pub jurisdictions: Vec<Jurisdiction>,
     pub courts: Vec<Court>,
     pub reporters: Vec<Reporter>,
     pub series: Vec<Series>,
+    #[serde(default)]
+    pub journals: Vec<Journal>,
     #[serde(skip)]
     index: Index,
 }
 
+/// Surface lookups are single-valued and first-listed-wins, except that a
+/// verified reporter or journal always outranks an unverified one: authored
+/// tables load before upstream ones, and within a table a Canadian entry is listed
+/// before a colliding Commonwealth one (`FCA`, `CLR`, `FCR`, `SI`). The
+/// `*s_by_surface` accessors return every entry sharing a surface, in the same
+/// order, for callers that disambiguate by context (`[2020] FCA 5` is
+/// Australian, `2020 FCA 5` Canadian).
 #[derive(Clone, Debug, Default)]
 struct Index {
     court_by_id: HashMap<String, usize>,
-    court_by_surface: HashMap<String, usize>,
-    reporter_by_surface: HashMap<String, (usize, String)>,
+    court_by_surface: HashMap<String, Vec<usize>>,
+    reporter_by_surface: HashMap<String, Vec<(usize, String)>>,
     series_by_surface: HashMap<String, usize>,
+    journal_by_surface: HashMap<String, usize>,
 }
 
 /// Case- and punctuation-insensitive lookup form of a surface string:
@@ -197,26 +262,42 @@ impl Registry {
         for (position, court) in self.courts.iter().enumerate() {
             index.court_by_id.insert(court.id.clone(), position);
             for surface in court.neutral.iter().chain(&court.aliases) {
-                index.court_by_surface.entry(fold(surface)).or_insert(position);
+                let courts = index.court_by_surface.entry(fold(surface)).or_default();
+                if !courts.contains(&position) {
+                    courts.push(position);
+                }
             }
         }
         for (position, reporter) in self.reporters.iter().enumerate() {
-            for edition in &reporter.editions {
-                index
-                    .reporter_by_surface
-                    .entry(fold(&edition.abbreviation))
-                    .or_insert((position, edition.abbreviation.clone()));
+            // Variations are a HashMap: visit them in a fixed order.
+            let mut variations: Vec<_> = reporter.variations.iter().collect();
+            variations.sort();
+            let surfaces = reporter
+                .editions
+                .iter()
+                .map(|edition| (&edition.abbreviation, &edition.abbreviation))
+                .chain(variations);
+            for (surface, canonical) in surfaces {
+                let reporters = index.reporter_by_surface.entry(fold(surface)).or_default();
+                if !reporters.iter().any(|(at, _)| *at == position) {
+                    reporters.push((position, canonical.clone()));
+                }
             }
-            for (surface, canonical) in &reporter.variations {
-                index
-                    .reporter_by_surface
-                    .entry(fold(surface))
-                    .or_insert((position, canonical.clone()));
-            }
+        }
+        for found in index.reporter_by_surface.values_mut() {
+            found.sort_by_key(|(at, _)| !self.reporters[*at].verified);
         }
         for (position, series) in self.series.iter().enumerate() {
             for surface in std::iter::once(&series.abbreviation).chain(&series.variations) {
                 index.series_by_surface.entry(fold(surface)).or_insert(position);
+            }
+        }
+        for (position, journal) in self.journals.iter().enumerate() {
+            for surface in std::iter::once(&journal.abbreviation).chain(&journal.variations) {
+                let at = index.journal_by_surface.entry(fold(surface)).or_insert(position);
+                if journal.verified && !self.journals[*at].verified {
+                    *at = position;
+                }
             }
         }
         self.index = index;
@@ -228,19 +309,53 @@ impl Registry {
     }
 
     /// The court a neutral identifier or alias names (`SCC`, `CSC`, `ON CA`).
+    /// A surface several courts share resolves to the first listed (the
+    /// Canadian `fca` for `FCA`); see [`Registry::courts_by_surface`].
     pub fn court_by_surface(&self, surface: &str) -> Option<&Court> {
+        self.courts_by_surface(surface).into_iter().next()
+    }
+
+    /// Every court a surface names, preferred first (`FCA` -> `fca`, `fca-au`).
+    pub fn courts_by_surface(&self, surface: &str) -> Vec<&Court> {
         self.index
             .court_by_surface
             .get(&fold(surface))
-            .map(|&at| &self.courts[at])
+            .map(|positions| positions.iter().map(|&at| &self.courts[at]).collect())
+            .unwrap_or_default()
     }
 
     /// The reporter and canonical edition abbreviation a surface form names.
+    /// Check [`Reporter::verified`] before treating the match as evidence of
+    /// kind. A surface several reporters share resolves to the first verified
+    /// one listed; see
+    /// [`Registry::reporters_by_surface`].
     pub fn reporter_by_surface(&self, surface: &str) -> Option<(&Reporter, &str)> {
+        self.reporters_by_surface(surface).into_iter().next()
+    }
+
+    /// Every reporter a surface names, verified entries first, then in listed
+    /// order (`CLR` -> `clr`,
+    /// `clr-au`; `OR` -> Ontario Reports, then reporters-db's Oregon Reports).
+    pub fn reporters_by_surface(&self, surface: &str) -> Vec<(&Reporter, &str)> {
         self.index
             .reporter_by_surface
             .get(&fold(surface))
-            .map(|(at, canonical)| (&self.reporters[*at], canonical.as_str()))
+            .map(|found| {
+                found
+                    .iter()
+                    .map(|(at, canonical)| (&self.reporters[*at], canonical.as_str()))
+                    .collect()
+            })
+            .unwrap_or_default()
+    }
+
+    /// The journal an abbreviation names (`McGill LJ`, `Harv. L. Rev.`). Check
+    /// [`Journal::verified`] before treating the match as evidence of kind.
+    pub fn journal_by_surface(&self, surface: &str) -> Option<&Journal> {
+        self.index
+            .journal_by_surface
+            .get(&fold(surface))
+            .map(|&at| &self.journals[at])
     }
 
     pub fn series_by_surface(&self, surface: &str) -> Option<&Series> {
@@ -269,11 +384,22 @@ fn load() -> Registry {
         "upstream/courts.json",
         include_str!("../registry/upstream/courts.json"),
     ));
+    let mut series: Vec<Series> = table("series.json", include_str!("../registry/series.json"));
+    series.extend(table::<Series>(
+        "upstream/series.json",
+        include_str!("../registry/upstream/series.json"),
+    ));
+    let mut journals: Vec<Journal> = table("journals.json", include_str!("../registry/journals.json"));
+    journals.extend(table::<Journal>(
+        "upstream/journals.json",
+        include_str!("../registry/upstream/journals.json"),
+    ));
     Registry {
         jurisdictions: table("jurisdictions.json", include_str!("../registry/jurisdictions.json")),
         courts,
         reporters,
-        series: table("series.json", include_str!("../registry/series.json")),
+        series,
+        journals,
         index: Index::default(),
     }
     .indexed()

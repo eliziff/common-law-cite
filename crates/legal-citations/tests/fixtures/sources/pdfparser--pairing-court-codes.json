@@ -1,0 +1,126 @@
+{
+ "source": {
+  "repo": "legal-pdf-parser",
+  "path": "legal-pdf-support/src/pairing_support.rs",
+  "table": "COURT_CODE_PATTERN",
+  "commit": "4e484ca9e2805400c694a790ffed03a9fefdb0ec",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "SCC"
+  },
+  {
+   "key": "FCA"
+  },
+  {
+   "key": "FC"
+  },
+  {
+   "key": "TCC"
+  },
+  {
+   "key": "CMAC"
+  },
+  {
+   "key": "BCCA"
+  },
+  {
+   "key": "BCSC"
+  },
+  {
+   "key": "BCPC"
+  },
+  {
+   "key": "ABCA"
+  },
+  {
+   "key": "ABQB"
+  },
+  {
+   "key": "ABKB"
+  },
+  {
+   "key": "ABPC"
+  },
+  {
+   "key": "SKCA"
+  },
+  {
+   "key": "SKQB"
+  },
+  {
+   "key": "SKKB"
+  },
+  {
+   "key": "SKPC"
+  },
+  {
+   "key": "MBCA"
+  },
+  {
+   "key": "MBQB"
+  },
+  {
+   "key": "ONCA"
+  },
+  {
+   "key": "ONSC"
+  },
+  {
+   "key": "ONCJ"
+  },
+  {
+   "key": "QCCA"
+  },
+  {
+   "key": "QCCS"
+  },
+  {
+   "key": "QCCQ"
+  },
+  {
+   "key": "NBCA"
+  },
+  {
+   "key": "NBQB"
+  },
+  {
+   "key": "NSSC"
+  },
+  {
+   "key": "NSCA"
+  },
+  {
+   "key": "PECA"
+  },
+  {
+   "key": "PESC"
+  },
+  {
+   "key": "NLCA"
+  },
+  {
+   "key": "NLSC"
+  },
+  {
+   "key": "YKCA"
+  },
+  {
+   "key": "YKSC"
+  },
+  {
+   "key": "NWTCA"
+  },
+  {
+   "key": "NWTSC"
+  },
+  {
+   "key": "NUCA"
+  },
+  {
+   "key": "NUCJ"
+  }
+ ]
+}

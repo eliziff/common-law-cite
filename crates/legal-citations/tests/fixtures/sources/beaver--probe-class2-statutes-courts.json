@@ -1,0 +1,48 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "benchmarks/structure_stress/probes/cite_class2_statutes.py",
+  "table": "COURTS",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "SCC"
+  },
+  {
+   "key": "FCA"
+  },
+  {
+   "key": "FC"
+  },
+  {
+   "key": "TCC"
+  },
+  {
+   "key": "ONCA"
+  },
+  {
+   "key": "BCCA"
+  },
+  {
+   "key": "NSCA"
+  },
+  {
+   "key": "CMAC"
+  },
+  {
+   "key": "CHRT"
+  },
+  {
+   "key": "FPSLREB"
+  },
+  {
+   "key": "CITT"
+  },
+  {
+   "key": "SST"
+  }
+ ]
+}

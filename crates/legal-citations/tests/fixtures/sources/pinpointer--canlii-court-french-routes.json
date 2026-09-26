@@ -1,0 +1,32 @@
+{
+ "source": {
+  "repo": "legal-pinpointer",
+  "path": "canlii-courts.js",
+  "table": "frenchRoutes",
+  "commit": "39d85cfcd5cfd24497ba85f0654f0fae20cb44e2",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "CSC",
+   "canlii_fr": "ca/csc"
+  },
+  {
+   "key": "CAF",
+   "canlii_fr": "ca/caf"
+  },
+  {
+   "key": "CF",
+   "canlii_fr": "ca/cf"
+  },
+  {
+   "key": "CCI",
+   "canlii_fr": "ca/cci"
+  },
+  {
+   "key": "CACM",
+   "canlii_fr": "ca/cacm"
+  }
+ ]
+}

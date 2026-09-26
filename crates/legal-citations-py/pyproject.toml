@@ -1,0 +1,34 @@
+[build-system]
+requires = ["maturin>=1.7,<2"]
+build-backend = "maturin"
+
+[project]
+name = "legal-citations"
+description = "Legal citation extraction, resolution and formatting for Canadian, Commonwealth and US law; an eyecite superset"
+readme = "../../README.md"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+requires-python = ">=3.9"
+dynamic = ["version"]
+keywords = ["legal", "citations", "law", "eyecite", "canlii", "mcgill"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Text Processing :: Linguistic",
+    "Intended Audience :: Legal Industry",
+]
+
+[project.urls]
+Repository = "https://github.com/eliziff/legal-citations"
+Changelog = "https://github.com/eliziff/legal-citations/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[tool.maturin]
+python-source = "python"
+module-name = "legal_citations._native"
+features = ["extension-module"]
+exclude = ["**/__pycache__/**", "**/*.pyc"]

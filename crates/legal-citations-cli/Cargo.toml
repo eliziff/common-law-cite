@@ -1,0 +1,25 @@
+[package]
+name = "legal-citations-cli"
+description = "Command-line interface for legal-citations: extract, key, format, url and annotate legal citations as JSON"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+readme = "../../README.md"
+keywords = ["legal", "citation", "law", "eyecite", "cli"]
+categories = ["command-line-utilities", "text-processing"]
+include = ["src/**", "Cargo.toml", "LICENSE", "NOTICE"]
+
+[[bin]]
+name = "legal-citations"
+path = "src/main.rs"
+
+[dependencies]
+legal-citations.workspace = true
+serde_json.workspace = true
+clap = { version = "4.5", features = ["derive"] }
+
+[dev-dependencies]
+serde.workspace = true
+serde_json.workspace = true

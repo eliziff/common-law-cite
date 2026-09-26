@@ -1,1 +1,7739 @@
-[]
+[
+ {
+  "id": "abaer",
+  "name": {
+   "en": "Alberta Energy Regulator"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABAER"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abaer"
+  }
+ },
+ {
+  "id": "abca",
+  "name": {
+   "en": "Court of Appeal of Alberta",
+   "fr": "Cour d'appel de l'Alberta"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "appellate",
+  "neutral": [
+   "ABCA"
+  ],
+  "aliases": [
+   "Alta CA",
+   "AB CA"
+  ],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abca"
+  }
+ },
+ {
+  "id": "abcgyarb",
+  "name": {
+   "en": "Calgary Assessment Review Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABCGYARB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abcgyarb"
+  }
+ },
+ {
+  "id": "abci",
+  "name": {
+   "en": "Alberta Commission of Inquiry"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABCI"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abci"
+  }
+ },
+ {
+  "id": "abcj",
+  "name": {
+   "en": "Alberta Court of Justice"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "inferior_trial",
+  "neutral": [
+   "ABCJ"
+  ],
+  "aliases": [
+   "Alta CJ",
+   "AB CJ"
+  ],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abcj"
+  },
+  "start": 2022,
+  "parent": "abpc"
+ },
+ {
+  "id": "abcpa",
+  "name": {
+   "en": "Chartered Professional Accountants of Alberta"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABCPA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abcpa"
+  }
+ },
+ {
+  "id": "abcpsdc",
+  "name": {
+   "en": "College of Physicians and Surgeons Discipline Committee"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABCPSDC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abcpsdc"
+  }
+ },
+ {
+  "id": "abcpt",
+  "name": {
+   "en": "College of Physiotherapists of Alberta"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABCPT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abcpt"
+  }
+ },
+ {
+  "id": "abctiab",
+  "name": {
+   "en": "Calgary Tax Incentive Appeal Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABCTIAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abctiab"
+  }
+ },
+ {
+  "id": "abeab",
+  "name": {
+   "en": "Alberta Environmental Appeal Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABEAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abeab"
+  }
+ },
+ {
+  "id": "abecarb",
+  "name": {
+   "en": "Edmonton Composite Assessment Review Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABECARB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abecarb"
+  }
+ },
+ {
+  "id": "abelarb",
+  "name": {
+   "en": "Edmonton Local Assessment Review Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABELARB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abelarb"
+  }
+ },
+ {
+  "id": "abesab",
+  "name": {
+   "en": "Alberta Employment Standards Appeals"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABESAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abesab"
+  }
+ },
+ {
+  "id": "abesdab",
+  "name": {
+   "en": "Edmonton Subdivision and Development Appeal Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABESDAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abesdab"
+  }
+ },
+ {
+  "id": "abgaa",
+  "name": {
+   "en": "Alberta Grievance Arbitration Awards"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABGAA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abgaa"
+  }
+ },
+ {
+  "id": "abhraat",
+  "name": {
+   "en": "Horse Racing Alberta Appeal Tribunal"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABHRAAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abhraat"
+  }
+ },
+ {
+  "id": "abkb",
+  "name": {
+   "en": "Court of King's Bench of Alberta"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "superior_trial",
+  "neutral": [
+   "ABKB"
+  ],
+  "aliases": [
+   "Alta KB",
+   "AB KB"
+  ],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abkb"
+  },
+  "start": 2022,
+  "parent": "abqb"
+ },
+ {
+  "id": "ablcb",
+  "name": {
+   "en": "Alberta Land Compensation Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABLCB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "ablcb"
+  }
+ },
+ {
+  "id": "ablcsab",
+  "name": {
+   "en": "Alberta Licence and Community Standards Appeal Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABLCSAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "ablcsab"
+  }
+ },
+ {
+  "id": "ablerb",
+  "name": {
+   "en": "Alberta Law Enforcement Review Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABLERB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "ablerb"
+  }
+ },
+ {
+  "id": "ablprt",
+  "name": {
+   "en": "Alberta Land and Property Rights Tribunal"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABLPRT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "ablprt"
+  }
+ },
+ {
+  "id": "abls",
+  "name": {
+   "en": "Law Society of Alberta"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABLS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abls"
+  }
+ },
+ {
+  "id": "abmgb",
+  "name": {
+   "en": "Alberta Municipal Government Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABMGB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abmgb"
+  }
+ },
+ {
+  "id": "abohsab",
+  "name": {
+   "en": "Alberta Occupational Health and Safety Appeal Body"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABOHSAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abohsab"
+  }
+ },
+ {
+  "id": "aboipc",
+  "name": {
+   "en": "Office of the Information and Privacy Commissioner"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABOIPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "aboipc"
+  }
+ },
+ {
+  "id": "abpc",
+  "name": {
+   "en": "Provincial Court of Alberta"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "inferior_trial",
+  "neutral": [
+   "ABPC"
+  ],
+  "aliases": [
+   "Alta Prov Ct",
+   "AB PC"
+  ],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abpc"
+  },
+  "end": 2022
+ },
+ {
+  "id": "abplab",
+  "name": {
+   "en": "Alberta Public Lands Appeal Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABPLAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abplab"
+  }
+ },
+ {
+  "id": "abqb",
+  "name": {
+   "en": "Court of Queen's Bench of Alberta"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "superior_trial",
+  "neutral": [
+   "ABQB"
+  ],
+  "aliases": [
+   "Alta QB",
+   "AB QB"
+  ],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abqb"
+  },
+  "end": 2022
+ },
+ {
+  "id": "abreca",
+  "name": {
+   "en": "Real Estate Council of Alberta"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABRECA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abreca"
+  }
+ },
+ {
+  "id": "abrtdrs",
+  "name": {
+   "en": "Alberta Residential Tenancy Dispute Resolution Service"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABRTDRS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abrtdrs"
+  }
+ },
+ {
+  "id": "absec",
+  "name": {
+   "en": "Alberta Securities Commission"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABSEC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "absec"
+  }
+ },
+ {
+  "id": "absra",
+  "name": {
+   "en": "SafeRoads Alberta"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABSRA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "absra"
+  }
+ },
+ {
+  "id": "absrb",
+  "name": {
+   "en": "Alberta Surface Rights Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABSRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "absrb"
+  }
+ },
+ {
+  "id": "abtsb",
+  "name": {
+   "en": "Alberta Transportation Safety Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABTSB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abtsb"
+  }
+ },
+ {
+  "id": "abwcac",
+  "name": {
+   "en": "Appeals Commission for Alberta Workers' Compensation"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ABWCAC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "abwcac"
+  }
+ },
+ {
+  "id": "ahrc",
+  "name": {
+   "en": "Alberta Human Rights Commission"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "AHRC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "ahrc"
+  }
+ },
+ {
+  "id": "alrb",
+  "name": {
+   "en": "Alberta Labour Relations Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "ALRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "alrb"
+  }
+ },
+ {
+  "id": "bcca",
+  "name": {
+   "en": "Court of Appeal for British Columbia",
+   "fr": "Cour d'appel de la Colombie-Britannique"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "appellate",
+  "neutral": [
+   "BCCA"
+  ],
+  "aliases": [
+   "BC CA"
+  ],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcca"
+  }
+ },
+ {
+  "id": "bcccalab",
+  "name": {
+   "en": "Community Care and Assisted Living Appeal Board"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCCCALAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcccalab"
+  }
+ },
+ {
+  "id": "bccds",
+  "name": {
+   "en": "College of Dental Surgeons of British Columbia"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCCDS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bccds"
+  }
+ },
+ {
+  "id": "bccnm",
+  "name": {
+   "en": "British Columbia College of Nurses and Midwives"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCCNM"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bccnm"
+  }
+ },
+ {
+  "id": "bccps",
+  "name": {
+   "en": "College of Physicians and Surgeons of British Columbia"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCCPS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bccps"
+  }
+ },
+ {
+  "id": "bccrt",
+  "name": {
+   "en": "Civil Resolution Tribunal of British Columbia"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCCRT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bccrt"
+  }
+ },
+ {
+  "id": "bcctc",
+  "name": {
+   "en": "British Columbia Container Trucking Commissioner"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCCTC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcctc"
+  }
+ },
+ {
+  "id": "bceab",
+  "name": {
+   "en": "British Columbia Environmental Appeal Board"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCEAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bceab"
+  }
+ },
+ {
+  "id": "bcegbc",
+  "name": {
+   "en": "Engineers and Geoscientists British Columbia"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCEGBC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcegbc"
+  }
+ },
+ {
+  "id": "bcerat",
+  "name": {
+   "en": "Energy Resource Appeal Tribunal"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCERAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcerat"
+  }
+ },
+ {
+  "id": "bcest",
+  "name": {
+   "en": "British Columbia Employment Standards Tribunal"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCEST"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcest"
+  }
+ },
+ {
+  "id": "bcfac",
+  "name": {
+   "en": "Forest Appeals Commission"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCFAC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcfac"
+  }
+ },
+ {
+  "id": "bcfst",
+  "name": {
+   "en": "Financial Services Tribunal"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCFST"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcfst"
+  }
+ },
+ {
+  "id": "bchab",
+  "name": {
+   "en": "British Columbia Hospital Appeal Board"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCHAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bchab"
+  }
+ },
+ {
+  "id": "bchprb",
+  "name": {
+   "en": "Health Professions Review Board of British Columbia"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCHPRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bchprb"
+  }
+ },
+ {
+  "id": "bchrt",
+  "name": {
+   "en": "British Columbia Human Rights Tribunal"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCHRT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bchrt"
+  }
+ },
+ {
+  "id": "bcipc",
+  "name": {
+   "en": "Information and Privacy Commissioner"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCIPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcipc"
+  }
+ },
+ {
+  "id": "bcla",
+  "name": {
+   "en": "Labour Arbitration Awards"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCLA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcla"
+  }
+ },
+ {
+  "id": "bclcrb",
+  "name": {
+   "en": "British Columbia Liquor and Cannabis Regulation Branch"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCLCRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bclcrb"
+  }
+ },
+ {
+  "id": "bclrb",
+  "name": {
+   "en": "Labour Relations Board"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCLRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bclrb"
+  }
+ },
+ {
+  "id": "bcorl",
+  "name": {
+   "en": "Office of the Registrar of Lobbyists"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCORL"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcorl"
+  }
+ },
+ {
+  "id": "bcpaab",
+  "name": {
+   "en": "Property Assessment Appeal Board"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCPAAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcpaab"
+  }
+ },
+ {
+  "id": "bcpc",
+  "name": {
+   "en": "Provincial Court of British Columbia"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "inferior_trial",
+  "neutral": [
+   "BCPC"
+  ],
+  "aliases": [
+   "BC Prov Ct",
+   "BC PC"
+  ],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcpc"
+  }
+ },
+ {
+  "id": "bcrb",
+  "name": {
+   "en": "British Columbia Review Board"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcrb"
+  }
+ },
+ {
+  "id": "bcrec",
+  "name": {
+   "en": "Real Estate Council of British Columbia"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCREC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcrec"
+  }
+ },
+ {
+  "id": "bcrmb",
+  "name": {
+   "en": "Registrar of Mortgage Brokers"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCRMB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcrmb"
+  }
+ },
+ {
+  "id": "bcsc",
+  "name": {
+   "en": "Supreme Court of British Columbia",
+   "fr": "Cour suprême de la Colombie-Britannique"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "superior_trial",
+  "neutral": [
+   "BCSC"
+  ],
+  "aliases": [
+   "BC SC"
+  ],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcsc"
+  }
+ },
+ {
+  "id": "bcsec",
+  "name": {
+   "en": "British Columbia Securities Commission"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCSEC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcsec"
+  }
+ },
+ {
+  "id": "bcsfi",
+  "name": {
+   "en": "Superintendent of Financial Institutions"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCSFI"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcsfi"
+  }
+ },
+ {
+  "id": "bcsp",
+  "name": {
+   "en": "Superintendent of Pensions"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCSP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcsp"
+  }
+ },
+ {
+  "id": "bcsre",
+  "name": {
+   "en": "Superintendent of Real Estate"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCSRE"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcsre"
+  }
+ },
+ {
+  "id": "bcstab",
+  "name": {
+   "en": "Skilled Trades BC Appeal Board"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCSTAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcstab"
+  }
+ },
+ {
+  "id": "bcwcat",
+  "name": {
+   "en": "British Columbia Workers' Compensation Appeal Tribunal"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "BCWCAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bwcwcat"
+  }
+ },
+ {
+  "id": "caci",
+  "name": {
+   "en": "Federal Commission of Inquiry"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CACI"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "caci"
+  }
+ },
+ {
+  "id": "cacp",
+  "name": {
+   "en": "Commissioner of Patents"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CACP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "cacp"
+  }
+ },
+ {
+  "id": "cact",
+  "name": {
+   "en": "Competition Tribunal",
+   "fr": "Tribunal de la concurrence"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "Comp Trib",
+   "Trib conc"
+  ],
+  "aliases": [
+   "CACT",
+   "CT"
+  ],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "cact"
+  }
+ },
+ {
+  "id": "cala",
+  "name": {
+   "en": "Labour Arbitration Awards"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CALA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "cala"
+  }
+ },
+ {
+  "id": "camfda",
+  "name": {
+   "en": "Mutual Fund Dealers Association of Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CAMFDA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "camfda"
+  }
+ },
+ {
+  "id": "cart",
+  "name": {
+   "en": "Canada Agricultural Review Tribunal",
+   "fr": "Commission de révision agricole du Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CART"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "cart"
+  }
+ },
+ {
+  "id": "cb",
+  "name": {
+   "en": "Copyright Board of Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "cb"
+  }
+ },
+ {
+  "id": "cbsc",
+  "name": {
+   "en": "Canadian Broadcast Standards Council"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CBSC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "cbsc"
+  }
+ },
+ {
+  "id": "cer",
+  "name": {
+   "en": "Canada Energy Regulator"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CER"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "cer"
+  }
+ },
+ {
+  "id": "cgysdab",
+  "name": {
+   "en": "Calgary Subdivision & Development Appeal Board"
+  },
+  "jurisdiction": "ca-ab",
+  "level": "tribunal",
+  "neutral": [
+   "CGYSDAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ab",
+   "database": "cgysdab"
+  }
+ },
+ {
+  "id": "chrt",
+  "name": {
+   "en": "Canadian Human Rights Tribunal",
+   "fr": "Tribunal canadien des droits de la personne"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CHRT",
+   "TCDP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "chrt"
+  }
+ },
+ {
+  "id": "cicc",
+  "name": {
+   "en": "College of Immigration and Citizenship Consultants"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CICC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "cicc"
+  }
+ },
+ {
+  "id": "cirb",
+  "name": {
+   "en": "Canada Industrial Relations Board",
+   "fr": "Conseil canadien des relations industrielles"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CIRB",
+   "CCRI",
+   "CIRB LD",
+   "CCRI LD"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "cirb"
+  }
+ },
+ {
+  "id": "ciro",
+  "name": {
+   "en": "Canadian Investment Regulatory Organization"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CIRO"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "ciro"
+  }
+ },
+ {
+  "id": "citt",
+  "name": {
+   "en": "Canadian International Trade Tribunal",
+   "fr": "Tribunal canadien du commerce extérieur"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CITT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "citt"
+  }
+ },
+ {
+  "id": "cm",
+  "name": {
+   "en": "Courts Martial"
+  },
+  "jurisdiction": "ca",
+  "level": "inferior_trial",
+  "neutral": [
+   "CM"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "cm"
+  }
+ },
+ {
+  "id": "cmac",
+  "name": {
+   "en": "Court Martial Appeal Court of Canada",
+   "fr": "Cour d'appel de la cour martiale du Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "appellate",
+  "neutral": [
+   "CMAC",
+   "CACM"
+  ],
+  "aliases": [
+   "Ct Martial App Ct"
+  ],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "cmac"
+  },
+  "canlii_fr": {
+   "jurisdiction": "ca",
+   "database": "cacm"
+  }
+ },
+ {
+  "id": "cpata",
+  "name": {
+   "en": "College of Patent Agents & Trademark Agents"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CPATA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "cpata"
+  }
+ },
+ {
+  "id": "eptc",
+  "name": {
+   "en": "Environmental Protection Tribunal of Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "EPTC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "eptc"
+  }
+ },
+ {
+  "id": "exch",
+  "name": {
+   "en": "Exchequer Court of Canada",
+   "fr": "Cour de l'Échiquier du Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "superior_trial",
+  "neutral": [],
+  "aliases": [
+   "EXCH",
+   "Ex Ct",
+   "Exch Ct"
+  ],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "exch"
+  },
+  "end": 1971
+ },
+ {
+  "id": "fc",
+  "name": {
+   "en": "Federal Court",
+   "fr": "Cour fédérale"
+  },
+  "jurisdiction": "ca",
+  "level": "superior_trial",
+  "neutral": [
+   "FC",
+   "CF",
+   "FCT",
+   "CFPI"
+  ],
+  "aliases": [
+   "FCTD",
+   "FC TD",
+   "Fed Ct",
+   "FC-CF"
+  ],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "fct"
+  },
+  "canlii_fr": {
+   "jurisdiction": "ca",
+   "database": "cf"
+  },
+  "parent": "exch",
+  "start": 1971
+ },
+ {
+  "id": "fca",
+  "name": {
+   "en": "Federal Court of Appeal",
+   "fr": "Cour d'appel fédérale"
+  },
+  "jurisdiction": "ca",
+  "level": "appellate",
+  "neutral": [
+   "FCA",
+   "CAF"
+  ],
+  "aliases": [
+   "Fed CA",
+   "FCA-CAF"
+  ],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "fca"
+  },
+  "canlii_fr": {
+   "jurisdiction": "ca",
+   "database": "caf"
+  },
+  "parent": "exch",
+  "start": 1971
+ },
+ {
+  "id": "forep",
+  "name": {
+   "en": "Foreign reported decisions"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [],
+  "aliases": [
+   "FOREP"
+  ],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "forep"
+  }
+ },
+ {
+  "id": "fpca",
+  "name": {
+   "en": "Financial Planning Canada Standards Council"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "FPCA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "fpca"
+  }
+ },
+ {
+  "id": "hrto",
+  "name": {
+   "en": "Human Rights Tribunal of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "HRTO"
+  ],
+  "aliases": [
+   "ONHRT",
+   "ON HRT"
+  ],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onhrt"
+  }
+ },
+ {
+  "id": "iiroc",
+  "name": {
+   "en": "Investment Industry Regulatory Organization of Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "IIROC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "iiroc"
+  }
+ },
+ {
+  "id": "irb",
+  "name": {
+   "en": "Immigration and Refugee Board of Canada",
+   "fr": "Commission de l'immigration et du statut de réfugié du Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "IRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "irb"
+  }
+ },
+ {
+  "id": "lsbc",
+  "name": {
+   "en": "Law Society of British Columbia"
+  },
+  "jurisdiction": "ca-bc",
+  "level": "tribunal",
+  "neutral": [
+   "LSBC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "lsbc"
+  }
+ },
+ {
+  "id": "mbca",
+  "name": {
+   "en": "Court of Appeal of Manitoba",
+   "fr": "Cour d'appel du Manitoba"
+  },
+  "jurisdiction": "ca-mb",
+  "level": "appellate",
+  "neutral": [
+   "MBCA"
+  ],
+  "aliases": [
+   "Man CA",
+   "MB CA"
+  ],
+  "canlii": {
+   "jurisdiction": "mb",
+   "database": "mbca"
+  }
+ },
+ {
+  "id": "mbcpsdc",
+  "name": {
+   "en": "College of Physicians & Surgeons of Manitoba Discipline Committee"
+  },
+  "jurisdiction": "ca-mb",
+  "level": "tribunal",
+  "neutral": [
+   "MBCPSDC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "mb",
+   "database": "mbcpsdc"
+  }
+ },
+ {
+  "id": "mbhab",
+  "name": {
+   "en": "Manitoba Health Appeal Board"
+  },
+  "jurisdiction": "ca-mb",
+  "level": "tribunal",
+  "neutral": [
+   "MBHAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "mb",
+   "database": "mbhab"
+  }
+ },
+ {
+  "id": "mbhrc",
+  "name": {
+   "en": "Manitoba Human Rights Commission"
+  },
+  "jurisdiction": "ca-mb",
+  "level": "tribunal",
+  "neutral": [
+   "MBHRC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "mb",
+   "database": "mbhrc"
+  }
+ },
+ {
+  "id": "mbkb",
+  "name": {
+   "en": "Court of King's Bench of Manitoba"
+  },
+  "jurisdiction": "ca-mb",
+  "level": "superior_trial",
+  "neutral": [
+   "MBKB"
+  ],
+  "aliases": [
+   "Man KB",
+   "MB KB"
+  ],
+  "canlii": {
+   "jurisdiction": "mb",
+   "database": "mbkb"
+  },
+  "start": 2022,
+  "parent": "mbqb"
+ },
+ {
+  "id": "mbla",
+  "name": {
+   "en": "Labour Arbitration Awards"
+  },
+  "jurisdiction": "ca-mb",
+  "level": "tribunal",
+  "neutral": [
+   "MBLA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "mb",
+   "database": "mbla"
+  }
+ },
+ {
+  "id": "mblb",
+  "name": {
+   "en": "Manitoba Labour Board"
+  },
+  "jurisdiction": "ca-mb",
+  "level": "tribunal",
+  "neutral": [
+   "MBLB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "mb",
+   "database": "mblb"
+  }
+ },
+ {
+  "id": "mbls",
+  "name": {
+   "en": "Law Society of Manitoba"
+  },
+  "jurisdiction": "ca-mb",
+  "level": "tribunal",
+  "neutral": [
+   "MBLS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "mb",
+   "database": "mbls"
+  }
+ },
+ {
+  "id": "mbpc",
+  "name": {
+   "en": "Provincial Court of Manitoba"
+  },
+  "jurisdiction": "ca-mb",
+  "level": "inferior_trial",
+  "neutral": [
+   "MBPC"
+  ],
+  "aliases": [
+   "Man Prov Ct"
+  ],
+  "canlii": {
+   "jurisdiction": "mb",
+   "database": "mbpc"
+  }
+ },
+ {
+  "id": "mbqb",
+  "name": {
+   "en": "Court of Queen's Bench of Manitoba"
+  },
+  "jurisdiction": "ca-mb",
+  "level": "superior_trial",
+  "neutral": [
+   "MBQB"
+  ],
+  "aliases": [
+   "Man QB",
+   "MB QB"
+  ],
+  "canlii": {
+   "jurisdiction": "mb",
+   "database": "mbqb"
+  },
+  "end": 2022
+ },
+ {
+  "id": "mbsec",
+  "name": {
+   "en": "Manitoba Securities Commission"
+  },
+  "jurisdiction": "ca-mb",
+  "level": "tribunal",
+  "neutral": [
+   "MBSEC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "mb",
+   "database": "mbsec"
+  }
+ },
+ {
+  "id": "nbapab",
+  "name": {
+   "en": "New Brunswick Assessment and Planning Appeal Board"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "tribunal",
+  "neutral": [
+   "NBAPAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbapab"
+  }
+ },
+ {
+  "id": "nbbihra",
+  "name": {
+   "en": "Board of Inquiry Under the Human Rights Act"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "tribunal",
+  "neutral": [
+   "NBBIHRA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbbihra"
+  }
+ },
+ {
+  "id": "nbca",
+  "name": {
+   "en": "Court of Appeal of New Brunswick",
+   "fr": "Cour d'appel du Nouveau-Brunswick"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "appellate",
+  "neutral": [
+   "NBCA"
+  ],
+  "aliases": [
+   "NB CA"
+  ],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbca"
+  }
+ },
+ {
+  "id": "nbcph",
+  "name": {
+   "en": "New Brunswick College of Pharmacists"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "tribunal",
+  "neutral": [
+   "NBCPH"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbcph"
+  }
+ },
+ {
+  "id": "nbeub",
+  "name": {
+   "en": "New Brunswick Energy and Utilities Board"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "tribunal",
+  "neutral": [
+   "NBEUB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbeub"
+  }
+ },
+ {
+  "id": "nbfcsc",
+  "name": {
+   "en": "Financial and Consumer Services Commission"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "tribunal",
+  "neutral": [
+   "NBFCSC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbfcsc"
+  }
+ },
+ {
+  "id": "nbfcst",
+  "name": {
+   "en": "Financial and Consumer Services Tribunal"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "tribunal",
+  "neutral": [
+   "NBFCST"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbfcst"
+  }
+ },
+ {
+  "id": "nbqb",
+  "name": {
+   "en": "Court of Queen's Bench of New Brunswick",
+   "fr": "Cour du Banc de la Reine du Nouveau-Brunswick"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "superior_trial",
+  "neutral": [
+   "NBQB",
+   "NBBR"
+  ],
+  "aliases": [
+   "NB QB"
+  ],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbqb"
+  },
+  "canlii_fr": {
+   "jurisdiction": "nb",
+   "database": "NBQB"
+  },
+  "end": 2022
+ },
+ {
+  "id": "nbkb",
+  "name": {
+   "en": "Court of King's Bench of New Brunswick",
+   "fr": "Cour du Banc du Roi du Nouveau-Brunswick"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "superior_trial",
+  "neutral": [
+   "NBKB",
+   "NBBR"
+  ],
+  "aliases": [
+   "NB KB"
+  ],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbkb"
+  },
+  "start": 2022,
+  "parent": "nbqb"
+ },
+ {
+  "id": "nbla",
+  "name": {
+   "en": "Labour Arbitration Awards"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "tribunal",
+  "neutral": [
+   "NBLA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbla"
+  }
+ },
+ {
+  "id": "nbleb",
+  "name": {
+   "en": "New Brunswick Labour and Employment Board"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "tribunal",
+  "neutral": [
+   "NBLEB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbleb"
+  }
+ },
+ {
+  "id": "nblsb",
+  "name": {
+   "en": "Law Society of New Brunswick"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "tribunal",
+  "neutral": [
+   "NBLSB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nblsb"
+  }
+ },
+ {
+  "id": "nbombud",
+  "name": {
+   "en": "Ombud New Brunswick"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "tribunal",
+  "neutral": [
+   "NBOMBUD"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbombud"
+  }
+ },
+ {
+  "id": "nbpc",
+  "name": {
+   "en": "Provincial Court of New Brunswick",
+   "fr": "Cour provinciale du Nouveau-Brunswick"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "inferior_trial",
+  "neutral": [
+   "NBPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbpc"
+  }
+ },
+ {
+  "id": "nbrea",
+  "name": {
+   "en": "New Brunswick Real Estate Association"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "tribunal",
+  "neutral": [
+   "NBREA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbrea"
+  }
+ },
+ {
+  "id": "nbsm",
+  "name": {
+   "en": "Small Claims Court of New Brunswick"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "inferior_trial",
+  "neutral": [
+   "NBSM"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbs"
+  }
+ },
+ {
+  "id": "nbwcat",
+  "name": {
+   "en": "Workers’ Compensation Appeals Tribunal"
+  },
+  "jurisdiction": "ca-nb",
+  "level": "tribunal",
+  "neutral": [
+   "NBWCAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nb",
+   "database": "nbwcat"
+  }
+ },
+ {
+  "id": "nlca",
+  "name": {
+   "en": "Court of Appeal of Newfoundland and Labrador"
+  },
+  "jurisdiction": "ca-nl",
+  "level": "appellate",
+  "neutral": [
+   "NLCA"
+  ],
+  "aliases": [
+   "Nfld CA",
+   "NL CA",
+   "Nfld & Lab CA"
+  ],
+  "canlii": {
+   "jurisdiction": "nl",
+   "database": "nlca"
+  }
+ },
+ {
+  "id": "nlcp",
+  "name": {
+   "en": "College of Pharmacy of Newfoundland and Labrador"
+  },
+  "jurisdiction": "ca-nl",
+  "level": "tribunal",
+  "neutral": [
+   "NLCP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nl",
+   "database": "nlcp"
+  }
+ },
+ {
+  "id": "nlcps",
+  "name": {
+   "en": "College of Physicians and Surgeons of Newfoundland and Labrador"
+  },
+  "jurisdiction": "ca-nl",
+  "level": "tribunal",
+  "neutral": [
+   "NLCPS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nl",
+   "database": "nlcps"
+  }
+ },
+ {
+  "id": "nlhrc",
+  "name": {
+   "en": "Newfoundland and Labrador Human Rights Commission"
+  },
+  "jurisdiction": "ca-nl",
+  "level": "tribunal",
+  "neutral": [
+   "NLHRC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nl",
+   "database": "nlhrc"
+  }
+ },
+ {
+  "id": "nlipc",
+  "name": {
+   "en": "Information and Privacy Commissioner"
+  },
+  "jurisdiction": "ca-nl",
+  "level": "tribunal",
+  "neutral": [
+   "NLIPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nl",
+   "database": "nlipc"
+  }
+ },
+ {
+  "id": "nlla",
+  "name": {
+   "en": "Labour Arbitration Awards"
+  },
+  "jurisdiction": "ca-nl",
+  "level": "tribunal",
+  "neutral": [
+   "NLLA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nl",
+   "database": "nlla"
+  }
+ },
+ {
+  "id": "nllrb",
+  "name": {
+   "en": "Newfoundland and Labrador Labour Relations Board"
+  },
+  "jurisdiction": "ca-nl",
+  "level": "tribunal",
+  "neutral": [
+   "NLLRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nl",
+   "database": "nllrb"
+  }
+ },
+ {
+  "id": "nlls",
+  "name": {
+   "en": "Law Society of Newfoundland and Labrador"
+  },
+  "jurisdiction": "ca-nl",
+  "level": "tribunal",
+  "neutral": [
+   "NLLS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nl",
+   "database": "nlls"
+  }
+ },
+ {
+  "id": "nlpc",
+  "name": {
+   "en": "Provincial Court of Newfoundland and Labrador"
+  },
+  "jurisdiction": "ca-nl",
+  "level": "inferior_trial",
+  "neutral": [
+   "NLPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nl",
+   "database": "nlpc"
+  }
+ },
+ {
+  "id": "nlsc",
+  "name": {
+   "en": "Supreme Court of Newfoundland and Labrador"
+  },
+  "jurisdiction": "ca-nl",
+  "level": "superior_trial",
+  "neutral": [
+   "NLSC",
+   "NLTD",
+   "NLTD(G)",
+   "NLTD(F)"
+  ],
+  "aliases": [
+   "NL SC",
+   "Nfld TD",
+   "NL TD",
+   "Nfld SC"
+  ],
+  "canlii": {
+   "jurisdiction": "nl",
+   "database": "nlsc"
+  }
+ },
+ {
+  "id": "nsawab",
+  "name": {
+   "en": "Nova Scotia Animal Welfare Appeal Board"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSAWAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nsawab"
+  }
+ },
+ {
+  "id": "nsbs",
+  "name": {
+   "en": "Nova Scotia Barristers' Society Hearing Panel"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSBS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nsbs"
+  }
+ },
+ {
+  "id": "nsca",
+  "name": {
+   "en": "Nova Scotia Court of Appeal",
+   "fr": "Cour d'appel de la Nouvelle-Écosse"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "appellate",
+  "neutral": [
+   "NSCA"
+  ],
+  "aliases": [
+   "NS CA"
+  ],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nsca"
+  }
+ },
+ {
+  "id": "nscps",
+  "name": {
+   "en": "College of Physicians and Surgeons of Nova Scotia"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSCPS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nscps"
+  }
+ },
+ {
+  "id": "nserbt",
+  "name": {
+   "en": "Nova Scotia Energy and Regulatory Boards Tribunal"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSERBT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nserbt"
+  }
+ },
+ {
+  "id": "nsfc",
+  "name": {
+   "en": "Nova Scotia Family Court"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "inferior_trial",
+  "neutral": [
+   "NSFC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nsfc"
+  }
+ },
+ {
+  "id": "nshrc",
+  "name": {
+   "en": "Nova Scotia Human Rights Commission"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSHRC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nshrc"
+  }
+ },
+ {
+  "id": "nsla",
+  "name": {
+   "en": "Labour Arbitration Awards"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSLA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nsla"
+  }
+ },
+ {
+  "id": "nslb",
+  "name": {
+   "en": "Nova Scotia Labour Board"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSLB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nslb"
+  }
+ },
+ {
+  "id": "nslrb",
+  "name": {
+   "en": "Nova Scotia Labour Relations Board"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSLRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nsrb"
+  }
+ },
+ {
+  "id": "nslst",
+  "name": {
+   "en": "Nova Scotia Labour Standards Tribunal"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSLST"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nslst"
+  }
+ },
+ {
+  "id": "nsohsap",
+  "name": {
+   "en": "Nova Scotia Occupational Health and Safety Appeal Panel"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSOHSAP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nsohsap"
+  }
+ },
+ {
+  "id": "nsoipc",
+  "name": {
+   "en": "Office of the Information and Privacy Commissioner for Nova Scotia"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSOIPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nsoipc"
+  }
+ },
+ {
+  "id": "nspc",
+  "name": {
+   "en": "Provincial Court of Nova Scotia"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "inferior_trial",
+  "neutral": [
+   "NSPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nspc"
+  }
+ },
+ {
+  "id": "nspr",
+  "name": {
+   "en": "Nova Scotia Probate Court"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "inferior_trial",
+  "neutral": [
+   "NSPR"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nspr"
+  }
+ },
+ {
+  "id": "nsprb",
+  "name": {
+   "en": "Nova Scotia Police Review Board"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSPRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nsprb"
+  }
+ },
+ {
+  "id": "nssc",
+  "name": {
+   "en": "Supreme Court of Nova Scotia",
+   "fr": "Cour suprême de la Nouvelle-Écosse"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "superior_trial",
+  "neutral": [
+   "NSSC"
+  ],
+  "aliases": [
+   "NS SC"
+  ],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nssc"
+  }
+ },
+ {
+  "id": "nssec",
+  "name": {
+   "en": "Nova Scotia Securities Commission"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSSEC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nssec"
+  }
+ },
+ {
+  "id": "nssf",
+  "name": {
+   "en": "Supreme Court of Nova Scotia (Family Division)"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "superior_trial",
+  "neutral": [
+   "NSSF"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nssf"
+  },
+  "parent": "nssc"
+ },
+ {
+  "id": "nssirt",
+  "name": {
+   "en": "Nova Scotia Serious Incident Response Team"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSSIRT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nssirt"
+  }
+ },
+ {
+  "id": "nssm",
+  "name": {
+   "en": "Nova Scotia Small Claims Court"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "inferior_trial",
+  "neutral": [
+   "NSSM"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nssm"
+  }
+ },
+ {
+  "id": "nswcat",
+  "name": {
+   "en": "Nova Scotia Workers' Compensation Appeals Tribunal"
+  },
+  "jurisdiction": "ca-ns",
+  "level": "tribunal",
+  "neutral": [
+   "NSWCAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nswcat"
+  }
+ },
+ {
+  "id": "ntaat",
+  "name": {
+   "en": "Northwest Territories Assessment Appeal Tribunal"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "tribunal",
+  "neutral": [
+   "NTAAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntaat"
+  }
+ },
+ {
+  "id": "nwtca",
+  "name": {
+   "en": "Court of Appeal for the Northwest Territories"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "appellate",
+  "neutral": [
+   "NWTCA"
+  ],
+  "aliases": [
+   "NTCA",
+   "NWT CA",
+   "NT CA"
+  ],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntca"
+  }
+ },
+ {
+  "id": "ntesa",
+  "name": {
+   "en": "Northwest Territories Employment Standards Appeals"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "tribunal",
+  "neutral": [
+   "NTESA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntesa"
+  }
+ },
+ {
+  "id": "nthrap",
+  "name": {
+   "en": "Human Rights Adjudication Panel"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "tribunal",
+  "neutral": [
+   "NTHRAP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "nthrap"
+  }
+ },
+ {
+  "id": "ntipc",
+  "name": {
+   "en": "Northwest Territories Information and Privacy Commissioner"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "tribunal",
+  "neutral": [
+   "NTIPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntipc"
+  }
+ },
+ {
+  "id": "ntla",
+  "name": {
+   "en": "Labour Arbitration Awards"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "tribunal",
+  "neutral": [
+   "NTLA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntla"
+  }
+ },
+ {
+  "id": "ntllb",
+  "name": {
+   "en": "Northwest Territories Liquor Licensing Board"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "tribunal",
+  "neutral": [
+   "NTLLB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntllb"
+  }
+ },
+ {
+  "id": "ntls",
+  "name": {
+   "en": "Law Society of the Northwest Territories"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "tribunal",
+  "neutral": [
+   "NTLS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntls"
+  }
+ },
+ {
+  "id": "ntro",
+  "name": {
+   "en": "Rental Officer"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "tribunal",
+  "neutral": [
+   "NTRO"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntro"
+  }
+ },
+ {
+  "id": "nwtsc",
+  "name": {
+   "en": "Supreme Court of the Northwest Territories"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "superior_trial",
+  "neutral": [
+   "NWTSC"
+  ],
+  "aliases": [
+   "NTSC",
+   "NWT SC",
+   "NT SC"
+  ],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntsc"
+  }
+ },
+ {
+  "id": "ntsec",
+  "name": {
+   "en": "Northwest Territories Office of Superintendent of Securities"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "tribunal",
+  "neutral": [
+   "NTSEC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntsec"
+  }
+ },
+ {
+  "id": "nwttc",
+  "name": {
+   "en": "Territorial Court of the Northwest Territories"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "inferior_trial",
+  "neutral": [
+   "NWTTC"
+  ],
+  "aliases": [
+   "NTTC",
+   "NWT Terr Ct",
+   "NT TC"
+  ],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "nttc"
+  }
+ },
+ {
+  "id": "ntwcat",
+  "name": {
+   "en": "Northwest Territories and Nunavut Workers’ Compensation Appeals Tribunal"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "tribunal",
+  "neutral": [
+   "NTWCAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntwcat"
+  }
+ },
+ {
+  "id": "ntydab",
+  "name": {
+   "en": "Yellowknife Development Appeal Board"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "tribunal",
+  "neutral": [
+   "NTYDAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntyadab"
+  }
+ },
+ {
+  "id": "ntyjc",
+  "name": {
+   "en": "Youth Justice Court"
+  },
+  "jurisdiction": "ca-nt",
+  "level": "inferior_trial",
+  "neutral": [
+   "NTYJC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntyjc"
+  }
+ },
+ {
+  "id": "nuca",
+  "name": {
+   "en": "Court of Appeal of Nunavut"
+  },
+  "jurisdiction": "ca-nu",
+  "level": "appellate",
+  "neutral": [
+   "NUCA"
+  ],
+  "aliases": [
+   "Nu CA",
+   "NU CA"
+  ],
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nuca"
+  }
+ },
+ {
+  "id": "nucj",
+  "name": {
+   "en": "Nunavut Court of Justice"
+  },
+  "jurisdiction": "ca-nu",
+  "level": "superior_trial",
+  "neutral": [
+   "NUCJ"
+  ],
+  "aliases": [
+   "Nu CJ",
+   "NU CJ",
+   "Nun Ct J"
+  ],
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nucj"
+  }
+ },
+ {
+  "id": "nuhrt",
+  "name": {
+   "en": "Nunavut Human Rights Tribunal"
+  },
+  "jurisdiction": "ca-nu",
+  "level": "tribunal",
+  "neutral": [
+   "NUHRT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nuhrt"
+  }
+ },
+ {
+  "id": "nuipc",
+  "name": {
+   "en": "Information and Privacy Commissioner"
+  },
+  "jurisdiction": "ca-nu",
+  "level": "tribunal",
+  "neutral": [
+   "NUIPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nuipc"
+  }
+ },
+ {
+  "id": "nula",
+  "name": {
+   "en": "Labour Arbitration Awards"
+  },
+  "jurisdiction": "ca-nu",
+  "level": "tribunal",
+  "neutral": [
+   "NULA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nula"
+  }
+ },
+ {
+  "id": "nuls",
+  "name": {
+   "en": "Law Society of Nunavut"
+  },
+  "jurisdiction": "ca-nu",
+  "level": "tribunal",
+  "neutral": [
+   "NULS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nuls"
+  }
+ },
+ {
+  "id": "nusec",
+  "name": {
+   "en": "Nunavut Registrar of Securities"
+  },
+  "jurisdiction": "ca-nu",
+  "level": "tribunal",
+  "neutral": [
+   "NUSEC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nusec"
+  }
+ },
+ {
+  "id": "nuwcat",
+  "name": {
+   "en": "Northwest Territories and Nunavut Workers’ Compensation Appeals Tribunal"
+  },
+  "jurisdiction": "ca-nu",
+  "level": "tribunal",
+  "neutral": [
+   "NUWCAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nuwcat"
+  }
+ },
+ {
+  "id": "ohstc",
+  "name": {
+   "en": "Occupational Health and Safety Tribunal Canada",
+   "fr": "Tribunal de santé et sécurité au travail Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "OHSTC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "ohstc"
+  }
+ },
+ {
+  "id": "oic",
+  "name": {
+   "en": "Information Commissioner of Canada",
+   "fr": "Commissaire à l'information du Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "OIC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "oic"
+  }
+ },
+ {
+  "id": "onacrb",
+  "name": {
+   "en": "Ontario Animal Care Review Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONACRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onacrb"
+  }
+ },
+ {
+  "id": "onafraat",
+  "name": {
+   "en": "Agriculture, Food & Rural Affairs Appeal Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONAFRAAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onafraat"
+  }
+ },
+ {
+  "id": "onagc",
+  "name": {
+   "en": "Alcohol and Gaming Commission of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONAGC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onagc"
+  }
+ },
+ {
+  "id": "onape",
+  "name": {
+   "en": "Association of Professional Engineers of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONAPE"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onape"
+  }
+ },
+ {
+  "id": "onarb",
+  "name": {
+   "en": "Assessment Review Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONARB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onarb"
+  }
+ },
+ {
+  "id": "onaslpdt",
+  "name": {
+   "en": "Ontario Audiologists and Speech-Language Pathologists Discipline Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONASLPDT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onaslpdt"
+  }
+ },
+ {
+  "id": "onbcc",
+  "name": {
+   "en": "Building Code Commission"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONBCC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onbcc"
+  }
+ },
+ {
+  "id": "onca",
+  "name": {
+   "en": "Court of Appeal for Ontario",
+   "fr": "Cour d'appel de l'Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "appellate",
+  "neutral": [
+   "ONCA"
+  ],
+  "aliases": [
+   "Ont CA",
+   "ON CA",
+   "C.A. Ont."
+  ],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onca"
+  }
+ },
+ {
+  "id": "oncat",
+  "name": {
+   "en": "Condominium Authority Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncat"
+  }
+ },
+ {
+  "id": "onccb",
+  "name": {
+   "en": "Consent and Capacity Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCCB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onccb"
+  }
+ },
+ {
+  "id": "oncdho",
+  "name": {
+   "en": "College of Dental Hygienists of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCDHO"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncdho"
+  }
+ },
+ {
+  "id": "oncece",
+  "name": {
+   "en": "Ontario College of Early Childhood Educators"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCECE"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncece"
+  }
+ },
+ {
+  "id": "oncfsrb",
+  "name": {
+   "en": "Child and Family Services Review Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCFSRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncfsrb"
+  }
+ },
+ {
+  "id": "oncicb",
+  "name": {
+   "en": "Criminal Injuries Compensation Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCICB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncicb"
+  }
+ },
+ {
+  "id": "oncj",
+  "name": {
+   "en": "Ontario Court of Justice",
+   "fr": "Cour de justice de l'Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "inferior_trial",
+  "neutral": [
+   "ONCJ"
+  ],
+  "aliases": [
+   "Ont CJ",
+   "Ont Ct J",
+   "ON CJ"
+  ],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncj"
+  }
+ },
+ {
+  "id": "oncmt",
+  "name": {
+   "en": "Capital Markets Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCMT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncmt"
+  }
+ },
+ {
+  "id": "oncno",
+  "name": {
+   "en": "College of Nurses of Ontario Discipline Committee"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCNO"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncno"
+  }
+ },
+ {
+  "id": "onco",
+  "name": {
+   "en": "College of Optometrists of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCO"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onco"
+  }
+ },
+ {
+  "id": "onconrb",
+  "name": {
+   "en": "Conservation Review Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCONRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onconrb"
+  }
+ },
+ {
+  "id": "oncpa",
+  "name": {
+   "en": "Chartered Professional Accountants of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCPA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncpa"
+  }
+ },
+ {
+  "id": "oncpc",
+  "name": {
+   "en": "Ontario Civilian Police Commission"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncpc"
+  }
+ },
+ {
+  "id": "oncpd",
+  "name": {
+   "en": "College of Psychologists of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCPD"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncpd"
+  }
+ },
+ {
+  "id": "oncpdc",
+  "name": {
+   "en": "Ontario College of Pharmacists Discipline Committee"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCPDC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncpdc"
+  }
+ },
+ {
+  "id": "oncpdt",
+  "name": {
+   "en": "Ontario Chiropodists and Podiatrists Discipline Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCPDT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncpdt"
+  }
+ },
+ {
+  "id": "oncpo",
+  "name": {
+   "en": "College of Physiotherapists of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCPO"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncpo"
+  }
+ },
+ {
+  "id": "oncrb",
+  "name": {
+   "en": "Ontario Custody Review Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncrb"
+  }
+ },
+ {
+  "id": "oncswssw",
+  "name": {
+   "en": "Ontario College of Social Workers and Social Service Workers"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCSWSSW"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncswssw"
+  }
+ },
+ {
+  "id": "onctcmpao",
+  "name": {
+   "en": "College of Traditional Chinese Medicine Practitioners and Acupuncturists of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCTCMPAO"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onctcmpao"
+  }
+ },
+ {
+  "id": "oncvo",
+  "name": {
+   "en": "College of Veterinarians of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONCVO"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "oncvo"
+  }
+ },
+ {
+  "id": "ondr",
+  "name": {
+   "en": "Ontario Court of the Drainage Referee"
+  },
+  "jurisdiction": "ca-on",
+  "level": "inferior_trial",
+  "neutral": [
+   "ONDR"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "ondr"
+  }
+ },
+ {
+  "id": "onert",
+  "name": {
+   "en": "Environmental Review Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONERT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onert"
+  }
+ },
+ {
+  "id": "onfsc",
+  "name": {
+   "en": "Ontario Fire Safety Commission"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONFSC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onfsc"
+  }
+ },
+ {
+  "id": "onfscdrs",
+  "name": {
+   "en": "Ontario Financial Services Commission - Dispute Resolution Services"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONFSCDRS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onfscdrs"
+  }
+ },
+ {
+  "id": "onfst",
+  "name": {
+   "en": "Financial Services Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONFST"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onfst"
+  }
+ },
+ {
+  "id": "ongsb",
+  "name": {
+   "en": "Grievance Settlement Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONGSB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "ongsb"
+  }
+ },
+ {
+  "id": "onhparb",
+  "name": {
+   "en": "Health Professions Appeal and Review Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONHPARB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onhparb"
+  }
+ },
+ {
+  "id": "onhrap",
+  "name": {
+   "en": "Horse Racing Appeal Panel"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONHRAP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onhrap"
+  }
+ },
+ {
+  "id": "onhsarb",
+  "name": {
+   "en": "Health Services Appeal and Review Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONHSARB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onhsarb"
+  }
+ },
+ {
+  "id": "onipc",
+  "name": {
+   "en": "Information and Privacy Commissioner Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONIPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onipc"
+  }
+ },
+ {
+  "id": "onla",
+  "name": {
+   "en": "Labour Arbitration Awards"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONLA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onla"
+  }
+ },
+ {
+  "id": "onlat",
+  "name": {
+   "en": "Ontario Licence Appeal Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONLAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onlat"
+  }
+ },
+ {
+  "id": "onlpat",
+  "name": {
+   "en": "Local Planning Appeal Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONLPAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onlpat"
+  }
+ },
+ {
+  "id": "onlrb",
+  "name": {
+   "en": "Ontario Labour Relations Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONLRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onlrb"
+  }
+ },
+ {
+  "id": "onlst",
+  "name": {
+   "en": "Law Society Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONLST"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onlst"
+  }
+ },
+ {
+  "id": "onlt",
+  "name": {
+   "en": "Ontario Land Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONLT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onlt"
+  }
+ },
+ {
+  "id": "onltb",
+  "name": {
+   "en": "Landlord and Tenant Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONLTB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onltb"
+  }
+ },
+ {
+  "id": "onmic",
+  "name": {
+   "en": "Municipal Integrity Commissioners of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONMIC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onmic"
+  }
+ },
+ {
+  "id": "onmlt",
+  "name": {
+   "en": "Mining and Lands Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONMLT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onmlt"
+  }
+ },
+ {
+  "id": "onmtdt",
+  "name": {
+   "en": "Ontario Massage Therapists Discipline Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONMTDT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onmtdt"
+  }
+ },
+ {
+  "id": "onnfppb",
+  "name": {
+   "en": "Normal Farm Practices Protection Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONNFPPB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onnfppb"
+  }
+ },
+ {
+  "id": "onoct",
+  "name": {
+   "en": "Ontario College of Teachers"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONOCT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onoct"
+  }
+ },
+ {
+  "id": "onombud",
+  "name": {
+   "en": "Office of the Ombudsman of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONOMBUD"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onombud"
+  }
+ },
+ {
+  "id": "onotdt",
+  "name": {
+   "en": "Ontario Occupational Therapists Discipline Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONOTDT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onotdt"
+  }
+ },
+ {
+  "id": "onpeht",
+  "name": {
+   "en": "Ontario Pay Equity Hearings Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONPEHT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onpeht"
+  }
+ },
+ {
+  "id": "onpprb",
+  "name": {
+   "en": "Ontario Physician Payment Review Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONPPRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onpprb"
+  }
+ },
+ {
+  "id": "onpsdt",
+  "name": {
+   "en": "Ontario Physicians and Surgeons Discipline Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONPSDT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onpsdt"
+  }
+ },
+ {
+  "id": "onpsgb",
+  "name": {
+   "en": "Ontario Public Service Grievance Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONPSGB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onpsgb"
+  }
+ },
+ {
+  "id": "onrb",
+  "name": {
+   "en": "Ontario Review Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onrb"
+  }
+ },
+ {
+  "id": "onrc",
+  "name": {
+   "en": "Ontario Racing Commission"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONRC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onrc"
+  }
+ },
+ {
+  "id": "onrcdso",
+  "name": {
+   "en": "Royal College of Dental Surgeons of Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONRCDSO"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onrcdso"
+  }
+ },
+ {
+  "id": "onrpdt",
+  "name": {
+   "en": "Ontario Registered Psychotherapists Discipline Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONRPDT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onrpdt"
+  }
+ },
+ {
+  "id": "onsbt",
+  "name": {
+   "en": "Ontario Social Benefits Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONSBT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onsbt"
+  }
+ },
+ {
+  "id": "onsc",
+  "name": {
+   "en": "Ontario Superior Court of Justice",
+   "fr": "Cour supérieure de justice de l'Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "superior_trial",
+  "neutral": [
+   "ONSC"
+  ],
+  "aliases": [
+   "Ont SCJ",
+   "Ont Sup Ct J",
+   "ON SC",
+   "Ont Sup Ct"
+  ],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onsc"
+  }
+ },
+ {
+  "id": "onscdc",
+  "name": {
+   "en": "Divisional Court (Ontario Superior Court of Justice)",
+   "fr": "Cour divisionnaire"
+  },
+  "jurisdiction": "ca-on",
+  "level": "superior_trial",
+  "neutral": [
+   "ONSCDC"
+  ],
+  "aliases": [
+   "Ont Div Ct",
+   "ON SCDC",
+   "Ont SCJ (Div Ct)"
+  ],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onscdc"
+  },
+  "parent": "onsc"
+ },
+ {
+  "id": "onscsm",
+  "name": {
+   "en": "Small Claims Court (Ontario Superior Court of Justice)"
+  },
+  "jurisdiction": "ca-on",
+  "level": "inferior_trial",
+  "neutral": [
+   "ONSCSM"
+  ],
+  "aliases": [
+   "Ont Sm Cl Ct",
+   "ON SCSM"
+  ],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onscsm"
+  },
+  "parent": "onsc"
+ },
+ {
+  "id": "onsec",
+  "name": {
+   "en": "Ontario Securities Commission"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONSEC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onsec"
+  }
+ },
+ {
+  "id": "onset",
+  "name": {
+   "en": "Ontario Special Education (English) Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONSET"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onset"
+  }
+ },
+ {
+  "id": "onst",
+  "name": {
+   "en": "Skilled Trades Ontario"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONST"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onst"
+  }
+ },
+ {
+  "id": "ontlab",
+  "name": {
+   "en": "Toronto Local Appeal Body"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONTLAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "ontlab"
+  }
+ },
+ {
+  "id": "onwsiat",
+  "name": {
+   "en": "Ontario Workplace Safety and Insurance Appeals Tribunal"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONWSIAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onwsiat"
+  }
+ },
+ {
+  "id": "onwsib",
+  "name": {
+   "en": "Ontario Workplace Safety and Insurance Board"
+  },
+  "jurisdiction": "ca-on",
+  "level": "tribunal",
+  "neutral": [
+   "ONWSIB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "on",
+   "database": "onwsib"
+  }
+ },
+ {
+  "id": "pcc",
+  "name": {
+   "en": "Privacy Commissioner of Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "PCC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "pcc"
+  }
+ },
+ {
+  "id": "pec",
+  "name": {
+   "en": "Pay Equity Commissioner"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "PEC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "pec"
+  }
+ },
+ {
+  "id": "peihrc",
+  "name": {
+   "en": "Prince Edward Island Human Rights Commission"
+  },
+  "jurisdiction": "ca-pe",
+  "level": "tribunal",
+  "neutral": [
+   "PEIHRC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "pe",
+   "database": "peihrc"
+  }
+ },
+ {
+  "id": "peipc",
+  "name": {
+   "en": "Information and Privacy Commissioner"
+  },
+  "jurisdiction": "ca-pe",
+  "level": "tribunal",
+  "neutral": [
+   "PEIPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "pe",
+   "database": "peipc"
+  }
+ },
+ {
+  "id": "peirac",
+  "name": {
+   "en": "Prince Edward Island Regulatory & Appeals Commission"
+  },
+  "jurisdiction": "ca-pe",
+  "level": "tribunal",
+  "neutral": [
+   "PEIRAC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "pe",
+   "database": "peirac"
+  }
+ },
+ {
+  "id": "pela",
+  "name": {
+   "en": "Labour Arbitration Awards"
+  },
+  "jurisdiction": "ca-pe",
+  "level": "tribunal",
+  "neutral": [
+   "PELA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "pe",
+   "database": "pela"
+  }
+ },
+ {
+  "id": "pelrb",
+  "name": {
+   "en": "Prince Edward Island Labour Relations Board"
+  },
+  "jurisdiction": "ca-pe",
+  "level": "tribunal",
+  "neutral": [
+   "PELRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "pe",
+   "database": "pelrb"
+  }
+ },
+ {
+  "id": "pepc",
+  "name": {
+   "en": "Provincial Court of Prince Edward Island"
+  },
+  "jurisdiction": "ca-pe",
+  "level": "inferior_trial",
+  "neutral": [
+   "PEPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "pe",
+   "database": "pepc"
+  }
+ },
+ {
+  "id": "peca",
+  "name": {
+   "en": "Prince Edward Island Court of Appeal"
+  },
+  "jurisdiction": "ca-pe",
+  "level": "appellate",
+  "neutral": [
+   "PECA",
+   "PESCAD"
+  ],
+  "aliases": [
+   "PEI CA",
+   "PE CA",
+   "PEI SCAD",
+   "PE SCAD"
+  ],
+  "canlii": {
+   "jurisdiction": "pe",
+   "database": "pescad"
+  }
+ },
+ {
+  "id": "pesc",
+  "name": {
+   "en": "Supreme Court of Prince Edward Island"
+  },
+  "jurisdiction": "ca-pe",
+  "level": "superior_trial",
+  "neutral": [
+   "PESC",
+   "PESCTD"
+  ],
+  "aliases": [
+   "PEI SC",
+   "PE SC",
+   "PEI SCTD",
+   "PE SCTD"
+  ],
+  "canlii": {
+   "jurisdiction": "pe",
+   "database": "pesctd"
+  }
+ },
+ {
+  "id": "psdpt",
+  "name": {
+   "en": "Public Servants Disclosure Protection Tribunal",
+   "fr": "Tribunal de la protection des fonctionnaires divulgateurs"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "PSDPT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "psdpt"
+  }
+ },
+ {
+  "id": "pslreb",
+  "name": {
+   "en": "Federal Public Sector Labour Relations and Employment Board",
+   "fr": "Commission des relations de travail et de l'emploi dans le secteur public fédéral"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "FPSLREB",
+   "PSLREB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "pslreb"
+  }
+ },
+ {
+  "id": "pssrb",
+  "name": {
+   "en": "Public Service Labour Relations Board"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "PSSRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "pssrb"
+  }
+ },
+ {
+  "id": "psst",
+  "name": {
+   "en": "Public Service Staffing Tribunal"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "PSST"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "psst"
+  }
+ },
+ {
+  "id": "qcadmaq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des administrateurs agréés du Québec",
+   "fr": "Conseil de discipline de l'Ordre des administrateurs agréés du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCADMAQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcadmaq"
+  }
+ },
+ {
+  "id": "qcagq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des agronomes du Québec",
+   "fr": "Conseil de discipline de l'Ordre des agronomes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCAGQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcagq"
+  }
+ },
+ {
+  "id": "qcamf",
+  "name": {
+   "en": "Quebec Autorité des marchés financiers"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCAMF"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcamf"
+  }
+ },
+ {
+  "id": "qcamp",
+  "name": {
+   "en": "Autorité des marchés publics",
+   "fr": "Autorité des marchés publics"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCAMP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcamp"
+  }
+ },
+ {
+  "id": "qcca",
+  "name": {
+   "en": "Court of Appeal of Quebec",
+   "fr": "Cour d'appel du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "appellate",
+  "neutral": [
+   "QCCA"
+  ],
+  "aliases": [
+   "Qc CA",
+   "Que CA",
+   "C.A. Qué.",
+   "CA Qc"
+  ],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcca"
+  }
+ },
+ {
+  "id": "qccai",
+  "name": {
+   "en": "Commission d'accès à l'information",
+   "fr": "Commission d'accès à l'information"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCAI"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccai"
+  }
+ },
+ {
+  "id": "qccalp",
+  "name": {
+   "en": "Commission d'appel en matière de lésions professionnelles du Québec",
+   "fr": "Commission d'appel en matière de lésions professionnelles du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCALP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccalp"
+  }
+ },
+ {
+  "id": "qccdbq",
+  "name": {
+   "en": "Barreau du Québec Disciplinary Council",
+   "fr": "Barreau du Québec Disciplinary Council"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDBQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdbq"
+  }
+ },
+ {
+  "id": "qccdccoq",
+  "name": {
+   "en": "Conseil de discipline des Conseillers et conseillères d'orientation du Québec",
+   "fr": "Conseil de discipline des Conseillers et conseillères d'orientation du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDCCOQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdccoq"
+  }
+ },
+ {
+  "id": "qccdchad",
+  "name": {
+   "en": "Comité de discipline de la Chambre de l'assurance de dommages",
+   "fr": "Comité de discipline de la Chambre de l'assurance de dommages"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDCHAD"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdchad"
+  }
+ },
+ {
+  "id": "qccdcm",
+  "name": {
+   "en": "Collège des médecins du Québec Disciplinary Council"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDCM"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdcm"
+  }
+ },
+ {
+  "id": "qccdcrim",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des criminologues du Québec",
+   "fr": "Conseil de discipline de l'Ordre des criminologues du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDCRIM"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdcrim"
+  }
+ },
+ {
+  "id": "qccdcsf",
+  "name": {
+   "en": "Comité de discipline de la Chambre de la sécurité financière",
+   "fr": "Comité de discipline de la Chambre de la sécurité financière"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDCSF"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdcsf"
+  }
+ },
+ {
+  "id": "qccddtp",
+  "name": {
+   "en": "Ordre des diététistes-nutritionnistes du Québec",
+   "fr": "Ordre des diététistes-nutritionnistes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDDTP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccddtp"
+  }
+ },
+ {
+  "id": "qccdhj",
+  "name": {
+   "en": "Conseil de discipline de la Chambre des huissiers de justice du Québec",
+   "fr": "Conseil de discipline de la Chambre des huissiers de justice du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDHJ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdhj"
+  }
+ },
+ {
+  "id": "qccdnq",
+  "name": {
+   "en": "Conseil de discipline de la Chambre des notaires du Québec",
+   "fr": "Conseil de discipline de la Chambre des notaires du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDNQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdnq"
+  }
+ },
+ {
+  "id": "qccdoii",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des infirmières et infirmiers du Québec",
+   "fr": "Conseil de discipline de l'Ordre des infirmières et infirmiers du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDOII"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdoii"
+  }
+ },
+ {
+  "id": "qccdoiia",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des infirmières et infirmiers auxiliaires du Québec",
+   "fr": "Conseil de discipline de l'Ordre des infirmières et infirmiers auxiliaires du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDOIIA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdoiia"
+  }
+ },
+ {
+  "id": "qccdoiq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des ingénieurs du Québec",
+   "fr": "Conseil de discipline de l'Ordre des ingénieurs du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDOIQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdoiq"
+  }
+ },
+ {
+  "id": "qccdomv",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des médecins vétérinaires du Québec",
+   "fr": "Conseil de discipline de l'Ordre des médecins vétérinaires du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDOMV"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdomv"
+  }
+ },
+ {
+  "id": "qccdoooq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des opticiens d'ordonnances du Québec",
+   "fr": "Conseil de discipline de l'Ordre des opticiens d'ordonnances du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDOOOQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdoooq"
+  }
+ },
+ {
+  "id": "qccdopq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des pharmaciens du Québec",
+   "fr": "Conseil de discipline de l'Ordre des pharmaciens du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDOPQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdopq"
+  }
+ },
+ {
+  "id": "qccdosfq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des sages-femmes du Québec",
+   "fr": "Conseil de discipline de l'Ordre des sages-femmes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDOSFQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdosfq"
+  }
+ },
+ {
+  "id": "qccdottdq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des techniciens et techniciennes dentaires du Québec",
+   "fr": "Conseil de discipline de l'Ordre des techniciens et techniciennes dentaires du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDOTTDQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdottdq"
+  }
+ },
+ {
+  "id": "qccdppq",
+  "name": {
+   "en": "Conseil de discipline des psychoéducateurs et psychoéducatrices du Québec",
+   "fr": "Conseil de discipline des psychoéducateurs et psychoéducatrices du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDPPQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdppq"
+  }
+ },
+ {
+  "id": "qccdrhri",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre professionnel des conseillers en ressources humaines et en relations industrielles agrées du Québec",
+   "fr": "Conseil de discipline de l'Ordre professionnel des conseillers en ressources humaines et en relations industrielles agrées du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCDRHRI"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccdrhri"
+  }
+ },
+ {
+  "id": "qcces",
+  "name": {
+   "en": "Commission de l'équité salariale",
+   "fr": "Commission de l'équité salariale"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCES"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcces"
+  }
+ },
+ {
+  "id": "qccfp",
+  "name": {
+   "en": "Commission de la fonction publique",
+   "fr": "Commission de la fonction publique"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCFP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccfp"
+  }
+ },
+ {
+  "id": "qccja",
+  "name": {
+   "en": "Conseil de la justice administrative",
+   "fr": "Conseil de la justice administrative"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCJA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccja"
+  }
+ },
+ {
+  "id": "qcclp",
+  "name": {
+   "en": "Commission des lésions professionnelles du Québec",
+   "fr": "Commission des lésions professionnelles du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCLP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcclp"
+  }
+ },
+ {
+  "id": "qccm",
+  "name": {
+   "en": "Municipal Courts",
+   "fr": "Cours municipales"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "inferior_trial",
+  "neutral": [
+   "QCCM"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccm"
+  }
+ },
+ {
+  "id": "qccmeq",
+  "name": {
+   "en": "Corporation des maîtres électriciens du Québec",
+   "fr": "Corporation des maîtres électriciens du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCMEQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccmeq"
+  }
+ },
+ {
+  "id": "qccmnq",
+  "name": {
+   "en": "Commission municipale du Québec",
+   "fr": "Commission municipale du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCMNQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccmnq"
+  }
+ },
+ {
+  "id": "qccmpmq",
+  "name": {
+   "en": "Corporation of Master Pipe-Mechanics of Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCMPMQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccmpmq"
+  }
+ },
+ {
+  "id": "qccmq",
+  "name": {
+   "en": "Conseil de la magistrature",
+   "fr": "Conseil de la magistrature"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCMQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccmq"
+  }
+ },
+ {
+  "id": "qccnesst",
+  "name": {
+   "en": "Commission des normes, de l’équité, de la santé et de la sécurité du travail",
+   "fr": "Commission des normes, de l’équité, de la santé et de la sécurité du travail"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCNESST"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccnesst"
+  }
+ },
+ {
+  "id": "qccpa",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des comptables professionnels agréés du Québec",
+   "fr": "Conseil de discipline de l'Ordre des comptables professionnels agréés du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCPA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccpa"
+  }
+ },
+ {
+  "id": "qccptaq",
+  "name": {
+   "en": "Commission de protection du territoire agricole du Québec",
+   "fr": "Commission de protection du territoire agricole du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCPTAQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccptaq"
+  }
+ },
+ {
+  "id": "qccq",
+  "name": {
+   "en": "Court of Quebec",
+   "fr": "Cour du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "inferior_trial",
+  "neutral": [
+   "QCCQ"
+  ],
+  "aliases": [
+   "Qc CQ",
+   "C.Q. Qué.",
+   "CQ Qc"
+  ],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccq"
+  }
+ },
+ {
+  "id": "qccqlc",
+  "name": {
+   "en": "QCCQLC"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCQLC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcqlc"
+  }
+ },
+ {
+  "id": "qccraaap",
+  "name": {
+   "en": "Commission de reconnaissance des associations d'artistes et des associations de producteurs",
+   "fr": "Commission de reconnaissance des associations d'artistes et des associations de producteurs"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCRAAAP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccraaap"
+  }
+ },
+ {
+  "id": "qccrt",
+  "name": {
+   "en": "Commission des relations du travail",
+   "fr": "Commission des relations du travail"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCRT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccrt"
+  }
+ },
+ {
+  "id": "qccs",
+  "name": {
+   "en": "Superior Court of Quebec",
+   "fr": "Cour supérieure du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "superior_trial",
+  "neutral": [
+   "QCCS"
+  ],
+  "aliases": [
+   "Qc CS",
+   "Que SC",
+   "C.S. Qué.",
+   "Qc Sup Ct",
+   "CS Qc"
+  ],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccs"
+  }
+ },
+ {
+  "id": "qccse",
+  "name": {
+   "en": "Conseil des services essentiels",
+   "fr": "Conseil des services essentiels"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCSE"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccse"
+  }
+ },
+ {
+  "id": "qccsj",
+  "name": {
+   "en": "Commission des services juridiques",
+   "fr": "Commission des services juridiques"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCSJ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccsj"
+  }
+ },
+ {
+  "id": "qccsst",
+  "name": {
+   "en": "Commission de la santé et de la sécurité du travail",
+   "fr": "Commission de la santé et de la sécurité du travail"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCSST"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccsst"
+  }
+ },
+ {
+  "id": "qcct",
+  "name": {
+   "en": "Labour Commissioner"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcct"
+  }
+ },
+ {
+  "id": "qcctq",
+  "name": {
+   "en": "Commission des transports du Québec",
+   "fr": "Commission des transports du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCTQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcctq"
+  }
+ },
+ {
+  "id": "qccvm",
+  "name": {
+   "en": "Commission des valeurs mobilières du Québec",
+   "fr": "Commission des valeurs mobilières du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCCVM"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qccvm"
+  }
+ },
+ {
+  "id": "qcla",
+  "name": {
+   "en": "Labour Arbitration Awards (including Conférence des arbitres)"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCLA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcla"
+  }
+ },
+ {
+  "id": "qcoaciq",
+  "name": {
+   "en": "Comité de discipline de l'organisme d'autoréglementation du courtage immobilier du Québec",
+   "fr": "Comité de discipline de l'organisme d'autoréglementation du courtage immobilier du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOACIQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcoaciq"
+  }
+ },
+ {
+  "id": "qcoagbrn",
+  "name": {
+   "en": "Arbitration - The Guarantee Plan For New Residential Buildings"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOAGBRN"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcoagbrn"
+  }
+ },
+ {
+  "id": "qcoagq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des arpenteurs-géomètres du Québec",
+   "fr": "Conseil de discipline de l'Ordre des arpenteurs-géomètres du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOAGQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcoagq"
+  }
+ },
+ {
+  "id": "qcoapq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des audioprothésistes du Québec",
+   "fr": "Conseil de discipline de l'Ordre des audioprothésistes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOAPQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcoapq"
+  }
+ },
+ {
+  "id": "qcoaq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des acupuncteurs du Québec",
+   "fr": "Conseil de discipline de l'Ordre des acupuncteurs du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOAQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcoaq"
+  }
+ },
+ {
+  "id": "qcoarq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des architectes du Québec",
+   "fr": "Conseil de discipline de l'Ordre des architectes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOARQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcoarq"
+  }
+ },
+ {
+  "id": "qcochq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre professionnel des chimistes du Québec",
+   "fr": "Conseil de discipline de l'Ordre professionnel des chimistes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOCHQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcochq"
+  }
+ },
+ {
+  "id": "qcocq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des chiropraticiens du Québec",
+   "fr": "Conseil de discipline de l'Ordre des chiropraticiens du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOCQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcocq"
+  }
+ },
+ {
+  "id": "qcodlq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre professionnel des denturologistes du Québec",
+   "fr": "Conseil de discipline de l'Ordre professionnel des denturologistes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCODLQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcodlq"
+  }
+ },
+ {
+  "id": "qcodq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des dentistes du Québec",
+   "fr": "Conseil de discipline de l'Ordre des dentistes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCODQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcodq"
+  }
+ },
+ {
+  "id": "qcoeaq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre professionnel des évaluateurs agréés du Québec",
+   "fr": "Conseil de discipline de l'Ordre professionnel des évaluateurs agréés du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOEAQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcoeaq"
+  }
+ },
+ {
+  "id": "qcoeq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des ergothérapeutes du Québec",
+   "fr": "Conseil de discipline de l'Ordre des ergothérapeutes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOEQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcoeq"
+  }
+ },
+ {
+  "id": "qcohdq",
+  "name": {
+   "en": "Ordre des hygiénistes dentaires du Québec",
+   "fr": "Ordre des hygiénistes dentaires du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOHDQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcohdq"
+  }
+ },
+ {
+  "id": "qcoifq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre professionnel des ingénieurs forestiers du Québec",
+   "fr": "Conseil de discipline de l'Ordre professionnel des ingénieurs forestiers du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOIFQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcoifq"
+  }
+ },
+ {
+  "id": "qcolf",
+  "name": {
+   "en": "Office de la langue française",
+   "fr": "Office de la langue française"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOLF"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcolf"
+  }
+ },
+ {
+  "id": "qcooaq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre professionnel des orthophonistes et audiologistes du Québec",
+   "fr": "Conseil de discipline de l'Ordre professionnel des orthophonistes et audiologistes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOOAQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcooaq"
+  }
+ },
+ {
+  "id": "qcooq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des optométristes du Québec",
+   "fr": "Conseil de discipline de l'Ordre des optométristes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOOQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcooq"
+  }
+ },
+ {
+  "id": "qcopgq",
+  "name": {
+   "en": "Ordre professionnel des géologues du Québec",
+   "fr": "Ordre professionnel des géologues du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOPGQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcopgq"
+  }
+ },
+ {
+  "id": "qcopiq",
+  "name": {
+   "en": "Ordre professionnel des inhalothérapeutes du Québec",
+   "fr": "Ordre professionnel des inhalothérapeutes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOPIQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcopiq"
+  }
+ },
+ {
+  "id": "qcopodq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des podiatres du Québec",
+   "fr": "Conseil de discipline de l'Ordre des podiatres du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOPODQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcopodq"
+  }
+ },
+ {
+  "id": "qcoppq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre professionnel de la physiothérapie du Québec",
+   "fr": "Conseil de discipline de l'Ordre professionnel de la physiothérapie du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOPPQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcoppq"
+  }
+ },
+ {
+  "id": "qcopq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des psychologues du Québec",
+   "fr": "Conseil de discipline de l'Ordre des psychologues du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOPQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcopq"
+  }
+ },
+ {
+  "id": "qcopsq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des sexologues du Québec",
+   "fr": "Conseil de discipline de l'Ordre des sexologues du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOPSQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcopsq"
+  }
+ },
+ {
+  "id": "qcotimro",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des technologues en imagerie médicale et en radio-oncologie du Québec",
+   "fr": "Conseil de discipline de l'Ordre des technologues en imagerie médicale et en radio-oncologie du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOTIMRO"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcotimro"
+  }
+ },
+ {
+  "id": "qcotmq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre professionnel des technologistes médicaux du Québec",
+   "fr": "Conseil de discipline de l'Ordre professionnel des technologistes médicaux du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOTMQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcotmq"
+  }
+ },
+ {
+  "id": "qcotpq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des technologues professionnels du Québec",
+   "fr": "Conseil de discipline de l'Ordre des technologues professionnels du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOTPQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcotpq"
+  }
+ },
+ {
+  "id": "qcotstcfq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre professionnel des travailleurs sociaux et des thérapeutes conjugaux et familiaux du Québec",
+   "fr": "Conseil de discipline de l'Ordre professionnel des travailleurs sociaux et des thérapeutes conjugaux et familiaux du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOTSTCFQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcotstcfq"
+  }
+ },
+ {
+  "id": "qcottiaq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre professionnel des traducteurs, terminologues et interprètes agréés du Québec",
+   "fr": "Conseil de discipline de l'Ordre professionnel des traducteurs, terminologues et interprètes agréés du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOTTIAQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcottiaq"
+  }
+ },
+ {
+  "id": "qcouq",
+  "name": {
+   "en": "Conseil de discipline de l'Ordre des urbanistes du Québec",
+   "fr": "Conseil de discipline de l'Ordre des urbanistes du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCOUQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcouq"
+  }
+ },
+ {
+  "id": "qcracj",
+  "name": {
+   "en": "Régie des alcools des courses et des jeux",
+   "fr": "Régie des alcools des courses et des jeux"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCRACJ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcracj"
+  }
+ },
+ {
+  "id": "qcrbq",
+  "name": {
+   "en": "Régie du Bâtiment - licences d'entrepreneur de construction",
+   "fr": "Régie du Bâtiment - licences d'entrepreneur de construction"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCRBQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcrbq"
+  }
+ },
+ {
+  "id": "qcrde",
+  "name": {
+   "en": "Régie de l'énergie",
+   "fr": "Régie de l'énergie"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCRDE"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcrde"
+  }
+ },
+ {
+  "id": "qcrmaaq",
+  "name": {
+   "en": "Régie des marchés agricoles et alimentaires du Québec",
+   "fr": "Régie des marchés agricoles et alimentaires du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCRMAAQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcrmaaq"
+  }
+ },
+ {
+  "id": "qcta",
+  "name": {
+   "en": "Tribunal d'arbitrage (RQ and CARRA)",
+   "fr": "Tribunal d'arbitrage (RQ and CARRA)"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCTA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcta"
+  }
+ },
+ {
+  "id": "qctaa",
+  "name": {
+   "en": "Tribunal d'arbitrage (performing, recording and film artists)",
+   "fr": "Tribunal d'arbitrage (performing, recording and film artists)"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCTAA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qctaa"
+  }
+ },
+ {
+  "id": "qctadp",
+  "name": {
+   "en": "Tribunal administratif de déontologie policière",
+   "fr": "Tribunal administratif de déontologie policière"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCTADP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qctadp"
+  }
+ },
+ {
+  "id": "qctal",
+  "name": {
+   "en": "Tribunal administratif du logement",
+   "fr": "Tribunal administratif du logement"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCTAL"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qctal"
+  }
+ },
+ {
+  "id": "qctaq",
+  "name": {
+   "en": "Administrative Tribunal of Québec",
+   "fr": "Tribunal administratif du Québec"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCTAQ"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qctaq"
+  }
+ },
+ {
+  "id": "qctat",
+  "name": {
+   "en": "Tribunal administratif du travail",
+   "fr": "Tribunal administratif du travail"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCTAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qctat"
+  }
+ },
+ {
+  "id": "qctdp",
+  "name": {
+   "en": "Human Rights Tribunal",
+   "fr": "Tribunal des droits de la personne"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCTDP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qctdp"
+  }
+ },
+ {
+  "id": "qctmf",
+  "name": {
+   "en": "Tribunal administratif des marchés financiers",
+   "fr": "Tribunal administratif des marchés financiers"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCTMF"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qctmf"
+  }
+ },
+ {
+  "id": "qctp",
+  "name": {
+   "en": "Professions Tribunal",
+   "fr": "Tribunal des professions"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "tribunal",
+  "neutral": [
+   "QCTP"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qctp"
+  }
+ },
+ {
+  "id": "qctt",
+  "name": {
+   "en": "Labour Court"
+  },
+  "jurisdiction": "ca-qc",
+  "level": "inferior_trial",
+  "neutral": [
+   "QCTT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qctt"
+  }
+ },
+ {
+  "id": "scc",
+  "name": {
+   "en": "Supreme Court of Canada",
+   "fr": "Cour suprême du Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "apex",
+  "neutral": [
+   "SCC",
+   "CSC"
+  ],
+  "aliases": [
+   "SC Can"
+  ],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "scc"
+  },
+  "canlii_fr": {
+   "jurisdiction": "ca",
+   "database": "csc"
+  },
+  "start": 1875
+ },
+ {
+  "id": "scc-l",
+  "name": {
+   "en": "Supreme Court of Canada - Applications for Leave"
+  },
+  "jurisdiction": "ca",
+  "level": "apex",
+  "neutral": [],
+  "aliases": [
+   "SCC-L",
+   "SCC Leave"
+  ],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "scc-l"
+  },
+  "parent": "scc"
+ },
+ {
+  "id": "sct",
+  "name": {
+   "en": "Specific Claims Tribunal Canada",
+   "fr": "Tribunal des revendications particulières"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "SCT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "sct"
+  }
+ },
+ {
+  "id": "skac",
+  "name": {
+   "en": "Saskatchewan Assessment Commission"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKAC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skac"
+  }
+ },
+ {
+  "id": "skaia",
+  "name": {
+   "en": "Automobile Injury Appeal Commission"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKAIA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skia"
+  }
+ },
+ {
+  "id": "skatmpa",
+  "name": {
+   "en": "Appeal Tribunal under the Medical Profession Act"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKATMPA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skatmpa"
+  }
+ },
+ {
+  "id": "skca",
+  "name": {
+   "en": "Court of Appeal for Saskatchewan",
+   "fr": "Cour d'appel de la Saskatchewan"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "appellate",
+  "neutral": [
+   "SKCA"
+  ],
+  "aliases": [
+   "Sask CA",
+   "SK CA"
+  ],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skca"
+  }
+ },
+ {
+  "id": "skcppdc",
+  "name": {
+   "en": "Saskatchewan College of Pharmacy Professionals"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKCPPDC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skcppdc"
+  }
+ },
+ {
+  "id": "skdc",
+  "name": {
+   "en": "Saskatchewan District Court"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "inferior_trial",
+  "neutral": [],
+  "aliases": [
+   "SKDC",
+   "Sask Dist Ct"
+  ],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skdc"
+  }
+ },
+ {
+  "id": "skfca",
+  "name": {
+   "en": "Saskatchewan Board of Review under the Farmers' Creditors Arrangement Act, 1934"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKFCA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skfca"
+  }
+ },
+ {
+  "id": "skhrc",
+  "name": {
+   "en": "Saskatchewan Human Rights Commission"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKHRC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skhrc"
+  }
+ },
+ {
+  "id": "skhrt",
+  "name": {
+   "en": "Saskatchewan Human Rights Tribunal"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKHRT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skhrt"
+  }
+ },
+ {
+  "id": "skipc",
+  "name": {
+   "en": "Information and Privacy Commissioner"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKIPC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skipc"
+  }
+ },
+ {
+  "id": "skkb",
+  "name": {
+   "en": "Court of King's Bench for Saskatchewan"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "superior_trial",
+  "neutral": [
+   "SKKB"
+  ],
+  "aliases": [
+   "Sask KB",
+   "SK KB"
+  ],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skkb"
+  },
+  "start": 2022,
+  "parent": "skqb"
+ },
+ {
+  "id": "skla",
+  "name": {
+   "en": "Labour Arbitration Awards"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKLA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skla"
+  }
+ },
+ {
+  "id": "sklgb",
+  "name": {
+   "en": "Saskatchewan Local Government Board"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKLGB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "sklgb"
+  }
+ },
+ {
+  "id": "sklrb",
+  "name": {
+   "en": "Saskatchewan Labour Relations Board"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKLRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "sklrb"
+  }
+ },
+ {
+  "id": "sklss",
+  "name": {
+   "en": "Law Society of Saskatchewan"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKLSS"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "sklss"
+  }
+ },
+ {
+  "id": "skmb",
+  "name": {
+   "en": "Saskatchewan Municipal Board"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKMB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skmb"
+  }
+ },
+ {
+  "id": "skmbr",
+  "name": {
+   "en": "Saskatchewan Municipal Boards of Revision"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKMBR"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skmbr"
+  }
+ },
+ {
+  "id": "skmt",
+  "name": {
+   "en": "Saskatchewan Master of Titles"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKMT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skmt"
+  }
+ },
+ {
+  "id": "skort",
+  "name": {
+   "en": "Saskatchewan Office of Residential Tenancies"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKORT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skort"
+  }
+ },
+ {
+  "id": "skpc",
+  "name": {
+   "en": "Provincial Court of Saskatchewan"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "inferior_trial",
+  "neutral": [
+   "SKPC"
+  ],
+  "aliases": [
+   "Sask Prov Ct"
+  ],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skpc"
+  }
+ },
+ {
+  "id": "skpmb",
+  "name": {
+   "en": "Saskatchewan Provincial Mediation Board"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKPMB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skpmb"
+  }
+ },
+ {
+  "id": "skqb",
+  "name": {
+   "en": "Court of Queen's Bench for Saskatchewan"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "superior_trial",
+  "neutral": [
+   "SKQB"
+  ],
+  "aliases": [
+   "Sask QB",
+   "SK QB"
+  ],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skqb"
+  },
+  "end": 2022
+ },
+ {
+  "id": "skrec",
+  "name": {
+   "en": "Saskatchewan Real Estate Commission"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKREC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skrec"
+  }
+ },
+ {
+  "id": "sksec",
+  "name": {
+   "en": "Financial and Consumer Affairs Authority of Saskatchewan"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKSEC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "sksec"
+  }
+ },
+ {
+  "id": "sksu",
+  "name": {
+   "en": "Saskatchewan Surrogate Court"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "inferior_trial",
+  "neutral": [],
+  "aliases": [
+   "SKSU",
+   "Sask Sur Ct"
+  ],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "sksu"
+  }
+ },
+ {
+  "id": "skufc",
+  "name": {
+   "en": "Saskatchewan Unified Family Court"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "superior_trial",
+  "neutral": [
+   "SKUFC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skufc"
+  }
+ },
+ {
+  "id": "skwcbat",
+  "name": {
+   "en": "Saskatchewan Workers’ Compensation Board Appeal Tribunal"
+  },
+  "jurisdiction": "ca-sk",
+  "level": "tribunal",
+  "neutral": [
+   "SKWCBAT"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "sk",
+   "database": "skwcbat"
+  }
+ },
+ {
+  "id": "sopf",
+  "name": {
+   "en": "Ship-source Oil Pollution Fund"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "SOPF"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "sopf"
+  }
+ },
+ {
+  "id": "sst",
+  "name": {
+   "en": "Social Security Tribunal of Canada",
+   "fr": "Tribunal de la sécurité sociale"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "SST"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "sst"
+  }
+ },
+ {
+  "id": "tatc",
+  "name": {
+   "en": "Transportation Appeal Tribunal of Canada",
+   "fr": "Tribunal d'appel des transports du Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "TATC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "tatc"
+  }
+ },
+ {
+  "id": "tcc",
+  "name": {
+   "en": "Tax Court of Canada",
+   "fr": "Cour canadienne de l'impôt"
+  },
+  "jurisdiction": "ca",
+  "level": "superior_trial",
+  "neutral": [
+   "TCC",
+   "CCI"
+  ],
+  "aliases": [
+   "Tax Ct Can"
+  ],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "tcc"
+  },
+  "canlii_fr": {
+   "jurisdiction": "ca",
+   "database": "cci"
+  }
+ },
+ {
+  "id": "tmob",
+  "name": {
+   "en": "Trademarks Opposition Board"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "TMOB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "tmob"
+  }
+ },
+ {
+  "id": "vrab",
+  "name": {
+   "en": "Veterans Review and Appeal Board of Canada"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "VRAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "vrab"
+  }
+ },
+ {
+  "id": "yjcn",
+  "name": {
+   "en": "Youth Justice Court of Nunavut"
+  },
+  "jurisdiction": "ca-nu",
+  "level": "inferior_trial",
+  "neutral": [
+   "YJCN"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "yjcn"
+  }
+ },
+ {
+  "id": "ykca",
+  "name": {
+   "en": "Court of Appeal of Yukon",
+   "fr": "Cour d'appel du Yukon"
+  },
+  "jurisdiction": "ca-yt",
+  "level": "appellate",
+  "neutral": [
+   "YKCA"
+  ],
+  "aliases": [
+   "Yukon CA",
+   "YK CA"
+  ],
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ykca"
+  }
+ },
+ {
+  "id": "ykhrc",
+  "name": {
+   "en": "Yukon Human Rights Commission (Board of Adjudication)"
+  },
+  "jurisdiction": "ca-yt",
+  "level": "tribunal",
+  "neutral": [
+   "YKHRC"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ykhrc"
+  }
+ },
+ {
+  "id": "yksc",
+  "name": {
+   "en": "Supreme Court of Yukon"
+  },
+  "jurisdiction": "ca-yt",
+  "level": "superior_trial",
+  "neutral": [
+   "YKSC"
+  ],
+  "aliases": [
+   "Yukon SC",
+   "YK SC"
+  ],
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "yksc"
+  }
+ },
+ {
+  "id": "yksm",
+  "name": {
+   "en": "Small Claims Court of the Yukon"
+  },
+  "jurisdiction": "ca-yt",
+  "level": "inferior_trial",
+  "neutral": [
+   "YKSM"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "yksm"
+  }
+ },
+ {
+  "id": "yktc",
+  "name": {
+   "en": "Territorial Court of Yukon"
+  },
+  "jurisdiction": "ca-yt",
+  "level": "inferior_trial",
+  "neutral": [
+   "YKTC"
+  ],
+  "aliases": [
+   "Yukon Terr Ct",
+   "YK TC"
+  ],
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "yktc"
+  }
+ },
+ {
+  "id": "ytla",
+  "name": {
+   "en": "Labour Arbitration Awards"
+  },
+  "jurisdiction": "ca-yt",
+  "level": "tribunal",
+  "neutral": [
+   "YTLA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ytla"
+  }
+ },
+ {
+  "id": "ytpslrb",
+  "name": {
+   "en": "Yukon Public Service Labour Relations Board"
+  },
+  "jurisdiction": "ca-yt",
+  "level": "tribunal",
+  "neutral": [
+   "YTPSLRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ytpslrb"
+  }
+ },
+ {
+  "id": "ytrto",
+  "name": {
+   "en": "Yukon Residential Tenancies Office"
+  },
+  "jurisdiction": "ca-yt",
+  "level": "tribunal",
+  "neutral": [
+   "YTRTO"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ytrto"
+  }
+ },
+ {
+  "id": "yttlrb",
+  "name": {
+   "en": "Yukon Teachers Labour Relations Board"
+  },
+  "jurisdiction": "ca-yt",
+  "level": "tribunal",
+  "neutral": [
+   "YTTLRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "yttlrb"
+  }
+ },
+ {
+  "id": "capprt",
+  "name": {
+   "en": "Canadian Artists and Producers Professional Relations Tribunal",
+   "fr": "Tribunal canadien des relations professionnelles artistes-producteurs"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "neutral": [
+   "CAPPRT LD",
+   "TCRPAP LD"
+  ]
+ },
+ {
+  "id": "rad",
+  "name": {
+   "en": "Refugee Appeal Division (IRB)",
+   "fr": "Section d'appel des réfugiés (CISR)"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "aliases": [
+   "RAD"
+  ],
+  "parent": "irb"
+ },
+ {
+  "id": "rpd",
+  "name": {
+   "en": "Refugee Protection Division (IRB)",
+   "fr": "Section de la protection des réfugiés (CISR)"
+  },
+  "jurisdiction": "ca",
+  "level": "tribunal",
+  "aliases": [
+   "RPD",
+   "RLLR"
+  ],
+  "parent": "irb"
+ },
+ {
+  "id": "ukhl",
+  "name": {
+   "en": "House of Lords"
+  },
+  "jurisdiction": "uk",
+  "level": "apex",
+  "neutral": [
+   "UKHL"
+  ],
+  "aliases": [
+   "HL"
+  ],
+  "end": 2009
+ },
+ {
+  "id": "uksc",
+  "name": {
+   "en": "Supreme Court of the United Kingdom"
+  },
+  "jurisdiction": "uk",
+  "level": "apex",
+  "neutral": [
+   "UKSC"
+  ],
+  "start": 2009,
+  "parent": "ukhl"
+ },
+ {
+  "id": "ukpc",
+  "name": {
+   "en": "Judicial Committee of the Privy Council",
+   "fr": "Comité judiciaire du Conseil privé"
+  },
+  "jurisdiction": "uk",
+  "level": "apex",
+  "neutral": [
+   "UKPC"
+  ],
+  "aliases": [
+   "PC",
+   "JCPC",
+   "UKJCPC",
+   "UK JCPC"
+  ],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "ukjcpc"
+  }
+ },
+ {
+  "id": "ewca-civ",
+  "name": {
+   "en": "Court of Appeal of England and Wales (Civil Division)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "appellate",
+  "neutral": [
+   "EWCA Civ"
+  ],
+  "start": 2001
+ },
+ {
+  "id": "ewca-crim",
+  "name": {
+   "en": "Court of Appeal of England and Wales (Criminal Division)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "appellate",
+  "neutral": [
+   "EWCA Crim"
+  ],
+  "start": 2001
+ },
+ {
+  "id": "ewhc",
+  "name": {
+   "en": "High Court of Justice of England and Wales"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "neutral": [
+   "EWHC"
+  ],
+  "start": 2001
+ },
+ {
+  "id": "ewhc-admin",
+  "name": {
+   "en": "High Court of Justice (Administrative Court)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "aliases": [
+   "EWHC (Admin)",
+   "EWHC Admin"
+  ],
+  "parent": "ewhc"
+ },
+ {
+  "id": "ewhc-admlty",
+  "name": {
+   "en": "High Court of Justice (Admiralty Court)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "aliases": [
+   "EWHC (Admlty)",
+   "EWHC Admlty"
+  ],
+  "parent": "ewhc"
+ },
+ {
+  "id": "ewhc-ch",
+  "name": {
+   "en": "High Court of Justice (Chancery Division)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "aliases": [
+   "EWHC (Ch)",
+   "EWHC Ch"
+  ],
+  "parent": "ewhc"
+ },
+ {
+  "id": "ewhc-comm",
+  "name": {
+   "en": "High Court of Justice (Commercial Court)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "aliases": [
+   "EWHC (Comm)",
+   "EWHC Comm"
+  ],
+  "parent": "ewhc"
+ },
+ {
+  "id": "ewhc-fam",
+  "name": {
+   "en": "High Court of Justice (Family Division)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "aliases": [
+   "EWHC (Fam)",
+   "EWHC Fam"
+  ],
+  "parent": "ewhc"
+ },
+ {
+  "id": "ewhc-kb",
+  "name": {
+   "en": "High Court of Justice (King's Bench Division)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "aliases": [
+   "EWHC (KB)",
+   "EWHC KB"
+  ],
+  "start": 2022,
+  "parent": "ewhc"
+ },
+ {
+  "id": "ewhc-qb",
+  "name": {
+   "en": "High Court of Justice (Queen's Bench Division)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "aliases": [
+   "EWHC (QB)",
+   "EWHC QB"
+  ],
+  "end": 2022,
+  "parent": "ewhc"
+ },
+ {
+  "id": "ewhc-tcc",
+  "name": {
+   "en": "High Court of Justice (Technology and Construction Court)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "aliases": [
+   "EWHC (TCC)",
+   "EWHC TCC"
+  ],
+  "parent": "ewhc"
+ },
+ {
+  "id": "ewhc-pat",
+  "name": {
+   "en": "High Court of Justice (Patents Court)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "aliases": [
+   "EWHC (Pat)",
+   "EWHC Pat"
+  ],
+  "parent": "ewhc"
+ },
+ {
+  "id": "ewhc-ipec",
+  "name": {
+   "en": "High Court of Justice (Intellectual Property Enterprise Court)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "aliases": [
+   "EWHC (IPEC)",
+   "EWHC IPEC"
+  ],
+  "parent": "ewhc"
+ },
+ {
+  "id": "ewhc-scco",
+  "name": {
+   "en": "High Court of Justice (Senior Courts Costs Office)"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "aliases": [
+   "EWHC (SCCO)",
+   "EWHC SCCO"
+  ],
+  "parent": "ewhc"
+ },
+ {
+  "id": "ewfc",
+  "name": {
+   "en": "Family Court of England and Wales"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "inferior_trial",
+  "neutral": [
+   "EWFC"
+  ],
+  "start": 2014
+ },
+ {
+  "id": "ewcop",
+  "name": {
+   "en": "Court of Protection"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "neutral": [
+   "EWCOP"
+  ]
+ },
+ {
+  "id": "ewcc",
+  "name": {
+   "en": "County Court of England and Wales"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "inferior_trial",
+  "neutral": [
+   "EWCC"
+  ]
+ },
+ {
+  "id": "ewcr",
+  "name": {
+   "en": "Crown Court of England and Wales"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "superior_trial",
+  "neutral": [
+   "EWCR"
+  ]
+ },
+ {
+  "id": "ukut",
+  "name": {
+   "en": "Upper Tribunal"
+  },
+  "jurisdiction": "uk",
+  "level": "tribunal",
+  "neutral": [
+   "UKUT"
+  ],
+  "start": 2008
+ },
+ {
+  "id": "ukut-aac",
+  "name": {
+   "en": "Upper Tribunal (Administrative Appeals Chamber)"
+  },
+  "jurisdiction": "uk",
+  "level": "tribunal",
+  "aliases": [
+   "UKUT (AAC)",
+   "UKUT AAC"
+  ],
+  "parent": "ukut"
+ },
+ {
+  "id": "ukut-iac",
+  "name": {
+   "en": "Upper Tribunal (Immigration and Asylum Chamber)"
+  },
+  "jurisdiction": "uk",
+  "level": "tribunal",
+  "aliases": [
+   "UKUT (IAC)",
+   "UKUT IAC"
+  ],
+  "parent": "ukut"
+ },
+ {
+  "id": "ukut-lc",
+  "name": {
+   "en": "Upper Tribunal (Lands Chamber)"
+  },
+  "jurisdiction": "uk",
+  "level": "tribunal",
+  "aliases": [
+   "UKUT (LC)",
+   "UKUT LC"
+  ],
+  "parent": "ukut"
+ },
+ {
+  "id": "ukut-tcc",
+  "name": {
+   "en": "Upper Tribunal (Tax and Chancery Chamber)"
+  },
+  "jurisdiction": "uk",
+  "level": "tribunal",
+  "aliases": [
+   "UKUT (TCC)",
+   "UKUT TCC"
+  ],
+  "parent": "ukut"
+ },
+ {
+  "id": "ukftt",
+  "name": {
+   "en": "First-tier Tribunal"
+  },
+  "jurisdiction": "uk",
+  "level": "tribunal",
+  "neutral": [
+   "UKFTT"
+  ],
+  "start": 2008
+ },
+ {
+  "id": "ukftt-grc",
+  "name": {
+   "en": "First-tier Tribunal (General Regulatory Chamber)"
+  },
+  "jurisdiction": "uk",
+  "level": "tribunal",
+  "aliases": [
+   "UKFTT (GRC)",
+   "UKFTT GRC"
+  ],
+  "parent": "ukftt"
+ },
+ {
+  "id": "ukftt-tc",
+  "name": {
+   "en": "First-tier Tribunal (Tax Chamber)"
+  },
+  "jurisdiction": "uk",
+  "level": "tribunal",
+  "aliases": [
+   "UKFTT (TC)",
+   "UKFTT TC"
+  ],
+  "parent": "ukftt"
+ },
+ {
+  "id": "eat",
+  "name": {
+   "en": "Employment Appeal Tribunal"
+  },
+  "jurisdiction": "uk",
+  "level": "tribunal",
+  "neutral": [
+   "EAT",
+   "UKEAT"
+  ]
+ },
+ {
+  "id": "csih",
+  "name": {
+   "en": "Court of Session (Inner House)"
+  },
+  "jurisdiction": "uk-sc",
+  "level": "appellate",
+  "neutral": [
+   "CSIH"
+  ]
+ },
+ {
+  "id": "csoh",
+  "name": {
+   "en": "Court of Session (Outer House)"
+  },
+  "jurisdiction": "uk-sc",
+  "level": "superior_trial",
+  "neutral": [
+   "CSOH"
+  ]
+ },
+ {
+  "id": "hcjac",
+  "name": {
+   "en": "High Court of Justiciary (Appeal Court)"
+  },
+  "jurisdiction": "uk-sc",
+  "level": "appellate",
+  "neutral": [
+   "HCJAC"
+  ]
+ },
+ {
+  "id": "hcj",
+  "name": {
+   "en": "High Court of Justiciary"
+  },
+  "jurisdiction": "uk-sc",
+  "level": "superior_trial",
+  "neutral": [
+   "HCJ"
+  ]
+ },
+ {
+  "id": "nica",
+  "name": {
+   "en": "Court of Appeal in Northern Ireland"
+  },
+  "jurisdiction": "uk-ni",
+  "level": "appellate",
+  "neutral": [
+   "NICA"
+  ]
+ },
+ {
+  "id": "niqb",
+  "name": {
+   "en": "High Court of Justice in Northern Ireland (Queen's Bench Division)"
+  },
+  "jurisdiction": "uk-ni",
+  "level": "superior_trial",
+  "neutral": [
+   "NIQB"
+  ],
+  "end": 2022
+ },
+ {
+  "id": "nikb",
+  "name": {
+   "en": "High Court of Justice in Northern Ireland (King's Bench Division)"
+  },
+  "jurisdiction": "uk-ni",
+  "level": "superior_trial",
+  "neutral": [
+   "NIKB"
+  ],
+  "start": 2022
+ },
+ {
+  "id": "nich",
+  "name": {
+   "en": "High Court of Justice in Northern Ireland (Chancery Division)"
+  },
+  "jurisdiction": "uk-ni",
+  "level": "superior_trial",
+  "neutral": [
+   "NICh"
+  ]
+ },
+ {
+  "id": "nifam",
+  "name": {
+   "en": "High Court of Justice in Northern Ireland (Family Division)"
+  },
+  "jurisdiction": "uk-ni",
+  "level": "superior_trial",
+  "neutral": [
+   "NIFam"
+  ]
+ },
+ {
+  "id": "hca",
+  "name": {
+   "en": "High Court of Australia"
+  },
+  "jurisdiction": "au",
+  "level": "apex",
+  "neutral": [
+   "HCA"
+  ],
+  "start": 1903
+ },
+ {
+  "id": "fca-au",
+  "name": {
+   "en": "Federal Court of Australia"
+  },
+  "jurisdiction": "au",
+  "level": "superior_trial",
+  "neutral": [
+   "FCA"
+  ],
+  "start": 1977
+ },
+ {
+  "id": "fcafc",
+  "name": {
+   "en": "Federal Court of Australia (Full Court)"
+  },
+  "jurisdiction": "au",
+  "level": "appellate",
+  "neutral": [
+   "FCAFC"
+  ],
+  "parent": "fca-au"
+ },
+ {
+  "id": "famca",
+  "name": {
+   "en": "Family Court of Australia"
+  },
+  "jurisdiction": "au",
+  "level": "superior_trial",
+  "neutral": [
+   "FamCA"
+  ],
+  "end": 2021
+ },
+ {
+  "id": "fcca",
+  "name": {
+   "en": "Federal Circuit Court of Australia"
+  },
+  "jurisdiction": "au",
+  "level": "inferior_trial",
+  "neutral": [
+   "FCCA"
+  ],
+  "start": 2013,
+  "end": 2021
+ },
+ {
+  "id": "aata",
+  "name": {
+   "en": "Administrative Appeals Tribunal"
+  },
+  "jurisdiction": "au",
+  "level": "tribunal",
+  "neutral": [
+   "AATA"
+  ],
+  "end": 2024
+ },
+ {
+  "id": "nswca",
+  "name": {
+   "en": "New South Wales Court of Appeal"
+  },
+  "jurisdiction": "au-nsw",
+  "level": "appellate",
+  "neutral": [
+   "NSWCA"
+  ]
+ },
+ {
+  "id": "nswcca",
+  "name": {
+   "en": "New South Wales Court of Criminal Appeal"
+  },
+  "jurisdiction": "au-nsw",
+  "level": "appellate",
+  "neutral": [
+   "NSWCCA"
+  ]
+ },
+ {
+  "id": "nswsc",
+  "name": {
+   "en": "Supreme Court of New South Wales"
+  },
+  "jurisdiction": "au-nsw",
+  "level": "superior_trial",
+  "neutral": [
+   "NSWSC"
+  ]
+ },
+ {
+  "id": "vsca",
+  "name": {
+   "en": "Supreme Court of Victoria (Court of Appeal)"
+  },
+  "jurisdiction": "au-vic",
+  "level": "appellate",
+  "neutral": [
+   "VSCA"
+  ]
+ },
+ {
+  "id": "vsc",
+  "name": {
+   "en": "Supreme Court of Victoria"
+  },
+  "jurisdiction": "au-vic",
+  "level": "superior_trial",
+  "neutral": [
+   "VSC"
+  ]
+ },
+ {
+  "id": "qca",
+  "name": {
+   "en": "Queensland Court of Appeal"
+  },
+  "jurisdiction": "au-qld",
+  "level": "appellate",
+  "neutral": [
+   "QCA"
+  ]
+ },
+ {
+  "id": "qsc",
+  "name": {
+   "en": "Supreme Court of Queensland"
+  },
+  "jurisdiction": "au-qld",
+  "level": "superior_trial",
+  "neutral": [
+   "QSC"
+  ]
+ },
+ {
+  "id": "wasca",
+  "name": {
+   "en": "Supreme Court of Western Australia (Court of Appeal)"
+  },
+  "jurisdiction": "au-wa",
+  "level": "appellate",
+  "neutral": [
+   "WASCA"
+  ]
+ },
+ {
+  "id": "wasc",
+  "name": {
+   "en": "Supreme Court of Western Australia"
+  },
+  "jurisdiction": "au-wa",
+  "level": "superior_trial",
+  "neutral": [
+   "WASC"
+  ]
+ },
+ {
+  "id": "sasca",
+  "name": {
+   "en": "Supreme Court of South Australia (Court of Appeal)"
+  },
+  "jurisdiction": "au-sa",
+  "level": "appellate",
+  "neutral": [
+   "SASCA"
+  ],
+  "start": 2021
+ },
+ {
+  "id": "sasc",
+  "name": {
+   "en": "Supreme Court of South Australia"
+  },
+  "jurisdiction": "au-sa",
+  "level": "superior_trial",
+  "neutral": [
+   "SASC"
+  ]
+ },
+ {
+  "id": "tassc",
+  "name": {
+   "en": "Supreme Court of Tasmania"
+  },
+  "jurisdiction": "au-tas",
+  "level": "superior_trial",
+  "neutral": [
+   "TASSC"
+  ]
+ },
+ {
+  "id": "tascca",
+  "name": {
+   "en": "Court of Criminal Appeal of Tasmania"
+  },
+  "jurisdiction": "au-tas",
+  "level": "appellate",
+  "neutral": [
+   "TASCCA"
+  ]
+ },
+ {
+  "id": "actca",
+  "name": {
+   "en": "Court of Appeal of the Australian Capital Territory"
+  },
+  "jurisdiction": "au-act",
+  "level": "appellate",
+  "neutral": [
+   "ACTCA"
+  ]
+ },
+ {
+  "id": "actsc",
+  "name": {
+   "en": "Supreme Court of the Australian Capital Territory"
+  },
+  "jurisdiction": "au-act",
+  "level": "superior_trial",
+  "neutral": [
+   "ACTSC"
+  ]
+ },
+ {
+  "id": "ntca-au",
+  "name": {
+   "en": "Court of Appeal of the Northern Territory"
+  },
+  "jurisdiction": "au-nt",
+  "level": "appellate",
+  "neutral": [
+   "NTCA"
+  ]
+ },
+ {
+  "id": "ntsc-au",
+  "name": {
+   "en": "Supreme Court of the Northern Territory"
+  },
+  "jurisdiction": "au-nt",
+  "level": "superior_trial",
+  "neutral": [
+   "NTSC"
+  ]
+ },
+ {
+  "id": "nzsc",
+  "name": {
+   "en": "Supreme Court of New Zealand"
+  },
+  "jurisdiction": "nz",
+  "level": "apex",
+  "neutral": [
+   "NZSC"
+  ],
+  "start": 2004
+ },
+ {
+  "id": "nzca",
+  "name": {
+   "en": "Court of Appeal of New Zealand"
+  },
+  "jurisdiction": "nz",
+  "level": "appellate",
+  "neutral": [
+   "NZCA"
+  ]
+ },
+ {
+  "id": "nzhc",
+  "name": {
+   "en": "High Court of New Zealand"
+  },
+  "jurisdiction": "nz",
+  "level": "superior_trial",
+  "neutral": [
+   "NZHC"
+  ]
+ },
+ {
+  "id": "nzdc",
+  "name": {
+   "en": "District Court of New Zealand"
+  },
+  "jurisdiction": "nz",
+  "level": "inferior_trial",
+  "neutral": [
+   "NZDC"
+  ]
+ },
+ {
+  "id": "nzfc",
+  "name": {
+   "en": "Family Court of New Zealand"
+  },
+  "jurisdiction": "nz",
+  "level": "inferior_trial",
+  "neutral": [
+   "NZFC"
+  ]
+ },
+ {
+  "id": "icj",
+  "name": {
+   "en": "International Court of Justice",
+   "fr": "Cour internationale de Justice"
+  },
+  "jurisdiction": "int",
+  "level": "apex",
+  "aliases": [
+   "ICJ"
+  ]
+ },
+ {
+  "id": "echr",
+  "name": {
+   "en": "European Court of Human Rights",
+   "fr": "Cour européenne des droits de l'homme"
+  },
+  "jurisdiction": "int",
+  "level": "apex",
+  "neutral": [
+   "ECHR"
+  ],
+  "aliases": [
+   "ECtHR"
+  ]
+ }
+]

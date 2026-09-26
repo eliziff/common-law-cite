@@ -6,7 +6,7 @@ edition.workspace = true
 license.workspace = true
 repository.workspace = true
 rust-version.workspace = true
-include = ["src/**", "data/**", "Cargo.toml"]
+include = ["src/**", "data/**", "Cargo.toml", "LICENSE", "NOTICE"]
 
 [dependencies]
 fancy-regex.workspace = true

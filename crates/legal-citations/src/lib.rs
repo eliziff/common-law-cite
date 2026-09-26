@@ -20,6 +20,7 @@ pub mod annotate;
 pub mod api;
 pub mod classify;
 pub mod clean;
+pub mod cues;
 pub mod excerpt;
 pub mod find;
 pub mod format;
@@ -83,6 +84,11 @@ pub struct NoteRange {
     pub number: u32,
     pub start: usize,
     pub end: usize,
+    /// Numbering sequence the note belongs to. Documents that restart note
+    /// numbering (per chapter, per part) repeat numbers across sequences; a
+    /// reference prefers a note in its own sequence.
+    #[serde(default)]
+    pub sequence: u32,
 }
 
 /// Find, classify and (optionally) resolve every citation in `text`.

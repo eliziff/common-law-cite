@@ -1,0 +1,154 @@
+{
+ "source": {
+  "repo": "legal-pinpointer",
+  "path": "canlii-legislation.js",
+  "table": "SERIES, SERIES_JURISDICTIONS",
+  "commit": "39d85cfcd5cfd24497ba85f0654f0fae20cb44e2",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "series",
+ "entries": [
+  {
+   "key": "rsc",
+   "canlii_jurisdiction": "ca"
+  },
+  {
+   "key": "sc",
+   "canlii_jurisdiction": "ca"
+  },
+  {
+   "key": "rso",
+   "canlii_jurisdiction": "on"
+  },
+  {
+   "key": "so",
+   "canlii_jurisdiction": "on"
+  },
+  {
+   "key": "rsbc",
+   "canlii_jurisdiction": "bc"
+  },
+  {
+   "key": "sbc",
+   "canlii_jurisdiction": "bc"
+  },
+  {
+   "key": "rsa",
+   "canlii_jurisdiction": "ab"
+  },
+  {
+   "key": "sa",
+   "canlii_jurisdiction": "ab"
+  },
+  {
+   "key": "rss",
+   "canlii_jurisdiction": "sk"
+  },
+  {
+   "key": "ss",
+   "canlii_jurisdiction": "sk"
+  },
+  {
+   "key": "rsm",
+   "canlii_jurisdiction": "mb"
+  },
+  {
+   "key": "sm",
+   "canlii_jurisdiction": "mb"
+  },
+  {
+   "key": "rsnb",
+   "canlii_jurisdiction": "nb"
+  },
+  {
+   "key": "snb",
+   "canlii_jurisdiction": "nb"
+  },
+  {
+   "key": "rsns",
+   "canlii_jurisdiction": "ns"
+  },
+  {
+   "key": "sns",
+   "canlii_jurisdiction": "ns"
+  },
+  {
+   "key": "rsnl",
+   "canlii_jurisdiction": "nl"
+  },
+  {
+   "key": "snl",
+   "canlii_jurisdiction": "nl"
+  },
+  {
+   "key": "rspei",
+   "canlii_jurisdiction": "pe"
+  },
+  {
+   "key": "spei",
+   "canlii_jurisdiction": "pe"
+  },
+  {
+   "key": "rsnwt",
+   "canlii_jurisdiction": "nt"
+  },
+  {
+   "key": "snwt",
+   "canlii_jurisdiction": "nt"
+  },
+  {
+   "key": "rsy",
+   "canlii_jurisdiction": "yk"
+  },
+  {
+   "key": "sy",
+   "canlii_jurisdiction": "yk"
+  },
+  {
+   "key": "cqlr",
+   "canlii_jurisdiction": "qc"
+  },
+  {
+   "key": "rlrq",
+   "canlii_jurisdiction": "qc"
+  },
+  {
+   "key": "ccsm",
+   "canlii_jurisdiction": "mb"
+  },
+  {
+   "key": "cplm",
+   "canlii_jurisdiction": "mb"
+  },
+  {
+   "key": "lrc",
+   "canlii_jurisdiction": "ca"
+  },
+  {
+   "key": "lc",
+   "canlii_jurisdiction": "ca"
+  },
+  {
+   "key": "lro",
+   "canlii_jurisdiction": "on"
+  },
+  {
+   "key": "lo",
+   "canlii_jurisdiction": "on"
+  },
+  {
+   "key": "lrm"
+  },
+  {
+   "key": "lm"
+  },
+  {
+   "key": "rsq",
+   "canlii_jurisdiction": "qc"
+  },
+  {
+   "key": "lq",
+   "canlii_jurisdiction": "qc"
+  }
+ ]
+}

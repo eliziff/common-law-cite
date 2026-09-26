@@ -1,0 +1,2425 @@
+{
+ "source": {
+  "repo": "legal-citations",
+  "path": "crates/legal-grammar/data/grammar-corpus.json",
+  "table": "defs.us_journals",
+  "commit": "e40ceccfacdc9fb8bec6f11cd0b56c50b8a02466",
+  "worktree_modified": true,
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "journal",
+ "entries": [
+  {
+   "key": "Nat'l Lawyers Guild, Civil Rights Litigation and Attorney Fees Annual Handbook"
+  },
+  {
+   "key": "Fordham Intell. Prop. Media & Ent. L. J."
+  },
+  {
+   "key": "N. Y. L. Sch. J. Int'l & Comp. L."
+  },
+  {
+   "key": "Wash. & Lee J. C. R. & Soc. Just."
+  },
+  {
+   "key": "Pub. Ent. Advert. & Allied Fields L. Q."
+  },
+  {
+   "key": "U. Md. L. J. Race Religion Gender & Class"
+  },
+  {
+   "key": "Hastings W. -Nw. J. Envtl. L. & Pol'y"
+  },
+  {
+   "key": "N. Y. U. Ann. Inst. On Fed. Tax'n."
+  },
+  {
+   "key": "N. Y. St. B. A. Antitrust L. Symp."
+  },
+  {
+   "key": "Nat'l Rep. Legal Ethics (Univ. Pub. Am. )"
+  },
+  {
+   "key": "New Eng. J. On Crim. & Civ. Confinement"
+  },
+  {
+   "key": "Loy. L. A. Int'l & Comp. L. Rev."
+  },
+  {
+   "key": "St. John's J. C. R. & Econ. Dev."
+  },
+  {
+   "key": "Am. U. J. Gender Soc. Pol'y & L."
+  },
+  {
+   "key": "T. M. Cooley J. Prac. & Clinical L."
+  },
+  {
+   "key": "Temp. Pol. & Civ. Rts. L. Rev."
+  },
+  {
+   "key": "Tol. J. Great Lakes, L. Sci. & Pol'y"
+  },
+  {
+   "key": "Wash. U. J. Urb. & Contemp. L."
+  },
+  {
+   "key": "Wash. & Lee Race & Ethnic Anc. L. J."
+  },
+  {
+   "key": "Annals Am. Acad. Pol. & Soc. Sci."
+  },
+  {
+   "key": "J. Affordable Housing & Community Dev. L."
+  },
+  {
+   "key": "J. Energy Nat. Resources & Envtl. L."
+  },
+  {
+   "key": "N. C. J. Int'l L. & Com. Reg."
+  },
+  {
+   "key": "S. Cal. Rev. L. & Soc. Just."
+  },
+  {
+   "key": "Depaul-LCA J. Art & Ent. L. & Pol'y"
+  },
+  {
+   "key": "N. Y. U. J. Legis. & Pub. Pol'y"
+  },
+  {
+   "key": "Geo. Wash. J. Int'l L. & Econ."
+  },
+  {
+   "key": "J. Marshall J. Computer & Info. L."
+  },
+  {
+   "key": "N. Y. U. Rev. L. & Soc. Change"
+  },
+  {
+   "key": "Santa Clara Computer & High Tech. L. J."
+  },
+  {
+   "key": "Fla. St. J. Transnat'l L. & Pol'y"
+  },
+  {
+   "key": "Inst. on Priv. Inv. & Inv. Abroad"
+  },
+  {
+   "key": "Mich. Telecomm. & Tech. L. Rev."
+  },
+  {
+   "key": "Wash. U. Glob. Stud. L. Rev."
+  },
+  {
+   "key": "Colo. J. Int'l Envtl. L. & Pol'y"
+  },
+  {
+   "key": "Laws. Man. on Prof. Conduct (ABA/BNA)"
+  },
+  {
+   "key": "U. Pa. J. Lab. & Emp. L."
+  },
+  {
+   "key": "N. Y. L. Sch. J. Hum. Rts."
+  },
+  {
+   "key": "N. Y. U. Ann. Surv. Am. L."
+  },
+  {
+   "key": "N. Y. U. J. Int'l L. & Pol."
+  },
+  {
+   "key": "Notre Dame J. L. Ethics & Pub. Pol'y"
+  },
+  {
+   "key": "Temp. Pol. & C. R. L. Rev."
+  },
+  {
+   "key": "Wm. & Mary Envtl. L. Pol'y Rev."
+  },
+  {
+   "key": "Berkeley J. Afr. -Am. L. & Pol'y"
+  },
+  {
+   "key": "Duke J. Const. L. & Pub. Pol'y"
+  },
+  {
+   "key": "Inst. on Plan. Zoning & Eminent Domain"
+  },
+  {
+   "key": "New Eng. Int'l & Comp. L. Ann."
+  },
+  {
+   "key": "U. Balt. Intell. Prop. L. J."
+  },
+  {
+   "key": "U. Miami Int'l & Comp. L. Rev."
+  },
+  {
+   "key": "B. U. J. Sci. & Tech. L."
+  },
+  {
+   "key": "Colum. Sci. & Tech. L. Rev."
+  },
+  {
+   "key": "Harv. C. R. -C. L. L. Rev."
+  },
+  {
+   "key": "Harv. J. on Racial & Ethnic Just."
+  },
+  {
+   "key": "B. C. Int'l & Comp. L. Rev."
+  },
+  {
+   "key": "Real Prop. Tr. & Est. L. J."
+  },
+  {
+   "key": "Temp. Envtl. L. & Tech. J."
+  },
+  {
+   "key": "Tex. F. on C. L. & C. R."
+  },
+  {
+   "key": "U. Ill. J. L. Tech. & Pol'y"
+  },
+  {
+   "key": "Yale Hum. Rts. & Dev. L. J."
+  },
+  {
+   "key": "B. C. Envtl. Aff. L. Rev."
+  },
+  {
+   "key": "Conv. & Prop. Law. (n. s. )"
+  },
+  {
+   "key": "Empl. Testing (Univ. Pub. Am. )"
+  },
+  {
+   "key": "J. Nat. Resources & Envtl. L."
+  },
+  {
+   "key": "Psychol. Pub. Pol'y & L. Pub."
+  },
+  {
+   "key": "School L. Rep. (Educ. Law Ass'n)"
+  },
+  {
+   "key": "UCLA J. Int'l L. & Foreign Aff."
+  },
+  {
+   "key": "U. Fla. J. L. & Pub. Pol'y"
+  },
+  {
+   "key": "Geo. Mason U. C. R. L. J."
+  },
+  {
+   "key": "Marq. Intell. Prop. L. Rev."
+  },
+  {
+   "key": "Minn. J. L. Sci. & Tech."
+  },
+  {
+   "key": "Parker Sch. J. E. Eur. L."
+  },
+  {
+   "key": "Seton Hall J. Sports & Ent. L."
+  },
+  {
+   "key": "St. B. Tex. Envtl. L. J."
+  },
+  {
+   "key": "St. Louis U. Pub. L. Rev."
+  },
+  {
+   "key": "Tort Trial & Ins. Prac. L. J."
+  },
+  {
+   "key": "Vand. J. Ent. & Tech. L."
+  },
+  {
+   "key": "Ann. Rev. Banking & Fin. L."
+  },
+  {
+   "key": "Ann. Surv. Int'l & Comp. L."
+  },
+  {
+   "key": "Colum. J. L. & Soc. Probs."
+  },
+  {
+   "key": "Geo. J. on Poverty L. & Pol'y"
+  },
+  {
+   "key": "Loy. L. A. Ent. L. Rev."
+  },
+  {
+   "key": "N. C. J. L. & Tech. On."
+  },
+  {
+   "key": "Preview U. S. Sup. Ct. Cas."
+  },
+  {
+   "key": "St. Louis-Warsaw Transatlantic L. J."
+  },
+  {
+   "key": "Transactions: Tenn. J. Bus. L."
+  },
+  {
+   "key": "U. Pa. J. Int'l Econ. L."
+  },
+  {
+   "key": "Berkeley J. Emp. & Lab. L."
+  },
+  {
+   "key": "Fordham J. Corp. & Fin. L."
+  },
+  {
+   "key": "Hastings Int'l & Comp. L. Rev."
+  },
+  {
+   "key": "Ind. Int'l & Comp. L. Rev."
+  },
+  {
+   "key": "Inst. on Oil & Gas L. & Tax'n"
+  },
+  {
+   "key": "J. Am. Acad. Matrim. Law."
+  },
+  {
+   "key": "J. Pat. & Trademark Off. Soc'y"
+  },
+  {
+   "key": "Mo. Envtl. L. & Pol'y Rev."
+  },
+  {
+   "key": "Ohio St. J. on Disp. Resol."
+  },
+  {
+   "key": "Stan. J. C. R. & C. L."
+  },
+  {
+   "key": "Suffolk J. Trial & App. Advoc."
+  },
+  {
+   "key": "U. Ark. Little Rock L. Rev."
+  },
+  {
+   "key": "Yale J. Health Pol'y L. & Ethics"
+  },
+  {
+   "key": "Am. Bankr. Inst. L. Rev."
+  },
+  {
+   "key": "Ariz. J. Int'l & Comp. L."
+  },
+  {
+   "key": "Colum. Hum. Rts. L. Rev."
+  },
+  {
+   "key": "Emp. Rts. & Emp. Pol'y J."
+  },
+  {
+   "key": "J. Contemp. Health L. & Pol'y"
+  },
+  {
+   "key": "J. Land Resources & Envtl. L."
+  },
+  {
+   "key": "Pub. Land & Resources L. Rev."
+  },
+  {
+   "key": "Real Prop. Prob. & Tr. J."
+  },
+  {
+   "key": "Rich. J. Global L. & Bus."
+  },
+  {
+   "key": "Tex. J. C. L. & C. R."
+  },
+  {
+   "key": "Transnat'l L. & Contemp. Probs."
+  },
+  {
+   "key": "Alb. L. J. Sci. & Tech."
+  },
+  {
+   "key": "Buff. Hum. Rts. L. Rev."
+  },
+  {
+   "key": "Comp. Lab. L. & Pol'y J."
+  },
+  {
+   "key": "Hastings Comm. & Ent. L. J."
+  },
+  {
+   "key": "Rich. J. L. & Pub. Int."
+  },
+  {
+   "key": "Stan. J. L. Bus. & Fin."
+  },
+  {
+   "key": "Tul. J. Int'l & Comp. L."
+  },
+  {
+   "key": "U. Miami Inter-Am. L. Rev."
+  },
+  {
+   "key": "Cardozo J. lnt'l & Comp. L."
+  },
+  {
+   "key": "Case W. Res. J. Int'l L."
+  },
+  {
+   "key": "Fam. & Conciliation Cts. Rev."
+  },
+  {
+   "key": "Ga. J. Int'l & Comp. L."
+  },
+  {
+   "key": "J. Small & Emerging Bus. L."
+  },
+  {
+   "key": "Rutgers Computer & Tech. L. J."
+  },
+  {
+   "key": "Syracuse J. Int'l L. & Com."
+  },
+  {
+   "key": "Tul. Eur. & Civ. L. F."
+  },
+  {
+   "key": "Wm. & Mary J. Women & L."
+  },
+  {
+   "key": "Admin. L. Rev. Am. U."
+  },
+  {
+   "key": "Am. B. Found. Res. J."
+  },
+  {
+   "key": "B. U. Pub. Int. L. J."
+  },
+  {
+   "key": "Cardozo Online J. Conflict Resol."
+  },
+  {
+   "key": "Computer L. Rev. & Tech J."
+  },
+  {
+   "key": "Dydke Envtl. L. & Pol'y F."
+  },
+  {
+   "key": "Geo. Int'l Envtl. L. Rev."
+  },
+  {
+   "key": "Hamline J. Pub. L. & Pol'y"
+  },
+  {
+   "key": "Hofstra Lab. & Emp. L. J."
+  },
+  {
+   "key": "N. Y. L. Sch. L. Rev."
+  },
+  {
+   "key": "Nw. J. Int'l L. & Bus."
+  },
+  {
+   "key": "S. Cal. Interdisc. L. J."
+  },
+  {
+   "key": "Temp. Int'l & Comp. L. J."
+  },
+  {
+   "key": "Tex. Intell. Prop. L. J."
+  },
+  {
+   "key": "U. Balt. J. Envtl. L."
+  },
+  {
+   "key": "Va. J. Soc. Pol'y & L."
+  },
+  {
+   "key": "Vill. Sports & Ent. L. J."
+  },
+  {
+   "key": "Colum. J. E. Eur. L."
+  },
+  {
+   "key": "Consumer Fin. L. Q. Rep."
+  },
+  {
+   "key": "DePaul Bus. & Com. L. J."
+  },
+  {
+   "key": "Denv. J. Int'l L. & Pol'y"
+  },
+  {
+   "key": "Geo. Wash. Int'l L. Rev."
+  },
+  {
+   "key": "Harv. J. L. & Pub. Pol'y"
+  },
+  {
+   "key": "Indus. & Lab. Rel. Rev."
+  },
+  {
+   "key": "J. Health Pol. Pol'y & L."
+  },
+  {
+   "key": "Loy. J. Pub. Int. L."
+  },
+  {
+   "key": "Md. J. Contemp. Legal Issues"
+  },
+  {
+   "key": "Rocky Mtn. Min. L. Inst."
+  },
+  {
+   "key": "Tex. Hisp. J. L. & Pol'y"
+  },
+  {
+   "key": "Tulsa J. Comp. & Int'l L."
+  },
+  {
+   "key": "UCLA J. Envtl. L. & Pol'y"
+  },
+  {
+   "key": "Duke J. Comp. & Int'l L."
+  },
+  {
+   "key": "Fla. St. U. L. Rev."
+  },
+  {
+   "key": "ILSA J. Int'l & Comp. L."
+  },
+  {
+   "key": "Immigr. & Nat'lity L. Rev."
+  },
+  {
+   "key": "J. Am. Soc'y Info. Sci."
+  },
+  {
+   "key": "J. Copyright Soc'y U. S. A."
+  },
+  {
+   "key": "J. Int'l Wildlife L. & Pol'y"
+  },
+  {
+   "key": "Kan. J. L. & Pub. Pol'y"
+  },
+  {
+   "key": "Penn St. Envtl. L. Rev."
+  },
+  {
+   "key": "Search & Seizure Bull. (Quinlan)"
+  },
+  {
+   "key": "Tenn. J. Prac. & Proc."
+  },
+  {
+   "key": "U. Pa. J. Const. L."
+  },
+  {
+   "key": "U. Toronto Fac. L. Rev."
+  },
+  {
+   "key": "Va. Sports & Ent. L. J."
+  },
+  {
+   "key": "Asian-Pac. L. & Pol'y J."
+  },
+  {
+   "key": "Buff. Pub. Int. L. J."
+  },
+  {
+   "key": "Cornell J. L. & Pub. Pol'y"
+  },
+  {
+   "key": "Ga. St. U. L. Rev."
+  },
+  {
+   "key": "Great Plains Nat. Resources J."
+  },
+  {
+   "key": "Ind. J. Global Legal Stud."
+  },
+  {
+   "key": "Int'l J. Pub. Opinion Res."
+  },
+  {
+   "key": "J. Crim. L. & Criminology"
+  },
+  {
+   "key": "J. Envtl. L. & Litig."
+  },
+  {
+   "key": "J. Land Use & Envtl. L."
+  },
+  {
+   "key": "Md. J. Int'l L. & Trade"
+  },
+  {
+   "key": "Minn. Intell. Prop. Rev."
+  },
+  {
+   "key": "N. Y. U. Envtl. L. J."
+  },
+  {
+   "key": "N. Y. U. Moot Ct. Casebook"
+  },
+  {
+   "key": "N. Ill. U. L. Rev."
+  },
+  {
+   "key": "U. Denv. Water L. Rev."
+  },
+  {
+   "key": "U. Miami Y. B. Int'l L."
+  },
+  {
+   "key": "Wash. U. J. L. & Pol'y"
+  },
+  {
+   "key": "Wm. & Mary Bill Rts. J."
+  },
+  {
+   "key": "Cardozo Arts & Ent. L. J."
+  },
+  {
+   "key": "Okla. City U. L. Rev."
+  },
+  {
+   "key": "Pac. Rim L. & Pol'y J."
+  },
+  {
+   "key": "Roger Williams U. L. Rev."
+  },
+  {
+   "key": "U. Det. Mercy L. Rev."
+  },
+  {
+   "key": "U. Miami Bus. L. Rev."
+  },
+  {
+   "key": "U. Pa. J. Bus. L."
+  },
+  {
+   "key": "W. St. U. L. Rev."
+  },
+  {
+   "key": "Am. Soc'y Int'l L. Proc."
+  },
+  {
+   "key": "Am. U. Int'l L. Rev."
+  },
+  {
+   "key": "Antitrust & Trade Reg. Rep."
+  },
+  {
+   "key": "Case W. Res. L. Rev."
+  },
+  {
+   "key": "Colum. J. Of Eur. L."
+  },
+  {
+   "key": "Duke J. Gender L. & Pol'y"
+  },
+  {
+   "key": "J. App. Prac. & Process"
+  },
+  {
+   "key": "J. Health Care L. & Pol'y"
+  },
+  {
+   "key": "N. C. Cent. L. Rev."
+  },
+  {
+   "key": "N. C. J. L. & Tech."
+  },
+  {
+   "key": "Ohio St. J. Crim. L."
+  },
+  {
+   "key": "Race & Ethnic Anc. L. J."
+  },
+  {
+   "key": "San Fern. V. L. Rev."
+  },
+  {
+   "key": "Tex. Rev. L. & Pol."
+  },
+  {
+   "key": "B. C. Third World L. J."
+  },
+  {
+   "key": "J. Sci. & Tech. L."
+  },
+  {
+   "key": "Loy. L. A. L. Rev."
+  },
+  {
+   "key": "Loy. U. Chi. L. J."
+  },
+  {
+   "key": "Va. L. & Bus. Rev."
+  },
+  {
+   "key": "W. New Eng. L. Rev."
+  },
+  {
+   "key": "Yale J. World Pub. Ord."
+  },
+  {
+   "key": "AIDS L. & Litig. Rep."
+  },
+  {
+   "key": "Colum. -VLA J. L. & Arts"
+  },
+  {
+   "key": "Colum. J. Gender & L."
+  },
+  {
+   "key": "Copyright L. Symp. (ASCAP)"
+  },
+  {
+   "key": "Golden Gate U. L. Rev."
+  },
+  {
+   "key": "Harv. Envtl. L. Rev."
+  },
+  {
+   "key": "Harv. L. & Pol'y Rev."
+  },
+  {
+   "key": "Harv. Negot. L. Rev."
+  },
+  {
+   "key": "Int'l Rev. L. & Econ."
+  },
+  {
+   "key": "J. Mar. L. & Com."
+  },
+  {
+   "key": "Penn St. Int'l L. Rev."
+  },
+  {
+   "key": "Soc. Sec. Rep. Serv."
+  },
+  {
+   "key": "Stan. L. & Pol'y Rev."
+  },
+  {
+   "key": "Stud. L. Pol. & Soc'y"
+  },
+  {
+   "key": "UCLA Bull. L. & Tech."
+  },
+  {
+   "key": "U. Mich. J. L. Reform"
+  },
+  {
+   "key": "U. Pa. J. Int'l L."
+  },
+  {
+   "key": "U. Puget Sound L. Rev."
+  },
+  {
+   "key": "Aff. Action Compl. Man."
+  },
+  {
+   "key": "Asian Pac. Am. L. J."
+  },
+  {
+   "key": "Buff. Crim. L. Rev."
+  },
+  {
+   "key": "Colum. Bus. L. Rev."
+  },
+  {
+   "key": "Colum. J. Envtl. L."
+  },
+  {
+   "key": "Colum. J. Transnat'l L."
+  },
+  {
+   "key": "Harv. J. L. & Tech."
+  },
+  {
+   "key": "Int'l J. L. & Psychiat Ry"
+  },
+  {
+   "key": "J. Health & Hosp. L."
+  },
+  {
+   "key": "J. Intell. Prop. L."
+  },
+  {
+   "key": "Mich. J. Gender & L."
+  },
+  {
+   "key": "Pub. Util. Rep. (PUR)"
+  },
+  {
+   "key": "Rich. J. L. & Tech."
+  },
+  {
+   "key": "S. Ill. U. L. J."
+  },
+  {
+   "key": "Stan. Tech. L. Rev."
+  },
+  {
+   "key": "T. M. Cooley L. Rev."
+  },
+  {
+   "key": "Cal. Crim. L. Rev."
+  },
+  {
+   "key": "Cal. W. Int'l L. J."
+  },
+  {
+   "key": "Cardozo J. Conflict Resol."
+  },
+  {
+   "key": "Crime, L. & Soc. Change"
+  },
+  {
+   "key": "DePaul J. Health Care L."
+  },
+  {
+   "key": "Fordham Envtl. L. Rev."
+  },
+  {
+   "key": "Geo. J. Gender & L."
+  },
+  {
+   "key": "Geo. Wash. L. Rev."
+  },
+  {
+   "key": "Harv. Hum. Rts. J."
+  },
+  {
+   "key": "J. L. Econ. & Org."
+  },
+  {
+   "key": "J. L. & Fam. Stud."
+  },
+  {
+   "key": "J. Tech. L. & Pol'y"
+  },
+  {
+   "key": "Minn. J. Int'l. L."
+  },
+  {
+   "key": "N. Y. Int'l L. Rev."
+  },
+  {
+   "key": "Proc. Nat'l Acad. Sci."
+  },
+  {
+   "key": "Rev. Jur. U. P. R."
+  },
+  {
+   "key": "S. C. Envtl. L. J."
+  },
+  {
+   "key": "Seton Hall Const. L. J."
+  },
+  {
+   "key": "Soc. Sec. Rep. Service"
+  },
+  {
+   "key": "Southeastern Envtl. L. J."
+  },
+  {
+   "key": "Suffolk Transnat'l L. Rev."
+  },
+  {
+   "key": "Tul. J. L. & Sexuality"
+  },
+  {
+   "key": "U. C. Davis L. Rev."
+  },
+  {
+   "key": "U. St. Thomas L. J."
+  },
+  {
+   "key": "Vand. J. Transnat'l L."
+  },
+  {
+   "key": "Wash. & Lee L. Rev."
+  },
+  {
+   "key": "Am. Crim. L. Rev."
+  },
+  {
+   "key": "Ann. Surv. Am. L."
+  },
+  {
+   "key": "Cal. Reg. L. Rep."
+  },
+  {
+   "key": "Clev. -Marshall L. Rev."
+  },
+  {
+   "key": "Clev. St. L. Rev."
+  },
+  {
+   "key": "Currents: Int'l Trad L. J."
+  },
+  {
+   "key": "J. Gender Race & Just."
+  },
+  {
+   "key": "J. Min. L. & Pol'y"
+  },
+  {
+   "key": "J. Sup. Ct. Hist."
+  },
+  {
+   "key": "Loy. Consumer L. Rev."
+  },
+  {
+   "key": "Mich. J. Race & L."
+  },
+  {
+   "key": "Mich. St. L. Rev."
+  },
+  {
+   "key": "N. C. Cent. L. J."
+  },
+  {
+   "key": "N. Y. City L. Rev."
+  },
+  {
+   "key": "Ohio N. U. L. Rev."
+  },
+  {
+   "key": "Pub. Int. L. Rep."
+  },
+  {
+   "key": "Rutgers Race & L. Rev."
+  },
+  {
+   "key": "Santa Clara J. Int'l L."
+  },
+  {
+   "key": "St. Louis U. L. J."
+  },
+  {
+   "key": "Tex. J. Women & L."
+  },
+  {
+   "key": "Tex. Wesleyan L. Rev."
+  },
+  {
+   "key": "U. S. F. Mar. L. J"
+  },
+  {
+   "key": "Va. J. L. & Tech."
+  },
+  {
+   "key": "Va. L. L. & Tech."
+  },
+  {
+   "key": "Wm. & Mary L. Rev."
+  },
+  {
+   "key": "Am. J. L. & Med."
+  },
+  {
+   "key": "Ann. Rev. Banking L."
+  },
+  {
+   "key": "Cath. U. L. Rev."
+  },
+  {
+   "key": "Child. Legal Rts. J."
+  },
+  {
+   "key": "Del. J. Corp. L."
+  },
+  {
+   "key": "Denv. U. L. Rev."
+  },
+  {
+   "key": "Emory Bankr. Dev. J."
+  },
+  {
+   "key": "Food Drug Cosm. L. J."
+  },
+  {
+   "key": "Harv. J. L. & Gender"
+  },
+  {
+   "key": "Harv. Latino L. Rev."
+  },
+  {
+   "key": "Int'l J. Pub. Admin."
+  },
+  {
+   "key": "J. Contemp. Legal Issues"
+  },
+  {
+   "key": "Lewis & Clark L. Rev."
+  },
+  {
+   "key": "Marq. Sports L. Rev."
+  },
+  {
+   "key": "Melb. U. L. Rev."
+  },
+  {
+   "key": "Miss. C. L. Rev."
+  },
+  {
+   "key": "N. Y. U. L. Rev."
+  },
+  {
+   "key": "Seton Hall J. Sport L."
+  },
+  {
+   "key": "T. Jefferson L. Rev."
+  },
+  {
+   "key": "UCLA Pac. Basin L. J."
+  },
+  {
+   "key": "U. S. F. L. Rev."
+  },
+  {
+   "key": "U. Balt. L. Rev."
+  },
+  {
+   "key": "U. Colo. L. Rev."
+  },
+  {
+   "key": "U. Pitt. L. Rev."
+  },
+  {
+   "key": "U. Rich. L. Rev."
+  },
+  {
+   "key": "Vt. J. Envtl. L."
+  },
+  {
+   "key": "Wash. U. L. Rev."
+  },
+  {
+   "key": "Wm. Mitchell L. Rev."
+  },
+  {
+   "key": "Women's Rts. L. Rep."
+  },
+  {
+   "key": "Am. J. Comp. L."
+  },
+  {
+   "key": "Am. J. Crim. L."
+  },
+  {
+   "key": "Am. J. Trial Advoc."
+  },
+  {
+   "key": "Am. Rev. Int'l Arb."
+  },
+  {
+   "key": "Auckland U. L. Rev."
+  },
+  {
+   "key": "Buff. Envtl. L. J."
+  },
+  {
+   "key": "Cal. W. L. Rev."
+  },
+  {
+   "key": "Can. -U. S. L. J."
+  },
+  {
+   "key": "Cap. U. L. Rev."
+  },
+  {
+   "key": "Colum. J. L. & Arts"
+  },
+  {
+   "key": "Common Mkt. L. Rev."
+  },
+  {
+   "key": "Dick. Int'l L. Ann."
+  },
+  {
+   "key": "Geo. Immigr. L. J."
+  },
+  {
+   "key": "Int'l & Comp. L. Q."
+  },
+  {
+   "key": "J. L. Med. & Ethics"
+  },
+  {
+   "key": "J. Air L. & Com."
+  },
+  {
+   "key": "J. Marshall L. Rev."
+  },
+  {
+   "key": "J. Suffolk Acad. L."
+  },
+  {
+   "key": "Legal Reference Services Q."
+  },
+  {
+   "key": "N. C. St. B. J."
+  },
+  {
+   "key": "Pace Envtl. L. Rev."
+  },
+  {
+   "key": "Quinnipiac Prob. L. J."
+  },
+  {
+   "key": "S. Cal. L. Rev."
+  },
+  {
+   "key": "S. Tex. L. Rev."
+  },
+  {
+   "key": "Stan. Envtl. L. J."
+  },
+  {
+   "key": "T. Marshall L. Rev."
+  },
+  {
+   "key": "Tex. J. Bus. L."
+  },
+  {
+   "key": "Tu L. Mar. L. J."
+  },
+  {
+   "key": "U. Chi. L. Rev."
+  },
+  {
+   "key": "U. Cin. L. Rev."
+  },
+  {
+   "key": "U. Fla. L. Rev."
+  },
+  {
+   "key": "U. Haw. L. Rev."
+  },
+  {
+   "key": "U. Ill. L. Rev."
+  },
+  {
+   "key": "U. Kan. L. Rev."
+  },
+  {
+   "key": "U. Mem. L. Rev."
+  },
+  {
+   "key": "U. Tol. L. Rev."
+  },
+  {
+   "key": "Val. U. L. Rev."
+  },
+  {
+   "key": "Vill. Envtl. L. J."
+  },
+  {
+   "key": "Widener L. Symp. J."
+  },
+  {
+   "key": "Yale J. L. & Human."
+  },
+  {
+   "key": "Yale L. & Pol'y Rev."
+  },
+  {
+   "key": "Am. Indian L. Rev."
+  },
+  {
+   "key": "Am. J. Legal Hist."
+  },
+  {
+   "key": "Am. U. L. Rev."
+  },
+  {
+   "key": "Brook. J. Int'l L."
+  },
+  {
+   "key": "Colum. J. Asian L."
+  },
+  {
+   "key": "Conn. Prob. L. J."
+  },
+  {
+   "key": "Drake J. Agric. L."
+  },
+  {
+   "key": "Geo. Mason L. Rev."
+  },
+  {
+   "key": "Harv. J. on Legis."
+  },
+  {
+   "key": "Hastings Const. L. Q."
+  },
+  {
+   "key": "Inst. on Sec. Reg."
+  },
+  {
+   "key": "Int'l Org. L. Rev."
+  },
+  {
+   "key": "Law & Contemp. Probs."
+  },
+  {
+   "key": "N. Ky. L. Rev."
+  },
+  {
+   "key": "Nw. U. L. Rev."
+  },
+  {
+   "key": "Seattle U. L. Rev."
+  },
+  {
+   "key": "St. John's L. Rev."
+  },
+  {
+   "key": "St. Thomas L. Rev."
+  },
+  {
+   "key": "Suffolk U. L. Rev."
+  },
+  {
+   "key": "Sw. U. L. Rev."
+  },
+  {
+   "key": "Touro J. Transnat'l L."
+  },
+  {
+   "key": "Tul. Envtl. L. J."
+  },
+  {
+   "key": "UCLA J. L. & Tech."
+  },
+  {
+   "key": "U. Pa. L. Rev."
+  },
+  {
+   "key": "U. Seattle L. Rev."
+  },
+  {
+   "key": "W. Va. L. Rev."
+  },
+  {
+   "key": "Widener J. Pub. L."
+  },
+  {
+   "key": "Wis. Envtl. L. J."
+  },
+  {
+   "key": "Yale J. L. & Tech."
+  },
+  {
+   "key": "Am. Bankr. L. J."
+  },
+  {
+   "key": "BYU Educ. & L. J."
+  },
+  {
+   "key": "B. U. Int'l L. J."
+  },
+  {
+   "key": "Behav. Sci. & L."
+  },
+  {
+   "key": "Berkeley Tech. L. J."
+  },
+  {
+   "key": "Chicano-Latino L. Rev."
+  },
+  {
+   "key": "Comp. Lab. L. J."
+  },
+  {
+   "key": "Conn. Ins. L. J."
+  },
+  {
+   "key": "Conn. J. Int'l L."
+  },
+  {
+   "key": "Fed. Comm. L. J."
+  },
+  {
+   "key": "Hous. J. Int'l L."
+  },
+  {
+   "key": "J. S. Legal Hist."
+  },
+  {
+   "key": "Law & Pol'y Int'l Bus."
+  },
+  {
+   "key": "Mich. Bus. L. J."
+  },
+  {
+   "key": "Mich. J. Int'l L."
+  },
+  {
+   "key": "Minn. J. Global Trade"
+  },
+  {
+   "key": "Monash U. L. Rev."
+  },
+  {
+   "key": "Ocean & Coastal L. J."
+  },
+  {
+   "key": "Or. Rev. Int'l L."
+  },
+  {
+   "key": "Pub. Cont. L. J."
+  },
+  {
+   "key": "Regent U. L. Rev."
+  },
+  {
+   "key": "Stan. J. Int'l L."
+  },
+  {
+   "key": "Tex. Tech L. Rev."
+  },
+  {
+   "key": "Tort & Ins. L. J."
+  },
+  {
+   "key": "UCLA Ent. L. Rev."
+  },
+  {
+   "key": "U. Dayton L. Rev."
+  },
+  {
+   "key": "Va. Envtl. L. J."
+  },
+  {
+   "key": "Yale J. L. & Feminism"
+  },
+  {
+   "key": "Anglo-Am. L. Rev."
+  },
+  {
+   "key": "Ariz. St. L. J."
+  },
+  {
+   "key": "Berkeley J. Int'l L."
+  },
+  {
+   "key": "Buff. Women's L. J."
+  },
+  {
+   "key": "Chi. -Kent L. Rev."
+  },
+  {
+   "key": "Chi. J. Int'l L."
+  },
+  {
+   "key": "Duq. Bus. L. J."
+  },
+  {
+   "key": "Eur. H. R. Rep."
+  },
+  {
+   "key": "Fed. Cir. B. J."
+  },
+  {
+   "key": "Fla. J. Int'l L."
+  },
+  {
+   "key": "Geo. J. Int'l L."
+  },
+  {
+   "key": "Geo. J. Legal Ethics"
+  },
+  {
+   "key": "Harv. Women's L. J."
+  },
+  {
+   "key": "J. High Tech. L."
+  },
+  {
+   "key": "J. Int'l Legal Stud."
+  },
+  {
+   "key": "N. C. Banking Inst."
+  },
+  {
+   "key": "New Eng. J. Med."
+  },
+  {
+   "key": "New Eng. L. Rev."
+  },
+  {
+   "key": "Penn St. L. Rev."
+  },
+  {
+   "key": "Quinnipiac Health L. J."
+  },
+  {
+   "key": "Rev. Der. P. R."
+  },
+  {
+   "key": "Seton Hall Legis. J."
+  },
+  {
+   "key": "U. Chi. Legal F."
+  },
+  {
+   "key": "U. Miami L. Rev."
+  },
+  {
+   "key": "Am. Bus. L. J."
+  },
+  {
+   "key": "Am. I. Int'l L."
+  },
+  {
+   "key": "Am. Stock Ex. Guide"
+  },
+  {
+   "key": "Berkeley Women's L. J."
+  },
+  {
+   "key": "Cal. St. B. J."
+  },
+  {
+   "key": "Current Med. for Att'ys"
+  },
+  {
+   "key": "Emory Int'l L. Rev."
+  },
+  {
+   "key": "Fordham Urb. L. J."
+  },
+  {
+   "key": "Hastings Women's L. J."
+  },
+  {
+   "key": "Inst. on Fed. Tax'n"
+  },
+  {
+   "key": "J. Irreproducible Results"
+  },
+  {
+   "key": "Santa Clara L. Rev."
+  },
+  {
+   "key": "Third World Legal Stud."
+  },
+  {
+   "key": "Touro Int'l L. Rev."
+  },
+  {
+   "key": "U. Balt. L. F."
+  },
+  {
+   "key": "Va. J. Int'l L."
+  },
+  {
+   "key": "Wake Forest L. Rev."
+  },
+  {
+   "key": "Wash. U. L. Q."
+  },
+  {
+   "key": "Wis. Women's L. J."
+  },
+  {
+   "key": "A. F. L. Rev."
+  },
+  {
+   "key": "BYU J. Pub. L."
+  },
+  {
+   "key": "B. C. L. Rev."
+  },
+  {
+   "key": "B. U. L. Rev."
+  },
+  {
+   "key": "Cardozo Women's L. J."
+  },
+  {
+   "key": "D. C. L. Rev."
+  },
+  {
+   "key": "DePaul Bus. L. J."
+  },
+  {
+   "key": "Harv. Int'l L. J."
+  },
+  {
+   "key": "J. C. & U. L."
+  },
+  {
+   "key": "J. Intell. Prop."
+  },
+  {
+   "key": "Law & Hum. Behav."
+  },
+  {
+   "key": "N. C. L. Rev."
+  },
+  {
+   "key": "N. D. L. Rev."
+  },
+  {
+   "key": "N. M. L. Rev."
+  },
+  {
+   "key": "Notre Dame L. Rev."
+  },
+  {
+   "key": "Oil Gas & Energy Q."
+  },
+  {
+   "key": "Pace Int'l L. Rev."
+  },
+  {
+   "key": "Rutgers-Cam. L. J."
+  },
+  {
+   "key": "S. C. L. Rev."
+  },
+  {
+   "key": "S. D. L. Rev."
+  },
+  {
+   "key": "S. U. L. Rev."
+  },
+  {
+   "key": "Seton Hall L. Rev."
+  },
+  {
+   "key": "Ave Maria L. Rev."
+  },
+  {
+   "key": "Chron. Higher Educ."
+  },
+  {
+   "key": "Food & Drug L. J."
+  },
+  {
+   "key": "High Tech. L. J."
+  },
+  {
+   "key": "J. Disp. Resol."
+  },
+  {
+   "key": "J. Med. & L."
+  },
+  {
+   "key": "Law & Hist. Rev."
+  },
+  {
+   "key": "San Diego L. Rev."
+  },
+  {
+   "key": "Soc. Serv. Rev."
+  },
+  {
+   "key": "St. Mary's L. J."
+  },
+  {
+   "key": "Tex. Int'l L. J."
+  },
+  {
+   "key": "U. S. -Mex. L."
+  },
+  {
+   "key": "U. Toronto L. J."
+  },
+  {
+   "key": "Wis. Int'l L. J."
+  },
+  {
+   "key": "Admin. L. Rev."
+  },
+  {
+   "key": "Asian Am. L. J."
+  },
+  {
+   "key": "Bankr. Dev. J."
+  },
+  {
+   "key": "Brook. L. Rev."
+  },
+  {
+   "key": "Cal. Bankr. J."
+  },
+  {
+   "key": "Calif. L. Rev."
+  },
+  {
+   "key": "Cap. Def. Dig."
+  },
+  {
+   "key": "Colum. L. Rev."
+  },
+  {
+   "key": "Cornell Int'l L. J."
+  },
+  {
+   "key": "Crim. Just. Ethics"
+  },
+  {
+   "key": "Crim. L. Bull."
+  },
+  {
+   "key": "Def. Couns. J."
+  },
+  {
+   "key": "Fordham Int'l L. J."
+  },
+  {
+   "key": "J. Contemp. L."
+  },
+  {
+   "key": "J. Prod. Liab."
+  },
+  {
+   "key": "Quinnipiac L. Rev."
+  },
+  {
+   "key": "Real Est. L. J."
+  },
+  {
+   "key": "Sw. J. Int'l Law"
+  },
+  {
+   "key": "Willamette L. Rev."
+  },
+  {
+   "key": "Yale J. Int'l L."
+  },
+  {
+   "key": "Adel. L. Rev."
+  },
+  {
+   "key": "Am. J. Juris."
+  },
+  {
+   "key": "Ariz. L. Rev."
+  },
+  {
+   "key": "Buff. L. Rev."
+  },
+  {
+   "key": "Chap. L. Rev."
+  },
+  {
+   "key": "Conn. L. Rev."
+  },
+  {
+   "key": "Creighton L. Rev."
+  },
+  {
+   "key": "Crim. L. Rev."
+  },
+  {
+   "key": "Cumb. L. Rev."
+  },
+  {
+   "key": "Dick. L. Rev."
+  },
+  {
+   "key": "Fam. Ct. Rev."
+  },
+  {
+   "key": "Gonz. L. Rev."
+  },
+  {
+   "key": "Harv. L. Rev."
+  },
+  {
+   "key": "Health L. Persps."
+  },
+  {
+   "key": "Hous. L. Rev."
+  },
+  {
+   "key": "J. L. & Econ."
+  },
+  {
+   "key": "J. L. & Educ."
+  },
+  {
+   "key": "Law & Soc. Inquiry"
+  },
+  {
+   "key": "Marq. L. Rev."
+  },
+  {
+   "key": "Mass. L. Rev."
+  },
+  {
+   "key": "Mich. L. Rev."
+  },
+  {
+   "key": "Minn. L. Rev."
+  },
+  {
+   "key": "Mont. L. Rev."
+  },
+  {
+   "key": "Monthly Lab. Rev."
+  },
+  {
+   "key": "Nat. Resources J."
+  },
+  {
+   "key": "Ohio St. L. J."
+  },
+  {
+   "key": "Oil & Gas Tax Q."
+  },
+  {
+   "key": "Okla. L. Rev."
+  },
+  {
+   "key": "Osgoode Hall L. J."
+  },
+  {
+   "key": "Pepp. L. Rev."
+  },
+  {
+   "key": "Sch. L. Bull."
+  },
+  {
+   "key": "Stan. L. Rev."
+  },
+  {
+   "key": "Sup. Ct. Rev."
+  },
+  {
+   "key": "Temp. L. Rev."
+  },
+  {
+   "key": "Tenn. L. Rev."
+  },
+  {
+   "key": "UCLA Women's L. J."
+  },
+  {
+   "key": "Vand. L. Rev."
+  },
+  {
+   "key": "Vill. L. Rev."
+  },
+  {
+   "key": "Wash. L. Rev."
+  },
+  {
+   "key": "Yale J. on Reg."
+  },
+  {
+   "key": "Ala. L. Rev."
+  },
+  {
+   "key": "Alb. L. Rev."
+  },
+  {
+   "key": "Am. J. Jurisprud"
+  },
+  {
+   "key": "Ark. L. Rev."
+  },
+  {
+   "key": "Cal. L. Rev."
+  },
+  {
+   "key": "Campbell L. Rev."
+  },
+  {
+   "key": "Cap. Def. J."
+  },
+  {
+   "key": "Carolina Alumni Rev."
+  },
+  {
+   "key": "Clinical L. Rev."
+  },
+  {
+   "key": "Del. L. Rev."
+  },
+  {
+   "key": "Duq. L. Rev."
+  },
+  {
+   "key": "Fed. Sent'g Rep."
+  },
+  {
+   "key": "Fla. L. Rev."
+  },
+  {
+   "key": "Geendale L. Rev."
+  },
+  {
+   "key": "Hum. Rts. Q."
+  },
+  {
+   "key": "Ind. L. Rev."
+  },
+  {
+   "key": "J. L. & Com."
+  },
+  {
+   "key": "J. L. & Pol."
+  },
+  {
+   "key": "J. L. & Religion"
+  },
+  {
+   "key": "J. Agric. L."
+  },
+  {
+   "key": "Loy. L. Rev."
+  },
+  {
+   "key": "McGeorge L. Rev."
+  },
+  {
+   "key": "Mil. L. Rev."
+  },
+  {
+   "key": "Mod. L. Rev."
+  },
+  {
+   "key": "Nat'l Black L. J."
+  },
+  {
+   "key": "Neb. L. Rev."
+  },
+  {
+   "key": "Pat. L. Ann."
+  },
+  {
+   "key": "Syracuse L. Rev."
+  },
+  {
+   "key": "Tax Mgm't Int'l J."
+  },
+  {
+   "key": "Tex. L. Rev."
+  },
+  {
+   "key": "Tul. L. Rev."
+  },
+  {
+   "key": "UDC/DCSL L. Rev."
+  },
+  {
+   "key": "Whittier L. Rev."
+  },
+  {
+   "key": "Wis. L. Rev."
+  },
+  {
+   "key": "Wyo. L. Rev."
+  },
+  {
+   "key": "A. B. A. J."
+  },
+  {
+   "key": "All St. Tax Guide"
+  },
+  {
+   "key": "Av. L. Rep."
+  },
+  {
+   "key": "Cardozo L. Rev."
+  },
+  {
+   "key": "Cornell L. Rev."
+  },
+  {
+   "key": "Dep't St. Bull."
+  },
+  {
+   "key": "Fordham L. Rev."
+  },
+  {
+   "key": "Ga. L. Rev."
+  },
+  {
+   "key": "Hamline L. Rev."
+  },
+  {
+   "key": "Hofstra L. Rev."
+  },
+  {
+   "key": "J. Corp. L."
+  },
+  {
+   "key": "La. L. Rev."
+  },
+  {
+   "key": "Law & Soc'y Rev."
+  },
+  {
+   "key": "Lincoln L. Rev."
+  },
+  {
+   "key": "Md. L. Rev."
+  },
+  {
+   "key": "Me. L. Rev."
+  },
+  {
+   "key": "Mo. L. Rev."
+  },
+  {
+   "key": "N. Y. L. J."
+  },
+  {
+   "key": "Or. L. Rev."
+  },
+  {
+   "key": "Rutgers L. Rec."
+  },
+  {
+   "key": "Rutgers L. Rev."
+  },
+  {
+   "key": "Stetson L. Rev."
+  },
+  {
+   "key": "Va. L. Rev."
+  },
+  {
+   "key": "Vt. L. Rev."
+  },
+  {
+   "key": "Widener L. Rev."
+  },
+  {
+   "key": "Alaska L. Rev."
+  },
+  {
+   "key": "Am. J. Jurispr"
+  },
+  {
+   "key": "Baylor L. Rev."
+  },
+  {
+   "key": "DePaul L. Rev."
+  },
+  {
+   "key": "Drexel L. Rev."
+  },
+  {
+   "key": "Hong Kong L. J."
+  },
+  {
+   "key": "Int'l Herald Trib."
+  },
+  {
+   "key": "J. L. & Health"
+  },
+  {
+   "key": "J. Bus. L."
+  },
+  {
+   "key": "J. Corp. Tax'n"
+  },
+  {
+   "key": "J. Fam. L."
+  },
+  {
+   "key": "J. Legal Educ."
+  },
+  {
+   "key": "J. Legal Prof."
+  },
+  {
+   "key": "J. Legal Stud."
+  },
+  {
+   "key": "J. Urb. L."
+  },
+  {
+   "key": "Mercer L. Rev."
+  },
+  {
+   "key": "Ottawa L. Rev."
+  },
+  {
+   "key": "Sports Law. J."
+  },
+  {
+   "key": "Sydney L. Rev."
+  },
+  {
+   "key": "Transp. L. J."
+  },
+  {
+   "key": "Akron L. Rev."
+  },
+  {
+   "key": "Ark. L. Notes"
+  },
+  {
+   "key": "Const. Comment."
+  },
+  {
+   "key": "Drake L. Rev."
+  },
+  {
+   "key": "Fla. Tax Rev."
+  },
+  {
+   "key": "Idaho L. Rev."
+  },
+  {
+   "key": "J. L. & Pol'y"
+  },
+  {
+   "key": "J. Chinese L."
+  },
+  {
+   "key": "J. Int'l Arb."
+  },
+  {
+   "key": "J. Legal Med."
+  },
+  {
+   "key": "Naval L. Rev."
+  },
+  {
+   "key": "Otago L. Rev."
+  },
+  {
+   "key": "RAND J. Econ."
+  },
+  {
+   "key": "Touro L. Rev."
+  },
+  {
+   "key": "Tulsa L. Rev."
+  },
+  {
+   "key": "UN Monthly Chron."
+  },
+  {
+   "key": "Wayne L. Rev."
+  },
+  {
+   "key": "Annals Health L."
+  },
+  {
+   "key": "Cambridge L. J."
+  },
+  {
+   "key": "Cent. Law J."
+  },
+  {
+   "key": "Clearinghouse Rev."
+  },
+  {
+   "key": "Crim. L. F."
+  },
+  {
+   "key": "Dalhousie L. J."
+  },
+  {
+   "key": "F. B. I. S."
+  },
+  {
+   "key": "Franchise L. J."
+  },
+  {
+   "key": "In Pub. Interest"
+  },
+  {
+   "key": "Iowa L. Rev."
+  },
+  {
+   "key": "J. Health L."
+  },
+  {
+   "key": "Just. Sys. L"
+  },
+  {
+   "key": "La Raza L. J."
+  },
+  {
+   "key": "Law Libr. J."
+  },
+  {
+   "key": "Law Libr. Lights"
+  },
+  {
+   "key": "Miss. L. J."
+  },
+  {
+   "key": "Nova L. Rev."
+  },
+  {
+   "key": "Pace L. Rev."
+  },
+  {
+   "key": "Prob. L. J."
+  },
+  {
+   "key": "Psychol. Bull."
+  },
+  {
+   "key": "Trial Law. Guide"
+  },
+  {
+   "key": "UCC Rep. -Dig."
+  },
+  {
+   "key": "UCLA L. Rev."
+  },
+  {
+   "key": "UMKC L. Rev."
+  },
+  {
+   "key": "UWLA L. Rev."
+  },
+  {
+   "key": "Utah L. Rev."
+  },
+  {
+   "key": "Va. Tax Rev."
+  },
+  {
+   "key": "BYU L. Rev."
+  },
+  {
+   "key": "BioLaw (LexisNexis)"
+  },
+  {
+   "key": "Brandeis L. J."
+  },
+  {
+   "key": "Bus. L. J."
+  },
+  {
+   "key": "FIU L. Rev."
+  },
+  {
+   "key": "Fam. L. Q."
+  },
+  {
+   "key": "Fla. B. J."
+  },
+  {
+   "key": "Geo. L. J."
+  },
+  {
+   "key": "Hastings L. J."
+  },
+  {
+   "key": "How. L. J."
+  },
+  {
+   "key": "Ill. B. J."
+  },
+  {
+   "key": "Ind. L. J."
+  },
+  {
+   "key": "J. Space L."
+  },
+  {
+   "key": "Lab. L. J."
+  },
+  {
+   "key": "Major Tax Plan."
+  },
+  {
+   "key": "Nev. L. J."
+  },
+  {
+   "key": "Notre Dame Law."
+  },
+  {
+   "key": "Pac. L. J."
+  },
+  {
+   "key": "Psychol. Rev."
+  },
+  {
+   "key": "SMU L. Rev."
+  },
+  {
+   "key": "Software L. J."
+  },
+  {
+   "key": "Tax L. Rev."
+  },
+  {
+   "key": "Wall St. J."
+  },
+  {
+   "key": "Washburn L. J."
+  },
+  {
+   "key": "Ecology L. Q."
+  },
+  {
+   "key": "Green Bag Alm."
+  },
+  {
+   "key": "J. World Trade"
+  },
+  {
+   "key": "Ky. L. J."
+  },
+  {
+   "key": "Rutgers L. J."
+  },
+  {
+   "key": "Sw. L. J."
+  },
+  {
+   "key": "Texas L. Rev."
+  },
+  {
+   "key": "Admin. L. 3d"
+  },
+  {
+   "key": "Computer/L. J."
+  },
+  {
+   "key": "Crim. Just."
+  },
+  {
+   "key": "Energy L. J."
+  },
+  {
+   "key": "Envtl. Law."
+  },
+  {
+   "key": "German L. J."
+  },
+  {
+   "key": "Jurid. Rev."
+  },
+  {
+   "key": "McGill L. J."
+  },
+  {
+   "key": "Rev. Litig."
+  },
+  {
+   "key": "Transnat'l Law."
+  },
+  {
+   "key": "AIPLA Q. J."
+  },
+  {
+   "key": "Akron Tax J."
+  },
+  {
+   "key": "Cath. Law."
+  },
+  {
+   "key": "Colo. Law."
+  },
+  {
+   "key": "CommLaw Conspectus"
+  },
+  {
+   "key": "Cong. Dig."
+  },
+  {
+   "key": "Elder L. J."
+  },
+  {
+   "key": "Emory L. J."
+  },
+  {
+   "key": "Est. Plan."
+  },
+  {
+   "key": "Fed. Probation"
+  },
+  {
+   "key": "J. L. Soc'y"
+  },
+  {
+   "key": "Jurimetrics J."
+  },
+  {
+   "key": "Law & Ineq."
+  },
+  {
+   "key": "Law & Phil."
+  },
+  {
+   "key": "N. Y. Times"
+  },
+  {
+   "key": "Nat'l L. J."
+  },
+  {
+   "key": "Prac. Law."
+  },
+  {
+   "key": "Trademark Rep."
+  },
+  {
+   "key": "Tulsa L. J."
+  },
+  {
+   "key": "Colorado Law."
+  },
+  {
+   "key": "Duke L. J."
+  },
+  {
+   "key": "Envtl. L."
+  },
+  {
+   "key": "J. Legis."
+  },
+  {
+   "key": "Lab. Law."
+  },
+  {
+   "key": "Urb. Law."
+  },
+  {
+   "key": "Wash. Monthly"
+  },
+  {
+   "key": "Wyo. Law."
+  },
+  {
+   "key": "Yale L. J."
+  },
+  {
+   "key": "Libr. J."
+  },
+  {
+   "key": "New L. J."
+  },
+  {
+   "key": "Sci. Am."
+  },
+  {
+   "key": "Student Law."
+  },
+  {
+   "key": "UCC L. J."
+  },
+  {
+   "key": "B. Examiner"
+  },
+  {
+   "key": "Corp. Tax'n"
+  },
+  {
+   "key": "Guild Prac."
+  },
+  {
+   "key": "Green Bag 2d"
+  },
+  {
+   "key": "Int'l Law."
+  },
+  {
+   "key": "Int'l Org."
+  },
+  {
+   "key": "Juris Mag."
+  },
+  {
+   "key": "Law & Pol'y"
+  },
+  {
+   "key": "Wash. Post"
+  },
+  {
+   "key": "Army Law."
+  },
+  {
+   "key": "Health Matrix"
+  },
+  {
+   "key": "Judges J."
+  },
+  {
+   "key": "Legal Writing"
+  },
+  {
+   "key": "J. Tax'n"
+  },
+  {
+   "key": "Tax Law."
+  },
+  {
+   "key": "J. ALWD"
+  },
+  {
+   "key": "Tax Adviser"
+  },
+  {
+   "key": "JAG J."
+  },
+  {
+   "key": "Green Bag"
+  },
+  {
+   "key": "Jurimetrics"
+  },
+  {
+   "key": "Nota Bene"
+  },
+  {
+   "key": "Tax Notes"
+  },
+  {
+   "key": "Healthspan"
+  },
+  {
+   "key": "Human."
+  },
+  {
+   "key": "Litig."
+  },
+  {
+   "key": "Briefcase"
+  },
+  {
+   "key": "Economist"
+  },
+  {
+   "key": "Landslide"
+  },
+  {
+   "key": "Scholar"
+  },
+  {
+   "key": "Digest"
+  },
+  {
+   "key": "NEXUS"
+  },
+  {
+   "key": "Taxes"
+  },
+  {
+   "key": "IDEA"
+  },
+  {
+   "key": "JAMA"
+  },
+  {
+   "key": "RISK"
+  }
+ ]
+}

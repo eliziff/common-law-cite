@@ -1,0 +1,1148 @@
+{
+ "source": {
+  "repo": "legal-citations",
+  "path": "crates/legal-grammar/data/grammar-corpus.json",
+  "table": "defs.us_laws",
+  "commit": "e40ceccfacdc9fb8bec6f11cd0b56c50b8a02466",
+  "worktree_modified": true,
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "series",
+ "note": "The literal code/register names inside each us_laws alternative.",
+ "entries": [
+  {
+   "key": "U. S. C."
+  },
+  {
+   "key": "USC"
+  },
+  {
+   "key": "U. S. C. A."
+  },
+  {
+   "key": "U. S. C. S."
+  },
+  {
+   "key": "U. S. C. U."
+  },
+  {
+   "key": "U. S. Code"
+  },
+  {
+   "key": "United States Code"
+  },
+  {
+   "key": "Public Law"
+  },
+  {
+   "key": "Pub. L."
+  },
+  {
+   "key": "Private Law"
+  },
+  {
+   "key": "Pvt. L."
+  },
+  {
+   "key": "F. R."
+  },
+  {
+   "key": "Fed. Reg."
+  },
+  {
+   "key": "N. H. Rev. Stat. Ann. Adv. Legis. Serv."
+  },
+  {
+   "key": "Haw. Rev. Stat. Ann. Adv. Legis. Serv."
+  },
+  {
+   "key": "Ill. Comp. Stat. Ann. Adv. Legis. Serv."
+  },
+  {
+   "key": "N. D. Cent. Code Adv. Legis. Serv."
+  },
+  {
+   "key": "N. Y. Comp. Codes R. & Regs."
+  },
+  {
+   "key": "Idaho Code Ann. Adv. Legis. Serv."
+  },
+  {
+   "key": "Ky. Rev. Stat. Adv. Legis. Serv."
+  },
+  {
+   "key": "Tex. Rev. Civ. Stat. Ann."
+  },
+  {
+   "key": "Ind. Stat. Ann. Adv. Legis. Serv."
+  },
+  {
+   "key": "Ga. Code Ann. Adv. Legis. Serv."
+  },
+  {
+   "key": "Md. Code Ann. Adv. Legis. Serv."
+  },
+  {
+   "key": "Tenn. Code Ann. Adv. Legis. Serv."
+  },
+  {
+   "key": "Del. Code. Ann. Adv. Legis. Serv."
+  },
+  {
+   "key": "Navajo Nation Code Ann."
+  },
+  {
+   "key": "Conn. Acts"
+  },
+  {
+   "key": "Ill. Comp. Stat. Ann."
+  },
+  {
+   "key": "V. I. Code Ann."
+  },
+  {
+   "key": "S. D. Sess. Laws"
+  },
+  {
+   "key": "Alaska Admin. Code"
+  },
+  {
+   "key": "Mo. Code Regs. Ann."
+  },
+  {
+   "key": "W. Va. Adv. Legis. Serv."
+  },
+  {
+   "key": "Cal. Code Regs."
+  },
+  {
+   "key": "P. R. Laws Ann."
+  },
+  {
+   "key": "Me. Rev. Stat. Ann."
+  },
+  {
+   "key": "Or. Laws Adv. Sh."
+  },
+  {
+   "key": "N. Mar. I. Admin. Code"
+  },
+  {
+   "key": "Pa. Stat. and Cons. Stat. Ann."
+  },
+  {
+   "key": "Mich. Adv. Legis. Serv."
+  },
+  {
+   "key": "Ky. Rev. Stat. & R. Serv."
+  },
+  {
+   "key": "N. C. Adv. Legis. Serv."
+  },
+  {
+   "key": "D. C. Code Adv. Leg. Serv."
+  },
+  {
+   "key": "Ill. Admin. Code"
+  },
+  {
+   "key": "D. C. Code Mun. Regs."
+  },
+  {
+   "key": "Tex. Code Crim. Proc. Ann."
+  },
+  {
+   "key": "Cal. Regulatory Notice Reg."
+  },
+  {
+   "key": "Alaska Adv. Legis. Serv."
+  },
+  {
+   "key": "N. H. Code Admin. R. Ann."
+  },
+  {
+   "key": "La. Code Crim. Proc. Ann."
+  },
+  {
+   "key": "Utah Adv. Legis. Serv."
+  },
+  {
+   "key": "R. I. Adv. Legis. Serv."
+  },
+  {
+   "key": "Am. Samoa Admin. Code"
+  },
+  {
+   "key": "Okla. Stat."
+  },
+  {
+   "key": "Del. Code Ann."
+  },
+  {
+   "key": "P. R. Leyes An."
+  },
+  {
+   "key": "R. I. Gen. Laws Ann."
+  },
+  {
+   "key": "Ohio Legis. Serv. Ann."
+  },
+  {
+   "key": "N. M. Adv. Legis. Serv."
+  },
+  {
+   "key": "Va. Adv. Legis. Serv."
+  },
+  {
+   "key": "Vt. Adv. Legis. Serv."
+  },
+  {
+   "key": "Ark. Adv. Legis. Serv."
+  },
+  {
+   "key": "Cal. Adv. Legis. Serv."
+  },
+  {
+   "key": "Mass. Adv. Legis. Serv."
+  },
+  {
+   "key": "Fla. Admin. Code Ann."
+  },
+  {
+   "key": "Mich. Comp. Laws Serv."
+  },
+  {
+   "key": "Mass. Gen. Laws"
+  },
+  {
+   "key": "Haw. Rev. Stat. Ann."
+  },
+  {
+   "key": "Neb. Rev. Stat. Ann."
+  },
+  {
+   "key": "Colo. Rev. Stat. Ann."
+  },
+  {
+   "key": "Del. Code Regs."
+  },
+  {
+   "key": "N. Y. Consol. Laws Adv."
+  },
+  {
+   "key": "Ala. Adv. Legis. Serv."
+  },
+  {
+   "key": "Utah Admin. Code"
+  },
+  {
+   "key": "Conn. Agencies Regs."
+  },
+  {
+   "key": "Mich. Comp. Laws Ann."
+  },
+  {
+   "key": "Ark. Code R."
+  },
+  {
+   "key": "Mass. Ann. Laws"
+  },
+  {
+   "key": "R. I. Code R."
+  },
+  {
+   "key": "Guam Admin. R. & Regs."
+  },
+  {
+   "key": "Mass. Gen. Laws Ann."
+  },
+  {
+   "key": "La. Code Civ. Proc. Ann."
+  },
+  {
+   "key": "Tex. Bus. Corp. Act Ann."
+  },
+  {
+   "key": "Mich. Comp. Laws"
+  },
+  {
+   "key": "Tex. Admin. Code"
+  },
+  {
+   "key": "Ga. Comp. R. & Regs."
+  },
+  {
+   "key": "Or. Rev. Stat. Ann."
+  },
+  {
+   "key": "N. Mar. I. Code"
+  },
+  {
+   "key": "Nev. Rev. Stat. Ann."
+  },
+  {
+   "key": "Miss. Code R."
+  },
+  {
+   "key": "Okla. Stat. Ann."
+  },
+  {
+   "key": "Fla. Sess. Law Serv."
+  },
+  {
+   "key": "D. C. Sess. L. Serv."
+  },
+  {
+   "key": "Neb. Admin. Code"
+  },
+  {
+   "key": "Ill. Comp. Stat."
+  },
+  {
+   "key": "D. C. Mun. Regs."
+  },
+  {
+   "key": "U. S. Patent"
+  },
+  {
+   "key": "Nev. Reg. Admin. Regs."
+  },
+  {
+   "key": "Minn. Sess. Law Serv."
+  },
+  {
+   "key": "Okla. Sess. Law Serv."
+  },
+  {
+   "key": "W. Va. Legis. Serv."
+  },
+  {
+   "key": "N. J. Sess. Law Serv."
+  },
+  {
+   "key": "Miss. Laws Adv. Sh."
+  },
+  {
+   "key": "Idaho Code Ann."
+  },
+  {
+   "key": "Mich. Admin. Code"
+  },
+  {
+   "key": "Okla. Admin. Code"
+  },
+  {
+   "key": "Tex. Prob. Code Ann."
+  },
+  {
+   "key": "Vt. Code R."
+  },
+  {
+   "key": "Ky. Rev. Stat. Ann."
+  },
+  {
+   "key": "La. Admin. Code"
+  },
+  {
+   "key": "Del. Admin. Code"
+  },
+  {
+   "key": "V. I. Code R."
+  },
+  {
+   "key": "Md. Code Ann."
+  },
+  {
+   "key": "La. Code Evid. Ann."
+  },
+  {
+   "key": "Tex. Ins. Code Ann."
+  },
+  {
+   "key": "Iowa Legis. Serv."
+  },
+  {
+   "key": "N. H. Rulemaking Reg."
+  },
+  {
+   "key": "Kan. Legis. Serv."
+  },
+  {
+   "key": "R. I. Acts & Resolves"
+  },
+  {
+   "key": "N. D. Legis. Serv."
+  },
+  {
+   "key": "Or. Laws Spec. Sess."
+  },
+  {
+   "key": "Tex. Sess. Law Serv."
+  },
+  {
+   "key": "Haw. Rev. Stat."
+  },
+  {
+   "key": "Mass. Code Regs."
+  },
+  {
+   "key": "Colo. Rev. Stat."
+  },
+  {
+   "key": "Me. Code R."
+  },
+  {
+   "key": "Ariz. Rev. Stat. Ann."
+  },
+  {
+   "key": "Vt. Stat. Ann."
+  },
+  {
+   "key": "N. H. Rev. Stat. Ann."
+  },
+  {
+   "key": "Registration"
+  },
+  {
+   "key": "La. Child. Code Ann."
+  },
+  {
+   "key": "Tenn. Comp. R. & Regs."
+  },
+  {
+   "key": "Colo. Sess. Laws"
+  },
+  {
+   "key": "Vt. Acts & Resolves"
+  },
+  {
+   "key": "V. I. Code Ann. Adv."
+  },
+  {
+   "key": "Alaska Legis. Serv."
+  },
+  {
+   "key": "Vt. Legis. Serv."
+  },
+  {
+   "key": "Haw. Legis. Serv."
+  },
+  {
+   "key": "Conn. Legis. Serv."
+  },
+  {
+   "key": "Miss. Legis. Serv."
+  },
+  {
+   "key": "N. Mar. I. Pub. L."
+  },
+  {
+   "key": "La. Sess. Law Serv."
+  },
+  {
+   "key": "N. C. Legis. Serv."
+  },
+  {
+   "key": "Iowa Admin. Code"
+  },
+  {
+   "key": "Ga. Code Ann."
+  },
+  {
+   "key": "Wash. Rev. Code"
+  },
+  {
+   "key": "D. C. Code Ann."
+  },
+  {
+   "key": "Nev. Rev. Stat."
+  },
+  {
+   "key": "Am. Samoa Code Ann."
+  },
+  {
+   "key": "N. J. Rev. Stat."
+  },
+  {
+   "key": "Pa. Cons. Stat."
+  },
+  {
+   "key": "Conn. Gen. Stat. Ann."
+  },
+  {
+   "key": "La. Civ. Code Ann."
+  },
+  {
+   "key": "Conn. Gov't Reg."
+  },
+  {
+   "key": "Fla. Admin. Weekly"
+  },
+  {
+   "key": "Alaska Sess. Laws"
+  },
+  {
+   "key": "Ala. Admin. Monthly"
+  },
+  {
+   "key": "Haw. Sess. Laws"
+  },
+  {
+   "key": "Conn. Spec. Acts"
+  },
+  {
+   "key": "Idaho Legis. Serv."
+  },
+  {
+   "key": "Cal. Legis. Serv."
+  },
+  {
+   "key": "Del. Legis. Serv."
+  },
+  {
+   "key": "Ariz. Legis. Serv."
+  },
+  {
+   "key": "Colo. Legis. Serv."
+  },
+  {
+   "key": "Mass. Legis. Serv."
+  },
+  {
+   "key": "Mich. Legis. Serv."
+  },
+  {
+   "key": "Tenn. Legis. Serv."
+  },
+  {
+   "key": "Utah. Legis. Serv."
+  },
+  {
+   "key": "Wash. Legis. Serv."
+  },
+  {
+   "key": "Utah Code Ann."
+  },
+  {
+   "key": "Idaho Admin. Code"
+  },
+  {
+   "key": "Ind. Code Ann."
+  },
+  {
+   "key": "Wash. Admin. Code"
+  },
+  {
+   "key": "Neb. Rev. Stat."
+  },
+  {
+   "key": "Ariz. Rev. Stat."
+  },
+  {
+   "key": "Minn. Stat. Ann."
+  },
+  {
+   "key": "N. J. Stat. Ann."
+  },
+  {
+   "key": "Wash. Rev. Code Ann."
+  },
+  {
+   "key": "N. D. Cent. Code Ann."
+  },
+  {
+   "key": "N. C. Gen. Stat. Ann."
+  },
+  {
+   "key": "Wis. Admin. Code"
+  },
+  {
+   "key": "Wis. Admin. Reg."
+  },
+  {
+   "key": "Mont. Admin. Reg."
+  },
+  {
+   "key": "Mich. Pub. Acts"
+  },
+  {
+   "key": "Wis. Sess. Laws"
+  },
+  {
+   "key": "Wyo. Sess. Laws"
+  },
+  {
+   "key": "Tenn. Admin. Reg."
+  },
+  {
+   "key": "Ariz. Sess. Laws"
+  },
+  {
+   "key": "Ohio Legis. Bull."
+  },
+  {
+   "key": "R. I. Pub. Laws"
+  },
+  {
+   "key": "N. C. Sess. Laws"
+  },
+  {
+   "key": "Mo. Legis. Serv."
+  },
+  {
+   "key": "Ala. Legis. Serv."
+  },
+  {
+   "key": "Ark. Legis. Serv."
+  },
+  {
+   "key": "Ill. Legis. Serv."
+  },
+  {
+   "key": "Ind. Legis. Serv."
+  },
+  {
+   "key": "Neb. Legis. Serv."
+  },
+  {
+   "key": "Nev. Legis. Serv."
+  },
+  {
+   "key": "Wis. Legis. Serv."
+  },
+  {
+   "key": "Wyo. Legis. Serv."
+  },
+  {
+   "key": "N. H. Legis. Serv."
+  },
+  {
+   "key": "N. M. Legis. Serv."
+  },
+  {
+   "key": "Iowa Code Ann."
+  },
+  {
+   "key": "Va. Code Ann."
+  },
+  {
+   "key": "Ark. Code Ann."
+  },
+  {
+   "key": "Fla. Stat. Ann."
+  },
+  {
+   "key": "N. D. Cent. Code"
+  },
+  {
+   "key": "Conn. Gen. Stat."
+  },
+  {
+   "key": "Ohio Rev. Code Ann."
+  },
+  {
+   "key": "C. Z. Code"
+  },
+  {
+   "key": "Me. Stat."
+  },
+  {
+   "key": "Colo. Code Regs."
+  },
+  {
+   "key": "CFPB"
+  },
+  {
+   "key": "Ky. Admin. Regs."
+  },
+  {
+   "key": "N. C. Admin. Code"
+  },
+  {
+   "key": "S. C. Code Ann. Regs."
+  },
+  {
+   "key": "Del Gov't Reg."
+  },
+  {
+   "key": "V. I. Gov't Reg."
+  },
+  {
+   "key": "Idaho Sess. Laws"
+  },
+  {
+   "key": "Okla. Sess. Laws"
+  },
+  {
+   "key": "Repub. Tex. Laws"
+  },
+  {
+   "key": "Tenn. Priv. Acts"
+  },
+  {
+   "key": "Wash. Sess. Laws"
+  },
+  {
+   "key": "N. Mar. I. Reg."
+  },
+  {
+   "key": "Md. Legis. Serv."
+  },
+  {
+   "key": "Me. Legis. Serv."
+  },
+  {
+   "key": "Or. Legis. Serv."
+  },
+  {
+   "key": "Pa. Legis. Serv."
+  },
+  {
+   "key": "Va. Legis. Serv."
+  },
+  {
+   "key": "Ala. Admin. Code"
+  },
+  {
+   "key": "Nev. Admin. Code"
+  },
+  {
+   "key": "Ariz. Admin. Code"
+  },
+  {
+   "key": "S. C. Code Ann."
+  },
+  {
+   "key": "Wyo. Stat. Ann."
+  },
+  {
+   "key": "W. Va. Code R."
+  },
+  {
+   "key": "Va. Admin. Code"
+  },
+  {
+   "key": "Wyo. Code R."
+  },
+  {
+   "key": "La. Const. Ann."
+  },
+  {
+   "key": "Ind. Admin. Code"
+  },
+  {
+   "key": "Vt. Gov't Reg."
+  },
+  {
+   "key": "Haw. Gov't Reg."
+  },
+  {
+   "key": "Iowa Admin. Bull."
+  },
+  {
+   "key": "Idaho Admin. Bull."
+  },
+  {
+   "key": "Va. Reg. Regs."
+  },
+  {
+   "key": "Del. Reg. Regs."
+  },
+  {
+   "key": "Ky. Admin. Reg."
+  },
+  {
+   "key": "Fla. Admin. Reg."
+  },
+  {
+   "key": "Conn. Pub. Acts"
+  },
+  {
+   "key": "Kan. Sess. Laws"
+  },
+  {
+   "key": "Tenn. Pub. Acts"
+  },
+  {
+   "key": "N. Y. Sess. Laws"
+  },
+  {
+   "key": "V. I. Sess. Laws"
+  },
+  {
+   "key": "N. H. Code R."
+  },
+  {
+   "key": "N. M. Code R."
+  },
+  {
+   "key": "Alaska Stat. Ann."
+  },
+  {
+   "key": "Mo. Rev. Stat."
+  },
+  {
+   "key": "S. D. Codified Laws"
+  },
+  {
+   "key": "Guam Code Ann."
+  },
+  {
+   "key": "Wis. Stat. Ann."
+  },
+  {
+   "key": "Kan. Admin. Regs."
+  },
+  {
+   "key": "Ga. Gov't Reg."
+  },
+  {
+   "key": "Wyo. Gov't Reg."
+  },
+  {
+   "key": "Miss. Gov't Reg."
+  },
+  {
+   "key": "N. H. Gov't Reg."
+  },
+  {
+   "key": "R. I. Gov't Reg."
+  },
+  {
+   "key": "Tex. Gen. Laws"
+  },
+  {
+   "key": "Ariz. Admin. Reg."
+  },
+  {
+   "key": "N. M. Stat. Ann."
+  },
+  {
+   "key": "R. I. Gen. Laws"
+  },
+  {
+   "key": "N. D. Admin. Code"
+  },
+  {
+   "key": "Ark. Gov't Reg."
+  },
+  {
+   "key": "Idaho Code"
+  },
+  {
+   "key": "D. C. Code"
+  },
+  {
+   "key": "Wis. Stat."
+  },
+  {
+   "key": "Treas. Reg."
+  },
+  {
+   "key": "Mo. Ann. Stat."
+  },
+  {
+   "key": "Or. Rev. Stat."
+  },
+  {
+   "key": "N. J. Admin. Code"
+  },
+  {
+   "key": "W. Va. Code Ann."
+  },
+  {
+   "key": "N. C. Gen. Stat."
+  },
+  {
+   "key": "Ohio Monthly Rec."
+  },
+  {
+   "key": "N. Y. Legis. Serv."
+  },
+  {
+   "key": "V. I. Legis. Serv."
+  },
+  {
+   "key": "Minn. Stat."
+  },
+  {
+   "key": "W. Va. Code"
+  },
+  {
+   "key": "Miss. Code Ann."
+  },
+  {
+   "key": "Mont. Code Ann."
+  },
+  {
+   "key": "Tenn. Code Ann."
+  },
+  {
+   "key": "Kan. Stat. Ann."
+  },
+  {
+   "key": "Ohio Admin. Code"
+  },
+  {
+   "key": "Ill. Code R."
+  },
+  {
+   "key": "Utah Laws"
+  },
+  {
+   "key": "Ky. Acts"
+  },
+  {
+   "key": "Md. Laws"
+  },
+  {
+   "key": "Pa. Laws"
+  },
+  {
+   "key": "Okla. Gaz."
+  },
+  {
+   "key": "Fla. Laws"
+  },
+  {
+   "key": "Me. Gov't Reg."
+  },
+  {
+   "key": "Minn. Laws"
+  },
+  {
+   "key": "S. C. Reg."
+  },
+  {
+   "key": "N. D. Laws"
+  },
+  {
+   "key": "N. H. Laws"
+  },
+  {
+   "key": "N. J. Laws"
+  },
+  {
+   "key": "W. Va. Reg."
+  },
+  {
+   "key": "W. Va. Acts"
+  },
+  {
+   "key": "Ala. Code"
+  },
+  {
+   "key": "Ind. Code"
+  },
+  {
+   "key": "Alaska Stat."
+  },
+  {
+   "key": "Pa. Code"
+  },
+  {
+   "key": "Haw. Code R."
+  },
+  {
+   "key": "La. Stat. Ann."
+  },
+  {
+   "key": "Md. Code Regs."
+  },
+  {
+   "key": "Or. Admin. R."
+  },
+  {
+   "key": "Mont. Admin. R."
+  },
+  {
+   "key": "Wash. Reg."
+  },
+  {
+   "key": "Mo. Laws"
+  },
+  {
+   "key": "Okla. Reg."
+  },
+  {
+   "key": "Ala. Laws"
+  },
+  {
+   "key": "Mass. Acts"
+  },
+  {
+   "key": "Miss. Laws"
+  },
+  {
+   "key": "Mont. Laws"
+  },
+  {
+   "key": "N. M. Laws"
+  },
+  {
+   "key": "N. Y. Laws"
+  },
+  {
+   "key": "S. C. Acts"
+  },
+  {
+   "key": "Cal. Stat."
+  },
+  {
+   "key": "Nev. Stat."
+  },
+  {
+   "key": "P. R. Leyes"
+  },
+  {
+   "key": "Iowa Code"
+  },
+  {
+   "key": "CFR"
+  },
+  {
+   "key": "C. F. R."
+  },
+  {
+   "key": "Guam Pub. L."
+  },
+  {
+   "key": "SBA"
+  },
+  {
+   "key": "S. D. Admin. R."
+  },
+  {
+   "key": "Utah Bull."
+  },
+  {
+   "key": "Mass. Reg."
+  },
+  {
+   "key": "Mich. Reg."
+  },
+  {
+   "key": "Iowa Acts"
+  },
+  {
+   "key": "Ohio Laws"
+  },
+  {
+   "key": "Ill. Reg."
+  },
+  {
+   "key": "Or. Bull."
+  },
+  {
+   "key": "Ark. Acts"
+  },
+  {
+   "key": "Ill. Laws"
+  },
+  {
+   "key": "Ind. Acts"
+  },
+  {
+   "key": "Neb. Laws"
+  },
+  {
+   "key": "D. C. Reg."
+  },
+  {
+   "key": "N. C. Reg."
+  },
+  {
+   "key": "N. J. Reg."
+  },
+  {
+   "key": "Conn. L. J."
+  },
+  {
+   "key": "P. R. Laws"
+  },
+  {
+   "key": "ASBCA"
+  },
+  {
+   "key": "CBCA"
+  },
+  {
+   "key": "Ohio Gov't"
+  },
+  {
+   "key": "Colo. Reg."
+  },
+  {
+   "key": "Md. Reg."
+  },
+  {
+   "key": "Ind. Reg."
+  },
+  {
+   "key": "Ga. Laws"
+  },
+  {
+   "key": "La. Acts"
+  },
+  {
+   "key": "Me. Laws"
+  },
+  {
+   "key": "Or. Laws"
+  },
+  {
+   "key": "Va. Acts"
+  },
+  {
+   "key": "Minn. Reg."
+  },
+  {
+   "key": "S. D. Reg."
+  },
+  {
+   "key": "CFTC"
+  },
+  {
+   "key": "Del. Laws"
+  },
+  {
+   "key": "La. Reg."
+  },
+  {
+   "key": "Ark. Reg."
+  },
+  {
+   "key": "Kan. Reg."
+  },
+  {
+   "key": "Pa. Bull."
+  },
+  {
+   "key": "N. M. Reg."
+  },
+  {
+   "key": "Fla. Stat."
+  },
+  {
+   "key": "Ohio Dep't"
+  },
+  {
+   "key": "Tex. Reg."
+  },
+  {
+   "key": "N. Y. Reg."
+  },
+  {
+   "key": "Mo. Reg."
+  },
+  {
+   "key": "Minn. R."
+  },
+  {
+   "key": "FR"
+  },
+  {
+   "key": "Stat."
+  }
+ ]
+}

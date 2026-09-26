@@ -1,0 +1,33 @@
+{
+ "source": {
+  "repo": "legal-citations",
+  "path": "crates/legal-grammar/data/grammar-corpus.json",
+  "table": "cite.neutral canonical.map.court",
+  "commit": "e40ceccfacdc9fb8bec6f11cd0b56c50b8a02466",
+  "worktree_modified": true,
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "CSC",
+   "same_as": "SCC"
+  },
+  {
+   "key": "CAF",
+   "same_as": "FCA"
+  },
+  {
+   "key": "CF",
+   "same_as": "FC"
+  },
+  {
+   "key": "CFPI",
+   "same_as": "FC"
+  },
+  {
+   "key": "CCI",
+   "same_as": "TCC"
+  }
+ ]
+}

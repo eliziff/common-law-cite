@@ -10,8 +10,8 @@ use std::sync::LazyLock;
 
 type Hit = Range<usize>;
 
-fn ecmascript(pattern: &str, flags: &str) -> Regex {
-    legal_grammar::compile_ecmascript_pattern("excerpt", pattern, flags).expect("frozen excerpt regex")
+fn grammar(id: &str) -> Regex {
+    legal_grammar::compile_ecmascript_table_entry(id).expect("excerpt grammar")
 }
 
 #[derive(Serialize)]
@@ -62,19 +62,9 @@ fn function_word(word: &str) -> bool {
     )
 }
 
-static NAME_LEADIN: LazyLock<Regex> = LazyLock::new(|| {
-    ecmascript(
-        r"(?:[A-Z][\w.'’()‑-]*(?:\s+[\w.'’()‑-]+){0,6}\s+(?:v|c)\.\s+[A-Z][\w.'’()‑-]*(?:\s+[\w.'’()‑-]+){0,6},?\s*)$",
-        "",
-    )
-});
-static PINPOINT: LazyLock<Regex> = LazyLock::new(|| {
-    ecmascript(
-        r"^\s*(?:,\s*)?(?:at\s+)?para?s?\.?\s+\d+(?:\s*[-–]\s*\d+)?",
-        "",
-    )
-});
-static GLUE: LazyLock<Regex> = LazyLock::new(|| ecmascript(r"^[\s,;]*(?:and\s+)?$", ""));
+static NAME_LEADIN: LazyLock<Regex> = LazyLock::new(|| grammar("excerpt.name-leadin"));
+static PINPOINT: LazyLock<Regex> = LazyLock::new(|| grammar("excerpt.pinpoint"));
+static GLUE: LazyLock<Regex> = LazyLock::new(|| grammar("excerpt.glue"));
 
 fn citation_spans(text: &str, document: &ScalarText<'_>) -> (Vec<Hit>, usize) {
     let hits = citation_hits(text, true);
@@ -139,8 +129,8 @@ fn lowercase_words(text: &str) -> usize {
 }
 
 fn trim_window_edges(text: &str) -> String {
-    static FIRST: LazyLock<Regex> = LazyLock::new(|| ecmascript(r"^\S*\s+", ""));
-    static LAST: LazyLock<Regex> = LazyLock::new(|| ecmascript(r"\s+\S*$", ""));
+    static FIRST: LazyLock<Regex> = LazyLock::new(|| grammar("excerpt.window-first"));
+    static LAST: LazyLock<Regex> = LazyLock::new(|| grammar("excerpt.window-last"));
     LAST.replace(&FIRST.replace(text, ""), "").into_owned()
 }
 

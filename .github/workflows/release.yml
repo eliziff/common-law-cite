@@ -1,0 +1,226 @@
+# Release on a version tag (v1.2.3): crates.io, PyPI, npm and CLI binaries.
+#
+# Credentials (configure once; no secret is stored in this file):
+#   crates.io  trusted publishing for this repository + workflow `release.yml`
+#              (crates.io > crate > Settings > Trusted Publishing), used through
+#              rust-lang/crates-io-auth-action. Fallback: a CARGO_REGISTRY_TOKEN
+#              repository secret.
+#   PyPI       trusted publisher for project `legal-citations`, workflow
+#              `release.yml`, environment `pypi` (pypi.org > Publishing).
+#   npm        trusted publisher for package `legal-citations`, workflow
+#              `release.yml` (npmjs.com > package > Settings). Fallback: an
+#              NPM_TOKEN secret (automation token) exposed as NODE_AUTH_TOKEN.
+# The `pypi`, `npm` and `crates-io` environments can require a reviewer.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Build everything but publish nothing
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run }}
+
+jobs:
+  check:
+    name: Tag matches the workspace version; tests pass
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: version
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [ "${GITHUB_REF_TYPE}" = tag ] && [ "${GITHUB_REF_NAME}" != "v$version" ]; then
+            echo "tag ${GITHUB_REF_NAME} does not match workspace version $version" >&2
+            exit 1
+          fi
+          grep -q "^## \[$version\]" CHANGELOG.md || { echo "CHANGELOG.md has no [$version] section" >&2; exit 1; }
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test -p legal-grammar -p legal-citations -p legal-citations-cli
+
+  crates:
+    name: crates.io
+    needs: check
+    runs-on: ubuntu-latest
+    environment: crates-io
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: rust-lang/crates-io-auth-action@v1
+        id: auth
+        if: env.DRY_RUN != 'true'
+      - name: publish in dependency order
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token || secrets.CARGO_REGISTRY_TOKEN }}
+        # One multi-package publish (cargo >= 1.90) orders the crates, verifies
+        # each against the others through a temporary local registry, and waits
+        # for the index between uploads.
+        run: |
+          flags=""
+          [ "$DRY_RUN" = true ] && flags="--dry-run"
+          cargo publish $flags -p legal-grammar -p legal-citations -p legal-citations-cli
+
+  wheels:
+    name: wheel ${{ matrix.platform.name }}
+    needs: check
+    runs-on: ${{ matrix.platform.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - { name: linux-x86_64, runner: ubuntu-latest, target: x86_64, manylinux: auto }
+          - { name: linux-aarch64, runner: ubuntu-latest, target: aarch64, manylinux: auto }
+          - { name: musllinux-x86_64, runner: ubuntu-latest, target: x86_64, manylinux: musllinux_1_2 }
+          - { name: macos-x86_64, runner: macos-13, target: x86_64, manylinux: "" }
+          - { name: macos-arm64, runner: macos-latest, target: aarch64, manylinux: "" }
+          - { name: windows-x64, runner: windows-latest, target: x64, manylinux: "" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: PyO3/maturin-action@v1
+        with:
+          working-directory: crates/legal-citations-py
+          target: ${{ matrix.platform.target }}
+          manylinux: ${{ matrix.platform.manylinux }}
+          args: --release --out dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheel-${{ matrix.platform.name }}
+          path: crates/legal-citations-py/dist
+
+  sdist:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: PyO3/maturin-action@v1
+        with:
+          working-directory: crates/legal-citations-py
+          command: sdist
+          args: --out dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sdist
+          path: crates/legal-citations-py/dist
+
+  pypi:
+    name: PyPI
+    needs: [wheels, sdist]
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - run: ls -l dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        if: env.DRY_RUN != 'true'
+        with:
+          packages-dir: dist
+
+  npm:
+    name: npm
+    needs: check
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - id: bindgen
+        run: echo "version=$(sed -n 's/^wasm-bindgen = "=\(.*\)"/\1/p' crates/legal-citations-wasm/Cargo.toml)" >> "$GITHUB_OUTPUT"
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-bindgen@${{ steps.bindgen.outputs.version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://registry.npmjs.org
+      - name: build
+        run: |
+          npm install -g binaryen npm@latest
+          crates/legal-citations-wasm/build.sh
+      - name: test the package
+        run: node conformance/run.mjs && (cd crates/legal-citations-wasm/js && node smoke.mjs)
+      - name: publish
+        working-directory: crates/legal-citations-wasm/js
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ "$DRY_RUN" = true ]; then npm publish --dry-run; else npm publish --provenance --access public; fi
+
+  cli-binaries:
+    name: CLI ${{ matrix.target }}
+    needs: check
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { target: x86_64-unknown-linux-musl, runner: ubuntu-latest, exe: "" }
+          - { target: aarch64-apple-darwin, runner: macos-latest, exe: "" }
+          - { target: x86_64-apple-darwin, runner: macos-13, exe: "" }
+          - { target: x86_64-pc-windows-msvc, runner: windows-latest, exe: .exe }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - if: contains(matrix.target, 'musl')
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+      - run: cargo build --release -p legal-citations-cli --target ${{ matrix.target }}
+      - shell: bash
+        run: |
+          mkdir -p out
+          cp target/${{ matrix.target }}/release/legal-citations${{ matrix.exe }} out/legal-citations-${{ matrix.target }}${{ matrix.exe }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cli-${{ matrix.target }}
+          path: out
+
+  github-release:
+    name: GitHub release
+    needs: [crates, pypi, npm, cli-binaries]
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cli-*
+          path: out
+          merge-multiple: true
+      - name: release notes from CHANGELOG.md
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="$version" '$0 ~ "^## \\[" v "\\]" {on=1; next} /^## \[/ {on=0} on' CHANGELOG.md > notes.md
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" out/* --title "$GITHUB_REF_NAME" --notes-file notes.md

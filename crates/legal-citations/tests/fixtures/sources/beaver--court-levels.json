@@ -1,0 +1,128 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "backend/src/lib/courtLevels.ts",
+  "table": "LEVELS",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "SCC",
+   "level": "apex"
+  },
+  {
+   "key": "FCA",
+   "level": "appellate"
+  },
+  {
+   "key": "CMAC",
+   "level": "appellate"
+  },
+  {
+   "key": "BCCA",
+   "level": "appellate"
+  },
+  {
+   "key": "ONCA",
+   "level": "appellate"
+  },
+  {
+   "key": "NSCA",
+   "level": "appellate"
+  },
+  {
+   "key": "YKCA",
+   "level": "appellate"
+  },
+  {
+   "key": "BCSC",
+   "level": "superior_trial"
+  },
+  {
+   "key": "NSSC",
+   "level": "superior_trial"
+  },
+  {
+   "key": "FC",
+   "level": "superior_trial"
+  },
+  {
+   "key": "TCC",
+   "level": "superior_trial"
+  },
+  {
+   "key": "NSPC",
+   "level": "inferior_trial"
+  },
+  {
+   "key": "NSFC",
+   "level": "inferior_trial"
+  },
+  {
+   "key": "NSSM",
+   "level": "inferior_trial"
+  },
+  {
+   "key": "CART",
+   "level": "tribunal"
+  },
+  {
+   "key": "CHRT",
+   "level": "tribunal"
+  },
+  {
+   "key": "CIRB",
+   "level": "tribunal"
+  },
+  {
+   "key": "CITT",
+   "level": "tribunal"
+  },
+  {
+   "key": "CT",
+   "level": "tribunal"
+  },
+  {
+   "key": "FPSLREB",
+   "level": "tribunal"
+  },
+  {
+   "key": "OHSTC",
+   "level": "tribunal"
+  },
+  {
+   "key": "OIC",
+   "level": "tribunal"
+  },
+  {
+   "key": "PSDPT",
+   "level": "tribunal"
+  },
+  {
+   "key": "RAD",
+   "level": "tribunal"
+  },
+  {
+   "key": "RLLR",
+   "level": "tribunal"
+  },
+  {
+   "key": "RPD",
+   "level": "tribunal"
+  },
+  {
+   "key": "SCT",
+   "level": "tribunal"
+  },
+  {
+   "key": "SST",
+   "level": "tribunal"
+  },
+  {
+   "key": "TATC",
+   "level": "tribunal"
+  }
+ ]
+}

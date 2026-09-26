@@ -1,0 +1,14 @@
+{
+ "source": {
+  "repo": "legal-citations",
+  "path": "crates/legal-grammar/data/grammar-corpus.json",
+  "table": "defs.reporter_words",
+  "commit": "e40ceccfacdc9fb8bec6f11cd0b56c50b8a02466",
+  "worktree_modified": true,
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "pattern",
+ "pattern": "[A-Z][A-Za-z&.'-]{1,16}(?:\\s+[A-Z][A-Za-z&.'-]{1,16}){0,4}",
+ "note": "An open character-class pattern: it names no reporter, so there is nothing to enumerate.",
+ "entries": []
+}

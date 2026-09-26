@@ -1,0 +1,68 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "backend/src/lib/canliiLawUrls.ts",
+  "table": "buildCanliiLawUrl dataset jurisdictions",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "jurisdiction",
+ "entries": [
+  {
+   "key": "FED",
+   "canlii": "ca"
+  },
+  {
+   "key": "AB",
+   "canlii": "ab"
+  },
+  {
+   "key": "BC",
+   "canlii": "bc"
+  },
+  {
+   "key": "MB",
+   "canlii": "mb"
+  },
+  {
+   "key": "NB",
+   "canlii": "nb"
+  },
+  {
+   "key": "NL",
+   "canlii": "nl"
+  },
+  {
+   "key": "NS",
+   "canlii": "ns"
+  },
+  {
+   "key": "NT",
+   "canlii": "nt"
+  },
+  {
+   "key": "NU",
+   "canlii": "nu"
+  },
+  {
+   "key": "ON",
+   "canlii": "on"
+  },
+  {
+   "key": "PE",
+   "canlii": "pe"
+  },
+  {
+   "key": "QC",
+   "canlii": "qc"
+  },
+  {
+   "key": "SK",
+   "canlii": "sk"
+  },
+  {
+   "key": "YT",
+   "canlii": "yt"
+  }
+ ]
+}

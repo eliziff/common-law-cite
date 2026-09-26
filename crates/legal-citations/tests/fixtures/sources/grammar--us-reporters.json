@@ -1,0 +1,9097 @@
+{
+ "source": {
+  "repo": "legal-citations",
+  "path": "crates/legal-grammar/data/grammar-corpus.json",
+  "table": "defs.us_reporters",
+  "commit": "e40ceccfacdc9fb8bec6f11cd0b56c50b8a02466",
+  "worktree_modified": true,
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "reporter",
+ "entries": [
+  {
+   "key": "Personal and Comm. Liab. Life Health & Accid. Ins. Cas. 2d (CCH)"
+  },
+  {
+   "key": "Sec. & Fed. Corp. L. Rep. (West)"
+  },
+  {
+   "key": "Am. Law T. Rep. (U. S. Cts. )"
+  },
+  {
+   "key": "Envtl. L. Rep. (Envtl. Law Inst. )"
+  },
+  {
+   "key": "N. Y. Civ. Proc. Rep. (n. s. )"
+  },
+  {
+   "key": "N. Y. Civ. Proc. R. , (N. S. )"
+  },
+  {
+   "key": "Robertson's Report of the Trial of Aaron Burr."
+  },
+  {
+   "key": "Robertson’s Report of the Trial of Aaron Burr."
+  },
+  {
+   "key": "Collective Bargaining Negot. & Cont. (BNA)"
+  },
+  {
+   "key": "Am. Law T. Rep. U. S. Cts."
+  },
+  {
+   "key": "OFCCP Fed. Cont. Compl. Man. (CCH)"
+  },
+  {
+   "key": "U. C. C. Rep. Serv. 2d (Callaghan)"
+  },
+  {
+   "key": "Fed. Election Camp. Fin. Guide (CCH)"
+  },
+  {
+   "key": "Inher. Est. & Gift Tax Rep. (CCH)"
+  },
+  {
+   "key": "Fed. Inc. Gift & Est. Tax'n (MB)"
+  },
+  {
+   "key": "Fed. Energy Reg. Comm'n Rep. (CCH)"
+  },
+  {
+   "key": "Fed. Est. & Gift Tax Rep. (CCH)"
+  },
+  {
+   "key": "Fed. R. Evid. Serv. (Callaghan)"
+  },
+  {
+   "key": "Jones and Spencer's Super. Ct. Rep."
+  },
+  {
+   "key": "U. C. C. Rep. Serv. 2d (West)"
+  },
+  {
+   "key": "U. C. C. Rep. Serv. (Callaghan)"
+  },
+  {
+   "key": "Fed. Tax Coordinator Second Series (RIA)"
+  },
+  {
+   "key": "Pat. Trademark & Copyright J. (BNA)"
+  },
+  {
+   "key": "Prod. Safety & Liab. Rep. (BNA)"
+  },
+  {
+   "key": "Am. Law T. Rep. (N. S. )"
+  },
+  {
+   "key": "Pa. Dist. & Cnty. Dec. LEXIS"
+  },
+  {
+   "key": "Cal. Comm. Jud. Perform. LEXIS"
+  },
+  {
+   "key": "McAllister U. S. Circ. Court R."
+  },
+  {
+   "key": "Sec. Reg. & L. Rep. (BNA)"
+  },
+  {
+   "key": "Bankr. Rep (St. Louis B. A. )"
+  },
+  {
+   "key": "Blatchf. (U. S. Circ. Ct. )"
+  },
+  {
+   "key": "Food Drug Cosm. L. Rep. (CCH)"
+  },
+  {
+   "key": "Pittsb. Leg. J. (O. S. )"
+  },
+  {
+   "key": "Mass. App. Div. Adv. Sh."
+  },
+  {
+   "key": "Rec. V. A. Ct. (R. I. )"
+  },
+  {
+   "key": "Tex. Crim. App. Unpub. LEXIS"
+  },
+  {
+   "key": "U. C. C. Rep. Serv. (West)"
+  },
+  {
+   "key": "Blatch. (U. S. Cir. Ct. )"
+  },
+  {
+   "key": "Fair Empl. Prac. Newsl. (BNA)"
+  },
+  {
+   "key": "N. Mar. I. Commw. Rptr."
+  },
+  {
+   "key": "Ohio Nisi Prius Reports (N. S. )"
+  },
+  {
+   "key": "St. & Loc. Tax Serv. (RIA)"
+  },
+  {
+   "key": "U. S. App. Vet. Claims LEXIS"
+  },
+  {
+   "key": "Ben. Rev. Bd. Serv. (MB)"
+  },
+  {
+   "key": "Empl. Safety & Health Guide (CCH)"
+  },
+  {
+   "key": "Fed. R. Serv. 2d (Callaghan)"
+  },
+  {
+   "key": "Fed. R. Serv. 3d (Callaghan)"
+  },
+  {
+   "key": "White & W. Civ. Cas. Ct. App."
+  },
+  {
+   "key": "Fair Empl. Prac. Cas. (BNA)"
+  },
+  {
+   "key": "Gov't Empl. Rel. Rep. (BNA)"
+  },
+  {
+   "key": "Montg. Co. L. R. (Pa. )"
+  },
+  {
+   "key": "Phila. Ct. Com. Pl. LEXIS"
+  },
+  {
+   "key": "Amer. Law Reg. (N. S. )"
+  },
+  {
+   "key": "Cost Accounting Stand. Guide (CCH)"
+  },
+  {
+   "key": "Fed. Banking L. Rep. (CCH)"
+  },
+  {
+   "key": "Liquor Cont. L. Rep. (CCH)"
+  },
+  {
+   "key": "Pens. & Profit Sharing 2d (RIA)"
+  },
+  {
+   "key": "Stand. Fed. Tax Rep. (CCH)"
+  },
+  {
+   "key": "Charlton's (Rob't. M. ) Rep."
+  },
+  {
+   "key": "Chicago Bd. Options Ex. (CCH)"
+  },
+  {
+   "key": "Consumer Prod. Safety Guide (CCH)"
+  },
+  {
+   "key": "Rec. Co. Ch. (S. C. )"
+  },
+  {
+   "key": "Accom. Disabilities Dec. (CCH)"
+  },
+  {
+   "key": "Am. Law Reg. (N. S. )"
+  },
+  {
+   "key": "Am. Law T. Rep. Bankr."
+  },
+  {
+   "key": "Amer. Law J. (N. S. )"
+  },
+  {
+   "key": "Cal. Jud. Ethics Op. LEXIS"
+  },
+  {
+   "key": "Can. Com. L. Guide (CCH)"
+  },
+  {
+   "key": "Col. & Caines Cas. (N. Y. )"
+  },
+  {
+   "key": "Fed. R. Evid. Serv. 2d"
+  },
+  {
+   "key": "Fed. R. Evid. Serv. 3d"
+  },
+  {
+   "key": "Hous. & Dev. Rep. (RIA)"
+  },
+  {
+   "key": "Lack. Leg. News (P. A. )"
+  },
+  {
+   "key": "Miss. (S. & M. Ch. )"
+  },
+  {
+   "key": "N. J. Super. Unpub. LEXIS"
+  },
+  {
+   "key": "N. Y. Civ. Proc. Rep."
+  },
+  {
+   "key": "Pens. & Ben. Rep. (BNA)"
+  },
+  {
+   "key": "Pens. & Benefits Rep. (BNA)"
+  },
+  {
+   "key": "U. C. C. Rep. Serv. 2d"
+  },
+  {
+   "key": "American Leading Cases (U. S. )"
+  },
+  {
+   "key": "Collier Bankr. Cas. 2d (MB)"
+  },
+  {
+   "key": "Fed. Ex. Tax Rep. (CCH)"
+  },
+  {
+   "key": "Fed. R. Serv. 2d (West)"
+  },
+  {
+   "key": "Fed. R. Serv. 3d (West)"
+  },
+  {
+   "key": "Fed. R. Serv. (Callaghan)"
+  },
+  {
+   "key": "N. Y. Proc. Ct. Ass."
+  },
+  {
+   "key": "Pittsb. Leg. J. (Pa. )"
+  },
+  {
+   "key": "Rep. Cont. Elect. Case."
+  },
+  {
+   "key": "Robertson's Super. Ct. Rep."
+  },
+  {
+   "key": "Tax Ct. Mem. Dec. (CCH)"
+  },
+  {
+   "key": "Tax Ct. Rep. Dec. (RIA)"
+  },
+  {
+   "key": "Wage Hour & Leave Rep. (BNA)"
+  },
+  {
+   "key": "Am. Law J. (N. S. )"
+  },
+  {
+   "key": "Am. Law J. (U. S. )"
+  },
+  {
+   "key": "Am. Law T. (N. S. )"
+  },
+  {
+   "key": "Cal. 3d Spec. Trib Supp."
+  },
+  {
+   "key": "MacArth. & M. (Dist. Col. )"
+  },
+  {
+   "key": "N. C. (Dev. & Bat. Eq. )"
+  },
+  {
+   "key": "N. J. Prerog. Ct. LEXIS"
+  },
+  {
+   "key": "N. M. App. Unpub. LEXIS"
+  },
+  {
+   "key": "N. Y. Civ. Proc. R."
+  },
+  {
+   "key": "Rep. Cont. Elect. Cas."
+  },
+  {
+   "key": "S. C. App. Unpub. LEXIS"
+  },
+  {
+   "key": "UCC Rep. Serv. 2d (Callaghan)"
+  },
+  {
+   "key": "Am. Disabilities Cas. (BNA)"
+  },
+  {
+   "key": "Am. L. Reg. , n. s."
+  },
+  {
+   "key": "Am. & Eng. R. Cas."
+  },
+  {
+   "key": "Bloom. Man. Neg. Cas."
+  },
+  {
+   "key": "Colo. Bankr. Ct. Rep."
+  },
+  {
+   "key": "Fed. Tax Guide Rep. (CCH)"
+  },
+  {
+   "key": "Immigr. L. Serv. (West)"
+  },
+  {
+   "key": "Leh. V. L. R. (Pa. )"
+  },
+  {
+   "key": "N. C. (Dev. & Bat. )"
+  },
+  {
+   "key": "N. M. St. B. Bull."
+  },
+  {
+   "key": "S. C. D. C. (N. S. )"
+  },
+  {
+   "key": "Treas. Dec. Int. Rev."
+  },
+  {
+   "key": "Bosworth Super. Ct. Rep."
+  },
+  {
+   "key": "Cal. Bankr. Ct. Rep."
+  },
+  {
+   "key": "Carpenter's Report of Burr's Trial"
+  },
+  {
+   "key": "Carpenter’s Report of Burr’s Trial"
+  },
+  {
+   "key": "Comm. Reg. 2d (P & F)"
+  },
+  {
+   "key": "N. Y. S. E. Guide (CCH)"
+  },
+  {
+   "key": "N. Y. App. Div. LEXIS"
+  },
+  {
+   "key": "N. Y. City H. Rec."
+  },
+  {
+   "key": "Northumberland Co. Leg. Jour"
+  },
+  {
+   "key": "Ops. Cal. Atty. Gen."
+  },
+  {
+   "key": "S. C. L. (Nott & McC. )"
+  },
+  {
+   "key": "S. C. L. (Mill Const. )"
+  },
+  {
+   "key": "Sandford Super. Ct. Rep."
+  },
+  {
+   "key": "Sawyer U. S. Ct. Rep."
+  },
+  {
+   "key": "Som. Leg. J. (Pa. )"
+  },
+  {
+   "key": "Tex. Bankr. Ct. Rep."
+  },
+  {
+   "key": "U. S. Vet. App. LEXIS"
+  },
+  {
+   "key": "Wage & Hour Cas. 2d (BNA)"
+  },
+  {
+   "key": "Wkly. Notes Cas. (Pa. )"
+  },
+  {
+   "key": "Am. B. R. (N. S. )"
+  },
+  {
+   "key": "Am. B. R. (n. s. )"
+  },
+  {
+   "key": "Ariz. App. Unpub. LEXIS"
+  },
+  {
+   "key": "Bankr. Ct. Dec. (CRR)"
+  },
+  {
+   "key": "Bankr. Ct. Dec. (LRP)"
+  },
+  {
+   "key": "Chem. Reg. Rep. (BNA)"
+  },
+  {
+   "key": "Communications Reg. 2d (P&F)"
+  },
+  {
+   "key": "Cont. App. Dec. (CCH)"
+  },
+  {
+   "key": "Empl. Benefits Cas. (BNA)"
+  },
+  {
+   "key": "Fam. L. Tax Guide (CCH)"
+  },
+  {
+   "key": "Fed. Carr. Rep. (CCH)"
+  },
+  {
+   "key": "Fed. Cont. Rep. (BNA)"
+  },
+  {
+   "key": "Fed. R. Evid. Serv."
+  },
+  {
+   "key": "Fire & Casualty Cas. (CCH)"
+  },
+  {
+   "key": "Fla. L. Weekly Fed. B"
+  },
+  {
+   "key": "Fla. L. Weekly Fed. C"
+  },
+  {
+   "key": "Luz. Leg. Reg. Rep."
+  },
+  {
+   "key": "Mass. App. Unpub. LEXIS"
+  },
+  {
+   "key": "Minn. App. Unpub. LEXIS"
+  },
+  {
+   "key": "Mont'g. Co. L. Rep."
+  },
+  {
+   "key": "N. J. Sup. Ct. LEXIS"
+  },
+  {
+   "key": "Off. Gaz. Pat. Off."
+  },
+  {
+   "key": "Ohio N. P. (n. s. )"
+  },
+  {
+   "key": "Ohio Nisi Prius (N. S. )"
+  },
+  {
+   "key": "Ohio Nisi Prius [N. S. ]"
+  },
+  {
+   "key": "Pa. Commw. Unpub. LEXIS"
+  },
+  {
+   "key": "Pa. Super. Unpub. LEXIS"
+  },
+  {
+   "key": "Phila. Cty. Rptr. LEXIS"
+  },
+  {
+   "key": "Rad. Reg. 2d (P & F)"
+  },
+  {
+   "key": "Sweeney Super. Ct. Rep."
+  },
+  {
+   "key": "U. C. C. Rep. Serv."
+  },
+  {
+   "key": "U. S. Commerce Ct. LEXIS"
+  },
+  {
+   "key": "Woolworth's Cir. Ct. R."
+  },
+  {
+   "key": "Abb. Ct. App. Dec."
+  },
+  {
+   "key": "Biss. (U. S. ) Bissell's"
+  },
+  {
+   "key": "Cal. App. Unpub. LEXIS"
+  },
+  {
+   "key": "Cin. Sup. Ct. Rep."
+  },
+  {
+   "key": "Collier Bankr. Cas. (MB)"
+  },
+  {
+   "key": "Davis. L. Ct. Cas."
+  },
+  {
+   "key": "Edm. Sel. Cas. (N. Y. )"
+  },
+  {
+   "key": "Employee Benefits Cas. (BNA)"
+  },
+  {
+   "key": "Ida. App. Unpub. LEXIS"
+  },
+  {
+   "key": "Ill. App. Unpub. LEXIS"
+  },
+  {
+   "key": "Ill. Cir. Ct. Rep."
+  },
+  {
+   "key": "Ind. App. Unpub. LEXIS"
+  },
+  {
+   "key": "Kan. App. Unpub. LEXIS"
+  },
+  {
+   "key": "Lab. Arb. Rep. (BNA)"
+  },
+  {
+   "key": "Lab. Rel. Rep. (BNA)"
+  },
+  {
+   "key": "Leg. Intel. or Intell."
+  },
+  {
+   "key": "N. Y. City Ct. Rep."
+  },
+  {
+   "key": "Ohio Cir. Ct. R. N. S."
+  },
+  {
+   "key": "Okla. Crim. App. LEXIS"
+  },
+  {
+   "key": "S. C. Eq. (Strob. Eq. )"
+  },
+  {
+   "key": "S. C. L. (McMullan Eq. )"
+  },
+  {
+   "key": "Secured Transactions Guide (CCH)"
+  },
+  {
+   "key": "Soc. Sec. Rep. (CCH)"
+  },
+  {
+   "key": "Tenn. Crim. App. LEXIS"
+  },
+  {
+   "key": "Treadway Const. (S. C. )"
+  },
+  {
+   "key": "U. S. Cl. Ct. LEXIS"
+  },
+  {
+   "key": "U. S. Ct. Cl. LEXIS"
+  },
+  {
+   "key": "Yates Sel. Cas. (N. Y. )"
+  },
+  {
+   "key": "York Leg. Rec. (Pa. )"
+  },
+  {
+   "key": "A. F. T. R. 2d (RIA)"
+  },
+  {
+   "key": "Ala. Crim. App. LEXIS"
+  },
+  {
+   "key": "Anderson's Ohio App. Cas."
+  },
+  {
+   "key": "Betts. D. C. MSS."
+  },
+  {
+   "key": "Blume Sup. Ct. Trans."
+  },
+  {
+   "key": "Colo. J. C. A. R."
+  },
+  {
+   "key": "Copy. L. Rep. (CCH)"
+  },
+  {
+   "key": "Copyright L. Rep. (CCH)"
+  },
+  {
+   "key": "Crim. L. Rep. (BNA)"
+  },
+  {
+   "key": "D. C. (MacArth. & M. )"
+  },
+  {
+   "key": "Empl. Prac. Guide (CCH)"
+  },
+  {
+   "key": "How. N. P. (Mich. )"
+  },
+  {
+   "key": "I. E. R. Cas. (BNA)"
+  },
+  {
+   "key": "Ky. App. Unpub. LEXIS"
+  },
+  {
+   "key": "La. App. Unpub. LEXIS"
+  },
+  {
+   "key": "Mac. A. Pat. Cas."
+  },
+  {
+   "key": "Mass. App. Div. LEXIS"
+  },
+  {
+   "key": "Med. Devices Rep. (CCH)"
+  },
+  {
+   "key": "Montg. Co. Law Rep'r."
+  },
+  {
+   "key": "N. Mar. I. Commw."
+  },
+  {
+   "key": "Nev. Adv. Op. No."
+  },
+  {
+   "key": "O. S. H. Cas. (BNA)"
+  },
+  {
+   "key": "O. S. H. Rep. (BNA)"
+  },
+  {
+   "key": "Okla. Civ. App. LEXIS"
+  },
+  {
+   "key": "Pa. Just. L. Rep."
+  },
+  {
+   "key": "S. C. Eq. (Bail. Eq. )"
+  },
+  {
+   "key": "S. C. Eq. (Chev. Eq. )"
+  },
+  {
+   "key": "S. C. Eq. (Harp. Eq. )"
+  },
+  {
+   "key": "S. C. Eq. (Rice. Eq. )"
+  },
+  {
+   "key": "S. C. Eq. (Rich. Eq. )"
+  },
+  {
+   "key": "S. C. Eq. (Speers Eq. )"
+  },
+  {
+   "key": "Super. Ct. (R. I. )"
+  },
+  {
+   "key": "Tex. Ct. App. Dec. Civ."
+  },
+  {
+   "key": "Tex. Crim. App. LEXIS"
+  },
+  {
+   "key": "UCC Rep. Serv. (Callaghan)"
+  },
+  {
+   "key": "UCC Rep. Serv. 2d (West)"
+  },
+  {
+   "key": "UNITED STATES TAX COURT REPORTS"
+  },
+  {
+   "key": "U. S. P. Q. 2d (BNA)"
+  },
+  {
+   "key": "U. S. P. Q. 2d [BNA]"
+  },
+  {
+   "key": "U. S. Tax Rep. (RIA)"
+  },
+  {
+   "key": "Ala. Civ. App. LEXIS"
+  },
+  {
+   "key": "Betts. C. C. MS."
+  },
+  {
+   "key": "Betts. D. C. MS."
+  },
+  {
+   "key": "Blatchf. C. C. Rep."
+  },
+  {
+   "key": "Bus. Franchise Guide (CCH)"
+  },
+  {
+   "key": "Cal. Daily Op. Serv."
+  },
+  {
+   "key": "Consumer Cred. Guide (CCH)"
+  },
+  {
+   "key": "Daily Wash. L. Rptr."
+  },
+  {
+   "key": "Duer Super. Ct. Rep."
+  },
+  {
+   "key": "EEOC Compl. Man. (CCH)"
+  },
+  {
+   "key": "Exempt Org. Rep. (CCH)"
+  },
+  {
+   "key": "Fam. L. Rep. (BNA)"
+  },
+  {
+   "key": "Fed. Banking L. Rep."
+  },
+  {
+   "key": "Fla. L. Weekly Supp."
+  },
+  {
+   "key": "Gov't Cont. Rep. (CCH)"
+  },
+  {
+   "key": "Hall Super. Ct. Rep."
+  },
+  {
+   "key": "Harring. Ch. (Mich. )"
+  },
+  {
+   "key": "Ins. L. Rep. (CCH)"
+  },
+  {
+   "key": "Lab. Arb. Awards (CCH)"
+  },
+  {
+   "key": "Lab. L. Rep. (CCH)"
+  },
+  {
+   "key": "Mart. O. S. (La. )"
+  },
+  {
+   "key": "N. C. (Car. L. Rep. )"
+  },
+  {
+   "key": "N. Y. Wkly. Dig."
+  },
+  {
+   "key": "Ohio C. C. (N. S. )"
+  },
+  {
+   "key": "Ohio C. C. (n. s. )"
+  },
+  {
+   "key": "Ohio Cir. Ct. (N. S. )"
+  },
+  {
+   "key": "Ohio Nisi Prius (n. s. )"
+  },
+  {
+   "key": "P. R. Offic. Trans."
+  },
+  {
+   "key": "Pa. Co. Ct. Rep."
+  },
+  {
+   "key": "Pa. Jud. Disc. LEXIS"
+  },
+  {
+   "key": "S. C. Eq. (Dud. Eq. )"
+  },
+  {
+   "key": "S. C. L. (McCord Eq. )"
+  },
+  {
+   "key": "Tenn. Ch. App. LEXIS"
+  },
+  {
+   "key": "Tex. Sup. Ct. J."
+  },
+  {
+   "key": "UNITED STATES TAX COURT REPORT"
+  },
+  {
+   "key": "U. S. App. D. C."
+  },
+  {
+   "key": "Wash. C. C. Rep."
+  },
+  {
+   "key": "Abb. Pr. (n. s. )"
+  },
+  {
+   "key": "Anthon N. P. (N. Y. )"
+  },
+  {
+   "key": "Cal. App. 4th Supp."
+  },
+  {
+   "key": "Cal. App. 5th Supp."
+  },
+  {
+   "key": "Cal. App. Supp. 4th"
+  },
+  {
+   "key": "Cal. App. Supp. 5th"
+  },
+  {
+   "key": "Comm. Reg. (P & F)"
+  },
+  {
+   "key": "D. C. (Tuck. & Cl. )"
+  },
+  {
+   "key": "Daily Lab. Rep. (BNA)"
+  },
+  {
+   "key": "Daily Leg. News (Pa. )"
+  },
+  {
+   "key": "Del. Fam. Ct. LEXIS"
+  },
+  {
+   "key": "Env't Rep. Cas. (BNA)"
+  },
+  {
+   "key": "Fla. L. Weekly Fed."
+  },
+  {
+   "key": "Haz. Reg. U. S."
+  },
+  {
+   "key": "Haz. U. S. Reg."
+  },
+  {
+   "key": "How. Pr. (n. s. )"
+  },
+  {
+   "key": "Lehigh Val. L. Rep."
+  },
+  {
+   "key": "Mason Circt. Ct. R."
+  },
+  {
+   "key": "McCrary's Cir. Ct. Rpts"
+  },
+  {
+   "key": "Montg. Co. L. Rep'r"
+  },
+  {
+   "key": "N. C. (Cam. & Nor. )"
+  },
+  {
+   "key": "N. M. (Ct. App. )"
+  },
+  {
+   "key": "N. Y. (N. Y. S. )"
+  },
+  {
+   "key": "N. Y. Ann. Cas."
+  },
+  {
+   "key": "N. Y. Leg. Obs."
+  },
+  {
+   "key": "Ohio C. C. R. N. S."
+  },
+  {
+   "key": "P. U. R. (N. S. )"
+  },
+  {
+   "key": "P. U. R. (n. s. )"
+  },
+  {
+   "key": "Patt. & H. (Va. )"
+  },
+  {
+   "key": "Pub. Util. Rep. 4th"
+  },
+  {
+   "key": "S. C. Eq. (Hill Eq. )"
+  },
+  {
+   "key": "Union Lab. Rep. (BNA)"
+  },
+  {
+   "key": "Wage & Hour Cas. (BNA)"
+  },
+  {
+   "key": "Wils. Super. (Ind. )"
+  },
+  {
+   "key": "Cal. App. 2d Supp."
+  },
+  {
+   "key": "Cal. App. 3d Supp."
+  },
+  {
+   "key": "Cal. App. Supp. 2d"
+  },
+  {
+   "key": "Cal. App. Supp. 3d"
+  },
+  {
+   "key": "Cal. Daily Op. Service"
+  },
+  {
+   "key": "Cole. & Cai. Cas."
+  },
+  {
+   "key": "Collier Bankr. Cas. 2d"
+  },
+  {
+   "key": "Commc'ns Reg. (P & F)"
+  },
+  {
+   "key": "Communications Reg. (P&F)"
+  },
+  {
+   "key": "Daily Journal D. A. R."
+  },
+  {
+   "key": "Freem. Ch. (Miss. )"
+  },
+  {
+   "key": "Gildersleeve (N. Mex. )"
+  },
+  {
+   "key": "Hall's Sup. Court Rep."
+  },
+  {
+   "key": "Hall's Sup. Ct. R."
+  },
+  {
+   "key": "Ill. Ct. Cl. LEXIS"
+  },
+  {
+   "key": "Md. Cir. Ct. LEXIS"
+  },
+  {
+   "key": "N. Y. Spec. Term Rep."
+  },
+  {
+   "key": "N. Y. Leg. Ob."
+  },
+  {
+   "key": "Nott & M'C. (S. C. )"
+  },
+  {
+   "key": "O. S. H. Cases (BNA)"
+  },
+  {
+   "key": "Pa. D. & C. 4th"
+  },
+  {
+   "key": "Pa. D. & C. 5th"
+  },
+  {
+   "key": "Rad. Reg. (P & F)"
+  },
+  {
+   "key": "Shipping Reg. (P & F)"
+  },
+  {
+   "key": "Smith's (E. H. ) Reports"
+  },
+  {
+   "key": "U. S. P. Q. 2D (BNA)"
+  },
+  {
+   "key": "U. S. P. Q. 2D [BNA]"
+  },
+  {
+   "key": "U. S. Tax Ct. LEXIS"
+  },
+  {
+   "key": "Va. (Patt. & Heath)"
+  },
+  {
+   "key": "Wkly. Law Gaz. No."
+  },
+  {
+   "key": "A. F. T. R. (P-H)"
+  },
+  {
+   "key": "Amer. Law T. Rep."
+  },
+  {
+   "key": "Auto. Cas. 2d (CCH)"
+  },
+  {
+   "key": "B. T. A. M. (P-H)"
+  },
+  {
+   "key": "Betts' D. C. MSS."
+  },
+  {
+   "key": "Betts, D. C. MSS."
+  },
+  {
+   "key": "C. C. A. Rep."
+  },
+  {
+   "key": "Can. Tax Rep. (CCH)"
+  },
+  {
+   "key": "Civ. Proc. N. S."
+  },
+  {
+   "key": "Ct. Intl. Trade LEXIS"
+  },
+  {
+   "key": "Dominion Tax Cas. (CCH)"
+  },
+  {
+   "key": "Fulton County D. Rep."
+  },
+  {
+   "key": "Harr. Ch. (Mich. )"
+  },
+  {
+   "key": "Hayw. & H. D. C."
+  },
+  {
+   "key": "Life. Cas. 2d (CCH)"
+  },
+  {
+   "key": "Mc. A. Pat. Cas."
+  },
+  {
+   "key": "Media L. Rep. (BNA)"
+  },
+  {
+   "key": "Montg. Co. L. R."
+  },
+  {
+   "key": "N. Y. Anno. Cas."
+  },
+  {
+   "key": "N. Y. Crim. Rep."
+  },
+  {
+   "key": "N. Y. Super. Ct."
+  },
+  {
+   "key": "Northumb. Legal. J."
+  },
+  {
+   "key": "Oh. N. P. (N. S)."
+  },
+  {
+   "key": "Pa. Dist. & C. Rep."
+  },
+  {
+   "key": "Pa. D. & C. 2d"
+  },
+  {
+   "key": "Pa. D. & C. 3d"
+  },
+  {
+   "key": "Pitts. Rep. (Pa. )"
+  },
+  {
+   "key": "SEC Accounting R. (CCH)"
+  },
+  {
+   "key": "S. W. , 2d Series."
+  },
+  {
+   "key": "S. W. , Second Series,"
+  },
+  {
+   "key": "San Fran. Law. J."
+  },
+  {
+   "key": "A. F. T. R. (RIA)"
+  },
+  {
+   "key": "A. L. R. Fed. 2d"
+  },
+  {
+   "key": "Ant. N. P. Cas."
+  },
+  {
+   "key": "Bett's D. C. MS."
+  },
+  {
+   "key": "Betts' C. C. MS."
+  },
+  {
+   "key": "Betts' D. C. MS."
+  },
+  {
+   "key": "Betts, C. C. MS."
+  },
+  {
+   "key": "Betts, D. C. MS."
+  },
+  {
+   "key": "Betts, D. C. Ms."
+  },
+  {
+   "key": "Bigelow. Ins. Rep."
+  },
+  {
+   "key": "Brunner. Col. Cas."
+  },
+  {
+   "key": "Cal. Sup. (Cal. )"
+  },
+  {
+   "key": "Cin. S. C. Rep."
+  },
+  {
+   "key": "Cust. B. & Dec."
+  },
+  {
+   "key": "Dev. & Bat. Eq."
+  },
+  {
+   "key": "Fed. Audit Guide (CCH)"
+  },
+  {
+   "key": "Fed. R. Serv. 2d"
+  },
+  {
+   "key": "Fed. R. Serv. 3d"
+  },
+  {
+   "key": "I. T. R. D. (BNA)"
+  },
+  {
+   "key": "Int'l Env't Rep. (BNA)"
+  },
+  {
+   "key": "Int'l Trade Rep. (BNA)"
+  },
+  {
+   "key": "Johns. Cas. (N. Y. )"
+  },
+  {
+   "key": "L. R. R. M. (BNA)"
+  },
+  {
+   "key": "Mut. Funds Guide (CCH)"
+  },
+  {
+   "key": "N. Y. Spec. Term R."
+  },
+  {
+   "key": "N. Y. St. Repr."
+  },
+  {
+   "key": "N. Y. St. Rptr."
+  },
+  {
+   "key": "N. Mar. I. LEXIS"
+  },
+  {
+   "key": "Neg. Cas. 2d (CCH)"
+  },
+  {
+   "key": "OSHA Comp. Guide (CCH)"
+  },
+  {
+   "key": "O. G. Pat. Off."
+  },
+  {
+   "key": "Oh. Cir. Ct. N. S."
+  },
+  {
+   "key": "P. R. Fed. Rep."
+  },
+  {
+   "key": "Patton & H. (Va. )"
+  },
+  {
+   "key": "Pet. Cir. C. R."
+  },
+  {
+   "key": "Philadelphia Leg. Int."
+  },
+  {
+   "key": "Pittsb. R. (Pa. )"
+  },
+  {
+   "key": "S. W. 2d Series."
+  },
+  {
+   "key": "St. Tax Rep. (CCH)"
+  },
+  {
+   "key": "Tax Ct. Rep. (CCH)"
+  },
+  {
+   "key": "UCC Rep. Serv. (West)"
+  },
+  {
+   "key": "U. S. L. W. (BNA)"
+  },
+  {
+   "key": "U. S. P. Q. (BNA)"
+  },
+  {
+   "key": "U. S. P. Q. [BNA]"
+  },
+  {
+   "key": "Wall. Jr. C. C."
+  },
+  {
+   "key": "Weekly Law Bulletin (Ohio)"
+  },
+  {
+   "key": "Am. Disabilities Dec."
+  },
+  {
+   "key": "Am. Law T. Rep."
+  },
+  {
+   "key": "Armstrong. Election Cases"
+  },
+  {
+   "key": "Betts. D C. MS."
+  },
+  {
+   "key": "Betts D. C. MS."
+  },
+  {
+   "key": "Brunn. Coll. Cas."
+  },
+  {
+   "key": "D. C. Super. LEXIS"
+  },
+  {
+   "key": "Empl. Coordinator (RIA)"
+  },
+  {
+   "key": "Fair Empl. Prac. Cas."
+  },
+  {
+   "key": "Hoffm. Ch. (N. Y. )"
+  },
+  {
+   "key": "How. Prac. (N. Y. )"
+  },
+  {
+   "key": "J. J. Marsh. (Ky. )"
+  },
+  {
+   "key": "Johns. Ch. (N. Y. )"
+  },
+  {
+   "key": "Ky. (A. K. Marsh. )"
+  },
+  {
+   "key": "Ky. (J. J. Marsh. )"
+  },
+  {
+   "key": "Leg. Ops. (Pa. )"
+  },
+  {
+   "key": "Mann. Unrep. Cas."
+  },
+  {
+   "key": "Mart. & Y. (Tenn. )"
+  },
+  {
+   "key": "McMul. Eq. (S. C. )"
+  },
+  {
+   "key": "Mich. N. P. R."
+  },
+  {
+   "key": "Mill Const. (S. C. )"
+  },
+  {
+   "key": "Month. West. Jur."
+  },
+  {
+   "key": "N. H. Super. LEXIS"
+  },
+  {
+   "key": "N. J. Super. LEXIS"
+  },
+  {
+   "key": "N. M. Ct. App."
+  },
+  {
+   "key": "N. M. Unpub. LEXIS"
+  },
+  {
+   "key": "N. Y. Ch. R. Ann."
+  },
+  {
+   "key": "N. Y. Ann. Ca."
+  },
+  {
+   "key": "N. Y. Ch. Ann."
+  },
+  {
+   "key": "N. Y. Cr. Rep."
+  },
+  {
+   "key": "N. Y. Crim. R."
+  },
+  {
+   "key": "N. Y. St. Rep."
+  },
+  {
+   "key": "N. Y. Sup. Ct."
+  },
+  {
+   "key": "Ohio St. (N. S. )"
+  },
+  {
+   "key": "Ohio St. (n. s. )"
+  },
+  {
+   "key": "Pa. Law J. Rep."
+  },
+  {
+   "key": "Pitts. Leg. Joor."
+  },
+  {
+   "key": "R. I. Super. LEXIS"
+  },
+  {
+   "key": "Rich. Cas. (S. C. )"
+  },
+  {
+   "key": "S. C. Unpub. LEXIS"
+  },
+  {
+   "key": "Sandf. Ch. (N. Y. )"
+  },
+  {
+   "key": "Sil. (Sup. Ct. )"
+  },
+  {
+   "key": "Smedes & M. (Miss. )"
+  },
+  {
+   "key": "Strob. Eq. (S. C. )"
+  },
+  {
+   "key": "Strobh. L. (S. C. )"
+  },
+  {
+   "key": "Unrep. Tenn. Cas."
+  },
+  {
+   "key": "Wheeler. Cr. Cas."
+  },
+  {
+   "key": "Wkly. Notes. Cas."
+  },
+  {
+   "key": "App. Div. (N. Y. )"
+  },
+  {
+   "key": "App. Com'r. Pat."
+  },
+  {
+   "key": "App. Com'r of Pat."
+  },
+  {
+   "key": "Bail. Eq. (S. C. )"
+  },
+  {
+   "key": "Barb. Ch. (N. Y. )"
+  },
+  {
+   "key": "Busbee Eq. (N. C. )"
+  },
+  {
+   "key": "Cal. 4th CJP Supp."
+  },
+  {
+   "key": "Cal. 5th CJP Supp."
+  },
+  {
+   "key": "Car. Law. Repos."
+  },
+  {
+   "key": "Ch. Sent. (N. Y. )"
+  },
+  {
+   "key": "Cheves Eq. (S. C. )"
+  },
+  {
+   "key": "Cin. Super. (Ohio)"
+  },
+  {
+   "key": "Clarke Ch. (N. Y. )"
+  },
+  {
+   "key": "Col. Cas. (N. Y. )"
+  },
+  {
+   "key": "Colo. Discipl. LEXIS"
+  },
+  {
+   "key": "Conn. Super. Ct."
+  },
+  {
+   "key": "Ct. Cust. Appls."
+  },
+  {
+   "key": "Dec. Commr. Pat."
+  },
+  {
+   "key": "Harp. Eq. (S. C. )"
+  },
+  {
+   "key": "Hoff. Land. Cas."
+  },
+  {
+   "key": "Ired. Eq. (N. C. )"
+  },
+  {
+   "key": "L. R. A (N. S. )"
+  },
+  {
+   "key": "Lehigh Val. L. R."
+  },
+  {
+   "key": "Life. Cas. 2d(CCH)"
+  },
+  {
+   "key": "Man. Unrep. Cas."
+  },
+  {
+   "key": "McMul. L. (S. C. )"
+  },
+  {
+   "key": "N. C. (Busb. Eq. )"
+  },
+  {
+   "key": "N. C. (Ired. Eq. )"
+  },
+  {
+   "key": "N. C. (Phil. Eq. )"
+  },
+  {
+   "key": "N. J. Misc. LEXIS"
+  },
+  {
+   "key": "N. Y. Misc. LEXIS"
+  },
+  {
+   "key": "Nat. Bankr. Reg."
+  },
+  {
+   "key": "Okla. Crim. Rep."
+  },
+  {
+   "key": "Pa. Commonwealth Ct."
+  },
+  {
+   "key": "Park. Crim. Rep."
+  },
+  {
+   "key": "Phil. Eq. (N. C. )"
+  },
+  {
+   "key": "Phila. Leg. Int."
+  },
+  {
+   "key": "Phill. L. (N. C. )"
+  },
+  {
+   "key": "S. C. L. (McMul. )"
+  },
+  {
+   "key": "S. C. L. (Strob. )"
+  },
+  {
+   "key": "S. C. L. (Tread. )"
+  },
+  {
+   "key": "Sarat. Ch. Sent."
+  },
+  {
+   "key": "Speers Eq. (S. C. )"
+  },
+  {
+   "key": "Tenn. Crim. App."
+  },
+  {
+   "key": "Tex. Unrep. Cas."
+  },
+  {
+   "key": "U. S. S. C. Rep."
+  },
+  {
+   "key": "U. S. Dist. LEXIS"
+  },
+  {
+   "key": "U. S. Law Int."
+  },
+  {
+   "key": "W. N. C. (Pa. )"
+  },
+  {
+   "key": "Wage & Hour Cas. 2d"
+  },
+  {
+   "key": "A. L. T. Bankr."
+  },
+  {
+   "key": "App. Comm. Pat."
+  },
+  {
+   "key": "App. Comr. Pat."
+  },
+  {
+   "key": "Ariz. Adv. Rep."
+  },
+  {
+   "key": "Bail. L. (S. C. )"
+  },
+  {
+   "key": "Bankr. Ct. Dec."
+  },
+  {
+   "key": "Bankr. Ct. Rep."
+  },
+  {
+   "key": "Bigelow's Insurance Reports"
+  },
+  {
+   "key": "Brun. Col. Cas."
+  },
+  {
+   "key": "Cal. App. 2d Supp"
+  },
+  {
+   "key": "Cal. App. Supp."
+  },
+  {
+   "key": "Cal. Super. Ct."
+  },
+  {
+   "key": "Cheves L. (S. C. )"
+  },
+  {
+   "key": "Chi. Leg. News."
+  },
+  {
+   "key": "City Hall Rec. (NY)"
+  },
+  {
+   "key": "Collier Bankr. Cas."
+  },
+  {
+   "key": "D. C. App. LEXIS"
+  },
+  {
+   "key": "Del. C. P. LEXIS"
+  },
+  {
+   "key": "Dud. Eq. (S. C. )"
+  },
+  {
+   "key": "Edw. Ch. (N. Y. )"
+  },
+  {
+   "key": "Fire & Casualty Cas."
+  },
+  {
+   "key": "Fish. Pat. Cas."
+  },
+  {
+   "key": "Fish. Pat. Rep."
+  },
+  {
+   "key": "Harp. L. (S. C. )"
+  },
+  {
+   "key": "Hayw. (N. C. )"
+  },
+  {
+   "key": "Hunt. Mer. Mag."
+  },
+  {
+   "key": "I. & N. Dec."
+  },
+  {
+   "key": "Ired. L. (N. C. )"
+  },
+  {
+   "key": "Johns. Ch. Rep."
+  },
+  {
+   "key": "Jour. Fr. Inst."
+  },
+  {
+   "key": "Lock. Rev. Cas."
+  },
+  {
+   "key": "MacA. Pat. Cas."
+  },
+  {
+   "key": "Mart. (N. C. )"
+  },
+  {
+   "key": "Mart. (O. S. )"
+  },
+  {
+   "key": "Mass. App. Dec."
+  },
+  {
+   "key": "Mass. App. Div."
+  },
+  {
+   "key": "Mont'g. L. Rep."
+  },
+  {
+   "key": "Morr. Min. Rep."
+  },
+  {
+   "key": "N. C. (Dev. Eq. )"
+  },
+  {
+   "key": "N. C. (Jones Eq. )"
+  },
+  {
+   "key": "N. C. App. LEXIS"
+  },
+  {
+   "key": "N. D. App. LEXIS"
+  },
+  {
+   "key": "N. M. App. LEXIS"
+  },
+  {
+   "key": "N. Y. Cr. R."
+  },
+  {
+   "key": "N. Y. Legal Observer"
+  },
+  {
+   "key": "N. Y. St. R."
+  },
+  {
+   "key": "Nat. Bank. Reg."
+  },
+  {
+   "key": "Ohio. Unrept. Cas."
+  },
+  {
+   "key": "Ohio C. C. N. S."
+  },
+  {
+   "key": "Ohio N. P. N. S."
+  },
+  {
+   "key": "Ohio Nisi Prius Decisions"
+  },
+  {
+   "key": "Ohio W. L. Bull."
+  },
+  {
+   "key": "P-H T. C. Memo."
+  },
+  {
+   "key": "Parker's Crim. Rep."
+  },
+  {
+   "key": "Patt. & Heath R."
+  },
+  {
+   "key": "Penn. Co. Ct. Rep."
+  },
+  {
+   "key": "Personnel Mgmt. (BNA)"
+  },
+  {
+   "key": "Pittsb. L. Rev."
+  },
+  {
+   "key": "Pittsb. Leg. J."
+  },
+  {
+   "key": "Pittsburgh Leg. Journal"
+  },
+  {
+   "key": "Rich. L. (S. C. )"
+  },
+  {
+   "key": "Riley Eq. (S. C. )"
+  },
+  {
+   "key": "S. C. Eq. (Des. )"
+  },
+  {
+   "key": "S. C. Eq. (Ril. )"
+  },
+  {
+   "key": "S. C. L. (Bail. )"
+  },
+  {
+   "key": "S. C. L. (Chev. )"
+  },
+  {
+   "key": "S. C. L. (Harp. )"
+  },
+  {
+   "key": "S. C. L. (Rich. )"
+  },
+  {
+   "key": "S. C. App. LEXIS"
+  },
+  {
+   "key": "S. W. , 2d Series,"
+  },
+  {
+   "key": "Speers L. (S. C. )"
+  },
+  {
+   "key": "St. Tax Guide (CCH)"
+  },
+  {
+   "key": "Super. Ct. Jud."
+  },
+  {
+   "key": "T. B. Mon. (Ky. )"
+  },
+  {
+   "key": "Tax Ct. Summary LEXIS"
+  },
+  {
+   "key": "Tenn. Chancery App."
+  },
+  {
+   "key": "Tenn. Leg. Rep."
+  },
+  {
+   "key": "UCC Rep. Serv. 2d"
+  },
+  {
+   "key": "U. S. App. LEXIS"
+  },
+  {
+   "key": "Wallace, Jr. , Rept."
+  },
+  {
+   "key": "Wash. Co. Repr."
+  },
+  {
+   "key": "Wheel. Cr. Cas."
+  },
+  {
+   "key": "Wheeler, Crim. Cas."
+  },
+  {
+   "key": "White & W. (Tex. )"
+  },
+  {
+   "key": "Abb. (U. S. )"
+  },
+  {
+   "key": "Am. Lead. Cas."
+  },
+  {
+   "key": "Am. Negl. Cas."
+  },
+  {
+   "key": "App. Com. Pat."
+  },
+  {
+   "key": "App. Div. Rep."
+  },
+  {
+   "key": "Ariz. Unpub. LEXIS"
+  },
+  {
+   "key": "Auto. Cas. (CCH)"
+  },
+  {
+   "key": "Barb. Ch. Rep."
+  },
+  {
+   "key": "Blat. C. C. R."
+  },
+  {
+   "key": "Brunner, Col. Cas."
+  },
+  {
+   "key": "CCH Tax Ct. Mem."
+  },
+  {
+   "key": "Cal. App. Rep."
+  },
+  {
+   "key": "Cal. Dist. Ct."
+  },
+  {
+   "key": "Conn. Cir. Ct."
+  },
+  {
+   "key": "Conn. L. Rptr."
+  },
+  {
+   "key": "Conn. Super. LEXIS"
+  },
+  {
+   "key": "Connoly Surr. Rep."
+  },
+  {
+   "key": "Daily Leg. (Pa. )"
+  },
+  {
+   "key": "Dec. Com. Pat."
+  },
+  {
+   "key": "Dev. & Bat. Law"
+  },
+  {
+   "key": "Dev. (N. C. )"
+  },
+  {
+   "key": "Dud. L. (S. C. )"
+  },
+  {
+   "key": "Edm. Sel. Cas."
+  },
+  {
+   "key": "Employee Benefits Cas."
+  },
+  {
+   "key": "Envtl. L. Rep."
+  },
+  {
+   "key": "Fla. L. Weekly S"
+  },
+  {
+   "key": "Gall. C. C. R."
+  },
+  {
+   "key": "Hill Eq. (S. C. )"
+  },
+  {
+   "key": "Hoff. Ch. Rep."
+  },
+  {
+   "key": "Hopk. Ch. Rep."
+  },
+  {
+   "key": "How. App. Cas."
+  },
+  {
+   "key": "Ill. App. Rep."
+  },
+  {
+   "key": "Ind. Cl. Comm."
+  },
+  {
+   "key": "Int. Rev. Rec."
+  },
+  {
+   "key": "Ired. Eq. Rep."
+  },
+  {
+   "key": "L. R. A. N. S."
+  },
+  {
+   "key": "Law Times (N. S. )"
+  },
+  {
+   "key": "Leg. Gaz. Rep."
+  },
+  {
+   "key": "Leg. Rec. Rep."
+  },
+  {
+   "key": "Life. Cas. (CCH)"
+  },
+  {
+   "key": "Luz. Leg. Reg."
+  },
+  {
+   "key": "Manning's Unrep. Cases"
+  },
+  {
+   "key": "Mass. App. Ct."
+  },
+  {
+   "key": "Mass. L. Rptr."
+  },
+  {
+   "key": "Mass. Super. LEXIS"
+  },
+  {
+   "key": "McA. Pat. Cas."
+  },
+  {
+   "key": "Mich. Ct. App."
+  },
+  {
+   "key": "Miss. (S. & M. )"
+  },
+  {
+   "key": "Mont. St. Rep."
+  },
+  {
+   "key": "Mor. Min. Rep."
+  },
+  {
+   "key": "Morr. St. Cas."
+  },
+  {
+   "key": "N. J. Admin. 2d"
+  },
+  {
+   "key": "N. J. Ch. LEXIS"
+  },
+  {
+   "key": "N. J. (Manumission)"
+  },
+  {
+   "key": "N. Y. St. Rep'r"
+  },
+  {
+   "key": "N. J. Law J."
+  },
+  {
+   "key": "N. Y. Law J."
+  },
+  {
+   "key": "Nev. , Adv. Op."
+  },
+  {
+   "key": "Nev. Adv. Rep."
+  },
+  {
+   "key": "O. C. C. N. S."
+  },
+  {
+   "key": "O. N. P. N. S."
+  },
+  {
+   "key": "Off. Gaz. Pat."
+  },
+  {
+   "key": "Ohio C. C. Dec."
+  },
+  {
+   "key": "Okla. Cr. Rep."
+  },
+  {
+   "key": "Pa. Corp. Rep."
+  },
+  {
+   "key": "Pa. D. & C."
+  },
+  {
+   "key": "Pac. Law. Rep."
+  },
+  {
+   "key": "Park. Cr. Rep."
+  },
+  {
+   "key": "Park. Crim. R."
+  },
+  {
+   "key": "Pitts. Leg. J."
+  },
+  {
+   "key": "Pittsburgh Leg. J."
+  },
+  {
+   "key": "Posey, Unrep. Cas."
+  },
+  {
+   "key": "Rep. Cont. El."
+  },
+  {
+   "key": "Rich. Eq. Rep."
+  },
+  {
+   "key": "Riley L. (S. C. )"
+  },
+  {
+   "key": "S. C. L. (Dud. )"
+  },
+  {
+   "key": "San Fran. Law J."
+  },
+  {
+   "key": "Sand. Ch. Rep."
+  },
+  {
+   "key": "Silv. Ct. App."
+  },
+  {
+   "key": "Tenn. Ch. App."
+  },
+  {
+   "key": "Tex. A. Civ. Cas."
+  },
+  {
+   "key": "Tex. Civ. App."
+  },
+  {
+   "key": "U. S. C. M. A."
+  },
+  {
+   "key": "U. S. Law J."
+  },
+  {
+   "key": "V. I. Supreme LEXIS"
+  },
+  {
+   "key": "Va. (Hen. & M. )"
+  },
+  {
+   "key": "W. W. Harr. Del"
+  },
+  {
+   "key": "Wall. Cir. Ct."
+  },
+  {
+   "key": "Wash. Co. Rep."
+  },
+  {
+   "key": "A. F. T. R. 2d"
+  },
+  {
+   "key": "A. L. R. Fed."
+  },
+  {
+   "key": "Abb. Ct. App."
+  },
+  {
+   "key": "Am. Ann. Cas."
+  },
+  {
+   "key": "Am. Law. Rec."
+  },
+  {
+   "key": "Am. Neg. Cas."
+  },
+  {
+   "key": "Amer. L. Rev."
+  },
+  {
+   "key": "App. Div. 2d."
+  },
+  {
+   "key": "App. Div. 3d."
+  },
+  {
+   "key": "Ark. Adv. Op."
+  },
+  {
+   "key": "Balt. C. Rep."
+  },
+  {
+   "key": "Betts, D C. MS."
+  },
+  {
+   "key": "Cal. I. A. C."
+  },
+  {
+   "key": "Cal. Super. LEXIS"
+  },
+  {
+   "key": "Cent. Law. J."
+  },
+  {
+   "key": "Cin. L. Bull."
+  },
+  {
+   "key": "Cin. S. C. R."
+  },
+  {
+   "key": "Cinc. L. Bul."
+  },
+  {
+   "key": "Civ. Proc. R."
+  },
+  {
+   "key": "Colem. & C. Cas."
+  },
+  {
+   "key": "Colo. L. Rep."
+  },
+  {
+   "key": "Connoly Sur. Rep."
+  },
+  {
+   "key": "Cranch. C. C."
+  },
+  {
+   "key": "D. Chip. Rep."
+  },
+  {
+   "key": "Del. Ch. Rep."
+  },
+  {
+   "key": "Del. Co. Rep."
+  },
+  {
+   "key": "Del. Super. LEXIS"
+  },
+  {
+   "key": "Dev. Eq. Rep."
+  },
+  {
+   "key": "Educ. L. Rep."
+  },
+  {
+   "key": "Edw. Ch. Rep."
+  },
+  {
+   "key": "Fed. R. Serv."
+  },
+  {
+   "key": "Fed. Sent. R."
+  },
+  {
+   "key": "Haz. Reg. Pa."
+  },
+  {
+   "key": "Hill & Den. Supp."
+  },
+  {
+   "key": "How. Pr. Rep."
+  },
+  {
+   "key": "I. E. R. Cas."
+  },
+  {
+   "key": "Ill. Cir. Ct."
+  },
+  {
+   "key": "Ind. Cl. Com."
+  },
+  {
+   "key": "Kan. Unpub. LEXIS"
+  },
+  {
+   "key": "Ky. (T. B. Monroe)"
+  },
+  {
+   "key": "L. Ed. (U. S. )"
+  },
+  {
+   "key": "La. Ann. Rep."
+  },
+  {
+   "key": "Lanc. L. Rev."
+  },
+  {
+   "key": "Law & Eq. Rep."
+  },
+  {
+   "key": "Lehigh Val. Law Rep"
+  },
+  {
+   "key": "Mich. Ct. Cl."
+  },
+  {
+   "key": "Minn. Dist. LEXIS"
+  },
+  {
+   "key": "Mont. Dist. LEXIS"
+  },
+  {
+   "key": "Mor. St. Cas."
+  },
+  {
+   "key": "Morr. Min. R."
+  },
+  {
+   "key": "N. C. Conf. Rep."
+  },
+  {
+   "key": "N. C. Term. Rep."
+  },
+  {
+   "key": "N. Y. Suprm. Ct."
+  },
+  {
+   "key": "N. Y. Slip Op."
+  },
+  {
+   "key": "N. Bkpt. Reg."
+  },
+  {
+   "key": "Neb. Ct. App."
+  },
+  {
+   "key": "Neg. Cas. (CCH)"
+  },
+  {
+   "key": "Nev. , Advance Opinion"
+  },
+  {
+   "key": "Nev. Adv. Op."
+  },
+  {
+   "key": "Nev. Advance Rep."
+  },
+  {
+   "key": "Nev. Unpub. LEXIS"
+  },
+  {
+   "key": "Northumberland L. J."
+  },
+  {
+   "key": "O. S. H. Cas."
+  },
+  {
+   "key": "Parker's Crim. R."
+  },
+  {
+   "key": "Rice L. (S. C. )"
+  },
+  {
+   "key": "T. C. M. (P-H)"
+  },
+  {
+   "key": "Tex. Ct. App. R."
+  },
+  {
+   "key": "Tex. Ct. App."
+  },
+  {
+   "key": "U. S. Claims LEXIS"
+  },
+  {
+   "key": "Va. Col. Dec."
+  },
+  {
+   "key": "Wash. Ter. N. S."
+  },
+  {
+   "key": "Wash. Terr. LEXIS"
+  },
+  {
+   "key": "West. Law. J."
+  },
+  {
+   "key": "Wheeler, Cr. Cas."
+  },
+  {
+   "key": "Wythe Ch. (Va. )"
+  },
+  {
+   "key": "Abb. N. Cas."
+  },
+  {
+   "key": "Abbott's Prac. Rep."
+  },
+  {
+   "key": "Alas. App. LEXIS"
+  },
+  {
+   "key": "Am. Neg. Ca."
+  },
+  {
+   "key": "Am. Ry. Rep."
+  },
+  {
+   "key": "Am. St. Rep."
+  },
+  {
+   "key": "App. Com'rs Pat."
+  },
+  {
+   "key": "Ariz. App. LEXIS"
+  },
+  {
+   "key": "Av. Cas. (CCH)"
+  },
+  {
+   "key": "B. C. A. (CCH)"
+  },
+  {
+   "key": "B. Mon. Rep."
+  },
+  {
+   "key": "Balt. Law Trans."
+  },
+  {
+   "key": "Banking Rep. (BNA)"
+  },
+  {
+   "key": "Bl. C. C. R."
+  },
+  {
+   "key": "Blume Unrep. Op."
+  },
+  {
+   "key": "Cal. Comp. Cases"
+  },
+  {
+   "key": "Car. L. Rep."
+  },
+  {
+   "key": "Centre Co. L. J."
+  },
+  {
+   "key": "Chester Co. Rep."
+  },
+  {
+   "key": "Chit. Cr. L."
+  },
+  {
+   "key": "Col. L. Rep."
+  },
+  {
+   "key": "Cole. & C. Cas."
+  },
+  {
+   "key": "Colo. App. LEXIS"
+  },
+  {
+   "key": "Conn. App. LEXIS"
+  },
+  {
+   "key": "Conn. Cir. LEXIS"
+  },
+  {
+   "key": "Ct. Cl. Rep."
+  },
+  {
+   "key": "D. C. (MacArth. )"
+  },
+  {
+   "key": "Dec. Comm'r Pat."
+  },
+  {
+   "key": "Dec. Comm’r Pat."
+  },
+  {
+   "key": "Delaware Co. Reports"
+  },
+  {
+   "key": "H. & M. (Va. )"
+  },
+  {
+   "key": "Harr. Ch. R."
+  },
+  {
+   "key": "Ill. Ct. Cl."
+  },
+  {
+   "key": "Ind. L. Rep."
+  },
+  {
+   "key": "Ins. Law. J."
+  },
+  {
+   "key": "Ky. L. Rptr."
+  },
+  {
+   "key": "Ky. L. Summ."
+  },
+  {
+   "key": "Ky. Unpub. LEXIS"
+  },
+  {
+   "key": "Lacka. Leg. News"
+  },
+  {
+   "key": "Mart. (N. S. )"
+  },
+  {
+   "key": "Mart. (n. s. )"
+  },
+  {
+   "key": "Mart. (o. s. )"
+  },
+  {
+   "key": "Mass. App. LEXIS"
+  },
+  {
+   "key": "Me. Super. LEXIS"
+  },
+  {
+   "key": "Me. Unpub. LEXIS"
+  },
+  {
+   "key": "Mich. App. LEXIS"
+  },
+  {
+   "key": "Minn. App. LEXIS"
+  },
+  {
+   "key": "Miss. App. LEXIS"
+  },
+  {
+   "key": "Mor. St. Ca."
+  },
+  {
+   "key": "N. C. (Phil. Law)"
+  },
+  {
+   "key": "N. J. Tax Ct."
+  },
+  {
+   "key": "N. M. (Gild. )"
+  },
+  {
+   "key": "N. M. (John. )"
+  },
+  {
+   "key": "N. Y. App. Dec."
+  },
+  {
+   "key": "N. Y. App. Div."
+  },
+  {
+   "key": "N. Y. Cas. Err."
+  },
+  {
+   "key": "N. Y. Ch. Sent."
+  },
+  {
+   "key": "N. Y. Supr. Ct."
+  },
+  {
+   "key": "N. Y. Supplement"
+  },
+  {
+   "key": "Northumb. L. J."
+  },
+  {
+   "key": "Oh. S. C. D."
+  },
+  {
+   "key": "Ohio App. Unrep."
+  },
+  {
+   "key": "Ohio Nisi Prius (NS)"
+  },
+  {
+   "key": "Op. O. L. C."
+  },
+  {
+   "key": "Pa. Dist. & Co."
+  },
+  {
+   "key": "Pa. Commw. LEXIS"
+  },
+  {
+   "key": "Pa. Corp. R."
+  },
+  {
+   "key": "Pa. Super. LEXIS"
+  },
+  {
+   "key": "Parker, Cr. Cas."
+  },
+  {
+   "key": "Pitts. L. J."
+  },
+  {
+   "key": "Pittsburgh Legal Journal"
+  },
+  {
+   "key": "Rec. Co. Ct."
+  },
+  {
+   "key": "Rich. Law(S. C. )"
+  },
+  {
+   "key": "Robb. (N. J. )"
+  },
+  {
+   "key": "S. C. L. (McCord)"
+  },
+  {
+   "key": "S. C. L. (Speers)"
+  },
+  {
+   "key": "T. C. M. (CCH)"
+  },
+  {
+   "key": "T. C. M. (RIA)"
+  },
+  {
+   "key": "Tax Ct. Memo LEXIS"
+  },
+  {
+   "key": "Tenn. App. LEXIS"
+  },
+  {
+   "key": "Tenn. Ch. R."
+  },
+  {
+   "key": "Tex. Sup. J."
+  },
+  {
+   "key": "Texas Crim. Rep."
+  },
+  {
+   "key": "Va. Ch. Dec."
+  },
+  {
+   "key": "Va. Unpub. LEXIS"
+  },
+  {
+   "key": "Vt. Super. LEXIS"
+  },
+  {
+   "key": "Vt. Unpub. LEXIS"
+  },
+  {
+   "key": "Wash. App. LEXIS"
+  },
+  {
+   "key": "Wash. Co. R."
+  },
+  {
+   "key": "Wash. Co (Pa. )"
+  },
+  {
+   "key": "Week. Notes Cas."
+  },
+  {
+   "key": "West. Law Month."
+  },
+  {
+   "key": "Wisc. App. LEXIS"
+  },
+  {
+   "key": "Wisc. Cir. LEXIS"
+  },
+  {
+   "key": "Wkly. Notes Cas."
+  },
+  {
+   "key": "Abbott Pract. Cas."
+  },
+  {
+   "key": "Ala. App. LEXIS"
+  },
+  {
+   "key": "Ala. (N. S. )"
+  },
+  {
+   "key": "App. Com'r Pat."
+  },
+  {
+   "key": "Ark. App. LEXIS"
+  },
+  {
+   "key": "Blatchf. C. C."
+  },
+  {
+   "key": "Cal. App. LEXIS"
+  },
+  {
+   "key": "Car. Law Repos."
+  },
+  {
+   "key": "Chit. Crim. Law"
+  },
+  {
+   "key": "Cin. Law. Bul."
+  },
+  {
+   "key": "Col. & C. Cas."
+  },
+  {
+   "key": "Colo. N. P."
+  },
+  {
+   "key": "Ct. Cls. R."
+  },
+  {
+   "key": "Ct. Cust. LEXIS"
+  },
+  {
+   "key": "Cust. Ct. LEXIS"
+  },
+  {
+   "key": "Fla. App. LEXIS"
+  },
+  {
+   "key": "Ga. L. Rep."
+  },
+  {
+   "key": "Grant Cas. (Pa. )"
+  },
+  {
+   "key": "Haw. App. LEXIS"
+  },
+  {
+   "key": "Hayw. N. C."
+  },
+  {
+   "key": "Hill & D. Supp."
+  },
+  {
+   "key": "Hoff. Land Cas."
+  },
+  {
+   "key": "Hunt, Mer. Mag."
+  },
+  {
+   "key": "Ida. App. LEXIS"
+  },
+  {
+   "key": "Ill. App. LEXIS"
+  },
+  {
+   "key": "Ind. App. LEXIS"
+  },
+  {
+   "key": "Kan. App. LEXIS"
+  },
+  {
+   "key": "Law J. Q. B."
+  },
+  {
+   "key": "Lehigh V. L. R."
+  },
+  {
+   "key": "Mart. N. C."
+  },
+  {
+   "key": "McCord Ch. Rep."
+  },
+  {
+   "key": "Morris St. Cas."
+  },
+  {
+   "key": "N. C. Term. R."
+  },
+  {
+   "key": "N. Bkpt. R."
+  },
+  {
+   "key": "N. Y. Supp."
+  },
+  {
+   "key": "Neb. App. LEXIS"
+  },
+  {
+   "key": "Ohio Cr. Ct. R."
+  },
+  {
+   "key": "Oil & Gas Reptr."
+  },
+  {
+   "key": "Ore. App. LEXIS"
+  },
+  {
+   "key": "P. Jr. & H."
+  },
+  {
+   "key": "Pa. Co. Ct. R."
+  },
+  {
+   "key": "Pa. Co. Ct."
+  },
+  {
+   "key": "Pac. Law Reptr."
+  },
+  {
+   "key": "Parker's Cr. R."
+  },
+  {
+   "key": "Parker Cr. Rep."
+  },
+  {
+   "key": "Penn. L. J."
+  },
+  {
+   "key": "Penn. Law Jour."
+  },
+  {
+   "key": "Pub. Lands Dec."
+  },
+  {
+   "key": "Robb, Pat. Cas."
+  },
+  {
+   "key": "S. C. L. (Riley)"
+  },
+  {
+   "key": "S. E. C. Docket"
+  },
+  {
+   "key": "S. Ct. Rep."
+  },
+  {
+   "key": "Tex. App. LEXIS"
+  },
+  {
+   "key": "Tex. Cr. R."
+  },
+  {
+   "key": "U. S. L. Ed. 2d"
+  },
+  {
+   "key": "U. S. Law. Ed."
+  },
+  {
+   "key": "U. S. CMCR LEXIS"
+  },
+  {
+   "key": "U. S. (Apx. )"
+  },
+  {
+   "key": "Wage & Hour Cas."
+  },
+  {
+   "key": "Wash. C. C."
+  },
+  {
+   "key": "Weekly L. Bull."
+  },
+  {
+   "key": "Yates Sel. Cas."
+  },
+  {
+   "key": "Abb. N. C."
+  },
+  {
+   "key": "Abb. U. S."
+  },
+  {
+   "key": "Abbott's Pr. Rep."
+  },
+  {
+   "key": "Am. Neg. Cases"
+  },
+  {
+   "key": "Am. St. R."
+  },
+  {
+   "key": "Amer. Law Reg."
+  },
+  {
+   "key": "Amer. Law Rev."
+  },
+  {
+   "key": "American Leading Cases"
+  },
+  {
+   "key": "Blatchf. & H."
+  },
+  {
+   "key": "C. Cls. R."
+  },
+  {
+   "key": "Cal. Unrep. Cas."
+  },
+  {
+   "key": "Cal. App. Supp"
+  },
+  {
+   "key": "Cal. Comp. Cas"
+  },
+  {
+   "key": "Charlet. (Ga. )"
+  },
+  {
+   "key": "Charlt. R. M."
+  },
+  {
+   "key": "Chi. Leg. News"
+  },
+  {
+   "key": "Cin. Law Bull."
+  },
+  {
+   "key": "Civil Proc. R."
+  },
+  {
+   "key": "Colo. Law Rep."
+  },
+  {
+   "key": "Ct. Cl. R."
+  },
+  {
+   "key": "D. Chip. (Vt. )"
+  },
+  {
+   "key": "Del. Ch. LEXIS"
+  },
+  {
+   "key": "Dev. & B. Eq."
+  },
+  {
+   "key": "Env't Rep. (BNA)"
+  },
+  {
+   "key": "Fla. L. Weekly"
+  },
+  {
+   "key": "Freem. (Miss. )"
+  },
+  {
+   "key": "Ga. App. LEXIS"
+  },
+  {
+   "key": "Gibbons (N. Y. )"
+  },
+  {
+   "key": "Hunt Mer. Mag."
+  },
+  {
+   "key": "Indian Terr. LEXIS"
+  },
+  {
+   "key": "Int. Rev. Rec,"
+  },
+  {
+   "key": "Ired. Law Rep."
+  },
+  {
+   "key": "Johns. (N. Y. )"
+  },
+  {
+   "key": "Ky. App. LEXIS"
+  },
+  {
+   "key": "La. App. (Orleans)"
+  },
+  {
+   "key": "La. App. LEXIS"
+  },
+  {
+   "key": "MacA. Pat Cas."
+  },
+  {
+   "key": "MacArth. & M."
+  },
+  {
+   "key": "Mason C. C. R."
+  },
+  {
+   "key": "Mass. Law Rep."
+  },
+  {
+   "key": "Md. App. LEXIS"
+  },
+  {
+   "key": "Mo. App. LEXIS"
+  },
+  {
+   "key": "Murph. (N. C. )"
+  },
+  {
+   "key": "N. C. T. Rep."
+  },
+  {
+   "key": "N. Chip. (Vt. )"
+  },
+  {
+   "key": "N. C. Rep."
+  },
+  {
+   "key": "N. Mar. I."
+  },
+  {
+   "key": "N. W. Rep."
+  },
+  {
+   "key": "N. Y. Rep."
+  },
+  {
+   "key": "O. S. H. Cases"
+  },
+  {
+   "key": "Oh. Dec. (Reprint)"
+  },
+  {
+   "key": "Ohio App. Rep."
+  },
+  {
+   "key": "Ohio Cir. Dec."
+  },
+  {
+   "key": "Ohio Dec. Rep."
+  },
+  {
+   "key": "Ohio Fed. Dec."
+  },
+  {
+   "key": "Ohio Law. Abs."
+  },
+  {
+   "key": "Ohio Prob. Ct."
+  },
+  {
+   "key": "Oil & Gas Rptr."
+  },
+  {
+   "key": "Op. Att'y Gen."
+  },
+  {
+   "key": "Paige Ch. Rep."
+  },
+  {
+   "key": "Parker, Cr. R."
+  },
+  {
+   "key": "Penn. Dist. Rep."
+  },
+  {
+   "key": "Pet. C. C."
+  },
+  {
+   "key": "Pittsb. L. J."
+  },
+  {
+   "key": "S. C. L. (Brev)"
+  },
+  {
+   "key": "S. C. L. (Hill)"
+  },
+  {
+   "key": "S. C. L. (Mill)"
+  },
+  {
+   "key": "S. C. L. (Rice)"
+  },
+  {
+   "key": "S. E. Rep."
+  },
+  {
+   "key": "S. W. Rep."
+  },
+  {
+   "key": "Serg. & Rawl."
+  },
+  {
+   "key": "So. (2nd Series)"
+  },
+  {
+   "key": "Tex. L. R."
+  },
+  {
+   "key": "Texas Cr. Rep."
+  },
+  {
+   "key": "UCC Rep. Serv."
+  },
+  {
+   "key": "U. S. P. Q. 2d"
+  },
+  {
+   "key": "U. S. Rep."
+  },
+  {
+   "key": "Utah Adv. Rep."
+  },
+  {
+   "key": "Va. App. LEXIS"
+  },
+  {
+   "key": "Va. Cir. LEXIS"
+  },
+  {
+   "key": "Week. Law Gaz."
+  },
+  {
+   "key": "Wkly. Law Gaz."
+  },
+  {
+   "key": "York Leg. Rec."
+  },
+  {
+   "key": "A. K. Marsh."
+  },
+  {
+   "key": "Alaska Fed. Rep."
+  },
+  {
+   "key": "Am. L. C."
+  },
+  {
+   "key": "Am. S. R."
+  },
+  {
+   "key": "Auto. Cas. 2d"
+  },
+  {
+   "key": "Baxt. (Tenn. )"
+  },
+  {
+   "key": "Brief Times Rptr."
+  },
+  {
+   "key": "Caines (N. Y. )"
+  },
+  {
+   "key": "Cal. App. 4th"
+  },
+  {
+   "key": "Cal. App. 5th"
+  },
+  {
+   "key": "Cal. Rptr. 2d"
+  },
+  {
+   "key": "Cal. Rptr. 3d"
+  },
+  {
+   "key": "Chit. Cr. Law"
+  },
+  {
+   "key": "Cin. Law Bul."
+  },
+  {
+   "key": "Col. Law Rep."
+  },
+  {
+   "key": "Conn. Cir. Ct"
+  },
+  {
+   "key": "Cranch, C. C."
+  },
+  {
+   "key": "D. C. (patent)"
+  },
+  {
+   "key": "D. L. N. ,"
+  },
+  {
+   "key": "Dev. & B. L."
+  },
+  {
+   "key": "Fla. Supp. 2d"
+  },
+  {
+   "key": "Harr. (Mich. )"
+  },
+  {
+   "key": "Hayw. & Haz."
+  },
+  {
+   "key": "Hill Ch. Rep."
+  },
+  {
+   "key": "Int Rev. Rec."
+  },
+  {
+   "key": "J. J. Marsh."
+  },
+  {
+   "key": "Johns. Ch. Cas."
+  },
+  {
+   "key": "Johns. Ct. Err."
+  },
+  {
+   "key": "Ky. (B. Mon. )"
+  },
+  {
+   "key": "Liv. Law Mag."
+  },
+  {
+   "key": "Mart. & Yer."
+  },
+  {
+   "key": "McAll. (Cal. )"
+  },
+  {
+   "key": "Media L. Rep."
+  },
+  {
+   "key": "Mont. Water LEXIS"
+  },
+  {
+   "key": "NLRB Dec. (CCH)"
+  },
+  {
+   "key": "N. C. (Busb. )"
+  },
+  {
+   "key": "N. C. (Hayw. )"
+  },
+  {
+   "key": "N. C. (Ired. )"
+  },
+  {
+   "key": "N. C. (Mart. )"
+  },
+  {
+   "key": "N. J. Admin."
+  },
+  {
+   "key": "N. J. Super."
+  },
+  {
+   "key": "N. M. (G. )"
+  },
+  {
+   "key": "N. M. (J. )"
+  },
+  {
+   "key": "N. Bk. R."
+  },
+  {
+   "key": "Ohio C. C. R."
+  },
+  {
+   "key": "Ohio Ct. App."
+  },
+  {
+   "key": "Ohio Dec. Reprint"
+  },
+  {
+   "key": "Ohio St. Rep."
+  },
+  {
+   "key": "Oil & Gas Rep."
+  },
+  {
+   "key": "Pac. Law Mag."
+  },
+  {
+   "key": "Pac. Law Rep."
+  },
+  {
+   "key": "Quart. Law J."
+  },
+  {
+   "key": "SEC Jud. Dec."
+  },
+  {
+   "key": "S. C. L. (Bay)"
+  },
+  {
+   "key": "So. (2d Series)"
+  },
+  {
+   "key": "T. C. No."
+  },
+  {
+   "key": "Tex. Crim. Rep."
+  },
+  {
+   "key": "U. S. L. Ed."
+  },
+  {
+   "key": "Utah Ct. App."
+  },
+  {
+   "key": "Vroom (G. D. W)"
+  },
+  {
+   "key": "Wash. App. 2d"
+  },
+  {
+   "key": "Wend. (N. Y. )"
+  },
+  {
+   "key": "West Co. Rep."
+  },
+  {
+   "key": "A. F. T. R."
+  },
+  {
+   "key": "A. L. R. 4th"
+  },
+  {
+   "key": "A. L. R. 5th"
+  },
+  {
+   "key": "A. L. R. 6th"
+  },
+  {
+   "key": "Abbott Pr. Rep."
+  },
+  {
+   "key": "Am. Law Rec."
+  },
+  {
+   "key": "Am. Law Reg."
+  },
+  {
+   "key": "Am. Law Rev."
+  },
+  {
+   "key": "Amer. Law J."
+  },
+  {
+   "key": "App. Div. 2d"
+  },
+  {
+   "key": "App. Div. 3d"
+  },
+  {
+   "key": "Arizona Cases Digest"
+  },
+  {
+   "key": "Betts, D. C."
+  },
+  {
+   "key": "C. C. L. J."
+  },
+  {
+   "key": "C. C. P. A."
+  },
+  {
+   "key": "C. C. A."
+  },
+  {
+   "key": "Cai. Cas. Err."
+  },
+  {
+   "key": "Cal. App. 2d"
+  },
+  {
+   "key": "Cal. App. 3d"
+  },
+  {
+   "key": "Cam. & Nor."
+  },
+  {
+   "key": "Cent. Law J."
+  },
+  {
+   "key": "City H. Rec."
+  },
+  {
+   "key": "Cole. Cas. Pr."
+  },
+  {
+   "key": "Cong. Index(CCH)"
+  },
+  {
+   "key": "D. L. N."
+  },
+  {
+   "key": "Dev. & Bat."
+  },
+  {
+   "key": "Dud. (S. C. )"
+  },
+  {
+   "key": "Ed. Law Rep."
+  },
+  {
+   "key": "F. L. R. A."
+  },
+  {
+   "key": "Ga. Law Reporter"
+  },
+  {
+   "key": "Hall. Law J."
+  },
+  {
+   "key": "Hay. & Haz."
+  },
+  {
+   "key": "IRS Pos. (CCH)"
+  },
+  {
+   "key": "I. T. R. D."
+  },
+  {
+   "key": "Ill. App. 2d"
+  },
+  {
+   "key": "Ill. App. 3d"
+  },
+  {
+   "key": "Kan. App. 2d"
+  },
+  {
+   "key": "Ky. Law Rep."
+  },
+  {
+   "key": "L. J. Q. B."
+  },
+  {
+   "key": "L. R. R. M."
+  },
+  {
+   "key": "Lack. L. N."
+  },
+  {
+   "key": "M. D. L. R."
+  },
+  {
+   "key": "M. S. P. B."
+  },
+  {
+   "key": "M. S. P. R."
+  },
+  {
+   "key": "M. T. C. A."
+  },
+  {
+   "key": "M. T. C. R."
+  },
+  {
+   "key": "Manning's U. C."
+  },
+  {
+   "key": "Marv. (Del. )"
+  },
+  {
+   "key": "Md. Law Rec."
+  },
+  {
+   "key": "Mich. N. P."
+  },
+  {
+   "key": "Montg. (Pa. )"
+  },
+  {
+   "key": "Morr. M. R."
+  },
+  {
+   "key": "N. C. (Dev. )"
+  },
+  {
+   "key": "N. C. (Mur. )"
+  },
+  {
+   "key": "N. C. (Tay. )"
+  },
+  {
+   "key": "N. J. L. J."
+  },
+  {
+   "key": "N. J. Misc."
+  },
+  {
+   "key": "N. L. R. B."
+  },
+  {
+   "key": "N. T. S. B."
+  },
+  {
+   "key": "N. Y. L. J."
+  },
+  {
+   "key": "N. Y. Crim."
+  },
+  {
+   "key": "N. Y. Slip Op"
+  },
+  {
+   "key": "N. B. R."
+  },
+  {
+   "key": "N. W. (2d)"
+  },
+  {
+   "key": "Neb. (Unof. )"
+  },
+  {
+   "key": "O. B. A. J."
+  },
+  {
+   "key": "O. S. C. D."
+  },
+  {
+   "key": "O. C. A."
+  },
+  {
+   "key": "Ohio B. Rep."
+  },
+  {
+   "key": "Ohio F. Dec."
+  },
+  {
+   "key": "Ohio L. Abs."
+  },
+  {
+   "key": "Ohio Misc. Dec."
+  },
+  {
+   "key": "Ohio Misc. LEXIS"
+  },
+  {
+   "key": "P. C. L. J."
+  },
+  {
+   "key": "P. R. Sent."
+  },
+  {
+   "key": "P. U. R. (NS)"
+  },
+  {
+   "key": "Pa. Commw. Ct."
+  },
+  {
+   "key": "Pacific Law Mag."
+  },
+  {
+   "key": "Park. C. R."
+  },
+  {
+   "key": "Penn. Law J."
+  },
+  {
+   "key": "S. E. (2d)"
+  },
+  {
+   "key": "S. W. (2d)"
+  },
+  {
+   "key": "Supr. Ct. Rep."
+  },
+  {
+   "key": "Tax Treaties (CCH)"
+  },
+  {
+   "key": "Tex. Civ. Cas."
+  },
+  {
+   "key": "Tuck. & Cl."
+  },
+  {
+   "key": "U. S. L. W."
+  },
+  {
+   "key": "U. S. P. Q."
+  },
+  {
+   "key": "U. S. Appx."
+  },
+  {
+   "key": "U. S. R."
+  },
+  {
+   "key": "Va. Law Rep."
+  },
+  {
+   "key": "Vroom (N. J. )"
+  },
+  {
+   "key": "Vroom (P. D. )"
+  },
+  {
+   "key": "W. L. Bull."
+  },
+  {
+   "key": "W. W. Harr."
+  },
+  {
+   "key": "W. Va. LEXIS"
+  },
+  {
+   "key": "West. Law J."
+  },
+  {
+   "key": "Woodb. & M."
+  },
+  {
+   "key": "York Leg. Record"
+  },
+  {
+   "key": "A. L. R. 2d"
+  },
+  {
+   "key": "A. L. R. 3d"
+  },
+  {
+   "key": "Abb. Pr. Rep."
+  },
+  {
+   "key": "Alaska Fed. R."
+  },
+  {
+   "key": "Alb. Law J."
+  },
+  {
+   "key": "Am. Leading Cas"
+  },
+  {
+   "key": "App. D. C."
+  },
+  {
+   "key": "Ariz. Tax LEXIS"
+  },
+  {
+   "key": "Blackf. (Ind. )"
+  },
+  {
+   "key": "CJ C. A. R."
+  },
+  {
+   "key": "Cal. Law J."
+  },
+  {
+   "key": "Chi. Law J."
+  },
+  {
+   "key": "Colo Bankr Ct Rep"
+  },
+  {
+   "key": "Ct. Int'l Trade"
+  },
+  {
+   "key": "D. C. App."
+  },
+  {
+   "key": "Daly (N. Y. )"
+  },
+  {
+   "key": "Dougl. (Mich. )"
+  },
+  {
+   "key": "Edm. Sel. Ca."
+  },
+  {
+   "key": "F. Supp. 2d"
+  },
+  {
+   "key": "F. Supp. 3d"
+  },
+  {
+   "key": "Fed. Sent'g Rep"
+  },
+  {
+   "key": "Flipp. (F. )"
+  },
+  {
+   "key": "Greene G. (Iowa)"
+  },
+  {
+   "key": "Havw. & H."
+  },
+  {
+   "key": "Hayw. & H."
+  },
+  {
+   "key": "Heisk. (Tenn. )"
+  },
+  {
+   "key": "How. N. P."
+  },
+  {
+   "key": "Ill. C. C."
+  },
+  {
+   "key": "Ins. L. J."
+  },
+  {
+   "key": "Ins. Law J."
+  },
+  {
+   "key": "Iowa App. LEXIS"
+  },
+  {
+   "key": "Iowa Sup. LEXIS"
+  },
+  {
+   "key": "Jeff. (Va. )"
+  },
+  {
+   "key": "Ky. Law. Rep."
+  },
+  {
+   "key": "Liquor Tax Rep."
+  },
+  {
+   "key": "Luz. L. R."
+  },
+  {
+   "key": "M. & Y. R."
+  },
+  {
+   "key": "MacArthur & M."
+  },
+  {
+   "key": "Mart. & Yerg."
+  },
+  {
+   "key": "Mass. LCR LEXIS"
+  },
+  {
+   "key": "Minn. Tax LEXIS"
+  },
+  {
+   "key": "Mo. App. Rep."
+  },
+  {
+   "key": "N. C. App."
+  },
+  {
+   "key": "N. J. Tax."
+  },
+  {
+   "key": "N. Y. S. 2d"
+  },
+  {
+   "key": "N. Y. S. 3d"
+  },
+  {
+   "key": "New York Supplement"
+  },
+  {
+   "key": "Northumb. L. J"
+  },
+  {
+   "key": "O. A. R. 2d"
+  },
+  {
+   "key": "O. A. R. 3d"
+  },
+  {
+   "key": "Oh. Cir. Dec."
+  },
+  {
+   "key": "Oh. App. 2d"
+  },
+  {
+   "key": "Oh. App. 3d"
+  },
+  {
+   "key": "Ohio App. LEXIS"
+  },
+  {
+   "key": "Okla. JUD LEXIS"
+  },
+  {
+   "key": "P. L. Rep."
+  },
+  {
+   "key": "P. R. Dec."
+  },
+  {
+   "key": "P. R. Fed."
+  },
+  {
+   "key": "Pa. County Ct."
+  },
+  {
+   "key": "Pa. (Admiralty)"
+  },
+  {
+   "key": "Patt. & H."
+  },
+  {
+   "key": "R. I. Dec."
+  },
+  {
+   "key": "Rich. Eq. Ch."
+  },
+  {
+   "key": "Sad. Pa. Cas."
+  },
+  {
+   "key": "Sar. Ch. Sen."
+  },
+  {
+   "key": "So. Rep. 2d"
+  },
+  {
+   "key": "So. Rep. 3d"
+  },
+  {
+   "key": "Som. L. J."
+  },
+  {
+   "key": "Somerset L. J."
+  },
+  {
+   "key": "Stew. & P."
+  },
+  {
+   "key": "Sup. Ct. Rep."
+  },
+  {
+   "key": "T. B. Mon."
+  },
+  {
+   "key": "Tenn. (Heisk. )"
+  },
+  {
+   "key": "Tenn. (Overt. )"
+  },
+  {
+   "key": "Tex. Cr. App."
+  },
+  {
+   "key": "Tex. Law J."
+  },
+  {
+   "key": "Tread. Const."
+  },
+  {
+   "key": "UT Ct. App."
+  },
+  {
+   "key": "Utah App. LEXIS"
+  },
+  {
+   "key": "Vir. L. J."
+  },
+  {
+   "key": "Weekly Law Bulletin"
+  },
+  {
+   "key": "West Coast Rep."
+  },
+  {
+   "key": "West Law Month."
+  },
+  {
+   "key": "Wn. App. 2d"
+  },
+  {
+   "key": "Am. B. R."
+  },
+  {
+   "key": "Am. L. Cas"
+  },
+  {
+   "key": "Am. Law J."
+  },
+  {
+   "key": "Am. Law T."
+  },
+  {
+   "key": "Am. Tribal Law"
+  },
+  {
+   "key": "Ban. & A."
+  },
+  {
+   "key": "Bl. C. C."
+  },
+  {
+   "key": "Blackf. Rep."
+  },
+  {
+   "key": "Burnett (Wis. )"
+  },
+  {
+   "key": "Chand. (Wis. )"
+  },
+  {
+   "key": "Chi. Leg. N."
+  },
+  {
+   "key": "Cole. & Cai."
+  },
+  {
+   "key": "Const. S. C."
+  },
+  {
+   "key": "Cush. (Mass. )"
+  },
+  {
+   "key": "D. C. (Cranch)"
+  },
+  {
+   "key": "D. C. (Mackey)"
+  },
+  {
+   "key": "Desaus. Rep."
+  },
+  {
+   "key": "Doug. (Mich. )"
+  },
+  {
+   "key": "E. D. Pa."
+  },
+  {
+   "key": "F. Supp. 3d."
+  },
+  {
+   "key": "H. & McH."
+  },
+  {
+   "key": "Har. & J."
+  },
+  {
+   "key": "Haskell C. C."
+  },
+  {
+   "key": "Hay. & H."
+  },
+  {
+   "key": "Hayw. (Tenn. )"
+  },
+  {
+   "key": "Hen. & M."
+  },
+  {
+   "key": "Hoff Land Cas."
+  },
+  {
+   "key": "Hopk. Works."
+  },
+  {
+   "key": "Ind. Tax LEXIS"
+  },
+  {
+   "key": "Johns. N. Y."
+  },
+  {
+   "key": "La. Law J."
+  },
+  {
+   "key": "Marsh. A. K."
+  },
+  {
+   "key": "Marsh. J. J."
+  },
+  {
+   "key": "Mass. (Cush. )"
+  },
+  {
+   "key": "Mass. (Pick. )"
+  },
+  {
+   "key": "Mass. (Will. )"
+  },
+  {
+   "key": "NY App Div LEXIS"
+  },
+  {
+   "key": "N. C. (Taylor)"
+  },
+  {
+   "key": "N. J. Eq."
+  },
+  {
+   "key": "Neb. App. R."
+  },
+  {
+   "key": "Nev. Ad. Op."
+  },
+  {
+   "key": "New York Supp."
+  },
+  {
+   "key": "No. East Rep."
+  },
+  {
+   "key": "No. West Rep."
+  },
+  {
+   "key": "O. Dec. Rep."
+  },
+  {
+   "key": "O. App. 2d"
+  },
+  {
+   "key": "O. App. 3d"
+  },
+  {
+   "key": "Oh. Cir. Ct."
+  },
+  {
+   "key": "Ohio Cir. Ct."
+  },
+  {
+   "key": "Ohio Law Abst."
+  },
+  {
+   "key": "Ohio Laws Abs."
+  },
+  {
+   "key": "Ore. Tax LEXIS"
+  },
+  {
+   "key": "Pa. Dist. R."
+  },
+  {
+   "key": "Pa. Law J."
+  },
+  {
+   "key": "Pac. (2d)."
+  },
+  {
+   "key": "Pat. & H."
+  },
+  {
+   "key": "Pen. & W."
+  },
+  {
+   "key": "Penn. St. R."
+  },
+  {
+   "key": "Pennyp. (Pa. )"
+  },
+  {
+   "key": "Pick. (Mass. )"
+  },
+  {
+   "key": "Pitts. Rpts."
+  },
+  {
+   "key": "Posey's U. C."
+  },
+  {
+   "key": "S. C. Eq."
+  },
+  {
+   "key": "Sad. Pa. Cs."
+  },
+  {
+   "key": "Serg. & Raw."
+  },
+  {
+   "key": "Serg. & Rawle"
+  },
+  {
+   "key": "Tenn. (Cold. )"
+  },
+  {
+   "key": "Tenn. (Hayw. )"
+  },
+  {
+   "key": "Tex. A. Civ."
+  },
+  {
+   "key": "Thomp. & Cook"
+  },
+  {
+   "key": "Va. Law J."
+  },
+  {
+   "key": "W. L. Monthly"
+  },
+  {
+   "key": "Watts & Serg."
+  },
+  {
+   "key": "Wood. & Minot"
+  },
+  {
+   "key": "Yerg. (Tenn. )"
+  },
+  {
+   "key": "Abbott P. R."
+  },
+  {
+   "key": "Agric. Dec."
+  },
+  {
+   "key": "Barb. S. C."
+  },
+  {
+   "key": "Black. Rep."
+  },
+  {
+   "key": "Bloom. Man."
+  },
+  {
+   "key": "Brayton (Vt. )"
+  },
+  {
+   "key": "Brock. Rep."
+  },
+  {
+   "key": "Browne, (Pa. )"
+  },
+  {
+   "key": "Cal. Unrep."
+  },
+  {
+   "key": "Chi Leg. News"
+  },
+  {
+   "key": "Col. & Cai."
+  },
+  {
+   "key": "Conn. Supp."
+  },
+  {
+   "key": "Conn. Surr."
+  },
+  {
+   "key": "Const. Rep."
+  },
+  {
+   "key": "Cooke (Tenn. )"
+  },
+  {
+   "key": "Cranch C. C."
+  },
+  {
+   "key": "Cranch D. C."
+  },
+  {
+   "key": "Daily Journal DAR"
+  },
+  {
+   "key": "Dall. S. C."
+  },
+  {
+   "key": "Gallison's Rep."
+  },
+  {
+   "key": "Gibb. Surr."
+  },
+  {
+   "key": "Gilm. (Ill. )"
+  },
+  {
+   "key": "Gratt. (Va. )"
+  },
+  {
+   "key": "Hawks(N. C. )"
+  },
+  {
+   "key": "Hen. & Mun."
+  },
+  {
+   "key": "Hill. N. Y."
+  },
+  {
+   "key": "Hoff. N. Y."
+  },
+  {
+   "key": "Howell N. P."
+  },
+  {
+   "key": "Humph. Rep."
+  },
+  {
+   "key": "I & N Dec."
+  },
+  {
+   "key": "Ill. (Gilm. )"
+  },
+  {
+   "key": "Ill. (Scam. )"
+  },
+  {
+   "key": "Johns. Cas."
+  },
+  {
+   "key": "Ken. L. Re."
+  },
+  {
+   "key": "L. Ed. 2d"
+  },
+  {
+   "key": "Legal Intelligencer"
+  },
+  {
+   "key": "MacAr. & M."
+  },
+  {
+   "key": "MacAr. & Mackey"
+  },
+  {
+   "key": "Manum. Cas."
+  },
+  {
+   "key": "Marsh. (Ky. )"
+  },
+  {
+   "key": "Marsh. Rep."
+  },
+  {
+   "key": "Mass. (Met. )"
+  },
+  {
+   "key": "Mass. Law Rep"
+  },
+  {
+   "key": "Mass. Supp."
+  },
+  {
+   "key": "Md. Tax LEXIS"
+  },
+  {
+   "key": "Mich. Lawy."
+  },
+  {
+   "key": "Montg. CLR."
+  },
+  {
+   "key": "Month. Jur."
+  },
+  {
+   "key": "Murph. Rep."
+  },
+  {
+   "key": "N. C. Conf."
+  },
+  {
+   "key": "N. C. (Hawks)"
+  },
+  {
+   "key": "N. C. (Jones)"
+  },
+  {
+   "key": "N W. Rep."
+  },
+  {
+   "key": "Oh. A. 2d"
+  },
+  {
+   "key": "Oh. A. 3d"
+  },
+  {
+   "key": "Ohio C. Dec."
+  },
+  {
+   "key": "Ohio Law Abs."
+  },
+  {
+   "key": "Ohio Law Rep."
+  },
+  {
+   "key": "Ohio Misc. 2d"
+  },
+  {
+   "key": "Ohio St. 3d."
+  },
+  {
+   "key": "Okla. Crim."
+  },
+  {
+   "key": "Okla. Trib."
+  },
+  {
+   "key": "PR App. LEXIS"
+  },
+  {
+   "key": "PR Sup. LEXIS"
+  },
+  {
+   "key": "P. U. R. 4th"
+  },
+  {
+   "key": "Pet C. C."
+  },
+  {
+   "key": "Peters C. C."
+  },
+  {
+   "key": "Phil. N. C."
+  },
+  {
+   "key": "Phila. Rep."
+  },
+  {
+   "key": "Phill. Rep."
+  },
+  {
+   "key": "Pitt. L. J."
+  },
+  {
+   "key": "Pitts. Rep."
+  },
+  {
+   "key": "Port. (Ala. )"
+  },
+  {
+   "key": "S. W. Series"
+  },
+  {
+   "key": "Sandf. Rep."
+  },
+  {
+   "key": "Schuy. Reg."
+  },
+  {
+   "key": "Smith (Tenn. )"
+  },
+  {
+   "key": "Smiths E. H."
+  },
+  {
+   "key": "South. Rep."
+  },
+  {
+   "key": "Tayl. N. C."
+  },
+  {
+   "key": "Tenn. (Hum. )"
+  },
+  {
+   "key": "Tenn. (Yer. )"
+  },
+  {
+   "key": "Tenn. (Cooke)"
+  },
+  {
+   "key": "Tex. S. Ct."
+  },
+  {
+   "key": "Thomp. Cas."
+  },
+  {
+   "key": "Trans. App."
+  },
+  {
+   "key": "Treas. Dec."
+  },
+  {
+   "key": "Tuck. Surr."
+  },
+  {
+   "key": "Va. (Gratt. )"
+  },
+  {
+   "key": "W. L. M."
+  },
+  {
+   "key": "Wall. S. C."
+  },
+  {
+   "key": "Wash. Terr."
+  },
+  {
+   "key": "Whart. Rep."
+  },
+  {
+   "key": "Wheat. Rep."
+  },
+  {
+   "key": "Wi. & Will."
+  },
+  {
+   "key": "Wils. Minn."
+  },
+  {
+   "key": "Wils. Oreg."
+  },
+  {
+   "key": "Woolw. Rep."
+  },
+  {
+   "key": "York Legal Record"
+  },
+  {
+   "key": "A. D. Cases"
+  },
+  {
+   "key": "A. F. Rep."
+  },
+  {
+   "key": "Abb. P. R."
+  },
+  {
+   "key": "Am. Dec's."
+  },
+  {
+   "key": "Am. Samoa 2d"
+  },
+  {
+   "key": "Am. Samoa 3d"
+  },
+  {
+   "key": "Amer. Jur."
+  },
+  {
+   "key": "Ariz. App."
+  },
+  {
+   "key": "Ark. Appx."
+  },
+  {
+   "key": "Auto. Cas."
+  },
+  {
+   "key": "Bail. Rep."
+  },
+  {
+   "key": "Barb. Rep."
+  },
+  {
+   "key": "Binn. (Pa. )"
+  },
+  {
+   "key": "Binn. Rep."
+  },
+  {
+   "key": "Brev. Rep."
+  },
+  {
+   "key": "Browne (Pa. )"
+  },
+  {
+   "key": "Cain. Rep."
+  },
+  {
+   "key": "Cal. Rptr."
+  },
+  {
+   "key": "Cal. Supp."
+  },
+  {
+   "key": "Chip. (Vt. )"
+  },
+  {
+   "key": "Chip. Rep."
+  },
+  {
+   "key": "Clayton's Notebook"
+  },
+  {
+   "key": "Clayton’s Notebook"
+  },
+  {
+   "key": "Cole. Cas."
+  },
+  {
+   "key": "Colo. App."
+  },
+  {
+   "key": "Comp. Gen."
+  },
+  {
+   "key": "Conn. App."
+  },
+  {
+   "key": "Conn. Rep."
+  },
+  {
+   "key": "Conn. Sup."
+  },
+  {
+   "key": "Coop. Chy."
+  },
+  {
+   "key": "Cow. N. Y."
+  },
+  {
+   "key": "Cush. Rep."
+  },
+  {
+   "key": "Daily L. N."
+  },
+  {
+   "key": "Daily L. R."
+  },
+  {
+   "key": "Dall. Rep."
+  },
+  {
+   "key": "Dem. Surr."
+  },
+  {
+   "key": "Doug. Rep."
+  },
+  {
+   "key": "Dudley (Ga. )"
+  },
+  {
+   "key": "E. D. Smith"
+  },
+  {
+   "key": "E. H. Smith"
+  },
+  {
+   "key": "F. C. C. 2d"
+  },
+  {
+   "key": "F. Supp. 3D"
+  },
+  {
+   "key": "Fed. Appx."
+  },
+  {
+   "key": "Fla. Supp."
+  },
+  {
+   "key": "Freem. Ch."
+  },
+  {
+   "key": "G. & J."
+  },
+  {
+   "key": "Gall. Rep."
+  },
+  {
+   "key": "Gray (Mass. )"
+  },
+  {
+   "key": "H. & G."
+  },
+  {
+   "key": "H. & J."
+  },
+  {
+   "key": "Hall, Law J."
+  },
+  {
+   "key": "Harr. Rep."
+  },
+  {
+   "key": "Hayw. Rep."
+  },
+  {
+   "key": "Hill & Den."
+  },
+  {
+   "key": "How. P. R."
+  },
+  {
+   "key": "How. Prac."
+  },
+  {
+   "key": "I. C. C. 2d"
+  },
+  {
+   "key": "Ired. Rep."
+  },
+  {
+   "key": "J. J. Mar."
+  },
+  {
+   "key": "John. Rep."
+  },
+  {
+   "key": "Johns. Ch."
+  },
+  {
+   "key": "Jones N. C."
+  },
+  {
+   "key": "Jones & Spencer"
+  },
+  {
+   "key": "Jour. Jur."
+  },
+  {
+   "key": "Juris P. R."
+  },
+  {
+   "key": "Ky. (Hard. )"
+  },
+  {
+   "key": "Ky. (Litt. )"
+  },
+  {
+   "key": "Lack. Leg."
+  },
+  {
+   "key": "Litt. (Ky. )"
+  },
+  {
+   "key": "Litt. Rep."
+  },
+  {
+   "key": "Mart. & Y."
+  },
+  {
+   "key": "Mart. Rep."
+  },
+  {
+   "key": "Mason C. C."
+  },
+  {
+   "key": "Mason U. S."
+  },
+  {
+   "key": "Mass. Rep."
+  },
+  {
+   "key": "Mass. (Cush)"
+  },
+  {
+   "key": "McMul. Eq."
+  },
+  {
+   "key": "Metc. Rep."
+  },
+  {
+   "key": "Mich. App."
+  },
+  {
+   "key": "Minn. Rep."
+  },
+  {
+   "key": "Minor (Ala. )"
+  },
+  {
+   "key": "Misc. Rep."
+  },
+  {
+   "key": "Miss. Dec."
+  },
+  {
+   "key": "Miss. Rep."
+  },
+  {
+   "key": "Mon. T. B."
+  },
+  {
+   "key": "Montg. Co."
+  },
+  {
+   "key": "Munf. Rep."
+  },
+  {
+   "key": "N. C. LEXIS"
+  },
+  {
+   "key": "N. D. App."
+  },
+  {
+   "key": "N. D. LEXIS"
+  },
+  {
+   "key": "N. E. Rep."
+  },
+  {
+   "key": "N. H. LEXIS"
+  },
+  {
+   "key": "N. J. LEXIS"
+  },
+  {
+   "key": "N. M. LEXIS"
+  },
+  {
+   "key": "N. Y. LEXIS"
+  },
+  {
+   "key": "N. E. 2d"
+  },
+  {
+   "key": "N. E. 3d"
+  },
+  {
+   "key": "N. W. 2d"
+  },
+  {
+   "key": "Neb. C. A."
+  },
+  {
+   "key": "Nott & McC."
+  },
+  {
+   "key": "O. L. Abs."
+  },
+  {
+   "key": "Ohio App. 2d"
+  },
+  {
+   "key": "Ohio App. 3d"
+  },
+  {
+   "key": "Okla. Rep."
+  },
+  {
+   "key": "P. U. R. 3d"
+  },
+  {
+   "key": "P. & H."
+  },
+  {
+   "key": "P. [2d. ]"
+  },
+  {
+   "key": "Pa. Commw."
+  },
+  {
+   "key": "Patton & H."
+  },
+  {
+   "key": "Peck (Tenn. )"
+  },
+  {
+   "key": "Penn. Del."
+  },
+  {
+   "key": "Penr. & W."
+  },
+  {
+   "key": "Pet. S. C."
+  },
+  {
+   "key": "Phil. Rep."
+  },
+  {
+   "key": "Pick. Rep."
+  },
+  {
+   "key": "Pitts L. J."
+  },
+  {
+   "key": "Port. Rep."
+  },
+  {
+   "key": "Posey U. C."
+  },
+  {
+   "key": "Pow. Surr."
+  },
+  {
+   "key": "R. I. LEXIS"
+  },
+  {
+   "key": "Rand. Rep."
+  },
+  {
+   "key": "Rich. Cas."
+  },
+  {
+   "key": "Rich. Rep."
+  },
+  {
+   "key": "S. C. LEXIS"
+  },
+  {
+   "key": "S. D. LEXIS"
+  },
+  {
+   "key": "S. E. 2d"
+  },
+  {
+   "key": "S. W. 2d"
+  },
+  {
+   "key": "S. W. 3d"
+  },
+  {
+   "key": "S. & M."
+  },
+  {
+   "key": "Scam. Rep."
+  },
+  {
+   "key": "Serg. & R."
+  },
+  {
+   "key": "Shan. Cas."
+  },
+  {
+   "key": "Silv. Sup."
+  },
+  {
+   "key": "Smed. & M."
+  },
+  {
+   "key": "Smedes & M."
+  },
+  {
+   "key": "SomersetL. J."
+  },
+  {
+   "key": "Stew. Rep."
+  },
+  {
+   "key": "Strob. Eq."
+  },
+  {
+   "key": "Sumn. Rep."
+  },
+  {
+   "key": "Supp. Tex."
+  },
+  {
+   "key": "Suppl. Ga."
+  },
+  {
+   "key": "Tay. J. L."
+  },
+  {
+   "key": "Tay. N. C."
+  },
+  {
+   "key": "Tenn. App."
+  },
+  {
+   "key": "Tenn. Cas."
+  },
+  {
+   "key": "Tenn. Chancery"
+  },
+  {
+   "key": "Tenn. Rep."
+  },
+  {
+   "key": "Tex. C. C."
+  },
+  {
+   "key": "Tex. Crim."
+  },
+  {
+   "key": "Tuck. & C."
+  },
+  {
+   "key": "U. S. LEXIS"
+  },
+  {
+   "key": "V. I. LEXIS"
+  },
+  {
+   "key": "Va. (Rand. )"
+  },
+  {
+   "key": "Va. (Wash. )"
+  },
+  {
+   "key": "Verm. Rep."
+  },
+  {
+   "key": "Vt. Super."
+  },
+  {
+   "key": "W. & S."
+  },
+  {
+   "key": "Wall. , Jr."
+  },
+  {
+   "key": "Wash. App."
+  },
+  {
+   "key": "Wash. Rep."
+  },
+  {
+   "key": "Weekly LawBulletin"
+  },
+  {
+   "key": "Wend. Rep."
+  },
+  {
+   "key": "West. Jur."
+  },
+  {
+   "key": "Whar. Rep."
+  },
+  {
+   "key": "Wils. Ind."
+  },
+  {
+   "key": "Wkly. Dig."
+  },
+  {
+   "key": "Woods C. C."
+  },
+  {
+   "key": "Yerg. Rep."
+  },
+  {
+   "key": "Abb. Rep."
+  },
+  {
+   "key": "Adm. Rec."
+  },
+  {
+   "key": "Aik. Rep."
+  },
+  {
+   "key": "Ala. App."
+  },
+  {
+   "key": "Ala. Rep."
+  },
+  {
+   "key": "All. Rep."
+  },
+  {
+   "key": "Am Law Rev."
+  },
+  {
+   "key": "App. Div."
+  },
+  {
+   "key": "Atl. Rep."
+  },
+  {
+   "key": "Bail. Eq."
+  },
+  {
+   "key": "Barb. Ch."
+  },
+  {
+   "key": "Bayard's Notebook"
+  },
+  {
+   "key": "Bayard’s Notebook"
+  },
+  {
+   "key": "Bin. Rep."
+  },
+  {
+   "key": "Blm. Neg."
+  },
+  {
+   "key": "Bur. Rep."
+  },
+  {
+   "key": "Busb. Eq."
+  },
+  {
+   "key": "Cai. Cas."
+  },
+  {
+   "key": "Cal. App."
+  },
+  {
+   "key": "Cal. Rep."
+  },
+  {
+   "key": "Cal. Sup."
+  },
+  {
+   "key": "Cam. & N."
+  },
+  {
+   "key": "Charl. R."
+  },
+  {
+   "key": "Charlton Rep."
+  },
+  {
+   "key": "Chev. Eq."
+  },
+  {
+   "key": "Cin. Rep."
+  },
+  {
+   "key": "Cow. Rep."
+  },
+  {
+   "key": "Ct. Cust."
+  },
+  {
+   "key": "Cust. Ct."
+  },
+  {
+   "key": "Dal. Rep."
+  },
+  {
+   "key": "Del. Cas."
+  },
+  {
+   "key": "Del. Rep."
+  },
+  {
+   "key": "Dem. Sur."
+  },
+  {
+   "key": "Des. Rep."
+  },
+  {
+   "key": "Dev. & B."
+  },
+  {
+   "key": "Dev. Rep."
+  },
+  {
+   "key": "E. H. Smith's"
+  },
+  {
+   "key": "Ed. C. R."
+  },
+  {
+   "key": "Edw. Rep."
+  },
+  {
+   "key": "F. App'x."
+  },
+  {
+   "key": "Fed. Rep. 4th"
+  },
+  {
+   "key": "Fed. App."
+  },
+  {
+   "key": "Fed. Cas."
+  },
+  {
+   "key": "Fla. Rep."
+  },
+  {
+   "key": "Free. Ch."
+  },
+  {
+   "key": "Ga. (Kelly)"
+  },
+  {
+   "key": "Georgia Decisions"
+  },
+  {
+   "key": "Goebel's Rep."
+  },
+  {
+   "key": "Grant (Pa. )"
+  },
+  {
+   "key": "Gunby (La. )"
+  },
+  {
+   "key": "Har. Chy."
+  },
+  {
+   "key": "Harp. Eq."
+  },
+  {
+   "key": "Harr. Ch."
+  },
+  {
+   "key": "Haw. App."
+  },
+  {
+   "key": "Haw. Rep."
+  },
+  {
+   "key": "Hay. Rep."
+  },
+  {
+   "key": "Hill S. C."
+  },
+  {
+   "key": "Hoff. Ch."
+  },
+  {
+   "key": "Hopk. Ch."
+  },
+  {
+   "key": "How. Rep."
+  },
+  {
+   "key": "Hum. Rep."
+  },
+  {
+   "key": "Ill. App."
+  },
+  {
+   "key": "Ill. Dec."
+  },
+  {
+   "key": "Ill. Rep."
+  },
+  {
+   "key": "Ill. (Scam)"
+  },
+  {
+   "key": "Ind. App."
+  },
+  {
+   "key": "Ind. Dec."
+  },
+  {
+   "key": "Interior Dec."
+  },
+  {
+   "key": "Ired. Eq."
+  },
+  {
+   "key": "Jones & S."
+  },
+  {
+   "key": "Kan. App."
+  },
+  {
+   "key": "Kan. Rep."
+  },
+  {
+   "key": "Ky. L. R."
+  },
+  {
+   "key": "Ky. (Duv. )"
+  },
+  {
+   "key": "Ky. (Met. )"
+  },
+  {
+   "key": "Lac. Jur."
+  },
+  {
+   "key": "Lans. Ch."
+  },
+  {
+   "key": "Law. Rep."
+  },
+  {
+   "key": "Leg. Gaz."
+  },
+  {
+   "key": "Leg. Int."
+  },
+  {
+   "key": "Leg. Rec."
+  },
+  {
+   "key": "Leg. Rep."
+  },
+  {
+   "key": "Legal Intell."
+  },
+  {
+   "key": "Leigh (Va. )"
+  },
+  {
+   "key": "Lit. Rep."
+  },
+  {
+   "key": "Low. Dec."
+  },
+  {
+   "key": "Low. Dis."
+  },
+  {
+   "key": "Mar. Rep."
+  },
+  {
+   "key": "Maryland Rep."
+  },
+  {
+   "key": "Mas. Rep."
+  },
+  {
+   "key": "Met. Rep."
+  },
+  {
+   "key": "Mich. Pr."
+  },
+  {
+   "key": "Min. Rep."
+  },
+  {
+   "key": "Mis. Rep."
+  },
+  {
+   "key": "Miss. (Howard)"
+  },
+  {
+   "key": "Miss. (Walker)"
+  },
+  {
+   "key": "Mon. Rep."
+  },
+  {
+   "key": "Monaghan(Pa. )"
+  },
+  {
+   "key": "Mur. Rep."
+  },
+  {
+   "key": "NY Slip Op."
+  },
+  {
+   "key": "N. W. 2. d"
+  },
+  {
+   "key": "N. W. 2d."
+  },
+  {
+   "key": "Neb. App."
+  },
+  {
+   "key": "Northw. Rep."
+  },
+  {
+   "key": "Off. Gaz."
+  },
+  {
+   "key": "Oh. N. P."
+  },
+  {
+   "key": "Ohio C. A."
+  },
+  {
+   "key": "Ohio C. C."
+  },
+  {
+   "key": "Ohio C. D."
+  },
+  {
+   "key": "Ohio F. D."
+  },
+  {
+   "key": "Ohio L. R."
+  },
+  {
+   "key": "Ohio N. P."
+  },
+  {
+   "key": "Ohio Nisi Prius"
+  },
+  {
+   "key": "Ohio Op. 2d"
+  },
+  {
+   "key": "Ohio Op. 3d"
+  },
+  {
+   "key": "Ohio S. U."
+  },
+  {
+   "key": "Ohio St. 2d"
+  },
+  {
+   "key": "Ohio St. 3d"
+  },
+  {
+   "key": "Okla. Cr."
+  },
+  {
+   "key": "Ore. App."
+  },
+  {
+   "key": "Pa. C. C."
+  },
+  {
+   "key": "Pa. Corp."
+  },
+  {
+   "key": "Pac. Rep."
+  },
+  {
+   "key": "Park. Cr."
+  },
+  {
+   "key": "Patton & Heath"
+  },
+  {
+   "key": "Pet. Adm."
+  },
+  {
+   "key": "Pet. Rep."
+  },
+  {
+   "key": "Phil. Eq."
+  },
+  {
+   "key": "Pitts. R."
+  },
+  {
+   "key": "Rad. Reg."
+  },
+  {
+   "key": "Rich. Eq."
+  },
+  {
+   "key": "Rob. Rep."
+  },
+  {
+   "key": "S. E. 2d."
+  },
+  {
+   "key": "S. W. 3d."
+  },
+  {
+   "key": "S. & Mar."
+  },
+  {
+   "key": "Sand. Ch."
+  },
+  {
+   "key": "Sawyer Circt."
+  },
+  {
+   "key": "Sch. Reg."
+  },
+  {
+   "key": "Smith & H."
+  },
+  {
+   "key": "So. Reporter,"
+  },
+  {
+   "key": "Sou. Rep."
+  },
+  {
+   "key": "Sto. Rep."
+  },
+  {
+   "key": "Ten. Rep."
+  },
+  {
+   "key": "Ter. Rep."
+  },
+  {
+   "key": "Tex. Rep."
+  },
+  {
+   "key": "USPQ 2d (BNA)"
+  },
+  {
+   "key": "USPQ 2d [BNA]"
+  },
+  {
+   "key": "Va. (Rob. )"
+  },
+  {
+   "key": "Vet. App."
+  },
+  {
+   "key": "W. Ty. R."
+  },
+  {
+   "key": "Walk. Ch."
+  },
+  {
+   "key": "Wall. C. C"
+  },
+  {
+   "key": "Wall. Jr."
+  },
+  {
+   "key": "Wash. Co."
+  },
+  {
+   "key": "Watts & S."
+  },
+  {
+   "key": "Week. No."
+  },
+  {
+   "key": "White & W."
+  },
+  {
+   "key": "Wis. Rep."
+  },
+  {
+   "key": "Wkly. N. C"
+  },
+  {
+   "key": "Wn. Terr."
+  },
+  {
+   "key": "Wythe (Va. )"
+  },
+  {
+   "key": "Yer. Rep."
+  },
+  {
+   "key": "A. E. C."
+  },
+  {
+   "key": "A. L. R."
+  },
+  {
+   "key": "A. M. C."
+  },
+  {
+   "key": "A. N. C."
+  },
+  {
+   "key": "Abb. Pr."
+  },
+  {
+   "key": "Am. Dec."
+  },
+  {
+   "key": "Am. Jur."
+  },
+  {
+   "key": "Am. Rep."
+  },
+  {
+   "key": "At. Rep."
+  },
+  {
+   "key": "Av. Cas."
+  },
+  {
+   "key": "B. C. D."
+  },
+  {
+   "key": "B. T. A."
+  },
+  {
+   "key": "Bankr. LEXIS"
+  },
+  {
+   "key": "Bk. Reg."
+  },
+  {
+   "key": "Bush (Ky. )"
+  },
+  {
+   "key": "C. B. C."
+  },
+  {
+   "key": "C. I. T."
+  },
+  {
+   "key": "C. M. A."
+  },
+  {
+   "key": "C. M. R."
+  },
+  {
+   "key": "Call (Va. )"
+  },
+  {
+   "key": "Colem. Cas."
+  },
+  {
+   "key": "Colo. J."
+  },
+  {
+   "key": "Colo. R."
+  },
+  {
+   "key": "Colorado Journal"
+  },
+  {
+   "key": "Ct. Sup."
+  },
+  {
+   "key": "D. A. R."
+  },
+  {
+   "key": "D. N. H."
+  },
+  {
+   "key": "D. P. R."
+  },
+  {
+   "key": "D. S. D."
+  },
+  {
+   "key": "D. Chip."
+  },
+  {
+   "key": "Del. Ch."
+  },
+  {
+   "key": "Del. Co."
+  },
+  {
+   "key": "Des. Eq."
+  },
+  {
+   "key": "Desaus. Eq."
+  },
+  {
+   "key": "Dev. Eq."
+  },
+  {
+   "key": "Dick. (NJ)"
+  },
+  {
+   "key": "Dud. Eq."
+  },
+  {
+   "key": "E. A. D."
+  },
+  {
+   "key": "Edw. Ch."
+  },
+  {
+   "key": "F. C. C."
+  },
+  {
+   "key": "F. R. D."
+  },
+  {
+   "key": "F. T. C."
+  },
+  {
+   "key": "F. Appx."
+  },
+  {
+   "key": "F. Supp."
+  },
+  {
+   "key": "Fed. Rep. 2d"
+  },
+  {
+   "key": "Fed. Rep. 3d"
+  },
+  {
+   "key": "Fed. Cl."
+  },
+  {
+   "key": "Florida Rep."
+  },
+  {
+   "key": "Fr. Chy."
+  },
+  {
+   "key": "G. D. R."
+  },
+  {
+   "key": "Ga. App."
+  },
+  {
+   "key": "Ga. Rep."
+  },
+  {
+   "key": "Har. Ch."
+  },
+  {
+   "key": "Hayw. Tenn."
+  },
+  {
+   "key": "Hilles' Notebook"
+  },
+  {
+   "key": "Hilles’ Notebook"
+  },
+  {
+   "key": "Hosea's Rep."
+  },
+  {
+   "key": "Houston Criminal"
+  },
+  {
+   "key": "How. Pr."
+  },
+  {
+   "key": "I. C. C."
+  },
+  {
+   "key": "I. E. R."
+  },
+  {
+   "key": "I. R. B."
+  },
+  {
+   "key": "Ill. (Breese)"
+  },
+  {
+   "key": "Indian Terr."
+  },
+  {
+   "key": "Ins Law J."
+  },
+  {
+   "key": "Johns. Rep."
+  },
+  {
+   "key": "Johnson Rep."
+  },
+  {
+   "key": "Ky. App."
+  },
+  {
+   "key": "Ky. Rep."
+  },
+  {
+   "key": "L. R. A."
+  },
+  {
+   "key": "La. Ann."
+  },
+  {
+   "key": "La. App."
+  },
+  {
+   "key": "La. Rep."
+  },
+  {
+   "key": "Leg. Op."
+  },
+  {
+   "key": "Legal Intel."
+  },
+  {
+   "key": "Littell Rep."
+  },
+  {
+   "key": "Mass. (Allen)"
+  },
+  {
+   "key": "Mass. R."
+  },
+  {
+   "key": "Md. App."
+  },
+  {
+   "key": "Md. Rep."
+  },
+  {
+   "key": "Metc. Mass."
+  },
+  {
+   "key": "Miss. R."
+  },
+  {
+   "key": "Mo. App."
+  },
+  {
+   "key": "Mo. Rep."
+  },
+  {
+   "key": "N. J. L."
+  },
+  {
+   "key": "N. J. M."
+  },
+  {
+   "key": "N. J. S."
+  },
+  {
+   "key": "N. J. Tax"
+  },
+  {
+   "key": "N. M. B."
+  },
+  {
+   "key": "N. R. C."
+  },
+  {
+   "key": "N. W. 2nd"
+  },
+  {
+   "key": "N. Y. S."
+  },
+  {
+   "key": "N. & Mc."
+  },
+  {
+   "key": "N. Chip."
+  },
+  {
+   "key": "Navajo Rptr."
+  },
+  {
+   "key": "O. A. R."
+  },
+  {
+   "key": "O. B. R."
+  },
+  {
+   "key": "O. C. C."
+  },
+  {
+   "key": "O. C. D."
+  },
+  {
+   "key": "O. L. A."
+  },
+  {
+   "key": "O. N. P."
+  },
+  {
+   "key": "O. R. W."
+  },
+  {
+   "key": "O. S. U."
+  },
+  {
+   "key": "O. Supp."
+  },
+  {
+   "key": "Oh. App."
+  },
+  {
+   "key": "Op. OLC."
+  },
+  {
+   "key": "Or. App."
+  },
+  {
+   "key": "P. C. R."
+  },
+  {
+   "key": "P. L. M."
+  },
+  {
+   "key": "P. L. R."
+  },
+  {
+   "key": "P. O. R."
+  },
+  {
+   "key": "P. R. R."
+  },
+  {
+   "key": "P. S. R."
+  },
+  {
+   "key": "P. U. R."
+  },
+  {
+   "key": "Pa. Cmwlth."
+  },
+  {
+   "key": "Pa. Fid."
+  },
+  {
+   "key": "Pacific Rep."
+  },
+  {
+   "key": "Ril. Eq."
+  },
+  {
+   "key": "S. C. L."
+  },
+  {
+   "key": "S. C. R."
+  },
+  {
+   "key": "S. T. B."
+  },
+  {
+   "key": "Sandf. Chy."
+  },
+  {
+   "key": "Sm. & M."
+  },
+  {
+   "key": "So. Rep."
+  },
+  {
+   "key": "So. Reporter"
+  },
+  {
+   "key": "Sou. (2nd)"
+  },
+  {
+   "key": "St. Rep."
+  },
+  {
+   "key": "State Reptr."
+  },
+  {
+   "key": "TN WC App."
+  },
+  {
+   "key": "T. C. A."
+  },
+  {
+   "key": "T. C. M."
+  },
+  {
+   "key": "Tenn. (Meigs)"
+  },
+  {
+   "key": "Tenn. (Sneed)"
+  },
+  {
+   "key": "Va. App."
+  },
+  {
+   "key": "Va. Cas."
+  },
+  {
+   "key": "Va. Cir."
+  },
+  {
+   "key": "Va. Dec."
+  },
+  {
+   "key": "Va. Rep."
+  },
+  {
+   "key": "Vt. Rep."
+  },
+  {
+   "key": "W. L. B."
+  },
+  {
+   "key": "W. L. J."
+  },
+  {
+   "key": "W. N. C."
+  },
+  {
+   "key": "Walk. Miss."
+  },
+  {
+   "key": "Wash. (VA)"
+  },
+  {
+   "key": "Wendell Rep."
+  },
+  {
+   "key": "Wh. Rep."
+  },
+  {
+   "key": "Wheaton Rep."
+  },
+  {
+   "key": "Will. Mass."
+  },
+  {
+   "key": "Willson Rep."
+  },
+  {
+   "key": "Wn. App."
+  },
+  {
+   "key": "Wythe's Rep."
+  },
+  {
+   "key": "A. D. 2d"
+  },
+  {
+   "key": "A. D. 3d"
+  },
+  {
+   "key": "Abb. Prac."
+  },
+  {
+   "key": "Adv. S."
+  },
+  {
+   "key": "Alas. LEXIS"
+  },
+  {
+   "key": "Alaska Fed."
+  },
+  {
+   "key": "Am. Reports"
+  },
+  {
+   "key": "Ariz. LEXIS"
+  },
+  {
+   "key": "B. Mon."
+  },
+  {
+   "key": "B. Stockton"
+  },
+  {
+   "key": "Bailey Rep."
+  },
+  {
+   "key": "Betts' Dec."
+  },
+  {
+   "key": "C. & C."
+  },
+  {
+   "key": "C. Cls."
+  },
+  {
+   "key": "Cai. R."
+  },
+  {
+   "key": "Caines Cas."
+  },
+  {
+   "key": "Caines Rep."
+  },
+  {
+   "key": "Cin. R."
+  },
+  {
+   "key": "Cl. Ch."
+  },
+  {
+   "key": "Cl. Ct."
+  },
+  {
+   "key": "Colo. LEXIS"
+  },
+  {
+   "key": "Conn. LEXIS"
+  },
+  {
+   "key": "Cranch Rep."
+  },
+  {
+   "key": "Ct. Cl."
+  },
+  {
+   "key": "D. & B."
+  },
+  {
+   "key": "D. Haw."
+  },
+  {
+   "key": "Dallas Rep."
+  },
+  {
+   "key": "Del. (Boyce)"
+  },
+  {
+   "key": "Dis. R."
+  },
+  {
+   "key": "Disney (Ohio)"
+  },
+  {
+   "key": "Dist. Rep."
+  },
+  {
+   "key": "Dudley Rep."
+  },
+  {
+   "key": "F. Cas."
+  },
+  {
+   "key": "Fed. R. 4th"
+  },
+  {
+   "key": "Fr. Ch."
+  },
+  {
+   "key": "H. & M."
+  },
+  {
+   "key": "H. Rep."
+  },
+  {
+   "key": "Hardin(Ky. )"
+  },
+  {
+   "key": "Hawaii App."
+  },
+  {
+   "key": "Hawaii Rep."
+  },
+  {
+   "key": "Head(Tenn. )"
+  },
+  {
+   "key": "Hoff. Cha."
+  },
+  {
+   "key": "Hopk. Works"
+  },
+  {
+   "key": "Howard Rep."
+  },
+  {
+   "key": "Hughes (1877)"
+  },
+  {
+   "key": "Ill. Decs."
+  },
+  {
+   "key": "Ind. T."
+  },
+  {
+   "key": "J. Rep."
+  },
+  {
+   "key": "Kans. App."
+  },
+  {
+   "key": "Ken. Opin."
+  },
+  {
+   "key": "Ky. (Hughes)"
+  },
+  {
+   "key": "Ky. Op."
+  },
+  {
+   "key": "L. Rep."
+  },
+  {
+   "key": "Lack. Jur."
+  },
+  {
+   "key": "Lalor Supp."
+  },
+  {
+   "key": "M. & Y."
+  },
+  {
+   "key": "Manning La."
+  },
+  {
+   "key": "Mart. Dec."
+  },
+  {
+   "key": "Martin Rep."
+  },
+  {
+   "key": "Mass. App."
+  },
+  {
+   "key": "Mass. (Gray)"
+  },
+  {
+   "key": "Mass. (Tyng)"
+  },
+  {
+   "key": "Mass. LEXIS"
+  },
+  {
+   "key": "McCord Rep."
+  },
+  {
+   "key": "Md. Ch."
+  },
+  {
+   "key": "Mich. LEXIS"
+  },
+  {
+   "key": "Mill Const."
+  },
+  {
+   "key": "Mills Surr."
+  },
+  {
+   "key": "Minn. LEXIS"
+  },
+  {
+   "key": "Miss. LEXIS"
+  },
+  {
+   "key": "Mont. LEXIS"
+  },
+  {
+   "key": "NY Misc LEXIS"
+  },
+  {
+   "key": "N. Y. 3d"
+  },
+  {
+   "key": "Niles' Reg."
+  },
+  {
+   "key": "Niles, Reg."
+  },
+  {
+   "key": "O. Misc. 2d"
+  },
+  {
+   "key": "O. App."
+  },
+  {
+   "key": "Okla. LEXIS"
+  },
+  {
+   "key": "P. & W."
+  },
+  {
+   "key": "P. Rep."
+  },
+  {
+   "key": "Pac. (2d)"
+  },
+  {
+   "key": "Penn. Rep."
+  },
+  {
+   "key": "Peters Rep."
+  },
+  {
+   "key": "Porter Rep."
+  },
+  {
+   "key": "Read's Notebook"
+  },
+  {
+   "key": "Read’s Notebook"
+  },
+  {
+   "key": "Rob. (VA)"
+  },
+  {
+   "key": "Sadler(Pa. )"
+  },
+  {
+   "key": "Sand. Chy."
+  },
+  {
+   "key": "Sandf. Ch."
+  },
+  {
+   "key": "Seld. Notes"
+  },
+  {
+   "key": "So. 2d."
+  },
+  {
+   "key": "So. (2nd)"
+  },
+  {
+   "key": "State Rptr."
+  },
+  {
+   "key": "T. C. at"
+  },
+  {
+   "key": "Tenn. (Head)"
+  },
+  {
+   "key": "Tenn. (Peck)"
+  },
+  {
+   "key": "Tenn. (Swan)"
+  },
+  {
+   "key": "Tenn. LEXIS"
+  },
+  {
+   "key": "US Dist LEXIS"
+  },
+  {
+   "key": "W. & W."
+  },
+  {
+   "key": "Wall. Rep."
+  },
+  {
+   "key": "Wash. Ter."
+  },
+  {
+   "key": "Wash. LEXIS"
+  },
+  {
+   "key": "Wells' Notebook"
+  },
+  {
+   "key": "Wells’ Notebook"
+  },
+  {
+   "key": "Whart. Pa."
+  },
+  {
+   "key": "Wisc. LEXIS"
+  },
+  {
+   "key": "Yeates Rep."
+  },
+  {
+   "key": "(So. 2nd)"
+  },
+  {
+   "key": "Agric. Dec"
+  },
+  {
+   "key": "Ala. LEXIS"
+  },
+  {
+   "key": "Am. D."
+  },
+  {
+   "key": "Ark. App'x"
+  },
+  {
+   "key": "Ark. LEXIS"
+  },
+  {
+   "key": "Bailey Ch."
+  },
+  {
+   "key": "Bailey Eq."
+  },
+  {
+   "key": "Black Rep."
+  },
+  {
+   "key": "Cal. LEXIS"
+  },
+  {
+   "key": "Ch. Sent."
+  },
+  {
+   "key": "Chev. Ch."
+  },
+  {
+   "key": "Clarke Ch."
+  },
+  {
+   "key": "Col. Cas."
+  },
+  {
+   "key": "D. Chipm."
+  },
+  {
+   "key": "Dane, Abr."
+  },
+  {
+   "key": "Del. LEXIS"
+  },
+  {
+   "key": "Denio Rep."
+  },
+  {
+   "key": "F. App’x."
+  },
+  {
+   "key": "Fed. R. 2d"
+  },
+  {
+   "key": "Fed. R. 3d"
+  },
+  {
+   "key": "Fed. Rep."
+  },
+  {
+   "key": "Fed. App'x"
+  },
+  {
+   "key": "Fla. LEXIS"
+  },
+  {
+   "key": "Grant Cas."
+  },
+  {
+   "key": "Handy (Ohio)"
+  },
+  {
+   "key": "Haw. LEXIS"
+  },
+  {
+   "key": "Hawks Rep."
+  },
+  {
+   "key": "Ida. LEXIS"
+  },
+  {
+   "key": "Ill. A. 2d"
+  },
+  {
+   "key": "Ill. A. 3d"
+  },
+  {
+   "key": "Ill. LEXIS"
+  },
+  {
+   "key": "Ind. Rep."
+  },
+  {
+   "key": "Ind. LEXIS"
+  },
+  {
+   "key": "Jones Law."
+  },
+  {
+   "key": "Kan. LEXIS"
+  },
+  {
+   "key": "Ken. Dec."
+  },
+  {
+   "key": "Ky. (Sneed)"
+  },
+  {
+   "key": "L. Ed."
+  },
+  {
+   "key": "Legal Gaz."
+  },
+  {
+   "key": "Legal Int."
+  },
+  {
+   "key": "Leigh Rep."
+  },
+  {
+   "key": "McCord Ch."
+  },
+  {
+   "key": "McCord Eq."
+  },
+  {
+   "key": "Metc. Ky."
+  },
+  {
+   "key": "Monroe, B."
+  },
+  {
+   "key": "Montg. CLR"
+  },
+  {
+   "key": "N. Chipm."
+  },
+  {
+   "key": "Neb. LEXIS"
+  },
+  {
+   "key": "Neb. Unoff"
+  },
+  {
+   "key": "Nev. LEXIS"
+  },
+  {
+   "key": "Nile, Reg."
+  },
+  {
+   "key": "Niles Reg."
+  },
+  {
+   "key": "Oh. A."
+  },
+  {
+   "key": "Ohio F. Dec"
+  },
+  {
+   "key": "Ohio Law Abs"
+  },
+  {
+   "key": "Ohio Misc."
+  },
+  {
+   "key": "Ohio Prob."
+  },
+  {
+   "key": "Ohio Supp."
+  },
+  {
+   "key": "Ore. LEXIS"
+  },
+  {
+   "key": "P. [2nd]"
+  },
+  {
+   "key": "Pa. Dist."
+  },
+  {
+   "key": "Pa. C."
+  },
+  {
+   "key": "Pa. Cmwlth"
+  },
+  {
+   "key": "Pa. D."
+  },
+  {
+   "key": "Pac. (2)"
+  },
+  {
+   "key": "Paige Rep."
+  },
+  {
+   "key": "Parker Cr."
+  },
+  {
+   "key": "Penn. St."
+  },
+  {
+   "key": "Rawle Rep."
+  },
+  {
+   "key": "Rodney's Notes"
+  },
+  {
+   "key": "Rodney’s Notes"
+  },
+  {
+   "key": "S. Ct."
+  },
+  {
+   "key": "S. (2nd)"
+  },
+  {
+   "key": "Sneed Dec."
+  },
+  {
+   "key": "So. (2d)"
+  },
+  {
+   "key": "South Car."
+  },
+  {
+   "key": "Spears Eq."
+  },
+  {
+   "key": "Speers Eq."
+  },
+  {
+   "key": "Story Rep."
+  },
+  {
+   "key": "Tex. App."
+  },
+  {
+   "key": "Tex. LEXIS"
+  },
+  {
+   "key": "Texas Rep."
+  },
+  {
+   "key": "USPQ2d (BNA)"
+  },
+  {
+   "key": "USPQ2d [BNA]"
+  },
+  {
+   "key": "Va. (Leigh)"
+  },
+  {
+   "key": "W. Va."
+  },
+  {
+   "key": "Walk. Pa."
+  },
+  {
+   "key": "Wallace R."
+  },
+  {
+   "key": "Wash. St."
+  },
+  {
+   "key": "Wash. Ty."
+  },
+  {
+   "key": "Wash. Va."
+  },
+  {
+   "key": "Watts(Pa. )"
+  },
+  {
+   "key": "Watts Rep."
+  },
+  {
+   "key": "Wyo. LEXIS"
+  },
+  {
+   "key": "Wythe's R."
+  },
+  {
+   "key": "Am. Samoa"
+  },
+  {
+   "key": "BNA IER CAS"
+  },
+  {
+   "key": "B. R."
+  },
+  {
+   "key": "Bai. Eq."
+  },
+  {
+   "key": "Bail. L."
+  },
+  {
+   "key": "Bibb(Ky. )"
+  },
+  {
+   "key": "Bibb Rep."
+  },
+  {
+   "key": "Blume Op."
+  },
+  {
+   "key": "Busb. L."
+  },
+  {
+   "key": "Call Rep."
+  },
+  {
+   "key": "Chip. D."
+  },
+  {
+   "key": "Chip. N."
+  },
+  {
+   "key": "Code Rep."
+  },
+  {
+   "key": "Court Cl."
+  },
+  {
+   "key": "Cranch (US)"
+  },
+  {
+   "key": "Daly's R."
+  },
+  {
+   "key": "Dana Rep."
+  },
+  {
+   "key": "Dud. Ch."
+  },
+  {
+   "key": "Fed. Ca."
+  },
+  {
+   "key": "Fed. Appx"
+  },
+  {
+   "key": "Ga. LEXIS"
+  },
+  {
+   "key": "Grant Pa."
+  },
+  {
+   "key": "Hall's R."
+  },
+  {
+   "key": "Hall Rep."
+  },
+  {
+   "key": "Harp. L."
+  },
+  {
+   "key": "Hill Rep."
+  },
+  {
+   "key": "I&N Dec."
+  },
+  {
+   "key": "Iowa Rep."
+  },
+  {
+   "key": "Ired. L."
+  },
+  {
+   "key": "Ired. Law"
+  },
+  {
+   "key": "Jones Eq."
+  },
+  {
+   "key": "Ky. (Bibb)"
+  },
+  {
+   "key": "Ky. (Bush)"
+  },
+  {
+   "key": "Ky. (Dana)"
+  },
+  {
+   "key": "Ky. LEXIS"
+  },
+  {
+   "key": "La. LEXIS"
+  },
+  {
+   "key": "Lack. Jurist"
+  },
+  {
+   "key": "Law, Rep."
+  },
+  {
+   "key": "Law. Ed."
+  },
+  {
+   "key": "M. J."
+  },
+  {
+   "key": "Md. LEXIS"
+  },
+  {
+   "key": "Me. LEXIS"
+  },
+  {
+   "key": "Misc. Rep"
+  },
+  {
+   "key": "Misc Rep."
+  },
+  {
+   "key": "Mo. LEXIS"
+  },
+  {
+   "key": "Mor. Ia."
+  },
+  {
+   "key": "N. J. Law"
+  },
+  {
+   "key": "N. C."
+  },
+  {
+   "key": "N. D."
+  },
+  {
+   "key": "N. E."
+  },
+  {
+   "key": "N. W."
+  },
+  {
+   "key": "N. Y."
+  },
+  {
+   "key": "O. Misc."
+  },
+  {
+   "key": "O. G."
+  },
+  {
+   "key": "Oh. Dec."
+  },
+  {
+   "key": "Ohio Abs."
+  },
+  {
+   "key": "Ohio App."
+  },
+  {
+   "key": "Ohio Dec."
+  },
+  {
+   "key": "Ohio Ops."
+  },
+  {
+   "key": "Okl. Cr."
+  },
+  {
+   "key": "P. R."
+  },
+  {
+   "key": "P. (2d)"
+  },
+  {
+   "key": "P. [2d]"
+  },
+  {
+   "key": "Pa. Cas."
+  },
+  {
+   "key": "Pa. Rep."
+  },
+  {
+   "key": "Pa. LEXIS"
+  },
+  {
+   "key": "Pa. Rawle"
+  },
+  {
+   "key": "Pai. Ch."
+  },
+  {
+   "key": "Paige Ch."
+  },
+  {
+   "key": "Phil. Law"
+  },
+  {
+   "key": "Riley Ch."
+  },
+  {
+   "key": "Riley Eq."
+  },
+  {
+   "key": "Rob. La."
+  },
+  {
+   "key": "Rob. Va."
+  },
+  {
+   "key": "S. E."
+  },
+  {
+   "key": "S. R."
+  },
+  {
+   "key": "S. W."
+  },
+  {
+   "key": "So. Car."
+  },
+  {
+   "key": "Spear Ch."
+  },
+  {
+   "key": "Spear Eq."
+  },
+  {
+   "key": "Sup. Ct."
+  },
+  {
+   "key": "T. C."
+  },
+  {
+   "key": "Tex. Cr."
+  },
+  {
+   "key": "U. S."
+  },
+  {
+   "key": "Utah App."
+  },
+  {
+   "key": "Va. (Call)"
+  },
+  {
+   "key": "Va. LEXIS"
+  },
+  {
+   "key": "Va. Leigh"
+  },
+  {
+   "key": "Vt. LEXIS"
+  },
+  {
+   "key": "WI. App."
+  },
+  {
+   "key": "Wash. T."
+  },
+  {
+   "key": "A. Rep."
+  },
+  {
+   "key": "Ap. 2d."
+  },
+  {
+   "key": "App. Div"
+  },
+  {
+   "key": "App Div."
+  },
+  {
+   "key": "Atl. R."
+  },
+  {
+   "key": "Black R."
+  },
+  {
+   "key": "Burr's Trial"
+  },
+  {
+   "key": "Burr’s Trial"
+  },
+  {
+   "key": "Cal. 4th"
+  },
+  {
+   "key": "Cal. 5th"
+  },
+  {
+   "key": "Cal. WCC"
+  },
+  {
+   "key": "Dakota LEXIS"
+  },
+  {
+   "key": "Day (Conn)"
+  },
+  {
+   "key": "Dev. L."
+  },
+  {
+   "key": "Dud. L."
+  },
+  {
+   "key": "Ed. Ch."
+  },
+  {
+   "key": "Educ L Rep"
+  },
+  {
+   "key": "F. 4th."
+  },
+  {
+   "key": "F. App'x"
+  },
+  {
+   "key": "F. App’x"
+  },
+  {
+   "key": "Fed. R."
+  },
+  {
+   "key": "Handy R."
+  },
+  {
+   "key": "Hill Ch."
+  },
+  {
+   "key": "Hill Eq."
+  },
+  {
+   "key": "Ill. A."
+  },
+  {
+   "key": "Jones L."
+  },
+  {
+   "key": "L. E. 2d"
+  },
+  {
+   "key": "Law Rep."
+  },
+  {
+   "key": "Law Reporter"
+  },
+  {
+   "key": "Mason R."
+  },
+  {
+   "key": "Misc. 2d"
+  },
+  {
+   "key": "Misc. 3d"
+  },
+  {
+   "key": "Mon. B."
+  },
+  {
+   "key": "NLRB No."
+  },
+  {
+   "key": "NY Slip Op"
+  },
+  {
+   "key": "N. W. 3d"
+  },
+  {
+   "key": "Neb App."
+  },
+  {
+   "key": "OK CIV APP"
+  },
+  {
+   "key": "OK JUD ETH"
+  },
+  {
+   "key": "OSHC (BNA)"
+  },
+  {
+   "key": "O. O. 2d"
+  },
+  {
+   "key": "O. O. 3d"
+  },
+  {
+   "key": "O. S. 2d"
+  },
+  {
+   "key": "O. S. 3d"
+  },
+  {
+   "key": "Oh. St."
+  },
+  {
+   "key": "Ohio Ch."
+  },
+  {
+   "key": "Ohio Law R"
+  },
+  {
+   "key": "Ohio Op."
+  },
+  {
+   "key": "Ohio St."
+  },
+  {
+   "key": "Oil & Gas"
+  },
+  {
+   "key": "Okl Jud."
+  },
+  {
+   "key": "Pa. St."
+  },
+  {
+   "key": "Pac. R."
+  },
+  {
+   "key": "Pennewill."
+  },
+  {
+   "key": "Rice Ch."
+  },
+  {
+   "key": "Rice Eq."
+  },
+  {
+   "key": "S. Car."
+  },
+  {
+   "key": "S. Dak."
+  },
+  {
+   "key": "S. E2. d"
+  },
+  {
+   "key": "Smith (TN)"
+  },
+  {
+   "key": "Sneed (Ky)"
+  },
+  {
+   "key": "Sp. Ch."
+  },
+  {
+   "key": "USPQ (BNA)"
+  },
+  {
+   "key": "USPQ [BNA]"
+  },
+  {
+   "key": "W. App."
+  },
+  {
+   "key": "Wash. 2d"
+  },
+  {
+   "key": "Wash. 3d"
+  },
+  {
+   "key": "West Va."
+  },
+  {
+   "key": "cal. 4th"
+  },
+  {
+   "key": "A. 2d."
+  },
+  {
+   "key": "A. 3d."
+  },
+  {
+   "key": "Ala. 2d"
+  },
+  {
+   "key": "Am Dec."
+  },
+  {
+   "key": "Binn [Pa]"
+  },
+  {
+   "key": "Buchanan."
+  },
+  {
+   "key": "Cal. 2d"
+  },
+  {
+   "key": "Cal. 3d"
+  },
+  {
+   "key": "Cl. R."
+  },
+  {
+   "key": "Daly (NY)"
+  },
+  {
+   "key": "ERC (BNA)"
+  },
+  {
+   "key": "F. 2d."
+  },
+  {
+   "key": "F. 3d."
+  },
+  {
+   "key": "F. Supp"
+  },
+  {
+   "key": "F Supp."
+  },
+  {
+   "key": "F Supp 2d"
+  },
+  {
+   "key": "Fl. S."
+  },
+  {
+   "key": "Hall R."
+  },
+  {
+   "key": "IN Dec."
+  },
+  {
+   "key": "Ill. 2d"
+  },
+  {
+   "key": "Intelligencer"
+  },
+  {
+   "key": "J. Ch."
+  },
+  {
+   "key": "La. A."
+  },
+  {
+   "key": "Ma. A."
+  },
+  {
+   "key": "O. Cr."
+  },
+  {
+   "key": "O. Supp"
+  },
+  {
+   "key": "Ohio B."
+  },
+  {
+   "key": "Or. A."
+  },
+  {
+   "key": "Or. Tax"
+  },
+  {
+   "key": "Or App."
+  },
+  {
+   "key": "P. 2d."
+  },
+  {
+   "key": "P. 3d."
+  },
+  {
+   "key": "Pac. 2d"
+  },
+  {
+   "key": "Puerto Rico"
+  },
+  {
+   "key": "Reporter."
+  },
+  {
+   "key": "So, (2nd)"
+  },
+  {
+   "key": "So. C."
+  },
+  {
+   "key": "So. 2nd"
+  },
+  {
+   "key": "T. Ct."
+  },
+  {
+   "key": "UT App."
+  },
+  {
+   "key": "W. St."
+  },
+  {
+   "key": "W. W. H"
+  },
+  {
+   "key": "Wa. A."
+  },
+  {
+   "key": "Wis. 2d"
+  },
+  {
+   "key": "A. D."
+  },
+  {
+   "key": "A. N."
+  },
+  {
+   "key": "A. R."
+  },
+  {
+   "key": "B. Mon"
+  },
+  {
+   "key": "B Stockton"
+  },
+  {
+   "key": "Blatchf."
+  },
+  {
+   "key": "CAAF LEXIS"
+  },
+  {
+   "key": "CCPA LEXIS"
+  },
+  {
+   "key": "C. B."
+  },
+  {
+   "key": "C. C."
+  },
+  {
+   "key": "D. C."
+  },
+  {
+   "key": "F. 4 th"
+  },
+  {
+   "key": "F. C."
+  },
+  {
+   "key": "F. (2d)"
+  },
+  {
+   "key": "F. 4th"
+  },
+  {
+   "key": "Gildersleeve"
+  },
+  {
+   "key": "Guam LEXIS"
+  },
+  {
+   "key": "Harring."
+  },
+  {
+   "key": "I&NDec."
+  },
+  {
+   "key": "L. E."
+  },
+  {
+   "key": "MacArth."
+  },
+  {
+   "key": "NCBC LEXIS"
+  },
+  {
+   "key": "N. J."
+  },
+  {
+   "key": "N. M."
+  },
+  {
+   "key": "O. D."
+  },
+  {
+   "key": "O. O."
+  },
+  {
+   "key": "O. S."
+  },
+  {
+   "key": "Ohio LEXIS"
+  },
+  {
+   "key": "Ohio State"
+  },
+  {
+   "key": "P. H."
+  },
+  {
+   "key": "Pa. State"
+  },
+  {
+   "key": "Pac (2d)"
+  },
+  {
+   "key": "R. I."
+  },
+  {
+   "key": "Robbins."
+  },
+  {
+   "key": "SEC Docket"
+  },
+  {
+   "key": "S. C."
+  },
+  {
+   "key": "S. D."
+  },
+  {
+   "key": "So. 2d"
+  },
+  {
+   "key": "So. 3d"
+  },
+  {
+   "key": "So (2nd)"
+  },
+  {
+   "key": "South. 2d"
+  },
+  {
+   "key": "South. 3d"
+  },
+  {
+   "key": "Sprague."
+  },
+  {
+   "key": "Utah LEXIS"
+  },
+  {
+   "key": "V. I."
+  },
+  {
+   "key": "V. R."
+  },
+  {
+   "key": "W. R."
+  },
+  {
+   "key": "W. T."
+  },
+  {
+   "key": "W. V."
+  },
+  {
+   "key": "Wn. 2d"
+  },
+  {
+   "key": "A. 2d"
+  },
+  {
+   "key": "A. 3d"
+  },
+  {
+   "key": "A . 2d"
+  },
+  {
+   "key": "BTA LEXIS"
+  },
+  {
+   "key": "Blackf."
+  },
+  {
+   "key": "Buchan."
+  },
+  {
+   "key": "CCA LEXIS"
+  },
+  {
+   "key": "CMA LEXIS"
+  },
+  {
+   "key": "CMR LEXIS"
+  },
+  {
+   "key": "Cal. 2nd"
+  },
+  {
+   "key": "Cal. 3rd"
+  },
+  {
+   "key": "Chandl."
+  },
+  {
+   "key": "Charlt."
+  },
+  {
+   "key": "Desaus."
+  },
+  {
+   "key": "F. 2d"
+  },
+  {
+   "key": "F. 3d"
+  },
+  {
+   "key": "Hardes."
+  },
+  {
+   "key": "Hughes."
+  },
+  {
+   "key": "IER Cases"
+  },
+  {
+   "key": "Jones Law"
+  },
+  {
+   "key": "L Ed 2d"
+  },
+  {
+   "key": "Lowell."
+  },
+  {
+   "key": "McLean."
+  },
+  {
+   "key": "P. 2 d"
+  },
+  {
+   "key": "P. 2d"
+  },
+  {
+   "key": "P. 3d"
+  },
+  {
+   "key": "Pa. Corp"
+  },
+  {
+   "key": "Pennew."
+  },
+  {
+   "key": "Pennyp."
+  },
+  {
+   "key": "S. Ct"
+  },
+  {
+   "key": "p. 2 d"
+  },
+  {
+   "key": "Atl. 2d"
+  },
+  {
+   "key": "BNA OSHC"
+  },
+  {
+   "key": "Black."
+  },
+  {
+   "key": "Bradf."
+  },
+  {
+   "key": "Brayt."
+  },
+  {
+   "key": "Brock."
+  },
+  {
+   "key": "Cates."
+  },
+  {
+   "key": "Chand."
+  },
+  {
+   "key": "Charlton's"
+  },
+  {
+   "key": "Chest."
+  },
+  {
+   "key": "Cliff."
+  },
+  {
+   "key": "Coldw."
+  },
+  {
+   "key": "Const."
+  },
+  {
+   "key": "Fed Appx"
+  },
+  {
+   "key": "Freem."
+  },
+  {
+   "key": "Gildr."
+  },
+  {
+   "key": "Gratt."
+  },
+  {
+   "key": "Harrington"
+  },
+  {
+   "key": "Heisk."
+  },
+  {
+   "key": "Hill Law"
+  },
+  {
+   "key": "Hoffm."
+  },
+  {
+   "key": "Houst."
+  },
+  {
+   "key": "Humph."
+  },
+  {
+   "key": "I&N Dec"
+  },
+  {
+   "key": "Johns."
+  },
+  {
+   "key": "MacAr."
+  },
+  {
+   "key": "Manum."
+  },
+  {
+   "key": "Marsh."
+  },
+  {
+   "key": "Mason."
+  },
+  {
+   "key": "McAll."
+  },
+  {
+   "key": "McMul."
+  },
+  {
+   "key": "Mich App"
+  },
+  {
+   "key": "Mills."
+  },
+  {
+   "key": "Misc Rep"
+  },
+  {
+   "key": "Monag."
+  },
+  {
+   "key": "Montg."
+  },
+  {
+   "key": "Murph."
+  },
+  {
+   "key": "Overt."
+  },
+  {
+   "key": "P [2d]"
+  },
+  {
+   "key": "Paine."
+  },
+  {
+   "key": "Pears."
+  },
+  {
+   "key": "Penne."
+  },
+  {
+   "key": "Penny."
+  },
+  {
+   "key": "Phila."
+  },
+  {
+   "key": "Phill."
+  },
+  {
+   "key": "Sandf."
+  },
+  {
+   "key": "Silvernail"
+  },
+  {
+   "key": "South."
+  },
+  {
+   "key": "Stock."
+  },
+  {
+   "key": "Story."
+  },
+  {
+   "key": "Strob."
+  },
+  {
+   "key": "Teiss."
+  },
+  {
+   "key": "Tiess."
+  },
+  {
+   "key": "Tread."
+  },
+  {
+   "key": "Utah App"
+  },
+  {
+   "key": "Van Ness"
+  },
+  {
+   "key": "Vroom."
+  },
+  {
+   "key": "Vt Super"
+  },
+  {
+   "key": "Whart."
+  },
+  {
+   "key": "Wheat."
+  },
+  {
+   "key": "Woods."
+  },
+  {
+   "key": "Woolw."
+  },
+  {
+   "key": "ALR 4th"
+  },
+  {
+   "key": "ALR 5th"
+  },
+  {
+   "key": "ALR 6th"
+  },
+  {
+   "key": "Anth."
+  },
+  {
+   "key": "App Div"
+  },
+  {
+   "key": "Ariz."
+  },
+  {
+   "key": "Bail."
+  },
+  {
+   "key": "Barb."
+  },
+  {
+   "key": "Baxt."
+  },
+  {
+   "key": "Binn."
+  },
+  {
+   "key": "Biss."
+  },
+  {
+   "key": "Bond."
+  },
+  {
+   "key": "Bosw."
+  },
+  {
+   "key": "Brad."
+  },
+  {
+   "key": "Brev."
+  },
+  {
+   "key": "Buch."
+  },
+  {
+   "key": "Busb."
+  },
+  {
+   "key": "Cain."
+  },
+  {
+   "key": "Chev."
+  },
+  {
+   "key": "Chip."
+  },
+  {
+   "key": "Cold."
+  },
+  {
+   "key": "Colo."
+  },
+  {
+   "key": "Conn."
+  },
+  {
+   "key": "Curt."
+  },
+  {
+   "key": "Cush."
+  },
+  {
+   "key": "Dall."
+  },
+  {
+   "key": "Dickinson"
+  },
+  {
+   "key": "Dill."
+  },
+  {
+   "key": "Doug."
+  },
+  {
+   "key": "Dudl."
+  },
+  {
+   "key": "FCC Rcd"
+  },
+  {
+   "key": "FLW Fed"
+  },
+  {
+   "key": "Flip."
+  },
+  {
+   "key": "Flor."
+  },
+  {
+   "key": "Gall."
+  },
+  {
+   "key": "Gild."
+  },
+  {
+   "key": "Gilm."
+  },
+  {
+   "key": "Hall."
+  },
+  {
+   "key": "Hand."
+  },
+  {
+   "key": "Hard."
+  },
+  {
+   "key": "Harp."
+  },
+  {
+   "key": "Harr."
+  },
+  {
+   "key": "Hasb."
+  },
+  {
+   "key": "Hask."
+  },
+  {
+   "key": "Hayw."
+  },
+  {
+   "key": "Hilt."
+  },
+  {
+   "key": "Hoff."
+  },
+  {
+   "key": "Hugh."
+  },
+  {
+   "key": "Ired."
+  },
+  {
+   "key": "Jeff."
+  },
+  {
+   "key": "Jefferson"
+  },
+  {
+   "key": "John."
+  },
+  {
+   "key": "Just."
+  },
+  {
+   "key": "Kans."
+  },
+  {
+   "key": "Kirb."
+  },
+  {
+   "key": "Lans."
+  },
+  {
+   "key": "Litt."
+  },
+  {
+   "key": "MacArthur"
+  },
+  {
+   "key": "Mart."
+  },
+  {
+   "key": "Marv."
+  },
+  {
+   "key": "Mass."
+  },
+  {
+   "key": "McAl."
+  },
+  {
+   "key": "McCanless"
+  },
+  {
+   "key": "McGl."
+  },
+  {
+   "key": "Mc Lean"
+  },
+  {
+   "key": "Metc."
+  },
+  {
+   "key": "Minn."
+  },
+  {
+   "key": "Misc."
+  },
+  {
+   "key": "Misc 2d"
+  },
+  {
+   "key": "Misc 3d"
+  },
+  {
+   "key": "Miss."
+  },
+  {
+   "key": "Mona."
+  },
+  {
+   "key": "Mont."
+  },
+  {
+   "key": "Morr."
+  },
+  {
+   "key": "Munf."
+  },
+  {
+   "key": "NW. 2d"
+  },
+  {
+   "key": "Neb App"
+  },
+  {
+   "key": "OKla."
+  },
+  {
+   "key": "Okla."
+  },
+  {
+   "key": "Oreg."
+  },
+  {
+   "key": "Pelt."
+  },
+  {
+   "key": "Penn."
+  },
+  {
+   "key": "Pennewill"
+  },
+  {
+   "key": "Phil."
+  },
+  {
+   "key": "Pick."
+  },
+  {
+   "key": "Pinn."
+  },
+  {
+   "key": "Port."
+  },
+  {
+   "key": "Rand."
+  },
+  {
+   "key": "Redf."
+  },
+  {
+   "key": "Reporter,"
+  },
+  {
+   "key": "Rich."
+  },
+  {
+   "key": "Robb."
+  },
+  {
+   "key": "SW. 3d"
+  },
+  {
+   "key": "Sadl."
+  },
+  {
+   "key": "Sawy."
+  },
+  {
+   "key": "Scam."
+  },
+  {
+   "key": "Shan."
+  },
+  {
+   "key": "Sick."
+  },
+  {
+   "key": "Stew."
+  },
+  {
+   "key": "Sumn."
+  },
+  {
+   "key": "Tenn."
+  },
+  {
+   "key": "Tiff."
+  },
+  {
+   "key": "Tuck."
+  },
+  {
+   "key": "USPQ 2d"
+  },
+  {
+   "key": "Utah 2d"
+  },
+  {
+   "key": "Verm."
+  },
+  {
+   "key": "Virg."
+  },
+  {
+   "key": "Wa. 2d"
+  },
+  {
+   "key": "Wa. 3d"
+  },
+  {
+   "key": "Walk."
+  },
+  {
+   "key": "Wall."
+  },
+  {
+   "key": "Ware."
+  },
+  {
+   "key": "Wash."
+  },
+  {
+   "key": "Wend."
+  },
+  {
+   "key": "Whar."
+  },
+  {
+   "key": "Will."
+  },
+  {
+   "key": "Wn. 3d"
+  },
+  {
+   "key": "Wool."
+  },
+  {
+   "key": "Woolworth"
+  },
+  {
+   "key": "Yerg."
+  },
+  {
+   "key": "ALR 2d"
+  },
+  {
+   "key": "ALR 3d"
+  },
+  {
+   "key": "Abb."
+  },
+  {
+   "key": "Abs."
+  },
+  {
+   "key": "Aik."
+  },
+  {
+   "key": "Ala."
+  },
+  {
+   "key": "Alk."
+  },
+  {
+   "key": "All."
+  },
+  {
+   "key": "App."
+  },
+  {
+   "key": "Atl."
+  },
+  {
+   "key": "Bai."
+  },
+  {
+   "key": "Bax."
+  },
+  {
+   "key": "Ben."
+  },
+  {
+   "key": "Bin."
+  },
+  {
+   "key": "Bradford"
+  },
+  {
+   "key": "Brightly"
+  },
+  {
+   "key": "Buchanan"
+  },
+  {
+   "key": "Bur."
+  },
+  {
+   "key": "Cai."
+  },
+  {
+   "key": "Cal."
+  },
+  {
+   "key": "Charlton"
+  },
+  {
+   "key": "Col."
+  },
+  {
+   "key": "Cow."
+  },
+  {
+   "key": "Cra."
+  },
+  {
+   "key": "Dak."
+  },
+  {
+   "key": "Dal."
+  },
+  {
+   "key": "Dan."
+  },
+  {
+   "key": "Day."
+  },
+  {
+   "key": "Del."
+  },
+  {
+   "key": "Dem."
+  },
+  {
+   "key": "Den."
+  },
+  {
+   "key": "Des."
+  },
+  {
+   "key": "Dev."
+  },
+  {
+   "key": "Div."
+  },
+  {
+   "key": "Dud."
+  },
+  {
+   "key": "Duv."
+  },
+  {
+   "key": "Edw."
+  },
+  {
+   "key": "F3d."
+  },
+  {
+   "key": "FCC 2d"
+  },
+  {
+   "key": "F Supp"
+  },
+  {
+   "key": "Fed."
+  },
+  {
+   "key": "Fla."
+  },
+  {
+   "key": "Gallison"
+  },
+  {
+   "key": "Har."
+  },
+  {
+   "key": "Hardesty"
+  },
+  {
+   "key": "Haw."
+  },
+  {
+   "key": "Hay."
+  },
+  {
+   "key": "Hen."
+  },
+  {
+   "key": "How."
+  },
+  {
+   "key": "Hum."
+  },
+  {
+   "key": "Hun."
+  },
+  {
+   "key": "Ida."
+  },
+  {
+   "key": "Ill."
+  },
+  {
+   "key": "Ind."
+  },
+  {
+   "key": "Kan."
+  },
+  {
+   "key": "Kas."
+  },
+  {
+   "key": "Kir."
+  },
+  {
+   "key": "LAW ED"
+  },
+  {
+   "key": "Lea."
+  },
+  {
+   "key": "Lit."
+  },
+  {
+   "key": "Low."
+  },
+  {
+   "key": "Mar."
+  },
+  {
+   "key": "Maryland"
+  },
+  {
+   "key": "Mas."
+  },
+  {
+   "key": "McGrdath"
+  },
+  {
+   "key": "Met."
+  },
+  {
+   "key": "Min."
+  },
+  {
+   "key": "Mis."
+  },
+  {
+   "key": "Mon."
+  },
+  {
+   "key": "Monaghan"
+  },
+  {
+   "key": "Mur."
+  },
+  {
+   "key": "ND APP"
+  },
+  {
+   "key": "ND App"
+  },
+  {
+   "key": "NYS 2d"
+  },
+  {
+   "key": "NYS 3d"
+  },
+  {
+   "key": "NYSlipOp"
+  },
+  {
+   "key": "Neb."
+  },
+  {
+   "key": "Nev."
+  },
+  {
+   "key": "OK JUD"
+  },
+  {
+   "key": "Okl."
+  },
+  {
+   "key": "Or App"
+  },
+  {
+   "key": "Ore."
+  },
+  {
+   "key": "P2. d"
+  },
+  {
+   "key": "P3. d"
+  },
+  {
+   "key": "PaC."
+  },
+  {
+   "key": "Pac."
+  },
+  {
+   "key": "Pai."
+  },
+  {
+   "key": "Pet."
+  },
+  {
+   "key": "Phillips"
+  },
+  {
+   "key": "Pin."
+  },
+  {
+   "key": "Raw."
+  },
+  {
+   "key": "Ril."
+  },
+  {
+   "key": "Rob."
+  },
+  {
+   "key": "Robinson"
+  },
+  {
+   "key": "Saw."
+  },
+  {
+   "key": "Som."
+  },
+  {
+   "key": "Sou."
+  },
+  {
+   "key": "Spr."
+  },
+  {
+   "key": "Sto."
+  },
+  {
+   "key": "Sum."
+  },
+  {
+   "key": "T. Ct"
+  },
+  {
+   "key": "Tay."
+  },
+  {
+   "key": "Teissier"
+  },
+  {
+   "key": "Ten."
+  },
+  {
+   "key": "Ter."
+  },
+  {
+   "key": "Tex."
+  },
+  {
+   "key": "Thompson"
+  },
+  {
+   "key": "Tyl."
+  },
+  {
+   "key": "UT App"
+  },
+  {
+   "key": "WI App"
+  },
+  {
+   "key": "W. 2d"
+  },
+  {
+   "key": "Williams"
+  },
+  {
+   "key": "Win."
+  },
+  {
+   "key": "Wis."
+  },
+  {
+   "key": "Wis 2d"
+  },
+  {
+   "key": "Wyo."
+  },
+  {
+   "key": "Yea."
+  },
+  {
+   "key": "Yer."
+  },
+  {
+   "key": "p. 2d"
+  },
+  {
+   "key": "AD 2d"
+  },
+  {
+   "key": "AD 3d"
+  },
+  {
+   "key": "Abbotts"
+  },
+  {
+   "key": "Ap."
+  },
+  {
+   "key": "At."
+  },
+  {
+   "key": "Bissell"
+  },
+  {
+   "key": "Bl."
+  },
+  {
+   "key": "Burnett"
+  },
+  {
+   "key": "Connoly"
+  },
+  {
+   "key": "Cushing"
+  },
+  {
+   "key": "FSupp3d"
+  },
+  {
+   "key": "Florida"
+  },
+  {
+   "key": "Ga."
+  },
+  {
+   "key": "Gibbons"
+  },
+  {
+   "key": "Gr."
+  },
+  {
+   "key": "Gummere"
+  },
+  {
+   "key": "Hawai'i"
+  },
+  {
+   "key": "Houston"
+  },
+  {
+   "key": "Howison"
+  },
+  {
+   "key": "Ia."
+  },
+  {
+   "key": "Johnson"
+  },
+  {
+   "key": "Ky."
+  },
+  {
+   "key": "La."
+  },
+  {
+   "key": "Littell"
+  },
+  {
+   "key": "Ma."
+  },
+  {
+   "key": "McCrary"
+  },
+  {
+   "key": "McGloin"
+  },
+  {
+   "key": "McGrath"
+  },
+  {
+   "key": "Md."
+  },
+  {
+   "key": "Mo."
+  },
+  {
+   "key": "Mt."
+  },
+  {
+   "key": "NE 2d"
+  },
+  {
+   "key": "NE 3d"
+  },
+  {
+   "key": "NW 2d"
+  },
+  {
+   "key": "NY 3d"
+  },
+  {
+   "key": "N. Y"
+  },
+  {
+   "key": "OK AG"
+  },
+  {
+   "key": "OK CR"
+  },
+  {
+   "key": "OS."
+  },
+  {
+   "key": "OTR-MD"
+  },
+  {
+   "key": "Or."
+  },
+  {
+   "key": "P. 2"
+  },
+  {
+   "key": "P. 3"
+  },
+  {
+   "key": "Pa."
+  },
+  {
+   "key": "Pacific"
+  },
+  {
+   "key": "Parsons"
+  },
+  {
+   "key": "Robbins"
+  },
+  {
+   "key": "SE 2d"
+  },
+  {
+   "key": "SO."
+  },
+  {
+   "key": "SW 2d"
+  },
+  {
+   "key": "SW 3d"
+  },
+  {
+   "key": "Sc."
+  },
+  {
+   "key": "Sickels"
+  },
+  {
+   "key": "So."
+  },
+  {
+   "key": "Sp."
+  },
+  {
+   "key": "Sprague"
+  },
+  {
+   "key": "Stewart"
+  },
+  {
+   "key": "TN WC"
+  },
+  {
+   "key": "Tiffany"
+  },
+  {
+   "key": "Va."
+  },
+  {
+   "key": "Vr."
+  },
+  {
+   "key": "Vt."
+  },
+  {
+   "key": "Wa."
+  },
+  {
+   "key": "Wendell"
+  },
+  {
+   "key": "Wh."
+  },
+  {
+   "key": "Wharton"
+  },
+  {
+   "key": "Wheaton"
+  },
+  {
+   "key": "Willson"
+  },
+  {
+   "key": "Wn."
+  },
+  {
+   "key": "Wy."
+  },
+  {
+   "key": "A."
+  },
+  {
+   "key": "Alaska"
+  },
+  {
+   "key": "B."
+  },
+  {
+   "key": "Backes"
+  },
+  {
+   "key": "Bailey"
+  },
+  {
+   "key": "Baxter"
+  },
+  {
+   "key": "Bedell"
+  },
+  {
+   "key": "Beeler"
+  },
+  {
+   "key": "Blatch"
+  },
+  {
+   "key": "Breese"
+  },
+  {
+   "key": "Brock,"
+  },
+  {
+   "key": "C."
+  },
+  {
+   "key": "Caines"
+  },
+  {
+   "key": "Cheves"
+  },
+  {
+   "key": "Clarke"
+  },
+  {
+   "key": "Coffey"
+  },
+  {
+   "key": "Cranch"
+  },
+  {
+   "key": "D."
+  },
+  {
+   "key": "Dakota"
+  },
+  {
+   "key": "Dallas"
+  },
+  {
+   "key": "Edmond"
+  },
+  {
+   "key": "FMSHRC"
+  },
+  {
+   "key": "F."
+  },
+  {
+   "key": "F 2d"
+  },
+  {
+   "key": "Foster"
+  },
+  {
+   "key": "Gilman"
+  },
+  {
+   "key": "Goebel"
+  },
+  {
+   "key": "Greene"
+  },
+  {
+   "key": "H."
+  },
+  {
+   "key": "Hardes"
+  },
+  {
+   "key": "Hardin"
+  },
+  {
+   "key": "Harper"
+  },
+  {
+   "key": "Hawaii"
+  },
+  {
+   "key": "Holmes"
+  },
+  {
+   "key": "Howard"
+  },
+  {
+   "key": "Hughes"
+  },
+  {
+   "key": "J."
+  },
+  {
+   "key": "L."
+  },
+  {
+   "key": "L Ed"
+  },
+  {
+   "key": "Lehigh"
+  },
+  {
+   "key": "Lowell"
+  },
+  {
+   "key": "Mackey"
+  },
+  {
+   "key": "Martin"
+  },
+  {
+   "key": "Marvel"
+  },
+  {
+   "key": "McCord"
+  },
+  {
+   "key": "McLean"
+  },
+  {
+   "key": "Morris"
+  },
+  {
+   "key": "Myrick"
+  },
+  {
+   "key": "O."
+  },
+  {
+   "key": "P."
+  },
+  {
+   "key": "P 2d"
+  },
+  {
+   "key": "P 3d"
+  },
+  {
+   "key": "Peters"
+  },
+  {
+   "key": "Pickle"
+  },
+  {
+   "key": "Porter"
+  },
+  {
+   "key": "R."
+  },
+  {
+   "key": "S Ct"
+  },
+  {
+   "key": "Sadler"
+  },
+  {
+   "key": "Spears"
+  },
+  {
+   "key": "Speers"
+  },
+  {
+   "key": "Storey"
+  },
+  {
+   "key": "Sweeny"
+  },
+  {
+   "key": "Taylor"
+  },
+  {
+   "key": "Tribal"
+  },
+  {
+   "key": "USPQ2d"
+  },
+  {
+   "key": "V."
+  },
+  {
+   "key": "W."
+  },
+  {
+   "key": "Walker"
+  },
+  {
+   "key": "Wilson"
+  },
+  {
+   "key": "Wright"
+  },
+  {
+   "key": "Y."
+  },
+  {
+   "key": "Yeates"
+  },
+  {
+   "key": "Allen"
+  },
+  {
+   "key": "Black"
+  },
+  {
+   "key": "Bland"
+  },
+  {
+   "key": "Boyce"
+  },
+  {
+   "key": "Cates"
+  },
+  {
+   "key": "Cooke"
+  },
+  {
+   "key": "DJCAR"
+  },
+  {
+   "key": "Denio"
+  },
+  {
+   "key": "Grant"
+  },
+  {
+   "key": "Gunby"
+  },
+  {
+   "key": "Handy"
+  },
+  {
+   "key": "Hawks"
+  },
+  {
+   "key": "Idaho"
+  },
+  {
+   "key": "Jones"
+  },
+  {
+   "key": "Kelly"
+  },
+  {
+   "key": "Keyes"
+  },
+  {
+   "key": "Kirby"
+  },
+  {
+   "key": "LEXIS"
+  },
+  {
+   "key": "LEd2d"
+  },
+  {
+   "key": "Lalor"
+  },
+  {
+   "key": "Leigh"
+  },
+  {
+   "key": "Mason"
+  },
+  {
+   "key": "Meigs"
+  },
+  {
+   "key": "Miles"
+  },
+  {
+   "key": "Mills"
+  },
+  {
+   "key": "Minor"
+  },
+  {
+   "key": "NYS2d"
+  },
+  {
+   "key": "NYS3d"
+  },
+  {
+   "key": "Paige"
+  },
+  {
+   "key": "Paine"
+  },
+  {
+   "key": "Posey"
+  },
+  {
+   "key": "Power"
+  },
+  {
+   "key": "Rawle"
+  },
+  {
+   "key": "Riley"
+  },
+  {
+   "key": "Smith"
+  },
+  {
+   "key": "Sneed"
+  },
+  {
+   "key": "South"
+  },
+  {
+   "key": "Story"
+  },
+  {
+   "key": "Terry"
+  },
+  {
+   "key": "Texas"
+  },
+  {
+   "key": "Tread"
+  },
+  {
+   "key": "Tyler"
+  },
+  {
+   "key": "USCMA"
+  },
+  {
+   "key": "USSCR"
+  },
+  {
+   "key": "UTApp"
+  },
+  {
+   "key": "Vroom"
+  },
+  {
+   "key": "Watts"
+  },
+  {
+   "key": "Woods"
+  },
+  {
+   "key": "Wythe"
+  },
+  {
+   "key": "Yates"
+  },
+  {
+   "key": "mills"
+  },
+  {
+   "key": "A,2d"
+  },
+  {
+   "key": "AD2d"
+  },
+  {
+   "key": "AD3d"
+  },
+  {
+   "key": "AWCC"
+  },
+  {
+   "key": "Bibb"
+  },
+  {
+   "key": "Biss"
+  },
+  {
+   "key": "Bond"
+  },
+  {
+   "key": "Bush"
+  },
+  {
+   "key": "CSCR"
+  },
+  {
+   "key": "Call"
+  },
+  {
+   "key": "Conn"
+  },
+  {
+   "key": "Curt"
+  },
+  {
+   "key": "Daly"
+  },
+  {
+   "key": "Dana"
+  },
+  {
+   "key": "Dill"
+  },
+  {
+   "key": "Duer"
+  },
+  {
+   "key": "F4th"
+  },
+  {
+   "key": "FCDR"
+  },
+  {
+   "key": "FPSC"
+  },
+  {
+   "key": "FS3d"
+  },
+  {
+   "key": "Gill"
+  },
+  {
+   "key": "Gray"
+  },
+  {
+   "key": "Guam"
+  },
+  {
+   "key": "Hall"
+  },
+  {
+   "key": "Head"
+  },
+  {
+   "key": "Hill"
+  },
+  {
+   "key": "ITRD"
+  },
+  {
+   "key": "I&N"
+  },
+  {
+   "key": "Iowa"
+  },
+  {
+   "key": "Jahn"
+  },
+  {
+   "key": "Kulp"
+  },
+  {
+   "key": "MDBT"
+  },
+  {
+   "key": "MDLR"
+  },
+  {
+   "key": "MSPB"
+  },
+  {
+   "key": "Mill"
+  },
+  {
+   "key": "Misc"
+  },
+  {
+   "key": "Mont"
+  },
+  {
+   "key": "NCBC"
+  },
+  {
+   "key": "NE2d"
+  },
+  {
+   "key": "NE3d"
+  },
+  {
+   "key": "NLRB"
+  },
+  {
+   "key": "NW2D"
+  },
+  {
+   "key": "NW2d"
+  },
+  {
+   "key": "NW3d"
+  },
+  {
+   "key": "NY3d"
+  },
+  {
+   "key": "Otto"
+  },
+  {
+   "key": "Peck"
+  },
+  {
+   "key": "Rice"
+  },
+  {
+   "key": "Root"
+  },
+  {
+   "key": "SE2d"
+  },
+  {
+   "key": "SW2D"
+  },
+  {
+   "key": "SW2d"
+  },
+  {
+   "key": "SW3D"
+  },
+  {
+   "key": "SW3d"
+  },
+  {
+   "key": "Swan"
+  },
+  {
+   "key": "TSPR"
+  },
+  {
+   "key": "Tiff"
+  },
+  {
+   "key": "Tyng"
+  },
+  {
+   "key": "USLW"
+  },
+  {
+   "key": "USPQ"
+  },
+  {
+   "key": "Utah"
+  },
+  {
+   "key": "Vaux"
+  },
+  {
+   "key": "WASH"
+  },
+  {
+   "key": "Ware"
+  },
+  {
+   "key": "York"
+  },
+  {
+   "key": "A2d"
+  },
+  {
+   "key": "ALR"
+  },
+  {
+   "key": "AMC"
+  },
+  {
+   "key": "AOA"
+  },
+  {
+   "key": "Abb"
+  },
+  {
+   "key": "Abs"
+  },
+  {
+   "key": "BNH"
+  },
+  {
+   "key": "BTR"
+  },
+  {
+   "key": "Bay"
+  },
+  {
+   "key": "Ben"
+  },
+  {
+   "key": "CIT"
+  },
+  {
+   "key": "CLR"
+  },
+  {
+   "key": "CMR"
+  },
+  {
+   "key": "COA"
+  },
+  {
+   "key": "DNH"
+  },
+  {
+   "key": "DPR"
+  },
+  {
+   "key": "DSD"
+  },
+  {
+   "key": "DTA"
+  },
+  {
+   "key": "DTS"
+  },
+  {
+   "key": "Day"
+  },
+  {
+   "key": "ELR"
+  },
+  {
+   "key": "ERC"
+  },
+  {
+   "key": "F3d"
+  },
+  {
+   "key": "FCC"
+  },
+  {
+   "key": "HOW"
+  },
+  {
+   "key": "Han"
+  },
+  {
+   "key": "Hun"
+  },
+  {
+   "key": "JTS"
+  },
+  {
+   "key": "LCR"
+  },
+  {
+   "key": "LEd"
+  },
+  {
+   "key": "Lea"
+  },
+  {
+   "key": "NCA"
+  },
+  {
+   "key": "NJM"
+  },
+  {
+   "key": "NYS"
+  },
+  {
+   "key": "OTR"
+  },
+  {
+   "key": "P2d"
+  },
+  {
+   "key": "P3d"
+  },
+  {
+   "key": "POR"
+  },
+  {
+   "key": "Pac"
+  },
+  {
+   "key": "SCt"
+  },
+  {
+   "key": "So,"
+  },
+  {
+   "key": "TNT"
+  },
+  {
+   "key": "AD"
+  },
+  {
+   "key": "AZ"
+  },
+  {
+   "key": "BR"
+  },
+  {
+   "key": "CO"
+  },
+  {
+   "key": "FL"
+  },
+  {
+   "key": "LA"
+  },
+  {
+   "key": "MJ"
+  },
+  {
+   "key": "ML"
+  },
+  {
+   "key": "MP"
+  },
+  {
+   "key": "MS"
+  },
+  {
+   "key": "MT"
+  },
+  {
+   "key": "Mt"
+  },
+  {
+   "key": "ND"
+  },
+  {
+   "key": "NE"
+  },
+  {
+   "key": "NM"
+  },
+  {
+   "key": "NV"
+  },
+  {
+   "key": "NW"
+  },
+  {
+   "key": "NY"
+  },
+  {
+   "key": "OK"
+  },
+  {
+   "key": "Or"
+  },
+  {
+   "key": "PA"
+  },
+  {
+   "key": "SD"
+  },
+  {
+   "key": "SE"
+  },
+  {
+   "key": "SW"
+  },
+  {
+   "key": "US"
+  },
+  {
+   "key": "UT"
+  },
+  {
+   "key": "VI"
+  },
+  {
+   "key": "VT"
+  },
+  {
+   "key": "WI"
+  },
+  {
+   "key": "WL"
+  },
+  {
+   "key": "Wl"
+  },
+  {
+   "key": "Wn"
+  },
+  {
+   "key": "mt"
+  },
+  {
+   "key": "wl"
+  },
+  {
+   "key": "P"
+  }
+ ]
+}

@@ -1,0 +1,120 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "backend/scripts/build_citator_graph.py",
+  "table": "STATUTE_RE series",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "series",
+ "entries": [
+  {
+   "key": "RSC"
+  },
+  {
+   "key": "RSO"
+  },
+  {
+   "key": "RSA"
+  },
+  {
+   "key": "RSS"
+  },
+  {
+   "key": "RSM"
+  },
+  {
+   "key": "RSQ"
+  },
+  {
+   "key": "RSY"
+  },
+  {
+   "key": "RSBC"
+  },
+  {
+   "key": "RSNL"
+  },
+  {
+   "key": "RSNB"
+  },
+  {
+   "key": "RSNS"
+  },
+  {
+   "key": "RSPEI"
+  },
+  {
+   "key": "RSNWT"
+  },
+  {
+   "key": "CQLR"
+  },
+  {
+   "key": "CCSM"
+  },
+  {
+   "key": "SC"
+  },
+  {
+   "key": "SO"
+  },
+  {
+   "key": "SA"
+  },
+  {
+   "key": "SS"
+  },
+  {
+   "key": "SM"
+  },
+  {
+   "key": "SQ"
+  },
+  {
+   "key": "SY"
+  },
+  {
+   "key": "SBC"
+  },
+  {
+   "key": "SNL"
+  },
+  {
+   "key": "SNB"
+  },
+  {
+   "key": "SNS"
+  },
+  {
+   "key": "SNWT"
+  },
+  {
+   "key": "Alta Reg"
+  },
+  {
+   "key": "BC Reg"
+  },
+  {
+   "key": "B C Reg"
+  },
+  {
+   "key": "O Reg"
+  },
+  {
+   "key": "OIC"
+  },
+  {
+   "key": "SOR"
+  },
+  {
+   "key": "SI"
+  },
+  {
+   "key": "SOR/"
+  },
+  {
+   "key": "CFR"
+  }
+ ]
+}

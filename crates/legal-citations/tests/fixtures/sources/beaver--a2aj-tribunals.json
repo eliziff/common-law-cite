@@ -1,0 +1,72 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "backend/src/lib/legalSources/a2aj.ts",
+  "table": "TRIBUNALS",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "CART",
+   "level": "tribunal"
+  },
+  {
+   "key": "CHRT",
+   "level": "tribunal"
+  },
+  {
+   "key": "CIRB",
+   "level": "tribunal"
+  },
+  {
+   "key": "CITT",
+   "level": "tribunal"
+  },
+  {
+   "key": "CT",
+   "level": "tribunal"
+  },
+  {
+   "key": "FPSLREB",
+   "level": "tribunal"
+  },
+  {
+   "key": "OHSTC",
+   "level": "tribunal"
+  },
+  {
+   "key": "OIC",
+   "level": "tribunal"
+  },
+  {
+   "key": "PSDPT",
+   "level": "tribunal"
+  },
+  {
+   "key": "RAD",
+   "level": "tribunal"
+  },
+  {
+   "key": "RLLR",
+   "level": "tribunal"
+  },
+  {
+   "key": "RPD",
+   "level": "tribunal"
+  },
+  {
+   "key": "SCT",
+   "level": "tribunal"
+  },
+  {
+   "key": "SST",
+   "level": "tribunal"
+  },
+  {
+   "key": "TATC",
+   "level": "tribunal"
+  }
+ ]
+}

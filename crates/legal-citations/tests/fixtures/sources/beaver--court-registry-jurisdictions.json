@@ -1,0 +1,68 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "shared/court-registry.json",
+  "table": "jurisdictions",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "jurisdiction",
+ "entries": [
+  {
+   "key": "ca",
+   "name": "Federal courts"
+  },
+  {
+   "key": "ab",
+   "name": "Alberta"
+  },
+  {
+   "key": "bc",
+   "name": "British Columbia"
+  },
+  {
+   "key": "sk",
+   "name": "Saskatchewan"
+  },
+  {
+   "key": "mb",
+   "name": "Manitoba"
+  },
+  {
+   "key": "on",
+   "name": "Ontario"
+  },
+  {
+   "key": "qc",
+   "name": "Quebec"
+  },
+  {
+   "key": "nb",
+   "name": "New Brunswick"
+  },
+  {
+   "key": "ns",
+   "name": "Nova Scotia"
+  },
+  {
+   "key": "pe",
+   "name": "Prince Edward Island"
+  },
+  {
+   "key": "nl",
+   "name": "Newfoundland and Labrador"
+  },
+  {
+   "key": "yt",
+   "name": "Yukon"
+  },
+  {
+   "key": "nt",
+   "name": "Northwest Territories"
+  },
+  {
+   "key": "nu",
+   "name": "Nunavut"
+  }
+ ]
+}

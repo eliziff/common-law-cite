@@ -1,0 +1,721 @@
+{
+ "format": "legal-citations-conformance:v1",
+ "source": "eyecite 2.7.8 (git 047af17), reporters-db 3.2.66, courts-db 0.10.27",
+ "description": "eyecite tests/test_ModelsTest.py and test_UtilsTest.py extraction inputs (missing pages, corrected reporters, full spans).",
+ "generatedBy": "conformance/tools/port-eyecite.py",
+ "cases": [
+  {
+   "name": "ModelsTest.test_citation_comparison_with_nominative_reporter#1",
+   "input": "5 U.S. 137",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 0,
+       "end": 10,
+       "text": "5 U.S. 137"
+      },
+      "fullSpan": {
+       "start": 0,
+       "end": 10
+      },
+      "fields": {
+       "volume": "5",
+       "reporter": "U.S.",
+       "page": "137",
+       "reporterCanonical": "U.S."
+      },
+      "court": {
+       "id": "scotus"
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ModelsTest.test_citation_comparison_with_nominative_reporter",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       0,
+       10
+      ],
+      "fullSpan": [
+       0,
+       10
+      ],
+      "groups": {
+       "volume": "5",
+       "reporter": "U.S.",
+       "page": "137"
+      },
+      "metadata": {
+       "court": "scotus"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "ModelsTest.test_citation_comparison_with_nominative_reporter#2",
+   "input": "5 U.S. (1 Cranch) 137",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 0,
+       "end": 21,
+       "text": "5 U.S. (1 Cranch) 137"
+      },
+      "fullSpan": {
+       "start": 0,
+       "end": 21
+      },
+      "fields": {
+       "volume": "5",
+       "reporter": "U.S. ",
+       "page": "137",
+       "reporterCanonical": "U.S."
+      },
+      "court": {
+       "id": "scotus"
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ModelsTest.test_citation_comparison_with_nominative_reporter",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       0,
+       21
+      ],
+      "fullSpan": [
+       0,
+       21
+      ],
+      "groups": {
+       "volume": "5",
+       "reporter": "U.S. ",
+       "volume_nominative": "1",
+       "reporter_nominative": "Cranch",
+       "page": "137"
+      },
+      "metadata": {
+       "court": "scotus"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "ModelsTest.test_corrected_full_citation_includes_closing_parenthesis#1",
+   "input": "Originalism without Foundations, 65 N.Y.U. L. Rev. 1373 (1990)",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "journal",
+      "span": {
+       "start": 33,
+       "end": 55,
+       "text": "65 N.Y.U. L. Rev. 1373"
+      },
+      "fullSpan": {
+       "start": 33,
+       "end": 62
+      },
+      "fields": {
+       "volume": "65",
+       "reporter": "N.Y.U. L. Rev.",
+       "page": "1373",
+       "year": "1990"
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ModelsTest.test_corrected_full_citation_includes_closing_parenthesis",
+    "citations": [
+     {
+      "class": "FullJournalCitation",
+      "span": [
+       33,
+       55
+      ],
+      "fullSpan": [
+       33,
+       62
+      ],
+      "groups": {
+       "volume": "65",
+       "reporter": "N.Y.U. L. Rev.",
+       "page": "1373"
+      },
+      "metadata": {
+       "year": "1990"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "ModelsTest.test_corrected_full_citation_includes_closing_parenthesis#2",
+   "input": "Meritor Sav. Bank v. Vinson, 477 U.S. 57, 60 (1986)",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 29,
+       "end": 40,
+       "text": "477 U.S. 57"
+      },
+      "fullSpan": {
+       "start": 0,
+       "end": 51
+      },
+      "fields": {
+       "volume": "477",
+       "reporter": "U.S.",
+       "page": "57",
+       "reporterCanonical": "U.S.",
+       "year": "1986"
+      },
+      "court": {
+       "id": "scotus"
+      },
+      "parties": {
+       "plaintiff": "Meritor Sav. Bank",
+       "defendant": "Vinson"
+      },
+      "pinpoints": {
+       "$contains": [
+        {
+         "kind": "page",
+         "first": "60",
+         "last": null
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ModelsTest.test_corrected_full_citation_includes_closing_parenthesis",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       29,
+       40
+      ],
+      "fullSpan": [
+       0,
+       51
+      ],
+      "groups": {
+       "volume": "477",
+       "reporter": "U.S.",
+       "page": "57"
+      },
+      "metadata": {
+       "pin_cite": "60",
+       "year": "1986",
+       "court": "scotus",
+       "plaintiff": "Meritor Sav. Bank",
+       "defendant": "Vinson"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "ModelsTest.test_missing_page_cite_conversion#1",
+   "input": "2 U.S. __",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 0,
+       "end": 9,
+       "text": "2 U.S. __"
+      },
+      "fullSpan": {
+       "start": 0,
+       "end": 9
+      },
+      "fields": {
+       "volume": "2",
+       "reporter": "U.S.",
+       "page": null,
+       "reporterCanonical": "U.S."
+      },
+      "court": {
+       "id": "scotus"
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ModelsTest.test_missing_page_cite_conversion",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       0,
+       9
+      ],
+      "fullSpan": [
+       0,
+       9
+      ],
+      "groups": {
+       "volume": "2",
+       "reporter": "U.S.",
+       "page": null
+      },
+      "metadata": {
+       "court": "scotus"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "ModelsTest.test_page_correction#1",
+   "input": "2024 N.Y. Slip Op. 51192(U)",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 0,
+       "end": 27,
+       "text": "2024 N.Y. Slip Op. 51192(U)"
+      },
+      "fullSpan": {
+       "start": 0,
+       "end": 27
+      },
+      "fields": {
+       "volume": "2024",
+       "reporter": "N.Y. Slip Op.",
+       "page": "51192(U)",
+       "reporterCanonical": "NY Slip Op"
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ModelsTest.test_page_correction",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       0,
+       27
+      ],
+      "fullSpan": [
+       0,
+       27
+      ],
+      "groups": {
+       "volume": "2024",
+       "reporter": "N.Y. Slip Op.",
+       "page": "51192(U)"
+      },
+      "metadata": {}
+     }
+    ]
+   }
+  },
+  {
+   "name": "ModelsTest.test_page_correction#2",
+   "input": "2024 NYSlipOp 51192[U]",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 0,
+       "end": 22,
+       "text": "2024 NYSlipOp 51192[U]"
+      },
+      "fullSpan": {
+       "start": 0,
+       "end": 22
+      },
+      "fields": {
+       "volume": "2024",
+       "reporter": "NYSlipOp",
+       "page": "51192[U]",
+       "reporterCanonical": "NY Slip Op"
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ModelsTest.test_page_correction",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       0,
+       22
+      ],
+      "fullSpan": [
+       0,
+       22
+      ],
+      "groups": {
+       "volume": "2024",
+       "reporter": "NYSlipOp",
+       "page": "51192[U]"
+      },
+      "metadata": {}
+     }
+    ]
+   }
+  },
+  {
+   "name": "ModelsTest.test_page_correction#3",
+   "input": "11 Misc 3d 134[A]",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 0,
+       "end": 17,
+       "text": "11 Misc 3d 134[A]"
+      },
+      "fullSpan": {
+       "start": 0,
+       "end": 17
+      },
+      "fields": {
+       "volume": "11",
+       "reporter": "Misc 3d",
+       "page": "134[A]",
+       "reporterCanonical": "Misc. 3d"
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ModelsTest.test_page_correction",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       0,
+       17
+      ],
+      "fullSpan": [
+       0,
+       17
+      ],
+      "groups": {
+       "volume": "11",
+       "reporter": "Misc 3d",
+       "page": "134[A]"
+      },
+      "metadata": {}
+     }
+    ]
+   }
+  },
+  {
+   "name": "ModelsTest.test_page_correction#4",
+   "input": "83 Misc.3d 126(A)",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 0,
+       "end": 17,
+       "text": "83 Misc.3d 126(A)"
+      },
+      "fullSpan": {
+       "start": 0,
+       "end": 17
+      },
+      "fields": {
+       "volume": "83",
+       "reporter": "Misc.3d",
+       "page": "126(A)",
+       "reporterCanonical": "Misc. 3d"
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ModelsTest.test_page_correction",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       0,
+       17
+      ],
+      "fullSpan": [
+       0,
+       17
+      ],
+      "groups": {
+       "volume": "83",
+       "reporter": "Misc.3d",
+       "page": "126(A)"
+      },
+      "metadata": {}
+     }
+    ]
+   }
+  },
+  {
+   "name": "ModelsTest.test_page_correction#5",
+   "input": "11 U.S. 11[2]",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 0,
+       "end": 10,
+       "text": "11 U.S. 11"
+      },
+      "fullSpan": {
+       "start": 0,
+       "end": 10
+      },
+      "fields": {
+       "volume": "11",
+       "reporter": "U.S.",
+       "page": "11",
+       "reporterCanonical": "U.S."
+      },
+      "court": {
+       "id": "scotus"
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ModelsTest.test_page_correction",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       0,
+       10
+      ],
+      "fullSpan": [
+       0,
+       10
+      ],
+      "groups": {
+       "volume": "11",
+       "reporter": "U.S.",
+       "page": "11"
+      },
+      "metadata": {
+       "court": "scotus"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "ModelsTest.test_page_correction#6",
+   "input": "Tex. Civ. Prac. & Rem. Code Ann. § 171.023",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "statute",
+      "span": {
+       "start": 0,
+       "end": 42,
+       "text": "Tex. Civ. Prac. & Rem. Code Ann. § 171.023"
+      },
+      "fields": {
+       "series": "Tex. Civ. Prac. & Rem. Code Ann.",
+       "section": "171.023"
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ModelsTest.test_page_correction",
+    "citations": [
+     {
+      "class": "FullLawCitation",
+      "span": [
+       0,
+       42
+      ],
+      "fullSpan": [
+       0,
+       42
+      ],
+      "groups": {
+       "reporter": "Tex. Civ. Prac. & Rem. Code Ann.",
+       "subject": "Civ. Prac. & Rem.",
+       "section": "171.023"
+      },
+      "metadata": {}
+     }
+    ]
+   }
+  },
+  {
+   "name": "ModelsTest.test_tax_court_citation_comparison#1",
+   "input": "T.C.M. (RIA) ¶ 95,342",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 0,
+       "end": 21,
+       "text": "T.C.M. (RIA) ¶ 95,342"
+      },
+      "fullSpan": {
+       "start": 0,
+       "end": 21
+      },
+      "fields": {
+       "volume": null,
+       "reporter": "T.C.M. (RIA)",
+       "page": "95,342",
+       "reporterCanonical": "T.C.M. (RIA)"
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ModelsTest.test_tax_court_citation_comparison",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       0,
+       21
+      ],
+      "fullSpan": [
+       0,
+       21
+      ],
+      "groups": {
+       "reporter": "T.C.M. (RIA)",
+       "page": "95,342"
+      },
+      "metadata": {}
+     }
+    ]
+   }
+  },
+  {
+   "name": "UtilsTest.test_dump_citations#1",
+   "input": "blah. Foo v. Bar, 1 U.S. 2, 3-4 (1999). blah",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 18,
+       "end": 26,
+       "text": "1 U.S. 2"
+      },
+      "fullSpan": {
+       "start": 6,
+       "end": 38
+      },
+      "fields": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2",
+       "reporterCanonical": "U.S.",
+       "year": "1999"
+      },
+      "court": {
+       "id": "scotus"
+      },
+      "parties": {
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      },
+      "pinpoints": {
+       "$contains": [
+        {
+         "kind": "page",
+         "first": "3",
+         "last": "4"
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "UtilsTest.test_dump_citations",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       18,
+       26
+      ],
+      "fullSpan": [
+       6,
+       38
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "pin_cite": "3-4",
+       "year": "1999",
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

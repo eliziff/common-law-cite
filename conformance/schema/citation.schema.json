@@ -1,0 +1,420 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/eliziff/legal-citations/blob/main/conformance/schema/citation.schema.json",
+  "title": "legal-citations extract response",
+  "description": "Output of the `extract` API method (Rust api::extract, Python legal_citations.call('extract'), npm call('extract'), CLI `legal-citations extract`). Schema version 1: breaking changes bump `schemaVersion`; new optional properties are added here without a bump. Written from crates/legal-citations/src/model.rs; crates/legal-citations-cli/tests/schema.rs fails when the two drift.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "offsetUnit",
+    "citations"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "enum": [
+        1
+      ]
+    },
+    "offsetUnit": {
+      "$ref": "#/$defs/offsetUnit"
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/citation"
+      }
+    }
+  },
+  "$defs": {
+    "offsetUnit": {
+      "type": "string",
+      "enum": [
+        "byte",
+        "char",
+        "utf16"
+      ],
+      "description": "byte = UTF-8 bytes (Rust), char = Unicode scalar values (Python), utf16 = UTF-16 code units (JavaScript)."
+    },
+    "form": {
+      "type": "string",
+      "enum": [
+        "full",
+        "short",
+        "supra",
+        "ibid",
+        "reference",
+        "unknown"
+      ],
+      "description": "How the text refers to the authority."
+    },
+    "authority": {
+      "type": "string",
+      "enum": [
+        "case",
+        "statute",
+        "regulation",
+        "constitution",
+        "court_rule",
+        "treaty",
+        "bill",
+        "debate",
+        "parliamentary_paper",
+        "government_document",
+        "journal",
+        "book",
+        "book_chapter",
+        "webpage",
+        "unknown"
+      ],
+      "description": "What kind of authority is cited."
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "reporter",
+        "can_lii",
+        "database",
+        "docket",
+        "statute_volume",
+        "regulation_series",
+        "code",
+        "publication",
+        "url"
+      ],
+      "description": "Surface shape of the citation core."
+    },
+    "span": {
+      "type": "object",
+      "description": "A range of the input text in the response's offsetUnit; `text` is the exact source substring.",
+      "required": [
+        "start",
+        "end",
+        "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "pinpointKind": {
+      "type": "string",
+      "enum": [
+        "paragraph",
+        "page",
+        "section",
+        "subsection",
+        "rule",
+        "article",
+        "schedule",
+        "footnote",
+        "clause"
+      ]
+    },
+    "pinpoint": {
+      "type": "object",
+      "required": [
+        "kind",
+        "span",
+        "first"
+      ],
+      "additionalProperties": false,
+      "description": "One located pinpoint; a range is one pinpoint with `first` and `last`, a list is several.",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/pinpointKind"
+        },
+        "span": {
+          "$ref": "#/$defs/span"
+        },
+        "first": {
+          "type": "string"
+        },
+        "last": {
+          "type": "string"
+        }
+      }
+    },
+    "parenthetical": {
+      "type": "object",
+      "required": [
+        "kind",
+        "span",
+        "content"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "court",
+            "date",
+            "explanatory",
+            "source"
+          ]
+        },
+        "span": {
+          "$ref": "#/$defs/span"
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "history": {
+      "type": "object",
+      "required": [
+        "relation",
+        "span"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "relation": {
+          "type": "string",
+          "description": "Normalized relation: affirmed, reversed, leave_refused, leave_granted, varied, overruled, appeal_dismissed, ..."
+        },
+        "span": {
+          "$ref": "#/$defs/span"
+        },
+        "target": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Index of the citation the relation points to."
+        }
+      }
+    },
+    "courtRef": {
+      "type": "object",
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Registry court id (scc, onca, ewca-civ, ca9, ...)."
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "parties": {
+      "type": "object",
+      "required": [
+        "plaintiff",
+        "defendant"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "plaintiff": {
+          "type": "string"
+        },
+        "defendant": {
+          "type": "string"
+        }
+      }
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Parsed components; which are present depends on authority and format.",
+      "properties": {
+        "year": {
+          "type": "string"
+        },
+        "volume": {
+          "type": "string"
+        },
+        "reporter": {
+          "type": "string",
+          "description": "Reporter, journal or series abbreviation as written."
+        },
+        "reporterCanonical": {
+          "type": "string",
+          "description": "The registry's canonical abbreviation for `reporter`."
+        },
+        "page": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string",
+          "description": "Neutral-citation or database decision number."
+        },
+        "series": {
+          "type": "string",
+          "description": "Neutral court identifier or statute/regulation series as written."
+        },
+        "chapter": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": "string"
+        },
+        "section": {
+          "type": "string"
+        },
+        "regnal": {
+          "type": "string"
+        },
+        "regulation": {
+          "type": "string"
+        },
+        "edition": {
+          "type": "string"
+        },
+        "place": {
+          "type": "string"
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "bill": {
+          "type": "string"
+        },
+        "session": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "docket": {
+          "type": "string"
+        },
+        "note": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The footnote a supra / above n / (n N) reference points to."
+        }
+      }
+    },
+    "citation": {
+      "type": "object",
+      "required": [
+        "index",
+        "form",
+        "authority",
+        "span",
+        "fullSpan",
+        "fields",
+        "reasons"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Position in the list; other citations refer to it by this index."
+        },
+        "form": {
+          "$ref": "#/$defs/form"
+        },
+        "authority": {
+          "$ref": "#/$defs/authority"
+        },
+        "format": {
+          "$ref": "#/$defs/format"
+        },
+        "span": {
+          "$ref": "#/$defs/span",
+          "description": "The citation core: 2016 SCC 27, RSC 1985, c C-46, Ibid."
+        },
+        "signal": {
+          "$ref": "#/$defs/span",
+          "description": "Introductory signal (See, See also, Cf, Voir)."
+        },
+        "fullSpan": {
+          "$ref": "#/$defs/span",
+          "description": "Style, core, pinpoints, parentheticals and a bracketed short form."
+        },
+        "style": {
+          "$ref": "#/$defs/span",
+          "description": "Style of cause, statute title or author/title in front of the core."
+        },
+        "parties": {
+          "$ref": "#/$defs/parties"
+        },
+        "fields": {
+          "$ref": "#/$defs/fields"
+        },
+        "court": {
+          "$ref": "#/$defs/courtRef"
+        },
+        "jurisdiction": {
+          "type": "string",
+          "description": "Registry jurisdiction id: ca, ca-on, uk, uk-ew, au-nsw, us, us-ca, ..."
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "fr"
+          ]
+        },
+        "pinpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pinpoint"
+          }
+        },
+        "parentheticals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parenthetical"
+          }
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/history"
+          }
+        },
+        "shortName": {
+          "type": "string",
+          "description": "The name later references use."
+        },
+        "explicitShortName": {
+          "type": "string",
+          "description": "A bracketed short form: [Jordan]."
+        },
+        "parallelGroup": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Shared by citations to the same decision printed side by side: the index of the group's first citation."
+        },
+        "antecedent": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "For short, supra, ibid and reference forms: the citation (or parallel group's first citation) it resolves to."
+        },
+        "key": {
+          "type": "string",
+          "description": "Versioned identity key (v2: `2:...`)."
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Grammar rules that produced this reading (audit/debugging; not a stable interface)."
+        }
+      }
+    }
+  }
+}

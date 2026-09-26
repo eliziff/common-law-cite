@@ -188,6 +188,27 @@ pub struct History {
     pub target: Option<usize>,
 }
 
+/// Which way a note cross-reference points.
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+#[non_exhaustive]
+pub enum NoteDirection {
+    /// `supra note 4`, `above n 4`, `(n 4)`, `op. cit. note 4`, `note 4 ci-dessus`.
+    Back,
+    /// `infra note 12`, `below n 12`, `note 12 ci-dessous`.
+    Forward,
+    /// `see footnote 7`, `see also note 7`.
+    Unspecified,
+}
+
+/// A reference to another footnote by number (see [`crate::find::note_references`]).
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct NoteReference {
+    pub span: Span,
+    pub note: u32,
+    pub direction: NoteDirection,
+}
+
 /// A court resolved against the registry.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct CourtRef {

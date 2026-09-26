@@ -1,0 +1,1703 @@
+{
+ "format": "legal-citations-conformance:v1",
+ "source": "legal-citations authored gold cases",
+ "description": "Canadian, Commonwealth and cross-jurisdiction behavior eyecite does not cover: neutral citations, year-volume reporters, parallel groups, CanLII and database identifiers, bilingual statutes and regulations, supra note / above n / (n N) / ibid, McGill pinpoints, subsequent history, the S.C.R. vs South Carolina collision, and offset units.",
+ "cases": [
+  {
+   "name": "neutral/scc-with-paragraph",
+   "input": "R v Jordan, 2016 SCC 27 at para 105.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 12,
+       "end": 23,
+       "text": "2016 SCC 27"
+      },
+      "shortName": "R v Jordan",
+      "parties": {
+       "plaintiff": "R",
+       "defendant": "Jordan"
+      },
+      "fields": {
+       "year": "2016",
+       "series": "SCC",
+       "number": "27"
+      },
+      "court": {
+       "id": "scc"
+      },
+      "jurisdiction": "ca",
+      "pinpoints": [
+       {
+        "kind": "paragraph",
+        "first": "105",
+        "last": null,
+        "span": {
+         "start": 32,
+         "end": 35,
+         "text": "105"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/csc-french",
+   "input": "R c Jordan, 2016 CSC 27, au para 105.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 12,
+       "end": 23,
+       "text": "2016 CSC 27"
+      },
+      "fields": {
+       "year": "2016",
+       "series": "CSC",
+       "number": "27"
+      },
+      "court": {
+       "id": "scc"
+      },
+      "jurisdiction": "ca",
+      "language": "fr",
+      "pinpoints": [
+       {
+        "kind": "paragraph",
+        "first": "105"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/scc-long-style",
+   "input": "Canada (Minister of Citizenship and Immigration) v Vavilov, 2019 SCC 65.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 60,
+       "end": 71,
+       "text": "2019 SCC 65"
+      },
+      "shortName": "Canada (Minister of Citizenship and Immigration) v Vavilov",
+      "fields": {
+       "year": "2019",
+       "number": "65"
+      },
+      "court": {
+       "id": "scc"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/onca",
+   "input": "Smith v Jones, 2021 ONCA 123.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 15,
+       "end": 28,
+       "text": "2021 ONCA 123"
+      },
+      "fields": {
+       "year": "2021",
+       "series": "ONCA",
+       "number": "123"
+      },
+      "court": {
+       "id": "onca"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/bcca",
+   "input": "Smith v Jones, 2021 BCCA 123.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 15,
+       "end": 28,
+       "text": "2021 BCCA 123"
+      },
+      "fields": {
+       "year": "2021",
+       "series": "BCCA",
+       "number": "123"
+      },
+      "court": {
+       "id": "bcca"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/fca",
+   "input": "Smith v Jones, 2021 FCA 123.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 15,
+       "end": 27,
+       "text": "2021 FCA 123"
+      },
+      "fields": {
+       "year": "2021",
+       "series": "FCA",
+       "number": "123"
+      },
+      "court": {
+       "id": "fca"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/fc",
+   "input": "Smith v Jones, 2021 FC 123.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 15,
+       "end": 26,
+       "text": "2021 FC 123"
+      },
+      "fields": {
+       "year": "2021",
+       "series": "FC",
+       "number": "123"
+      },
+      "court": {
+       "id": "fc"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/qcca",
+   "input": "Smith v Jones, 2021 QCCA 123.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 15,
+       "end": 28,
+       "text": "2021 QCCA 123"
+      },
+      "fields": {
+       "year": "2021",
+       "series": "QCCA",
+       "number": "123"
+      },
+      "court": {
+       "id": "qcca"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/abkb",
+   "input": "Smith v Jones, 2021 ABKB 123.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 15,
+       "end": 28,
+       "text": "2021 ABKB 123"
+      },
+      "fields": {
+       "year": "2021",
+       "series": "ABKB",
+       "number": "123"
+      },
+      "court": {
+       "id": "abkb"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/uksc-bracketed-paragraph",
+   "input": "R (Miller) v Prime Minister [2019] UKSC 41 at [50].",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 28,
+       "end": 42,
+       "text": "[2019] UKSC 41"
+      },
+      "fields": {
+       "year": "2019",
+       "series": "UKSC",
+       "number": "41"
+      },
+      "court": {
+       "id": "uksc"
+      },
+      "jurisdiction": "uk",
+      "pinpoints": [
+       {
+        "kind": "paragraph",
+        "first": "50"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/uksc-2021-5",
+   "input": "Uber BV v Aslam [2021] UKSC 5",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 16,
+       "end": 29,
+       "text": "[2021] UKSC 5"
+      },
+      "shortName": "Uber BV v Aslam",
+      "fields": {
+       "year": "2021",
+       "series": "UKSC",
+       "number": "5"
+      },
+      "court": {
+       "id": "uksc"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/uksc-2019-5",
+   "input": "Cavendish Square Holding BV v Makdessi [2015] UKSC 67; [2019] UKSC 5.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 39,
+       "end": 53,
+       "text": "[2015] UKSC 67"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 55,
+       "end": 68,
+       "text": "[2019] UKSC 5"
+      },
+      "fields": {
+       "year": "2019",
+       "series": "UKSC",
+       "number": "5"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/ewca-civ",
+   "input": "Smith v Jones [2010] EWCA Civ 1234",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 14,
+       "end": 34,
+       "text": "[2010] EWCA Civ 1234"
+      },
+      "fields": {
+       "year": "2010",
+       "number": "1234"
+      },
+      "court": {
+       "id": "ewca-civ"
+      },
+      "jurisdiction": "uk-ew"
+     }
+    ]
+   }
+  },
+  {
+   "name": "neutral/nzsc-and-hca",
+   "input": "Hoskins v Commissioner [2020] NZSC 1; Mabo v Queensland [No 2] [1992] HCA 23.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 23,
+       "end": 36,
+       "text": "[2020] NZSC 1"
+      },
+      "jurisdiction": "nz"
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 63,
+       "end": 76,
+       "text": "[1992] HCA 23"
+      },
+      "court": {
+       "id": "hca"
+      },
+      "jurisdiction": "au"
+     }
+    ]
+   }
+  },
+  {
+   "name": "reporter/scr-year-volume",
+   "input": "R v Jordan, [2016] 1 SCR 631 at 650.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "reporter",
+      "span": {
+       "start": 12,
+       "end": 28,
+       "text": "[2016] 1 SCR 631"
+      },
+      "fields": {
+       "year": "2016",
+       "volume": "1",
+       "reporter": "SCR",
+       "reporterCanonical": "SCR",
+       "page": "631"
+      },
+      "jurisdiction": "ca",
+      "pinpoints": [
+       {
+        "kind": "page",
+        "first": "650"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "reporter/scr-dotted",
+   "input": "R v Oakes, [1986] 1 S.C.R. 103.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "reporter",
+      "span": {
+       "start": 11,
+       "end": 30,
+       "text": "[1986] 1 S.C.R. 103"
+      },
+      "fields": {
+       "year": "1986",
+       "volume": "1",
+       "reporter": "S.C.R.",
+       "reporterCanonical": "SCR",
+       "page": "103"
+      },
+      "jurisdiction": "ca"
+     }
+    ]
+   }
+  },
+  {
+   "name": "reporter/scr-no-volume",
+   "input": "Roncarelli v Duplessis, [1959] SCR 121.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "reporter",
+      "span": {
+       "start": 24,
+       "end": 38,
+       "text": "[1959] SCR 121"
+      },
+      "fields": {
+       "year": "1959",
+       "reporterCanonical": "SCR",
+       "page": "121",
+       "volume": null
+      },
+      "jurisdiction": "ca"
+     }
+    ]
+   }
+  },
+  {
+   "name": "reporter/south-carolina-not-scr",
+   "input": "State v. Smith, 300 S.C. 1, 386 S.E.2d 1 (1989).",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "reporter",
+      "span": {
+       "start": 16,
+       "end": 26,
+       "text": "300 S.C. 1"
+      },
+      "fields": {
+       "volume": "300",
+       "reporter": "S.C.",
+       "reporterCanonical": "S.C.",
+       "page": "1",
+       "year": "1989"
+      },
+      "jurisdiction": "us-sc",
+      "parallelGroup": 0
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "reporter",
+      "span": {
+       "start": 28,
+       "end": 40,
+       "text": "386 S.E.2d 1"
+      },
+      "fields": {
+       "reporterCanonical": "S.E.2d"
+      },
+      "parallelGroup": 0
+     }
+    ]
+   },
+   "note": "S.C. (South Carolina Reports) must not be read as S.C.R.; the [year] volume shape decides."
+  },
+  {
+   "name": "reporter/scr-vs-sc-same-text",
+   "input": "Reference re Secession of Quebec, [1998] 2 S.C.R. 217 and Doe v. Roe, 123 S.C. 456 (1923).",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 34,
+       "end": 53,
+       "text": "[1998] 2 S.C.R. 217"
+      },
+      "fields": {
+       "reporterCanonical": "SCR"
+      },
+      "jurisdiction": "ca"
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 70,
+       "end": 82,
+       "text": "123 S.C. 456"
+      },
+      "fields": {
+       "reporterCanonical": "S.C.",
+       "year": "1923"
+      },
+      "jurisdiction": "us-sc"
+     }
+    ]
+   }
+  },
+  {
+   "name": "reporter/donoghue-ac",
+   "input": "Donoghue v Stevenson [1932] AC 562 (HL).",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "reporter",
+      "span": {
+       "start": 21,
+       "end": 34,
+       "text": "[1932] AC 562"
+      },
+      "shortName": "Donoghue v Stevenson",
+      "parties": {
+       "plaintiff": "Donoghue",
+       "defendant": "Stevenson"
+      },
+      "fields": {
+       "year": "1932",
+       "reporter": "AC",
+       "reporterCanonical": "AC",
+       "page": "562"
+      },
+      "jurisdiction": "uk",
+      "parentheticals": {
+       "$contains": [
+        {
+         "kind": "court",
+         "content": "HL"
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "reporter/ac-pinpoint-page",
+   "input": "Hedley Byrne & Co Ltd v Heller & Partners Ltd [1964] AC 465 at 502.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "reporter",
+      "span": {
+       "start": 46,
+       "end": 59,
+       "text": "[1964] AC 465"
+      },
+      "fields": {
+       "year": "1964",
+       "reporterCanonical": "AC",
+       "page": "465"
+      },
+      "pinpoints": [
+       {
+        "kind": "page",
+        "first": "502"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "reporter/qb-volume",
+   "input": "Carlill v Carbolic Smoke Ball Co [1893] 1 QB 256 (CA).",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "reporter",
+      "span": {
+       "start": 33,
+       "end": 48,
+       "text": "[1893] 1 QB 256"
+      },
+      "fields": {
+       "year": "1893",
+       "volume": "1",
+       "reporterCanonical": "QB",
+       "page": "256"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "reporter/clr-round-year",
+   "input": "Mabo v Queensland (No 2) (1992) 175 CLR 1.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "reporter",
+      "span": {
+       "start": 25,
+       "end": 41,
+       "text": "(1992) 175 CLR 1"
+      },
+      "fields": {
+       "year": "1992",
+       "volume": "175",
+       "reporterCanonical": "CLR",
+       "page": "1"
+      },
+      "jurisdiction": "au"
+     }
+    ]
+   },
+   "note": "Australian (year) volume reporter; whether the round-bracketed year is inside the core is the engine's call - adjust span if it keeps it in the style."
+  },
+  {
+   "name": "parallel/scr-dlr",
+   "input": "Hill v Church of Scientology of Toronto, [1995] 2 SCR 1130, 126 DLR (4th) 129.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 41,
+       "end": 58,
+       "text": "[1995] 2 SCR 1130"
+      },
+      "parallelGroup": 0
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "span": {
+       "start": 60,
+       "end": 77,
+       "text": "126 DLR (4th) 129"
+      },
+      "fields": {
+       "volume": "126",
+       "reporter": "DLR (4th)",
+       "reporterCanonical": "DLR (4th)",
+       "page": "129"
+      },
+      "parallelGroup": 0
+     }
+    ]
+   }
+  },
+  {
+   "name": "parallel/neutral-and-scr",
+   "input": "R v Jordan, 2016 SCC 27, [2016] 1 SCR 631.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "span": {
+       "start": 12,
+       "end": 23,
+       "text": "2016 SCC 27"
+      },
+      "parallelGroup": 0
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "reporter",
+      "span": {
+       "start": 25,
+       "end": 41,
+       "text": "[2016] 1 SCR 631"
+      },
+      "parallelGroup": 0
+     }
+    ]
+   }
+  },
+  {
+   "name": "parallel/three-way-with-pinpoint",
+   "input": "R v Grant, 2009 SCC 32, [2009] 2 SCR 353, 309 DLR (4th) 1 at para 71.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "span": {
+       "start": 11,
+       "end": 22,
+       "text": "2009 SCC 32"
+      },
+      "parallelGroup": 0
+     },
+     {
+      "form": "full",
+      "span": {
+       "start": 24,
+       "end": 40,
+       "text": "[2009] 2 SCR 353"
+      },
+      "parallelGroup": 0
+     },
+     {
+      "form": "full",
+      "span": {
+       "start": 42,
+       "end": 57,
+       "text": "309 DLR (4th) 1"
+      },
+      "parallelGroup": 0,
+      "pinpoints": [
+       {
+        "kind": "paragraph",
+        "first": "71"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "parallel/semicolon-separates-groups",
+   "input": "R v Jordan, 2016 SCC 27; R v Cody, 2017 SCC 31.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "span": {
+       "start": 12,
+       "end": 23,
+       "text": "2016 SCC 27"
+      },
+      "parallelGroup": null
+     },
+     {
+      "form": "full",
+      "span": {
+       "start": 35,
+       "end": 46,
+       "text": "2017 SCC 31"
+      },
+      "parallelGroup": null
+     }
+    ]
+   }
+  },
+  {
+   "name": "canlii/with-court",
+   "input": "Smith v Jones, 2004 CanLII 12345 (ON CA).",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "can_lii",
+      "span": {
+       "start": 15,
+       "end": 32,
+       "text": "2004 CanLII 12345"
+      },
+      "fields": {
+       "year": "2004",
+       "number": "12345"
+      },
+      "court": {
+       "id": "onca"
+      },
+      "parentheticals": {
+       "$contains": [
+        {
+         "kind": "court",
+         "content": "ON CA"
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "canlii/parallel-with-scr",
+   "input": "Doe v Roe, 1999 CanLII 3717 (SCC), [1999] 2 SCR 817.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "format": "can_lii",
+      "span": {
+       "start": 11,
+       "end": 27,
+       "text": "1999 CanLII 3717"
+      },
+      "court": {
+       "id": "scc"
+      },
+      "parallelGroup": 0
+     },
+     {
+      "form": "full",
+      "format": "reporter",
+      "span": {
+       "start": 35,
+       "end": 51,
+       "text": "[1999] 2 SCR 817"
+      },
+      "parallelGroup": 0
+     }
+    ]
+   }
+  },
+  {
+   "name": "database/qj-and-carswell",
+   "input": "Smith v Jones, [2019] OJ No 45 (QL) and 2019 CarswellOnt 123.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "database",
+      "span": {
+       "start": 15,
+       "end": 30,
+       "text": "[2019] OJ No 45"
+      },
+      "parentheticals": {
+       "$contains": [
+        {
+         "kind": "source",
+         "content": "QL"
+        }
+       ]
+      }
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "database",
+      "span": {
+       "start": 40,
+       "end": 60,
+       "text": "2019 CarswellOnt 123"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "statute/rsc-with-section",
+   "input": "Criminal Code, RSC 1985, c C-46, s 11(b).",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "statute",
+      "format": "statute_volume",
+      "span": {
+       "start": 15,
+       "end": 31,
+       "text": "RSC 1985, c C-46"
+      },
+      "shortName": "Criminal Code",
+      "fields": {
+       "series": "RSC",
+       "year": "1985",
+       "chapter": "C-46"
+      },
+      "jurisdiction": "ca",
+      "language": null,
+      "pinpoints": [
+       {
+        "kind": "section",
+        "first": "11(b)"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "statute/lrc-french",
+   "input": "Code criminel, LRC 1985, c C-46, art 11b).",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "statute",
+      "format": "statute_volume",
+      "span": {
+       "start": 15,
+       "end": 31,
+       "text": "LRC 1985, c C-46"
+      },
+      "fields": {
+       "series": "LRC",
+       "year": "1985",
+       "chapter": "C-46"
+      },
+      "jurisdiction": "ca",
+      "language": "fr"
+     }
+    ]
+   }
+  },
+  {
+   "name": "statute/so-schedule",
+   "input": "Personal Health Information Protection Act, 2004, SO 2004, c 3, Sched A, s 4.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "statute",
+      "format": "statute_volume",
+      "span": {
+       "start": 50,
+       "end": 71,
+       "text": "SO 2004, c 3, Sched A"
+      },
+      "fields": {
+       "series": "SO",
+       "year": "2004",
+       "chapter": "3",
+       "schedule": "A"
+      },
+      "jurisdiction": "ca-on"
+     }
+    ]
+   }
+  },
+  {
+   "name": "statute/rlrq-french",
+   "input": "Charte de la langue française, RLRQ c C-11, art 1.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "statute",
+      "span": {
+       "start": 31,
+       "end": 42,
+       "text": "RLRQ c C-11"
+      },
+      "fields": {
+       "series": "RLRQ",
+       "chapter": "C-11"
+      },
+      "jurisdiction": "ca-qc",
+      "language": "fr",
+      "pinpoints": [
+       {
+        "kind": "article",
+        "first": "1"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "regulation/sor",
+   "input": "Canadian Aviation Regulations, SOR/96-433, s 602.01.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "regulation",
+      "format": "regulation_series",
+      "span": {
+       "start": 31,
+       "end": 41,
+       "text": "SOR/96-433"
+      },
+      "fields": {
+       "series": "SOR"
+      },
+      "jurisdiction": "ca",
+      "pinpoints": [
+       {
+        "kind": "section",
+        "first": "602.01"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "regulation/dors-french",
+   "input": "Règlement de l'aviation canadien, DORS/96-433.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "regulation",
+      "format": "regulation_series",
+      "span": {
+       "start": 34,
+       "end": 45,
+       "text": "DORS/96-433"
+      },
+      "fields": {
+       "series": "DORS"
+      },
+      "language": "fr"
+     }
+    ]
+   }
+  },
+  {
+   "name": "regulation/ontario",
+   "input": "General, O Reg 191/11, s 3; RRO 1990, Reg 194, r 20.05.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "regulation",
+      "span": {
+       "start": 9,
+       "end": 21,
+       "text": "O Reg 191/11"
+      },
+      "fields": {
+       "series": "O Reg"
+      },
+      "jurisdiction": "ca-on"
+     },
+     {
+      "form": "full",
+      "authority": "regulation",
+      "span": {
+       "start": 28,
+       "end": 45,
+       "text": "RRO 1990, Reg 194"
+      },
+      "jurisdiction": "ca-on"
+     }
+    ]
+   }
+  },
+  {
+   "name": "statute/charter",
+   "input": "Canadian Charter of Rights and Freedoms, s 7, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11.",
+   "status": "pass",
+   "expect": {
+    "citations": {
+     "$contains": [
+      {
+       "form": "full",
+       "authority": "constitution"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "ref/ibid-paragraph",
+   "input": "R v Jordan, 2016 SCC 27 at para 5. Ibid at para 7.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "span": {
+       "start": 12,
+       "end": 23,
+       "text": "2016 SCC 27"
+      }
+     },
+     {
+      "form": "ibid",
+      "span": {
+       "start": 35,
+       "end": 39,
+       "text": "Ibid"
+      },
+      "antecedent": 0,
+      "pinpoints": [
+       {
+        "kind": "paragraph",
+        "first": "7"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "ref/ibid-follows-latest",
+   "input": "R v Jordan, 2016 SCC 27. Ibid. R v Cody, 2017 SCC 31. Ibid at para 3.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full"
+     },
+     {
+      "form": "ibid",
+      "antecedent": 0
+     },
+     {
+      "form": "full"
+     },
+     {
+      "form": "ibid",
+      "antecedent": 2
+     }
+    ]
+   }
+  },
+  {
+   "name": "ref/supra-note",
+   "input": "1 R v Jordan, 2016 SCC 27.\n2 See generally the literature.\n3 Jordan, supra note 1 at para 5.",
+   "options": {
+    "notes": [
+     {
+      "number": 1,
+      "start": 0,
+      "end": 26
+     },
+     {
+      "number": 2,
+      "start": 27,
+      "end": 58
+     },
+     {
+      "number": 3,
+      "start": 59,
+      "end": 92
+     }
+    ]
+   },
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "span": {
+       "start": 14,
+       "end": 25,
+       "text": "2016 SCC 27"
+      }
+     },
+     {
+      "form": "supra",
+      "fields": {
+       "note": 1
+      },
+      "antecedent": 0,
+      "pinpoints": [
+       {
+        "kind": "paragraph",
+        "first": "5"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "ref/above-n-aglc",
+   "input": "1 Mabo v Queensland (No 2) (1992) 175 CLR 1.\n2 Ibid.\n3 Mabo, above n 1, 42.",
+   "options": {
+    "notes": [
+     {
+      "number": 1,
+      "start": 0,
+      "end": 44
+     },
+     {
+      "number": 2,
+      "start": 45,
+      "end": 52
+     },
+     {
+      "number": 3,
+      "start": 53,
+      "end": 75
+     }
+    ]
+   },
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full"
+     },
+     {
+      "form": "ibid",
+      "antecedent": 0
+     },
+     {
+      "form": "supra",
+      "fields": {
+       "note": 1
+      },
+      "antecedent": 0
+     }
+    ]
+   }
+  },
+  {
+   "name": "ref/oscola-n",
+   "input": "1 Donoghue v Stevenson [1932] AC 562 (HL).\n2 Something else.\n3 Donoghue (n 1) 580.",
+   "options": {
+    "notes": [
+     {
+      "number": 1,
+      "start": 0,
+      "end": 42
+     },
+     {
+      "number": 2,
+      "start": 43,
+      "end": 60
+     },
+     {
+      "number": 3,
+      "start": 61,
+      "end": 82
+     }
+    ]
+   },
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "span": {
+       "start": 23,
+       "end": 36,
+       "text": "[1932] AC 562"
+      }
+     },
+     {
+      "form": "supra",
+      "fields": {
+       "note": 1
+      },
+      "antecedent": 0,
+      "pinpoints": [
+       {
+        "kind": "page",
+        "first": "580"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "ref/explicit-short-name-reference",
+   "input": "R v Jordan, 2016 SCC 27 [Jordan]. Later, in Jordan at para 5, the Court held.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "explicitShortName": "Jordan",
+      "shortName": "Jordan"
+     },
+     {
+      "form": "reference",
+      "antecedent": 0,
+      "pinpoints": [
+       {
+        "kind": "paragraph",
+        "first": "5"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "pinpoint/paragraph-range",
+   "input": "R v Jordan, 2016 SCC 27 at paras 62-64.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "pinpoints": [
+       {
+        "kind": "paragraph",
+        "first": "62",
+        "last": "64"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "pinpoint/paragraph-list",
+   "input": "R v Jordan, 2016 SCC 27 at paras 20, 23 and 25.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "pinpoints": [
+       {
+        "kind": "paragraph",
+        "first": "20"
+       },
+       {
+        "kind": "paragraph",
+        "first": "23"
+       },
+       {
+        "kind": "paragraph",
+        "first": "25"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "pinpoint/subsection-range",
+   "input": "Criminal Code, RSC 1985, c C-46, ss 7(2)-(4).",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "statute",
+      "pinpoints": [
+       {
+        "kind": "section",
+        "first": "7(2)",
+        "last": "7(4)"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "pinpoint/page-range-and-footnote",
+   "input": "R v Oakes, [1986] 1 SCR 103 at 138-39, n 12.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "pinpoints": {
+       "$contains": [
+        {
+         "kind": "page",
+         "first": "138",
+         "last": "139"
+        },
+        {
+         "kind": "footnote",
+         "first": "12"
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "history/leave-refused",
+   "input": "R v Smith (1999), 45 OR (3d) 123 (CA), leave to appeal to SCC refused, [2000] 1 SCR xiv.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "span": {
+       "start": 18,
+       "end": 32,
+       "text": "45 OR (3d) 123"
+      },
+      "history": [
+       {
+        "relation": "leave_refused",
+        "target": 1
+       }
+      ]
+     },
+     {
+      "form": "full",
+      "span": {
+       "start": 71,
+       "end": 87,
+       "text": "[2000] 1 SCR xiv"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "history/affirmed",
+   "input": "Smith v Jones, 2015 ONCA 100, aff'd 2016 SCC 27.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "span": {
+       "start": 15,
+       "end": 28,
+       "text": "2015 ONCA 100"
+      },
+      "history": [
+       {
+        "relation": "affirmed",
+        "target": 1
+       }
+      ],
+      "parallelGroup": null
+     },
+     {
+      "form": "full",
+      "span": {
+       "start": 36,
+       "end": 47,
+       "text": "2016 SCC 27"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "signal/see-also",
+   "input": "See also R v Jordan, 2016 SCC 27.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "signal": {
+       "start": 0,
+       "end": 8
+      },
+      "shortName": "R v Jordan"
+     }
+    ]
+   }
+  },
+  {
+   "name": "secondary/journal-mcgill",
+   "input": "Kent Roach, “Wrongful Convictions” (2010) 56:3 McGill LJ 1 at 5.",
+   "status": "pass",
+   "expect": {
+    "citations": {
+     "$contains": [
+      {
+       "form": "full",
+       "authority": "journal",
+       "fields": {
+        "volume": "56",
+        "page": "1"
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "secondary/book",
+   "input": "Peter W Hogg, Constitutional Law of Canada, 5th ed (Toronto: Carswell, 2007) at 36-12.",
+   "status": "pending",
+   "expect": {
+    "citations": {
+     "$contains": [
+      {
+       "form": "full",
+       "authority": "book",
+       "fields": {
+        "edition": "5",
+        "place": "Toronto",
+        "publisher": "Carswell",
+        "year": "2007"
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "name": "offsets/byte",
+   "input": "Voilà — 😀 R c Jordan, 2016 CSC 27, au para 5.",
+   "options": {
+    "offsetUnit": "byte"
+   },
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "span": {
+       "start": 28,
+       "end": 39,
+       "text": "2016 CSC 27"
+      },
+      "pinpoints": [
+       {
+        "first": "5",
+        "span": {
+         "start": 49,
+         "end": 50,
+         "text": "5"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "offsets/char",
+   "input": "Voilà — 😀 R c Jordan, 2016 CSC 27, au para 5.",
+   "options": {
+    "offsetUnit": "char"
+   },
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "span": {
+       "start": 22,
+       "end": 33,
+       "text": "2016 CSC 27"
+      },
+      "pinpoints": [
+       {
+        "first": "5",
+        "span": {
+         "start": 43,
+         "end": 44,
+         "text": "5"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "offsets/utf16",
+   "input": "Voilà — 😀 R c Jordan, 2016 CSC 27, au para 5.",
+   "options": {
+    "offsetUnit": "utf16"
+   },
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "span": {
+       "start": 23,
+       "end": 34,
+       "text": "2016 CSC 27"
+      },
+      "pinpoints": [
+       {
+        "first": "5",
+        "span": {
+         "start": 44,
+         "end": 45,
+         "text": "5"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "negative/no-citations",
+   "input": "Aucune citation ici. No citation here.",
+   "status": "pass",
+   "expect": {
+    "citations": []
+   }
+  },
+  {
+   "name": "negative/numbers-are-not-citations",
+   "input": "In 1985 the Court sat for 27 days; 2016 was a good year.",
+   "status": "pass",
+   "expect": {
+    "citations": []
+   }
+  }
+ ]
+}

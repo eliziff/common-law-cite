@@ -1,1 +1,617 @@
-[]
+[
+ {
+  "id": "ca",
+  "name": {
+   "en": "Canada",
+   "fr": "Canada"
+  }
+ },
+ {
+  "id": "ca-ab",
+  "name": {
+   "en": "Alberta",
+   "fr": "Alberta"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "ca-bc",
+  "name": {
+   "en": "British Columbia",
+   "fr": "Colombie-Britannique"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "ca-mb",
+  "name": {
+   "en": "Manitoba",
+   "fr": "Manitoba"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "ca-nb",
+  "name": {
+   "en": "New Brunswick",
+   "fr": "Nouveau-Brunswick"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "ca-nl",
+  "name": {
+   "en": "Newfoundland and Labrador",
+   "fr": "Terre-Neuve-et-Labrador"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "ca-ns",
+  "name": {
+   "en": "Nova Scotia",
+   "fr": "Nouvelle-Écosse"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "ca-nt",
+  "name": {
+   "en": "Northwest Territories",
+   "fr": "Territoires du Nord-Ouest"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "ca-nu",
+  "name": {
+   "en": "Nunavut",
+   "fr": "Nunavut"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "ca-on",
+  "name": {
+   "en": "Ontario",
+   "fr": "Ontario"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "ca-pe",
+  "name": {
+   "en": "Prince Edward Island",
+   "fr": "Île-du-Prince-Édouard"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "ca-qc",
+  "name": {
+   "en": "Quebec",
+   "fr": "Québec"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "ca-sk",
+  "name": {
+   "en": "Saskatchewan",
+   "fr": "Saskatchewan"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "ca-yt",
+  "name": {
+   "en": "Yukon",
+   "fr": "Yukon"
+  },
+  "parent": "ca"
+ },
+ {
+  "id": "uk",
+  "name": {
+   "en": "United Kingdom",
+   "fr": "Royaume-Uni"
+  }
+ },
+ {
+  "id": "uk-ew",
+  "name": {
+   "en": "England and Wales"
+  },
+  "parent": "uk"
+ },
+ {
+  "id": "uk-sc",
+  "name": {
+   "en": "Scotland"
+  },
+  "parent": "uk"
+ },
+ {
+  "id": "uk-ni",
+  "name": {
+   "en": "Northern Ireland"
+  },
+  "parent": "uk"
+ },
+ {
+  "id": "au",
+  "name": {
+   "en": "Australia",
+   "fr": "Australie"
+  }
+ },
+ {
+  "id": "au-act",
+  "name": {
+   "en": "Australian Capital Territory"
+  },
+  "parent": "au"
+ },
+ {
+  "id": "au-nsw",
+  "name": {
+   "en": "New South Wales"
+  },
+  "parent": "au"
+ },
+ {
+  "id": "au-nt",
+  "name": {
+   "en": "Northern Territory"
+  },
+  "parent": "au"
+ },
+ {
+  "id": "au-qld",
+  "name": {
+   "en": "Queensland"
+  },
+  "parent": "au"
+ },
+ {
+  "id": "au-sa",
+  "name": {
+   "en": "South Australia"
+  },
+  "parent": "au"
+ },
+ {
+  "id": "au-tas",
+  "name": {
+   "en": "Tasmania"
+  },
+  "parent": "au"
+ },
+ {
+  "id": "au-vic",
+  "name": {
+   "en": "Victoria"
+  },
+  "parent": "au"
+ },
+ {
+  "id": "au-wa",
+  "name": {
+   "en": "Western Australia"
+  },
+  "parent": "au"
+ },
+ {
+  "id": "nz",
+  "name": {
+   "en": "New Zealand",
+   "fr": "Nouvelle-Zélande"
+  }
+ },
+ {
+  "id": "us",
+  "name": {
+   "en": "United States",
+   "fr": "États-Unis"
+  }
+ },
+ {
+  "id": "us-al",
+  "name": {
+   "en": "Alabama"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ak",
+  "name": {
+   "en": "Alaska"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-as",
+  "name": {
+   "en": "American Samoa"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-az",
+  "name": {
+   "en": "Arizona"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ar",
+  "name": {
+   "en": "Arkansas"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ca",
+  "name": {
+   "en": "California"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-co",
+  "name": {
+   "en": "Colorado"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ct",
+  "name": {
+   "en": "Connecticut"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-de",
+  "name": {
+   "en": "Delaware"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-dc",
+  "name": {
+   "en": "District of Columbia"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-fl",
+  "name": {
+   "en": "Florida"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ga",
+  "name": {
+   "en": "Georgia"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-gu",
+  "name": {
+   "en": "Guam"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-hi",
+  "name": {
+   "en": "Hawaii"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-id",
+  "name": {
+   "en": "Idaho"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-il",
+  "name": {
+   "en": "Illinois"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-in",
+  "name": {
+   "en": "Indiana"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ia",
+  "name": {
+   "en": "Iowa"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ks",
+  "name": {
+   "en": "Kansas"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ky",
+  "name": {
+   "en": "Kentucky"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-la",
+  "name": {
+   "en": "Louisiana"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-me",
+  "name": {
+   "en": "Maine"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-md",
+  "name": {
+   "en": "Maryland"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ma",
+  "name": {
+   "en": "Massachusetts"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-mi",
+  "name": {
+   "en": "Michigan"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-mn",
+  "name": {
+   "en": "Minnesota"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ms",
+  "name": {
+   "en": "Mississippi"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-mo",
+  "name": {
+   "en": "Missouri"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-mt",
+  "name": {
+   "en": "Montana"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ne",
+  "name": {
+   "en": "Nebraska"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-nv",
+  "name": {
+   "en": "Nevada"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-nh",
+  "name": {
+   "en": "New Hampshire"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-nj",
+  "name": {
+   "en": "New Jersey"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-nm",
+  "name": {
+   "en": "New Mexico"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ny",
+  "name": {
+   "en": "New York"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-nc",
+  "name": {
+   "en": "North Carolina"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-nd",
+  "name": {
+   "en": "North Dakota"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-mp",
+  "name": {
+   "en": "Northern Mariana Islands"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-oh",
+  "name": {
+   "en": "Ohio"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ok",
+  "name": {
+   "en": "Oklahoma"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-or",
+  "name": {
+   "en": "Oregon"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-pa",
+  "name": {
+   "en": "Pennsylvania"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-pr",
+  "name": {
+   "en": "Puerto Rico"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ri",
+  "name": {
+   "en": "Rhode Island"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-sc",
+  "name": {
+   "en": "South Carolina"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-sd",
+  "name": {
+   "en": "South Dakota"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-tn",
+  "name": {
+   "en": "Tennessee"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-tx",
+  "name": {
+   "en": "Texas"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-ut",
+  "name": {
+   "en": "Utah"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-vt",
+  "name": {
+   "en": "Vermont"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-vi",
+  "name": {
+   "en": "Virgin Islands"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-va",
+  "name": {
+   "en": "Virginia"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-wa",
+  "name": {
+   "en": "Washington"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-wv",
+  "name": {
+   "en": "West Virginia"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-wi",
+  "name": {
+   "en": "Wisconsin"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "us-wy",
+  "name": {
+   "en": "Wyoming"
+  },
+  "parent": "us"
+ },
+ {
+  "id": "int",
+  "name": {
+   "en": "International",
+   "fr": "International"
+  }
+ }
+]

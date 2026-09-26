@@ -1,0 +1,54 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "benchmarks/structure_stress/probes/cite_class1_surfaces.py",
+  "table": "COURTS",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "SCC"
+  },
+  {
+   "key": "FCA"
+  },
+  {
+   "key": "FC"
+  },
+  {
+   "key": "TCC"
+  },
+  {
+   "key": "ONCA"
+  },
+  {
+   "key": "BCCA"
+  },
+  {
+   "key": "NSCA"
+  },
+  {
+   "key": "CT"
+  },
+  {
+   "key": "CITT"
+  },
+  {
+   "key": "CHRT"
+  },
+  {
+   "key": "CIRB"
+  },
+  {
+   "key": "CMAC"
+  },
+  {
+   "key": "FPSLREB"
+  },
+  {
+   "key": "SST"
+  }
+ ]
+}

@@ -1,0 +1,2569 @@
+{
+ "format": "legal-citations-conformance:v1",
+ "source": "eyecite 2.7.8 (git 047af17), reporters-db 3.2.66, courts-db 0.10.27",
+ "description": "eyecite tests/test_ResolveTest.py: each checkResolution() row list joined into one text; antecedents from real eyecite resolve_citations().",
+ "generatedBy": "conformance/tools/port-eyecite.py",
+ "cases": [
+  {
+   "name": "ResolveTest.test_ambigous_short_cite#1",
+   "input": "Foo v. Bar, 1 U.S. 1. See Foo, 1 U.S. 2. Foo, 1 U.S., at 2.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "short",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_ambigous_short_cite",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       31,
+       39
+      ],
+      "fullSpan": [
+       26,
+       39
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "court": "scotus",
+       "defendant": "Foo"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       46,
+       58
+      ],
+      "fullSpan": [
+       26,
+       58
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "pin_cite": "2",
+       "court": "scotus",
+       "antecedent_guess": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ],
+     [
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_complex_resolution#1",
+   "input": "Blah blah Foo v. Bar 1 U.S. 1, 77 blah blah. Asdf asdf Qwerty v. Uiop 2 F.3d 500, 555. Also check out Foo, 1 U.S. at 99. Then let's cite Qwerty, supra, at 567. See also Foo, supra, at 101 as well. Another full citation is Lorem v. Ipsum 1 U. S. 50. Quoting Qwerty, “something something”, 2 F.3d 500, at 559. This case is similar to Fake, supra, and Qwerty supra, as well. This should resolve to the foregoing. Ibid. This should also convert appropriately, see Id. at 567. But this fails because the pin cite is too low, see Id. at 400. This should fail to resolve because the reporter and citation is ambiguous, 1 U. S., at 51. However, this should succeed, Lorem, 1 U.S., at 52.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "short",
+      "antecedent": 0
+     },
+     {
+      "form": "supra",
+      "antecedent": {
+       "$in": [
+        1,
+        6
+       ]
+      }
+     },
+     {
+      "form": "supra",
+      "antecedent": 0
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "supra",
+      "antecedent": null
+     },
+     {
+      "form": "supra",
+      "antecedent": {
+       "$in": [
+        1,
+        6
+       ]
+      }
+     },
+     {
+      "form": "ibid",
+      "antecedent": {
+       "$in": [
+        1,
+        6
+       ]
+      }
+     },
+     {
+      "form": "ibid",
+      "antecedent": {
+       "$in": [
+        1,
+        6
+       ]
+      }
+     },
+     {
+      "form": "ibid",
+      "antecedent": null
+     },
+     {
+      "form": "short",
+      "antecedent": null
+     },
+     {
+      "form": "short",
+      "antecedent": 5
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_complex_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       21,
+       29
+      ],
+      "fullSpan": [
+       10,
+       29
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       70,
+       80
+      ],
+      "fullSpan": [
+       55,
+       85
+      ],
+      "groups": {
+       "volume": "2",
+       "reporter": "F.3d",
+       "page": "500"
+      },
+      "metadata": {
+       "pin_cite": "555",
+       "plaintiff": "Qwerty",
+       "defendant": "Uiop"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       107,
+       119
+      ],
+      "fullSpan": [
+       102,
+       119
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "99"
+      },
+      "metadata": {
+       "pin_cite": "99",
+       "court": "scotus",
+       "antecedent_guess": "Foo"
+      }
+     },
+     {
+      "class": "SupraCitation",
+      "span": [
+       145,
+       158
+      ],
+      "fullSpan": [
+       137,
+       158
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 567",
+       "antecedent_guess": "Qwerty"
+      }
+     },
+     {
+      "class": "SupraCitation",
+      "span": [
+       174,
+       180
+      ],
+      "fullSpan": [
+       169,
+       180
+      ],
+      "groups": {},
+      "metadata": {
+       "antecedent_guess": "Foo"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       237,
+       247
+      ],
+      "fullSpan": [
+       222,
+       247
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U. S.",
+       "page": "50"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Lorem",
+       "defendant": "Ipsum"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       288,
+       298
+      ],
+      "fullSpan": [
+       288,
+       306
+      ],
+      "groups": {
+       "volume": "2",
+       "reporter": "F.3d",
+       "page": "500"
+      },
+      "metadata": {
+       "pin_cite": "at 559"
+      }
+     },
+     {
+      "class": "SupraCitation",
+      "span": [
+       338,
+       344
+      ],
+      "fullSpan": [
+       332,
+       344
+      ],
+      "groups": {},
+      "metadata": {
+       "antecedent_guess": "Fake"
+      }
+     },
+     {
+      "class": "SupraCitation",
+      "span": [
+       356,
+       362
+      ],
+      "fullSpan": [
+       349,
+       362
+      ],
+      "groups": {},
+      "metadata": {
+       "antecedent_guess": "Qwerty"
+      }
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       410,
+       415
+      ],
+      "fullSpan": [
+       410,
+       415
+      ],
+      "groups": {},
+      "metadata": {}
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       460,
+       470
+      ],
+      "fullSpan": [
+       460,
+       470
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 567"
+      }
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       524,
+       534
+      ],
+      "fullSpan": [
+       524,
+       534
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 400"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       612,
+       626
+      ],
+      "fullSpan": [
+       612,
+       626
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U. S.",
+       "page": "51"
+      },
+      "metadata": {
+       "pin_cite": "51",
+       "court": "scotus"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       665,
+       678
+      ],
+      "fullSpan": [
+       658,
+       678
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "52"
+      },
+      "metadata": {
+       "pin_cite": "52",
+       "court": "scotus",
+       "antecedent_guess": "Lorem"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0,
+      2,
+      4
+     ],
+     [
+      1,
+      3,
+      6,
+      8,
+      9,
+      10
+     ],
+     [
+      5,
+      13
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_full_resolution#1",
+   "input": "Foo v. Bar, 1 U.S. 1.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_full_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_full_resolution#2",
+   "input": "Foo v. Bar, 1 U.S. 1. Foo v. Bar, 1 U.S. 1.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_full_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       34,
+       42
+      ],
+      "fullSpan": [
+       22,
+       42
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0,
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_full_resolution#3",
+   "input": "Foo v. Bar, 1 U.S. ____. Foo v. Bar, 1 U.S. ____.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_full_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       23
+      ],
+      "fullSpan": [
+       0,
+       23
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": null
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       37,
+       48
+      ],
+      "fullSpan": [
+       25,
+       48
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": null
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ],
+     [
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_full_resolution#4",
+   "input": "Foo v. Bar, 1 U.S. 1. Smith v. Jones, 1 F.2d 1.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_full_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       38,
+       46
+      ],
+      "fullSpan": [
+       22,
+       46
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "F.2d",
+       "page": "1"
+      },
+      "metadata": {
+       "plaintiff": "Smith",
+       "defendant": "Jones"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ],
+     [
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_full_resolution#5",
+   "input": "Foo v. Bar, 1 U.S. 1. Foo v. Bar, 1 U.S. 1. Foo, 1 U.S., at 2. Foo, supra at 2.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "short",
+      "antecedent": {
+       "$in": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "form": "supra",
+      "antecedent": {
+       "$in": [
+        0,
+        1
+       ]
+      }
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_full_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       34,
+       42
+      ],
+      "fullSpan": [
+       22,
+       42
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       49,
+       61
+      ],
+      "fullSpan": [
+       22,
+       61
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "pin_cite": "2",
+       "court": "scotus",
+       "antecedent_guess": "Bar",
+       "plaintiff": "Foo"
+      }
+     },
+     {
+      "class": "SupraCitation",
+      "span": [
+       68,
+       78
+      ],
+      "fullSpan": [
+       63,
+       78
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2",
+       "antecedent_guess": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0,
+      1,
+      2,
+      3
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_id_resolution#1",
+   "input": "Foo v. Bar, 1 U.S. 1. 2 F.2d, at 2. Id. at 2.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "short",
+      "antecedent": null
+     },
+     {
+      "form": "ibid",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_id_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       22,
+       34
+      ],
+      "fullSpan": [
+       0,
+       34
+      ],
+      "groups": {
+       "volume": "2",
+       "reporter": "F.2d",
+       "page": "2"
+      },
+      "metadata": {
+       "pin_cite": "2",
+       "antecedent_guess": "Bar",
+       "plaintiff": "Foo"
+      }
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       36,
+       44
+      ],
+      "fullSpan": [
+       36,
+       44
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_id_resolution#2",
+   "input": "Foo v. Bar, 1 U.S. 1. Blah § 2. Id. at 2.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "unknown",
+      "antecedent": null
+     },
+     {
+      "form": "ibid",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_id_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "UnknownCitation",
+      "span": [
+       27,
+       28
+      ],
+      "fullSpan": [
+       27,
+       28
+      ],
+      "groups": {},
+      "metadata": {}
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       32,
+       40
+      ],
+      "fullSpan": [
+       32,
+       40
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_id_resolution#3",
+   "input": "Id. at 2.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "ibid",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_id_resolution",
+    "citations": [
+     {
+      "class": "IdCitation",
+      "span": [
+       0,
+       8
+      ],
+      "fullSpan": [
+       0,
+       8
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2"
+      }
+     }
+    ],
+    "resolution": []
+   }
+  },
+  {
+   "name": "ResolveTest.test_id_resolution#4",
+   "input": "Foo v. Bar, 1 U.S. 100. Id. at 500. Foo v. Bar, 1 U.S. 100. Id. at 50. Foo v. Bar, 1 U.S. 100. Id. at ¶ 100. Ala. Code § 92 Id. at 2000",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "ibid",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "ibid",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "ibid",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "ibid",
+      "antecedent": 6
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_id_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       22
+      ],
+      "fullSpan": [
+       0,
+       22
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "100"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       24,
+       34
+      ],
+      "fullSpan": [
+       24,
+       34
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 500"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       48,
+       58
+      ],
+      "fullSpan": [
+       36,
+       58
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "100"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       60,
+       69
+      ],
+      "fullSpan": [
+       60,
+       69
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 50"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       83,
+       93
+      ],
+      "fullSpan": [
+       71,
+       93
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "100"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       95,
+       107
+      ],
+      "fullSpan": [
+       95,
+       107
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at ¶ 100"
+      }
+     },
+     {
+      "class": "FullLawCitation",
+      "span": [
+       109,
+       123
+      ],
+      "fullSpan": [
+       109,
+       124
+      ],
+      "groups": {
+       "reporter": "Ala. Code",
+       "section": "92"
+      },
+      "metadata": {}
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       124,
+       135
+      ],
+      "fullSpan": [
+       124,
+       135
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2000"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0,
+      2,
+      4
+     ],
+     [
+      6,
+      7
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_id_resolution#5",
+   "input": "Foo v. Bar, 1 U.S. ___ Id. at 100.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "ibid",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_id_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       22
+      ],
+      "fullSpan": [
+       0,
+       22
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": null
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       23,
+       33
+      ],
+      "fullSpan": [
+       23,
+       33
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 100"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_issue_167#1",
+   "input": "25 Texas L.Rev. 199",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_issue_167",
+    "citations": [
+     {
+      "class": "FullJournalCitation",
+      "span": [
+       0,
+       19
+      ],
+      "fullSpan": [
+       0,
+       19
+      ],
+      "groups": {
+       "volume": "25",
+       "reporter": "Texas L.Rev.",
+       "page": "199"
+      },
+      "metadata": {}
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_non_case_resolution#1",
+   "input": "Foo v. Bar, 1 U.S. 1. Id. at 2. Mass. Gen. Laws ch. 1, § 2 Id. Foo, supra, at 2. 1 Minn. L. Rev. 1. Id. at 2. Foo, 1 U.S., at 2.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "ibid",
+      "antecedent": 0
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "ibid",
+      "antecedent": 2
+     },
+     {
+      "form": "supra",
+      "antecedent": 0
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "ibid",
+      "antecedent": 5
+     },
+     {
+      "form": "short",
+      "antecedent": 0
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_non_case_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       22,
+       30
+      ],
+      "fullSpan": [
+       22,
+       30
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2"
+      }
+     },
+     {
+      "class": "FullLawCitation",
+      "span": [
+       32,
+       58
+      ],
+      "fullSpan": [
+       32,
+       59
+      ],
+      "groups": {
+       "reporter": "Mass. Gen. Laws",
+       "chapter": "1",
+       "section": "2"
+      },
+      "metadata": {}
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       59,
+       62
+      ],
+      "fullSpan": [
+       59,
+       62
+      ],
+      "groups": {},
+      "metadata": {}
+     },
+     {
+      "class": "SupraCitation",
+      "span": [
+       68,
+       79
+      ],
+      "fullSpan": [
+       63,
+       79
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2",
+       "antecedent_guess": "Foo"
+      }
+     },
+     {
+      "class": "FullJournalCitation",
+      "span": [
+       81,
+       98
+      ],
+      "fullSpan": [
+       81,
+       98
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "Minn. L. Rev.",
+       "page": "1"
+      },
+      "metadata": {}
+     },
+     {
+      "class": "IdCitation",
+      "span": [
+       100,
+       108
+      ],
+      "fullSpan": [
+       100,
+       108
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       115,
+       127
+      ],
+      "fullSpan": [
+       107,
+       127
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "pin_cite": "2",
+       "court": "scotus",
+       "antecedent_guess": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0,
+      1,
+      4,
+      7
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      5,
+      6
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_reference_resolution#1",
+   "input": "Foo v. Bar, 1 U.S. 1 ... Foo at 2",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "reference",
+      "antecedent": 0
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_reference_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "ReferenceCitation",
+      "span": [
+       25,
+       33
+      ],
+      "fullSpan": [
+       25,
+       33
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2",
+       "plaintiff": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0,
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_reference_resolution#2",
+   "input": "Foo at 2. .... ; Foo v. Bar, 1 U.S. 1",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_reference_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       29,
+       37
+      ],
+      "fullSpan": [
+       17,
+       37
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_reference_resolution#3",
+   "input": "Foo v. Bar 1 U.S. 12, 347-348. something something, In Foo at 62, we see that",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "reference",
+      "antecedent": 0
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_reference_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       11,
+       20
+      ],
+      "fullSpan": [
+       0,
+       29
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "12"
+      },
+      "metadata": {
+       "pin_cite": "347-348",
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "ReferenceCitation",
+      "span": [
+       55,
+       64
+      ],
+      "fullSpan": [
+       55,
+       64
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 62",
+       "plaintiff": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0,
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_reference_resolution#4",
+   "input": "Foo v. Bar 1 U.S. 12, 347-348; 12 U.S. 1. someting; In Foo at 2, we see that",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "reference",
+      "antecedent": 0
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_reference_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       11,
+       20
+      ],
+      "fullSpan": [
+       0,
+       29
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "12"
+      },
+      "metadata": {
+       "pin_cite": "347-348",
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       31,
+       40
+      ],
+      "fullSpan": [
+       31,
+       40
+      ],
+      "groups": {
+       "volume": "12",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus"
+      }
+     },
+     {
+      "class": "ReferenceCitation",
+      "span": [
+       55,
+       63
+      ],
+      "fullSpan": [
+       55,
+       63
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2",
+       "plaintiff": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0,
+      2
+     ],
+     [
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_reference_resolution#5",
+   "input": "Foo v. Bar 1 U.S. 12, 347-348; In Smith, 12 U.S. 1 (1999) we saw something else. someting. In Foo at 2, we see that",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "reference",
+      "antecedent": 0
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_reference_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       11,
+       20
+      ],
+      "fullSpan": [
+       0,
+       29
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "12"
+      },
+      "metadata": {
+       "pin_cite": "347-348",
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       41,
+       50
+      ],
+      "fullSpan": [
+       31,
+       57
+      ],
+      "groups": {
+       "volume": "12",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "year": "1999",
+       "court": "scotus",
+       "defendant": "Smith"
+      }
+     },
+     {
+      "class": "ReferenceCitation",
+      "span": [
+       94,
+       102
+      ],
+      "fullSpan": [
+       94,
+       102
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2",
+       "plaintiff": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0,
+      2
+     ],
+     [
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_short_resolution#1",
+   "input": "Foo v. Bar, 1 U.S. 1. 1 U.S., at 2.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "short",
+      "antecedent": 0
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_short_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       22,
+       34
+      ],
+      "fullSpan": [
+       0,
+       34
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "pin_cite": "2",
+       "court": "scotus",
+       "antecedent_guess": "Bar",
+       "plaintiff": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0,
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_short_resolution#2",
+   "input": "Foo v. Bar, 1 U.S. 1. Foo, 1 U.S., at 2.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "short",
+      "antecedent": 0
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_short_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       27,
+       39
+      ],
+      "fullSpan": [
+       0,
+       39
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "pin_cite": "2",
+       "court": "scotus",
+       "antecedent_guess": "Bar",
+       "plaintiff": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0,
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_short_resolution#3",
+   "input": "Foo v. Bar, 1 U.S. 1. Wrong v. Wrong, 1 U.S. 2. Foo, 1 U.S., at 2.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "short",
+      "antecedent": 1
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_short_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       38,
+       46
+      ],
+      "fullSpan": [
+       22,
+       46
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Wrong",
+       "defendant": "Wrong"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       53,
+       65
+      ],
+      "fullSpan": [
+       22,
+       65
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "pin_cite": "2",
+       "court": "scotus",
+       "antecedent_guess": "Wrong",
+       "plaintiff": "Wrong"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ],
+     [
+      1,
+      2
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_short_resolution#4",
+   "input": "Foo v. Bar, 1 U.S. 1. Boo v. Far, 1 U.S. 2. 1 U.S., at 2.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "short",
+      "antecedent": 1
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_short_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       34,
+       42
+      ],
+      "fullSpan": [
+       22,
+       42
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Boo",
+       "defendant": "Far"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       44,
+       56
+      ],
+      "fullSpan": [
+       22,
+       56
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "pin_cite": "2",
+       "court": "scotus",
+       "antecedent_guess": "Far",
+       "plaintiff": "Boo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ],
+     [
+      1,
+      2
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_short_resolution#5",
+   "input": "Foo v. Bar, 1 U.S. 1. Foo v. Bar, 1 U.S. 2. Foo, 1 U.S., at 2.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "short",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_short_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       34,
+       42
+      ],
+      "fullSpan": [
+       22,
+       42
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       49,
+       61
+      ],
+      "fullSpan": [
+       22,
+       61
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "pin_cite": "2",
+       "court": "scotus",
+       "antecedent_guess": "Bar",
+       "plaintiff": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ],
+     [
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_short_resolution#6",
+   "input": "Foo v. Bar, 1 U.S. 1. 2 F.2d, at 2.",
+   "status": "pending",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "short",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_short_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "ShortCaseCitation",
+      "span": [
+       22,
+       34
+      ],
+      "fullSpan": [
+       0,
+       34
+      ],
+      "groups": {
+       "volume": "2",
+       "reporter": "F.2d",
+       "page": "2"
+      },
+      "metadata": {
+       "pin_cite": "2",
+       "antecedent_guess": "Bar",
+       "plaintiff": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_supra_resolution#1",
+   "input": "Foo v. Bar, 1 U.S. 1. Foo, supra, at 2.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "supra",
+      "antecedent": 0
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_supra_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "SupraCitation",
+      "span": [
+       27,
+       38
+      ],
+      "fullSpan": [
+       22,
+       38
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2",
+       "antecedent_guess": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0,
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "name": "ResolveTest.test_supra_resolution#2",
+   "input": "Foo v. Bar, 1 U.S. 1. Foo v. Bar, 1 U.S. 2. Foo, supra, at 2.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "full",
+      "antecedent": null
+     },
+     {
+      "form": "supra",
+      "antecedent": null
+     }
+    ]
+   },
+   "upstream": {
+    "test": "ResolveTest.test_supra_resolution",
+    "citations": [
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       12,
+       20
+      ],
+      "fullSpan": [
+       0,
+       20
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "1"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "FullCaseCitation",
+      "span": [
+       34,
+       42
+      ],
+      "fullSpan": [
+       22,
+       42
+      ],
+      "groups": {
+       "volume": "1",
+       "reporter": "U.S.",
+       "page": "2"
+      },
+      "metadata": {
+       "court": "scotus",
+       "plaintiff": "Foo",
+       "defendant": "Bar"
+      }
+     },
+     {
+      "class": "SupraCitation",
+      "span": [
+       49,
+       60
+      ],
+      "fullSpan": [
+       44,
+       60
+      ],
+      "groups": {},
+      "metadata": {
+       "pin_cite": "at 2",
+       "antecedent_guess": "Foo"
+      }
+     }
+    ],
+    "resolution": [
+     [
+      0
+     ],
+     [
+      1
+     ]
+    ]
+   }
+  }
+ ]
+}

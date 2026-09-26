@@ -4,6 +4,9 @@
     "citations": {
       "description": "Citation grammars extracted VERBATIM from the deterministic-citations lineage (ALR verifier_core/deterministic_splitter.py == engine legalpdf/deterministic_citations.py, md5-verified 2026-07-29) and from toa_maker.py where it diverges — dialects preserved side by side, never merged. Authoring rules: JS-style named groups (added groups are provenance-marked; they wrap existing alternations without changing match semantics); leading (?i) hoisted to table flags; invisible characters stay \\uXXXX escapes, visible non-ASCII stays literal. Python compiles with re.ASCII, JS without the u flag. U.S. reporter, journal, law, regulation, constitution, docket, and short-cite families are a runtime-free authored snapshot of the pinned eyecite/reporters-db oracle; standard and custom reporter entries stay separate so overlap resolution cannot hide a valid span.",
       "defs": {
+        "cue_court_codes": "SCC|FCA|FC|TCC|CMAC|BCCA|BCSC|BCPC|ABCA|ABQB|ABKB|ABPC|SKCA|SKQB|SKKB|SKPC|MBCA|MBQB|ONCA|ONSC|ONCJ|QCCA|QCCS|QCCQ|NBCA|NBQB|NSSC|NSCA|PECA|PESC|NLCA|NLSC|YKCA|YKSC|NWTCA|NWTSC|NUCA|NUCJ",
+        "cue_reporter_tokens": "S\\.?\\s*C\\.?\\s*R\\.?|D\\.?\\s*L\\.?\\s*R\\.?|C\\.?\\s*C\\.?\\s*C\\.?|O\\.?\\s*R\\.?|W\\.?\\s*W\\.?\\s*R\\.?|C\\.?\\s*R\\.?|All\\s+E\\.?\\s*R\\.?|A\\.?\\s*C\\.?|K\\.?\\s*B\\.?|Q\\.?\\s*B\\.?|Q\\.?\\s*B\\.?\\s*D\\.?|Ch(?:\\s+D)?\\.?|App\\s+Cas|W\\.?\\s*L\\.?\\s*R\\.?|E\\.?\\s*R\\.?|T\\.?\\s*L\\.?\\s*R\\.?|Cox\\s+C\\.?\\s*C\\.?|Cr\\s+App\\s+R\\.?|Ex\\.?|Eq\\.?|H\\.?\\s*L\\.?\\s*Cas\\.?",
+        "cue_statute_sources": "RSC|RSO|RSA|RSBC|RSM|RSNB|RSNS|RSPEI|CQLR|CCSM|SC|SO|SA|SBC|SM|SNB|SNS|SS|SY|SNWT|SNu|RLRQ",
         "reporter_words": "[A-Z][A-Za-z&.'-]{1,16}(?:\\s+[A-Z][A-Za-z&.'-]{1,16}){0,4}",
         "ca_statute_series": "R\\.?S\\.?N\\.?W\\.?T\\.?|S\\.?N\\.?W\\.?T\\.?|R\\.?S\\.?P\\.?E\\.?I\\.?|S\\.?P\\.?E\\.?I\\.?|C\\.?C\\.?S\\.?M\\.?|R\\.?S\\.?N\\.?B\\.?|S\\.?N\\.?B\\.?|R\\.?S\\.?N\\.?S\\.?|S\\.?N\\.?S\\.?|R\\.?S\\.?N\\.?L\\.?|S\\.?N\\.?L\\.?|R\\.?S\\.?B\\.?C\\.?|S\\.?B\\.?C\\.?|R\\.?S\\.?C\\.?|R\\.?S\\.?O\\.?|R\\.?S\\.?A\\.?|R\\.?S\\.?S\\.?|R\\.?S\\.?M\\.?|R\\.?S\\.?Y\\.?|S\\.?C\\.?|S\\.?O\\.?|S\\.?A\\.?|S\\.?S\\.?|S\\.?M\\.?|S\\.?Y\\.?",
         "fr_statute_series": "C\\.?P\\.?L\\.?M\\.?|R\\.?L\\.?R\\.?Q\\.?|C\\.?Q\\.?L\\.?R\\.?|L\\.?R\\.?C\\.?|L\\.?R\\.?O\\.?|L\\.?R\\.?M\\.?|L\\.?C\\.?|L\\.?O\\.?|L\\.?M\\.?",
@@ -507,14 +510,14 @@
         },
         {
           "id": "cite.canlii",
-          "pattern": "\\b(?:17|18|19|20)\\d{2}\\s+CanLII\\s+\\d+\\b",
+          "pattern": "\\b(?<year>(?:17|18|19|20)\\d{2})\\s+CanLII\\s+(?<number>\\d+)\\b",
           "flags": "i",
           "canonical": {},
-          "provenance": "toa_maker.py:84 (_CANLII_RE). No splitter counterpart (splitter's _NEUTRAL_RE cannot match mixed-case CanLII).",
+          "provenance": "toa_maker.py:84 (_CANLII_RE). No splitter counterpart (splitter's _NEUTRAL_RE cannot match mixed-case CanLII). Named groups year/number are legal-citations additions wrapping existing subexpressions; spans are unchanged.",
           "vectors": [
             {
               "input": "R v Smith, 2015 CanLII 12345 (ON CA).",
-              "groups": {}
+              "groups": {"year": "2015", "number": "12345"}
             },
             {
               "input": "cited to CanLII without a year",
@@ -1058,10 +1061,10 @@
         },
         {
           "id": "cite.ca.statute.first",
-          "pattern": "\\b(?<series>{{ca_statute_series}}|{{fr_statute_series}})\\s*,?\\s+\\(?(?<year>(?:1[6-9]|20)\\d{2})\\)?(?:\\s*,?\\s+c\\.?\\s*(?<chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*(?:\\s+\\d+(?:\\.\\d+)?)?))?(?:\\s*,?\\s+Sched(?:ule)?\\.?\\s*(?<schedule>[A-Za-z0-9]+))?|\\b(?<compiled_series>C\\.?Q\\.?L\\.?R\\.?|C\\.?C\\.?S\\.?M\\.?|R\\.?L\\.?R\\.?Q\\.?)\\s*,?\\s+c\\.?\\s*(?<compiled_chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*)|\\b(?<regnal>\\d{1,2}(?:\\s*&\\s*\\d{1,2})?\\s+(?:Vict|Geo|Eliz|Will|Anne?|Car|Jac|Hen|Edw)\\.?(?:\\s*[IVX]+)?),?\\s+c\\.?\\s*(?<regnal_chapter>\\d{1,4}[A-Za-z]?)|\\b(?<instrument>(?:SOR|SI)/\\d{2,4}[-/]\\d{1,4})|\\bCRC,?\\s*c\\.?\\s*(?<consolidated_chapter>\\d{1,4}(?:\\.\\d+)?)|\\b(?<regulation>(?:[A-Z][A-Za-z]{0,2}\\s+)?(?:Reg|OIC)\\.?\\s*\\d{1,4}[-/]\\d{1,4})",
+          "pattern": "\\b(?<series>{{ca_statute_series}}|{{fr_statute_series}})\\s*,?\\s+\\(?(?<year>(?:1[6-9]|20)\\d{2})\\)?(?:\\s*,?\\s+c(?:h(?:ap)?)?\\.?\\s*(?<chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*(?:\\s+\\d+(?:\\.\\d+)?)?))?(?:\\s*,?\\s+Sched(?:ule)?\\.?\\s*(?<schedule>[A-Za-z0-9]+))?|\\b(?<compiled_series>C\\.?Q\\.?L\\.?R\\.?|C\\.?C\\.?S\\.?M\\.?|R\\.?L\\.?R\\.?Q\\.?)\\s*,?\\s+c(?:h(?:ap)?)?\\.?\\s*(?<compiled_chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*)|\\b(?<regnal>\\d{1,2}(?:\\s*&\\s*\\d{1,2})?\\s+(?:Vict|Geo|Eliz|Will|Anne?|Car|Jac|Hen|Edw)\\.?(?:\\s*[IVX]+)?),?\\s+c\\.?\\s*(?<regnal_chapter>\\d{1,4}[A-Za-z]?)|\\b(?<instrument>(?:SOR|SI|DORS|TR)/\\d{2,4}[-/]\\d{1,4})|\\bCRC,?\\s*c\\.?\\s*(?<consolidated_chapter>\\d{1,4}(?:\\.\\d+)?)|\\b(?<regulation>(?:[A-Z][A-Za-z]{0,2}\\s+)?(?:Reg|OIC)\\.?\\s*\\d{1,4}[-/]\\d{1,4})|\\b(?<rr_series>R\\.?R\\.?O\\.?|R\\.?R\\.?A\\.?|R\\.?R\\.?M\\.?|R\\.?R\\.?S\\.?|R\\.?R\\.?N\\.?S\\.?|R\\.?R\\.?N\\.?B\\.?|R\\.?R\\.?P\\.?E\\.?I\\.?|R\\.?R\\.?N\\.?W\\.?T\\.?|R\\.?R\\.?Y\\.?)\\s*,?\\s+(?<rr_year>(?:19|20)\\d{2}),?\\s+(?:Reg|Règl)\\.?\\s*(?<rr_number>\\d{1,4}(?:/\\d{1,4})?)|(?<fr_regulation>R[èe]gl\\s+de\\s+l['’](?:Ont|Alb|Î-P-É|N-É|N-B|C-B|Man|Sask|T-N-L|Yn|T-N-O)\\s+\\d{1,4}/\\d{1,4})",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored first-reference grammar for Canadian legislation, in the footnote (McGill Guide) dialect the judgment-side cite.statute.judgment entry cannot reach: the undotted series forms, the CQLR/CCSM/RLRQ compiled-statute forms that carry no year, the imperial regnal-year form (30 & 31 Vict, c 3), and the regulation instruments (SOR//SI//CRC//provincial Reg//OIC). Member list is the shared ca_statute_series//fr_statute_series defs unchanged, so the judgment and footnote dialects name the same series. Measured against the ALR fast-split field gold: the statute family scored 0 citation hits before this entry existed.",
+          "provenance": "Beaver-authored first-reference grammar for Canadian legislation, in the footnote (McGill Guide) dialect the judgment-side cite.statute.judgment entry cannot reach: the undotted series forms, the CQLR/CCSM/RLRQ compiled-statute forms that carry no year, the imperial regnal-year form (30 & 31 Vict, c 3), and the regulation instruments (SOR//SI//CRC//provincial Reg//OIC). Member list is the shared ca_statute_series//fr_statute_series defs unchanged, so the judgment and footnote dialects name the same series. Measured against the ALR fast-split field gold: the statute family scored 0 citation hits before this entry existed. legal-citations additions: 'ch'/'chap' chapter labels (LRC 1985, ch C-46 no longer reads chapter 'h'), the French and transitional instrument prefixes DORS/ and TR/, the revised-regulation volumes (RRO 1990, Reg 194) and the French provincial regulation form (Règl de l'Ont 191/11).",
           "vectors": [
             {
               "input": "Criminal Code, RSC 1985, c C-46, s 718.",
@@ -1131,7 +1134,11 @@
             {
               "input": "the parties settled before trial",
               "groups": null
-            }
+            },
+            {"input": "Code criminel, LRC 1985, ch C-46, art 7", "groups": {"series": "LRC", "year": "1985", "chapter": "C-46"}},
+            {"input": "Règlement, DORS/2002-227, art 3", "groups": {"instrument": "DORS/2002-227"}},
+            {"input": "Rules of Civil Procedure, RRO 1990, Reg 194, r 20.04", "groups": {"rr_series": "RRO", "rr_year": "1990", "rr_number": "194"}},
+            {"input": "Règl de l'Ont 191/11, art 2", "groups": {"fr_regulation": "Règl de l'Ont 191/11"}}
           ]
         },
         {
@@ -1257,10 +1264,10 @@
         },
         {
           "id": "cite.book.imprint",
-          "pattern": "\\b(?<edition>\\d{1,2}(?:st|nd|rd|th)|rev(?:ised)?|2d|3d|new)\\s+ed\\b\\.?,?\\s*\\((?<edition_imprint>[^()\\n]{0,90}(?:1[6-9]|20)\\d{2}[^()\\n]{0,30})\\)|\\((?<place>[A-Z][^()\\n:]{0,60}):\\s*(?<imprint>[^()\\n]{0,90}(?:1[6-9]|20)\\d{2}[^()\\n]{0,30})\\)",
+          "pattern": "(?:\\b(?<edition>\\d{1,2}(?:st|nd|rd|th)|rev(?:ised)?|2d|3d|new)\\s+ed\\b\\.?,?\\s*\\((?<edition_imprint>[^()\\n]{0,90}(?:1[6-9]|20)\\d{2}[^()\\n]{0,30})\\)|\\((?<place>[A-Z][^()\\n:]{0,60}):\\s*(?<imprint>[^()\\n]{0,90}(?:1[6-9]|20)\\d{2}[^()\\n]{0,30})\\))(?:\\s+(?<first_page>\\d{1,5})\\b)?",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored: the publication frame of a monograph or an edited collection - '(Place: Publisher, Year)', or an edition marker followed by a bare year parenthetical. Supersedes frame.book (splitter dialect, place class limited to [A-Za-z .,'-] and the year forced to sit last inside the parentheses) by admitting the forms the corpus shows: a trailing note inside the frame ('; online edn'), a publisher-first French frame ('(Themis: 2023, Montreal)'), and the edition-only frame ('2nd ed (2022)'). One entry serves both the book and the essay-collection families, which share the frame and differ only in the 'in Editor, ed,' lead-in.",
+          "provenance": "Beaver-authored: the publication frame of a monograph or an edited collection - '(Place: Publisher, Year)', or an edition marker followed by a bare year parenthetical. Supersedes frame.book (splitter dialect, place class limited to [A-Za-z .,'-] and the year forced to sit last inside the parentheses) by admitting the forms the corpus shows: a trailing note inside the frame ('; online edn'), a publisher-first French frame ('(Themis: 2023, Montreal)'), and the edition-only frame ('2nd ed (2022)'). One entry serves both the book and the essay-collection families, which share the frame and differ only in the 'in Editor, ed,' lead-in. legal-citations: an essay's first page after the frame ('(New York: Oxford University Press, 2015) 45 at 50') is read as first_page, so the pinpoint after it stays a pinpoint.",
           "vectors": [
             {
               "input": "Peter Hogg, Liability of the Crown, 4th ed (Toronto: Carswell, 2011) at 364",
@@ -1300,15 +1307,16 @@
             {
               "input": "(see the discussion below)",
               "groups": null
-            }
+            },
+            {"input": "Doe, \"Killing\" in Roe, ed, Ethics (New York: Oxford University Press, 2015) 45 at 50", "groups": {"place": "New York", "first_page": "45"}}
           ]
         },
         {
           "id": "cite.parliamentary.paper",
-          "pattern": "\\b(?<body>(?:[A-Z][A-Za-z.'’-]*\\s+){0,4})(?<record>Hansard|Debates)\\s*,?\\s*(?<session>\\d{1,3}\\s*[-–]\\s*\\d{1,3}|(?:\\d{1,3}(?:st|nd|rd|th)|First|Second|Third|Fourth|Fifth|Sixth)\\s+(?:Sess(?:ion)?|Parl(?:iament)?))(?:[^()\\n]{0,60}?\\((?<sitting>[^()\\n]{3,60})\\))?|\\b(?<bill>[Bb][Ii][Ll][Ll]\\s+(?:[CS]-)?\\d{1,4},\\s*(?:An?\\s+Act\\b[^,;\\n]{0,140}|[A-Z][A-Za-z'’.-]*(?:\\s+[A-Za-z'’.-]+){0,10}\\s+Act\\b))",
+          "pattern": "\\b(?<body>(?:[A-Z][A-Za-z.'’-]*\\s+(?:(?:of|the|de|des|du|la|le|[A-Z][A-Za-z.'’-]*)\\s+){0,4})?)(?<record>Hansard|Debates)\\s*,?\\s*(?<session>\\d{1,3}\\s*[-–]\\s*\\d{1,3}|(?:\\d{1,3}(?:st|nd|rd|th)|First|Second|Third|Fourth|Fifth|Sixth)\\s+(?:Sess(?:ion)?|Parl(?:iament)?))(?:[^()\\n]{0,60}?\\((?<sitting>[^()\\n]{3,60})\\))?|\\b(?<bill>[Bb][Ii][Ll][Ll]\\s+(?:[CS]-)?\\d{1,4},\\s*(?:An?\\s+Act\\b[^,;\\n]{0,140}|[A-Z][A-Za-z'’.-]*(?:\\s+[A-Za-z'’.-]+){0,10}\\s+Act\\b))",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored: the two parliamentary-paper shapes a footnote actually cites - a debate record ('Alberta Hansard, 31-2 (8 December 2025)', 'House of Commons Debates, 42-1 (5 May 2017)') identified by the record word plus a session number or ordinal session/parliament, and a bill by its number followed by its title ('Bill C-25, An Act to amend the National Defence Act'). The record word alone is prose ('the debates were heated'), so the session is required, and a bare bill number is a cross-reference or part of an article title ('Bill C-14: A Step Backwards ...'), so the title is required. The page that follows ('at 797') is deliberately left to the pinpoint grammar.",
+          "provenance": "Beaver-authored: the two parliamentary-paper shapes a footnote actually cites - a debate record ('Alberta Hansard, 31-2 (8 December 2025)', 'House of Commons Debates, 42-1 (5 May 2017)') identified by the record word plus a session number or ordinal session/parliament, and a bill by its number followed by its title ('Bill C-25, An Act to amend the National Defence Act'). The record word alone is prose ('the debates were heated'), so the session is required, and a bare bill number is a cross-reference or part of an article title ('Bill C-14: A Step Backwards ...'), so the title is required. The page that follows ('at 797') is deliberately left to the pinpoint grammar. legal-citations: the body group admits lowercase connectors after its first word, so 'House of Commons Debates' is one record rather than 'Commons Debates' with 'House of' left over.",
           "vectors": [
             {
               "input": "See e.g. Alberta Hansard, 31-2 (8 December 2025) at 797 (Rakhi Pancholi)",
@@ -1347,7 +1355,384 @@
             {
               "input": "the debates in the committee were heated",
               "groups": null
-            }
+            },
+            {"input": "House of Commons Debates, 42-1 (5 May 2017) at 1234", "groups": {"body": "House of Commons ", "record": "Debates", "session": "42-1"}}
+          ]
+        },
+        {
+          "id": "cite.neutral.bracketed",
+          "pattern": "\\[(?<year>(?:17|18|19|20)\\d{2})\\]\\s+(?<court>UKSC|UKPC|UKHL|UKUT|UKFTT|UKEAT|UKIPTrib|EWCA\\s+(?:Civ|Crim)|EWHC|EWCOP|EWFC(?:\\s+B)?|EWCC|EWMC|CSIH|CSOH|HCJAC|NICA|NIQB|NICh|NIFam|NICC|IESC|IECA|IEHC|HCA|FCAFC|FCA|FamCAFC|FamCA|FedCFamC[12][AF]|FCCA|FMCA|AATA|ARTA|NSWCCA|NSWCA|NSWSC|NSWLEC|NSWDC|NSWCATAP|VSCA|VSC|VCC|VCAT|QCA|QSC|QDC|QCAT|WASCA|WASC|WADC|SASCFC|SASC|SADC|TASFC|TASSC|TASCCA|ACTCA|ACTSC|NTCA|NTSC|NZSC|NZCA|NZHC|NZDC|NZEmpC|NZFC|NZEnvC|NZERA|SGCA|SGHC|HKCFA|HKCA|HKCFI|ZACC|ZASCA|JCPC)\\s+(?<num>\\d+)\\b(?:\\s+\\((?<division>Admin|Admlty|Ch|Comm|Fam|KB|QB|TCC|Pat|IPEC|SCCO|AAC|IAC|LC|GRC|TC|B|Costs|Mercantile)\\))?",
+          "flags": "",
+          "canonical": {"lowercase": ["court"], "strip": {"court": " "}},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The bracketed-year neutral citation of the United Kingdom, Ireland, Australia, New Zealand and other Commonwealth courts: a closed alternation of court identifiers (the cite.neutral.tribunal mechanism), so year-as-volume law reports ([1932] AC 562, [2016] 1 SCR 631) never read as neutral. A trailing High Court division ((Admin), (Ch)) is part of the court designation.",
+          "vectors": [
+            {"input": "Montgomery v Lanarkshire Health Board [2015] UKSC 11 at [87]", "groups": {"year": "2015", "court": "UKSC", "num": "11"}, "canonical": {"court": "uksc"}},
+            {"input": "Smith v Jones [2003] EWCA Civ 1 at [5]", "groups": {"year": "2003", "court": "EWCA Civ", "num": "1"}, "canonical": {"court": "ewcaciv"}},
+            {"input": "R (Miller) v Secretary of State [2016] EWHC 2768 (Admin)", "groups": {"year": "2016", "court": "EWHC", "num": "2768", "division": "Admin"}},
+            {"input": "Love v Commonwealth [2020] HCA 3", "groups": {"year": "2020", "court": "HCA", "num": "3"}},
+            {"input": "Wu v Minister [2020] FCAFC 5", "groups": {"year": "2020", "court": "FCAFC", "num": "5"}},
+            {"input": "Ellis v R [2022] NZSC 114", "groups": {"year": "2022", "court": "NZSC", "num": "114"}},
+            {"input": "Donoghue v Stevenson [1932] AC 562", "groups": null},
+            {"input": "R v Jordan, [2016] 1 SCR 631", "groups": null}
+          ]
+        },
+        {
+          "id": "cite.reporter.parts",
+          "pattern": "^(?:(?<open>[\\[(])(?<year>(?:17|18|19|20)\\d{2})[\\])],?\\s+)?(?:(?<volume>\\d{1,4})\\s+)?(?<reporter>[A-Z][A-Za-z0-9&.'’]*(?:\\s+(?:[A-Z0-9][A-Za-z0-9&.'’]*|&|of|de|du))*?(?:\\s*\\((?<edition>\\d+(?:st|nd|rd|th|d)|[A-Z][A-Za-z.]{0,12})\\))?(?:\\s+[A-Z][A-Za-z.]*)*?)\\s*,?\\s+(?<at>at\\s?(?:p(?:\\.|age)?)?\\s+)?(?<page>\\d{1,6}|_+|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv)))$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Classifier dialect of cite.reporter.splitter/cite.reporter.toa and the U.S. standard-reporter candidate: applied to a whole core span another grammar already found, never used to discover spans. Named groups give the year (with its bracket or parenthesis, which separates year-as-volume series from annual volumes), volume, reporter surface with its series edition, and first page; the optional 'at' marks a U.S. short form (123 F.3d at 456).",
+          "vectors": [
+            {"input": "[2016] 1 SCR 631", "groups": {"open": "[", "year": "2016", "volume": "1", "reporter": "SCR", "page": "631"}},
+            {"input": "[2016] 1 R.C.S. 631", "groups": {"year": "2016", "volume": "1", "reporter": "R.C.S.", "page": "631"}},
+            {"input": "[1932] AC 562", "groups": {"year": "1932", "volume": null, "reporter": "AC", "page": "562"}},
+            {"input": "(1992) 175 CLR 1", "groups": {"open": "(", "year": "1992", "volume": "175", "reporter": "CLR", "page": "1"}},
+            {"input": "(1994) 117 DLR (4th) 577", "groups": {"year": "1994", "volume": "117", "reporter": "DLR (4th)", "edition": "4th", "page": "577"}},
+            {"input": "(2003), 227 DLR (4th) 282", "groups": {"year": "2003", "volume": "227", "reporter": "DLR (4th)", "page": "282"}},
+            {"input": "410 U.S. 113", "groups": {"year": null, "volume": "410", "reporter": "U.S.", "page": "113"}},
+            {"input": "123 F. Supp. 2d 456", "groups": {"volume": "123", "reporter": "F. Supp. 2d", "page": "456"}},
+            {"input": "123 F.3d at 456", "groups": {"volume": "123", "reporter": "F.3d", "at": "at ", "page": "456"}},
+            {"input": "2016 SCC 27 at para 5", "groups": null}
+          ]
+        },
+        {
+          "id": "cite.database",
+          "pattern": "\\b(?<year>(?:19|20)\\d{2})\\s+(?<service>Carswell[A-Z][A-Za-z]{1,8}|WLNR|WL|(?:U\\.S\\.\\s+(?:(?:Dist\\.|App\\.)\\s+)?)?LEXIS)\\s+(?<number>\\d+)\\b|\\[(?<ql_year>(?:19|20)\\d{2})\\]\\s+(?<ql_service>[A-Z](?:\\.?[A-Z]){1,4}\\.?)\\s+No\\.?\\s+(?<ql_number>\\d+)\\b|\\b(?<soquij>EYB|REJB)\\s+(?<soquij_number>(?:19|20)\\d{2}-\\d{1,8})\\b|\\bAZ-(?<azimut_number>\\d{8})\\b",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Commercial database identifiers that stand in for a report citation: Westlaw Canada (2019 CarswellOnt 123), Westlaw (2019 WL 123456), Lexis (2019 U.S. Dist. LEXIS 12), Quicklaw ([2019] OJ No 45 and its dotted form, which cite.in-text reaches through its bracketed branches) and SOQUIJ/Azimut (EYB 2008-123456, AZ-50123456).",
+          "vectors": [
+            {"input": "Smith v Jones, 2019 CarswellOnt 123 (Ont SCJ)", "groups": {"year": "2019", "service": "CarswellOnt", "number": "123"}},
+            {"input": "Doe v Roe, 2019 WL 123456 (S.D.N.Y. 2019)", "groups": {"year": "2019", "service": "WL", "number": "123456"}},
+            {"input": "Doe v Roe, 2019 U.S. Dist. LEXIS 12", "groups": {"year": "2019", "service": "U.S. Dist. LEXIS", "number": "12"}},
+            {"input": "Smith v Jones, [2019] OJ No 45 (QL)", "groups": {"ql_year": "2019", "ql_service": "OJ", "ql_number": "45"}},
+            {"input": "Smith v Jones, [2019] O.J. No. 45", "groups": {"ql_year": "2019", "ql_service": "O.J.", "ql_number": "45"}},
+            {"input": "Tremblay c Roy, EYB 2008-123456", "groups": {"soquij": "EYB", "soquij_number": "2008-123456"}},
+            {"input": "R v Jordan, 2016 SCC 27", "groups": null}
+          ]
+        },
+        {
+          "id": "cite.treaty",
+          "pattern": "\\b(?<volume>\\d{1,4})\\s+(?<series>UNTS|U\\.N\\.T\\.S\\.|RTNU|R\\.T\\.N\\.U\\.|LNTS|L\\.N\\.T\\.S\\.|ILM|I\\.L\\.M\\.|UST|U\\.S\\.T\\.|CTS|C\\.T\\.S\\.)\\s+(?<page>\\d{1,5})\\b|\\b(?<ts_series>Can\\s+TS|C\\.T\\.S\\.|RT\\s+Can|UKTS|ATS|TIAS|NZTS)\\s+(?<ts_year>(?:18|19|20)\\d{2})\\s+(?:No\\.?\\s+)?(?<ts_number>\\d{1,5})\\b|\\b(?<ets>CETS|ETS|STE|STCE)\\s+No\\.?\\s+(?<ets_number>\\d{1,4})\\b",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Treaty series: the volume-page series (UNTS/RTNU, LNTS, ILM, UST, CTS), the year-number national series (Can TS, RT Can, UKTS, ATS, TIAS, NZTS) and the Council of Europe numbered series (ETS/CETS/STE). The title and signature date in front are the styled part, left to the style grammar.",
+          "vectors": [
+            {"input": "Convention for the Protection of Human Rights and Fundamental Freedoms, 4 November 1950, 213 UNTS 221", "groups": {"volume": "213", "series": "UNTS", "page": "221"}},
+            {"input": "Pacte international relatif aux droits civils et politiques, 19 décembre 1966, 999 RTNU 171", "groups": {"volume": "999", "series": "RTNU", "page": "171"}},
+            {"input": "Agreement between Canada and France, Can TS 1976 No 47", "groups": {"ts_series": "Can TS", "ts_year": "1976", "ts_number": "47"}},
+            {"input": "Convention on Cybercrime, 23 November 2001, ETS No 185", "groups": {"ets": "ETS", "ets_number": "185"}},
+            {"input": "R v Jordan, 2016 SCC 27", "groups": null}
+          ]
+        },
+        {
+          "id": "cite.ca.charter",
+          "pattern": "(?<title>Canadian\\s+Charter\\s+of\\s+Rights\\s+and\\s+Freedoms|Charte\\s+canadienne\\s+des\\s+droits\\s+et\\s+libertés)(?<pin>,\\s*(?:ss?|arts?)\\.?\\s*\\d[\\dA-Za-z().]*(?:\\s*(?:[-–]|,|and|et|à|to)\\s*\\d[\\dA-Za-z().]*)*)?\\s*,\\s*(?<source>(?:Part\\s+I\\s+of\\s+the\\s+Constitution\\s+Act,\\s*1982|partie\\s+I\\s+de\\s+la\\s+Loi\\s+constitutionnelle\\s+de\\s+1982)\\s*,\\s*(?:being\\s+Schedule\\s+B\\s+to\\s+the\\s+Canada\\s+Act\\s+1982|constituant\\s+l['’]annexe\\s+B\\s+de\\s+la\\s+Loi\\s+de\\s+1982\\s+sur\\s+le\\s+Canada)\\s*\\((?:UK|U\\.K\\.|R-U|R\\.-U\\.)\\)\\s*,\\s*1982\\s*,\\s*c\\.?\\s*11)",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The McGill full citation of the Charter, in which the pinpoint sits between the title and the enacting instrument ('Canadian Charter of Rights and Freedoms, s 7, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11'), English and French. The named groups keep the title, the pinpoint and the source apart so the pinpoint is never swallowed into the core; the Constitution Act inside the source is not a second authority.",
+          "vectors": [
+            {"input": "Canadian Charter of Rights and Freedoms, s 7, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11.", "groups": {"title": "Canadian Charter of Rights and Freedoms", "pin": ", s 7", "source": "Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11"}},
+            {"input": "Canadian Charter of Rights and Freedoms, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11", "groups": {"pin": null, "source": "Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11"}},
+            {"input": "Charte canadienne des droits et libertés, art 7, partie I de la Loi constitutionnelle de 1982, constituant l'annexe B de la Loi de 1982 sur le Canada (R-U), 1982, c 11", "groups": {"title": "Charte canadienne des droits et libertés", "pin": ", art 7"}},
+            {"input": "the Charter, s 7, protects life", "groups": null}
+          ]
+        },
+        {
+          "id": "cite.parliamentary.commonwealth",
+          "pattern": "\\b(?<house>HC|HL)\\s+Deb\\s+(?<sitting>\\d{1,2}\\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+\\d{4}),?\\s+vol\\.?\\s+(?<volume>\\d{1,4}),?\\s+cols?\\.?\\s+(?<column>\\d{1,5}[WS]{0,2}(?:[-–]\\d{1,5}[WS]{0,2})?)|\\b(?<au_record>Parliamentary\\s+Debates),\\s*(?<chamber>House\\s+of\\s+Representatives|Senate|Legislative\\s+(?:Assembly|Council)|House\\s+of\\s+Assembly),\\s*(?<au_sitting>\\d{1,2}\\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+\\d{4})|\\b(?<nz_volume>\\d{1,4})\\s+(?<nz_record>NZPD)\\s+(?<nz_page>\\d{1,6})\\b|\\((?<command_series>Cm|Cmnd|Cmd|Cd)\\s+(?<command_number>\\d{1,5})(?:,\\s*(?<command_year>\\d{4}))?\\)|\\b(?<paper_house>HC|HL)\\s+(?:Paper\\s+)?(?<paper_number>\\d{1,4}(?:-[IVX]+)?)\\s+\\((?<paper_session>\\d{4}[-–]\\d{2,4})\\)",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Sibling of cite.parliamentary.paper for the Westminster forms it cannot reach: OSCOLA Hansard (HC Deb 3 March 2020, vol 672, col 45), AGLC debates (Commonwealth, Parliamentary Debates, Senate, 12 May 2020, 1234), the New Zealand Parliamentary Debates series (745 NZPD 123), command papers ((Cm 1234)) and House papers (HC 123 (2019-20)). The debate branches and the paper branches are told apart by their named groups.",
+          "vectors": [
+            {"input": "HC Deb 3 March 2020, vol 672, col 45", "groups": {"house": "HC", "sitting": "3 March 2020", "volume": "672", "column": "45"}},
+            {"input": "Commonwealth, Parliamentary Debates, Senate, 12 May 2020, 1234", "groups": {"au_record": "Parliamentary Debates", "chamber": "Senate", "au_sitting": "12 May 2020"}},
+            {"input": "(12 May 2020) 745 NZPD 123", "groups": {"nz_volume": "745", "nz_record": "NZPD", "nz_page": "123"}},
+            {"input": "Home Office, Rights Brought Home (Cm 3782, 1997)", "groups": {"command_series": "Cm", "command_number": "3782", "command_year": "1997"}},
+            {"input": "Justice Committee, Report (HC 123 (2019-20))", "groups": {"paper_house": "HC", "paper_number": "123", "paper_session": "2019-20"}},
+            {"input": "the debates in the House were heated", "groups": null}
+          ]
+        },
+        {
+          "id": "cite.us.code.parts",
+          "pattern": "^(?:(?<title>\\d+[A-Za-z]?)\\s+)?(?<code>[A-Z][A-Za-z.'&\\s]*?)(?:\\s*,?\\s*§§?|,?\\s+(?:[Ss]ec(?:tion)?s?\\.?|[Ss]s?\\.))\\s*(?<section>\\d[\\w.:\\-–()]*)$|^(?<plain_title>\\d+)\\s+(?<plain_code>U\\.?\\s*S\\.?\\s*C\\.?(?:\\s*A\\.?|\\s*S\\.?)?|USC)\\s+(?<plain_section>\\d[\\w.:\\-()]*)$|^(?:Public\\s*Law|Pub\\.\\s*L\\.)\\s*(?:No\\.|Number)?\\s*(?<public_law>\\d{1,3}-\\d{1,5})",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Classifier for a whole U.S. code or public-law span found by cite.us.law.common or the eyecite law extractors: title, code abbreviation and section, so 42 U.S.C. § 1983 keys as code usc/42/1983 and 26 C.F.R. § 1.1 reads as a regulation.",
+          "vectors": [
+            {"input": "42 U.S.C. § 1983", "groups": {"title": "42", "code": "U.S.C.", "section": "1983"}},
+            {"input": "26 C.F.R. § 1.401(a)-1", "groups": {"title": "26", "code": "C.F.R.", "section": "1.401(a)-1"}},
+            {"input": "Cal. Civ. Code § 1714", "groups": {"title": null, "code": "Cal. Civ. Code", "section": "1714"}},
+            {"input": "42 USC 1983", "groups": {"plain_title": "42", "plain_code": "USC", "plain_section": "1983"}},
+            {"input": "Pub. L. No. 111-148", "groups": {"public_law": "111-148"}},
+            {"input": "410 U.S. 113", "groups": null}
+          ]
+        },
+        {
+          "id": "cite.journal.title-cue",
+          "pattern": "\\b(?:Rev|Review|Revue|J|Jour|Journal|Q|Quarterly|Bull|Bulletin|Studies|Forum|Rec|Record|Cahiers|Chron|Chronicle|Advocate|Yearbook|YB|Annals|Ann|Comment|Commentary|Dig|Digest|Ethics|Pol'y|Policy|Theory)\\b|LJ\\b|L\\s?J\\b|LQ\\b|L\\.\\s?J\\.|L\\.\\s?Q\\.|R\\.\\s?du\\s?B\\.?|R\\s?du\\s?B\\b|RGD\\b|RDUS\\b|RJT\\b|RDMcGill\\b|UTLJ\\b|CBR\\b",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The words that mark a periodical title rather than a law report (Can Bar Rev, Osgoode Hall LJ, Crim LQ, Harv. L. Rev., R du B). Used only on the reporter surface of an already-found '(year) volume Title page' span, so '(1992) 175 CLR 1' reads as a case and '(2019) 97 Can Bar Rev 1' as a journal.",
+          "vectors": [
+            {"input": "Can Bar Rev", "groups": {}},
+            {"input": "Osgoode Hall LJ", "groups": {}},
+            {"input": "Crim LQ", "groups": {}},
+            {"input": "Harv. L. Rev.", "groups": {}},
+            {"input": "UTLJ", "groups": {}},
+            {"input": "CLR", "groups": null},
+            {"input": "DLR (4th)", "groups": null},
+            {"input": "QB", "groups": null}
+          ]
+        },
+        {
+          "id": "reporter.language.fr",
+          "pattern": "^(?:R\\.?\\s?C\\.?\\s?S\\.?|R\\.?\\s?C\\.?\\s?F\\.?|C\\.?\\s?F\\.?|R\\.?\\s?J\\.?\\s?Q\\.?|R\\.?\\s?D\\.?\\s?F\\.?\\s?Q\\.?|R\\.?\\s?D\\.?\\s?J\\.?|B\\.?\\s?E\\.?|R\\.?\\s?L\\.?|R\\.?\\s?J\\.?\\s?D\\.?\\s?T\\.?|J\\.?\\s?E\\.?|R\\.?\\s?D\\.?\\s?I\\.?)$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. French-language report series (Recueils de la Cour suprême, Recueil des décisions des Cours fédérales, Quebec reports), so a citation to [2016] 1 RCS 631 carries language fr while keying with its English counterpart through the registry.",
+          "vectors": [
+            {"input": "R.C.S.", "groups": {}},
+            {"input": "RCS", "groups": {}},
+            {"input": "RJQ", "groups": {}},
+            {"input": "SCR", "groups": null}
+          ]
+        },
+        {
+          "id": "cite.us.reporter.candidate",
+          "pattern": "(?:^|[^A-Za-z0-9])(?<citation>(?<volume>[1-9][0-9]*) (?<reporter>[^;\\r\\n]{1,180}?),? (?:at\\s?(?:p(?:\\.|age)?)? )?(?<page>[0-9]+|_+))(?:$|[^A-Za-z0-9])",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved verbatim from legal-citations find.rs STANDARD_CANDIDATE (itself Beaver citationKey.ts's always-on standard-reporter candidate): \\A/\\z respelled ^/$ without the m flag, which is the same assertion. The reporter group is accepted only when it is a surface of cite.us.reporter.standard.full's us_reporters/us_journals catalogue.",
+          "vectors": [
+            {"input": "Roe v. Wade, 410 U.S. 113 (1973)", "groups": {"citation": "410 U.S. 113", "volume": "410", "reporter": "U.S.", "page": "113"}},
+            {"input": "Id., 123 F.3d at 456", "groups": {"citation": "123 F.3d at 456", "reporter": "F.3d", "page": "456"}},
+            {"input": "no volume here", "groups": null}
+          ]
+        },
+        {
+          "id": "cite.us.reporter.candidate.extended",
+          "pattern": "(?:^|[^A-Za-z0-9])(?<citation>(?<volume>[1-9][0-9]*) (?<reporter>[^;\\r\\n]{1,180}?),? (?:at\\s?(?:p(?:\\.|age)?)? )?(?<page>{{us_page}}))(?:$|[^A-Za-z0-9])",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved verbatim from legal-citations find.rs extended_standard_candidate: the same candidate with the eyecite page grammar (us_page def: roman and blank pages) for lines that carry a U.S. citation cue.",
+          "vectors": [
+            {"input": "5 U.S. xii", "groups": {"citation": "5 U.S. xii", "page": "xii"}},
+            {"input": "410 U.S. 113", "groups": {"page": "113"}},
+            {"input": "no volume here", "groups": null}
+          ]
+        },
+        {
+          "id": "cite.us.law.subdivision",
+          "pattern": "^(?:\\([A-Za-z0-9]{1,4}\\))+(?:-\\d+[A-Za-z]?)?",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The subdivisions written against a U.S. code section that eyecite's law extractors stop short of ('26 C.F.R. § 1.401(a)-1'): read at the end of a law core so '(a)' is never taken for a parenthetical.",
+          "vectors": [
+            {"input": "(a)-1 of the regulations", "groups": {}},
+            {"input": "(b)(2)", "groups": {}},
+            {"input": " (a)", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.citation",
+          "pattern": "\\b(?:ibid|id\\.?|ibidem|supra|infra|op\\s+cit|note|notes|para\\.?|paras\\.?|paragraphs?|pp?\\.?|pages?|ss?\\.?|secs?\\.?|sections?|art\\.?|arts\\.?|at|see|cf\\.?|e\\.?g\\.?|accord|contra|R\\.?\\s*v\\.?|Rex|Regina|v\\.?|vs\\.?|CanLII|SCC|SCR|DLR|(?:{{cue_court_codes}})|(?:{{cue_reporter_tokens}}))\\b|\\[(?:17|18|19|20)\\d{2}\\]|\\((?:17|18|19|20)\\d{2}\\)",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:23 citation_cue_re: a line that carries or starts a citation (reference words, pinpoint words, signals, versus, court codes, report series, bracketed or parenthesized years). The cue_court_codes, cue_reporter_tokens and cue_statute_sources defs hold the frozen legacy tables the vectors exercise; at run time cues.rs substitutes the registry's Canadian neutral identifiers, authored Canadian and English report series, and Canadian statute series, which are a superset.",
+          "vectors": [
+            {"input": "R. v. Jordan", "groups": {}},
+            {"input": "[2016] 1", "groups": {}},
+            {"input": "Tuesday afternoon", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.continuation",
+          "pattern": "^\\s*(?:{{cue_reporter_tokens}}|U\\.?\\s*T\\.?\\s*L\\.?|A\\.?\\s*L\\.?\\s*R\\.?|N\\.?\\s*R\\.?|S\\.?\\s*E\\.?|N\\.?\\s*E\\.?|P\\.?\\s*\\d+d)\\b",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:34 citation_continuation_re: a line that opens with a report series, continuing a citation broken across lines. The cue_court_codes, cue_reporter_tokens and cue_statute_sources defs hold the frozen legacy tables the vectors exercise; at run time cues.rs substitutes the registry's Canadian neutral identifiers, authored Canadian and English report series, and Canadian statute series, which are a superset.",
+          "vectors": [
+            {"input": "  S.C.R. 631", "groups": {}},
+            {"input": "P.2d 456", "groups": {}},
+            {"input": "The court", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.protected.reporter",
+          "pattern": "(?<span>\\[(?:17|18|19|20)\\d{2}\\]\\s+(?:\\d{1,4}\\s+)?(?:{{cue_reporter_tokens}})\\s+\\d{1,4}|\\((?:17|18|19|20)\\d{2}\\)\\s+\\d{1,4}\\s+(?:{{cue_reporter_tokens}})\\s+\\d{1,4}|\\b\\d{1,4}\\s+(?:{{cue_reporter_tokens}})\\s*(?:\\(\\d{1,4}[a-z]{0,2}\\))?\\s+\\d{1,4})(?:[^\\d]|$)",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:57 protected_re(0): a report citation whose digits are never footnote labels. The cue_court_codes, cue_reporter_tokens and cue_statute_sources defs hold the frozen legacy tables the vectors exercise; at run time cues.rs substitutes the registry's Canadian neutral identifiers, authored Canadian and English report series, and Canadian statute series, which are a superset.",
+          "vectors": [
+            {"input": "see [2016] 1 SCR 631.", "groups": {"span": "[2016] 1 SCR 631"}},
+            {"input": "117 DLR (4th) 577,", "groups": {"span": "117 DLR (4th) 577"}},
+            {"input": "12 apples 3", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.protected.neutral",
+          "pattern": "(?<span>\\b(?:17|18|19|20)\\d{2}\\s+(?:CanLII\\s+\\d{1,4}|(?:{{cue_court_codes}})\\s+\\d{1,4})\\b)",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:58 protected_re(1): a neutral or CanLII citation. The cue_court_codes, cue_reporter_tokens and cue_statute_sources defs hold the frozen legacy tables the vectors exercise; at run time cues.rs substitutes the registry's Canadian neutral identifiers, authored Canadian and English report series, and Canadian statute series, which are a superset.",
+          "vectors": [
+            {"input": "R v Jordan, 2016 SCC 27", "groups": {"span": "2016 SCC 27"}},
+            {"input": "in 2016 we met 27 times", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.protected.statute",
+          "pattern": "(?<span>\\b(?:{{cue_statute_sources}})\\s+(?:17|18|19|20)\\d{2},?\\s+c(?:h)?\\.?\\s+[A-Z0-9][A-Z0-9.\\-]*)",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:59 protected_re(2): a statute volume and chapter. The cue_court_codes, cue_reporter_tokens and cue_statute_sources defs hold the frozen legacy tables the vectors exercise; at run time cues.rs substitutes the registry's Canadian neutral identifiers, authored Canadian and English report series, and Canadian statute series, which are a superset.",
+          "vectors": [
+            {"input": "Criminal Code, RSC 1985, c C-46", "groups": {"span": "RSC 1985, c C-46"}},
+            {"input": "so 1985 was", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.protected.journal",
+          "pattern": "(?<span>\\((?:17|18|19|20)\\d{2}\\)\\s+\\d{1,4}(?::\\d{1,4})?\\s+[A-Z][A-Za-z&.'\\-\\s]{2,60}\\s+\\d{1,4}\\b)",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:60 protected_re(3): a periodical volume, title and first page.",
+          "vectors": [
+            {"input": "(2019) 97 Can Bar Rev 1", "groups": {"span": "(2019) 97 Can Bar Rev 1"}},
+            {"input": "(2019) was a year", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.protected.pinpoint",
+          "pattern": "(?:^|[^A-Za-z0-9])(?<span>(?:at\\s+|pp?\\.?\\s+|pages?\\s+|paras?\\.?\\s+|ss?\\.?\\s+)\\d{1,4}[A-Za-z]?(?:\\.\\d{1,4})?(?:\\s*(?:,|and|-|to|–)\\s*\\d{1,4}[A-Za-z]?(?:\\.\\d{1,4})?)*)(?:[^\\d]|$)",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:61 protected_re(4): a pinpoint and its values.",
+          "vectors": [
+            {"input": "Jordan at paras 20, 23 and 25.", "groups": {"span": "paras 20, 23 and 25"}},
+            {"input": "at 12 and 13", "groups": {"span": "at 12 and 13"}},
+            {"input": "flat 12", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.protected.code",
+          "pattern": "(?<span>\\b\\d{1,3}\\s+(?:U\\.?\\s*S\\.?\\s*C\\.?|C\\.?\\s*F\\.?\\s*R\\.?)\\s*(?:§{1,2}\\s*)?\\d+[A-Za-z]?(?:[.\\-]\\d+[A-Za-z]?)*(?:\\([A-Za-z0-9]+\\))*)",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:62 protected_re(5): a U.S. Code or C.F.R. section.",
+          "vectors": [
+            {"input": "42 U.S.C. § 1983(a)", "groups": {"span": "42 U.S.C. § 1983(a)"}},
+            {"input": "42 apples", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.signal.cased",
+          "pattern": "\\b\\d{4}\\s+(?:CanLII\\s+\\d+|(?:{{cue_court_codes}})\\s+\\d+)\\b|\\b[A-Z][A-Za-z'.\\-]+(?:\\s+(?:[A-Z][A-Za-z'.\\-]+|of|and|the|for|to|du|de|des|la|le)){0,6}\\s+[vV][sS]?\\.?\\s+[A-Z][A-Za-z'.\\-]+(?:\\s+(?:[A-Z][A-Za-z'.\\-]+|of|and|the|for|to|du|de|des|la|le)){0,6}\\b|\\(\\d{4}\\)\\s+\\d+(?::\\d+)?\\s+[A-Z][A-Za-z&.\\-\\s]{2,45}\\s+\\d+\\b",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:163 citation_signal_re, its case-sensitive members: a neutral citation, a two-party case name ((?i:v) respelled [vV][sS]?) and a periodical block. The cue_court_codes, cue_reporter_tokens and cue_statute_sources defs hold the frozen legacy tables the vectors exercise; at run time cues.rs substitutes the registry's Canadian neutral identifiers, authored Canadian and English report series, and Canadian statute series, which are a superset.",
+          "vectors": [
+            {"input": "2016 SCC 27", "groups": {}},
+            {"input": "Smith v. Jones", "groups": {}},
+            {"input": "(2019) 97 Can Bar Rev 1", "groups": {}},
+            {"input": "smith v jones", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.signal.folded",
+          "pattern": "\\[\\d{4}\\]\\s+\\d+\\s+S\\.?\\s*C\\.?\\s*R\\.?\\s+\\d+\\b|(?:\\[\\d{4}\\]\\s+(?:\\d+\\s+)?(?:{{cue_reporter_tokens}})\\s+\\d+|\\(\\d{4}\\)\\s+\\d+\\s+(?:{{cue_reporter_tokens}})\\s+\\d+|\\b\\d+\\s+(?:{{cue_reporter_tokens}})\\s*(?:\\(\\d+[a-z]{0,2}\\))?\\s+\\d+)|\\b(?:{{cue_statute_sources}})\\s+\\d{4},?\\s+c(?:h)?\\.?\\s+[A-Z0-9][A-Z0-9.\\-]*|(?:^|[^A-Za-z0-9])(?:s|ss|sec|secs|section|sections|silcrow|§+)\\.?\\s+\\d+[A-Za-z]?(?:\\.\\d+)*(?:\\([A-Za-z0-9]+\\))?(?:\\s*(?:,|and|-|to)\\s*\\d+[A-Za-z]?(?:\\.\\d+)*(?:\\([A-Za-z0-9]+\\))?)*|(?:^|[^A-Za-z0-9])(?:paras?|paragraphs?|pilcrow|¶)\\.?\\s+\\d+(?:\\([A-Za-z0-9]+\\))?(?:\\s*(?:,|and|-|to)\\s*\\d+(?:\\([A-Za-z0-9]+\\))?)*|(?:^|[^A-Za-z0-9])(?:at\\s+|à\\s+la\\s+|aux\\s+)(?:p{1,2}|pages?)\\.?\\s+\\d{1,4}[A-Za-z]?(?:\\.\\d{1,4})?(?:\\s*(?:,|and|et|-|to|à|–)\\s*\\d{1,4}[A-Za-z]?(?:\\.\\d{1,4})?)*(?:[^\\d]|$)|\\b(?:supra\\s+(?:note|n\\.?|nn\\.?)\\s+\\d+|ibid(?:em)?\\.?)(?:\\W|$)",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:163 citation_signal_re, its case-insensitive members: SCR and report citations, statute chapters, section, paragraph and page pinpoints, supra/ibid. The cue_court_codes, cue_reporter_tokens and cue_statute_sources defs hold the frozen legacy tables the vectors exercise; at run time cues.rs substitutes the registry's Canadian neutral identifiers, authored Canadian and English report series, and Canadian statute series, which are a superset.",
+          "vectors": [
+            {"input": "[2016] 1 S.C.R. 631", "groups": {}},
+            {"input": "RSC 1985, c C-46", "groups": {}},
+            {"input": "see s. 7(2)", "groups": {}},
+            {"input": "à la p. 45", "groups": {}},
+            {"input": "Ibid.", "groups": {}},
+            {"input": "the sections of a report", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.reporter-candidate",
+          "pattern": "(?:\\[\\d{4}\\]\\s+(?:\\d+\\s+)?|\\(\\d{4}\\)\\s+\\d+\\s+|\\b\\d+\\s+)(?<reporter>[A-Z][A-Za-z.&'’]*(?:\\s+[A-Z][A-Za-z.&'’]*){0,4}(?:\\s*\\(\\d+[A-Za-z]{0,3}\\))?)\\s+\\d+",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:271 has_mcgill_reporter_citation: the volume/reporter/page shape whose reporter is then looked up among the registry's authored report series (the McGill inventory), replacing the per-letter compiled inventory.",
+          "vectors": [
+            {"input": "(1990) 71 OR (2d) 725", "groups": {"reporter": "OR (2d)"}},
+            {"input": "[2016] 1 SCR 631", "groups": {"reporter": "SCR"}},
+            {"input": "no citation", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.citation-tail",
+          "pattern": "^\\s+(?:\\[\\d{4}\\]\\s+)?(?:[A-Z][A-Za-z0-9.&'-]*\\s+){1,4}(?:\\([^\\)\\r\\n]{1,40}\\)\\s+)?\\d+\\b",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-structure/src/structure.rs:2355 citation_shaped_tail: the text after a candidate note marker reads as the rest of a citation ('1 SCR 631'), so the digit is not a marker.",
+          "vectors": [
+            {"input": " SCR 631", "groups": {}},
+            {"input": " [2016] Ont CA (Div Ct) 5", "groups": {}},
+            {"input": " the court held", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.crossref-short-form",
+          "pattern": "(?:\\[|^|\\W)(?<short>[A-Z][\\w.'’&-]*(?:\\s+(?:[A-Z][\\w.'’&-]*|v\\.?|c\\.?|de|du|and|&)){0,5})\\]?[,:]?\\s*$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-structure/src/structure.rs:2643 crossref_shortform: the short form written just before a note cross-reference ('Jordan, supra note 4'). [^\\p{L}\\p{M}\\p{N}_] respelled \\W, whose Unicode dialect is the same class.",
+          "vectors": [
+            {"input": "See Jordan, ", "groups": {"short": "See Jordan"}},
+            {"input": "the court in [Hansman] ", "groups": {"short": "Hansman"}},
+            {"input": "as held ", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.crossref-stopword",
+          "pattern": "^(?:see|in|the|but|and|also|supra|infra|ibid|at)$",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-structure/src/structure.rs:2660: words that are never a cross-reference short form on their own.",
+          "vectors": [
+            {"input": "See", "groups": {}},
+            {"input": "Jordan", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.counter-noun",
+          "pattern": "^(?:notes?|supra|infra|pages?|pp|paras?|paragraphs?|secs?|sections?|arts?|articles?|vols?|volumes?|nos?|numbers?|chapters?|parts?|clauses?|rules?|regs?|schedules?|appendix|appendices|tables?|figures?|figs?|charts?|columns?|cols?|books?|editions?|amend)$",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-pairing/src/pairing.rs:841 counter_noun: a noun that a following number counts ('note 12', 'para 5'), so the number is not a footnote label.",
+          "vectors": [
+            {"input": "paras", "groups": {}},
+            {"input": "Figures", "groups": {}},
+            {"input": "court", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.heading-trailing-digit",
+          "pattern": "\\d\\s*[.,;]?\\s*$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:342 heading_text_plausible: a line ending in a number is a citation or list item, not a heading.",
+          "vectors": [
+            {"input": "Part 3.", "groups": {}},
+            {"input": "Introduction", "groups": null}
+          ]
+        },
+        {
+          "id": "cue.heading-possessive",
+          "pattern": "([A-Za-z])['’]s\\b",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Moved from legal-pdf-parser legal-pdf-support/src/pairing_support.rs:351 heading_text_plausible: a possessive 's, removed before the cue test so 'Rex's Case' is not read as a citation cue.",
+          "vectors": [
+            {"input": "Director's Report", "groups": {}},
+            {"input": "Directors Report", "groups": null}
           ]
         }
       ]
@@ -1743,6 +2128,55 @@
               "groups": null
             }
           ]
+        },
+        {
+          "id": "pinpoint.locator",
+          "pattern": "^(?<lead>[\\s,]*(?:(?<at>at|au|aux|à\\s+la|à)\\s+|(?<elided>à\\s+l['’]))?)(?<keyword>[Pp]aragraphs?|[Pp]aras?\\.?|[Pp]ars?\\.?|[Pp]ages?|[Pp]p?\\.?|[Ss]ubsections?|[Ss]ubs?\\.?|[Ss]ections?|[Ss]ecs?\\.?|[Ss]s?\\.?|[Aa]rticles?|[Aa]rts?\\.?|[Rr]ules?|[Rr]r?\\.?|[Ss]ch(?:ed(?:ule)?)?s?\\.?|[Aa]nnexes?|[Ff]ootnotes?|[Ff]ns?\\.?|[Nn]otes?|[Nn]n?\\.?|[Cc]lauses?|[Cc]ls?\\.?|¶¶?|§§?)?\\s*(?<values>(?:\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))(?:\\s*(?:[-–—]|to|à)\\s*(?:(?:\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))|(?:\\([A-Za-z0-9.]{1,5}\\))+))?(?:\\s*(?:,|and|&|et)\\s*(?:\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))(?:\\s*(?:[-–—]|to|à)\\s*(?:(?:\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))|(?:\\([A-Za-z0-9.]{1,5}\\))+))?)*)",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Converges pinpoint.para/section/page .splitter and .toa into one locator read at the start of the text after a citation core: English 'at', French 'au'/'aux'/'à la'/'à l'' and the keyword name the kind (paragraph, page, section, subsection, rule, article, schedule, footnote, clause, ¶, §); the value list keeps ranges whole ('62-64', '7(2)-(4)', '23 to 27', '12 à 15') and separates list items on ',', 'and', '&', 'et'. Unlike the toa dialect a dash never separates list items, so 'paras 62-64' keeps 63. Roman pages follow eyecite's page grammar and never swallow a following word.",
+          "vectors": [
+            {"input": " at paras 62-64 and 70.", "groups": {"at": "at", "keyword": "paras", "values": "62-64 and 70"}},
+            {"input": " at paras. 20, 23 and 25.", "groups": {"keyword": "paras.", "values": "20, 23 and 25"}},
+            {"input": " at 553, 559 (holding)", "groups": {"at": "at", "keyword": null, "values": "553, 559"}},
+            {"input": ", s 7(2)", "groups": {"at": null, "keyword": "s", "values": "7(2)"}},
+            {"input": ", ss 7(2)-(4)", "groups": {"keyword": "ss", "values": "7(2)-(4)"}},
+            {"input": ", au para 23", "groups": {"at": "au", "keyword": "para", "values": "23"}},
+            {"input": " aux paras 23 à 27", "groups": {"at": "aux", "keyword": "paras", "values": "23 à 27"}},
+            {"input": ", à l'art 1457", "groups": {"elided": "à l'", "keyword": "art", "values": "1457"}},
+            {"input": " at ¶ 12", "groups": {"keyword": "¶", "values": "12"}},
+            {"input": " at p. 5", "groups": {"keyword": "p.", "values": "5"}},
+            {"input": " at xii", "groups": {"values": "xii"}},
+            {"input": " at 353 n 4", "groups": {"values": "353"}},
+            {"input": " at civil", "groups": null},
+            {"input": " (ON CA)", "groups": null}
+          ]
+        },
+        {
+          "id": "pinpoint.item",
+          "pattern": "(?<first>(?:\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z])))(?:\\s*(?<separator>[-–—]|to|à)\\s*(?<last>(?:\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))|(?:\\([A-Za-z0-9.]{1,5}\\))+))?",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. One item of a pinpoint.locator value list: a locator or a range with its first and last locator.",
+          "vectors": [
+            {"input": "62-64", "groups": {"first": "62", "last": "64"}},
+            {"input": "7(2)-(4)", "groups": {"first": "7(2)", "last": "(4)"}},
+            {"input": "23 to 27", "groups": {"first": "23", "separator": "to", "last": "27"}},
+            {"input": "672.54(a)", "groups": {"first": "672.54(a)", "last": null}},
+            {"input": "xii-xiv", "groups": {"first": "xii", "last": "xiv"}}
+          ]
+        },
+        {
+          "id": "pinpoint.bracketed-paragraph",
+          "pattern": "^(?<lead>[\\s,]*(?:at\\s+)?)\\[(?<first>\\d{1,4})\\](?:\\s*(?:[-–]|to)\\s*\\[(?<last>\\d{1,4})\\])?",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The bracketed paragraph pinpoint of UK, Australian and New Zealand judgments ('[2015] UKSC 11 at [87]', '(n 4) [12]', '[87]-[90]'). A bracketed number is never an explicit short form (shortform.splitter rejects digits-only brackets).",
+          "vectors": [
+            {"input": " at [87]", "groups": {"first": "87", "last": null}},
+            {"input": " [87]-[90]", "groups": {"first": "87", "last": "90"}},
+            {"input": " [Jordan]", "groups": null}
+          ]
         }
       ]
     },
@@ -1977,6 +2411,7 @@
     "references": {
       "description": "Reference, short-form, signal, and boundary grammars extracted VERBATIM from the deterministic-citations lineage (ALR verifier_core/deterministic_splitter.py == engine legalpdf/deterministic_citations.py, byte-identical block, cited as splitter.py:N == deterministic_citations.py:N) with the toa_maker.py and engine docx_linking.py dialects preserved side by side, never merged. The defs mirror the source rf-composition splitter.py:39-47 (_REF_NUM/_REF_NUMS/_REF_PIN) so each fragment keeps one edit point, exactly as pinpoints.json does for pin_*. Authoring rules: JS-style named groups ((?P<x> translated; groups ADDED by beaver are provenance-marked and wrap existing subexpressions without changing what matches); invisible characters stay \\uXXXX escapes, visible non-ASCII stays literal (\\u2018/\\u2019/\\u201c source escapes written as the characters, compiled-identical, noted per entry); Python compiles re.ASCII, JS without u. Vectors: real strings from benchmarks/grammar_vectors/harvested.jsonl (ALR/TOA test corpora) where available; expectations are regex-level (ALR's pure-ref PREFILTER carries extra gates beyond _PURE_REF_RE, e.g. paren-subdivision and bracket-note rejection, so harvested prefilter verdicts are not regex verdicts).",
       "defs": {
+        "intro_signal": "(?:but\\s+)?see(?:\\s+also|\\s+generally)?(?:,?\\s+e\\.\\s?g\\.)?|e\\.\\s?g\\.|cf\\.?|contra|compare|accord|voir(?:\\s+aussi|\\s+également|\\s+notamment|\\s+toutefois|\\s+cependant|\\s+par\\s+ex(?:emple|\\.))?|comparer",
         "ref_num": "\\d+(?:\\.\\d+)?[a-z]?(?:\\s*\\([A-Za-z0-9]+\\))*(?:\\s*[-–]\\s*\\d+(?:\\.\\d+)?[a-z]?(?:\\s*\\([A-Za-z0-9]+\\))*)?",
         "ref_nums": "{{ref_num}}(?:\\s*(?:,|and|&)\\s*{{ref_num}})*",
         "ref_pin": "(?:at\\s+(?:paras?\\.?|pp?\\.?|pages?)?\\s*{{ref_nums}}(?:ff)?|(?:paras?\\.?|ss?\\.?|(?:sub)?sections?|arts?\\.?|articles?)\\s+{{ref_nums}}(?:ff)?)"
@@ -2560,6 +2995,266 @@
               "input": "and then some",
               "groups": null
             }
+          ]
+        },
+        {
+          "id": "ref.back",
+          "pattern": "(?<ibid>\\bibid(?:em)?\\b\\.?|\\bid\\.)|\\b(?<supra>supra)\\b(?:,?\\s+(?:note|n\\.?|nn\\.?)\\s+(?<supra_note>\\d+))?|\\b(?<above>above)\\s+(?:note|n\\.?)\\s+(?<above_note>\\d+)\\b|\\((?<oscola>n\\s+(?<oscola_note>\\d+))\\)|(?<precite>\\bpr[ée]cit[ée]e?s?)\\b(?:,?\\s+(?:note|n)\\s+(?<precite_note>\\d+))?|(?<opcit>\\bop\\.?\\s*cit\\.?)(?:,?\\s+(?:note|n\\.?)\\s+(?<opcit_note>\\d+))?",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Superset of ref.inline.toa and ref.supra-note.linking: Ibid/ibidem, eyecite's Id./id., McGill supra (with or without a note), AGLC 'above n 4', OSCOLA '(n 4)', French précité and op. cit. Each branch is named so the form and the note number are read without a second scan.",
+          "vectors": [
+            {"input": "Ibid at para 38.", "groups": {"ibid": "Ibid"}},
+            {"input": "Id. at 5.", "groups": {"ibid": "Id."}},
+            {"input": "Johnson, supra note 243 at para 19", "groups": {"supra": "supra", "supra_note": "243"}},
+            {"input": "Jordan, supra at para 5", "groups": {"supra": "supra", "supra_note": null}},
+            {"input": "Jordan, above n 4, 353", "groups": {"above": "above", "above_note": "4"}},
+            {"input": "Jordan (n 4) [12]", "groups": {"oscola": "n 4", "oscola_note": "4"}},
+            {"input": "Jordan, précité, au para 12", "groups": {"precite": "précité"}},
+            {"input": "the supranational tribunal paid.", "groups": null}
+          ]
+        },
+        {
+          "id": "ref.note-cross",
+          "pattern": "(?:\\b(?<back>supra|above|op\\.?\\s*cit\\.?)|\\b(?<forward>infra|below)|\\b(?<see>see(?:\\s+also)?|voir(?:\\s+aussi)?))\\s*,?\\s+(?:(?:foot)?notes?|nn?\\.?)\\s+(?<note>\\d{1,4})\\b|\\(n\\s+(?<oscola_note>\\d{1,4})\\)|\\bnotes?\\s+(?<fr_note>\\d{1,4})\\s+(?:(?<fr_back>ci-dessus|supra)|(?<fr_forward>ci-dessous|infra))\\b",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Note cross-references with their direction: supra/above/op. cit. (back), infra/below (forward), see (also) footnote (unspecified), OSCOLA (n 4) and French 'note 4 ci-dessus/ci-dessous'. A superset of legal-structure-parser footnote_pairing.rs CROSSREF.",
+          "vectors": [
+            {"input": "Smith, supra note 4 at 12", "groups": {"back": "supra", "note": "4"}},
+            {"input": "see infra, footnote 12", "groups": {"forward": "infra", "note": "12"}},
+            {"input": "op. cit. note 3", "groups": {"back": "op. cit.", "note": "3"}},
+            {"input": "See also footnote 7.", "groups": {"see": "See also", "note": "7"}},
+            {"input": "Jordan, above n 4", "groups": {"back": "above", "note": "4"}},
+            {"input": "Jordan (n 4) 353", "groups": {"oscola_note": "4"}},
+            {"input": "voir la note 12 ci-dessus", "groups": {"fr_note": "12", "fr_back": "ci-dessus"}},
+            {"input": "the notes were taken", "groups": null}
+          ]
+        },
+        {
+          "id": "ref.antecedent-name",
+          "pattern": "(?<name>[A-ZÀ-ÖØ-Þ0-9][A-Za-zÀ-ÖØ-öø-ÿ0-9.'’&-]*(?:\\s+(?:[A-ZÀ-ÖØ-Þ0-9][A-Za-zÀ-ÖØ-öø-ÿ0-9.'’&-]*|\\([A-ZÀ-ÖØ-Þ][^()\\n]{0,60}\\)|v\\.?|c\\.?|vs\\.?|of|the|and|for|de|la|le|du|des|et|&|re)){0,10})\\s*,?\\s*$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The case name or author written in front of a supra, above n, (n N), précité or short-form reference ('Jordan, supra note 4', 'R v Jordan (n 4)', 'Roe, 410 U.S. at 153'). Anchored at the end of the text before the reference; a leading signal is trimmed by signal.prefix.toa.",
+          "vectors": [
+            {"input": "See Johnson, ", "groups": {"name": "See Johnson"}},
+            {"input": "19 citing Lyons, ", "groups": {"name": "Lyons"}},
+            {"input": "R v Jordan ", "groups": {"name": "R v Jordan"}},
+            {"input": "Côté, ", "groups": {"name": "Côté"}},
+            {"input": "as discussed ", "groups": null}
+          ]
+        },
+        {
+          "id": "ref.history",
+          "pattern": "^[\\s,;]*(?<relation>aff['’]?d|aff['’]?g|affirmed|affirming|rev['’]?d|rev['’]?g|reversed|reversing|var['’]?d|var['’]?g|varied|varying|overruled|overruling|leave\\s+to\\s+appeal(?:\\s+to\\s+(?:the\\s+)?[A-Z][A-Za-z. ]{1,40}?)?\\s+(?:refused|denied|dismissed|granted|allowed)|appeal\\s+(?:dismissed|allowed|quashed|abandoned)|cert\\.?\\s+(?:denied|granted|dismissed)|autorisation\\s+d['’]appel\\s+(?:à\\s+la\\s+(?:CSC|Cour\\s+suprême(?:\\s+du\\s+Canada)?)\\s+)?(?:refusée|accordée)|confirmé(?:e|s)?|infirmé(?:e|s)?|modifié(?:e|s)?|conf\\.|inf\\.)(?<qualifier>\\s+(?:on\\s+other\\s+grounds|in\\s+part|sub\\s+nom\\.?\\s+[^,;]{1,80}?|by|in|on|par|pour\\s+d['’]autres\\s+motifs))?(?:\\s*,?\\s*\\((?<court>[^()]{1,40})\\))?\\s*,?\\s*",
+          "flags": "i",
+          "canonical": {"lowercase": ["relation"]},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Subsequent and prior history read at the start of the gap after a citation: a superset of ref.history.toa (aff'd/rev'd/varied/leave to appeal) that adds overruled, appeal dismissed/allowed, cert. denied, 'leave to appeal to SCC refused' with its court, and the French forms (autorisation d'appel refusée, conf., inf.). The following citation is the one the relation names.",
+          "vectors": [
+            {"input": ", aff'd ", "groups": {"relation": "aff'd"}},
+            {"input": ", rev’g ", "groups": {"relation": "rev’g"}},
+            {"input": ", leave to appeal to SCC refused, ", "groups": {"relation": "leave to appeal to SCC refused"}},
+            {"input": ", appeal dismissed ", "groups": {"relation": "appeal dismissed"}},
+            {"input": " overruled by ", "groups": {"relation": "overruled", "qualifier": " by"}},
+            {"input": ", autorisation d'appel à la CSC refusée, ", "groups": {"relation": "autorisation d'appel à la CSC refusée"}},
+            {"input": " citing ", "groups": null}
+          ]
+        },
+        {
+          "id": "signal.introductory",
+          "pattern": "(?:^|[;(:.,\\n—–]\\s*)(?<signal>{{intro_signal}})\\s*[,:]?\\s*$",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The introductory signal immediately in front of a citation (Bluebook/McGill/AGLC/OSCOLA and French), anchored at the end of the text before the citation. Unlike signal.citation.toa it excludes the relational verbs (citing, aff'd) that belong to explanatory text or ref.history.",
+          "vectors": [
+            {"input": "See ", "groups": {"signal": "See"}},
+            {"input": "; see also ", "groups": {"signal": "see also"}},
+            {"input": "But see, e.g., ", "groups": {"signal": "But see, e.g."}},
+            {"input": "Cf ", "groups": {"signal": "Cf"}},
+            {"input": "Voir aussi ", "groups": {"signal": "Voir aussi"}},
+            {"input": " citing ", "groups": null},
+            {"input": "the court did see ", "groups": null}
+          ]
+        },
+        {
+          "id": "party.versus",
+          "pattern": "\\b(?<versus>v|c|vs|versus)\\.?\\s+",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Moved from legal-citations find.rs CASE_VERSUS ((?i)\\b(?:v|c)\\.?\\s+) and widened to vs/versus: the token that divides a style of cause into its parties, French 'c.' included.",
+          "vectors": [
+            {"input": "R. v. Jordan", "groups": {"versus": "v"}},
+            {"input": "R c Jordan", "groups": {"versus": "c"}},
+            {"input": "Ontario Ltd. V. Marlin", "groups": {"versus": "V"}},
+            {"input": "Smith vs. Jones", "groups": {"versus": "vs"}},
+            {"input": "Québec Inc and others", "groups": null}
+          ]
+        },
+        {
+          "id": "boundary.corporate-suffix",
+          "pattern": "(?:^|[^A-Za-z])(?:Ltd|Ltée|Ltee|Inc|Corp|Co|LLC|LLP|Cie|Bros|Pty|Plc|Mfg|Assn|Intl|Dept|Mr|Mrs|Ms|Dr|Hon|Mt|St|Ste|Jr|Sr|No|Nos)\\.$",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. A period that ends a corporate suffix or title abbreviation is not a sentence end, so '1068490 Ontario Ltd. V. Marlin Center Mobile Homes Inc. and Howard Geisler' stays one style of cause (legal-pdf-language deterministic_citations.rs CORPORATE guard, widened).",
+          "vectors": [
+            {"input": "1068490 Ontario Ltd.", "groups": {}},
+            {"input": "Mobile Homes Inc.", "groups": {}},
+            {"input": "the court held.", "groups": null}
+          ]
+        },
+        {
+          "id": "parenthetical.source",
+          "pattern": "^(?:QL|WL|WL\\s*Can|WLNext|WestlawNext(?:\\s*Canada)?|Westlaw(?:\\s*Can(?:ada)?)?|Quicklaw|Lexis(?:Nexis)?(?:\\s*Q(?:uick)?L(?:aw)?)?|CanLII|BAILII|AustLII|NZLII|vLex|SOQUIJ|Azimut|Carswell|Lexum|Justia|Casetext)$",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The content of a parenthetical that names the database a citation was taken from: (QL), (WL Can), (CanLII).",
+          "vectors": [
+            {"input": "QL", "groups": {}},
+            {"input": "WL Can", "groups": {}},
+            {"input": "CanLII", "groups": {}},
+            {"input": "ON CA", "groups": null}
+          ]
+        },
+        {
+          "id": "parenthetical.court",
+          "pattern": "^(?<court>(?!(?:1[6-9]|20)\\d{2}\\b)(?:[A-Z0-9][A-Za-z0-9'&-]{0,5}\\.?|[A-Z][A-Za-z]*\\.|[A-Z][A-Z.&]{1,11})(?:\\s+(?:[A-Z0-9][A-Za-z0-9'&-]{0,5}\\.?|[A-Z][A-Za-z]*\\.|[A-Z][A-Z.&]{1,11}|of|&)){0,5}?)?\\s*,?\\s*(?<date>(?:(?:(?:1er|\\d{1,2})\\s+)?(?:(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?|(?:janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre))\\s+(?:\\d{1,2},\\s+)?)?(?:1[6-9]|20)\\d{2})?$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The content of a court and/or date parenthetical: (ON CA), (HL), (2d Cir. 1999), (S.D.N.Y. 2001), (1998), (UK). Tokens are short or abbreviated, so explanatory text ('Book of Authorities TAB 17', 'Abella J dissenting') is not read as a court; the court surface is resolved against the registry's aliases.",
+          "vectors": [
+            {"input": "ON CA", "groups": {"court": "ON CA", "date": null}},
+            {"input": "HL", "groups": {"court": "HL"}},
+            {"input": "2d Cir. 1999", "groups": {"court": "2d Cir.", "date": "1999"}},
+            {"input": "S.D.N.Y. Mar. 3, 2001", "groups": {"court": "S.D.N.Y.", "date": "Mar. 3, 2001"}},
+            {"input": "1998", "groups": {"court": null, "date": "1998"}},
+            {"input": "Book of Authorities TAB 17", "groups": null},
+            {"input": "Abella J dissenting", "groups": null}
+          ]
+        },
+        {
+          "id": "style.trailing-date",
+          "pattern": ",\\s*(?:(?:(?:1er|\\d{1,2})\\s+)?(?:(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?|(?:janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre))\\s+(?:\\d{1,2},\\s+)?)?(?:1[6-9]|20)\\d{2}\\s*,?\\s*$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The signature or sitting date between a treaty or instrument title and its series ('Convention ..., 4 November 1950, 213 UNTS 221'), removed before the title grammar reads the style.",
+          "vectors": [
+            {"input": "Convention for the Protection of Human Rights, 4 November 1950, ", "groups": {}},
+            {"input": "Pacte international, 19 décembre 1966, ", "groups": {}},
+            {"input": "Criminal Code, ", "groups": null}
+          ]
+        },
+        {
+          "id": "title.instrument-kind",
+          "pattern": "^(?:(?<constitution>(?:The\\s+)?(?:Constitution\\s+Act|Loi\\s+constitutionnelle|Canadian\\s+Charter\\s+of\\s+Rights|Charte\\s+canadienne\\s+des\\s+droits|Canada\\s+Act\\s+1982|British\\s+North\\s+America\\s+Act|Commonwealth\\s+of\\s+Australia\\s+Constitution\\s+Act|Constitution\\s+of\\s+|Canadian\\s+Bill\\s+of\\s+Rights|Déclaration\\s+canadienne\\s+des\\s+droits|Bill\\s+of\\s+Rights\\b))|(?<court_rule>.*\\b(?:Rules\\s+of\\s+(?:Civil\\s+|Criminal\\s+|Appellate\\s+|Family\\s+)?(?:Procedure|Court|Practice|the\\s+(?:Supreme|Superior|Federal)\\s+Courts?)|Court\\s+Rules|Courts?\\s+Rules|Civil\\s+Procedure\\s+Rules|Criminal\\s+Procedure\\s+Rules|Family\\s+(?:Law\\s+)?Rules|Rules\\s+of\\s+Court|Règles\\s+de\\s+(?:procédure|pratique|la\\s+Cour)|Règles\\s+des\\s+Cours\\s+fédérales)\\b)|(?<treaty>.*\\b(?:Convention|Treaty|Protocol|Covenant|Pact|Agreement|Accord|Traité|Pacte|Protocole|Charter\\s+of\\s+the\\s+United\\s+Nations|Statute\\s+of\\s+the\\s+International|Rome\\s+Statute)\\b)|(?<regulation>.*\\b(?:Regulations?|Règlement|Order|Ordonnance|Rules)\\b))",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The kind of legislative instrument a statute-shaped citation's title names: a constitutional instrument, court rules, a treaty or a regulation. Read on the style text only; a title that matches none is a statute.",
+          "vectors": [
+            {"input": "Constitution Act, 1982", "groups": {"constitution": "Constitution Act"}},
+            {"input": "Rules of Civil Procedure", "groups": {"court_rule": "Rules of Civil Procedure"}},
+            {"input": "Federal Courts Rules", "groups": {"court_rule": "Federal Courts Rules"}},
+            {"input": "Convention on the Rights of the Child", "groups": {"treaty": "Convention"}},
+            {"input": "Food and Drug Regulations", "groups": {"regulation": "Food and Drug Regulations"}},
+            {"input": "Criminal Code", "groups": null}
+          ]
+        },
+        {
+          "id": "title.book-chapter",
+          "pattern": "[\\\"”“]\\s*,?\\s+(?:in|dans)\\s+[A-ZÀ-ÖØ-Þ].*\\b(?:eds?|éds?|dir)\\b\\.?|\\b(?:in|dans)\\s+[A-ZÀ-ÖØ-Þ][^,]{0,80},\\s*(?:eds?|éds?|dir)\\b\\.?",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The 'in Editor, ed, Title' lead-in that makes a work cited with a book imprint a chapter of an edited collection rather than a monograph (the essay_collection test in legal-pdf-language deterministic_citations.rs kind()).",
+          "vectors": [
+            {"input": "Kasperbauer, \"Killing\" in Visak, ed, The Ethics of Killing", "groups": {}},
+            {"input": "Jane Doe, “Title” in John Roe & Mary Poe, eds, Collected Essays", "groups": {}},
+            {"input": "Peter Hogg, Constitutional Law of Canada", "groups": null}
+          ]
+        },
+        {
+          "id": "cite.section-symbol",
+          "pattern": "(?<symbol>§§?)\\s*(?<section>\\d+[A-Za-z]?(?:[.:\\-]\\d+[A-Za-z]?)*(?:\\([A-Za-z0-9]{1,4}\\))*)",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. eyecite's UnknownCitation: a bare section symbol ('§ 1983') that belongs to no recognized citation, kept so a following Id. never attaches to the wrong authority.",
+          "vectors": [
+            {"input": "under § 1983 the claim", "groups": {"symbol": "§", "section": "1983"}},
+            {"input": "§§ 12(a)", "groups": {"section": "12(a)"}},
+            {"input": "section 12", "groups": null}
+          ]
+        },
+        {
+          "id": "signal.introductory.prefix",
+          "pattern": "^(?<signal>{{intro_signal}})\\s*[,:]?\\s+",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The start-anchored twin of signal.introductory (same intro_signal def): trims an introductory signal, French included ('Voir', 'Voir aussi', 'Comparer'), from the front of a styled span, which signal.prefix.toa alone cannot.",
+          "vectors": [
+            {"input": "Voir R c Jordan", "groups": {"signal": "Voir"}},
+            {"input": "See also, Smith v Jones", "groups": {"signal": "See also"}},
+            {"input": "Seeley v Smith", "groups": null}
+          ]
+        }
+      ]
+    },
+    "excerpt": {
+      "description": "Grammars for the citator excerpt classifier (legal-citations excerpt.rs), moved verbatim from its inline regexes. Compiled in the ECMAScript dialect.",
+      "entries": [
+        {
+          "id": "excerpt.name-leadin",
+          "pattern": "(?:[A-Z][\\w.'’()‑-]*(?:\\s+[\\w.'’()‑-]+){0,6}\\s+(?:v|c)\\.\\s+[A-Z][\\w.'’()‑-]*(?:\\s+[\\w.'’()‑-]+){0,6},?\\s*)$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved verbatim from legal-citations excerpt.rs NAME_LEADIN (legal-structure-parser citator.rs): a dotted two-party style of cause ending at the citation it leads into.",
+          "vectors": [
+            {"input": "In R. v. Jordan, ", "groups": {}},
+            {"input": "the court held that ", "groups": null}
+          ]
+        },
+        {
+          "id": "excerpt.pinpoint",
+          "pattern": "^\\s*(?:,\\s*)?(?:at\\s+)?para?s?\\.?\\s+\\d+(?:\\s*[-–]\\s*\\d+)?",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved verbatim from legal-citations excerpt.rs PINPOINT: a paragraph pinpoint trailing a citation in a quoted excerpt.",
+          "vectors": [
+            {"input": " at paras 12-14 the court", "groups": {}},
+            {"input": ", para 5", "groups": {}},
+            {"input": " the court", "groups": null}
+          ]
+        },
+        {
+          "id": "excerpt.glue",
+          "pattern": "^[\\s,;]*(?:and\\s+)?$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved verbatim from legal-citations excerpt.rs GLUE: the punctuation that merges adjacent citation spans into one run.",
+          "vectors": [
+            {"input": "; ", "groups": {}},
+            {"input": ", and ", "groups": {}},
+            {"input": " held ", "groups": null}
+          ]
+        },
+        {
+          "id": "excerpt.window-first",
+          "pattern": "^\\S*\\s+",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved verbatim from legal-citations excerpt.rs trim_window_edges FIRST: the possibly truncated first word of a prose window.",
+          "vectors": [
+            {"input": "ment of the court", "groups": {}},
+            {"input": "single", "groups": null}
+          ]
+        },
+        {
+          "id": "excerpt.window-last",
+          "pattern": "\\s+\\S*$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Moved verbatim from legal-citations excerpt.rs trim_window_edges LAST: the possibly truncated last word of a prose window.",
+          "vectors": [
+            {"input": "the court he", "groups": {}},
+            {"input": "single", "groups": null}
           ]
         }
       ]

@@ -1,0 +1,57 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "experiments/a2aj_decision_roster_qwen/scratch/semantic_mvp_candidates.ts",
+  "table": "datasets",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "SCC"
+  },
+  {
+   "key": "BCCA"
+  },
+  {
+   "key": "BCSC"
+  },
+  {
+   "key": "ONCA"
+  },
+  {
+   "key": "NSCA"
+  },
+  {
+   "key": "NSSC"
+  },
+  {
+   "key": "YKCA"
+  },
+  {
+   "key": "FCA"
+  },
+  {
+   "key": "FC"
+  },
+  {
+   "key": "TCC"
+  },
+  {
+   "key": "CHRT"
+  },
+  {
+   "key": "CITT"
+  },
+  {
+   "key": "RAD"
+  },
+  {
+   "key": "RPD"
+  },
+  {
+   "key": "FPSLREB"
+  }
+ ]
+}

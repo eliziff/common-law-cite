@@ -1,1 +1,8029 @@
-[]
+[
+ {
+  "id": "scr",
+  "name": {
+   "en": "Canada Supreme Court Reports",
+   "fr": "Recueils des arrêts de la Cour suprême du Canada"
+  },
+  "kind": "official",
+  "jurisdiction": "ca",
+  "courts": [
+   "scc"
+  ],
+  "editions": [
+   {
+    "abbreviation": "SCR",
+    "start": 1876
+   }
+  ],
+  "variations": {
+   "RCS": "SCR"
+  },
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "fcr",
+  "name": {
+   "en": "Federal Court Reports",
+   "fr": "Recueil des décisions des Cours fédérales"
+  },
+  "kind": "official",
+  "jurisdiction": "ca",
+  "courts": [
+   "fc",
+   "fca"
+  ],
+  "editions": [
+   {
+    "abbreviation": "FC",
+    "start": 1971,
+    "end": 1997
+   },
+   {
+    "abbreviation": "FCR",
+    "start": 1998
+   }
+  ],
+  "variations": {
+   "RCF": "FCR",
+   "CF": "FC"
+  },
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "excr",
+  "name": {
+   "en": "Exchequer Court of Canada Reports",
+   "fr": "Recueil des arrêts de la Cour de l'Échiquier"
+  },
+  "kind": "official",
+  "jurisdiction": "ca",
+  "courts": [
+   "exch"
+  ],
+  "editions": [
+   {
+    "abbreviation": "Ex CR",
+    "start": 1875,
+    "end": 1971
+   }
+  ],
+  "variations": {
+   "RC de l'É": "Ex CR",
+   "Exch CR": "Ex CR"
+  },
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "dlr",
+  "name": {
+   "en": "Dominion Law Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "DLR"
+   },
+   {
+    "abbreviation": "DLR (2d)"
+   },
+   {
+    "abbreviation": "DLR (3d)"
+   },
+   {
+    "abbreviation": "DLR (4th)"
+   },
+   {
+    "abbreviation": "DLR (5th)"
+   }
+  ],
+  "variations": {
+   "DLR (2nd)": "DLR (2d)",
+   "DLR (2e)": "DLR (2d)",
+   "DLR (3rd)": "DLR (3d)",
+   "DLR (3e)": "DLR (3d)",
+   "DLR (4e)": "DLR (4th)",
+   "DLR (5e)": "DLR (5th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "nr",
+  "name": {
+   "en": "National Reporter"
+  },
+  "kind": "general",
+  "jurisdiction": "ca",
+  "courts": [
+   "scc",
+   "fca"
+  ],
+  "editions": [
+   {
+    "abbreviation": "NR"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "ftr",
+  "name": {
+   "en": "Federal Trial Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca",
+  "courts": [
+   "fc"
+  ],
+  "editions": [
+   {
+    "abbreviation": "FTR"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "or",
+  "name": {
+   "en": "Ontario Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-on",
+  "editions": [
+   {
+    "abbreviation": "OR"
+   },
+   {
+    "abbreviation": "OR (2d)"
+   },
+   {
+    "abbreviation": "OR (3d)"
+   }
+  ],
+  "variations": {
+   "OR (2nd)": "OR (2d)",
+   "OR (2e)": "OR (2d)",
+   "OR (3rd)": "OR (3d)",
+   "OR (3e)": "OR (3d)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "olr",
+  "name": {
+   "en": "Ontario Law Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-on",
+  "editions": [
+   {
+    "abbreviation": "OLR",
+    "start": 1901,
+    "end": 1931
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "own",
+  "name": {
+   "en": "Ontario Weekly Notes"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-on",
+  "editions": [
+   {
+    "abbreviation": "OWN"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "oac",
+  "name": {
+   "en": "Ontario Appeal Cases"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-on",
+  "courts": [
+   "onca",
+   "onscdc"
+  ],
+  "editions": [
+   {
+    "abbreviation": "OAC"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "wwr",
+  "name": {
+   "en": "Western Weekly Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "WWR"
+   },
+   {
+    "abbreviation": "WWR (NS)"
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "bclr",
+  "name": {
+   "en": "British Columbia Law Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-bc",
+  "editions": [
+   {
+    "abbreviation": "BCLR"
+   },
+   {
+    "abbreviation": "BCLR (2d)"
+   },
+   {
+    "abbreviation": "BCLR (3d)"
+   },
+   {
+    "abbreviation": "BCLR (4th)"
+   },
+   {
+    "abbreviation": "BCLR (5th)"
+   },
+   {
+    "abbreviation": "BCLR (6th)"
+   }
+  ],
+  "variations": {
+   "BCLR (2nd)": "BCLR (2d)",
+   "BCLR (2e)": "BCLR (2d)",
+   "BCLR (3rd)": "BCLR (3d)",
+   "BCLR (3e)": "BCLR (3d)",
+   "BCLR (4e)": "BCLR (4th)",
+   "BCLR (5e)": "BCLR (5th)",
+   "BCLR (6e)": "BCLR (6th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "bcr",
+  "name": {
+   "en": "British Columbia Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-bc",
+  "editions": [
+   {
+    "abbreviation": "BCR",
+    "start": 1867,
+    "end": 1947
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "bcac",
+  "name": {
+   "en": "British Columbia Appeal Cases"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-bc",
+  "courts": [
+   "bcca",
+   "ykca"
+  ],
+  "editions": [
+   {
+    "abbreviation": "BCAC"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "wac",
+  "name": {
+   "en": "Western Appeal Cases"
+  },
+  "kind": "general",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "WAC"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "ar",
+  "name": {
+   "en": "Alberta Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-ab",
+  "editions": [
+   {
+    "abbreviation": "AR"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "altalr",
+  "name": {
+   "en": "Alberta Law Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-ab",
+  "editions": [
+   {
+    "abbreviation": "Alta LR"
+   },
+   {
+    "abbreviation": "Alta LR (2d)"
+   },
+   {
+    "abbreviation": "Alta LR (3d)"
+   },
+   {
+    "abbreviation": "Alta LR (4th)"
+   },
+   {
+    "abbreviation": "Alta LR (5th)"
+   },
+   {
+    "abbreviation": "Alta LR (6th)"
+   },
+   {
+    "abbreviation": "Alta LR (7th)"
+   }
+  ],
+  "variations": {
+   "Alta LR (2nd)": "Alta LR (2d)",
+   "Alta LR (2e)": "Alta LR (2d)",
+   "Alta LR (3rd)": "Alta LR (3d)",
+   "Alta LR (3e)": "Alta LR (3d)",
+   "Alta LR (4e)": "Alta LR (4th)",
+   "Alta LR (5e)": "Alta LR (5th)",
+   "Alta LR (6e)": "Alta LR (6th)",
+   "Alta LR (7e)": "Alta LR (7th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "saskr",
+  "name": {
+   "en": "Saskatchewan Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-sk",
+  "editions": [
+   {
+    "abbreviation": "Sask R"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "sasklr",
+  "name": {
+   "en": "Saskatchewan Law Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-sk",
+  "editions": [
+   {
+    "abbreviation": "Sask LR",
+    "start": 1907,
+    "end": 1931
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "manr",
+  "name": {
+   "en": "Manitoba Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-mb",
+  "editions": [
+   {
+    "abbreviation": "Man R"
+   },
+   {
+    "abbreviation": "Man R (2d)"
+   }
+  ],
+  "variations": {
+   "Man R (2nd)": "Man R (2d)",
+   "Man R (2e)": "Man R (2d)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "nbr",
+  "name": {
+   "en": "New Brunswick Reports",
+   "fr": "Recueil des arrêts du Nouveau-Brunswick"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-nb",
+  "editions": [
+   {
+    "abbreviation": "NBR"
+   },
+   {
+    "abbreviation": "NBR (2d)"
+   }
+  ],
+  "variations": {
+   "RN-B": "NBR",
+   "NBR (2nd)": "NBR (2d)",
+   "RN-B (2e)": "NBR (2d)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "nsr",
+  "name": {
+   "en": "Nova Scotia Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-ns",
+  "editions": [
+   {
+    "abbreviation": "NSR"
+   },
+   {
+    "abbreviation": "NSR (2d)"
+   }
+  ],
+  "variations": {
+   "NSR (2nd)": "NSR (2d)",
+   "NSR (2e)": "NSR (2d)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "nfldpeir",
+  "name": {
+   "en": "Newfoundland and Prince Edward Island Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "Nfld & PEIR"
+   }
+  ],
+  "variations": {
+   "Nfld and PEIR": "Nfld & PEIR"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "apr",
+  "name": {
+   "en": "Atlantic Provinces Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "APR"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "qac",
+  "name": {
+   "en": "Quebec Appeal Cases"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-qc",
+  "editions": [
+   {
+    "abbreviation": "QAC"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "rjq",
+  "name": {
+   "en": "Recueils de jurisprudence du Québec",
+   "fr": "Recueils de jurisprudence du Québec"
+  },
+  "kind": "official",
+  "jurisdiction": "ca-qc",
+  "editions": [
+   {
+    "abbreviation": "RJQ",
+    "start": 1986
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "rdj",
+  "name": {
+   "en": "Revue de droit judiciaire",
+   "fr": "Revue de droit judiciaire"
+  },
+  "kind": "general",
+  "jurisdiction": "ca-qc",
+  "editions": [
+   {
+    "abbreviation": "RDJ"
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "ccc",
+  "name": {
+   "en": "Canadian Criminal Cases"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CCC"
+   },
+   {
+    "abbreviation": "CCC (NS)"
+   },
+   {
+    "abbreviation": "CCC (2d)"
+   },
+   {
+    "abbreviation": "CCC (3d)"
+   }
+  ],
+  "variations": {
+   "CCC (2nd)": "CCC (2d)",
+   "CCC (2e)": "CCC (2d)",
+   "CCC (3rd)": "CCC (3d)",
+   "CCC (3e)": "CCC (3d)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "cr",
+  "name": {
+   "en": "Criminal Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CR"
+   },
+   {
+    "abbreviation": "CR (NS)"
+   },
+   {
+    "abbreviation": "CR (3d)"
+   },
+   {
+    "abbreviation": "CR (4th)"
+   },
+   {
+    "abbreviation": "CR (5th)"
+   },
+   {
+    "abbreviation": "CR (6th)"
+   },
+   {
+    "abbreviation": "CR (7th)"
+   },
+   {
+    "abbreviation": "CR (8th)"
+   }
+  ],
+  "variations": {
+   "CR (3rd)": "CR (3d)",
+   "CR (3e)": "CR (3d)",
+   "CR (4e)": "CR (4th)",
+   "CR (5e)": "CR (5th)",
+   "CR (6e)": "CR (6th)",
+   "CR (7e)": "CR (7th)",
+   "CR (8e)": "CR (8th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "crr",
+  "name": {
+   "en": "Canadian Rights Reporter"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CRR"
+   },
+   {
+    "abbreviation": "CRR (2d)"
+   }
+  ],
+  "variations": {
+   "CRR (2nd)": "CRR (2d)",
+   "CRR (2e)": "CRR (2d)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "cpr",
+  "name": {
+   "en": "Canadian Patent Reporter"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CPR"
+   },
+   {
+    "abbreviation": "CPR (2d)"
+   },
+   {
+    "abbreviation": "CPR (3d)"
+   },
+   {
+    "abbreviation": "CPR (4th)"
+   }
+  ],
+  "variations": {
+   "CPR (2nd)": "CPR (2d)",
+   "CPR (2e)": "CPR (2d)",
+   "CPR (3rd)": "CPR (3d)",
+   "CPR (3e)": "CPR (3d)",
+   "CPR (4e)": "CPR (4th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "foxpatc",
+  "name": {
+   "en": "Fox's Patent Cases"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "Fox Pat C"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "ccel",
+  "name": {
+   "en": "Canadian Cases on Employment Law"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CCEL"
+   },
+   {
+    "abbreviation": "CCEL (2d)"
+   },
+   {
+    "abbreviation": "CCEL (3d)"
+   },
+   {
+    "abbreviation": "CCEL (4th)"
+   }
+  ],
+  "variations": {
+   "CCEL (2nd)": "CCEL (2d)",
+   "CCEL (2e)": "CCEL (2d)",
+   "CCEL (3rd)": "CCEL (3d)",
+   "CCEL (3e)": "CCEL (3d)",
+   "CCEL (4e)": "CCEL (4th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "rfl",
+  "name": {
+   "en": "Reports of Family Law"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "RFL"
+   },
+   {
+    "abbreviation": "RFL (2d)"
+   },
+   {
+    "abbreviation": "RFL (3d)"
+   },
+   {
+    "abbreviation": "RFL (4th)"
+   },
+   {
+    "abbreviation": "RFL (5th)"
+   },
+   {
+    "abbreviation": "RFL (6th)"
+   },
+   {
+    "abbreviation": "RFL (7th)"
+   },
+   {
+    "abbreviation": "RFL (8th)"
+   },
+   {
+    "abbreviation": "RFL (9th)"
+   }
+  ],
+  "variations": {
+   "RFL (2nd)": "RFL (2d)",
+   "RFL (2e)": "RFL (2d)",
+   "RFL (3rd)": "RFL (3d)",
+   "RFL (3e)": "RFL (3d)",
+   "RFL (4e)": "RFL (4th)",
+   "RFL (5e)": "RFL (5th)",
+   "RFL (6e)": "RFL (6th)",
+   "RFL (7e)": "RFL (7th)",
+   "RFL (8e)": "RFL (8th)",
+   "RFL (9e)": "RFL (9th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "etr",
+  "name": {
+   "en": "Estates and Trusts Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "ETR"
+   },
+   {
+    "abbreviation": "ETR (2d)"
+   },
+   {
+    "abbreviation": "ETR (3d)"
+   },
+   {
+    "abbreviation": "ETR (4th)"
+   }
+  ],
+  "variations": {
+   "ETR (2nd)": "ETR (2d)",
+   "ETR (2e)": "ETR (2d)",
+   "ETR (3rd)": "ETR (3d)",
+   "ETR (3e)": "ETR (3d)",
+   "ETR (4e)": "ETR (4th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "blr",
+  "name": {
+   "en": "Business Law Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "BLR"
+   },
+   {
+    "abbreviation": "BLR (2d)"
+   },
+   {
+    "abbreviation": "BLR (3d)"
+   },
+   {
+    "abbreviation": "BLR (4th)"
+   },
+   {
+    "abbreviation": "BLR (5th)"
+   },
+   {
+    "abbreviation": "BLR (6th)"
+   }
+  ],
+  "variations": {
+   "BLR (2nd)": "BLR (2d)",
+   "BLR (2e)": "BLR (2d)",
+   "BLR (3rd)": "BLR (3d)",
+   "BLR (3e)": "BLR (3d)",
+   "BLR (4e)": "BLR (4th)",
+   "BLR (5e)": "BLR (5th)",
+   "BLR (6e)": "BLR (6th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "cclt",
+  "name": {
+   "en": "Canadian Cases on the Law of Torts"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CCLT"
+   },
+   {
+    "abbreviation": "CCLT (2d)"
+   },
+   {
+    "abbreviation": "CCLT (3d)"
+   },
+   {
+    "abbreviation": "CCLT (4th)"
+   },
+   {
+    "abbreviation": "CCLT (5th)"
+   }
+  ],
+  "variations": {
+   "CCLT (2nd)": "CCLT (2d)",
+   "CCLT (2e)": "CCLT (2d)",
+   "CCLT (3rd)": "CCLT (3d)",
+   "CCLT (3e)": "CCLT (3d)",
+   "CCLT (4e)": "CCLT (4th)",
+   "CCLT (5e)": "CCLT (5th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "mplr",
+  "name": {
+   "en": "Municipal and Planning Law Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "MPLR"
+   },
+   {
+    "abbreviation": "MPLR (2d)"
+   },
+   {
+    "abbreviation": "MPLR (3d)"
+   },
+   {
+    "abbreviation": "MPLR (4th)"
+   },
+   {
+    "abbreviation": "MPLR (5th)"
+   },
+   {
+    "abbreviation": "MPLR (6th)"
+   }
+  ],
+  "variations": {
+   "MPLR (2nd)": "MPLR (2d)",
+   "MPLR (2e)": "MPLR (2d)",
+   "MPLR (3rd)": "MPLR (3d)",
+   "MPLR (3e)": "MPLR (3d)",
+   "MPLR (4e)": "MPLR (4th)",
+   "MPLR (5e)": "MPLR (5th)",
+   "MPLR (6e)": "MPLR (6th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "adminlr",
+  "name": {
+   "en": "Administrative Law Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "Admin LR"
+   },
+   {
+    "abbreviation": "Admin LR (2d)"
+   },
+   {
+    "abbreviation": "Admin LR (3d)"
+   },
+   {
+    "abbreviation": "Admin LR (4th)"
+   },
+   {
+    "abbreviation": "Admin LR (5th)"
+   },
+   {
+    "abbreviation": "Admin LR (6th)"
+   },
+   {
+    "abbreviation": "Admin LR (7th)"
+   }
+  ],
+  "variations": {
+   "Admin LR (2nd)": "Admin LR (2d)",
+   "Admin LR (2e)": "Admin LR (2d)",
+   "Admin LR (3rd)": "Admin LR (3d)",
+   "Admin LR (3e)": "Admin LR (3d)",
+   "Admin LR (4e)": "Admin LR (4th)",
+   "Admin LR (5e)": "Admin LR (5th)",
+   "Admin LR (6e)": "Admin LR (6th)",
+   "Admin LR (7e)": "Admin LR (7th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "celr",
+  "name": {
+   "en": "Canadian Environmental Law Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CELR"
+   },
+   {
+    "abbreviation": "CELR (NS)"
+   },
+   {
+    "abbreviation": "CELR (3d)"
+   },
+   {
+    "abbreviation": "CELR (4th)"
+   }
+  ],
+  "variations": {
+   "CELR (3rd)": "CELR (3d)",
+   "CELR (3e)": "CELR (3d)",
+   "CELR (4e)": "CELR (4th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "clr",
+  "name": {
+   "en": "Construction Law Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CLR"
+   },
+   {
+    "abbreviation": "CLR (2d)"
+   },
+   {
+    "abbreviation": "CLR (3d)"
+   },
+   {
+    "abbreviation": "CLR (4th)"
+   },
+   {
+    "abbreviation": "CLR (5th)"
+   }
+  ],
+  "variations": {
+   "CLR (2nd)": "CLR (2d)",
+   "CLR (2e)": "CLR (2d)",
+   "CLR (3rd)": "CLR (3d)",
+   "CLR (3e)": "CLR (3d)",
+   "CLR (4e)": "CLR (4th)",
+   "CLR (5e)": "CLR (5th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "ctc",
+  "name": {
+   "en": "Canada Tax Cases"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CTC"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "dtc",
+  "name": {
+   "en": "Dominion Tax Cases"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "DTC"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "immlr",
+  "name": {
+   "en": "Immigration Law Reporter"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "Imm LR"
+   },
+   {
+    "abbreviation": "Imm LR (2d)"
+   },
+   {
+    "abbreviation": "Imm LR (3d)"
+   },
+   {
+    "abbreviation": "Imm LR (4th)"
+   }
+  ],
+  "variations": {
+   "Imm LR (2nd)": "Imm LR (2d)",
+   "Imm LR (2e)": "Imm LR (2d)",
+   "Imm LR (3rd)": "Imm LR (3d)",
+   "Imm LR (3e)": "Imm LR (3d)",
+   "Imm LR (4e)": "Imm LR (4th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "cpc",
+  "name": {
+   "en": "Carswell's Practice Cases"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CPC"
+   },
+   {
+    "abbreviation": "CPC (2d)"
+   },
+   {
+    "abbreviation": "CPC (3d)"
+   },
+   {
+    "abbreviation": "CPC (4th)"
+   },
+   {
+    "abbreviation": "CPC (5th)"
+   },
+   {
+    "abbreviation": "CPC (6th)"
+   },
+   {
+    "abbreviation": "CPC (7th)"
+   },
+   {
+    "abbreviation": "CPC (8th)"
+   }
+  ],
+  "variations": {
+   "CPC (2nd)": "CPC (2d)",
+   "CPC (2e)": "CPC (2d)",
+   "CPC (3rd)": "CPC (3d)",
+   "CPC (3e)": "CPC (3d)",
+   "CPC (4e)": "CPC (4th)",
+   "CPC (5e)": "CPC (5th)",
+   "CPC (6e)": "CPC (6th)",
+   "CPC (7e)": "CPC (7th)",
+   "CPC (8e)": "CPC (8th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "rpr",
+  "name": {
+   "en": "Real Property Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "RPR"
+   },
+   {
+    "abbreviation": "RPR (2d)"
+   },
+   {
+    "abbreviation": "RPR (3d)"
+   },
+   {
+    "abbreviation": "RPR (4th)"
+   },
+   {
+    "abbreviation": "RPR (5th)"
+   },
+   {
+    "abbreviation": "RPR (6th)"
+   }
+  ],
+  "variations": {
+   "RPR (2nd)": "RPR (2d)",
+   "RPR (2e)": "RPR (2d)",
+   "RPR (3rd)": "RPR (3d)",
+   "RPR (3e)": "RPR (3d)",
+   "RPR (4e)": "RPR (4th)",
+   "RPR (5e)": "RPR (5th)",
+   "RPR (6e)": "RPR (6th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "cbr",
+  "name": {
+   "en": "Canadian Bankruptcy Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CBR"
+   },
+   {
+    "abbreviation": "CBR (NS)"
+   },
+   {
+    "abbreviation": "CBR (3d)"
+   },
+   {
+    "abbreviation": "CBR (4th)"
+   },
+   {
+    "abbreviation": "CBR (5th)"
+   },
+   {
+    "abbreviation": "CBR (6th)"
+   },
+   {
+    "abbreviation": "CBR (7th)"
+   }
+  ],
+  "variations": {
+   "CBR (3rd)": "CBR (3d)",
+   "CBR (3e)": "CBR (3d)",
+   "CBR (4e)": "CBR (4th)",
+   "CBR (5e)": "CBR (5th)",
+   "CBR (6e)": "CBR (6th)",
+   "CBR (7e)": "CBR (7th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "ccli",
+  "name": {
+   "en": "Canadian Cases on the Law of Insurance"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CCLI"
+   },
+   {
+    "abbreviation": "CCLI (2d)"
+   },
+   {
+    "abbreviation": "CCLI (3d)"
+   },
+   {
+    "abbreviation": "CCLI (4th)"
+   },
+   {
+    "abbreviation": "CCLI (5th)"
+   },
+   {
+    "abbreviation": "CCLI (6th)"
+   }
+  ],
+  "variations": {
+   "CCLI (2nd)": "CCLI (2d)",
+   "CCLI (2e)": "CCLI (2d)",
+   "CCLI (3rd)": "CCLI (3d)",
+   "CCLI (3e)": "CCLI (3d)",
+   "CCLI (4e)": "CCLI (4th)",
+   "CCLI (5e)": "CCLI (5th)",
+   "CCLI (6e)": "CCLI (6th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "mvr",
+  "name": {
+   "en": "Motor Vehicle Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "MVR"
+   },
+   {
+    "abbreviation": "MVR (2d)"
+   },
+   {
+    "abbreviation": "MVR (3d)"
+   },
+   {
+    "abbreviation": "MVR (4th)"
+   },
+   {
+    "abbreviation": "MVR (5th)"
+   },
+   {
+    "abbreviation": "MVR (6th)"
+   },
+   {
+    "abbreviation": "MVR (7th)"
+   }
+  ],
+  "variations": {
+   "MVR (2nd)": "MVR (2d)",
+   "MVR (2e)": "MVR (2d)",
+   "MVR (3rd)": "MVR (3d)",
+   "MVR (3e)": "MVR (3d)",
+   "MVR (4e)": "MVR (4th)",
+   "MVR (5e)": "MVR (5th)",
+   "MVR (6e)": "MVR (6th)",
+   "MVR (7e)": "MVR (7th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "cnlr",
+  "name": {
+   "en": "Canadian Native Law Reporter"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CNLR"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "cllc",
+  "name": {
+   "en": "Canadian Labour Law Cases"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CLLC"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "lac",
+  "name": {
+   "en": "Labour Arbitration Cases"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "LAC"
+   },
+   {
+    "abbreviation": "LAC (2d)"
+   },
+   {
+    "abbreviation": "LAC (3d)"
+   },
+   {
+    "abbreviation": "LAC (4th)"
+   }
+  ],
+  "variations": {
+   "LAC (2nd)": "LAC (2d)",
+   "LAC (2e)": "LAC (2d)",
+   "LAC (3rd)": "LAC (3d)",
+   "LAC (3e)": "LAC (3d)",
+   "LAC (4e)": "LAC (4th)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "chrr",
+  "name": {
+   "en": "Canadian Human Rights Reporter"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CHRR"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "lcr",
+  "name": {
+   "en": "Land Compensation Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "LCR"
+   },
+   {
+    "abbreviation": "LCR (2d)"
+   }
+  ],
+  "variations": {
+   "LCR (2nd)": "LCR (2d)",
+   "LCR (2e)": "LCR (2d)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "cmar",
+  "name": {
+   "en": "Court Martial Appeal Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "courts": [
+   "cmac"
+  ],
+  "editions": [
+   {
+    "abbreviation": "CMAR"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "ccpb",
+  "name": {
+   "en": "Canadian Cases on Pensions and Benefits"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CCPB"
+   },
+   {
+    "abbreviation": "CCPB (2d)"
+   }
+  ],
+  "variations": {
+   "CCPB (2nd)": "CCPB (2d)",
+   "CCPB (2e)": "CCPB (2d)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "acws",
+  "name": {
+   "en": "All Canada Weekly Summaries"
+  },
+  "kind": "digest",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "ACWS"
+   },
+   {
+    "abbreviation": "ACWS (2d)"
+   },
+   {
+    "abbreviation": "ACWS (3d)"
+   }
+  ],
+  "variations": {
+   "ACWS (2nd)": "ACWS (2d)",
+   "ACWS (2e)": "ACWS (2d)",
+   "ACWS (3rd)": "ACWS (3d)",
+   "ACWS (3e)": "ACWS (3d)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "wcb",
+  "name": {
+   "en": "Weekly Criminal Bulletin"
+  },
+  "kind": "digest",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "WCB"
+   },
+   {
+    "abbreviation": "WCB (2d)"
+   }
+  ],
+  "variations": {
+   "WCB (2nd)": "WCB (2d)",
+   "WCB (2e)": "WCB (2d)"
+  },
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "awld",
+  "name": {
+   "en": "Alberta Weekly Law Digest"
+  },
+  "kind": "digest",
+  "jurisdiction": "ca-ab",
+  "editions": [
+   {
+    "abbreviation": "AWLD"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "bcwld",
+  "name": {
+   "en": "British Columbia Weekly Law Digest"
+  },
+  "kind": "digest",
+  "jurisdiction": "ca-bc",
+  "editions": [
+   {
+    "abbreviation": "BCWLD"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "wdfl",
+  "name": {
+   "en": "Weekly Digest of Family Law"
+  },
+  "kind": "digest",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "WDFL"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "dte",
+  "name": {
+   "en": "Droit du travail Express",
+   "fr": "Droit du travail Express"
+  },
+  "kind": "digest",
+  "jurisdiction": "ca-qc",
+  "editions": [
+   {
+    "abbreviation": "DTE"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "je",
+  "name": {
+   "en": "Jurisprudence Express",
+   "fr": "Jurisprudence Express"
+  },
+  "kind": "digest",
+  "jurisdiction": "ca-qc",
+  "editions": [
+   {
+    "abbreviation": "JE"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "carswell",
+  "name": {
+   "en": "Westlaw Canada (Carswell)"
+  },
+  "kind": "database",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "CarswellNat"
+   },
+   {
+    "abbreviation": "CarswellOnt"
+   },
+   {
+    "abbreviation": "CarswellBC"
+   },
+   {
+    "abbreviation": "CarswellAlta"
+   },
+   {
+    "abbreviation": "CarswellSask"
+   },
+   {
+    "abbreviation": "CarswellMan"
+   },
+   {
+    "abbreviation": "CarswellQue"
+   },
+   {
+    "abbreviation": "CarswellNB"
+   },
+   {
+    "abbreviation": "CarswellNS"
+   },
+   {
+    "abbreviation": "CarswellNfld"
+   },
+   {
+    "abbreviation": "CarswellPEI"
+   },
+   {
+    "abbreviation": "CarswellYukon"
+   },
+   {
+    "abbreviation": "CarswellNWT"
+   },
+   {
+    "abbreviation": "CarswellNun"
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "ql",
+  "name": {
+   "en": "Quicklaw (Lexis Advance Quicklaw)"
+  },
+  "kind": "database",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "SCJ No"
+   },
+   {
+    "abbreviation": "SCCA No"
+   },
+   {
+    "abbreviation": "FCJ No"
+   },
+   {
+    "abbreviation": "OJ No"
+   },
+   {
+    "abbreviation": "BCJ No"
+   },
+   {
+    "abbreviation": "AJ No"
+   },
+   {
+    "abbreviation": "SJ No"
+   },
+   {
+    "abbreviation": "MJ No"
+   },
+   {
+    "abbreviation": "QJ No"
+   },
+   {
+    "abbreviation": "NBJ No"
+   },
+   {
+    "abbreviation": "NSJ No"
+   },
+   {
+    "abbreviation": "NJ No"
+   },
+   {
+    "abbreviation": "PEIJ No"
+   },
+   {
+    "abbreviation": "YJ No"
+   },
+   {
+    "abbreviation": "NWTJ No"
+   },
+   {
+    "abbreviation": "NuJ No"
+   },
+   {
+    "abbreviation": "ACWSJ No"
+   }
+  ],
+  "variations": {
+   "ACS no": "SCJ No",
+   "ACF no": "FCJ No",
+   "JQ no": "QJ No",
+   "ACWSJ": "ACWSJ No"
+  },
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "wl",
+  "name": {
+   "en": "Westlaw"
+  },
+  "kind": "database",
+  "editions": [
+   {
+    "abbreviation": "WL"
+   }
+  ],
+  "variations": {
+   "WL Can": "WL",
+   "WLNR": "WL"
+  },
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "eyb",
+  "name": {
+   "en": "La Référence (Éditions Yvon Blais)"
+  },
+  "kind": "database",
+  "jurisdiction": "ca-qc",
+  "editions": [
+   {
+    "abbreviation": "EYB"
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "az",
+  "name": {
+   "en": "SOQUIJ (AZ number)"
+  },
+  "kind": "database",
+  "jurisdiction": "ca-qc",
+  "editions": [
+   {
+    "abbreviation": "AZ"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "ac",
+  "name": {
+   "en": "Law Reports, Appeal Cases"
+  },
+  "kind": "official",
+  "jurisdiction": "uk",
+  "courts": [
+   "ukhl",
+   "uksc",
+   "ukpc"
+  ],
+  "editions": [
+   {
+    "abbreviation": "AC",
+    "start": 1891
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "appcas",
+  "name": {
+   "en": "Law Reports, Appeal Cases (1875-1890)"
+  },
+  "kind": "official",
+  "jurisdiction": "uk",
+  "editions": [
+   {
+    "abbreviation": "App Cas",
+    "start": 1875,
+    "end": 1890
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "qb",
+  "name": {
+   "en": "Law Reports, Queen's Bench"
+  },
+  "kind": "official",
+  "jurisdiction": "uk-ew",
+  "editions": [
+   {
+    "abbreviation": "QB"
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "qbd",
+  "name": {
+   "en": "Law Reports, Queen's Bench Division"
+  },
+  "kind": "official",
+  "jurisdiction": "uk-ew",
+  "editions": [
+   {
+    "abbreviation": "QBD",
+    "start": 1875,
+    "end": 1890
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "kb",
+  "name": {
+   "en": "Law Reports, King's Bench"
+  },
+  "kind": "official",
+  "jurisdiction": "uk-ew",
+  "editions": [
+   {
+    "abbreviation": "KB",
+    "start": 1901,
+    "end": 1952
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "ch",
+  "name": {
+   "en": "Law Reports, Chancery"
+  },
+  "kind": "official",
+  "jurisdiction": "uk-ew",
+  "editions": [
+   {
+    "abbreviation": "Ch",
+    "start": 1891
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "chd",
+  "name": {
+   "en": "Law Reports, Chancery Division"
+  },
+  "kind": "official",
+  "jurisdiction": "uk-ew",
+  "editions": [
+   {
+    "abbreviation": "Ch D",
+    "start": 1875,
+    "end": 1890
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "fam",
+  "name": {
+   "en": "Law Reports, Family Division"
+  },
+  "kind": "official",
+  "jurisdiction": "uk-ew",
+  "editions": [
+   {
+    "abbreviation": "Fam",
+    "start": 1972
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "wlr",
+  "name": {
+   "en": "Weekly Law Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "uk",
+  "editions": [
+   {
+    "abbreviation": "WLR",
+    "start": 1953
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "aller",
+  "name": {
+   "en": "All England Law Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "uk",
+  "editions": [
+   {
+    "abbreviation": "All ER",
+    "start": 1936
+   },
+   {
+    "abbreviation": "All ER (Comm)"
+   },
+   {
+    "abbreviation": "All ER Rep"
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "lloyds",
+  "name": {
+   "en": "Lloyd's Law Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "uk",
+  "editions": [
+   {
+    "abbreviation": "Lloyd's Rep",
+    "start": 1951
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "crappr",
+  "name": {
+   "en": "Criminal Appeal Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "uk-ew",
+  "editions": [
+   {
+    "abbreviation": "Cr App R",
+    "start": 1908
+   },
+   {
+    "abbreviation": "Cr App R (S)"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "icr",
+  "name": {
+   "en": "Industrial Cases Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "uk",
+  "editions": [
+   {
+    "abbreviation": "ICR",
+    "start": 1972
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "irlr",
+  "name": {
+   "en": "Industrial Relations Law Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "uk",
+  "editions": [
+   {
+    "abbreviation": "IRLR",
+    "start": 1972
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "emlr",
+  "name": {
+   "en": "Entertainment and Media Law Reports"
+  },
+  "kind": "specialty",
+  "jurisdiction": "uk",
+  "editions": [
+   {
+    "abbreviation": "EMLR"
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "er",
+  "name": {
+   "en": "English Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "uk",
+  "editions": [
+   {
+    "abbreviation": "ER"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "tlr",
+  "name": {
+   "en": "Times Law Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "uk",
+  "editions": [
+   {
+    "abbreviation": "TLR",
+    "start": 1884,
+    "end": 1952
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "coxcc",
+  "name": {
+   "en": "Cox's Criminal Cases"
+  },
+  "kind": "specialty",
+  "jurisdiction": "uk",
+  "editions": [
+   {
+    "abbreviation": "Cox CC"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "hlcas",
+  "name": {
+   "en": "Clark's House of Lords Cases"
+  },
+  "kind": "official",
+  "jurisdiction": "uk",
+  "courts": [
+   "ukhl"
+  ],
+  "editions": [
+   {
+    "abbreviation": "HL Cas",
+    "start": 1847,
+    "end": 1866
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "slt",
+  "name": {
+   "en": "Scots Law Times"
+  },
+  "kind": "general",
+  "jurisdiction": "uk-sc",
+  "editions": [
+   {
+    "abbreviation": "SLT"
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "ehrr",
+  "name": {
+   "en": "European Human Rights Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "int",
+  "courts": [
+   "echr"
+  ],
+  "editions": [
+   {
+    "abbreviation": "EHRR"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "cmlr",
+  "name": {
+   "en": "Common Market Law Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "int",
+  "editions": [
+   {
+    "abbreviation": "CMLR"
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "icjrep",
+  "name": {
+   "en": "International Court of Justice Reports",
+   "fr": "Recueil des arrêts de la Cour internationale de Justice"
+  },
+  "kind": "official",
+  "jurisdiction": "int",
+  "courts": [
+   "icj"
+  ],
+  "editions": [
+   {
+    "abbreviation": "ICJ Rep"
+   }
+  ],
+  "variations": {
+   "CIJ Rec": "ICJ Rep"
+  },
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "clr-au",
+  "name": {
+   "en": "Commonwealth Law Reports"
+  },
+  "kind": "official",
+  "jurisdiction": "au",
+  "courts": [
+   "hca"
+  ],
+  "editions": [
+   {
+    "abbreviation": "CLR",
+    "start": 1903
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "fcr-au",
+  "name": {
+   "en": "Federal Court Reports (Australia)"
+  },
+  "kind": "official",
+  "jurisdiction": "au",
+  "courts": [
+   "fca-au",
+   "fcafc"
+  ],
+  "editions": [
+   {
+    "abbreviation": "FCR",
+    "start": 1984
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "alr",
+  "name": {
+   "en": "Australian Law Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "au",
+  "editions": [
+   {
+    "abbreviation": "ALR",
+    "start": 1973
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "aljr",
+  "name": {
+   "en": "Australian Law Journal Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "au",
+  "editions": [
+   {
+    "abbreviation": "ALJR"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "nswlr",
+  "name": {
+   "en": "New South Wales Law Reports"
+  },
+  "kind": "official",
+  "jurisdiction": "au-nsw",
+  "editions": [
+   {
+    "abbreviation": "NSWLR",
+    "start": 1971
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "vr",
+  "name": {
+   "en": "Victorian Reports"
+  },
+  "kind": "official",
+  "jurisdiction": "au-vic",
+  "editions": [
+   {
+    "abbreviation": "VR",
+    "start": 1957
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "qdr",
+  "name": {
+   "en": "Queensland Reports"
+  },
+  "kind": "official",
+  "jurisdiction": "au-qld",
+  "editions": [
+   {
+    "abbreviation": "Qd R",
+    "start": 1958
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "sasr",
+  "name": {
+   "en": "South Australian State Reports"
+  },
+  "kind": "official",
+  "jurisdiction": "au-sa",
+  "editions": [
+   {
+    "abbreviation": "SASR",
+    "start": 1971
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "war",
+  "name": {
+   "en": "Western Australian Reports"
+  },
+  "kind": "official",
+  "jurisdiction": "au-wa",
+  "editions": [
+   {
+    "abbreviation": "WAR"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored"
+ },
+ {
+  "id": "nzlr",
+  "name": {
+   "en": "New Zealand Law Reports"
+  },
+  "kind": "official",
+  "jurisdiction": "nz",
+  "editions": [
+   {
+    "abbreviation": "NZLR",
+    "start": 1883
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "mcgill-aclr",
+  "name": {
+   "en": "ACLR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "ACLR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-a-crim-r",
+  "name": {
+   "en": "A Crim R"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "A Crim R"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-acsr",
+  "name": {
+   "en": "ACSR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "ACSR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-actr",
+  "name": {
+   "en": "ACTR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "ACTR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-adam",
+  "name": {
+   "en": "Adam"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Adam"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ad-el",
+  "name": {
+   "en": "Ad & El"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ad & El"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-afr-lr-comm",
+  "name": {
+   "en": "Afr LR (Comm)"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Afr LR (Comm)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-afr-lr-mal",
+  "name": {
+   "en": "Afr LR (Mal)"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Afr LR (Mal)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-afr-lr-sl",
+  "name": {
+   "en": "Afr LR (SL)"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Afr LR (SL)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-alaska-r",
+  "name": {
+   "en": "Alaska R"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Alaska R"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ald",
+  "name": {
+   "en": "ALD"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "ALD"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-all-er-ec",
+  "name": {
+   "en": "All ER (EC)"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "All ER (EC)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-alta-lrbr",
+  "name": {
+   "en": "Alta LRBR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Alta LRBR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-amb",
+  "name": {
+   "en": "Amb"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Amb"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-and",
+  "name": {
+   "en": "And"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "And"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-andr",
+  "name": {
+   "en": "Andr"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Andr"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-anst",
+  "name": {
+   "en": "Anst"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Anst"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-arb-serv-rep",
+  "name": {
+   "en": "Arb Serv Rep"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Arb Serv Rep"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-asp-mlc",
+  "name": {
+   "en": "Asp MLC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Asp MLC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-atc",
+  "name": {
+   "en": "ATC"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "ATC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-atk",
+  "name": {
+   "en": "Atk"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Atk"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-b-ad",
+  "name": {
+   "en": "B & Ad"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "B & Ad"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ball-b",
+  "name": {
+   "en": "Ball & B"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ball & B"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-barn-c",
+  "name": {
+   "en": "Barn C"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Barn C"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-barnes",
+  "name": {
+   "en": "Barnes"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Barnes"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-barn-kb",
+  "name": {
+   "en": "Barn KB"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Barn KB"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-batt",
+  "name": {
+   "en": "Batt"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Batt"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bc-empl-standards-bd-dec",
+  "name": {
+   "en": "BC Empl Standards Bd Dec"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "BC Empl Standards Bd Dec"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bchrc-dec",
+  "name": {
+   "en": "BCHRC Dec"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "BCHRC Dec"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bclrb-dec",
+  "name": {
+   "en": "BCLRB Dec"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "BCLRB Dec"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-b-const-lr",
+  "name": {
+   "en": "B Const LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "B Const LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-b-cress",
+  "name": {
+   "en": "B & Cress"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "B & Cress"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bcwcr",
+  "name": {
+   "en": "BCWCR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "BCWCR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bd-rwy-comm-rs-can",
+  "name": {
+   "en": "Bd Rwy Comm'rs Can"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Bd Rwy Comm'rs Can"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bd-trans-comm-rs-can",
+  "name": {
+   "en": "Bd Trans Comm'rs Can"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Bd Trans Comm'rs Can"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-beat",
+  "name": {
+   "en": "Beat"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Beat"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-beav",
+  "name": {
+   "en": "Beav"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Beav"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bel",
+  "name": {
+   "en": "Bel"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bel"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bell",
+  "name": {
+   "en": "Bell"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bell"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ben-d",
+  "name": {
+   "en": "Ben & D"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ben & D"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-benl",
+  "name": {
+   "en": "Benl"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Benl"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bing",
+  "name": {
+   "en": "Bing"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bing"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bing-nc",
+  "name": {
+   "en": "Bing NC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bing NC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bla-h",
+  "name": {
+   "en": "Bla H"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bla H"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bla-w",
+  "name": {
+   "en": "Bla W"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bla W"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bli",
+  "name": {
+   "en": "Bli"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bli"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bli-ns",
+  "name": {
+   "en": "Bli NS"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bli NS"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bos-pul",
+  "name": {
+   "en": "Bos & Pul"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bos & Pul"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bos-pul-nr",
+  "name": {
+   "en": "Bos & Pul NR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bos & Pul NR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bridg",
+  "name": {
+   "en": "Bridg"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bridg"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bridg-conv",
+  "name": {
+   "en": "Bridg Conv"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bridg Conv"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bridg-o",
+  "name": {
+   "en": "Bridg O"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bridg O"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bro-cc",
+  "name": {
+   "en": "Bro CC"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Bro CC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-brod-bing",
+  "name": {
+   "en": "Brod & Bing"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Brod & Bing"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-brooke-nc",
+  "name": {
+   "en": "Brooke NC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Brooke NC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bro-pc",
+  "name": {
+   "en": "Bro PC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bro PC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-brownl",
+  "name": {
+   "en": "Brownl"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Brownl"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-brown-lush",
+  "name": {
+   "en": "Brown & Lush"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Brown & Lush"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-b-s",
+  "name": {
+   "en": "B & S"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "B & S"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bulst",
+  "name": {
+   "en": "Bulst"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bulst"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-bunb",
+  "name": {
+   "en": "Bunb"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Bunb"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-burr",
+  "name": {
+   "en": "Burr"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Burr"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-burrell",
+  "name": {
+   "en": "Burrell"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Burrell"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-calth",
+  "name": {
+   "en": "Calth"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Calth"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cameron-pc",
+  "name": {
+   "en": "Cameron PC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Cameron PC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cameron-sc",
+  "name": {
+   "en": "Cameron SC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Cameron SC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-camp",
+  "name": {
+   "en": "Camp"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Camp"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-can-bioethics-rep",
+  "name": {
+   "en": "Can Bioethics Rep"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Can Bioethics Rep"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-can-comp-rec",
+  "name": {
+   "en": "Can Comp Rec"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Can Comp Rec"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cape-scr",
+  "name": {
+   "en": "Cape SCR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Cape SCR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-carey",
+  "name": {
+   "en": "Carey"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Carey"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-car-k",
+  "name": {
+   "en": "Car & K"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Car & K"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-car-m",
+  "name": {
+   "en": "Car & M"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Car & M"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-car-p",
+  "name": {
+   "en": "Car & P"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Car & P"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-carter",
+  "name": {
+   "en": "Carter"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Carter"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-carth",
+  "name": {
+   "en": "Carth"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Carth"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cary",
+  "name": {
+   "en": "Cary"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Cary"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cas-t-hard",
+  "name": {
+   "en": "Cas t Hard"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Cas t Hard"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cas-t-talb",
+  "name": {
+   "en": "Cas t Talb"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Cas t Talb"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cb",
+  "name": {
+   "en": "CB"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "CB (NS)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cedh",
+  "name": {
+   "en": "CEDH"
+  },
+  "kind": "official",
+  "editions": [
+   {
+    "abbreviation": "CEDH"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-chan-cas",
+  "name": {
+   "en": "Chan Cas"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Chan Cas"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ch-app",
+  "name": {
+   "en": "Ch App"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ch App"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ch-ca",
+  "name": {
+   "en": "Ch Ca"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ch Ca"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-chit",
+  "name": {
+   "en": "Chit"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Chit"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-choyce-ca",
+  "name": {
+   "en": "Choyce Ca"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Choyce Ca"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ch-r",
+  "name": {
+   "en": "Ch R"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Ch R"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-clrbr",
+  "name": {
+   "en": "CLRBR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "CLRBR"
+   },
+   {
+    "abbreviation": "CLRBR (2d)"
+   },
+   {
+    "abbreviation": "CLRBR (NS)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-c-m",
+  "name": {
+   "en": "C & M"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "C & M"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-coll",
+  "name": {
+   "en": "Coll"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Coll"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-colles",
+  "name": {
+   "en": "Colles"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Colles"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-com",
+  "name": {
+   "en": "Com"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Com"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-comb",
+  "name": {
+   "en": "Comb"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Comb"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-comm-lr",
+  "name": {
+   "en": "Comm LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Comm LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-comp-trib-dec",
+  "name": {
+   "en": "Comp Trib dec"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Comp Trib dec"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-conc-bd-rpts",
+  "name": {
+   "en": "Conc Bd Rpts"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Conc Bd Rpts"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-conc-comm-r-rpts",
+  "name": {
+   "en": "Conc Comm'r Rpts"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Conc Comm'r Rpts"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cook-adm",
+  "name": {
+   "en": "Cook Adm"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Cook Adm"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cooke-cp",
+  "name": {
+   "en": "Cooke CP"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Cooke CP"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-coop-ch-ch",
+  "name": {
+   "en": "Coop Ch Ch"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Coop Ch Ch"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-coop-g",
+  "name": {
+   "en": "Coop G"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Coop G"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-coop-pr-ca",
+  "name": {
+   "en": "Coop Pr Ca"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Coop Pr Ca"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-coop-t-br",
+  "name": {
+   "en": "Coop t Br"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Coop t Br"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-coop-t-cott",
+  "name": {
+   "en": "Coop t Cott"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Coop t Cott"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-co-rep",
+  "name": {
+   "en": "Co Rep"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Co Rep"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cowp",
+  "name": {
+   "en": "Cowp"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Cowp"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cox",
+  "name": {
+   "en": "Cox"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Cox"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cpd",
+  "name": {
+   "en": "CPD"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "CPD"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cpji",
+  "name": {
+   "en": "CPJI"
+  },
+  "kind": "official",
+  "editions": [
+   {
+    "abbreviation": "CPJI (Sér A)"
+   },
+   {
+    "abbreviation": "CPJI (Sér A/B)"
+   },
+   {
+    "abbreviation": "CPJI (Sér B)"
+   },
+   {
+    "abbreviation": "CPJI (Sér C)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-crac",
+  "name": {
+   "en": "CRAC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "CRAC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-crnz",
+  "name": {
+   "en": "CRNZ"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "CRNZ"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ct-cases",
+  "name": {
+   "en": "CT Cases"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "CT Cases"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-cun",
+  "name": {
+   "en": "Cun"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Cun"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-davis",
+  "name": {
+   "en": "Davis"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Davis"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-dears",
+  "name": {
+   "en": "Dears"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Dears"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-dears-b",
+  "name": {
+   "en": "Dears & B"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Dears & B"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-dea-sw",
+  "name": {
+   "en": "Dea & Sw"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Dea & Sw"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-de-g-m-g",
+  "name": {
+   "en": "De G M & G"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "De G M & G"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-de-g-sm",
+  "name": {
+   "en": "De G & Sm"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "De G & Sm"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-dick",
+  "name": {
+   "en": "Dick"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Dick"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-dods",
+  "name": {
+   "en": "Dods"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Dods"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-donn",
+  "name": {
+   "en": "Donn"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Donn"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-dow",
+  "name": {
+   "en": "Dow"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Dow"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-dow-cl",
+  "name": {
+   "en": "Dow & Cl"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Dow & Cl"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-dowl-ry",
+  "name": {
+   "en": "Dowl & Ry"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Dowl & Ry"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-drap",
+  "name": {
+   "en": "Drap"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Drap"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-drew",
+  "name": {
+   "en": "Drew"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Drew"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-drew-sm",
+  "name": {
+   "en": "Drew & Sm"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Drew & Sm"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-dy",
+  "name": {
+   "en": "Dy"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Dy"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-e-afr-lr",
+  "name": {
+   "en": "E Afr LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "E Afr LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-east",
+  "name": {
+   "en": "East"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "East"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-echr",
+  "name": {
+   "en": "ECHR"
+  },
+  "kind": "official",
+  "editions": [
+   {
+    "abbreviation": "ECHR"
+   },
+   {
+    "abbreviation": "ECHR (Ser A)"
+   },
+   {
+    "abbreviation": "ECHR (Ser B)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ecr",
+  "name": {
+   "en": "ECR"
+  },
+  "kind": "official",
+  "editions": [
+   {
+    "abbreviation": "ECR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-eden",
+  "name": {
+   "en": "Eden"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Eden"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-e-distr-ldr",
+  "name": {
+   "en": "E Distr LDR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "E Distr LDR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-e-distr-r",
+  "name": {
+   "en": "E Distr R"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "E Distr R"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-el-bl",
+  "name": {
+   "en": "El & Bl"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "El & Bl"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-el-bl-el",
+  "name": {
+   "en": "El Bl & El"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "El Bl & El"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-el-el",
+  "name": {
+   "en": "El & El"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "El & El"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-eq-ca-abr",
+  "name": {
+   "en": "Eq Ca Abr"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Eq Ca Abr"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-esp",
+  "name": {
+   "en": "Esp"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Esp"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-eur-comm-n-hrdr",
+  "name": {
+   "en": "Eur Comm'n HRDR"
+  },
+  "kind": "official",
+  "editions": [
+   {
+    "abbreviation": "Eur Comm'n HRDR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-exch-rep",
+  "name": {
+   "en": "Exch Rep"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Exch Rep"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ex-d",
+  "name": {
+   "en": "Ex D"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ex D"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-fam-lr",
+  "name": {
+   "en": "Fam LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Fam LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-fitz-g",
+  "name": {
+   "en": "Fitz-G"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Fitz-G"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-flr",
+  "name": {
+   "en": "FLR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "FLR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-forrest",
+  "name": {
+   "en": "Forrest"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Forrest"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-fort",
+  "name": {
+   "en": "Fort"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Fort"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-fost",
+  "name": {
+   "en": "Fost"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Fost"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-gaz-lr",
+  "name": {
+   "en": "Gaz LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Gaz LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ghana-lr",
+  "name": {
+   "en": "Ghana LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Ghana LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-giff",
+  "name": {
+   "en": "Giff"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Giff"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-gilb-cas",
+  "name": {
+   "en": "Gilb Cas"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Gilb Cas"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-gilb-rep",
+  "name": {
+   "en": "Gilb Rep"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Gilb Rep"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-glr",
+  "name": {
+   "en": "GLR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "GLR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-godbolt",
+  "name": {
+   "en": "Godbolt"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Godbolt"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-gould",
+  "name": {
+   "en": "Gould"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Gould"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-gow",
+  "name": {
+   "en": "Gow"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Gow"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-gr-uc-ch",
+  "name": {
+   "en": "Gr / UC Ch"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Gr / UC Ch"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-hag-adm",
+  "name": {
+   "en": "Hag Adm"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Hag Adm"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-hag-con",
+  "name": {
+   "en": "Hag Con"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Hag Con"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-hag-ecc",
+  "name": {
+   "en": "Hag Ecc"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Hag Ecc"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-hague-ct-rep",
+  "name": {
+   "en": "Hague Ct Rep"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Hague Ct Rep"
+   },
+   {
+    "abbreviation": "Hague Ct Rep (2d)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-hardr",
+  "name": {
+   "en": "Hardr"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Hardr"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-hare",
+  "name": {
+   "en": "Hare"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Hare"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-harr-hodg",
+  "name": {
+   "en": "Harr & Hodg"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Harr & Hodg"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-hay-m",
+  "name": {
+   "en": "Hay & M"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Hay & M"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-h-c",
+  "name": {
+   "en": "H & C"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "H & C"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-het",
+  "name": {
+   "en": "Het"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Het"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-h-n",
+  "name": {
+   "en": "H & N"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "H & N"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-hob",
+  "name": {
+   "en": "Hob"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Hob"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-hodg",
+  "name": {
+   "en": "Hodg"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Hodg"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-hold-lr",
+  "name": {
+   "en": "Hold LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Hold LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-holt",
+  "name": {
+   "en": "Holt"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Holt"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-holt-eq",
+  "name": {
+   "en": "Holt, Eq"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Holt, Eq"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-holt-kb",
+  "name": {
+   "en": "Holt, KB"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Holt, KB"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-h-tw",
+  "name": {
+   "en": "H & Tw"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "H & Tw"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-hum-rts-case-digest",
+  "name": {
+   "en": "Hum Rts Case Digest"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Hum Rts Case Digest"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-hut",
+  "name": {
+   "en": "Hut"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Hut"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-h-w",
+  "name": {
+   "en": "H & W"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "H & W"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-i-ch-r",
+  "name": {
+   "en": "I Ch R"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "I Ch R"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-icj-pleadings",
+  "name": {
+   "en": "ICJ Pleadings"
+  },
+  "kind": "official",
+  "editions": [
+   {
+    "abbreviation": "ICJ Pleadings"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ilr",
+  "name": {
+   "en": "ILR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "ILR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ilrm",
+  "name": {
+   "en": "ILRM"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "ILRM"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-iltr",
+  "name": {
+   "en": "ILTR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "ILTR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-imm-ac",
+  "name": {
+   "en": "Imm AC"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Imm AC"
+   },
+   {
+    "abbreviation": "Imm AC (2d)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ir",
+  "name": {
+   "en": "IR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "IR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ir-eq",
+  "name": {
+   "en": "IR Eq"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "IR Eq"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-isr-lr",
+  "name": {
+   "en": "Isr LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Isr LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-jac",
+  "name": {
+   "en": "Jac"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Jac"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-jac-w",
+  "name": {
+   "en": "Jac & W"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Jac & W"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-jenk",
+  "name": {
+   "en": "Jenk"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Jenk"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-jones-t",
+  "name": {
+   "en": "Jones, T"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Jones, T"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-jones-w",
+  "name": {
+   "en": "Jones, W"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Jones, W"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-kay",
+  "name": {
+   "en": "Kay"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Kay"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-keble",
+  "name": {
+   "en": "Keble"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Keble"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-keen",
+  "name": {
+   "en": "Keen"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Keen"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-keilway",
+  "name": {
+   "en": "Keilway"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Keilway"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-kel-w",
+  "name": {
+   "en": "Kel W"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Kel W"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-keny",
+  "name": {
+   "en": "Keny"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Keny"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-kenya-lr",
+  "name": {
+   "en": "Kenya LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Kenya LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-kn",
+  "name": {
+   "en": "Kn"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Kn"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lane",
+  "name": {
+   "en": "Lane"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Lane"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lap-sp-dec",
+  "name": {
+   "en": "Lap Sp Dec"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Lap Sp Dec"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-latch",
+  "name": {
+   "en": "Latch"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Latch"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lc-jurist",
+  "name": {
+   "en": "LC Jurist"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "LC Jurist"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-leach",
+  "name": {
+   "en": "Leach"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Leach"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-le-ca",
+  "name": {
+   "en": "Le & Ca"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Le & Ca"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lee",
+  "name": {
+   "en": "Lee"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Lee"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-leo",
+  "name": {
+   "en": "Leo"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Leo"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lev",
+  "name": {
+   "en": "Lev"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Lev"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lewin",
+  "name": {
+   "en": "Lewin"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Lewin"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ley",
+  "name": {
+   "en": "Ley"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ley"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lilly",
+  "name": {
+   "en": "Lilly"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Lilly"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ll-lr",
+  "name": {
+   "en": "Ll LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Ll LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lloyd-s-lr",
+  "name": {
+   "en": "Lloyd's LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Lloyd's LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lr-a-e",
+  "name": {
+   "en": "LR A & E"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "LR A & E"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lr-ccr",
+  "name": {
+   "en": "LR CCR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "LR CCR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lr-ch-app",
+  "name": {
+   "en": "LR Ch App"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "LR Ch App"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lr-cp",
+  "name": {
+   "en": "LR CP"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "LR CP"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lr-eq",
+  "name": {
+   "en": "LR Eq"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "LR Eq"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lr-ex",
+  "name": {
+   "en": "LR Ex"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "LR Ex"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lrhl",
+  "name": {
+   "en": "LRHL"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "LRHL"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lr-ir",
+  "name": {
+   "en": "LR Ir"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "LR Ir"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lrpc",
+  "name": {
+   "en": "LRPC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "LRPC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lr-p-d",
+  "name": {
+   "en": "LR P & D"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "LR P & D"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lr-qb",
+  "name": {
+   "en": "LR QB"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "LR QB"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lr-rp",
+  "name": {
+   "en": "LR RP"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "LR RP"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lr-sc-div",
+  "name": {
+   "en": "LR Sc & Div"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "LR Sc & Div"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lush",
+  "name": {
+   "en": "Lush"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Lush"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-lut",
+  "name": {
+   "en": "Lut"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Lut"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-mac-g",
+  "name": {
+   "en": "Mac & G"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Mac & G"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-macl-r",
+  "name": {
+   "en": "Macl & R"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Macl & R"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-madd",
+  "name": {
+   "en": "Madd"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Madd"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-man-g",
+  "name": {
+   "en": "Man & G"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Man & G"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-man-lr",
+  "name": {
+   "en": "Man LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Man LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-man-r-temp-wood",
+  "name": {
+   "en": "Man R temp Wood"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Man R temp Wood"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-march-nr",
+  "name": {
+   "en": "March, NR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "March, NR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-m-cle",
+  "name": {
+   "en": "M'Cle"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "M'Cle"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-m-cle-yo",
+  "name": {
+   "en": "M'Cle & Yo"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "M'Cle & Yo"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-mer",
+  "name": {
+   "en": "Mer"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Mer"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-mlb-dec",
+  "name": {
+   "en": "MLB Dec"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "MLB Dec"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-mlr-kb",
+  "name": {
+   "en": "MLR (KB)"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "MLR (KB)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-mlr-qb",
+  "name": {
+   "en": "MLR (QB)"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "MLR (QB)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-mlr-sc",
+  "name": {
+   "en": "MLR (SC)"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "MLR (SC)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-m-m",
+  "name": {
+   "en": "M & M"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "M & M"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-mod",
+  "name": {
+   "en": "Mod"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Mod"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-mont-cond-rep",
+  "name": {
+   "en": "Mont Cond Rep"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Mont Cond Rep"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-mood",
+  "name": {
+   "en": "Mood"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Mood"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-moo-ind-app",
+  "name": {
+   "en": "Moo Ind App"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Moo Ind App"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-moo-kb",
+  "name": {
+   "en": "Moo KB"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Moo KB"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-moo-pc",
+  "name": {
+   "en": "Moo PC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Moo PC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-moo-pcns",
+  "name": {
+   "en": "Moo PCNS"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Moo PCNS"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-mos",
+  "name": {
+   "en": "Mos"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Mos"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-mpr",
+  "name": {
+   "en": "MPR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "MPR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-m-rob",
+  "name": {
+   "en": "M & Rob"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "M & Rob"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-m-w",
+  "name": {
+   "en": "M & W"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "M & W"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-my-cr",
+  "name": {
+   "en": "My & Cr"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "My & Cr"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-my-k",
+  "name": {
+   "en": "My & K"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "My & K"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nb-eq",
+  "name": {
+   "en": "NB Eq"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "NB Eq"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nb-eq-cas",
+  "name": {
+   "en": "NB Eq Cas"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "NB Eq Cas"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nels",
+  "name": {
+   "en": "Nels"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Nels"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nfld-lr",
+  "name": {
+   "en": "Nfld LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Nfld LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-noy",
+  "name": {
+   "en": "Noy"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Noy"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nscga-dec",
+  "name": {
+   "en": "NSCGA Dec"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "NSCGA Dec"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nswr",
+  "name": {
+   "en": "NSWR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "NSWR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nswscr",
+  "name": {
+   "en": "NSWSCR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "NSWSCR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nsw-st-r",
+  "name": {
+   "en": "NSW St R"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "NSW St R"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nswwn",
+  "name": {
+   "en": "NSWWN"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "NSWWN"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ntj",
+  "name": {
+   "en": "NTJ"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "NTJ"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ntr",
+  "name": {
+   "en": "NTR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "NTR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nwtr",
+  "name": {
+   "en": "NWTR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "NWTR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nzar",
+  "name": {
+   "en": "NZAR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "NZAR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nzflr",
+  "name": {
+   "en": "NZFLR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "NZFLR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-nzpcc",
+  "name": {
+   "en": "NZPCC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "NZPCC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-olmsted-pc",
+  "name": {
+   "en": "Olmsted PC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Olmsted PC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-olrb-rep",
+  "name": {
+   "en": "OLRB Rep"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "OLRB Rep"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-omb-dec",
+  "name": {
+   "en": "OMB Dec"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "OMB Dec"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ont-d-crim",
+  "name": {
+   "en": "Ont D Crim"
+  },
+  "kind": "digest",
+  "editions": [
+   {
+    "abbreviation": "Ont D Crim"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ont-d-crim-conv",
+  "name": {
+   "en": "Ont D Crim Conv"
+  },
+  "kind": "digest",
+  "editions": [
+   {
+    "abbreviation": "Ont D Crim Conv"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ont-d-crim-sent",
+  "name": {
+   "en": "Ont D Crim Sent"
+  },
+  "kind": "digest",
+  "editions": [
+   {
+    "abbreviation": "Ont D Crim Sent"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ont-elec",
+  "name": {
+   "en": "Ont Elec"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ont Elec"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ont-liquor-licence-app-trib-dec",
+  "name": {
+   "en": "Ont Liquor Licence App Trib Dec"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Ont Liquor Licence App Trib Dec"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-opr",
+  "name": {
+   "en": "OPR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "OPR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-orange-free-state-prov-div-r",
+  "name": {
+   "en": "Orange Free State Prov Div R"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Orange Free State Prov Div R"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ow",
+  "name": {
+   "en": "Ow"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ow"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-owr",
+  "name": {
+   "en": "OWR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "OWR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-palm",
+  "name": {
+   "en": "Palm"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Palm"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-park",
+  "name": {
+   "en": "Park"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Park"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-patr-elec-cas",
+  "name": {
+   "en": "Patr Elec Cas"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Patr Elec Cas"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-pcij",
+  "name": {
+   "en": "PCIJ"
+  },
+  "kind": "official",
+  "editions": [
+   {
+    "abbreviation": "PCIJ (Ser A)"
+   },
+   {
+    "abbreviation": "PCIJ (Ser A/B)"
+   },
+   {
+    "abbreviation": "PCIJ (Ser B)"
+   },
+   {
+    "abbreviation": "PCIJ (Ser C)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-pd",
+  "name": {
+   "en": "PD"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "PD"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-peake",
+  "name": {
+   "en": "Peake"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Peake"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-peake-add-cas",
+  "name": {
+   "en": "Peake Add Cas"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Peake Add Cas"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-perr-p",
+  "name": {
+   "en": "Perr P"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Perr P"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-phill-ecc",
+  "name": {
+   "en": "Phill Ecc"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Phill Ecc"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-pl-com",
+  "name": {
+   "en": "Pl Com"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Pl Com"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-pollex",
+  "name": {
+   "en": "Pollex"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Pollex"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-pop",
+  "name": {
+   "en": "Pop"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Pop"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ppsac",
+  "name": {
+   "en": "PPSAC"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "PPSAC"
+   },
+   {
+    "abbreviation": "PPSAC (2d)"
+   },
+   {
+    "abbreviation": "PPSAC (3d)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-prec-ch",
+  "name": {
+   "en": "Prec Ch"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Prec Ch"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-price",
+  "name": {
+   "en": "Price"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Price"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-p-wms",
+  "name": {
+   "en": "P Wms"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "P Wms"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-pyke",
+  "name": {
+   "en": "Pyke"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Pyke"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-qlr",
+  "name": {
+   "en": "QLR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "QLR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-qpr",
+  "name": {
+   "en": "QPR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "QPR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-qr",
+  "name": {
+   "en": "QR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "QR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-raym-ld",
+  "name": {
+   "en": "Raym Ld"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Raym Ld"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-raym-t",
+  "name": {
+   "en": "Raym T"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Raym T"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-rep-ch",
+  "name": {
+   "en": "Rep Ch"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Rep Ch"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-rep-t-finch",
+  "name": {
+   "en": "Rep t Finch"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Rep t Finch"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-rhod-lr",
+  "name": {
+   "en": "Rhod LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Rhod LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-rhod-nlr",
+  "name": {
+   "en": "Rhod & NLR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Rhod & NLR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-riaa",
+  "name": {
+   "en": "RIAA"
+  },
+  "kind": "official",
+  "editions": [
+   {
+    "abbreviation": "RIAA"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ridg-t-hard",
+  "name": {
+   "en": "Ridg t Hard"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ridg t Hard"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ritch-eq-rep",
+  "name": {
+   "en": "Ritch Eq Rep"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Ritch Eq Rep"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-rl",
+  "name": {
+   "en": "RL"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "RL"
+   },
+   {
+    "abbreviation": "RL (ns)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-rob-ecc",
+  "name": {
+   "en": "Rob Ecc"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Rob Ecc"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-rob-rob-chr",
+  "name": {
+   "en": "Rob / Rob Chr"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Rob / Rob Chr"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-rolle",
+  "name": {
+   "en": "Rolle"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Rolle"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-rpc",
+  "name": {
+   "en": "RPC"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "RPC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-rpq",
+  "name": {
+   "en": "RPQ"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "RPQ"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-russ",
+  "name": {
+   "en": "Russ"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Russ"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-russ-er",
+  "name": {
+   "en": "Russ ER"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Russ ER"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-russ-m",
+  "name": {
+   "en": "Russ & M"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Russ & M"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-russ-ry",
+  "name": {
+   "en": "Russ & Ry"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Russ & Ry"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-s-afr-lr",
+  "name": {
+   "en": "S Afr LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "S Afr LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-salk",
+  "name": {
+   "en": "Salk"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Salk"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-salr",
+  "name": {
+   "en": "SALR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "SALR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sav",
+  "name": {
+   "en": "Sav"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Sav"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-say",
+  "name": {
+   "en": "Say"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Say"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-scc-cam",
+  "name": {
+   "en": "SCC Cam"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "SCC Cam"
+   },
+   {
+    "abbreviation": "SCC Cam (2d)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-scc-coutl",
+  "name": {
+   "en": "SCC Coutl"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "SCC Coutl"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-scot-lr",
+  "name": {
+   "en": "Scot LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Scot LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sec-dec",
+  "name": {
+   "en": "SEC Dec"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "SEC Dec"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sel-ca-t-king",
+  "name": {
+   "en": "Sel Ca t King"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Sel Ca t King"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sess-cas",
+  "name": {
+   "en": "Sess Cas"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Sess Cas"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sess-cas-d",
+  "name": {
+   "en": "Sess Cas D"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Sess Cas D"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sess-cas-m",
+  "name": {
+   "en": "Sess Cas M"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Sess Cas M"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sess-cas-r",
+  "name": {
+   "en": "Sess Cas R"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Sess Cas R"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sess-cas-s",
+  "name": {
+   "en": "Sess Cas S"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Sess Cas S"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-show-kb",
+  "name": {
+   "en": "Show KB"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Show KB"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-show-pc",
+  "name": {
+   "en": "Show PC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Show PC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sid",
+  "name": {
+   "en": "Sid"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Sid"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sim",
+  "name": {
+   "en": "Sim"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Sim"
+   },
+   {
+    "abbreviation": "Sim (NS)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sim-st",
+  "name": {
+   "en": "Sim & St"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Sim & St"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-skin",
+  "name": {
+   "en": "Skin"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Skin"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sm-g",
+  "name": {
+   "en": "Sm & G"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Sm & G"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sp-ecc-ad",
+  "name": {
+   "en": "Sp Ecc & Ad"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Sp Ecc & Ad"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sp-pc",
+  "name": {
+   "en": "Sp PC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Sp PC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-stark",
+  "name": {
+   "en": "Stark"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Stark"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-str",
+  "name": {
+   "en": "Str"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Str"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-stu-adm",
+  "name": {
+   "en": "Stu Adm"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Stu Adm"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-stu-kb",
+  "name": {
+   "en": "Stu KB"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Stu KB"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sty",
+  "name": {
+   "en": "Sty"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Sty"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sudan-lr",
+  "name": {
+   "en": "Sudan LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Sudan LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-swab",
+  "name": {
+   "en": "Swab"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Swab"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-swans",
+  "name": {
+   "en": "Swans"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Swans"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-sw-tr",
+  "name": {
+   "en": "Sw & Tr"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Sw & Tr"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-talb",
+  "name": {
+   "en": "Talb"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Talb"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-taml",
+  "name": {
+   "en": "Taml"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Taml"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-tas-r",
+  "name": {
+   "en": "Tas R"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Tas R"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-tas-sr",
+  "name": {
+   "en": "Tas SR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Tas SR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-taun",
+  "name": {
+   "en": "Taun"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Taun"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-tax-abc",
+  "name": {
+   "en": "Tax ABC"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Tax ABC"
+   },
+   {
+    "abbreviation": "Tax ABC (NS)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-terr-lr",
+  "name": {
+   "en": "Terr LR"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Terr LR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-toth",
+  "name": {
+   "en": "Toth"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Toth"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-tr",
+  "name": {
+   "en": "TR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "TR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-trib-conc-dec",
+  "name": {
+   "en": "Trib conc déc"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Trib conc déc"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-turn-r",
+  "name": {
+   "en": "Turn & R"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "Turn & R"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-uc-chamb-rep",
+  "name": {
+   "en": "UC Chamb Rep"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "UC Chamb Rep"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-uccp",
+  "name": {
+   "en": "UCCP"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "UCCP"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-uce-a",
+  "name": {
+   "en": "UCE & A"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "UCE & A"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-uckb",
+  "name": {
+   "en": "UCKB"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "UCKB"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ucqb",
+  "name": {
+   "en": "UCQB"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "UCQB"
+   },
+   {
+    "abbreviation": "UCQB (OS)"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-uic-dec-ump",
+  "name": {
+   "en": "UIC Dec Ump"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "UIC Dec Ump"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-uic-selec-dec-ump",
+  "name": {
+   "en": "UIC Selec Dec Ump"
+  },
+  "kind": "specialty",
+  "editions": [
+   {
+    "abbreviation": "UIC Selec Dec Ump"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-vaugh",
+  "name": {
+   "en": "Vaugh"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Vaugh"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-vent",
+  "name": {
+   "en": "Vent"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Vent"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-vern",
+  "name": {
+   "en": "Vern"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Vern"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ves-bea",
+  "name": {
+   "en": "Ves & Bea"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ves & Bea"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ves-jr",
+  "name": {
+   "en": "Ves Jr"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ves Jr"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-ves-sr",
+  "name": {
+   "en": "Ves Sr"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Ves Sr"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-vlr",
+  "name": {
+   "en": "VLR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "VLR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-walr",
+  "name": {
+   "en": "WALR"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "WALR"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-welsb-h-g",
+  "name": {
+   "en": "Welsb H & G"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Welsb H & G"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-west",
+  "name": {
+   "en": "West"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "West"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-west-t-hard",
+  "name": {
+   "en": "West, t Hard"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "West, t Hard"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-wight",
+  "name": {
+   "en": "Wight"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Wight"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-willes",
+  "name": {
+   "en": "Willes"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Willes"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-wilm",
+  "name": {
+   "en": "Wilm"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Wilm"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-wils-ch",
+  "name": {
+   "en": "Wils Ch"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Wils Ch"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-wils-ex",
+  "name": {
+   "en": "Wils Ex"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Wils Ex"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-wils-kb",
+  "name": {
+   "en": "Wils KB"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Wils KB"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-winch",
+  "name": {
+   "en": "Winch"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Winch"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-wms-saund",
+  "name": {
+   "en": "Wms Saund"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Wms Saund"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-w-rob",
+  "name": {
+   "en": "W Rob"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "W Rob"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-w-w-a-b",
+  "name": {
+   "en": "W W & A'B"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "W W & A'B"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-yad-young-adm",
+  "name": {
+   "en": "YAD / Young Adm"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "YAD / Young Adm"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-y-ccc",
+  "name": {
+   "en": "Y & CCC"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Y & CCC"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-y-c-ex",
+  "name": {
+   "en": "Y & C Ex"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Y & C Ex"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-yel",
+  "name": {
+   "en": "Yel"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "Yel"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ },
+ {
+  "id": "mcgill-you",
+  "name": {
+   "en": "You"
+  },
+  "kind": "general",
+  "editions": [
+   {
+    "abbreviation": "You"
+   }
+  ],
+  "year_volume": false,
+  "source": "mcgill"
+ }
+]

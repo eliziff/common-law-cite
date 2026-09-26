@@ -1,0 +1,28 @@
+# Rust
+/target/
+**/*.rs.bk
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+.pytest_cache/
+*.so
+*.pyd
+
+# npm package build output (crates/legal-citations-wasm/build.sh)
+crates/legal-citations-wasm/js/pkg/
+crates/legal-citations-wasm/js/node_modules/
+crates/legal-citations-wasm/js/LICENSE
+crates/legal-citations-wasm/js/NOTICE
+crates/legal-citations-wasm/js/README.md
+*.tgz
+
+# eyecite caches from the port/diff tools
+.test_cache/
+eyecite-diff.json
+
+.DS_Store

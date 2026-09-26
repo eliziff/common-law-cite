@@ -1,0 +1,48 @@
+{
+ "source": {
+  "repo": "legal-citations",
+  "path": "crates/legal-grammar/data/grammar-corpus.json",
+  "table": "defs.fr_statute_series",
+  "commit": "e40ceccfacdc9fb8bec6f11cd0b56c50b8a02466",
+  "worktree_modified": true,
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "series",
+ "entries": [
+  {
+   "key": "CPLM",
+   "same_as": "CCSM"
+  },
+  {
+   "key": "RLRQ",
+   "same_as": "CQLR"
+  },
+  {
+   "key": "CQLR"
+  },
+  {
+   "key": "LRC",
+   "same_as": "RSC"
+  },
+  {
+   "key": "LRO",
+   "same_as": "RSO"
+  },
+  {
+   "key": "LRM",
+   "same_as": "RSM"
+  },
+  {
+   "key": "LC",
+   "same_as": "SC"
+  },
+  {
+   "key": "LO",
+   "same_as": "SO"
+  },
+  {
+   "key": "LM",
+   "same_as": "SM"
+  }
+ ]
+}

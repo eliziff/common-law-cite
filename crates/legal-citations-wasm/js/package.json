@@ -1,0 +1,53 @@
+{
+  "name": "legal-citations",
+  "version": "0.1.0",
+  "description": "Legal citation extraction, resolution and formatting for Canadian, Commonwealth and US law (WebAssembly; an eyecite superset)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eliziff/legal-citations.git",
+    "directory": "crates/legal-citations-wasm/js"
+  },
+  "keywords": [
+    "legal",
+    "citation",
+    "law",
+    "eyecite",
+    "canlii",
+    "mcgill",
+    "wasm"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "main": "./node.js",
+  "browser": "./index.js",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "node": "./node.js",
+      "deno": "./node.js",
+      "default": "./index.js"
+    },
+    "./legal_citations_wasm_bg.wasm": "./pkg/legal_citations_wasm_bg.wasm",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "api.js",
+    "index.js",
+    "node.js",
+    "index.d.ts",
+    "pkg/legal_citations_wasm.js",
+    "pkg/legal_citations_wasm_bg.wasm",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "../build.sh",
+    "test": "node ../../../conformance/run.mjs && node smoke.mjs"
+  }
+}

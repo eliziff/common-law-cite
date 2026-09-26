@@ -1,0 +1,68 @@
+{
+ "source": {
+  "repo": "legal-citations",
+  "path": "crates/legal-grammar/data/grammar-corpus.json",
+  "table": "cite.neutral.tribunal court",
+  "commit": "e40ceccfacdc9fb8bec6f11cd0b56c50b8a02466",
+  "worktree_modified": true,
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "Comp. Trib."
+  },
+  {
+   "key": "Trib. conc."
+  },
+  {
+   "key": "Comp Trib."
+  },
+  {
+   "key": "CAPPRT LD"
+  },
+  {
+   "key": "Comp Trib"
+  },
+  {
+   "key": "Comp trib"
+  },
+  {
+   "key": "TCRPAP LD"
+  },
+  {
+   "key": "TRIB COMP"
+  },
+  {
+   "key": "Trib Comp"
+  },
+  {
+   "key": "Trib Conc"
+  },
+  {
+   "key": "Trib conc"
+  },
+  {
+   "key": "CCRI LD"
+  },
+  {
+   "key": "CIRB LD"
+  },
+  {
+   "key": "trib conc",
+   "same_as": "comp trib"
+  },
+  {
+   "key": "trib comp",
+   "same_as": "comp trib"
+  },
+  {
+   "key": "ccri ld",
+   "same_as": "cirb ld"
+  },
+  {
+   "key": "tcrpap ld",
+   "same_as": "capprt ld"
+  }
+ ]
+}

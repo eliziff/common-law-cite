@@ -1,0 +1,204 @@
+{
+ "format": "legal-citations-conformance:v1",
+ "source": "eyecite 2.7.8 (git 047af17), reporters-db 3.2.66, courts-db 0.10.27",
+ "description": "eyecite clean_text() calls from tests/test_UtilsTest.py and test_AnnotateTest.py.",
+ "generatedBy": "conformance/tools/port-eyecite.py",
+ "cases": [
+  {
+   "name": "UtilsTest.test_clean_text#1",
+   "method": "clean",
+   "request": {
+    "text": "  word \t \n  word  ",
+    "steps": [
+     "inline_whitespace"
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "text": " word \n word "
+   },
+   "upstream": {
+    "test": "UtilsTest.test_clean_text"
+   }
+  },
+  {
+   "name": "UtilsTest.test_clean_text#2",
+   "method": "clean",
+   "request": {
+    "text": "  word \t \n  word  ",
+    "steps": [
+     "all_whitespace"
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "text": " word word "
+   },
+   "upstream": {
+    "test": "UtilsTest.test_clean_text"
+   }
+  },
+  {
+   "name": "UtilsTest.test_clean_text#3",
+   "method": "clean",
+   "request": {
+    "text": "__word__word_",
+    "steps": [
+     "underscores"
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "text": "wordword_"
+   },
+   "upstream": {
+    "test": "UtilsTest.test_clean_text"
+   }
+  },
+  {
+   "name": "UtilsTest.test_clean_text#4",
+   "method": "clean",
+   "request": {
+    "text": " <style>ignore</style> <i> word </i> ",
+    "steps": [
+     "html"
+    ]
+   },
+   "status": "pending",
+   "expect": {
+    "text": " word "
+   },
+   "upstream": {
+    "test": "UtilsTest.test_clean_text"
+   }
+  },
+  {
+   "name": "UtilsTest.test_clean_text#5",
+   "method": "clean",
+   "request": {
+    "text": " <style>ignore</style> __ <i> word  word </i>",
+    "steps": [
+     "html",
+     "underscores",
+     "inline_whitespace"
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "text": " word word "
+   },
+   "upstream": {
+    "test": "UtilsTest.test_clean_text"
+   }
+  },
+  {
+   "name": "UtilsTest.test_clean_text_invalid#1",
+   "method": "clean",
+   "request": {
+    "text": "foo",
+    "steps": [
+     "invalid"
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "error": {
+     "code": "invalid_request"
+    }
+   },
+   "upstream": {
+    "test": "UtilsTest.test_clean_text_invalid"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_span_with_pincite#1",
+   "method": "clean",
+   "request": {
+    "text": "foo, Foo v. Bar, 550 U. S. 500, at 554-555, and so on ",
+    "steps": [
+     "all_whitespace",
+     "html"
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "text": "foo, Foo v. Bar, 550 U. S. 500, at 554-555, and so on "
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_span_with_pincite"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_span_with_pincite#2",
+   "method": "clean",
+   "request": {
+    "text": "foo, Twombly, 550 U. S., at 554-555. ",
+    "steps": [
+     "all_whitespace",
+     "html"
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "text": "foo, Twombly, 550 U. S., at 554-555. "
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_span_with_pincite"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_span_with_pincite#3",
+   "method": "clean",
+   "request": {
+    "text": "Twombly, 550 U. S., at 554-555. ... etitive entry,’ ” id., at 551, beca",
+    "steps": [
+     "all_whitespace",
+     "html"
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "text": "Twombly, 550 U. S., at 554-555. ... etitive entry,’ ” id., at 551, beca"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_span_with_pincite"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_span_with_pincite#4",
+   "method": "clean",
+   "request": {
+    "text": "compelling Amick v. Liberty Mut. Ins. Co., 455 A.2d 793 (R.I. 1983). In that case ... Stats, do. See Amick at 795",
+    "steps": [
+     "all_whitespace",
+     "html"
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "text": "compelling Amick v. Liberty Mut. Ins. Co., 455 A.2d 793 (R.I. 1983). In that case ... Stats, do. See Amick at 795"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_span_with_pincite"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_span_with_pincite#5",
+   "method": "clean",
+   "request": {
+    "text": "Bell Atlantic Corp. </em>v. <em>Twombly, </em>550 U. S. 544 (2007), which discussed... apellate court’s core competency <em>Twombly, </em>550 U. S., at 557. Evaluating... In <em>Twombly</em>, supra, at 553-554, the ",
+    "steps": [
+     "all_whitespace",
+     "html"
+    ]
+   },
+   "status": "pending",
+   "expect": {
+    "text": "Bell Atlantic Corp. v.  Twombly,  550 U. S. 544 (2007), which discussed... apellate court’s core competency  Twombly,  550 U. S., at 557. Evaluating... In  Twombly , supra, at 553-554, the "
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_span_with_pincite"
+   }
+  }
+ ]
+}

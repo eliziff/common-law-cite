@@ -1,0 +1,42 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "backend/experiments/deterministic-library-analysis/legalTextAnchors.ts",
+  "table": "CITE_US_REPORTER_RE reporters",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "reporter",
+ "entries": [
+  {
+   "key": "U.S."
+  },
+  {
+   "key": "S. Ct."
+  },
+  {
+   "key": "F. 2d"
+  },
+  {
+   "key": "F. 3d"
+  },
+  {
+   "key": "F. 4th"
+  },
+  {
+   "key": "F. Supp."
+  },
+  {
+   "key": "F. Supp. 2d"
+  },
+  {
+   "key": "F. Supp. 3d"
+  },
+  {
+   "key": "L. Ed."
+  },
+  {
+   "key": "L. Ed. 2d"
+  }
+ ]
+}

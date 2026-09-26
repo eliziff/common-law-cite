@@ -1,0 +1,12 @@
+{
+  "eyecite": "2.7.8",
+  "reporters-db": "3.2.66",
+  "courts-db": "0.10.27",
+  "summary": {
+    "documents": 256,
+    "eyecite": 368,
+    "matched": 102,
+    "mismatch": 252,
+    "missed": 14
+  }
+}

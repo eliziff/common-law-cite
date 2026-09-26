@@ -1,0 +1,672 @@
+{
+ "format": "legal-citations-conformance:v1",
+ "source": "eyecite 2.7.8 (git 047af17), reporters-db 3.2.66, courts-db 0.10.27",
+ "description": "eyecite tests/test_AnnotateTest.py annotate_citations() calls as annotate requests.",
+ "generatedBy": "conformance/tools/port-eyecite.py",
+ "cases": [
+  {
+   "name": "AnnotateTest.test_annotate#1",
+   "method": "annotate",
+   "request": {
+    "text": "1 U.S. 1",
+    "annotations": [
+     {
+      "start": 0,
+      "end": 8,
+      "before": "<0>",
+      "after": "</0>"
+     }
+    ],
+    "offsetUnit": "char"
+   },
+   "status": "pass",
+   "expect": {
+    "text": "<0>1 U.S. 1</0>"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#2",
+   "method": "annotate",
+   "request": {
+    "text": "foo 1 U.S. 1 bar",
+    "annotations": [
+     {
+      "start": 4,
+      "end": 12,
+      "before": "<0>",
+      "after": "</0>"
+     }
+    ],
+    "offsetUnit": "char"
+   },
+   "status": "pass",
+   "expect": {
+    "text": "foo <0>1 U.S. 1</0> bar"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#3",
+   "method": "annotate",
+   "request": {
+    "text": "foo '1 U.S. 1' bar",
+    "annotations": [
+     {
+      "start": 5,
+      "end": 13,
+      "before": "<0>",
+      "after": "</0>"
+     }
+    ],
+    "offsetUnit": "char"
+   },
+   "status": "pass",
+   "expect": {
+    "text": "foo '<0>1 U.S. 1</0>' bar"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#4",
+   "method": "annotate",
+   "request": {
+    "text": "foo 1 U.S. ____ bar",
+    "annotations": [
+     {
+      "start": 4,
+      "end": 15,
+      "before": "<0>",
+      "after": "</0>"
+     }
+    ],
+    "offsetUnit": "char"
+   },
+   "status": "pass",
+   "expect": {
+    "text": "foo <0>1 U.S. ____</0> bar"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#5",
+   "method": "annotate",
+   "request": {
+    "text": "foo. Mass. Gen. Laws ch. 1, § 2. bar",
+    "annotations": [
+     {
+      "start": 5,
+      "end": 31,
+      "before": "<0>",
+      "after": "</0>"
+     }
+    ],
+    "offsetUnit": "char"
+   },
+   "status": "pass",
+   "expect": {
+    "text": "foo. <0>Mass. Gen. Laws ch. 1, § 2</0>. bar"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#6",
+   "method": "annotate",
+   "request": {
+    "text": "foo. 1 Minn. L. Rev. 2. bar",
+    "annotations": [
+     {
+      "start": 5,
+      "end": 22,
+      "before": "<0>",
+      "after": "</0>"
+     }
+    ],
+    "offsetUnit": "char"
+   },
+   "status": "pass",
+   "expect": {
+    "text": "foo. <0>1 Minn. L. Rev. 2</0>. bar"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#7",
+   "method": "annotate",
+   "request": {
+    "text": "1 U.S. 1. Foo. Id. Bar. Id. at 2.",
+    "annotations": [
+     {
+      "start": 0,
+      "end": 8,
+      "before": "<0>",
+      "after": "</0>"
+     },
+     {
+      "start": 15,
+      "end": 18,
+      "before": "<1>",
+      "after": "</1>"
+     },
+     {
+      "start": 24,
+      "end": 32,
+      "before": "<2>",
+      "after": "</2>"
+     }
+    ],
+    "offsetUnit": "char"
+   },
+   "status": "pass",
+   "expect": {
+    "text": "<0>1 U.S. 1</0>. Foo. <1>Id.</1> Bar. <2>Id. at 2</2>."
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#8",
+   "method": "annotate",
+   "request": {
+    "text": "1 U.S. 1. Foo v. Bar, supra at 2.",
+    "annotations": [
+     {
+      "start": 0,
+      "end": 8,
+      "before": "<0>",
+      "after": "</0>"
+     },
+     {
+      "start": 22,
+      "end": 32,
+      "before": "<1>",
+      "after": "</1>"
+     }
+    ],
+    "offsetUnit": "char"
+   },
+   "status": "pass",
+   "expect": {
+    "text": "<0>1 U.S. 1</0>. Foo v. Bar, <1>supra at 2</1>."
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#9",
+   "method": "annotate",
+   "request": {
+    "text": "Foo v. Bar 1 U.S. 1. In Foo at 2.",
+    "annotations": [
+     {
+      "start": 11,
+      "end": 19,
+      "before": "<0>",
+      "after": "</0>"
+     },
+     {
+      "start": 24,
+      "end": 32,
+      "before": "<1>",
+      "after": "</1>"
+     }
+    ],
+    "offsetUnit": "char"
+   },
+   "status": "pass",
+   "expect": {
+    "text": "Foo v. Bar <0>1 U.S. 1</0>. In <1>Foo at 2</1>."
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#10",
+   "method": "annotate",
+   "request": {
+    "text": "foo 1 U.S. 1 bar",
+    "annotations": [
+     {
+      "start": 4,
+      "end": 12,
+      "before": "<0>",
+      "after": "</0>"
+     }
+    ],
+    "offsetUnit": "char",
+    "source": "<body>foo  <i>1   <b>U.S.</b></i>   1 bar</body>",
+    "cleanSteps": [
+     "html",
+     "inline_whitespace"
+    ]
+   },
+   "status": "pending",
+   "expect": {
+    "text": "<body>foo  <i><0>1   <b>U.S.</b></i>   1</0> bar</body>"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#11",
+   "method": "annotate",
+   "request": {
+    "text": "foo 1 U.S. 1; 2 U.S. 2",
+    "annotations": [
+     {
+      "start": 4,
+      "end": 12,
+      "before": "<0>",
+      "after": "</0>"
+     },
+     {
+      "start": 14,
+      "end": 22,
+      "before": "<1>",
+      "after": "</1>"
+     }
+    ],
+    "offsetUnit": "char",
+    "source": "foo  <i>1 U.S.</i> 1; 2 <i>U.S.</i> 2",
+    "cleanSteps": [
+     "html",
+     "inline_whitespace"
+    ],
+    "unbalancedTags": "skip"
+   },
+   "status": "pending",
+   "expect": {
+    "text": "foo  <0><i>1 U.S.</i> 1</0>; <1>2 <i>U.S.</i> 2</1>"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#12",
+   "method": "annotate",
+   "request": {
+    "text": "1 U.S. 1; 2 U.S. 2",
+    "annotations": [
+     {
+      "start": 0,
+      "end": 8,
+      "before": "<0>",
+      "after": "</0>"
+     },
+     {
+      "start": 10,
+      "end": 18,
+      "before": "<1>",
+      "after": "</1>"
+     }
+    ],
+    "offsetUnit": "char",
+    "source": "<i>1 U.S.</i> 1; 2 <i>U.S.</i> 2",
+    "cleanSteps": [
+     "html",
+     "inline_whitespace"
+    ],
+    "unbalancedTags": "wrap"
+   },
+   "status": "pass",
+   "expect": {
+    "text": "<i><0>1 U.S.</0></i><0> 1</0>; <1>2 <i>U.S.</i> 2</1>"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#13",
+   "method": "annotate",
+   "request": {
+    "text": "foo Ibid. bar",
+    "annotations": [
+     {
+      "start": 4,
+      "end": 9,
+      "before": "<0>",
+      "after": "</0>"
+     }
+    ],
+    "offsetUnit": "char",
+    "source": "foo <i>Ibid.</i> bar",
+    "cleanSteps": [
+     "html",
+     "inline_whitespace"
+    ],
+    "unbalancedTags": "skip"
+   },
+   "status": "pass",
+   "expect": {
+    "text": "foo <i><0>Ibid.</0></i> bar"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#14",
+   "method": "annotate",
+   "request": {
+    "text": "1 U.S. 1",
+    "annotations": [
+     {
+      "start": 0,
+      "end": 8,
+      "before": "<0>",
+      "after": "</0>"
+     }
+    ],
+    "offsetUnit": "char",
+    "source": "1\nU.S. 1",
+    "cleanSteps": []
+   },
+   "status": "pending",
+   "expect": {
+    "text": "<0>1\nU.S. 1</0>"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#15",
+   "method": "annotate",
+   "request": {
+    "text": "1 U.S. 1. Id. 2 U.S. 2. Id.",
+    "annotations": [
+     {
+      "start": 0,
+      "end": 8,
+      "before": "<0>",
+      "after": "</0>"
+     },
+     {
+      "start": 10,
+      "end": 13,
+      "before": "<1>",
+      "after": "</1>"
+     },
+     {
+      "start": 14,
+      "end": 22,
+      "before": "<2>",
+      "after": "</2>"
+     },
+     {
+      "start": 24,
+      "end": 27,
+      "before": "<3>",
+      "after": "</3>"
+     }
+    ],
+    "offsetUnit": "char"
+   },
+   "status": "pass",
+   "expect": {
+    "text": "<0>1 U.S. 1</0>. <1>Id.</1> <2>2 U.S. 2</2>. <3>Id.</3>"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#16",
+   "method": "annotate",
+   "request": {
+    "text": "partially secured by a debtor’s principal residence was not con-firmable. Nobelman v. Am. Sav. Bank, 508 U.S. 324, 113 S.Ct. 2106, 124 L.Ed.2d 228 (1993). That plan proposed to bifurcate the claim and... pay the unsecured... only by a lien on the debtor’s principal residence.” Nobelman at 332, 113 S.Ct. 2106. Section 1123(b)(5) codifies the Nobelman decision in individual debtor chapter 11 cases.",
+    "annotations": [
+     {
+      "start": 101,
+      "end": 113,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     },
+     {
+      "start": 115,
+      "end": 129,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     },
+     {
+      "start": 131,
+      "end": 146,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     },
+     {
+      "start": 295,
+      "end": 309,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     },
+     {
+      "start": 343,
+      "end": 351,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     }
+    ],
+    "offsetUnit": "char",
+    "source": " partially secured by a debtor’s principal residence was not con-firmable. <em>Nobelman v. Am. Sav. Bank, </em>508 U.S. 324, 113 S.Ct. 2106, 124 L.Ed.2d 228 (1993). That plan proposed to bifurcate the claim and... pay the unsecured... only by a lien on the debtor’s principal residence.” <em>Nobelman </em>at 332, 113 S.Ct. 2106. Section 1123(b)(5) codifies the <em>Nobelman </em>decision in individual debtor chapter 11 cases.",
+    "cleanSteps": [
+     "html",
+     "all_whitespace"
+    ],
+    "unbalancedTags": "skip"
+   },
+   "status": "pass",
+   "expect": {
+    "text": " partially secured by a debtor’s principal residence was not con-firmable. <em>Nobelman v. Am. Sav. Bank, </em><a href='something'>508 U.S. 324</a>, <a href='something'>113 S.Ct. 2106</a>, <a href='something'>124 L.Ed.2d 228</a> (1993). That plan proposed to bifurcate the claim and... pay the unsecured... only by a lien on the debtor’s principal residence.” <em>Nobelman </em>at 332, <a href='something'>113 S.Ct. 2106</a>. Section 1123(b)(5) codifies the <em><a href='something'>Nobelman</a> </em>decision in individual debtor chapter 11 cases."
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#17",
+   "method": "annotate",
+   "request": {
+    "text": "he has not agreed so to submit.’” Howsam v. Dean Witter Reynolds, Inc. , 537 U.S. 79, 83, 123 S. Ct. 588, 591 (2002) (combined mandamus and interlocutory appeal) (citing Howsam at 84, 123 S. Ct. at 592)",
+    "annotations": [
+     {
+      "start": 73,
+      "end": 84,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     },
+     {
+      "start": 90,
+      "end": 104,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     },
+     {
+      "start": 170,
+      "end": 182,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     },
+     {
+      "start": 184,
+      "end": 201,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     }
+    ],
+    "offsetUnit": "char",
+    "source": "he has not agreed so to submit.’”  <i>Howsam v. Dean Witter Reynolds, Inc.</i>, 537 U.S. 79, 83, 123 S. Ct. 588, 591 (2002) (combined mandamus and interlocutory appeal) (citing <i>Howsam</i> at 84, 123 S. Ct. at 592)",
+    "cleanSteps": [
+     "html",
+     "all_whitespace"
+    ],
+    "unbalancedTags": "skip"
+   },
+   "status": "pending",
+   "expect": {
+    "text": "he has not agreed so to submit.’”  <i>Howsam v. Dean Witter Reynolds, Inc.</i>, <a href='something'>537 U.S. 79</a>, 83, <a href='something'>123 S. Ct. 588</a>, 591 (2002) (combined mandamus and interlocutory appeal) (citing <a href='something'><i>Howsam</i> at 84</a>, <a href='something'>123 S. Ct. at 592</a>)"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#18",
+   "method": "annotate",
+   "request": {
+    "text": "See also Styler v. Tall Oaks, Inc. (In re Hatch), 93 B.R. 263, 267 (Bankr.D. Utah 1988), rev'd 114 B.R. 747 (D.Utah 1989).... The court makes no determination as to whe Fifth Amendment to the constitution of the United States.” Styler v. Tall Oaks, Inc. (In re Hatch), at 748.",
+    "annotations": [
+     {
+      "start": 50,
+      "end": 61,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     },
+     {
+      "start": 95,
+      "end": 107,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     }
+    ],
+    "offsetUnit": "char",
+    "source": "See also Styler v. Tall Oaks, Inc. (In re Hatch), 93 B.R. 263, 267 (Bankr.D. Utah 1988), <em> rev'd </em> 114 B.R. 747 (D.Utah 1989).</p>...   The court makes no determination as to whe Fifth Amendment to the constitution of the United States.” <em> Styler v. Tall Oaks, Inc. (In re Hatch), </em> at 748.</p>",
+    "cleanSteps": [
+     "html",
+     "all_whitespace"
+    ],
+    "unbalancedTags": "skip"
+   },
+   "status": "pending",
+   "expect": {
+    "text": "See also Styler v. Tall Oaks, Inc. (In re Hatch), <a href='something'>93 B.R. 263</a>, 267 (Bankr.D. Utah 1988), <em> rev'd </em> <a href='something'>114 B.R. 747</a> (D.Utah 1989).</p>...   The court makes no determination as to whe Fifth Amendment to the constitution of the United States.” <em> Styler v. Tall Oaks, Inc. (In re Hatch), </em> at 748.</p>"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#19",
+   "method": "annotate",
+   "request": {
+    "text": "to act rationally. See, e.g., State v. Wingler, 25 N.J. 161, 175, 135 A. 2d 468 (1957); citing, ... have been applied.' [ State v. Wingler at 175, 135 A. 2d 468, citing, Minnesota ex rel.",
+    "annotations": [
+     {
+      "start": 48,
+      "end": 59,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     },
+     {
+      "start": 66,
+      "end": 79,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     },
+     {
+      "start": 147,
+      "end": 160,
+      "before": "<a href='something'>",
+      "after": "</a>"
+     }
+    ],
+    "offsetUnit": "char",
+    "source": "to act rationally. <i>See, e.g., </i><i>State v. Wingler,</i> 25 <i>N.J.</i> 161, 175, 135 <i>A.</i>2d 468 (1957); <i>citing, ...  have been applied.' [<i>State v. Wingler</i> at 175, 135 <i>A.</i>2d 468, <i>citing, </i><i>Minnesota ex rel.</i>",
+    "cleanSteps": [
+     "html",
+     "all_whitespace"
+    ],
+    "unbalancedTags": "skip"
+   },
+   "status": "pending",
+   "expect": {
+    "text": "to act rationally. <i>See, e.g., </i><i>State v. Wingler,</i> <a href='something'>25 <i>N.J.</i> 161</a>, 175, <a href='something'>135 <i>A.</i>2d 468</a> (1957); <i>citing, ...  have been applied.' [<i>State v. Wingler</i> at 175, <a href='something'>135 <i>A.</i>2d 468</a>, <i>citing, </i><i>Minnesota ex rel.</i>"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#20",
+   "method": "annotate",
+   "request": {
+    "text": "2016 WL 4217254 . id.",
+    "annotations": [
+     {
+      "start": 0,
+      "end": 15,
+      "before": "<0>",
+      "after": "</0>"
+     },
+     {
+      "start": 18,
+      "end": 21,
+      "before": "<1>",
+      "after": "</1>"
+     }
+    ],
+    "offsetUnit": "char",
+    "source": "<p index=\"143\">2016 WL 4217254</p>.<p index=\"144\">id.</p>",
+    "cleanSteps": [
+     "html",
+     "all_whitespace"
+    ],
+    "unbalancedTags": "skip"
+   },
+   "status": "pending",
+   "expect": {
+    "text": "<p index=\"143\"><0>2016 WL 4217254</0></p>.<p index=\"144\"><1>id.</1></p>"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  },
+  {
+   "name": "AnnotateTest.test_annotate#21",
+   "method": "annotate",
+   "request": {
+    "text": "contending it <12123 is < the most “apt.” “ ‘[A] vast enterprise usu. 2016 WL 4217254",
+    "annotations": [
+     {
+      "start": 70,
+      "end": 85,
+      "before": "<0>",
+      "after": "</0>"
+     }
+    ],
+    "offsetUnit": "char",
+    "source": "contending it <12123 is < the most “apt.” “ ‘[A] vast enterprise usu. <p index=\"143\">2016 WL 4217254</p>",
+    "cleanSteps": [
+     "html",
+     "all_whitespace"
+    ],
+    "unbalancedTags": "skip"
+   },
+   "status": "pending",
+   "expect": {
+    "text": "contending it <12123 is < the most “apt.” “ ‘[A] vast enterprise usu. <p index=\"143\"><0>2016 WL 4217254</0></p>"
+   },
+   "upstream": {
+    "test": "AnnotateTest.test_annotate"
+   }
+  }
+ ]
+}

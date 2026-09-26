@@ -1,0 +1,259 @@
+{
+ "source": {
+  "repo": "legal-citations",
+  "path": "crates/legal-grammar/data/grammar-corpus.json",
+  "table": "cite.neutral.bracketed court",
+  "commit": "e40ceccfacdc9fb8bec6f11cd0b56c50b8a02466",
+  "worktree_modified": true,
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "UKSC"
+  },
+  {
+   "key": "UKPC"
+  },
+  {
+   "key": "UKHL"
+  },
+  {
+   "key": "UKUT"
+  },
+  {
+   "key": "UKFTT"
+  },
+  {
+   "key": "UKEAT"
+  },
+  {
+   "key": "UKIPTrib"
+  },
+  {
+   "key": "EWCA Civ"
+  },
+  {
+   "key": "EWCA Crim"
+  },
+  {
+   "key": "EWHC"
+  },
+  {
+   "key": "EWCOP"
+  },
+  {
+   "key": "EWFC"
+  },
+  {
+   "key": "EWFC B"
+  },
+  {
+   "key": "EWCC"
+  },
+  {
+   "key": "EWMC"
+  },
+  {
+   "key": "CSIH"
+  },
+  {
+   "key": "CSOH"
+  },
+  {
+   "key": "HCJAC"
+  },
+  {
+   "key": "NICA"
+  },
+  {
+   "key": "NIQB"
+  },
+  {
+   "key": "NICh"
+  },
+  {
+   "key": "NIFam"
+  },
+  {
+   "key": "NICC"
+  },
+  {
+   "key": "IESC"
+  },
+  {
+   "key": "IECA"
+  },
+  {
+   "key": "IEHC"
+  },
+  {
+   "key": "HCA"
+  },
+  {
+   "key": "FCAFC"
+  },
+  {
+   "key": "FCA"
+  },
+  {
+   "key": "FamCAFC"
+  },
+  {
+   "key": "FamCA"
+  },
+  {
+   "key": "FedCFamC1A"
+  },
+  {
+   "key": "FedCFamC1F"
+  },
+  {
+   "key": "FedCFamC2A"
+  },
+  {
+   "key": "FedCFamC2F"
+  },
+  {
+   "key": "FCCA"
+  },
+  {
+   "key": "FMCA"
+  },
+  {
+   "key": "AATA"
+  },
+  {
+   "key": "ARTA"
+  },
+  {
+   "key": "NSWCCA"
+  },
+  {
+   "key": "NSWCA"
+  },
+  {
+   "key": "NSWSC"
+  },
+  {
+   "key": "NSWLEC"
+  },
+  {
+   "key": "NSWDC"
+  },
+  {
+   "key": "NSWCATAP"
+  },
+  {
+   "key": "VSCA"
+  },
+  {
+   "key": "VSC"
+  },
+  {
+   "key": "VCC"
+  },
+  {
+   "key": "VCAT"
+  },
+  {
+   "key": "QCA"
+  },
+  {
+   "key": "QSC"
+  },
+  {
+   "key": "QDC"
+  },
+  {
+   "key": "QCAT"
+  },
+  {
+   "key": "WASCA"
+  },
+  {
+   "key": "WASC"
+  },
+  {
+   "key": "WADC"
+  },
+  {
+   "key": "SASCFC"
+  },
+  {
+   "key": "SASC"
+  },
+  {
+   "key": "SADC"
+  },
+  {
+   "key": "TASFC"
+  },
+  {
+   "key": "TASSC"
+  },
+  {
+   "key": "TASCCA"
+  },
+  {
+   "key": "ACTCA"
+  },
+  {
+   "key": "ACTSC"
+  },
+  {
+   "key": "NTCA"
+  },
+  {
+   "key": "NTSC"
+  },
+  {
+   "key": "NZSC"
+  },
+  {
+   "key": "NZCA"
+  },
+  {
+   "key": "NZHC"
+  },
+  {
+   "key": "NZDC"
+  },
+  {
+   "key": "NZEmpC"
+  },
+  {
+   "key": "NZFC"
+  },
+  {
+   "key": "NZEnvC"
+  },
+  {
+   "key": "NZERA"
+  },
+  {
+   "key": "SGCA"
+  },
+  {
+   "key": "SGHC"
+  },
+  {
+   "key": "HKCFA"
+  },
+  {
+   "key": "HKCA"
+  },
+  {
+   "key": "HKCFI"
+  },
+  {
+   "key": "ZACC"
+  },
+  {
+   "key": "ZASCA"
+  },
+  {
+   "key": "JCPC"
+  }
+ ]
+}
