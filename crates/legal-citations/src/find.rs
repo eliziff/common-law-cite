@@ -7,7 +7,9 @@
 //! rebuilt exactly from its citations' full spans and the gaps between them.
 
 use crate::metadata::{self, TailRules};
-use crate::model::{Authority, Citation, Fields, Form, NoteDirection, NoteReference, Span};
+use crate::model::{
+    Authority, Citation, Fields, Form, NoteDirection, NoteReference, Pinpoint, PinpointKind, Span,
+};
 use crate::text::javascript_whitespace;
 use crate::Options;
 use legal_grammar::{AsciiBoundedGrammar, CompiledEcmascriptGrammar, CompiledGrammar};
@@ -936,15 +938,15 @@ fn full_citation(
     previous_end: usize,
     limit: usize,
 ) -> Citation {
-    let mut core = anchor.span.clone();
+    let core = &anchor.span;
     let (kind, kind_reason) = anchor.family.unwrap_or_else(|| citation_kind(&text[core.clone()]));
-    // eyecite's law extractors stop before written subdivisions (`§ 1.401(a)-1`).
-    if kind_reason == "statute_grammar" {
-        if let Some(subdivision) = LAW_SUBDIVISION.find(&text[core.end..limit]) {
-            core.end += subdivision.end();
-        }
-    }
-    let core = &core;
+    // eyecite's law cores stop before a written subdivision (`§ 21-3516(a)(2)`,
+    // `§ 1.401(a)-1`); the subdivision is the citation's first pinpoint, read
+    // here so `(a)` is never taken for a parenthetical.
+    let subdivision = (kind_reason == "statute_grammar")
+        .then(|| LAW_SUBDIVISION.find(&text[core.end..limit]))
+        .flatten()
+        .map(|matched| core.end..core.end + matched.end());
     let core_text = &text[core.clone()];
     let styled_start = anchor.style_start.unwrap_or_else(|| match kind {
         "case" => case_style_start(text, core.start, previous_end),
@@ -962,9 +964,9 @@ fn full_citation(
     let bare_page = matches!(kind, "case" | "journal")
         && core_text.contains('.')
         && REPORTER_PARTS.is_match(core_text).unwrap_or(false);
-    let tail = metadata::tail(
+    let mut tail = metadata::tail(
         text,
-        core.end,
+        subdivision.as_ref().map_or(core.end, |range| range.end),
         limit,
         TailRules {
             bare_page,
@@ -972,6 +974,17 @@ fn full_citation(
             inner: anchor.inner,
         },
     );
+    if let Some(range) = subdivision {
+        tail.pinpoints.insert(
+            0,
+            Pinpoint {
+                kind: PinpointKind::Subsection,
+                first: text[range.clone()].to_owned(),
+                span: span(text, range),
+                last: None,
+            },
+        );
+    }
     let style_end = trim_style_end(text, styled_start, core.start);
     let observed_name = text[styled_start..core.start].trim_matches(|character: char| {
         javascript_whitespace(character) || ",;:.".contains(character)

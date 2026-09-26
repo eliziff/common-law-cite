@@ -54,7 +54,8 @@ impl AsciiBoundedGrammar {
 }
 
 pub const GRAMMAR_CORPUS_FORMAT: &str = "legal-grammar-corpus:v1";
-const GRAMMAR_CORPUS_JSON: &str = include_str!("../data/grammar-corpus.json");
+/// The embedded corpus, byte for byte, so consumers can fingerprint it.
+pub const GRAMMAR_CORPUS_JSON: &str = include_str!("../data/grammar-corpus.json");
 pub const SOURCE_WHITESPACE: &str = concat!(
     r" \t\n\r\f\v\x1c-\x1f\x85\u00a0\u1680",
     r"\u2000-\u200a\u2028\u2029\u202f\u205f\u3000"

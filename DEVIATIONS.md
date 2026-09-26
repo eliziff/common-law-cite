@@ -42,7 +42,7 @@ item closes only when a test or recorded evidence covers it.
 | 34 | Boundary | Many Beaver findings are in `benchmarks/` and `experiments/`; agent suggests ignoring them. Beaver AGENTS.md forbids consolidating experiments in ordinary refactors | boundary agent | Open: user decision (ignore, allowlist with reasons, or migrate) |
 | 35 | Boundary | ~3% false positives in Beaver (an `O. Reg` keyword list, benchmark report f-strings, test fixtures), ~1 each in legal-pinpointer and legal-pdf-parser | boundary agent | Open: tune or allowlist with reasons during migration |
 | 36 | Boundary | 75 of 92 engine corpus citation/pinpoint/reference entries detected if copied; misses are generic URL/boundary/conjunction fragments | boundary agent | Open: accepted limitation unless user objects |
-| 37 | Boundary | `npx` distribution needs a root `package.json` bin; CI clone of a private repo needs a token | boundary agent | Open: packaging at integration |
+| 37 | Boundary | `npx` distribution needed a root `package.json` bin | boundary agent | Closed: root `package.json` exposes `citation-boundary` and `citation-boundary-hook`; `npm run test:boundary` 55/55 |
 | 38 | Boundary | Audit paths moved: `courtlistenerLocalBulk.ts` now `backend/src/lib/`, `folderSources.ts` now `frontend/src/app/authorities/`; AuthoritiesHelper `domain.mjs` `key()` at line 2 | boundary agent | Closed: informational |
 | 39 | Boundary | Baseline findings to eliminate in migration: Beaver 186, legal-pinpointer 68, AuthoritiesHelper 16, legal-pdf-parser 28, legal-structure-parser 28 | boundary agent | Open: migration target is zero non-allowlisted |
 | 40 | Conformance | Engine is NOT yet an eyecite superset: 149 pass / 197 pending overall. eyecite-find 62/216, resolve 14/27, annotate 13/21, clean 9/11, models 1/13; Commonwealth authored 50/58. Top eyecite failure causes: fullSpan (35), court id (35), citation count (25), form (18) | bindings agent | Open: engine work until pending is empty |
@@ -55,8 +55,8 @@ item closes only when a test or recorded evidence covers it.
 | 47 | Engine | `(1990). Id.` read as a journal citation | bindings agent | Open |
 | 48 | Bindings | eyecite facade gives eyecite's class sequence on 171 of 229 inputs | bindings agent | Open |
 | 49 | Bindings | WASM module is 3.57 MB (~800 KB gzipped); ~1.8 MB is embedded registry + grammar data | bindings agent | Open: acceptable for MV3? decide at review gate |
-| 50 | Bindings | `version` reports `null` for grammar sha256 and upstream pins (not embedded yet) | bindings agent | Open |
+| 50 | Bindings | `version` reported `null` for grammar sha256 and upstream pins | bindings agent | Closed: sha256 computed from the embedded corpus; pins from `registry/upstream/pins.json`, written by `sync-upstream.py` |
 | 51 | CI | GitHub workflows not executed (YAML parse only); no real browser/extension run | bindings agent | Open: runs after push |
-| 52 | CI | `upstream.yml` flag mismatch with `sync-upstream.py` (`--update`/`--check` vs `--write`) | bindings agent | Open: fix at integration |
+| 52 | CI | Reported flag mismatch between `upstream.yml` and `sync-upstream.py` | bindings agent | Closed: not a defect. Without `--check` the script writes; `--update` moves pins then writes |
 | 53 | Aliases | 26,546 A2AJ-observed reporter aliases from ALR-Verifier `data/a2aj_reporter_aliases.json` being added to the engine; completeness test required | coordinator | Open: alias agent |
 | 54 | Scope | ALR-Verifier (AlbertaLawReview) added to the migration; push needs the Claude GitHub App on that account | coordinator | Open: waiting on access; migration prepared locally meanwhile |

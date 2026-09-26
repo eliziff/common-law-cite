@@ -1,0 +1,22 @@
+{
+  "name": "common-law-cite-tools",
+  "private": true,
+  "description": "Repository tooling for common-law-cite: the citation boundary checker and its Claude Code hook",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "citation-boundary": "tools/citation-boundary/check.mjs",
+    "citation-boundary-hook": "tools/citation-boundary/claude-hook.mjs"
+  },
+  "files": [
+    "tools/citation-boundary/",
+    "crates/legal-citations/registry/",
+    "crates/legal-grammar/data/"
+  ],
+  "scripts": {
+    "test:boundary": "node --test \"tools/citation-boundary/test/*.test.mjs\""
+  }
+}

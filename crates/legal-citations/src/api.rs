@@ -932,12 +932,8 @@ pub struct GrammarVersion {
     pub format: String,
     /// Number of grammar entries across all tables.
     pub entries: usize,
-    /// SHA-256 of `grammar-corpus.json`.
-    ///
-    /// TODO(legal-grammar): `null` until the grammar crate exports its corpus
-    /// hash (e.g. `pub const GRAMMAR_CORPUS_SHA256`); the api cannot read
-    /// `data/manifest.json` without breaking `cargo package`.
-    pub sha256: Option<String>,
+    /// SHA-256 of the embedded `grammar-corpus.json`.
+    pub sha256: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -951,12 +947,8 @@ pub struct RegistryVersion {
     /// Reporter and journal entries by data source (`mcgill`, `reporters-db`, ...).
     pub sources: std::collections::BTreeMap<String, usize>,
     /// Upstream data versions (`reporters-db`, `courts-db`) the generated
-    /// entries were built from.
-    ///
-    /// TODO(registry): `null` until the registry embeds its `upstream.lock`
-    /// pins (the lock lives at the repository root, outside the published
-    /// crate, so the api cannot `include_str!` it).
-    pub upstream: Option<Map<String, Value>>,
+    /// entries were built from, as pinned in `upstream.lock`.
+    pub upstream: Map<String, Value>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -988,7 +980,13 @@ pub fn version() -> VersionResponse {
         grammar: GrammarVersion {
             format: legal_grammar::GRAMMAR_CORPUS_FORMAT.to_owned(),
             entries: legal_grammar::load_tables().map_or(0, |tables| tables.len()),
-            sha256: None,
+            sha256: {
+                use sha2::{Digest, Sha256};
+                Sha256::digest(legal_grammar::GRAMMAR_CORPUS_JSON.as_bytes())
+                    .iter()
+                    .map(|byte| format!("{byte:02x}"))
+                    .collect()
+            },
         },
         registry: RegistryVersion {
             jurisdictions: registry.jurisdictions.len(),
@@ -997,7 +995,8 @@ pub fn version() -> VersionResponse {
             series: registry.series.len(),
             journals: registry.journals.len(),
             sources,
-            upstream: None,
+            upstream: serde_json::from_str(include_str!("../registry/upstream/pins.json"))
+                .expect("registry/upstream/pins.json"),
         },
     }
 }

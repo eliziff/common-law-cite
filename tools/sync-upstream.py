@@ -359,6 +359,8 @@ def main():
     if args.update:
         update_lock(lock)
     outputs = generate(fetch(lock, sources))
+    pins = {name: {key: lock[name][key] for key in ("repository", "version", "commit")} for name in sorted(lock)}
+    outputs["pins.json"] = json.dumps(pins, indent=2, sort_keys=True) + "\n"
     stale = []
     for name, text in outputs.items():
         path = OUT / name
@@ -370,6 +372,8 @@ def main():
     if args.check and stale:
         sys.exit(f"registry/upstream is stale: {', '.join(stale)}; run tools/sync-upstream.py")
     for name, text in outputs.items():
+        if name == "pins.json":
+            continue
         rows = len(json.loads(text))
         print(f"upstream/{name}: {rows} rows, {len(text.encode())} bytes")
 

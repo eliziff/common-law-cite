@@ -3,8 +3,7 @@
   "repo": "legal-citations",
   "path": "crates/legal-grammar/data/grammar-corpus.json",
   "table": "defs.reporter_words",
-  "commit": "e40ceccfacdc9fb8bec6f11cd0b56c50b8a02466",
-  "worktree_modified": true,
+  "commit": "dab9bc2c32d38a934a508dc53715241018a003a7",
   "extracted_by": "tools/extract-source-tables.py"
  },
  "kind": "pattern",
