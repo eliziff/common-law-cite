@@ -22,7 +22,8 @@ sha2.workspace = true
 unicode-normalization.workspace = true
 unicode-casefold = "0.2"
 num-bigint = "0.4"
-diff-match-patch-rs = "0.5.1"
+# 0.5.1 with only the missing WASI chrono dependency declaration corrected.
+diff-match-patch-rs = { git = "https://github.com/eliziff/diff-match-patch-rs.git", rev = "30daa5ab7e4fac48fcb520641e537c89e6fdc40c" }
 roxmltree = "0.21"
 ts-rs = { version = "12", optional = true, features = ["serde-json-impl"] }
 scraper = { version = "0.27", default-features = false }
