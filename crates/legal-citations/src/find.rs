@@ -1094,8 +1094,7 @@ fn back_citation(
             }
         })
         .flatten();
-    let start = name.as_ref().map_or(core.start, |name| name.start)
-        .min(source_name.map_or(core.start, |name| name.full_span_start));
+    let start = name.as_ref().map_or(core.start, |name| name.start);
     if let Some(name) = name {
         citation.reasons.push("same_text_style".to_owned());
         citation.short_name = Some(text[name.clone()].to_owned());
