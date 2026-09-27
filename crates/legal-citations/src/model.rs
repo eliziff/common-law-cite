@@ -344,6 +344,8 @@ pub struct SourceCaseName {
     pub plaintiff: Option<String>,
     #[serde(skip)]
     pub defendant: Option<String>,
+    #[serde(skip)]
+    pub volume: Option<String>,
     pub antecedent_guess: Option<String>,
     pub year: Option<String>,
     pub pre_citation: Option<Span>,

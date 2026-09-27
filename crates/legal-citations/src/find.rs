@@ -472,9 +472,20 @@ fn primary_anchors(value: &str, extended_us: bool) -> Vec<Anchor> {
             found.push(matched.start()..matched.end());
         }
     }
+    let captured = crate::us::find(value, extended_us);
+    // Pinned source tokens own their core. Standard Commonwealth forms keep
+    // a leading year; their captured reporter fields do not shorten that core.
+    found.retain(|span| {
+        let next = captured.partition_point(|matched| matched.span.end <= span.start);
+        captured.get(next).is_none_or(|matched| matched.span.start >= span.end
+            || (span.start < matched.span.start && matched.span.end == span.end
+                && matched.fields.source_groups.get("reporter").and_then(|value| value.as_deref()).is_some_and(|surface|
+                    crate::registry::registry().reporters_by_surface(surface).iter()
+                        .any(|(reporter, _)| reporter.verified && reporter.source != "reporters-db"))))
+    });
     let mut found: Vec<_> = found.into_iter()
         .map(|span| Anchor { span, ..Anchor::default() }).collect();
-    found.extend(crate::us::find(value, extended_us).into_iter().map(|matched| {
+    found.extend(captured.into_iter().map(|matched| {
         let reading = crate::classify::extracted(&value[matched.span.clone()], matched.fields, matched.short_at);
         Anchor { span: matched.span, family: Some(reading.family()), reading: Some(reading), ..Anchor::default() }
     }));
@@ -901,7 +912,9 @@ fn full_citation(
             }),
             bare_page,
             oscola: false,
-            inner: anchor.inner,
+            inner: anchor.inner.or_else(|| source_name
+                .filter(|name| name.pre_citation.is_some()).and_then(|name| name.pin_cite.as_ref())
+                .map(|pin| (pin.start, pin.end))),
         },
     );
     if let Some(range) = subdivision {
@@ -1047,6 +1060,7 @@ fn back_citation(
     text: &str,
     core: &Hit,
     (form, note, oscola, french): (Form, Option<u32>, bool, bool),
+    source_name: Option<&crate::SourceCaseName>,
     previous_end: usize,
     limit: usize,
 ) -> Citation {
@@ -1061,6 +1075,8 @@ fn back_citation(
     );
     let mut citation = blank_citation(text, form, Authority::Unknown, core.clone(), "reference_grammar");
     citation.fields.note = note;
+    citation.fields.source_case_name = source_name.cloned();
+    citation.fields.volume = citation.fields.source_case_name.as_mut().and_then(|name| name.volume.take());
     if french {
         citation.language = Some("fr".to_owned());
     }
@@ -1283,6 +1299,7 @@ pub fn find(text: &str, options: &Options) -> Vec<Citation> {
 
 pub(crate) fn find_styled(text: &str, options: &Options, markup: Option<&crate::clean::Markup<'_>>) -> Vec<Citation> {
     let cores = cores(text, options);
+    if cores.is_empty() { return Vec::new(); }
     let source_names = crate::us::case_names(text, &cores.iter().filter_map(|core| match &core.kind {
         CoreKind::Full(anchor) if anchor.reading.as_ref().is_some_and(|reading| reading.source_captured()) =>
             Some((core.span.clone(), anchor.reading.as_ref().is_some_and(|reading| reading.short_at.is_some()))),
@@ -1317,7 +1334,7 @@ pub(crate) fn find_styled(text: &str, options: &Options, markup: Option<&crate::
                 note,
                 oscola,
                 french,
-            } => back_citation(text, &core.span, (*form, *note, *oscola, *french), floor, limit),
+            } => back_citation(text, &core.span, (*form, *note, *oscola, *french), source_names.get(&core.span.start), floor, limit),
             CoreKind::Unknown(section) => {
                 let mut citation =
                     blank_citation(text, Form::Unknown, Authority::Unknown, core.span.clone(), "section_symbol");

@@ -385,8 +385,9 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
         let window = &text[start..if source == PostCitation::Case { paragraph_end } else { paragraph_end.min(limit) }];
         let end = window.char_indices().nth(300).map_or(window.len(), |(at, _)| at);
         if let Some(captures) = POST_CITATION[source as usize].captures(&window[..end]).expect("post-citation match") {
-            if source == PostCitation::Case {
-                let mut source_end = start + captures.get(0).unwrap().end();
+            if matches!(source, PostCitation::Case | PostCitation::Short) {
+                let mut source_end = start + if source == PostCitation::Case { captures.get(0).unwrap().end() }
+                    else { captures.name("pin_cite").map_or(0, |pin| pin.as_str().trim_end_matches([',', ' ']).len()) };
                 // Eyecite process_parenthetical: stop at the first unmatched
                 // closing parenthesis, then exclude year-only parentheticals.
                 if let Some(part) = captures.name("parenthetical") {
@@ -399,7 +400,7 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
                         if balance < 0 {
                             closed = true;
                             value = &value[..offset];
-                            if !value.is_empty() { source_end -= part.as_str().len() - value.len(); }
+                            if source == PostCitation::Case && !value.is_empty() { source_end -= part.as_str().len() - value.len(); }
                             break;
                         }
                     }

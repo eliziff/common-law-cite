@@ -16,6 +16,7 @@ dist/
 
 # npm package build output (crates/legal-citations-wasm/build.sh)
 crates/legal-citations-wasm/js/pkg/
+crates/legal-citations-wasm/js/bindings/
 crates/legal-citations-wasm/js/node_modules/
 crates/legal-citations-wasm/js/LICENSE
 crates/legal-citations-wasm/js/NOTICE

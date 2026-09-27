@@ -20,6 +20,7 @@ mod names {
     }
     pattern!(ID, "name.us.id");
     pattern!(SUPRA, "name.us.supra");
+    pattern!(SUPRA_ANTECEDENT, "name.us.supra-antecedent");
     pattern!(PARAGRAPH, "name.us.paragraph");
     pattern!(STOP, "name.us.stop");
     pattern!(PLACEHOLDER, "cite.us.placeholder");
@@ -40,7 +41,7 @@ mod names {
     });
 
     #[derive(Clone, Copy)]
-    enum Kind { Text, Citation(bool), Stop(bool), Supra, Placeholder, Other }
+    enum Kind { Text, Citation(bool), Stop(bool), Supra, Id, Placeholder, Other }
     struct Word<'a> { text: &'a str, start: usize, end: usize, kind: Kind }
 
     fn alphabetic(character: char) -> bool {
@@ -198,11 +199,9 @@ mod names {
         None
     }
 
-    // helpers.add_pre_citation / match_on_tokens: stop at the first non-string
-    // token and keep the last 300 Unicode scalars, not 300 bytes.
-    fn pre_citation(text: &str, words: &[Word<'_>], cite: usize, name: &mut SourceCaseName) {
-        if name.plaintiff.as_ref().is_some_and(|value| !value.is_empty())
-            || name.defendant.as_ref().is_some_and(|value| !value.is_empty()) { return; }
+    // helpers.match_on_tokens: stop at a non-string token and retain at most
+    // 300 Unicode scalars when scanning backward.
+    fn before(text: &str, words: &[Word<'_>], cite: usize) -> Range<usize> {
         let end = words[cite].start;
         let (mut start, mut length) = (end, 0);
         for word in words[..cite].iter().rev() {
@@ -214,6 +213,15 @@ mod names {
                 break;
             }
         }
+        start..end
+    }
+
+    // helpers.add_pre_citation / match_on_tokens: stop at the first non-string
+    // token and keep the last 300 Unicode scalars, not 300 bytes.
+    fn pre_citation(text: &str, words: &[Word<'_>], cite: usize, name: &mut SourceCaseName) {
+        if name.plaintiff.as_ref().is_some_and(|value| !value.is_empty())
+            || name.defendant.as_ref().is_some_and(|value| !value.is_empty()) { return; }
+        let Range { start, end } = before(text, words, cite);
         let Some(captures) = PRE.captures(&text[start..end]).expect("source pre-citation") else { return; };
         let matched = captures.get(0).unwrap();
         name.full_span_start = start + matched.start();
@@ -227,12 +235,39 @@ mod names {
         });
     }
 
+    // find._extract_id_citation / _extract_supra_citation. The existing tail
+    // parser carries the pinned POST_SHORT_CITATION_REGEX and parenthetical rules.
+    fn reference(text: &str, words: &[Word<'_>], index: usize) -> SourceCaseName {
+        let token = &words[index];
+        let limit = words[index + 1..].iter().take_while(|word| matches!(word.kind, Kind::Text))
+            .last().map_or(token.end, |word| word.end);
+        let tail = crate::metadata::tail(text, token.end, limit, crate::metadata::TailRules {
+            post_citation: Some((crate::metadata::PostCitation::Short, limit)), ..Default::default()
+        });
+        let end = tail.source_end.unwrap_or(token.end);
+        let mut name = SourceCaseName {
+            full_span_start: token.start, full_span_end: Some(end),
+            reference_span: Some(crate::find::span(text, token.start..end)),
+            pin_cite: tail.source_pin, parenthetical: tail.source_parenthetical, ..Default::default()
+        };
+        if matches!(token.kind, Kind::Supra) {
+            let range = before(text, words, index);
+            if let Some(captures) = SUPRA_ANTECEDENT.captures(&text[range.clone()]).expect("source supra antecedent") {
+                name.full_span_start = range.start + captures.get(0).unwrap().start();
+                name.antecedent_guess = captures.name("antecedent").or_else(|| captures.name("antecedent_only"))
+                    .map(|value| value.as_str().to_owned());
+                name.volume = captures.name("volume").or_else(|| captures.name("volume_only"))
+                    .map(|value| value.as_str().to_owned());
+            }
+        }
+        name
+    }
+
     pub(super) fn extract(text: &str, citations: &[(Range<usize>, bool)], markup: Option<&crate::clean::Markup<'_>>) -> BTreeMap<usize, SourceCaseName> {
-        if citations.is_empty() { return BTreeMap::new(); }
         let mut tokens: Vec<_> = citations.iter().map(|(span, short)| Word {
             text: &text[span.clone()], start: span.start, end: span.end, kind: Kind::Citation(*short),
         }).collect();
-        for (pattern, kind) in [(&*ID, Kind::Other), (&*SUPRA, Kind::Supra), (&*PARAGRAPH, Kind::Other),
+        for (pattern, kind) in [(&*ID, Kind::Id), (&*SUPRA, Kind::Supra), (&*PARAGRAPH, Kind::Other),
             (&*STOP, Kind::Stop(false)), (&*PLACEHOLDER, Kind::Placeholder), (&*SECTION, Kind::Other)] {
             for captures in pattern.captures_iter(text) {
                 let captures = captures.expect("source name token");
@@ -258,6 +293,7 @@ mod names {
                 if !short { pre_citation(text, &words, index, &mut found); }
                 Some((word.start, found))
             },
+            Kind::Id | Kind::Supra => Some((word.start, reference(text, &words, index))),
             _ => None,
         }).collect()
     }
@@ -313,6 +349,7 @@ pub(crate) struct Match {
     pub fields: Fields,
     pub short_at: Option<usize>,
     short: bool,
+    ecmascript: bool,
 }
 
 impl Match {
@@ -384,11 +421,12 @@ pub(crate) fn find(text: &str, extended: bool) -> Vec<Match> {
                 variation_editions,
                 ..Fields::default()
             };
-            found.push(Match { span: core.start()..core.end(), fields, short: extractor.short,
+            found.push(Match { span: core.start()..core.end(), fields, short: extractor.short, ecmascript: extractor.ecmascript,
                 short_at: captures.name("__short_at").map(|at| at.start() - core.start()) });
         }
     }
-    found.sort_by_key(|m| (m.span.start, std::cmp::Reverse(m.span.end)));
+    // Preserve the pinned source token when a broader standard form also matches.
+    found.sort_by_key(|m| (m.span.start, m.ecmascript, std::cmp::Reverse(m.span.end)));
     let mut kept: Vec<Match> = Vec::new();
     for candidate in found {
         if let Some(previous) = kept.last_mut() {

@@ -269,6 +269,8 @@ class CitationBase:
                 values["pin_cite"] = pin["text"] if pin else None
                 if pin:
                     values["pin_cite_span_start"] = source_name["preCitation"]["start"]
+        if data.get("form") == "supra":
+            values["volume"] = fields.get("volume")
         return Metadata(**values)
 
     # -- identity

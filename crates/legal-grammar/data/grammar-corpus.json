@@ -5789,6 +5789,13 @@
           "canonical": {},
           "provenance": "Eyecite 2.7.8, commit 047af17e13806a437e75f2ea85cb9615f69516c3, regexes.POST_FULL_CITATION_REGEX. Verbose whitespace/comments removed; repeated Python regex capture names numbered in occurrence order for Rust/ECMAScript. No alternatives removed.",
           "vectors": []
+        },
+        {
+          "id": "name.us.supra-antecedent",
+          "pattern": "(?:(?<antecedent>[\\w\\-.]+)\\ ?,?\\ (?<volume>\\d+)|(?<volume_only>\\d+)|(?<antecedent_only>[\\w\\-.]+)\\ ?,?)\\ $",
+          "flags": "",
+          "provenance": "Pinned Eyecite regexes.SUPRA_ANTECEDENT_REGEX and helpers.match_on_tokens; verbose syntax expanded, end anchored, repeated capture names suffixed for Rust.",
+          "vectors": []
         }
       ]
     }
