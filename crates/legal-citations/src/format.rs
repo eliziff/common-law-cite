@@ -653,12 +653,10 @@ pub fn short_label(citation: &Citation, language: Language) -> String {
     }
     if citation.authority == Authority::Case {
         if let Some(parties) = &citation.parties {
-            let chosen = if is_crown_party(&parties.plaintiff) {
-                &parties.defendant
-            } else {
-                &parties.plaintiff
-            };
-            return party(chosen, language);
+            let plaintiff = parties.plaintiff.as_deref().filter(|name| !name.is_empty());
+            let defendant = parties.defendant.as_deref().filter(|name| !name.is_empty());
+            let chosen = if plaintiff.is_some_and(is_crown_party) { defendant } else { plaintiff.or(defendant) };
+            if let Some(chosen) = chosen { return party(chosen, language); }
         }
         if let Some(style) = citation.style.as_ref().map(|style| style.text.as_str()) {
             let name = case_name(style, language);

@@ -339,7 +339,10 @@ pub struct Fields {
 pub struct SourceCaseName {
     pub full_span_start: usize,
     pub full_span_end: Option<usize>,
+    // Discovery moves these parser-local values into Citation.parties.
+    #[serde(skip)]
     pub plaintiff: Option<String>,
+    #[serde(skip)]
     pub defendant: Option<String>,
     pub antecedent_guess: Option<String>,
     pub year: Option<String>,
@@ -369,12 +372,12 @@ pub struct SourceReporter {
     pub source: String,
 }
 
-/// The parties of a two-party style of cause.
+/// Parsed party names; a source may identify only one side.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct Parties {
-    pub plaintiff: String,
-    pub defendant: String,
+    pub plaintiff: Option<String>,
+    pub defendant: Option<String>,
 }
 
 /// One citation found in a text.

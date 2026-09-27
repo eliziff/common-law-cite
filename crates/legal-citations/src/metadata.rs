@@ -7,7 +7,7 @@
 
 use crate::find::span;
 use crate::model::{
-    Citation, Form, History, Parenthetical, ParentheticalKind, Parties, Pinpoint,
+    Citation, History, Parenthetical, ParentheticalKind, Parties, Pinpoint,
     PinpointKind,
 };
 use crate::text::javascript_whitespace;
@@ -568,8 +568,8 @@ pub(crate) fn parties(style: &str) -> Option<Parties> {
     let plaintiff = trim(&style[..versus.start()]);
     let defendant = trim(&style[versus.end()..]);
     (!plaintiff.is_empty() && !defendant.is_empty()).then_some(Parties {
-        plaintiff,
-        defendant,
+        plaintiff: Some(plaintiff),
+        defendant: Some(defendant),
     })
 }
 
@@ -583,7 +583,7 @@ pub(crate) fn parenthetical_date(citation: &Citation) -> Option<CourtReading> {
         })
 }
 
-/// Parties, dates and history links. Registry court selection is owned by classification.
+/// Dates and history links. Registry court selection is owned by classification.
 pub fn attach(text: &str, citations: &mut [Citation]) {
     for citation in citations.iter_mut() {
         if let Some(date) = parenthetical_date(citation) {
@@ -601,14 +601,6 @@ pub fn attach(text: &str, citations: &mut [Citation]) {
                 }
             }
         }
-        if citation.form == Form::Full && citation.parties.is_none() {
-            if let Some(style) = &citation.style {
-                if citation.authority == crate::model::Authority::Case {
-                    citation.parties = parties(&style.text);
-                }
-            }
-        }
-
     }
     for index in 0..citations.len() {
         let from = citations[index].full_span.end;

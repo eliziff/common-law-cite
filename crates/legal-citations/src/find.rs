@@ -1035,6 +1035,11 @@ fn full_citation(
             }
         }
     }
+    citation.parties = if let Some(name) = citation.fields.source_case_name.as_mut() {
+        Some(crate::Parties { plaintiff: name.plaintiff.take(), defendant: name.defendant.take() })
+    } else if citation.authority == Authority::Case {
+        citation.style.as_ref().and_then(|style| metadata::parties(&style.text))
+    } else { None };
     citation
 }
 
@@ -1109,8 +1114,8 @@ fn reference_names(citation: &Citation) -> Vec<String> {
     let mut names = crate::resolve::candidate_names(citation);
     names.retain(|name| {
         let lower = name.trim().to_lowercase();
-        let source_name = citation.fields.source_case_name.as_ref().is_some_and(|source|
-            source.plaintiff.as_deref() == Some(name.as_str()) || source.defendant.as_deref() == Some(name.as_str()));
+        let source_name = citation.fields.source_case_name.is_some() && citation.parties.as_ref().is_some_and(|parties|
+            parties.plaintiff.as_deref() == Some(name.as_str()) || parties.defendant.as_deref() == Some(name.as_str()));
         name.chars().count() >= 3
             && name.chars().next().is_some_and(char::is_uppercase)
             && if source_name {
@@ -1146,9 +1151,9 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
     let mut names = Vec::new();
     for citation in citations.iter().filter(|citation| citation.form == Form::Full) {
         for name in reference_names(citation) {
-            let source_field = citation.fields.source_case_name.as_ref().and_then(|source| {
-                if source.plaintiff.as_deref() == Some(&name) { Some(true) }
-                else if source.defendant.as_deref() == Some(&name) { Some(false) }
+            let source_field = citation.fields.source_case_name.as_ref().and(citation.parties.as_ref()).and_then(|parties| {
+                if parties.plaintiff.as_deref() == Some(&name) { Some(true) }
+                else if parties.defendant.as_deref() == Some(&name) { Some(false) }
                 else { None }
             });
             names.push((name, citation.span.end, citation.authority, source_field));
@@ -1249,9 +1254,11 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
                 let reference_end = source_pin.as_ref().map_or(end, |pin| pin.end);
                 let source_start = if source_pin.is_some() { start } else { markup.map_or(start, |range| range.start) };
                 let source_end = if source_pin.is_some() { reference_end } else { markup.map_or(tail.end, |range| range.end) };
+                citation.parties = Some(crate::Parties {
+                    plaintiff: plaintiff.then(|| name.clone()), defendant: (!plaintiff).then(|| name.clone()),
+                });
                 citation.fields.source_case_name = Some(crate::SourceCaseName {
                     full_span_start: source_start, full_span_end: Some(source_end),
-                    plaintiff: plaintiff.then(|| name.clone()), defendant: (!plaintiff).then(|| name.clone()),
                     reference_span: Some(span(text, start..reference_end)), pin_cite: source_pin.clone(),
                     ..Default::default()
                 });

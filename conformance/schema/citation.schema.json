@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/eliziff/legal-citations/blob/main/conformance/schema/citation.schema.json",
   "title": "legal-citations extract response",
-  "description": "Output of the `extract` API method (Rust api::extract, Python legal_citations.call('extract'), npm call('extract'), CLI `legal-citations extract`). Schema version 1: breaking changes bump `schemaVersion`; new optional properties are added here without a bump. Written from crates/legal-citations/src/model.rs; crates/legal-citations-cli/tests/schema.rs fails when the two drift.",
+  "description": "Output of the `extract` API method (Rust api::extract, Python legal_citations.call('extract'), npm call('extract'), CLI `legal-citations extract`). Schema version 2: breaking changes bump `schemaVersion`; new optional properties are added here without a bump. Written from crates/legal-citations/src/model.rs; crates/legal-citations-cli/tests/schema.rs fails when the two drift.",
   "type": "object",
   "required": [
     "schemaVersion",
@@ -14,7 +14,7 @@
     "schemaVersion": {
       "type": "integer",
       "enum": [
-        1
+        2
       ]
     },
     "offsetUnit": {
@@ -232,10 +232,10 @@
       "additionalProperties": false,
       "properties": {
         "plaintiff": {
-          "type": "string"
+          "type": ["string", "null"]
         },
         "defendant": {
-          "type": "string"
+          "type": ["string", "null"]
         }
       }
     },

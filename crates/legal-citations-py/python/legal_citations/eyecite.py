@@ -228,7 +228,8 @@ class CitationBase:
         source_name = fields.get("sourceCaseName")
         if data["form"] == "reference" and source_name is not None:
             pin = source_name.get("pinCite")
-            return Metadata(plaintiff=source_name["plaintiff"], defendant=source_name["defendant"],
+            parties = data.get("parties") or {}
+            return Metadata(plaintiff=parties.get("plaintiff"), defendant=parties.get("defendant"),
                             pin_cite=pin["text"] if pin else None)
         values: dict = dict(self._pin())
         for parenthetical in data.get("parentheticals") or []:
@@ -241,8 +242,8 @@ class CitationBase:
         if data.get("court"):
             values["court"] = data["court"]["id"]
         if data.get("parties"):
-            values["plaintiff"] = data["parties"]["plaintiff"] or None
-            values["defendant"] = data["parties"]["defendant"] or None
+            values["plaintiff"] = data["parties"]["plaintiff"]
+            values["defendant"] = data["parties"]["defendant"]
         if fields.get("publisher"):
             values["publisher"] = fields["publisher"]
         if data.get("form") == "reference" and data.get("shortName"):
@@ -256,8 +257,6 @@ class CitationBase:
         if data.get("form") in ("short", "supra", "reference") and data.get("style"):
             values["antecedent_guess"] = data["style"]["text"].strip().rstrip(",").strip()
         if source_name is not None:
-            values["plaintiff"] = source_name["plaintiff"]
-            values["defendant"] = source_name["defendant"]
             values["antecedent_guess"] = source_name["antecedentGuess"]
             if source_name.get("fullSpanEnd") is not None:
                 pin = source_name.get("pinCite")

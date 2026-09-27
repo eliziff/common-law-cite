@@ -137,8 +137,10 @@ parentheticals), `style`, `signal`, `parties`, `fields` (year, volume,
 reporter, reporterCanonical, page, number, series, chapter, section, note, ...),
 `court` (registry id), `jurisdiction`, `language`, `pinpoints` (kind, first,
 last), `parentheticals`, `history`, `parallelGroup`, `antecedent` and `key`.
+`parties` is the shared parsed name record; either side may be null.
+Bindings and resolution use it directly, without reparsing the styled extent.
 The JSON Schema is [`conformance/schema/citation.schema.json`](conformance/schema/citation.schema.json)
-(`schemaVersion` 1: breaking changes bump it; new optional properties do not).
+(`schemaVersion` 2: breaking changes bump it; new optional properties do not).
 
 ### eyecite → legal-citations
 

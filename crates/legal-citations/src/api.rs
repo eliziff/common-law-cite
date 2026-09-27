@@ -45,7 +45,7 @@ use std::fmt;
 /// Version of the JSON citation schema (`conformance/schema/citation.schema.json`).
 /// Bumped on any breaking change to the serialized [`Citation`] shape; additive
 /// optional fields do not bump it.
-pub const SCHEMA_VERSION: u32 = 1;
+pub const SCHEMA_VERSION: u32 = 2;
 
 /// Every method [`call`] accepts.
 pub const METHODS: &[&str] = &[

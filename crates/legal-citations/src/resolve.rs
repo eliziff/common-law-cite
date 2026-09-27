@@ -94,8 +94,8 @@ impl From<&Citation> for ReferenceRecord {
             jurisdiction: citation.jurisdiction.clone(),
             reporter: citation.fields.reporter_canonical.clone().or_else(|| citation.fields.reporter.clone()),
             volume: citation.fields.volume.clone(), page: citation.fields.page.clone(),
-            plaintiff: source.map(|name| name.plaintiff.clone()).unwrap_or_else(|| citation.parties.as_ref().map(|parties| parties.plaintiff.clone())),
-            defendant: source.map(|name| name.defendant.clone()).unwrap_or_else(|| citation.parties.as_ref().map(|parties| parties.defendant.clone())),
+            plaintiff: citation.parties.as_ref().and_then(|parties| parties.plaintiff.clone()),
+            defendant: citation.parties.as_ref().and_then(|parties| parties.defendant.clone()),
             antecedent_guess: source.and_then(|name| name.antecedent_guess.clone()),
             pin_cite: source.filter(|name| name.full_span_end.is_some()).map(|name| name.pin_cite.as_ref())
                 .unwrap_or(citation.fields.pin_cite.as_ref()).map(|pin| pin.text.clone()),
@@ -422,11 +422,12 @@ impl<'a> Resolver<'a> {
     }
 
     fn by_name(&self, position: usize, hint: Option<String>) -> (Option<usize>, &'static str) {
-        if let Some(name) = &self.citations[position].fields.source_case_name {
+        if self.citations[position].fields.source_case_name.is_some() {
             // Feed the same exact metadata-value matching used by the facade.
             // Resource tokens include ambiguous candidates; the shared resolver
             // keeps them in the pool and vetoes an uncertain identity.
-            let values = [name.plaintiff.as_deref(), name.defendant.as_deref()]
+            let parties = self.citations[position].parties.as_ref();
+            let values = [parties.and_then(|p| p.plaintiff.as_deref()), parties.and_then(|p| p.defendant.as_deref())]
                 .into_iter().flatten().filter(|value| !value.is_empty()).collect::<Vec<_>>();
             let mut reference = ReferenceRecord::from(&self.citations[position]);
             reference.name_values = (0..values.len()).collect();
@@ -553,12 +554,8 @@ impl<'a> Resolver<'a> {
             let hint = strip_antecedent_punctuation(&hint);
             let authority = unique_resource(candidates.iter().filter(|&&(_, other)| {
                 let candidate = &self.citations[other];
-                let (plaintiff, defendant) = if let Some(name) = &candidate.fields.source_case_name {
-                    (name.plaintiff.as_deref(), name.defendant.as_deref())
-                } else {
-                    let parties = candidate.parties.as_ref();
-                    (parties.map(|parties| parties.plaintiff.as_str()), parties.map(|parties| parties.defendant.as_str()))
-                };
+                let parties = candidate.parties.as_ref();
+                let (plaintiff, defendant) = (parties.and_then(|p| p.plaintiff.as_deref()), parties.and_then(|p| p.defendant.as_deref()));
                 antecedent_matches(&hint, plaintiff, defendant)
             }).map(|&(authority, _)| Some(authority)));
             return (authority, if authority.is_some() { "short_name" } else { "short_ambiguous" });
@@ -645,18 +642,11 @@ pub(crate) fn candidate_names(citation: &Citation) -> Vec<String> {
     names.extend(citation.short_name.clone());
     names.extend(citation.style.as_ref().map(|style| style.text.clone()));
     if let Some(source) = &citation.fields.source_case_name {
-        names.extend(source.plaintiff.clone());
-        names.extend(source.defendant.clone());
         names.extend(source.antecedent_guess.clone());
     }
-    let parties = citation.parties.clone().or_else(|| {
-        if citation.authority == crate::Authority::Case {
-            citation.style.as_ref().and_then(|style| crate::metadata::parties(&style.text))
-        } else { None }
-    });
-    if let Some(parties) = parties {
-        names.push(parties.plaintiff.clone());
-        names.push(parties.defendant.clone());
+    if let Some(parties) = &citation.parties {
+        names.extend(parties.plaintiff.clone());
+        names.extend(parties.defendant.clone());
     }
     names.extend(crate::short_forms::infer(&citation.full_span.text, inference_kind(citation)).into_iter().map(|form| form.value));
     if names.is_empty() {
@@ -679,7 +669,7 @@ pub fn reference_name(citation: &Citation) -> Option<String> {
         .clone()
         .or_else(|| citation.short_name.clone())
         .or_else(|| citation.style.as_ref().map(|style| style.text.clone()))
-        .or_else(|| citation.parties.as_ref().map(|parties| parties.plaintiff.clone()));
+        .or_else(|| citation.parties.as_ref().and_then(|parties| parties.plaintiff.clone()));
     let cleaned = |value: &str| {
         let value = value
             .trim()
