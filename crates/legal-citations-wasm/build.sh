@@ -17,6 +17,8 @@ if [ "$pinned" != "$installed" ]; then
   exit 1
 fi
 
+(cd "$here/js" && cargo run --manifest-path "$root/Cargo.toml" -p legal-citations --features binding-types --bin export-types)
+
 # Size-oriented profile for this build only; the workspace release profile
 # stays tuned for native speed.
 CARGO_PROFILE_RELEASE_OPT_LEVEL=z \
@@ -39,6 +41,7 @@ fi
 cp "$root/LICENSE" "$here/js/LICENSE"
 cp "$root/NOTICE" "$here/js/NOTICE"
 cp "$root/README.md" "$here/js/README.md"
+cp "$root/crates/legal-citations/registry/source-canlii-routes.json" "$here/js/source-canlii-routes.json"
 version="$(sed -n 's/^version = "\(.*\)"/\1/p' "$root/Cargo.toml" | head -1)"
 (cd "$here/js" && npm pkg set version="$version" >/dev/null)
 ls -l "$here/js/pkg"

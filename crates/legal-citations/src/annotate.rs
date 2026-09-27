@@ -1,25 +1,11 @@
-//! Insert markup around citations while preserving the source's own markup
-//! (eyecite `annotate_citations`).
-//!
-//! [`annotate`] inserts `before`/`after` strings at byte ranges of the text
-//! the citations were extracted from. When that text was produced by
-//! [`crate::clean::clean`] from HTML or other markup, [`annotate_source`]
-//! maps every range back through the exact offset map in
-//! [`Cleaned`](crate::clean::Cleaned) (no diffing) and inserts into the
-//! source. A mapped range that crosses tag boundaries unevenly
-//! (`R v Jordan</i>, 2016 SCC 27`) is handled per [`Unbalanced`]:
-//!
-//! * [`Unbalanced::Unchecked`]: insert anyway (may produce invalid markup);
-//! * [`Unbalanced::Skip`]: leave that annotation out;
-//! * [`Unbalanced::Wrap`]: close the annotation before each tag inside the
-//!   range and reopen it after, so every run of text between tags is wrapped
-//!   on its own (`<a>R v Jordan</a></i><a>, 2016 SCC 27</a>`).
-//!
-//! Overlapping annotations are not nested: the earliest-starting (then
-//! longest) one wins and any annotation overlapping it is dropped. Ranges not
-//! on character boundaries are dropped.
+//! Source annotation with two established output policies: typed Rust callers
+//! retain structure-aware tag balancing, while [`prepare`] and [`render`]
+//! implement the pinned eyecite ordering for the JSON facade. Offsets are
+//! bytes here; bindings translate at the boundary.
 
 use crate::clean::{Cleaned, Tag, TagKind};
+use serde::{Deserialize, Serialize};
+use std::sync::LazyLock;
 use crate::model::Citation;
 
 /// Markup to insert around one range.
@@ -79,6 +65,112 @@ pub fn citation_annotations(
         .collect()
 }
 
+/// A whole annotation after offset mapping and markup treatment. `index`
+/// identifies the input annotation so hosts can invoke callbacks with objects.
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct PreparedAnnotation {
+    pub index: usize,
+    pub start: usize,
+    pub end: usize,
+    pub before: String,
+    pub after: String,
+    pub text: String,
+}
+
+fn balanced(text: &str) -> bool {
+    !text.contains(['<', '>']) || roxmltree::Document::parse(&format!("<div>{text}</div>")).is_ok()
+}
+
+/// Pinned eyecite.utils.maybe_balance_style_tags, with character tolerances.
+fn balance_style_tags(source: &str, mut start: usize, mut end: usize) -> (usize, usize) {
+    let span = source.get(start..end).unwrap_or_default();
+    for tag in ["i", "em", "b"] {
+        let opening = format!("<{tag}>");
+        let closing = format!("</{tag}>");
+        let has_opening = span.contains(&opening);
+        let has_closing = span.contains(&closing);
+        if has_opening && !has_closing {
+            let extended_end = source[end..].char_indices().nth(closing.len() + 10)
+                .map_or(source.len(), |(offset, _)| end + offset);
+            if let Some(offset) = source[start..extended_end].find(&closing) {
+                end = start + offset + closing.len();
+            }
+        }
+        if !has_opening && has_closing {
+            let extended_start = source[..start].char_indices().rev().nth(opening.len() + 9)
+                .map_or(0, |(offset, _)| offset);
+            if let Some(offset) = source[extended_start..end].rfind(&opening) {
+                start = extended_start + offset;
+            }
+        }
+    }
+    (start, end)
+}
+
+/// Prepare whole spans in the pinned annotate_citations order. Partial
+/// overlaps are clamped; style-tag recovery is performed after that clamp.
+pub fn source_annotations(source: &str, cleaned: &Cleaned, annotations: &[Annotation], unbalanced: Unbalanced) -> Vec<PreparedAnnotation> {
+    prepare(source, annotations, unbalanced, |_, annotation| cleaned.source_range(annotation.start..annotation.end))
+}
+
+pub fn prepare(
+    source: &str, annotations: &[Annotation], unbalanced: Unbalanced,
+    map: impl Fn(usize, &Annotation) -> Option<std::ops::Range<usize>>,
+) -> Vec<PreparedAnnotation> {
+    static TAG: LazyLock<regex::Regex> = LazyLock::new(|| regex::Regex::new(r"(<[^>]+>)").unwrap());
+    let mut sorted = annotations.iter().enumerate().collect::<Vec<_>>();
+    sorted.sort_by_key(|(_, annotation)| (annotation.start, annotation.end));
+    let mut output = Vec::with_capacity(sorted.len());
+    let mut last_end = 0;
+    for (index, annotation) in sorted {
+        let Some(range) = map(index, annotation) else { continue };
+        let (mut start, mut end) = (range.start, range.end);
+        if start > source.len() || end > source.len() || !source.is_char_boundary(start) || !source.is_char_boundary(end) {
+            continue;
+        }
+        if start < last_end {
+            start = last_end;
+            if start >= end { continue; }
+        }
+        let mut text = source.get(start..end).unwrap_or_default().to_owned();
+        if unbalanced != Unbalanced::Unchecked && !balanced(&text) {
+            match unbalanced {
+                Unbalanced::Wrap => {
+                    text = TAG.replace_all(&text, |captures: &regex::Captures<'_>| {
+                        format!("{}{}{}", annotation.after, &captures[0], annotation.before)
+                    }).into_owned();
+                }
+                Unbalanced::Skip => {
+                    (start, end) = balance_style_tags(source, start, end);
+                    text = source.get(start..end).unwrap_or_default().to_owned();
+                    if !balanced(&text) { continue; }
+                }
+                Unbalanced::Unchecked => unreachable!(),
+            }
+        }
+        output.push(PreparedAnnotation { index, start, end, before: annotation.before.clone(), after: annotation.after.clone(), text });
+        last_end = end;
+    }
+    output
+}
+
+pub fn render(source: &str, annotations: &[PreparedAnnotation]) -> String {
+    let mut output = String::new();
+    let mut last_end = 0;
+    for annotation in annotations {
+        // Style-tag recovery can extend a span back across last_end. Python
+        // slicing then emits an empty gap, while retaining the recovered span.
+        output.push_str(source.get(last_end..annotation.start).unwrap_or_default());
+        output.push_str(&annotation.before);
+        output.push_str(&annotation.text);
+        output.push_str(&annotation.after);
+        last_end = annotation.end;
+    }
+    output.push_str(&source[last_end..]);
+    output
+}
+
 /// Sorted, non-overlapping, in-bounds annotations.
 fn accepted<'a>(text: &str, annotations: &'a [Annotation]) -> Vec<&'a Annotation> {
     let mut sorted = annotations
@@ -127,7 +219,7 @@ pub fn annotate(text: &str, annotations: &[Annotation]) -> String {
 }
 
 /// Whether the tags inside a source range open and close evenly.
-fn balanced(tags: &[&Tag]) -> bool {
+fn balanced_tags(tags: &[&Tag]) -> bool {
     let mut stack: Vec<&str> = Vec::new();
     for tag in tags {
         match tag.kind {
@@ -169,7 +261,7 @@ pub fn annotate_source(source: &str, cleaned: &Cleaned, annotations: &[Annotatio
             .iter()
             .filter(|tag| range.start <= tag.start && tag.end <= range.end)
             .collect::<Vec<_>>();
-        let even = !splits_tag && balanced(&inside);
+        let even = !splits_tag && balanced_tags(&inside);
         match (even, unbalanced) {
             (true, _) | (false, Unbalanced::Unchecked) => {
                 insertions.push((range.start, annotation.before.clone()));

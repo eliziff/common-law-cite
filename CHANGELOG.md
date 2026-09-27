@@ -10,6 +10,24 @@ versioned separately and noted here when they change.
 
 ## [Unreleased]
 
+- Pinned U.S. extractor captures and edition candidates now travel through the
+  shared pipeline, including source post-citation metadata and markup references.
+  Code identities retain the source's additional hierarchy fields.
+- Pinpointer's CanLII legislation-index spelling rules are shared through
+  `legislationLookup`; external TSV retrieval remains in the application.
+- All 26,546 direct ALR/A2AJ reporter-alias records are preserved with their
+  evidence. Reviewed parallels supply a canonical authority key and URL;
+  disputed, incomplete and invalid records cannot supply a guessed identity.
+- Reporter-series grammar accepts French ordinals and New Series spellings.
+- Identity keys are now **v3**. Reporter keys include the registry reporter id
+  and edition, preventing collisions between jurisdictions. Historical DLR,
+  CCC and WWR numbering regimes preserve essential years; CTC and CNLR require
+  their report year. Ambiguous numbering produces no identity.
+- `jurisdictionPriority` ranks ambiguous court and reporter abbreviations.
+  Written court evidence takes precedence, alternatives remain in
+  `interpretations`, and unresolved ties produce no identity. Keys, reporter
+  ranking and URLs use the same selected reporter.
+
 ## [0.1.0]
 
 ### Added

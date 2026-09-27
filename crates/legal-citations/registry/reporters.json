@@ -13,7 +13,20 @@
   "editions": [
    {
     "abbreviation": "SCR",
-    "start": 1876
+    "start": 1876,
+    "numbering": [
+     {
+      "start": 1876,
+      "end": 1922,
+      "year_volume": false,
+      "evidence": "https://our-languages.canada.ca/en/writing-tips-plus/reference-notes-legal-references"
+     },
+     {
+      "start": 1923,
+      "year_volume": true,
+      "evidence": "https://our-languages.canada.ca/en/writing-tips-plus/reference-notes-legal-references"
+     }
+    ]
    }
   ],
   "variations": {
@@ -25,7 +38,7 @@
  {
   "id": "fcr",
   "name": {
-   "en": "Federal Court Reports",
+   "en": "Federal Courts Reports",
    "fr": "Recueil des décisions des Cours fédérales"
   },
   "kind": "official",
@@ -38,11 +51,11 @@
    {
     "abbreviation": "FC",
     "start": 1971,
-    "end": 1997
+    "end": 2003
    },
    {
     "abbreviation": "FCR",
-    "start": 1998
+    "start": 2004
    }
   ],
   "variations": {
@@ -86,7 +99,21 @@
   "jurisdiction": "ca",
   "editions": [
    {
-    "abbreviation": "DLR"
+    "abbreviation": "DLR",
+    "numbering": [
+     {
+      "start": 1912,
+      "end": 1922,
+      "year_volume": false,
+      "evidence": "https://lawsocietypei.ca/media/files/Law%20Library%20Catalogue%20Print%20Serials%20April%2028%2C%202016.pdf"
+     },
+     {
+      "start": 1923,
+      "end": 1955,
+      "year_volume": true,
+      "evidence": "https://lawsocietypei.ca/media/files/Law%20Library%20Catalogue%20Print%20Serials%20April%2028%2C%202016.pdf"
+     }
+    ]
    },
    {
     "abbreviation": "DLR (2d)"
@@ -236,10 +263,42 @@
   "jurisdiction": "ca",
   "editions": [
    {
-    "abbreviation": "WWR"
+    "abbreviation": "WWR",
+    "numbering": [
+     {
+      "start": 1911,
+      "end": 1916,
+      "year_volume": false,
+      "evidence": "https://www.courthouselibrary.ca/catalogue-item?cid=26021"
+     },
+     {
+      "start": 1917,
+      "end": 1950,
+      "year_volume": true,
+      "evidence": "https://www.courthouselibrary.ca/catalogue-item?cid=26021"
+     },
+     {
+      "start": 1951,
+      "end": 1970,
+      "year_volume": false,
+      "evidence": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+      "edition": "WWR (NS)"
+     },
+     {
+      "start": 1971,
+      "year_volume": true,
+      "evidence": "https://www.courthouselibrary.ca/catalogue-item?cid=26021"
+     }
+    ]
    },
    {
-    "abbreviation": "WWR (NS)"
+    "abbreviation": "WWR (NS)",
+    "numbering": [
+     {
+      "year_volume": false,
+      "evidence": "https://www.courthouselibrary.ca/catalogue-item?cid=26021"
+     }
+    ]
    }
   ],
   "year_volume": true,
@@ -583,10 +642,31 @@
   "jurisdiction": "ca",
   "editions": [
    {
-    "abbreviation": "CCC"
+    "abbreviation": "CCC",
+    "numbering": [
+     {
+      "start": 1898,
+      "end": 1962,
+      "year_volume": false,
+      "evidence": "https://lawsocietypei.ca/media/files/Law%20Library%20Catalogue%20Print%20Serials%20April%2028%2C%202016.pdf"
+     },
+     {
+      "start": 1963,
+      "end": 1970,
+      "year_volume": true,
+      "evidence": "https://lawsocietypei.ca/media/files/Law%20Library%20Catalogue%20Print%20Serials%20April%2028%2C%202016.pdf",
+      "edition": "CCC (NS)"
+     }
+    ]
    },
    {
-    "abbreviation": "CCC (NS)"
+    "abbreviation": "CCC (NS)",
+    "numbering": [
+     {
+      "year_volume": true,
+      "evidence": "https://lawsocietypei.ca/media/files/Law%20Library%20Catalogue%20Print%20Serials%20April%2028%2C%202016.pdf"
+     }
+    ]
    },
    {
     "abbreviation": "CCC (2d)"
@@ -1059,10 +1139,16 @@
   "jurisdiction": "ca",
   "editions": [
    {
-    "abbreviation": "CTC"
+    "abbreviation": "CTC",
+    "numbering": [
+     {
+      "year_volume": true,
+      "evidence": "https://decisions.scc-csc.ca/scc-csc/scc-csc/en/item/400/index.do"
+     }
+    ]
    }
   ],
-  "year_volume": false,
+  "year_volume": true,
   "source": "authored"
  },
  {
@@ -1074,10 +1160,30 @@
   "jurisdiction": "ca",
   "editions": [
    {
-    "abbreviation": "DTC"
+    "abbreviation": "DTC",
+    "numbering": [
+     {
+      "start": 1920,
+      "end": 1950,
+      "year_volume": false,
+      "evidence": "https://lawcat.berkeley.edu/record/1319846?ln=en; https://publications.gc.ca/collections/collection_2019/cmf-fja/JU1-2-1-2004-4-1.pdf"
+     },
+     {
+      "start": 1951,
+      "end": 1999,
+      "year_volume": true,
+      "short_year_century": 1900,
+      "evidence": "https://lawcat.berkeley.edu/record/1319846?ln=en; https://publications.gc.ca/collections/collection_2019/cmf-fja/JU1-2-1-1991-1.pdf"
+     },
+     {
+      "start": 2000,
+      "year_volume": true,
+      "evidence": "https://publications.gc.ca/collections/collection_2019/cmf-fja/JU1-2-1-2002-3-1.pdf"
+     }
+    ]
    }
   ],
-  "year_volume": false,
+  "year_volume": true,
   "source": "authored"
  },
  {
@@ -1329,10 +1435,16 @@
   "jurisdiction": "ca",
   "editions": [
    {
-    "abbreviation": "CNLR"
+    "abbreviation": "CNLR",
+    "numbering": [
+     {
+      "year_volume": true,
+      "evidence": "https://indigenouslaw.usask.ca/publications/canadian-native-law-reporter.php"
+     }
+    ]
    }
   ],
-  "year_volume": false,
+  "year_volume": true,
   "source": "authored"
  },
  {
@@ -4911,7 +5023,8 @@
    }
   ],
   "year_volume": false,
-  "source": "mcgill"
+  "source": "mcgill",
+  "verified": false
  },
  {
   "id": "mcgill-ilrm",
@@ -8025,5 +8138,213 @@
   ],
   "year_volume": false,
   "source": "mcgill"
+ },
+ {
+  "id": "amc",
+  "name": {
+   "en": "American Maritime Cases"
+  },
+  "kind": "specialty",
+  "jurisdiction": "us",
+  "editions": [
+   {
+    "abbreviation": "A.M.C.",
+    "start": 1923,
+    "numbering": [
+     {
+      "start": 1923,
+      "year_volume": true,
+      "evidence": "https://www.courtlistener.com/c/amc/"
+     }
+    ]
+   }
+  ],
+  "variations": {
+   "AMC": "A.M.C."
+  },
+  "year_volume": true,
+  "source": "authored",
+  "upstream_key": "A.M.C."
+ },
+ {
+  "id": "gtc",
+  "name": {
+   "en": "Canadian GST & Commodity Tax Cases"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "GTC",
+    "numbering": [
+     {
+      "year_volume": true,
+      "evidence": "https://www.lexisnexis.ca/documents/References_paralleles_dans_Quicklaw.pdf; https://taxinterpretations.com/cra/severed-letters/9m18638"
+     }
+    ]
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "p-uk",
+  "name": {
+   "en": "Law Reports, Probate"
+  },
+  "kind": "official",
+  "jurisdiction": "uk-ew",
+  "editions": [
+   {
+    "abbreviation": "P",
+    "start": 1891,
+    "end": 1971,
+    "numbering": [
+     {
+      "year_volume": true,
+      "evidence": "https://pegasus.law.columbia.edu/record/1101673"
+     }
+    ]
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "sc-scot",
+  "name": {
+   "en": "Session Cases"
+  },
+  "kind": "official",
+  "jurisdiction": "uk-sc",
+  "editions": [
+   {
+    "abbreviation": "SC",
+    "start": 1907,
+    "numbering": [
+     {
+      "year_volume": true,
+      "evidence": "https://www.scottishlawreports.org.uk/publications/session-cases"
+     }
+    ]
+   }
+  ],
+  "year_volume": true,
+  "source": "authored"
+ },
+ {
+  "id": "ilr",
+  "name": {
+   "en": "International Law Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "int",
+  "editions": [
+   {
+    "abbreviation": "ILR",
+    "start": 1956
+   }
+  ],
+  "year_volume": false,
+  "source": "authored",
+  "evidence": "https://www.cambridge.org/core/journals/international-law-reports/all-issues"
+ },
+ {
+  "id": "ilr-ca",
+  "name": {
+   "en": "Insurance Law Reporter"
+  },
+  "kind": "specialty",
+  "jurisdiction": "ca",
+  "editions": [
+   {
+    "abbreviation": "ILR"
+   }
+  ],
+  "year_volume": false,
+  "source": "authored",
+  "evidence": "https://www.mcgill.ca/files/library/Legal_Abbreviations.pdf"
+ },
+ {
+  "id": "ilr-ie",
+  "name": {
+   "en": "Irish Law Reports"
+  },
+  "kind": "general",
+  "jurisdiction": "ie",
+  "editions": [
+   {
+    "abbreviation": "ILR"
+   }
+  ],
+  "variations": {
+   "Ir LR": "ILR"
+  },
+  "year_volume": false,
+  "source": "authored",
+  "evidence": "https://www.mcgill.ca/files/library/Legal_Abbreviations.pdf"
+ },
+ {
+  "id": "lr-eq",
+  "name": {
+   "en": "Law Reports, Equity Cases"
+  },
+  "kind": "official",
+  "jurisdiction": "uk-ew",
+  "editions": [
+   {
+    "abbreviation": "LR Eq",
+    "start": 1865,
+    "end": 1875
+   }
+  ],
+  "variations": {
+   "Eq": "LR Eq"
+  },
+  "year_volume": false,
+  "source": "authored",
+  "evidence": "https://www.icaew.com/library/research-guides/case-law/law-reports-in-the-library-collection"
+ },
+ {
+  "id": "lr-ex",
+  "name": {
+   "en": "Law Reports, Exchequer Cases"
+  },
+  "kind": "official",
+  "jurisdiction": "uk-ew",
+  "editions": [
+   {
+    "abbreviation": "LR Ex",
+    "start": 1865,
+    "end": 1875
+   }
+  ],
+  "variations": {
+   "Ex": "LR Ex"
+  },
+  "year_volume": false,
+  "source": "authored",
+  "evidence": "https://www.sclqld.org.au/catalogue/records/20122"
+ },
+ {
+  "id": "ex-whg",
+  "name": {
+   "en": "Exchequer Reports, Welsby, Hurlstone and Gordon"
+  },
+  "kind": "general",
+  "jurisdiction": "uk-ew",
+  "editions": [
+   {
+    "abbreviation": "Ex",
+    "start": 1847,
+    "end": 1856
+   }
+  ],
+  "variations": {
+   "Exch": "Ex"
+  },
+  "year_volume": false,
+  "source": "authored",
+  "evidence": "https://support.thomsonreuters.com.au/sites/default/files/2017-09/AU-WLAU-Guide-FirstPoint-Table-of-Abbreviations.pdf"
  }
 ]

@@ -17,6 +17,7 @@
 //! its output, and [`registry`] exposes the court, reporter and series data.
 
 pub mod annotate;
+pub mod aliases;
 pub mod api;
 pub mod classify;
 pub mod clean;
@@ -30,8 +31,11 @@ pub mod model;
 pub mod parallel;
 pub mod registry;
 pub mod resolve;
+pub mod short_forms;
+pub mod source;
 pub mod text;
 pub mod url;
+mod us;
 
 pub use legal_grammar as grammar;
 pub use model::*;
@@ -41,6 +45,7 @@ use serde::{Deserialize, Serialize};
 /// The unit [`api`] reports offsets in. The Rust API always uses bytes.
 #[derive(Clone, Copy, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub enum OffsetUnit {
     #[default]
     Byte,
@@ -52,27 +57,35 @@ pub enum OffsetUnit {
 
 /// Options for [`extract`].
 #[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(default, rename_all = "camelCase")]
+#[serde(default, rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct Options {
+    /// Omit citations with unresolved registry interpretations.
+    pub remove_ambiguous: bool,
     /// Attach short forms, supra, ibid and references to their antecedents.
     pub resolve: bool,
     /// Group parallel citations.
     pub parallel: bool,
-    /// Scan for US reporter and code citations beyond the common set. Costs a
-    /// second pass over lines that carry a US citation cue.
+    /// Include the pinned source's specialized US citation forms in the shared
+    /// extractor. Literal citation cues prefilter their compiled patterns.
     pub extended_us: bool,
     /// Treat each `\n\n`-separated block, or each entry of [`Options::notes`],
     /// as a footnote whose number `supra note N` can refer to.
     pub notes: Option<Vec<NoteRange>>,
+    /// Ordered jurisdiction preferences for ambiguous abbreviations, e.g.
+    /// `["ca", "uk"]`. An explicit court takes precedence. Empty is neutral.
+    pub jurisdiction_priority: Vec<String>,
 }
 
 impl Default for Options {
     fn default() -> Self {
         Self {
+            remove_ambiguous: false,
             resolve: true,
             parallel: true,
             extended_us: true,
             notes: None,
+            jurisdiction_priority: Vec::new(),
         }
     }
 }
@@ -80,6 +93,7 @@ impl Default for Options {
 /// A footnote's byte range and number, so `supra note 4` resolves to the
 /// authority first cited in note 4.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct NoteRange {
     pub number: u32,
     pub start: usize,
@@ -93,19 +107,29 @@ pub struct NoteRange {
 
 /// Find, classify and (optionally) resolve every citation in `text`.
 pub fn extract(text: &str, options: &Options) -> Vec<Citation> {
-    let mut citations = find::find(text, options);
-    for citation in &mut citations {
-        classify::classify(text, citation);
-    }
+    extract_markup(text, None, options)
+}
+
+pub fn extract_markup(text: &str, markup: Option<&str>, options: &Options) -> Vec<Citation> {
+    let markup = markup.map(|source| clean::Markup::new(text, source));
+    let mut citations = find::find_styled(text, options, markup.as_ref());
     metadata::attach(text, &mut citations);
+    for citation in &mut citations {
+        us::finish(citation);
+    }
     if options.parallel {
         parallel::group(text, &mut citations);
+    }
+    for citation in &mut citations {
+        citation.alias = aliases::resolve(citation).cloned();
+        citation.key = citation.alias.as_ref().map(|target| target.key.clone())
+            .or_else(|| key::key_in(citation, registry::registry()));
     }
     if options.resolve {
         resolve::resolve(&mut citations, options.notes.as_deref());
     }
-    for citation in &mut citations {
-        citation.key = key::key(citation);
+    if options.remove_ambiguous {
+        citations.retain(|citation| !citation.is_ambiguous());
     }
     citations
 }

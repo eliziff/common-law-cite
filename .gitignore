@@ -1,5 +1,6 @@
 # Rust
 /target/
+/bindings/
 **/*.rs.bk
 
 # Python
@@ -19,6 +20,7 @@ crates/legal-citations-wasm/js/node_modules/
 crates/legal-citations-wasm/js/LICENSE
 crates/legal-citations-wasm/js/NOTICE
 crates/legal-citations-wasm/js/README.md
+crates/legal-citations-wasm/js/source-canlii-routes.json
 *.tgz
 
 # eyecite caches from the port/diff tools

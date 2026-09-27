@@ -356,7 +356,7 @@ def pinpointer(repo):
     not_reporter = re.search(r"const notReporter = /(.*)/i;", text).group(1)
     services = re.search(r"\\b\(\?:([A-Za-z|]+)\)\\b", not_reporter).group(1).split("|")
     out.append(fixture("pinpointer--core-not-reporter", header(repo, path, "reporterCandidates notReporter"),
-                       "reporter_or_court", [{"key": k} for k in ["Carswell"] + services]))
+                       "reporter_exclusion", [{"key": k} for k in ["Carswell"] + services]))
     score = re.search(r"/\\b\(\?:([A-Z|]+)\)\\b/\.test\(cite\)\) score \+= 30", text).group(1).split("|")
     out.append(fixture("pinpointer--core-reporter-score", header(repo, path, "reporterScore"), "reporter",
                        [{"key": k} for k in score]))

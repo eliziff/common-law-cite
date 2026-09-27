@@ -16,7 +16,10 @@
 //! | `key`             | `{citation}`                                                   | `{keyVersion, key}`                                    |
 //! | `keyForText`      | `{text, options?}`                                             | `{keyVersion, key, reason?, message?, keys}`           |
 //! | `format`          | `{citation}` / `{text, options?}` / `{pinpoint}`, `language?`, `rangeDash?`, `style?` | `{citations: [{index, formatted}]}` / `{pinpoint}` |
+//! | `formatDocument`  | `{documentType?, title?, citation?}`                            | `{title, citation, plain}`                              |
+//! | `caseHeading`     | `{text}`                                                       | `{name, citation}`                                      |
 //! | `url`             | `{citation}` / `{text, options?}`, `language?`, `anchor?`     | `{urls: [{index, url}]}`                               |
+//! | `sourceCanliiRoutes` | `{}`                                                        | source court code to CanLII route                       |
 //! | `annotate`        | `{text, annotations? \| before/after, span?, source?, cleanSteps?, unbalancedTags?, offsetUnit?}` | `{text}`          |
 //! | `clean`           | `{text, steps}`                                                | `{text}`                                               |
 //! | `registry`        | `{table?, surface?}`                                           | the registry, a table, or the entries a surface names  |
@@ -47,20 +50,51 @@ pub const SCHEMA_VERSION: u32 = 1;
 /// Every method [`call`] accepts.
 pub const METHODS: &[&str] = &[
     "extract",
+    "resolve",
+    "resolveReference",
+    "inferShortForms",
+    "referenceShortForms",
+    "referenceInfo",
+    "normalizeShortForm",
+    "resolveInferredReference",
+    "resolveRegistryReference",
+    "supraHint",
+    "reanchorReference",
+    "splitSources",
+    "sourceFields",
+    "bareCitation",
+    "legislationLookup",
+    "stripCitationTail",
+    "correctCitation",
     "key",
     "keyForText",
     "format",
+    "formatArticle",
+    "formatDocument",
+    "caseHeading",
+    "chooseCaseCitation",
+    "pinpointLayouts",
     "url",
+    "sourceCanliiRoutes",
+    "canliiAliasTarget",
     "annotate",
+    "annotationRanges",
     "clean",
+    "placeholderMarkup",
     "registry",
     "classifyExcerpt",
     "hasCitation",
+    "hasCitationCue",
+    "hasCitationSignal",
+    "isCitationContinuation",
+    "protectedCitationSpans",
+    "matchesReporterHeader",
     "version",
 ];
 
 /// Why a call failed. Serialized as `{"code": ..., "message": ...}`.
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct ApiError {
     pub code: ErrorCode,
     pub message: String,
@@ -68,6 +102,7 @@ pub struct ApiError {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub enum ErrorCode {
     /// The method name is not one of [`METHODS`].
     UnknownMethod,
@@ -125,14 +160,122 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
     }
     match method {
         "extract" => to_value(extract(&parse(method, request)?)?),
+        "resolve" => to_value(resolve(&parse(method, request)?)?),
+        "resolveReference" => to_value(crate::resolve::resolve_reference(&parse(method, request)?)),
+        "inferShortForms" => {
+            let request: InferShortFormsRequest = parse(method, request)?;
+            to_value(crate::short_forms::infer(&request.text, &request.kind))
+        }
+        "referenceShortForms" => {
+            let request: HasCitationRequest = parse(method, request)?;
+            to_value(crate::short_forms::reference_candidates(&request.text))
+        }
+        "referenceInfo" => {
+            let request: HasCitationRequest = parse(method, request)?;
+            to_value(crate::short_forms::reference_info(&request.text))
+        }
+        "bareCitation" => {
+            let request: InferShortFormsRequest = parse(method, request)?;
+            to_value(crate::source::derive_bare_citation(&request.text, &request.kind))
+        }
+        "legislationLookup" => {
+            let request: HasCitationRequest = parse(method, request)?;
+            to_value(url_stage::legislation_lookup(&request.text))
+        }
+        "stripCitationTail" => {
+            let request: HasCitationRequest = parse(method, request)?;
+            to_value(crate::source::strip_administrative_tail(&request.text))
+        }
+        "correctCitation" => to_value(crate::format::correct_citation(&parse(method, request)?)),
+        "normalizeShortForm" => {
+            let request: HasCitationRequest = parse(method, request)?;
+            to_value(crate::short_forms::normalize(&request.text))
+        }
+        "resolveInferredReference" => {
+            let request: InferredReferenceRequest = parse(method, request)?;
+            to_value(crate::short_forms::resolve_after_strict_abstention(
+                &request.text, &request.registry, &request.inferred_forms))
+        }
+        "resolveRegistryReference" => {
+            let request: RegistryReferenceRequest = parse(method, request)?;
+            to_value(crate::short_forms::resolve_registry(&request.text, &request.registry, request.aggressive))
+        }
+        "reanchorReference" => {
+            let request: ReanchorRequest = parse(method, request)?;
+            to_value(crate::short_forms::reanchor_reference(&request.link, &request.text))
+        },
+        "supraHint" => {
+            let request: SupraHintRequest = parse(method, request)?;
+            to_value(if request.fallback {
+                crate::short_forms::fallback_hint(&request.text)
+            } else {
+                crate::short_forms::supra_hint(&request.text, request.aggressive)
+            })
+        }
+        "splitSources" => {
+            let request: SplitSourcesRequest = parse(method, request)?;
+            to_value(split_sources(&request))
+        }
+        "sourceFields" => {
+            let request: SourceFieldsRequest = parse(method, request)?;
+            match (&request.text, &request.part) {
+                (Some(text), None) => to_value(crate::source::extract_text_fields(text, request.extended_us)),
+                (None, Some(part)) => to_value(crate::source::extract_fields(part, request.extended_us)),
+                _ => Err(ApiError::invalid("sourceFields: pass exactly one of text or part")),
+            }
+        }
         "key" => to_value(key(&parse(method, request)?)),
+        "matchesReporterHeader" => {
+            let request: ReporterHeaderRequest = parse(method, request)?;
+            to_value(crate::cues::matches_reporter_header(&request.text, &request.citations))
+        }
         "keyForText" => to_value(key_for_text(&parse(method, request)?)),
         "format" => to_value(format(&parse(method, request)?)?),
+        "formatArticle" => to_value(format_stage::article(&parse(method, request)?)),
+        "chooseCaseCitation" => to_value(format_stage::choose_case_citation(&parse(method, request)?)),
+        "formatDocument" => to_value(format_stage::document(&parse(method, request)?)),
+        "caseHeading" => {
+            #[derive(Deserialize)]
+            #[serde(deny_unknown_fields)]
+            struct Request { text: String }
+            let request: Request = parse(method, request)?;
+            to_value(format_stage::case_heading(&request.text))
+        },
+        "pinpointLayouts" => {
+            let request: PinpointLayoutsRequest = parse(method, request)?;
+            to_value(request.values.iter().map(|values| format_stage::pinpoint_layout(&request.kind, values, request.style.as_deref() == Some("full"))).collect::<Vec<_>>())
+        },
         "url" => to_value(url(&parse(method, request)?)?),
+        "sourceCanliiRoutes" => {
+            #[derive(Deserialize)]
+            #[serde(deny_unknown_fields)]
+            struct Empty {}
+            let _: Empty = parse(method, request)?;
+            to_value(url_stage::source_canlii_routes())
+        },
+        "canliiAliasTarget" => {
+            let request: AliasTargetRequest = parse(method, request)?;
+            let page = url_stage::canlii_alias_target(&request.target, request.language.as_deref().map_or(Language::En, Language::from_code));
+            to_value(if request.pdf { page.and_then(|page| url_stage::canlii_pdf_url(&page)) } else { page })
+        },
         "annotate" => to_value(annotate(&parse(method, request)?)?),
+        "annotationRanges" => to_value(annotation_ranges(&parse(method, request)?)?),
         "clean" => to_value(clean(&parse(method, request)?)?),
+        "placeholderMarkup" => {
+            let request: HasCitationRequest = parse(method, request)?;
+            to_value(clean_stage::placeholder_markup(&request.text))
+        }
         "registry" => registry(&parse(method, request)?),
         "classifyExcerpt" => to_value(classify_excerpt(&parse(method, request)?)),
+        "hasCitationCue" | "hasCitationSignal" | "isCitationContinuation" => {
+            let request: HasCitationRequest = parse(method, request)?;
+            to_value(match method {
+                "hasCitationCue" => crate::cues::has_citation_cue(&request.text),
+                "hasCitationSignal" => crate::cues::has_citation_signal(&request.text),
+                _ => crate::cues::is_citation_continuation(&request.text),
+            })
+        },
+        "protectedCitationSpans" => to_value(protected_citation_spans(&parse(method, request)?)),
         "hasCitation" => to_value(has_citation(&parse(method, request)?)),
         "version" => {
             parse::<Empty>(method, request)?;
@@ -148,37 +291,40 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
     }
 }
 
-fn parse<T: for<'de> Deserialize<'de>>(method: &str, request: Value) -> Result<T, ApiError> {
+fn parse<T: for<'de> Deserialize<'de>>(method: &str, mut request: Value) -> Result<T, ApiError> {
     if !request.is_object() {
         return Err(ApiError::invalid(format!(
             "{method}: request must be a JSON object"
         )));
     }
-    reject_unknown_options(method, &request)?;
+    normalize_options(method, &mut request)?;
     serde_json::from_value(request).map_err(|error| ApiError::invalid(format!("{method}: {error}")))
 }
 
-/// [`Options`] tolerates unknown keys; the API does not, so a misspelt option
-/// is an error rather than a silent default. The allowed keys are read from the
-/// serialized default, so they never drift from the struct.
-fn reject_unknown_options(method: &str, request: &Value) -> Result<(), ApiError> {
-    let Some(Value::Object(options)) = request.get("options") else {
-        return Ok(());
-    };
-    let Value::Object(known) = serde_json::to_value(Options::default()).expect("options serialize")
-    else {
-        unreachable!("options serialize to an object")
-    };
-    for name in options.keys() {
-        if !known.contains_key(name) {
-            let mut allowed = known.keys().map(String::as_str).collect::<Vec<_>>();
-            allowed.sort_unstable();
-            return Err(ApiError::invalid(format!(
-                "{method}: unknown option {name:?}; expected one of {}",
-                allowed.join(", ")
-            )));
+/// Normalize convenience-call options once, at the engine boundary.
+fn normalize_options(method: &str, request: &mut Value) -> Result<(), ApiError> {
+    let object = request.as_object_mut().ok_or_else(|| ApiError::invalid("request must be an object"))?;
+    if !matches!(method, "extract" | "keyForText" | "format" | "url" | "annotate" | "annotationRanges") { return Ok(()); }
+    static OPTION_NAMES: std::sync::LazyLock<Vec<String>> = std::sync::LazyLock::new(|| {
+        serde_json::to_value(Options::default()).expect("options serialize")
+            .as_object().unwrap().keys().cloned().collect()
+    });
+    let mut options = object.remove("options").unwrap_or_else(|| serde_json::json!({}));
+    let target = options.as_object_mut().ok_or_else(|| ApiError::invalid("options must be an object"))?;
+    for name in OPTION_NAMES.iter() {
+        if let Some(value) = object.remove(name) {
+            if target.insert(name.clone(), value).is_some() {
+                return Err(ApiError::invalid(format!("duplicate option {name:?}")));
+            }
         }
     }
+    let parsed: Options = serde_json::from_value(options.clone()).map_err(|error| ApiError::invalid(error.to_string()))?;
+    for priority in &parsed.jurisdiction_priority {
+        if registry_stage::registry().jurisdiction(priority).is_none() {
+            return Err(ApiError::invalid(format!("unknown jurisdiction priority {priority:?}")));
+        }
+    }
+    object.insert("options".into(), options);
     Ok(())
 }
 
@@ -188,10 +334,99 @@ struct Empty {}
 
 // ---------------------------------------------------------------- extract
 
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct InferShortFormsRequest {
+    pub text: String,
+    pub kind: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct InferredReferenceRequest {
+    pub text: String,
+    pub registry: Vec<crate::short_forms::ReferenceSource>,
+    pub inferred_forms: Vec<crate::short_forms::ReferenceSource>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct RegistryReferenceRequest {
+    pub text: String,
+    pub registry: Vec<crate::short_forms::ReferenceSource>,
+    pub aggressive: bool,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct SupraHintRequest {
+    pub text: String,
+    pub aggressive: bool,
+    #[serde(default)]
+    pub fallback: bool,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct ReanchorRequest {
+    pub link: String,
+    pub text: String,
+}
+
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct SplitSourcesRequest {
+    pub text: String,
+    #[serde(default)]
+    pub recall_first: bool,
+    #[serde(default)]
+    pub extended_us: bool,
+    #[serde(default)]
+    pub offset_unit: OffsetUnit,
+}
+
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct SourceFieldsRequest {
+    pub text: Option<String>,
+    pub part: Option<crate::source::SourcePart>,
+    #[serde(default)]
+    pub extended_us: bool,
+}
+
+pub fn split_sources(request: &SplitSourcesRequest) -> crate::source::SourceSplit {
+    let mut result = crate::source::split(&request.text, request.recall_first, request.extended_us);
+    let document = ScalarText::new(&request.text);
+    let convert = |byte| match request.offset_unit {
+        OffsetUnit::Byte => byte,
+        OffsetUnit::Char => document.scalar_at_byte(byte).unwrap(),
+        OffsetUnit::Utf16 => document.utf16_at_byte(byte).unwrap(),
+    };
+    for part in &mut result.parts {
+        part.start = convert(part.start);
+        part.end = convert(part.end);
+    }
+    for (start, end, _) in &mut result.delimiters {
+        *start = convert(*start);
+        *end = convert(*end);
+    }
+    result
+}
+
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct ExtractRequest {
     pub text: String,
+    #[serde(default)]
+    pub markup_text: Option<String>,
     #[serde(default)]
     pub options: Options,
     /// Unit of every offset in the response, and of `options.notes` ranges.
@@ -200,25 +435,37 @@ pub struct ExtractRequest {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct ReporterHeaderRequest {
+    pub text: String,
+    pub citations: Vec<Citation>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct ExtractResponse {
     pub schema_version: u32,
     pub offset_unit: OffsetUnit,
     pub citations: Vec<Citation>,
+    pub authorities: Vec<Vec<usize>>,
 }
 
 /// [`crate::extract`] with offsets converted to `request.offset_unit`.
 pub fn extract(request: &ExtractRequest) -> Result<ExtractResponse, ApiError> {
-    let citations = extract_citations(&request.text, &request.options, request.offset_unit)?;
+    let citations = extract_citations(&request.text, request.markup_text.as_deref(), &request.options, request.offset_unit)?;
     Ok(ExtractResponse {
         schema_version: SCHEMA_VERSION,
         offset_unit: request.offset_unit,
+        authorities: crate::resolve::authorities(&citations),
         citations,
     })
 }
 
 fn extract_citations(
     text: &str,
+    markup: Option<&str>,
     options: &Options,
     unit: OffsetUnit,
 ) -> Result<Vec<Citation>, ApiError> {
@@ -236,7 +483,7 @@ fn extract_citations(
             }
         }
     }
-    let mut citations = crate::extract(text, &options);
+    let mut citations = crate::extract_markup(text, markup, &options);
     convert_citations(&document, &mut citations, unit);
     Ok(citations)
 }
@@ -282,6 +529,17 @@ pub fn convert_citations(document: &ScalarText<'_>, citations: &mut [Citation], 
     for citation in citations {
         convert_span(&mut citation.span);
         convert_span(&mut citation.full_span);
+        if let Some(pin_cite) = citation.fields.pin_cite.as_mut() {
+            convert_span(pin_cite);
+        }
+        if let Some(name) = citation.fields.source_case_name.as_mut() {
+            name.full_span_start = convert(name.full_span_start);
+            name.full_span_end = name.full_span_end.map(convert);
+            name.pin_cite_span_end = name.pin_cite_span_end.map(convert);
+            if let Some(pre) = name.pre_citation.as_mut() { convert_span(pre); }
+            if let Some(pin) = name.pin_cite.as_mut() { convert_span(pin); }
+            if let Some(reference) = name.reference_span.as_mut() { convert_span(reference); }
+        }
         if let Some(signal) = citation.signal.as_mut() {
             convert_span(signal);
         }
@@ -300,16 +558,76 @@ pub fn convert_citations(document: &ScalarText<'_>, citations: &mut [Citation], 
     }
 }
 
+// ---------------------------------------------------------------- resolve
+
+/// Resolve an existing citation list without extracting it again. Note ranges
+/// and citation spans must use the same offset unit; resolution does not slice
+/// the document, so no conversion or original text is needed.
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct ResolveRequest {
+    pub citations: Vec<Citation>,
+    #[serde(default)]
+    pub notes: Option<Vec<crate::NoteRange>>,
+    #[serde(default)]
+    pub alias_groups: Vec<crate::aliases::SourceAliasGroup>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct ResolveResponse {
+    pub citations: Vec<Citation>,
+    pub resolutions: Vec<crate::resolve::Resolution>,
+    pub authorities: Vec<Vec<usize>>,
+}
+
+pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
+    let mut citations = request.citations.clone();
+    let mut indices = std::collections::HashSet::new();
+    for citation in &mut citations {
+        if !indices.insert(citation.index) {
+            return Err(ApiError::invalid("resolve: citation indices must be unique"));
+        }
+        if citation.span.start > citation.span.end {
+            return Err(ApiError::invalid("resolve: citation start is after its end"));
+        }
+        // Recompute identity and references from the supplied records. A caller
+        // may have removed or edited citations since the previous resolution.
+        citation.antecedent = None;
+        citation.reasons.retain(|reason| reason != "source_alias_conflict");
+        citation.key = key_stage::key(citation);
+    }
+    if request.notes.as_ref().is_some_and(|notes| notes.iter().any(|note| note.start > note.end)) {
+        return Err(ApiError::invalid("resolve: note start is after its end"));
+    }
+    citations.sort_by_key(|citation| (citation.span.start, citation.index));
+    if request.alias_groups.iter().any(|group| !indices.contains(&group.index)) {
+        return Err(ApiError::invalid("resolve: alias group refers to an unknown citation index"));
+    }
+    let links = crate::aliases::source_links(&mut citations, &request.alias_groups);
+    let resolutions = crate::resolve::resolve_with_links(&citations, request.notes.as_deref(), &links);
+    for resolution in &resolutions {
+        if let Some(citation) = citations.iter_mut().find(|citation| citation.index == resolution.index) {
+            citation.antecedent = resolution.antecedent;
+        }
+    }
+    let authorities = crate::resolve::authorities_with_links(&citations, &links);
+    Ok(ResolveResponse { citations, resolutions, authorities })
+}
+
 // ---------------------------------------------------------------- key
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct KeyRequest {
     pub citation: Citation,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct KeyResponse {
     pub key_version: String,
     pub key: Option<String>,
@@ -326,6 +644,7 @@ pub fn key(request: &KeyRequest) -> KeyResponse {
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct TextRequest {
     pub text: String,
     #[serde(default)]
@@ -333,6 +652,7 @@ pub struct TextRequest {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct CitationKey {
     pub index: usize,
     /// The citation core as written.
@@ -342,6 +662,7 @@ pub struct CitationKey {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct KeyForTextResponse {
     pub key_version: String,
     /// The key of the one full citation `text` holds (`R v Jordan, 2016 SCC
@@ -359,7 +680,8 @@ pub struct KeyForTextResponse {
 
 /// The key of the single citation in `text`, plus every citation's key.
 pub fn key_for_text(request: &TextRequest) -> KeyForTextResponse {
-    let (key, reason, message) = match key_stage::key_for_text(&request.text) {
+    let citations = crate::extract(&request.text, &request.options);
+    let (key, reason, message) = match key_stage::single_key(&citations) {
         Ok(key) => (Some(key), None, None),
         Err(error) => {
             let reason = match error {
@@ -370,7 +692,6 @@ pub fn key_for_text(request: &TextRequest) -> KeyForTextResponse {
             (None, Some(reason.to_owned()), Some(error.to_string()))
         }
     };
-    let citations = crate::extract(&request.text, &request.options);
     let keys = citations
         .iter()
         .map(|citation| CitationKey {
@@ -379,7 +700,7 @@ pub fn key_for_text(request: &TextRequest) -> KeyForTextResponse {
             key: citation
                 .key
                 .clone()
-                .or_else(|| citations.get(citation.authority_index())?.key.clone()),
+                .or_else(|| citations.iter().find(|target| target.index == citation.authority_index())?.key.clone()),
         })
         .collect();
     KeyForTextResponse {
@@ -397,6 +718,7 @@ pub fn key_for_text(request: &TextRequest) -> KeyForTextResponse {
 /// pinpoint, in McGill style.
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct FormatRequest {
     #[serde(default)]
     pub citation: Option<Citation>,
@@ -417,10 +739,20 @@ pub struct FormatRequest {
     pub range_dash: Option<String>,
 }
 
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct PinpointLayoutsRequest {
+    pub kind: String,
+    pub values: Vec<Vec<String>>,
+    #[serde(default)] pub style: Option<String>,
+}
+
 /// `{kind: "paragraph", locators: [{first: "12", last: "14"}]}` →
 /// `at paras 12-14`.
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct PinpointRequest {
     pub kind: PinpointKind,
     pub locators: Vec<Locator>,
@@ -428,6 +760,7 @@ pub struct PinpointRequest {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct Locator {
     pub first: String,
     #[serde(default)]
@@ -435,6 +768,7 @@ pub struct Locator {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct Formatted {
     pub index: usize,
     /// `null` for forms the formatter does not render (short forms,
@@ -443,6 +777,7 @@ pub struct Formatted {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct FormatResponse {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub citations: Vec<Formatted>,
@@ -566,6 +901,7 @@ pub fn format(request: &FormatRequest) -> Result<FormatResponse, ApiError> {
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct UrlRequest {
     #[serde(default)]
     pub citation: Option<Citation>,
@@ -582,12 +918,23 @@ pub struct UrlRequest {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct AliasTargetRequest {
+    pub target: String,
+    #[serde(default)] pub language: Option<String>,
+    #[serde(default)] pub pdf: bool,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct CitationUrl {
     pub index: usize,
     pub url: Option<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct UrlResponse {
     pub urls: Vec<CitationUrl>,
 }
@@ -635,6 +982,7 @@ pub fn url(request: &UrlRequest) -> Result<UrlResponse, ApiError> {
 /// `{key}`, `{form}`, `{authority}` and `{url}` are substituted.
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct AnnotateRequest {
     pub text: String,
     #[serde(default)]
@@ -655,6 +1003,13 @@ pub struct AnnotateRequest {
     pub source: Option<String>,
     #[serde(default)]
     pub clean_steps: Vec<String>,
+    /// Character-count diff steps supplied by a host's stdlib aligner.
+    #[serde(default)]
+    pub alignment: Option<Vec<clean_stage::DiffStep>>,
+    /// Source spans returned by a host-provided offset updater, in input order
+    /// and offsetUnit. Ordering still uses the original extraction spans.
+    #[serde(default)]
+    pub source_offsets: Option<Vec<[usize; 2]>>,
     /// How to treat an annotation whose source range crosses tags unevenly
     /// (eyecite's `unbalanced_tags`): `unchecked` (default), `skip`, `wrap`.
     #[serde(default)]
@@ -666,6 +1021,7 @@ pub struct AnnotateRequest {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct Annotation {
     pub start: usize,
     pub end: usize,
@@ -676,6 +1032,7 @@ pub struct Annotation {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct AnnotateResponse {
     pub text: String,
 }
@@ -684,7 +1041,7 @@ fn clean_steps(method: &str, names: &[String]) -> Result<Vec<clean_stage::Step>,
     names
         .iter()
         .map(|name| {
-            clean_stage::Step::from_name(name).ok_or_else(|| {
+            clean_stage::Step::from_eyecite_name(name).ok_or_else(|| {
                 ApiError::invalid(format!(
                     "{method}: unknown clean step {name:?}; expected html, xml, inline_whitespace, all_whitespace, underscores or zero_width"
                 ))
@@ -718,7 +1075,7 @@ fn serde_value_name<T: Serialize>(value: &T) -> String {
     }
 }
 
-pub fn annotate(request: &AnnotateRequest) -> Result<AnnotateResponse, ApiError> {
+fn planned_annotations(request: &AnnotateRequest) -> Result<Vec<annotate_stage::PreparedAnnotation>, ApiError> {
     let unbalanced = match request.unbalanced_tags.as_deref() {
         None | Some("unchecked") => annotate_stage::Unbalanced::Unchecked,
         Some("skip") => annotate_stage::Unbalanced::Skip,
@@ -781,35 +1138,76 @@ pub fn annotate(request: &AnnotateRequest) -> Result<AnnotateResponse, ApiError>
             })
         }
     };
-    let text = match &request.source {
-        None => annotate_stage::annotate(&request.text, &annotations),
-        Some(source) => {
-            let cleaned =
-                clean_stage::clean(source, &clean_steps("annotate", &request.clean_steps)?);
-            if cleaned.text != request.text {
-                return Err(ApiError::invalid(
-                    "annotate: cleaning `source` with `cleanSteps` does not produce `text`",
-                ));
-            }
-            annotate_stage::annotate_source(source, &cleaned, &annotations, unbalanced)
+    let source = request.source.as_deref().unwrap_or(&request.text);
+    if let Some(offsets) = &request.source_offsets {
+        if request.alignment.is_some() || !request.clean_steps.is_empty() {
+            return Err(ApiError::invalid("annotate: sourceOffsets cannot be combined with alignment or cleanSteps"));
         }
+        if offsets.len() != annotations.len() {
+            return Err(ApiError::invalid("annotate: sourceOffsets must have one span per annotation"));
+        }
+        let document = ScalarText::new(source);
+        let mapped = offsets.iter().map(|[start, end]| Ok(
+            to_byte(&document, *start, request.offset_unit, "sourceOffsets[].start")?..
+            to_byte(&document, *end, request.offset_unit, "sourceOffsets[].end")?
+        )).collect::<Result<Vec<_>, ApiError>>()?;
+        return Ok(annotate_stage::prepare(source, &annotations, unbalanced, |index, _| Some(mapped[index].clone())));
+    }
+    if request.alignment.is_some() && !request.clean_steps.is_empty() {
+        return Err(ApiError::invalid("annotate: alignment and cleanSteps are mutually exclusive"));
+    }
+    let cleaned = if source == request.text && request.alignment.is_none() {
+        clean_stage::Cleaned::identity(source)
+    } else if request.clean_steps.is_empty() {
+        let map = clean_stage::SpanUpdater::new(&request.text, source,
+            &clean_stage::placeholder_markup(source), request.alignment.as_deref()).map_err(ApiError::invalid)?;
+        return Ok(annotate_stage::prepare(source, &annotations, unbalanced, |_, annotation|
+            Some(map.byte(annotation.start, true)?..map.byte(annotation.end, false)?)));
+    } else {
+        let cleaned = clean_stage::clean(source, &clean_steps("annotate", &request.clean_steps)?);
+        if cleaned.text != request.text {
+            return Err(ApiError::invalid("annotate: cleaning source with cleanSteps does not produce text"));
+        }
+        cleaned
     };
-    Ok(AnnotateResponse { text })
+    Ok(annotate_stage::source_annotations(source, &cleaned, &annotations, unbalanced))
+}
+
+pub fn annotate(request: &AnnotateRequest) -> Result<AnnotateResponse, ApiError> {
+    Ok(AnnotateResponse { text: annotate_stage::render(
+        request.source.as_deref().unwrap_or(&request.text), &planned_annotations(request)?) })
+}
+
+pub fn annotation_ranges(request: &AnnotateRequest) -> Result<Vec<annotate_stage::PreparedAnnotation>, ApiError> {
+    let annotations = planned_annotations(request)?;
+    let document = ScalarText::new(request.source.as_deref().unwrap_or(&request.text));
+    let convert = |byte| match request.offset_unit {
+        OffsetUnit::Byte => byte,
+        OffsetUnit::Char => document.scalar_at_byte(byte).unwrap(),
+        OffsetUnit::Utf16 => document.utf16_at_byte(byte).unwrap(),
+    };
+    Ok(annotations.into_iter().map(|mut annotation| {
+        annotation.start = convert(annotation.start);
+        annotation.end = convert(annotation.end);
+        annotation
+    }).collect())
 }
 
 // ---------------------------------------------------------------- clean
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct CleanRequest {
     pub text: String,
-    /// eyecite-compatible step names: `html` (= `xml`), `inline_whitespace`,
+    /// eyecite-compatible step names: `html`, `xml`, `inline_whitespace`,
     /// `all_whitespace`, `underscores`, plus `zero_width`; applied in order.
     #[serde(default)]
     pub steps: Vec<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct CleanResponse {
     pub text: String,
 }
@@ -831,6 +1229,7 @@ pub fn clean(request: &CleanRequest) -> Result<CleanResponse, ApiError> {
 /// `[{"reporter": {...}, "canonical": "SCR"}]`).
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct RegistryRequest {
     #[serde(default)]
     pub table: Option<String>,
@@ -882,8 +1281,8 @@ pub fn registry(request: &RegistryRequest) -> Result<Value, ApiError> {
                 .map(|(reporter, canonical)| serde_json::json!({"reporter": reporter, "canonical": canonical}))
                 .collect(),
         ),
-        "series" => to_json(registry.series_by_surface(surface).into_iter().collect::<Vec<_>>()),
-        "journals" => to_json(registry.journal_by_surface(surface).into_iter().collect::<Vec<_>>()),
+        "series" => to_json(registry.series_candidates(surface)),
+        "journals" => to_json(registry.journals_by_surface(surface)),
         "jurisdictions" => to_json(registry.jurisdiction(surface).into_iter().collect::<Vec<_>>()),
         other if registry_tables().iter().any(|name| name == other) => {
             return Err(ApiError::invalid(format!("registry: table {other:?} has no surface lookup")))
@@ -896,6 +1295,7 @@ pub fn registry(request: &RegistryRequest) -> Result<Value, ApiError> {
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct ExcerptRequest {
     pub excerpt: String,
 }
@@ -909,12 +1309,14 @@ pub fn classify_excerpt(request: &ExcerptRequest) -> excerpt::ExcerptClassificat
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct HasCitationRequest {
     pub text: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct HasCitationResponse {
     pub has_citation: bool,
 }
@@ -926,7 +1328,28 @@ pub fn has_citation(request: &HasCitationRequest) -> HasCitationResponse {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct ProtectedSpansRequest {
+    pub text: String,
+    #[serde(default)]
+    pub offset_unit: OffsetUnit,
+}
+
+pub fn protected_citation_spans(request: &ProtectedSpansRequest) -> Vec<[usize; 2]> {
+    let text = ScalarText::new(&request.text);
+    let convert = |byte| match request.offset_unit {
+        OffsetUnit::Byte => byte,
+        OffsetUnit::Char => text.scalar_at_byte(byte).unwrap(),
+        OffsetUnit::Utf16 => text.utf16_at_byte(byte).unwrap(),
+    };
+    crate::cues::protected_spans(&request.text).into_iter()
+        .map(|span| [convert(span.start), convert(span.end)]).collect()
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct GrammarVersion {
     /// `legal-grammar-corpus:v1`.
     pub format: String,
@@ -938,6 +1361,7 @@ pub struct GrammarVersion {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct RegistryVersion {
     pub jurisdictions: usize,
     pub courts: usize,
@@ -953,6 +1377,7 @@ pub struct RegistryVersion {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct VersionResponse {
     /// The `legal-citations` crate version.
     pub version: String,

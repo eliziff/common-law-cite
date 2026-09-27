@@ -7,10 +7,9 @@
 
 use crate::find::span;
 use crate::model::{
-    Citation, CourtRef, Form, History, Parenthetical, ParentheticalKind, Parties, Pinpoint,
+    Citation, Form, History, Parenthetical, ParentheticalKind, Parties, Pinpoint,
     PinpointKind,
 };
-use crate::registry::registry;
 use crate::text::javascript_whitespace;
 use legal_grammar::{CompiledEcmascriptGrammar, CompiledGrammar};
 use std::ops::Range;
@@ -28,11 +27,34 @@ fn linear(id: &str) -> CompiledEcmascriptGrammar {
 // first letter of a following word, which is the backtracking dialect.
 static LOCATOR: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("pinpoint.locator"));
 static ITEM: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("pinpoint.item"));
+static TOKEN: LazyLock<regex::Regex> = LazyLock::new(|| {
+    let tables = legal_grammar::load_tables().unwrap();
+    regex::Regex::new(&tables["pinpoint.token"].entry.pattern).unwrap()
+});
+
+/// Legal Structure Parser's numeric-token projection of a parsed locator.
+/// Keep the full range in `Pinpoint`; callers needing individual source tokens
+/// receive their original text and byte offsets here.
+pub fn pinpoint_tokens(pinpoint: &Pinpoint) -> impl Iterator<Item = crate::Span> + '_ {
+    TOKEN.find_iter(&pinpoint.span.text).map(|matched| crate::Span {
+        text: matched.as_str().to_owned(),
+        start: pinpoint.span.start + matched.start(),
+        end: pinpoint.span.start + matched.end(),
+    })
+}
 static SHORT_FORM_SUFFIX: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("shortform.splitter"));
 static SOURCE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("parenthetical.source"));
 static COURT: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("parenthetical.court"));
+static LAW_PUBLICATION: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("parenthetical.law"));
+static POST_CITATION: LazyLock<[CompiledGrammar; 4]> = LazyLock::new(|| {
+    ["parenthetical.us.post-full", "parenthetical.us.post-law",
+        "parenthetical.us.post-journal", "parenthetical.us.post-short"].map(|id|
+        legal_grammar::compile_python_table_entry(id).expect("pinned post-citation grammar"))
+});
+static SOURCE_YEAR: LazyLock<CompiledGrammar> = LazyLock::new(||
+    legal_grammar::compile_python_table_entry("parenthetical.us.year").expect("pinned parenthetical year"));
 static HISTORY: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("ref.history"));
 static VERSUS: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("party.versus"));
 static BRACKETED_PARAGRAPH: LazyLock<CompiledEcmascriptGrammar> =
@@ -41,9 +63,15 @@ static BRACKETED_PARAGRAPH: LazyLock<CompiledEcmascriptGrammar> =
 /// A parenthetical may hold nested parentheses but never runs on for pages.
 const MAX_PARENTHETICAL: usize = 600;
 
+#[derive(Clone, Copy, PartialEq)]
+pub(crate) enum PostCitation { Case, Law, Journal, Short }
+
 /// What [`tail`] may read after a core.
 #[derive(Clone, Copy, Default)]
 pub(crate) struct TailRules {
+    /// Pinned source metadata grammar and paragraph boundary. Only a full
+    /// case's date can follow citation tokens beyond the next core boundary.
+    pub post_citation: Option<(PostCitation, usize)>,
     /// A Bluebook pinpoint with no keyword: `410 U.S. 113, 153`.
     pub bare_page: bool,
     /// OSCOLA pinpoints after `(n 4)`: a bare page (`353`) or a bracketed
@@ -57,7 +85,15 @@ pub(crate) struct TailRules {
 /// The pinpoints, parentheticals and bracketed short form after a core.
 #[derive(Default)]
 pub(crate) struct Tail {
+    pub source_end: Option<usize>,
+    pub source_pin: Option<crate::Span>,
+    pub source_pin_end: Option<usize>,
+    pub source_parenthetical: Option<String>,
+    pub extra: Option<String>,
+    pub publisher: Option<String>,
+    pub court_date: Option<CourtReading>,
     pub pinpoints: Vec<Pinpoint>,
+    pub pin_cite: Option<crate::Span>,
     pub parentheticals: Vec<Parenthetical>,
     pub short: Option<String>,
     pub end: usize,
@@ -116,7 +152,7 @@ fn pinpoint_group(
     start: usize,
     limit: usize,
     bare_page: bool,
-) -> Option<(Vec<Pinpoint>, usize)> {
+) -> Option<(Vec<Pinpoint>, crate::Span)> {
     let captures = LOCATOR.captures(&text[start..limit]).ok()??;
     let keyword = captures.name("keyword").map(|value| value.as_str());
     let led = captures.name("at").is_some() || captures.name("elided").is_some();
@@ -145,7 +181,11 @@ fn pinpoint_group(
         });
     }
     let end = pinpoints.last()?.span.end;
-    Some((pinpoints, end))
+    // Eyecite's clean_pin_cite strips only commas and spaces. Keep the
+    // written label ("at", "¶", "p.") rather than reconstructing it.
+    let raw = &text[start..end];
+    let phrase_start = start + raw.len() - raw.trim_start_matches([',', ' ']).len();
+    Some((pinpoints, span(text, phrase_start..end)))
 }
 
 /// A balanced parenthetical opening after optional spaces and a comma.
@@ -155,19 +195,28 @@ fn parenthetical_at(text: &str, start: usize, limit: usize) -> Option<Range<usiz
         - rest
             .trim_start_matches(|character: char| javascript_whitespace(character) || character == ',')
             .len();
-    if !text[open..limit].starts_with('(') {
-        return None;
-    }
+    let opening = text[open..limit].chars().next()?;
+    let closing = match opening { '(' => ')', '[' => ']', _ => return None };
     let mut depth = 0usize;
-    for (offset, character) in text[open..limit].char_indices() {
+    // A following core may itself be cited inside this parenthetical.
+    // `limit` constrains where a trailing component starts, not where an
+    // already-open parenthetical closes (eyecite.process_parenthetical).
+    for (offset, character) in text[open..].char_indices() {
         if offset > MAX_PARENTHETICAL || character == '\n' {
             return None;
         }
         match character {
-            '(' => depth += 1,
-            ')' => {
+            value if value == opening => depth += 1,
+            value if value == closing => {
                 depth -= 1;
                 if depth == 0 {
+                    if opening == '[' {
+                        let reading = read_court(&text[open + 1..open + offset])?;
+                        if reading.date.is_none() && reading.court.as_deref().is_none_or(|court|
+                            crate::registry::registry().courts_by_surface(court).is_empty()) {
+                            return None;
+                        }
+                    }
                     return Some(open..open + offset + 1);
                 }
             }
@@ -181,14 +230,20 @@ fn parenthetical_at(text: &str, start: usize, limit: usize) -> Option<Range<usiz
 pub(crate) struct CourtReading {
     pub court: Option<String>,
     pub date: Option<String>,
+    pub year: Option<String>,
+    pub month: Option<String>,
+    pub day: Option<String>,
 }
 
 pub(crate) fn read_court(content: &str) -> Option<CourtReading> {
     let captures = COURT.captures(content.trim()).ok()??;
     let court = captures.name("court").map(|value| value.as_str().trim().to_owned());
     let date = captures.name("date").map(|value| value.as_str().to_owned());
+    let year = captures.name("year").map(|value| value.as_str().to_owned());
+    let month = captures.name("month").map(|value| value.as_str().to_owned());
+    let day = captures.name("day").or_else(|| captures.name("day_before")).map(|value| value.as_str().to_owned());
     (court.as_deref().is_some_and(|court| !court.is_empty()) || date.is_some())
-        .then_some(CourtReading { court, date })
+        .then_some(CourtReading { court, date, year, month, day })
 }
 
 fn parenthetical(text: &str, range: Range<usize>) -> Parenthetical {
@@ -270,48 +325,144 @@ fn bracketed_paragraph(text: &str, start: usize, limit: usize) -> Option<(Pinpoi
 }
 
 /// Walk pinpoints, parentheticals and a bracketed short form from `start`,
-/// never past `limit` (the next citation's core).
+/// starting before `limit` (the next citation's core). An explanatory
+/// parenthetical can contain another citation and therefore end beyond it.
 pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> Tail {
     let mut result = Tail {
         end: start,
         ..Tail::default()
     };
     if let Some((inner_start, inner_end)) = rules.inner {
-        if let Some((pinpoints, _)) = pinpoint_group(text, inner_start, inner_end, false) {
+        if let Some((pinpoints, phrase)) = pinpoint_group(text, inner_start, inner_end, false) {
             result.pinpoints.extend(pinpoints);
+            result.pin_cite = Some(phrase);
         }
     }
     let mut cursor = start;
     let mut bare_page = rules.bare_page;
     if rules.oscola {
         if let Some((pinpoint, end)) = oscola_page(text, cursor, limit) {
+            result.pin_cite = Some(pinpoint.span.clone());
             result.pinpoints.push(pinpoint);
             cursor = end;
         }
     }
-    loop {
-        if let Some((pinpoints, end)) = pinpoint_group(text, cursor, limit, bare_page) {
+    while cursor < limit {
+        if let Some((pinpoints, phrase)) = pinpoint_group(text, cursor, limit, bare_page) {
+            let end = phrase.end;
+            match &mut result.pin_cite {
+                Some(previous) if previous.end == cursor => *previous = span(text, previous.start..end),
+                None => result.pin_cite = Some(phrase),
+                _ => {},
+            }
             result.pinpoints.extend(pinpoints);
             cursor = end;
             bare_page = false;
             continue;
         }
         if let Some((pinpoint, end)) = bracketed_paragraph(text, cursor, limit) {
+            if result.pin_cite.is_none() { result.pin_cite = Some(pinpoint.span.clone()); }
             result.pinpoints.push(pinpoint);
             cursor = end;
             continue;
         }
         if let Some(range) = parenthetical_at(text, cursor, limit) {
+            // The source-specific post-citation grammar below owns any
+            // explanatory extent crossing the next recognized citation.
+            if range.end > limit {
+                break;
+            }
             cursor = range.end;
             result.parentheticals.push(parenthetical(text, range));
             continue;
         }
         break;
     }
+    if let Some((source, paragraph_end)) = rules.post_citation {
+        if source == PostCitation::Case { result.source_end = Some(start); }
+        // Full cases may span parallel citation tokens. Other source forms
+        // stop at the next citation as well as the paragraph boundary.
+        let window = &text[start..if source == PostCitation::Case { paragraph_end } else { paragraph_end.min(limit) }];
+        let end = window.char_indices().nth(300).map_or(window.len(), |(at, _)| at);
+        if let Some(captures) = POST_CITATION[source as usize].captures(&window[..end]).expect("post-citation match") {
+            if source == PostCitation::Case {
+                let mut source_end = start + captures.get(0).unwrap().end();
+                // Eyecite process_parenthetical: stop at the first unmatched
+                // closing parenthesis, then exclude year-only parentheticals.
+                if let Some(part) = captures.name("parenthetical") {
+                    let mut balance = 0;
+                    let mut value = part.as_str();
+                    let mut closed = false;
+                    for (offset, character) in value.char_indices() {
+                        if character == '(' { balance += 1; }
+                        if character == ')' { balance -= 1; }
+                        if balance < 0 {
+                            closed = true;
+                            value = &value[..offset];
+                            if !value.is_empty() { source_end -= part.as_str().len() - value.len(); }
+                            break;
+                        }
+                    }
+                    if !value.is_empty() && (closed || !SOURCE_YEAR.is_match(value).expect("source parenthetical year")) {
+                        result.source_parenthetical = Some(value.to_owned());
+                    }
+                }
+                result.source_end = Some(source_end);
+                if let Some(pin) = captures.name("pin_cite").or_else(|| captures.name("pin_cite_2")) {
+                    if !pin.as_str().is_empty() { result.source_pin_end = Some(start + pin.as_str().len()); }
+                    let trimmed = pin.as_str().trim_matches([',', ' ']);
+                    let leading = pin.as_str().len() - pin.as_str().trim_start_matches([',', ' ']).len();
+                    if !trimmed.is_empty() {
+                        result.source_pin = Some(span(text, start + pin.start() + leading..start + pin.start() + leading + trimmed.len()));
+                    }
+                }
+            }
+            if let Some(extra) = captures.name("extra") {
+                let group = |name| captures.name(name).map(|value| value.as_str().to_owned());
+                result.court_date = Some(CourtReading {
+                    court: group("court").map(|value| value.trim().to_owned()).filter(|value| !value.is_empty()),
+                    date: group("year_2"), year: group("year_3"),
+                    month: group("month_3"), day: group("day"),
+                });
+                let extra_text = extra.as_str().trim_matches(crate::text::python_whitespace);
+                result.extra = (!extra_text.is_empty()).then(|| extra_text.to_owned());
+                let matched_end = start + captures.get(0).unwrap().end();
+                let mut at = start + extra.end();
+                // The source grammar has a court/date parenthetical and at
+                // most one following explanation. Reuse the shared balanced
+                // extent reader so an explanation can contain another cite.
+                for _ in 0..2 {
+                    let Some(range) = parenthetical_at(text, at, matched_end) else { break };
+                    at = range.end;
+                    if !result.parentheticals.iter().any(|part| part.span.start == range.start) {
+                        result.parentheticals.push(parenthetical(text, range));
+                    }
+                }
+                cursor = cursor.max(at);
+            } else if source != PostCitation::Case {
+                let group = |name| captures.name(name).map(|value| value.as_str().to_owned());
+                result.publisher = group("publisher");
+                result.court_date = Some(CourtReading {
+                    court: None, date: group("year"), year: group("year"),
+                    month: group("month"), day: group("day"),
+                });
+                if let Some(pin) = captures.name("pin_cite") {
+                    let trimmed = pin.as_str().trim_matches([',', ' ']);
+                    if !trimmed.is_empty() {
+                        let leading = pin.as_str().len() - pin.as_str().trim_start_matches([',', ' ']).len();
+                        result.pin_cite = Some(span(text, start + pin.start() + leading..start + pin.start() + leading + trimmed.len()));
+                    }
+                }
+                cursor = cursor.max(start + captures.get(0).unwrap().end());
+            }
+        }
+    }
     result.end = cursor;
-    if let Some((short, end)) = explicit_short_form(text, cursor, limit) {
-        result.short = Some(short);
-        result.end = end;
+    if cursor < limit {
+        if let Some((short, end)) = explicit_short_form(text, cursor, limit) {
+            result.short = Some(short);
+            result.end = end;
+        }
     }
     result
 }
@@ -422,24 +573,34 @@ pub(crate) fn parties(style: &str) -> Option<Parties> {
     })
 }
 
-/// Resolve a parenthetical's court surface (`ON CA`, `HL`, `2d Cir.`) against
-/// the registry's aliases.
-fn court_of(content: &str) -> Option<(CourtRef, String)> {
-    let reading = read_court(content)?;
-    let surface = reading.court?;
-    let court = registry().court_by_surface(&surface)?;
-    Some((
-        CourtRef {
-            id: court.id.clone(),
-            text: surface,
-        },
-        court.jurisdiction.clone(),
-    ))
+/// The first dated court/date parenthetical, using the same parsed fields
+/// for classification and metadata attachment.
+pub(crate) fn parenthetical_date(citation: &Citation) -> Option<CourtReading> {
+    citation.parentheticals.iter()
+        .filter(|parenthetical| matches!(parenthetical.kind, ParentheticalKind::Court | ParentheticalKind::Date))
+        .find_map(|parenthetical| {
+            read_court(&parenthetical.content).filter(|reading| reading.date.is_some())
+        })
 }
 
-/// Parties, court and date from parentheticals, and history links.
+/// Parties, dates and history links. Registry court selection is owned by classification.
 pub fn attach(text: &str, citations: &mut [Citation]) {
     for citation in citations.iter_mut() {
+        if let Some(date) = parenthetical_date(citation) {
+            citation.fields.year = citation.fields.year.take().or(date.year);
+            citation.fields.month = citation.fields.month.take().or(date.month);
+            citation.fields.day = citation.fields.day.take().or(date.day);
+        }
+        if citation.authority.is_legislation() && citation.fields.source_groups.is_empty() {
+            if let Some(publication) = citation.parentheticals.iter().find_map(|parenthetical|
+                LAW_PUBLICATION.captures(&parenthetical.content).expect("law publication metadata")) {
+                for (name, field) in [("publisher", &mut citation.fields.publisher),
+                    ("month", &mut citation.fields.month), ("day", &mut citation.fields.day),
+                    ("year", &mut citation.fields.year)] {
+                    if field.is_none() { *field = publication.name(name).map(|value| value.as_str().to_owned()); }
+                }
+            }
+        }
         if citation.form == Form::Full && citation.parties.is_none() {
             if let Some(style) = &citation.style {
                 if citation.authority == crate::model::Authority::Case {
@@ -447,33 +608,7 @@ pub fn attach(text: &str, citations: &mut [Citation]) {
                 }
             }
         }
-        for parenthetical in &citation.parentheticals {
-            if parenthetical.kind != ParentheticalKind::Court
-                && parenthetical.kind != ParentheticalKind::Date
-            {
-                continue;
-            }
-            if citation.court.is_none() {
-                if let Some((court, jurisdiction)) = court_of(&parenthetical.content) {
-                    citation.court = Some(court);
-                    // The court's jurisdiction refines a series-wide one
-                    // (CarswellOnt `ca` -> Ontario Superior Court `ca-on`).
-                    let refines = citation.jurisdiction.as_deref().is_none_or(|current| {
-                        jurisdiction.starts_with(current) && jurisdiction.len() > current.len()
-                    });
-                    if refines {
-                        citation.jurisdiction = Some(jurisdiction);
-                    }
-                    citation.reasons.push("court_parenthetical".to_owned());
-                }
-            }
-            if citation.fields.year.is_none() {
-                if let Some(date) = read_court(&parenthetical.content).and_then(|reading| reading.date) {
-                    let year = date.chars().rev().take(4).collect::<Vec<_>>();
-                    citation.fields.year = Some(year.into_iter().rev().collect());
-                }
-            }
-        }
+
     }
     for index in 0..citations.len() {
         let from = citations[index].full_span.end;

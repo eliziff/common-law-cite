@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eliziff/legal-citations.git",
+    "url": "git+https://github.com/eliziff/common-law-cite.git",
     "directory": "crates/legal-citations-wasm/js"
   },
   "keywords": [
@@ -30,6 +30,7 @@
       "default": "./index.js"
     },
     "./legal_citations_wasm_bg.wasm": "./pkg/legal_citations_wasm_bg.wasm",
+    "./source-canlii-routes.json": "./source-canlii-routes.json",
     "./package.json": "./package.json"
   },
   "files": [
@@ -37,8 +38,10 @@
     "index.js",
     "node.js",
     "index.d.ts",
+    "bindings/",
     "pkg/legal_citations_wasm.js",
     "pkg/legal_citations_wasm_bg.wasm",
+    "source-canlii-routes.json",
     "README.md",
     "LICENSE",
     "NOTICE"

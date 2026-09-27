@@ -9,7 +9,7 @@ export class LegalCitationsError extends Error {
   }
 }
 
-const OPTION_NAMES = new Set(["resolve", "parallel", "extendedUs", "notes"]);
+const OPTION_NAMES = new Set(["resolve", "parallel", "extendedUs", "notes", "removeAmbiguous", "jurisdictionPriority"]);
 
 export function makeApi(getRawCall) {
   function call(method, request = {}) {
@@ -56,10 +56,14 @@ export function makeApi(getRawCall) {
 
   return {
     call,
+    resolve(citations, options = {}) {
+      rejectUnknown(options, ["notes", "aliasGroups"]);
+      return call("resolve", { citations, ...options });
+    },
     extract(text, options = {}) {
       const [engine, rest] = splitOptions(options);
-      rejectUnknown(rest, ["offsetUnit"]);
-      return call("extract", { text, options: engine, offsetUnit: rest.offsetUnit ?? "utf16" }).citations;
+      rejectUnknown(rest, ["offsetUnit", "markupText"]);
+      return call("extract", { text, options: engine, offsetUnit: "utf16", ...rest }).citations;
     },
     key(citation) {
       return call("key", { citation }).key;

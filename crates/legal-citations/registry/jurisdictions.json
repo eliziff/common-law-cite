@@ -613,5 +613,29 @@
    "en": "International",
    "fr": "International"
   }
+ },
+ {
+  "id": "ie",
+  "name": {
+   "en": "Ireland"
+  }
+ },
+ {
+  "id": "hk",
+  "name": {
+   "en": "Hong Kong"
+  }
+ },
+ {
+  "id": "sg",
+  "name": {
+   "en": "Singapore"
+  }
+ },
+ {
+  "id": "za",
+  "name": {
+   "en": "South Africa"
+  }
  }
 ]

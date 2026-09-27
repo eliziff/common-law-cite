@@ -26,7 +26,7 @@
 //!   alone never turns a citation into a journal article.
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::sync::LazyLock;
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
@@ -93,6 +93,12 @@ pub struct Court {
     /// `Ont CA`, `C.A. Ont.`, `2d Cir.`).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub aliases: Vec<String>,
+    /// Original courts-db citation string, distinct from other aliases.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub citation_string: Option<String>,
+    /// Contradictory source dates retained without inventing corrected bounds.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub source_dates: Vec<serde_json::Value>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub canlii: Option<CanLiiRoute>,
     /// The route CanLII uses for decisions cited by the court's French neutral
@@ -133,6 +139,27 @@ pub struct Edition {
     pub start: Option<u16>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub end: Option<u16>,
+    /// Numbering regimes when this edition changed between continuous and
+    /// annually reset volumes. Missing/ambiguous years cannot be guessed.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub numbering: Vec<Numbering>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct Numbering {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub start: Option<u16>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub end: Option<u16>,
+    pub year_volume: bool,
+    /// A two-digit report-year locator in this period, e.g. 82 DTC = 1982.
+    /// The expanded year must lie within the period's explicit bounds.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub short_year_century: Option<u16>,
+    /// Edition implied by this period when the citation omits its series label.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub edition: Option<String>,
+    pub evidence: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -146,6 +173,9 @@ pub struct Reporter {
     /// Courts whose decisions the reporter publishes; empty for general reporters.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub courts: Vec<String>,
+    /// Reporter-based inference used only when the citation does not name a court.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default_court: Option<String>,
     pub editions: Vec<Edition>,
     /// Surface form -> canonical edition abbreviation (`S.C.R.` -> `SCR`,
     /// `R.C.S.` -> `SCR`, `D.L.R. (4th)` -> `DLR (4th)`).
@@ -241,9 +271,10 @@ pub struct Registry {
 struct Index {
     court_by_id: HashMap<String, usize>,
     court_by_surface: HashMap<String, Vec<usize>>,
+    court_by_parenthetical: BTreeMap<String, Vec<usize>>,
     reporter_by_surface: HashMap<String, Vec<(usize, String)>>,
-    series_by_surface: HashMap<String, usize>,
-    journal_by_surface: HashMap<String, usize>,
+    series_by_surface: HashMap<String, Vec<usize>>,
+    journal_by_surface: HashMap<String, Vec<usize>>,
 }
 
 /// Case- and punctuation-insensitive lookup form of a surface string:
@@ -256,11 +287,24 @@ pub fn fold(surface: &str) -> String {
         .collect()
 }
 
+/// Eyecite helpers.get_court_by_paren uses Unicode regex word characters.
+fn parenthetical_fold(surface: &str) -> String {
+    static NONWORD: LazyLock<regex::Regex> = LazyLock::new(|| {
+        let tables = legal_grammar::load_tables().expect("grammar corpus");
+        regex::Regex::new(&tables["court.parenthetical.nonword"].entry.pattern)
+            .expect("court parenthetical normalization")
+    });
+    NONWORD.replace_all(surface, "").to_lowercase()
+}
+
 impl Registry {
     fn indexed(mut self) -> Self {
         let mut index = Index::default();
         for (position, court) in self.courts.iter().enumerate() {
             index.court_by_id.insert(court.id.clone(), position);
+            if let Some(surface) = &court.citation_string {
+                index.court_by_parenthetical.entry(parenthetical_fold(surface)).or_default().push(position);
+            }
             for surface in court.neutral.iter().chain(&court.aliases) {
                 let courts = index.court_by_surface.entry(fold(surface)).or_default();
                 if !courts.contains(&position) {
@@ -289,16 +333,18 @@ impl Registry {
         }
         for (position, series) in self.series.iter().enumerate() {
             for surface in std::iter::once(&series.abbreviation).chain(&series.variations) {
-                index.series_by_surface.entry(fold(surface)).or_insert(position);
+                let entries = index.series_by_surface.entry(fold(surface)).or_default();
+                if !entries.contains(&position) { entries.push(position); }
             }
         }
         for (position, journal) in self.journals.iter().enumerate() {
             for surface in std::iter::once(&journal.abbreviation).chain(&journal.variations) {
-                let at = index.journal_by_surface.entry(fold(surface)).or_insert(position);
-                if journal.verified && !self.journals[*at].verified {
-                    *at = position;
-                }
+                let entries = index.journal_by_surface.entry(fold(surface)).or_default();
+                if !entries.contains(&position) { entries.push(position); }
             }
+        }
+        for entries in index.journal_by_surface.values_mut() {
+            entries.sort_by_key(|&at| !self.journals[at].verified);
         }
         self.index = index;
         self
@@ -322,6 +368,21 @@ impl Registry {
             .get(&fold(surface))
             .map(|positions| positions.iter().map(|&at| &self.courts[at]).collect())
             .unwrap_or_default()
+    }
+
+    /// Exact court aliases precede the pinned source's citation-string prefix
+    /// readings. Return every candidate so context can resolve a unique court.
+    pub fn courts_by_parenthetical(&self, surface: &str) -> Vec<&Court> {
+        let exact = self.courts_by_surface(surface);
+        if !exact.is_empty() { return exact; }
+        let normalized = parenthetical_fold(surface);
+        if normalized.is_empty() { return Vec::new(); }
+        if let Some(positions) = self.index.court_by_parenthetical.get(&normalized) {
+            return positions.iter().map(|&at| &self.courts[at]).collect();
+        }
+        self.index.court_by_parenthetical.range(normalized.clone()..)
+            .take_while(|(prefix, _)| prefix.starts_with(&normalized))
+            .flat_map(|(_, positions)| positions.iter().map(|&at| &self.courts[at])).collect()
     }
 
     /// The reporter and canonical edition abbreviation a surface form names.
@@ -352,17 +413,27 @@ impl Registry {
     /// The journal an abbreviation names (`McGill LJ`, `Harv. L. Rev.`). Check
     /// [`Journal::verified`] before treating the match as evidence of kind.
     pub fn journal_by_surface(&self, surface: &str) -> Option<&Journal> {
+        self.journals_by_surface(surface).into_iter().next()
+    }
+
+    pub fn journals_by_surface(&self, surface: &str) -> Vec<&Journal> {
         self.index
             .journal_by_surface
             .get(&fold(surface))
-            .map(|&at| &self.journals[at])
+            .map(|entries| entries.iter().map(|&at| &self.journals[at]).collect())
+            .unwrap_or_default()
     }
 
     pub fn series_by_surface(&self, surface: &str) -> Option<&Series> {
+        self.series_candidates(surface).into_iter().next()
+    }
+
+    pub fn series_candidates(&self, surface: &str) -> Vec<&Series> {
         self.index
             .series_by_surface
             .get(&fold(surface))
-            .map(|&at| &self.series[at])
+            .map(|entries| entries.iter().map(|&at| &self.series[at]).collect())
+            .unwrap_or_default()
     }
 
     pub fn jurisdiction(&self, id: &str) -> Option<&Jurisdiction> {

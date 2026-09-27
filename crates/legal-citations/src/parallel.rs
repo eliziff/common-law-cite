@@ -37,6 +37,11 @@ pub fn group(text: &str, citations: &mut [Citation]) {
         let first = citations[position - 1]
             .parallel_group
             .unwrap_or(citations[position - 1].index);
+        if citations[..position].iter().any(|member|
+            (member.index == first || member.parallel_group == Some(first))
+                && distinct(member, &citations[position])) {
+            continue;
+        }
         citations[position - 1].parallel_group = Some(first);
         citations[position].parallel_group = Some(first);
     }
@@ -62,7 +67,20 @@ fn joinable(text: &str, previous: &Citation, current: &Citation) -> bool {
     if current.style.is_some() || current.signal.is_some() {
         return false;
     }
-    let (end, start) = (previous.full_span.end, current.full_span.start);
+    let start = current.full_span.start;
+    // A shared trailing court/date extends the first full span across its
+    // parallels. Compare the core and its own locators, while still excluding
+    // citations nested inside an explanatory parenthetical.
+    let end = if previous.full_span.end > start {
+        if previous.parentheticals.iter().any(|part|
+            part.span.start <= current.span.start && current.span.start < part.span.end) {
+            return false;
+        }
+        previous.pinpoints.iter().map(|pin| pin.span.end)
+            .chain(previous.parentheticals.iter().map(|part| part.span.end))
+            .filter(|end| *end <= start).max().unwrap_or(previous.span.end)
+            .max(previous.span.end)
+    } else { previous.full_span.end };
     if start < end {
         return false;
     }
@@ -80,7 +98,17 @@ fn joinable(text: &str, previous: &Citation, current: &Citation) -> bool {
 }
 
 /// Readings that always name two different decisions.
-fn distinct(left: &Citation, right: &Citation) -> bool {
+pub(crate) fn distinct(left: &Citation, right: &Citation) -> bool {
+    if left.is_ambiguous() || right.is_ambiguous() { return true; }
+    // Evidence-backed aliases can contradict a printed parallel even when
+    // the two members use different reporters and have no written courts.
+    let canonical = |citation: &Citation| {
+        crate::aliases::resolve(citation).map(|target| target.key.clone())
+            .or_else(|| (citation.format == Some(Format::Neutral)).then(|| key::key(citation)).flatten())
+    };
+    if let (Some(left), Some(right)) = (canonical(left), canonical(right)) {
+        if left != right { return true; }
+    }
     if left.format == Some(Format::Neutral) && right.format == Some(Format::Neutral) {
         let identity = |citation: &Citation| {
             key::key(citation).or_else(|| {
@@ -111,9 +139,18 @@ fn distinct(left: &Citation, right: &Citation) -> bool {
         && right.format == Some(Format::Reporter)
         && reporter(left).is_some()
         && reporter(left) == reporter(right)
-        && (left.fields.volume != right.fields.volume || left.fields.page != right.fields.page)
+        && (left.fields.volume != right.fields.volume || left.fields.page != right.fields.page
+            || (left.fields.reporter_id.is_some() && right.fields.reporter_id.is_some()
+                && left.fields.reporter_id != right.fields.reporter_id))
     {
         return true;
+    }
+    if left.format == Some(Format::Reporter) && right.format == Some(Format::Reporter)
+        && reporter(left).is_some() && reporter(left) == reporter(right)
+    {
+        if let (Some(left), Some(right)) = (key::key(left), key::key(right)) {
+            if left != right { return true; }
+        }
     }
     let year = |citation: &Citation| {
         citation
@@ -146,6 +183,7 @@ fn share_metadata(citations: &mut [Citation]) {
         let court = members.iter().find_map(|member| member.court.clone());
         let jurisdiction = members.iter().find_map(|member| member.jurisdiction.clone());
         let year = members.iter().find_map(|member| member.fields.year.clone());
+        let year_number = members.iter().find_map(|member| member.fields.year.as_ref().map(|_| member.fields.year_number)).flatten();
         for member in members.iter_mut() {
             if member.court.is_none() {
                 member.court.clone_from(&court);
@@ -155,6 +193,7 @@ fn share_metadata(citations: &mut [Citation]) {
             }
             if member.fields.year.is_none() {
                 member.fields.year.clone_from(&year);
+                member.fields.year_number = year_number;
             }
         }
         for member in members.iter_mut().skip(1) {
@@ -200,17 +239,7 @@ pub fn rank(citation: &Citation) -> u8 {
 
 /// [`rank`] against `registry`.
 pub fn rank_in(citation: &Citation, registry: &Registry) -> u8 {
-    let fields = &citation.fields;
-    let kind = fields
-        .reporter_canonical
-        .as_deref()
-        .and_then(|surface| key::reporter_by_surface(registry, surface))
-        .or_else(|| {
-            fields
-                .reporter
-                .as_deref()
-                .and_then(|surface| key::reporter_by_surface(registry, surface))
-        })
+    let kind = key::selected_reporter(citation, registry)
         // An unverified registry entry is no evidence of kind.
         .filter(|(reporter, _)| reporter.verified)
         .map(|(reporter, _)| reporter.kind);

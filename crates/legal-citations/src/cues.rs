@@ -12,41 +12,109 @@
 use crate::registry::{registry, ReporterKind, SeriesKind};
 use crate::text::last_scalars;
 use legal_grammar::{CompiledEcmascriptGrammar, CompiledGrammar};
+use regex::Regex;
 use std::borrow::Cow;
 use std::collections::{BTreeSet, HashMap};
 use std::ops::Range;
-use std::sync::LazyLock;
+use std::sync::{LazyLock, OnceLock};
 use unicode_normalization::UnicodeNormalization;
 
-/// A registry surface as a pattern: dotted and undotted, spaced or not
-/// (`S.C.R.`, `SCR`, `S C R`), as the legacy tables spelled their members.
-fn surface_pattern(surface: &str) -> Option<String> {
-    let surface = surface.split('(').next().unwrap_or(surface).trim();
-    let tokens = surface
-        .split_whitespace()
-        .map(|token| token.trim_matches('.'))
-        .filter(|token| !token.is_empty())
-        .collect::<Vec<_>>();
-    let letters = tokens.iter().map(|token| token.chars().filter(|c| c.is_alphanumeric()).count()).sum::<usize>();
-    if tokens.is_empty() || letters < 2 {
-        return None;
-    }
-    let pattern = tokens
-        .iter()
-        .map(|token| {
-            let bare = token.replace('.', "");
-            if bare.chars().count() > 1 && bare.chars().all(|character| character.is_ascii_uppercase()) {
-                bare.chars()
-                    .map(|character| format!("{character}\\.?"))
-                    .collect::<Vec<_>>()
-                    .join(r"\s*")
-            } else {
-                format!("{}\\.?", regex::escape(token))
-            }
+/// Legal Structure's partial SCR/RCS page cue for printed pagination.
+pub fn canadian_report_start(text: &str) -> Option<u32> {
+    static REPORT: LazyLock<CompiledGrammar> = LazyLock::new(||
+        legal_grammar::compile_table_entry("header.scr.start-page").unwrap());
+    REPORT.captures(text).expect("SCR first-page cue")?
+        .name("page")?.as_str().parse().ok()
+}
+
+/// AuthoritiesHelper's SCR/RCS running-head evidence. The caller selects the
+/// opening PDF lines; citation identity and reporter spelling stay here.
+pub fn matches_reporter_header(text: &str, citations: &[crate::Citation]) -> bool {
+    static REPORTER: LazyLock<CompiledGrammar> = LazyLock::new(||
+        legal_grammar::compile_ecmascript_backtracking_table_entry("header.scr.reporter").unwrap());
+    static PAGE: LazyLock<CompiledGrammar> = LazyLock::new(||
+        legal_grammar::compile_ecmascript_backtracking_table_entry("header.scr.page").unwrap());
+    citations.iter().filter(|citation| citation.form == crate::Form::Full
+        && !citation.is_ambiguous() && citation.fields.reporter_id.as_deref() == Some("scr"))
+        .any(|citation| {
+            let fields = &citation.fields;
+            REPORTER.captures_iter(text).any(|matched| {
+                let matched = matched.expect("SCR running-head reporter");
+                matched.name("volume").map(|value| value.as_str()) == fields.volume.as_deref()
+                    && fields.year.as_deref().is_none_or(|year|
+                        matched.name("year").is_some_and(|value| value.as_str() == year))
+            }) && PAGE.captures_iter(text).any(|matched|
+                matched.expect("SCR running-head page").name("page").map(|value| value.as_str()) == fields.page.as_deref())
         })
-        .collect::<Vec<_>>()
-        .join(r"\s+");
-    Some(pattern)
+}
+
+/// Original legal-pdf-support abbreviation spelling rules, including editions,
+/// punctuation, apostrophes and spaced capital abbreviations.
+fn python_escape(value: &str) -> String {
+    let mut escaped = String::new();
+    for character in value.chars() {
+        if "()[]{}?*+-|^$\\.&~# \t\n\r\u{000b}\u{000c}".contains(character) {
+            escaped.push('\\');
+        }
+        escaped.push(character);
+    }
+    escaped
+}
+
+pub fn reporter_abbreviation_regex(abbreviation: &str) -> String {
+    let mut result = String::new();
+    let characters: Vec<char> = abbreviation.chars().collect();
+    let mut index = 0;
+    while index < characters.len() {
+        let character = characters[index];
+        if character.is_whitespace() {
+            while index < characters.len() && characters[index].is_whitespace() {
+                index += 1;
+            }
+            result.push_str(r"\s+");
+        } else if character.is_alphanumeric() {
+            let start = index;
+            while index < characters.len() && characters[index].is_alphanumeric() {
+                index += 1;
+            }
+            let token: String = characters[start..index].iter().collect();
+            if token.chars().count() > 1 && token.chars().all(char::is_uppercase) {
+                result.push_str(
+                    &token
+                        .chars()
+                        .map(|value| format!("{}\\.?", python_escape(&value.to_string())))
+                        .collect::<Vec<_>>()
+                        .join(r"\s*"),
+                );
+            } else {
+                result.push_str(&python_escape(&token));
+            }
+        } else if character == '(' {
+            let end = characters[index + 1..]
+                .iter()
+                .position(|value| *value == ')')
+                .map_or(characters.len(), |offset| index + offset + 1);
+            let inner: String = characters[index + 1..end].iter().collect();
+            result.push_str(r"\(\s*");
+            result.push_str(&python_escape(&inner).replace(r"\ ", r"\s+"));
+            result.push_str(r"\s*\)");
+            index = (end + 1).min(characters.len());
+        } else {
+            match character {
+                '&' => result.push_str(r"\s*&\s*"),
+                '-' | '/' => result.push_str(r"\s*[-/]\s*"),
+                '\'' | '\u{2019}' => result.push_str("['\u{2019}]"),
+                '.' => result.push_str(r"\.?"),
+                _ => result.push_str(&python_escape(&character.to_string())),
+            }
+            index += 1;
+        }
+    }
+    result
+}
+
+fn surface_pattern(surface: &str) -> Option<String> {
+    (!surface.is_empty()).then(|| reporter_abbreviation_regex(surface))
 }
 
 /// The legacy alternation joined with registry surfaces, longest first.
@@ -123,9 +191,9 @@ fn cue(id: &str) -> CompiledEcmascriptGrammar {
     let tables = legal_grammar::load_tables().expect("grammar corpus");
     let entry = &tables[id].entry;
     let pattern = legal_grammar::expand_pattern(&entry.pattern, &DEFS).expect("cue defs");
-    let mut builder = regex::RegexBuilder::new(
-        &legal_grammar::expand_ecmascript_portable(&pattern).expect("portable cue"),
-    );
+    // These primitives came from native Rust regexes; retain their Unicode
+    // word, digit and whitespace semantics at the new owner.
+    let mut builder = regex::RegexBuilder::new(&pattern);
     builder
         .case_insensitive(entry.flags.contains('i'))
         .multi_line(entry.flags.contains('m'))
@@ -154,8 +222,6 @@ static PROTECTED: LazyLock<[CompiledEcmascriptGrammar; 6]> = LazyLock::new(|| {
 static SIGNAL_CASED: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| cue("cue.signal.cased"));
 static SIGNAL_FOLDED: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| cue("cue.signal.folded"));
-static REPORTER_CANDIDATE: LazyLock<CompiledEcmascriptGrammar> =
-    LazyLock::new(|| cue("cue.reporter-candidate"));
 static CITATION_TAIL: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| cue("cue.citation-tail"));
 // `\w` in a cross-reference short form is any letter, which is the Unicode
@@ -186,18 +252,93 @@ pub fn is_citation_continuation(text: &str) -> bool {
     CONTINUATION.is_match(text)
 }
 
+fn has_pinpoint_prefix(text: &str) -> bool {
+    if !text.is_ascii() {
+        return true;
+    }
+    const CUES: [(&str, bool); 9] = [
+        ("at", false),
+        ("p", true),
+        ("pp", true),
+        ("page", true),
+        ("pages", true),
+        ("para", true),
+        ("paras", true),
+        ("s", true),
+        ("ss", true),
+    ];
+    text.char_indices().any(|(index, character)| {
+        if !character.is_ascii_alphabetic()
+            || (index > 0
+                && text[..index]
+                    .chars()
+                    .next_back()
+                    .is_some_and(|previous| previous.is_ascii_alphanumeric()))
+        {
+            return false;
+        }
+        CUES.iter().any(|(cue, allows_dot)| {
+            let rest = &text[index..];
+            let Some(prefix) = rest.get(..cue.len()) else {
+                return false;
+            };
+            if !prefix.eq_ignore_ascii_case(cue) {
+                return false;
+            }
+            let mut tail = &rest[cue.len()..];
+            if *allows_dot && tail.starts_with('.') {
+                tail = &tail[1..];
+            }
+            let mut characters = tail.chars();
+            characters.next().is_some_and(char::is_whitespace)
+                && characters
+                    .find(|next| !next.is_whitespace())
+                    .is_some_and(char::is_numeric)
+        })
+    })
+}
+
 /// The byte spans of citation text whose digits must not be read as footnote
 /// markers: report, neutral and CanLII citations, statute chapters,
 /// periodical blocks, pinpoints and U.S. Code sections, grouped by kind in
 /// that order.
 pub fn protected_spans(text: &str) -> Vec<Range<usize>> {
-    if !text.chars().any(char::is_numeric) {
+    if !text.chars().any(|character| character.is_numeric()) {
         return Vec::new();
     }
+    let mut digit_runs = 0;
+    let mut inside_digits = false;
+    for character in text.chars() {
+        if character.is_numeric() {
+            if !inside_digits {
+                digit_runs += 1;
+            }
+            inside_digits = true;
+        } else {
+            inside_digits = false;
+        }
+    }
+    let statute_source = !text.is_ascii()
+        || text
+            .split(|character: char| !character.is_ascii_alphanumeric())
+            .any(|token| {
+                DEFS["cue_statute_sources"]
+                    .split('|')
+                    .any(|source| token.eq_ignore_ascii_case(source))
+            });
+    let pinpoint_prefix = has_pinpoint_prefix(text);
     let mut spans = Vec::new();
-    for pattern in PROTECTED.iter() {
+    for index in 0..6 {
+        if (index < 2 && digit_runs < 2)
+            || (index == 2 && !statute_source)
+            || (index == 3 && digit_runs < 3)
+            || (index == 4 && !pinpoint_prefix)
+        {
+            continue;
+        }
+        let regex = &PROTECTED[index];
         let mut offset = 0;
-        while let Some(captures) = pattern.captures_at(text, offset) {
+        while let Some(captures) = regex.captures_at(text, offset) {
             let found = captures.name("span").expect("protected span capture");
             spans.push(found.start()..found.end());
             offset = found.end();
@@ -225,26 +366,62 @@ fn normalize(text: &str) -> Cow<'_, str> {
     )
 }
 
-fn digit_runs(text: &str) -> usize {
-    let mut runs = 0;
-    let mut inside = false;
-    for character in text.chars() {
-        let digit = character.is_ascii_digit();
-        if digit && !inside {
-            runs += 1;
+fn reporter_citation_re(first: u8) -> Option<&'static Regex> {
+    static RES: OnceLock<[OnceLock<Regex>; 26]> = OnceLock::new();
+    static ABBREVIATIONS: OnceLock<Vec<String>> = OnceLock::new();
+    let index = first.checked_sub(b'A')? as usize;
+    let slot = RES
+        .get_or_init(|| std::array::from_fn(|_| OnceLock::new()))
+        .get(index)?;
+    let abbreviations = ABBREVIATIONS.get_or_init(|| {
+        let mut values: Vec<String> = serde_json::from_str(include_str!("../registry/mcgill-inventory.json"))
+            .expect("source McGill abbreviation inventory");
+        // Retain original records and order; authored additions use the same
+        // proven spelling routine, without certifying the inventory entries.
+        let mut seen = values.iter().cloned().collect::<BTreeSet<_>>();
+        for reporter in &registry().reporters {
+            if reporter.source == "reporters-db" { continue; }
+            for surface in reporter.editions.iter().map(|edition| &edition.abbreviation)
+                .chain(reporter.variations.keys()) {
+                if seen.insert(surface.clone()) { values.push(surface.clone()); }
+            }
         }
-        inside = digit;
-    }
-    runs
+        values
+    });
+    abbreviations
+        .iter()
+        .any(|value| value.as_bytes().first() == Some(&first))
+        .then(|| {
+            slot.get_or_init(|| {
+                let reporters = abbreviations
+                    .iter()
+                    .filter(|value| value.as_bytes().first() == Some(&first))
+                    .map(|value| reporter_abbreviation_regex(value))
+                    .collect::<Vec<_>>()
+                    .join("|");
+                let tables = legal_grammar::load_tables().expect("citation grammar");
+                let entry = &tables["cue.reporter-inventory"].entry;
+                Regex::new(&entry.pattern.replace("{{inventory_reporters}}", &reporters))
+                    .expect("source reporter inventory grammar")
+            })
+        })
 }
 
-/// A volume/reporter/page shape whose reporter is an authored report series.
-fn has_registry_reporter_citation(text: &str) -> bool {
-    REPORTER_CANDIDATE.captures_iter(text).any(|captures| {
-        registry()
-            .reporters_by_surface(&captures["reporter"])
-            .iter()
-            .any(|(reporter, _)| reporter.source != "reporters-db")
+fn has_reporter_citation(text: &str) -> bool {
+    static PREFIX: OnceLock<Regex> = OnceLock::new();
+    let prefix = PREFIX.get_or_init(|| {
+        let tables = legal_grammar::load_tables().expect("citation grammar");
+        Regex::new(&tables["cue.reporter-prefix"].entry.pattern).expect("source reporter prefix")
+    });
+    let mut tried = 0_u32;
+    prefix.captures_iter(text).any(|captures| {
+        let first = captures[1].as_bytes()[0];
+        let bit = 1 << (first - b'A');
+        if tried & bit != 0 {
+            return false;
+        }
+        tried |= bit;
+        reporter_citation_re(first).is_some_and(|regex| regex.is_match(text))
     })
 }
 
@@ -256,7 +433,10 @@ pub fn has_citation_signal(text: &str) -> bool {
     if SIGNAL_CASED.is_match(&normalized) || SIGNAL_FOLDED.is_match(&normalized) {
         return true;
     }
-    digit_runs(&normalized) >= 2 && has_registry_reporter_citation(&normalized)
+    static DIGIT_RUN: OnceLock<Regex> = OnceLock::new();
+    DIGIT_RUN.get_or_init(|| Regex::new(r"\d+").expect("digit run regex"))
+        .find_iter(&normalized).take(2).count() >= 2
+        && has_reporter_citation(&normalized)
 }
 
 /// Whether a short line is plausibly a heading: capitalized, not ending in a

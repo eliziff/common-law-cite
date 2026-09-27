@@ -143,6 +143,9 @@ struct Input {
 
 #[derive(Args)]
 struct ExtractOptions {
+    /// Omit citations with unresolved registry interpretations.
+    #[arg(long)]
+    remove_ambiguous: bool,
     /// Do not resolve short forms, supra, ibid and references.
     #[arg(long)]
     no_resolve: bool,
@@ -152,15 +155,23 @@ struct ExtractOptions {
     /// Skip the extended US reporter/code pass.
     #[arg(long)]
     no_extended_us: bool,
+    /// Prefer these jurisdictions in order for ambiguous abbreviations (repeatable).
+    #[arg(long = "jurisdiction-priority")]
+    jurisdiction_priority: Vec<String>,
 }
 
 impl ExtractOptions {
     fn to_json(&self) -> Value {
-        json!({
-            "resolve": !self.no_resolve,
-            "parallel": !self.no_parallel,
-            "extendedUs": !self.no_extended_us,
-        })
+        let mut options = Map::new();
+        for (name, disabled) in [("resolve", self.no_resolve),
+            ("parallel", self.no_parallel), ("extendedUs", self.no_extended_us)] {
+            if disabled { options.insert(name.into(), Value::Bool(false)); }
+        }
+        if self.remove_ambiguous { options.insert("removeAmbiguous".into(), Value::Bool(true)); }
+        if !self.jurisdiction_priority.is_empty() {
+            options.insert("jurisdictionPriority".into(), json!(self.jurisdiction_priority));
+        }
+        Value::Object(options)
     }
 }
 

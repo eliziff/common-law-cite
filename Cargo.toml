@@ -6,8 +6,8 @@ resolver = "2"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
-repository = "https://github.com/eliziff/legal-citations"
-rust-version = "1.80"
+repository = "https://github.com/eliziff/common-law-cite"
+rust-version = "1.85"
 
 [workspace.dependencies]
 legal-grammar = { path = "crates/legal-grammar", version = "0.1.0" }

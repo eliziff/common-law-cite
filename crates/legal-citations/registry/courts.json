@@ -625,7 +625,8 @@
    "BCCA"
   ],
   "aliases": [
-   "BC CA"
+   "BC CA",
+   "BC Court of Appeal"
   ],
   "canlii": {
    "jurisdiction": "bc",
@@ -1047,7 +1048,8 @@
    "BCSC"
   ],
   "aliases": [
-   "BC SC"
+   "BC SC",
+   "BC Supreme Court"
   ],
   "canlii": {
    "jurisdiction": "bc",
@@ -1196,7 +1198,10 @@
   ],
   "aliases": [
    "CACT",
-   "CT"
+   "CT",
+   "RCT",
+   "TC",
+   "Trib Comp"
   ],
   "canlii": {
    "jurisdiction": "ca",
@@ -1328,7 +1333,9 @@
    "CHRT",
    "TCDP"
   ],
-  "aliases": [],
+  "aliases": [
+   "HRTC"
+  ],
   "canlii": {
    "jurisdiction": "ca",
    "database": "chrt"
@@ -2351,7 +2358,8 @@
    "NSCA"
   ],
   "aliases": [
-   "NS CA"
+   "NS CA",
+   "Court of Appeal of Nova Scotia"
   ],
   "canlii": {
    "jurisdiction": "ns",
@@ -2400,7 +2408,9 @@
   "neutral": [
    "NSFC"
   ],
-  "aliases": [],
+  "aliases": [
+   "Nova Scotia Family Court"
+  ],
   "canlii": {
    "jurisdiction": "ns",
    "database": "nsfc"
@@ -2528,7 +2538,9 @@
   "neutral": [
    "NSPC"
   ],
-  "aliases": [],
+  "aliases": [
+   "Nova Scotia Provincial Court"
+  ],
   "canlii": {
    "jurisdiction": "ns",
    "database": "nspc"
@@ -2578,7 +2590,8 @@
    "NSSC"
   ],
   "aliases": [
-   "NS SC"
+   "NS SC",
+   "Nova Scotia Supreme Court"
   ],
   "canlii": {
    "jurisdiction": "ns",
@@ -2644,7 +2657,9 @@
   "neutral": [
    "NSSM"
   ],
-  "aliases": [],
+  "aliases": [
+   "Nova Scotia Small Claims Court"
+  ],
   "canlii": {
    "jurisdiction": "ns",
    "database": "nssm"
@@ -3081,7 +3096,9 @@
   "neutral": [
    "OIC"
   ],
-  "aliases": [],
+  "aliases": [
+   "OOIC"
+  ],
   "canlii": {
    "jurisdiction": "ca",
    "database": "oic"
@@ -3213,7 +3230,8 @@
   "aliases": [
    "Ont CA",
    "ON CA",
-   "C.A. Ont."
+   "C.A. Ont.",
+   "Ontario Court of Appeal"
   ],
   "canlii": {
    "jurisdiction": "on",
@@ -4432,7 +4450,9 @@
   "neutral": [
    "PSDPT"
   ],
-  "aliases": [],
+  "aliases": [
+   "PSDPTC"
+  ],
   "canlii": {
    "jurisdiction": "ca",
    "database": "psdpt"
@@ -6130,7 +6150,9 @@
   "neutral": [
    "SCT"
   ],
-  "aliases": [],
+  "aliases": [
+   "SCTC"
+  ],
   "canlii": {
    "jurisdiction": "ca",
    "database": "sct"
@@ -6612,7 +6634,9 @@
   "neutral": [
    "SST"
   ],
-  "aliases": [],
+  "aliases": [
+   "TSS"
+  ],
   "canlii": {
    "jurisdiction": "ca",
    "database": "sst"
@@ -6720,7 +6744,8 @@
   ],
   "aliases": [
    "Yukon CA",
-   "YK CA"
+   "YK CA",
+   "Yukon Court of Appeal"
   ],
   "canlii": {
    "jurisdiction": "yk",
@@ -6883,7 +6908,8 @@
   "jurisdiction": "ca",
   "level": "tribunal",
   "aliases": [
-   "RAD"
+   "RAD",
+   "SAR"
   ],
   "parent": "irb"
  },
@@ -6897,7 +6923,8 @@
   "level": "tribunal",
   "aliases": [
    "RPD",
-   "RLLR"
+   "RLLR",
+   "SPR"
   ],
   "parent": "irb"
  },
@@ -7735,5 +7762,424 @@
   "aliases": [
    "ECtHR"
   ]
+ },
+ {
+  "id": "ukiptrib",
+  "name": {
+   "en": "Investigatory Powers Tribunal"
+  },
+  "jurisdiction": "uk",
+  "level": "tribunal",
+  "neutral": [
+   "UKIPTrib"
+  ],
+  "evidence": "https://caselaw.nationalarchives.gov.uk/courts-and-tribunals/ukiptrib"
+ },
+ {
+  "id": "nicc",
+  "name": {
+   "en": "Crown Court of Northern Ireland"
+  },
+  "jurisdiction": "uk-ni",
+  "level": "superior_trial",
+  "neutral": [
+   "NICC"
+  ],
+  "evidence": "https://www.judiciaryni.uk/files/judiciaryni/decisions/Queen%20v%20Jason%20Peter%20Balandowitz.pdf"
+ },
+ {
+  "id": "iesc",
+  "name": {
+   "en": "Supreme Court of Ireland"
+  },
+  "jurisdiction": "ie",
+  "level": "apex",
+  "neutral": [
+   "IESC"
+  ],
+  "evidence": "https://ww2.courts.ie/view/Judgments/8b1bbc92-ca23-4802-b4aa-d27862502153/c876911d-4596-464e-a051-09dff8f52139/IESC%2030.2026%20BOI%20v%20Murray%20%26%20anor.pdf"
+ },
+ {
+  "id": "ieca",
+  "name": {
+   "en": "Court of Appeal of Ireland"
+  },
+  "jurisdiction": "ie",
+  "level": "appellate",
+  "neutral": [
+   "IECA"
+  ],
+  "evidence": "https://ww2.courts.ie/view/Judgments/8b1bbc92-ca23-4802-b4aa-d27862502153/c876911d-4596-464e-a051-09dff8f52139/IESC%2030.2026%20BOI%20v%20Murray%20%26%20anor.pdf"
+ },
+ {
+  "id": "iehc",
+  "name": {
+   "en": "High Court of Ireland"
+  },
+  "jurisdiction": "ie",
+  "level": "superior_trial",
+  "neutral": [
+   "IEHC"
+  ],
+  "evidence": "https://ww2.courts.ie/view/Judgments/8b1bbc92-ca23-4802-b4aa-d27862502153/c876911d-4596-464e-a051-09dff8f52139/IESC%2030.2026%20BOI%20v%20Murray%20%26%20anor.pdf"
+ },
+ {
+  "id": "nzempc",
+  "name": {
+   "en": "Employment Court of New Zealand"
+  },
+  "jurisdiction": "nz",
+  "level": "superior_trial",
+  "neutral": [
+   "NZEmpC"
+  ],
+  "evidence": "https://employmentcourt.govt.nz/judgments/decisions/"
+ },
+ {
+  "id": "nzenvc",
+  "name": {
+   "en": "Environment Court of New Zealand"
+  },
+  "jurisdiction": "nz",
+  "level": "inferior_trial",
+  "neutral": [
+   "NZEnvC"
+  ],
+  "evidence": "https://www.environmentcourt.govt.nz/cases-online/"
+ },
+ {
+  "id": "nzera",
+  "name": {
+   "en": "Employment Relations Authority"
+  },
+  "jurisdiction": "nz",
+  "level": "tribunal",
+  "neutral": [
+   "NZERA"
+  ],
+  "evidence": "https://determinations.era.govt.nz/determination/view/21245"
+ },
+ {
+  "id": "sgca",
+  "name": {
+   "en": "Court of Appeal of Singapore"
+  },
+  "jurisdiction": "sg",
+  "level": "apex",
+  "neutral": [
+   "SGCA"
+  ],
+  "evidence": "https://www.judiciary.gov.sg/docs/default-source/amendments-docs/2012/supreme_court_amendment_no-_3_of_2012.pdf"
+ },
+ {
+  "id": "sghc",
+  "name": {
+   "en": "High Court of Singapore"
+  },
+  "jurisdiction": "sg",
+  "level": "superior_trial",
+  "neutral": [
+   "SGHC"
+  ],
+  "evidence": "https://www.judiciary.gov.sg/docs/default-source/amendments-docs/2012/supreme_court_amendment_no-_3_of_2012.pdf"
+ },
+ {
+  "id": "hkcfa",
+  "name": {
+   "en": "Court of Final Appeal of Hong Kong"
+  },
+  "jurisdiction": "hk",
+  "level": "apex",
+  "neutral": [
+   "HKCFA"
+  ],
+  "evidence": "https://www.judiciary.hk/en/court_services_facilities/cfa.html"
+ },
+ {
+  "id": "hkca",
+  "name": {
+   "en": "Court of Appeal of the High Court of Hong Kong"
+  },
+  "jurisdiction": "hk",
+  "level": "appellate",
+  "neutral": [
+   "HKCA"
+  ],
+  "evidence": "https://www.hkcfa.hk/data.json?file=CACV000355B_2021_signed.pdf&folder=20240110_facv_8_2023&src=loadfile"
+ },
+ {
+  "id": "hkcfi",
+  "name": {
+   "en": "Court of First Instance of the High Court of Hong Kong"
+  },
+  "jurisdiction": "hk",
+  "level": "superior_trial",
+  "neutral": [
+   "HKCFI"
+  ],
+  "evidence": "https://www.judiciary.hk/en/about_us/complaints_responses/responses_flcc5275.html"
+ },
+ {
+  "id": "zacc",
+  "name": {
+   "en": "Constitutional Court of South Africa"
+  },
+  "jurisdiction": "za",
+  "level": "apex",
+  "neutral": [
+   "ZACC"
+  ],
+  "evidence": "https://collections.concourt.org.za/items/f64c1b6d-bade-43e2-b344-ef06e4dcee0e/full"
+ },
+ {
+  "id": "zasca",
+  "name": {
+   "en": "Supreme Court of Appeal of South Africa"
+  },
+  "jurisdiction": "za",
+  "level": "appellate",
+  "neutral": [
+   "ZASCA"
+  ],
+  "evidence": "https://www.supremecourtofappeal.org.za/index.php/component/jdownloads/category/98-judgements-2025?start=120"
+ },
+ {
+  "id": "famcafc",
+  "name": {
+   "en": "Full Court of the Family Court of Australia"
+  },
+  "jurisdiction": "au",
+  "level": "appellate",
+  "neutral": [
+   "FamCAFC"
+  ],
+  "evidence": "https://www.hcourt.gov.au/cases-and-judgments/cases/decided/case-s1792021",
+  "parent": "famca",
+  "end": 2021
+ },
+ {
+  "id": "fedcfamc1a",
+  "name": {
+   "en": "Federal Circuit and Family Court of Australia, Division 1, Appeals"
+  },
+  "jurisdiction": "au",
+  "level": "appellate",
+  "neutral": [
+   "FedCFamC1A"
+  ],
+  "evidence": "https://www.fcfcoa.gov.au/judgments",
+  "start": 2021
+ },
+ {
+  "id": "fedcfamc1f",
+  "name": {
+   "en": "Federal Circuit and Family Court of Australia, Division 1, Family Law"
+  },
+  "jurisdiction": "au",
+  "level": "superior_trial",
+  "neutral": [
+   "FedCFamC1F"
+  ],
+  "evidence": "https://www.fcfcoa.gov.au/judgments",
+  "start": 2021
+ },
+ {
+  "id": "fedcfamc2f",
+  "name": {
+   "en": "Federal Circuit and Family Court of Australia, Division 2, Family Law"
+  },
+  "jurisdiction": "au",
+  "level": "inferior_trial",
+  "neutral": [
+   "FedCFamC2F"
+  ],
+  "evidence": "https://www.fcfcoa.gov.au/judgments",
+  "start": 2021
+ },
+ {
+  "id": "fedcfamc2g",
+  "name": {
+   "en": "Federal Circuit and Family Court of Australia, Division 2, General Federal Law"
+  },
+  "jurisdiction": "au",
+  "level": "inferior_trial",
+  "neutral": [
+   "FedCFamC2G"
+  ],
+  "evidence": "https://www.fcfcoa.gov.au/judgments",
+  "start": 2021
+ },
+ {
+  "id": "fmca",
+  "name": {
+   "en": "Federal Magistrates Court of Australia"
+  },
+  "jurisdiction": "au",
+  "level": "inferior_trial",
+  "neutral": [
+   "FMCA"
+  ],
+  "evidence": "https://www.hcourt.gov.au/assets/cases/B682012/Li_App.pdf",
+  "end": 2013
+ },
+ {
+  "id": "arta",
+  "name": {
+   "en": "Administrative Review Tribunal"
+  },
+  "jurisdiction": "au",
+  "level": "tribunal",
+  "neutral": [
+   "ARTA"
+  ],
+  "evidence": "https://www.art.gov.au/sites/default/files/2025-10/Administrative%20Review%20Tribunal%20Annual%20Report%202024-25.pdf",
+  "start": 2024
+ },
+ {
+  "id": "nswlec",
+  "name": {
+   "en": "Land and Environment Court of New South Wales"
+  },
+  "jurisdiction": "au-nsw",
+  "level": "superior_trial",
+  "neutral": [
+   "NSWLEC"
+  ],
+  "evidence": "https://www.caselaw.nsw.gov.au/about"
+ },
+ {
+  "id": "nswdc",
+  "name": {
+   "en": "District Court of New South Wales"
+  },
+  "jurisdiction": "au-nsw",
+  "level": "inferior_trial",
+  "neutral": [
+   "NSWDC"
+  ],
+  "evidence": "https://www.caselaw.nsw.gov.au/about"
+ },
+ {
+  "id": "nswcatap",
+  "name": {
+   "en": "New South Wales Civil and Administrative Tribunal Appeal Panel"
+  },
+  "jurisdiction": "au-nsw",
+  "level": "tribunal",
+  "neutral": [
+   "NSWCATAP"
+  ],
+  "evidence": "https://www.caselaw.nsw.gov.au/about"
+ },
+ {
+  "id": "vcc",
+  "name": {
+   "en": "County Court of Victoria"
+  },
+  "jurisdiction": "au-vic",
+  "level": "inferior_trial",
+  "neutral": [
+   "VCC"
+  ],
+  "evidence": "https://www.countycourt.vic.gov.au/files/documents/2024-09/judgment-smit-v-state-victoria.pdf"
+ },
+ {
+  "id": "vcat",
+  "name": {
+   "en": "Victorian Civil and Administrative Tribunal"
+  },
+  "jurisdiction": "au-vic",
+  "level": "tribunal",
+  "neutral": [
+   "VCAT"
+  ],
+  "evidence": "https://www.vcat.vic.gov.au/media/195/download"
+ },
+ {
+  "id": "qdc",
+  "name": {
+   "en": "District Court of Queensland"
+  },
+  "jurisdiction": "au-qld",
+  "level": "inferior_trial",
+  "neutral": [
+   "QDC"
+  ],
+  "evidence": "https://www.queenslandjudgments.com.au/caselaw/qdc"
+ },
+ {
+  "id": "qcat",
+  "name": {
+   "en": "Queensland Civil and Administrative Tribunal"
+  },
+  "jurisdiction": "au-qld",
+  "level": "tribunal",
+  "neutral": [
+   "QCAT"
+  ],
+  "evidence": "https://www.queenslandjudgments.com.au/caselaw/qcat"
+ },
+ {
+  "id": "wadc",
+  "name": {
+   "en": "District Court of Western Australia"
+  },
+  "jurisdiction": "au-wa",
+  "level": "inferior_trial",
+  "neutral": [
+   "WADC"
+  ],
+  "evidence": "https://www.legalaid.wa.gov.au/sites/default/files/inline-files/What%27s%20New%20Weekly%20Alert%2001%20November%202024.pdf"
+ },
+ {
+  "id": "sascfc",
+  "name": {
+   "en": "Full Court of the Supreme Court of South Australia"
+  },
+  "jurisdiction": "au-sa",
+  "level": "appellate",
+  "neutral": [
+   "SASCFC"
+  ],
+  "evidence": "https://www.courts.sa.gov.au/going-to-court/court-locations/supreme-court/court-of-appeal/",
+  "end": 2020
+ },
+ {
+  "id": "sadc",
+  "name": {
+   "en": "District Court of South Australia"
+  },
+  "jurisdiction": "au-sa",
+  "level": "inferior_trial",
+  "neutral": [
+   "SADC"
+  ],
+  "evidence": "https://www.courts.sa.gov.au/wp-content/uploads/wp-download-manager-files/documents/bench%20books/South%20Australian%20Criminal%20Trials%20Bench%20Book.pdf"
+ },
+ {
+  "id": "tasfc",
+  "name": {
+   "en": "Full Court of the Supreme Court of Tasmania"
+  },
+  "jurisdiction": "au-tas",
+  "level": "appellate",
+  "neutral": [
+   "TASFC"
+  ],
+  "evidence": "https://www.supremecourt.tas.gov.au/publications/decisions-of-the-court/judgments/",
+  "start": 2010
+ },
+ {
+  "id": "ewfc-b",
+  "name": {
+   "en": "Family Court of England and Wales, district and circuit judges"
+  },
+  "jurisdiction": "uk-ew",
+  "level": "inferior_trial",
+  "neutral": [
+   "EWFC B"
+  ],
+  "parent": "ewfc",
+  "evidence": "https://caselaw.nationalarchives.gov.uk/courts-and-tribunals/ewfc/b"
  }
 ]

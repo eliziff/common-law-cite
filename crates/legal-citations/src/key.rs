@@ -1,6 +1,6 @@
 //! Versioned identity keys for authorities.
 //!
-//! # Lookup key v2 (durable contract)
+//! # Lookup key v3 (durable contract)
 //!
 //! A key identifies an *authority*, never a particular way of writing it: the
 //! same decision, statute or regulation written in any supported variant
@@ -11,7 +11,7 @@
 //! so its grammar below only ever changes together with [`KEY_VERSION`].
 //!
 //! ```text
-//! key        = "2:" kind ":" component *( ":" component )
+//! key        = "3:" kind ":" component *( ":" component )
 //! component  = 1*( a-z / 0-9 / "-" / "." )  |  "-"   ; "-" alone = absent
 //! ```
 //!
@@ -37,16 +37,16 @@
 //!
 //! | kind | shape | example |
 //! |---|---|---|
-//! | `neutral` | `2:neutral:{year}:{court}:{num}` | `2015 SCC 5`, `2015 CSC 5` → `2:neutral:2015:scc:5` |
-//! | `reporter` | `2:reporter:{rep}:{num volume}:{num page}` | `26 DLR (4th) 200` → `2:reporter:dlr4th:26:200`; `410 U.S. 113` → `2:reporter:us:410:113` |
-//! | `reporter` (year as volume) | `2:reporter:{rep}:{year}[:{num volume}]:{num page}` | `[2015] 1 SCR 331`, `[2015] 1 R.C.S. 331` → `2:reporter:scr:2015:1:331`; `[1932] AC 562` → `2:reporter:ac:1932:562` |
-//! | `canlii` | `2:canlii:{year}:{num}` | `2004 CanLII 12345 (ON CA)` → `2:canlii:2004:12345` |
-//! | `database` | `2:database:{db}:{year}:{num}` | `2019 CarswellOnt 123` → `2:database:carswellont:2019:123`; `[2019] OJ No 45` → `2:database:oj:2019:45` |
-//! | `docket` | `2:docket:{court}:{ident docket}` | needs a registry court |
-//! | `statute` | `2:statute:{jur}:{series}:{ident year}:{ident chapter}` | `RSC 1985, c C-46`, `LRC 1985, ch C-46` → `2:statute:ca:rsc:1985:c-46` |
-//! | `regulation` | `2:regulation:{jur}:{series}:{year}:{ident number}` | `SOR/2002-227` → `2:regulation:ca:sor:2002:227`; `O Reg 191/11` → `2:regulation:ca-on:oreg:2011:191`; `CRC, c 870` → `2:regulation:ca:crc:-:870` |
-//! | `code` | `2:code:{series}:{ident title}:{ident section}` | `42 U.S.C. § 1983` → `2:code:usc:42:1983` |
-//! | `journal` | `2:journal:{journal}:{num volume}:{num page}` | `(2010) 55:3 McGill LJ 1` → `2:journal:mcgilllj:55:1` |
+//! | `neutral` | `3:neutral:{year}:{court}:{num}` | `2015 SCC 5`, `2015 CSC 5` → `3:neutral:2015:scc:5` |
+//! | `reporter` | `3:reporter:{reporter-id}:{rep}:{num volume}:{num page}` | `26 DLR (4th) 200` → `3:reporter:dlr:dlr4th:26:200`; `410 U.S. 113` → `3:reporter:us:us:410:113` |
+//! | `reporter` (year as volume) | `3:reporter:{reporter-id}:{rep}:{year}[:{num volume}]:{num page}` | `[2015] 1 SCR 331`, `[2015] 1 R.C.S. 331` → `3:reporter:scr:scr:2015:1:331`; `[1932] AC 562` → `3:reporter:ac:ac:1932:562` |
+//! | `canlii` | `3:canlii:{year}:{num}` | `2004 CanLII 12345 (ON CA)` → `3:canlii:2004:12345` |
+//! | `database` | `3:database:{db}:{year}:{num}` | `2019 CarswellOnt 123` → `3:database:carswellont:2019:123`; `[2019] OJ No 45` → `3:database:oj:2019:45` |
+//! | `docket` | `3:docket:{court}:{ident docket}` | needs a registry court |
+//! | `statute` | `3:statute:{jur}:{series}:{ident year}:{ident chapter}` | `RSC 1985, c C-46`, `LRC 1985, ch C-46` → `3:statute:ca:rsc:1985:c-46` |
+//! | `regulation` | `3:regulation:{jur}:{series}:{year}:{ident number}` | `SOR/2002-227` → `3:regulation:ca:sor:2002:227`; `O Reg 191/11` → `3:regulation:ca-on:oreg:2011:191`; `CRC, c 870` → `3:regulation:ca:crc:-:870` |
+//! | `code` | `3:code:{series}:{ident title}:{ident section}` | `42 U.S.C. § 1983` → `3:code:usc:42:1983` |
+//! | `journal` | `3:journal:{journal}:{num volume}:{num page}` | `(2010) 55:3 McGill LJ 1` → `3:journal:mcgilllj:55:1` |
 //!
 //! Details:
 //!
@@ -58,11 +58,14 @@
 //!   else the fold of the written abbreviation. `{journal}` is the fold of the
 //!   registry journal's abbreviation, else as `{rep}`. A
 //!   database abbreviation drops a trailing `No` (`OJ No` → `oj`).
-//! * The year is part of a reporter key exactly when the registry marks the
-//!   reporter `year_volume`; for a reporter the registry does not know, when
-//!   the citation opens with a bracketed year (`[1999] 2 XYZ 5`); and always
-//!   when there is no volume number (`[1932] AC 562`). Otherwise a volume is
-//!   required.
+//! * Reporter keys include the selected registry id and edition so identical
+//!   abbreviations from different jurisdictions never share an identity.
+//! * The year is part of a reporter key when its edition's numbering regime
+//!   marks `year_volume`, falling back to the reporter's default; an ambiguous
+//!   or missing year across numbering regimes produces no key. For a reporter
+//!   the registry does not know, the year is used when
+//!   the citation opens with a bracketed year (`[1999] 2 XYZ 5`). A
+//!   continuously numbered reporter requires its volume.
 //! * A journal volume drops its issue (`55:3` and `55(3)` → `55`); a journal
 //!   without a volume uses the year in its place.
 //! * `{series}` is the registry series id for [`Fields::series`], else its
@@ -75,27 +78,38 @@
 //!   by chapter (`870`; `c-12-r-1`) and its year component is always `-`,
 //!   because consolidations are identified by chapter alone.
 //! * A code section drops subdivisions (`1983(a)` → `1983`); a missing title is `-`.
+//!   Additional captured identity fields (chapter, subject, act, issue, etc.)
+//!   follow as named components. These are source groups, not trailing metadata.
+//!   Resources identified by other fields use `-` for the absent section.
 //! * No key: non-[`Form::Full`] citations, books, webpages, bills, debates,
 //!   papers, citations without a [`Format`], and any citation missing a
-//!   required component. Keys are never guessed from free text.
-//!
-//! [`v1`] reproduces the retired v1 normalizer so stores can be migrated.
+//!   required component, or unresolved registry interpretations. Keys are never
+//!   guessed from free text.
 
 use crate::model::{Authority, Citation, Form, Format};
 use crate::registry::{self, fold, Court, Journal, Registry, Reporter, Series};
 use std::fmt;
 use unicode_normalization::UnicodeNormalization;
+use std::sync::LazyLock;
 
-pub const KEY_VERSION: &str = "2";
+static CODE_SECTION: LazyLock<legal_grammar::CompiledEcmascriptGrammar> = LazyLock::new(|| {
+    legal_grammar::compile_ecmascript_table_entry("cite.us.code.section").expect("code section grammar")
+});
 
-/// The v2 key of a full citation against the embedded registry.
+pub const KEY_VERSION: &str = "3";
+
+/// The v3 key of a full citation against the embedded registry.
 pub fn key(citation: &Citation) -> Option<String> {
-    key_in(citation, registry::registry())
+    crate::aliases::resolve(citation).map(|target| target.key.clone())
+        .or_else(|| key_in(citation, registry::registry()))
 }
 
-/// The v2 key of a full citation against `registry`.
+/// The structural v3 key against `registry`, before evidence-backed parallels.
 pub fn key_in(citation: &Citation, registry: &Registry) -> Option<String> {
     if citation.form != Form::Full {
+        return None;
+    }
+    if citation.is_ambiguous() {
         return None;
     }
     let parts = match citation.format? {
@@ -154,8 +168,14 @@ pub fn key_for_text(text: &str) -> Result<String, KeyError> {
         parallel: false,
         extended_us: true,
         notes: None,
+        jurisdiction_priority: Vec::new(),
+        ..Default::default()
     };
     let citations = crate::extract(text, &options);
+    single_key(&citations)
+}
+
+pub(crate) fn single_key(citations: &[Citation]) -> Result<String, KeyError> {
     let full = citations
         .iter()
         .filter(|citation| citation.form == Form::Full)
@@ -169,41 +189,6 @@ pub fn key_for_text(text: &str) -> Result<String, KeyError> {
             .ok_or(KeyError::NoIdentity),
         many => Err(KeyError::Multiple(many.len())),
     }
-}
-
-/// The retired v1 lookup key: NFKC, lowercase ASCII alphanumerics, with `.`,
-/// `-` and `/` between digits spelled `dot`, `dash`, `slash`.
-pub fn v1(value: &str) -> String {
-    let mut characters = value.nfkc().peekable();
-    let mut key = String::with_capacity(value.len());
-    let mut previous_digit = false;
-    while let Some(character) = characters.next() {
-        let character = if matches!(character, '\u{2013}' | '\u{2014}') {
-            '-'
-        } else {
-            character
-        };
-        if previous_digit
-            && matches!(character, '.' | '-' | '/')
-            && characters.peek().is_some_and(char::is_ascii_digit)
-        {
-            key.push_str(match character {
-                '.' => "dot",
-                '-' => "dash",
-                _ => "slash",
-            });
-        } else {
-            for character in character.to_lowercase() {
-                if character == '\u{df}' {
-                    key.push_str("ss");
-                } else if character.is_ascii_alphanumeric() {
-                    key.push(character);
-                }
-            }
-        }
-        previous_digit = character.is_ascii_digit();
-    }
-    key
 }
 
 // ---------------------------------------------------------------------------
@@ -233,7 +218,7 @@ fn court_id(citation: &Citation, registry: &Registry) -> Option<String> {
     })
 }
 
-/// The folded reporter component and whether the registry marks it year-as-volume
+/// The reporter id/edition component and whether its numbering uses the year
 /// (`None` when the registry does not know the reporter).
 pub(crate) fn reporter_component(
     citation: &Citation,
@@ -245,20 +230,37 @@ pub(crate) fn reporter_component(
         if let Some(journal) = surfaces
             .iter()
             .flatten()
-            .find_map(|surface| journal_by_surface(registry, surface))
+            .find_map(|surface| selected_journal(citation, registry, surface))
         {
             return Some((nonempty(fold(&journal.abbreviation))?, None));
         }
     }
-    let known = surfaces
-        .iter()
-        .flatten()
-        .find_map(|surface| reporter_by_surface(registry, surface));
+    let known = selected_reporter(citation, registry);
     match known {
-        Some((reporter, canonical)) => Some((nonempty(fold(canonical))?, Some(reporter.year_volume))),
+        Some((reporter, canonical)) => {
+            let edition = reporter.editions.iter().find(|edition| edition.abbreviation == canonical)?;
+            let year = fields.year.as_deref().and_then(|year| year.parse::<u16>().ok());
+            let (year_volume, canonical) = if edition.numbering.is_empty() {
+                (reporter.year_volume, canonical)
+            } else {
+                let policies: Vec<_> = edition.numbering.iter().filter(|period| {
+                    year.is_none_or(|year| period.start.is_none_or(|start| year >= start)
+                        && period.end.is_none_or(|end| year <= end))
+                }).map(|period| (period.year_volume, period.edition.as_deref().unwrap_or(canonical))).collect();
+                let first = *policies.first()?;
+                if policies.iter().any(|policy| *policy != first) { return None; }
+                first
+            };
+            Some((format!("{}:{}", reporter.id, nonempty(fold(canonical))?), Some(year_volume)))
+        }
         None => {
+            if fields.reporter_id.is_some() { return None; }
             let written = fields.reporter_canonical.as_deref().or(fields.reporter.as_deref())?;
-            Some((nonempty(fold(written))?, None))
+            if !registry.reporters_by_surface(written).is_empty() { return None; }
+            if citation.authority == Authority::Journal {
+                return Some((nonempty(fold(written))?, None));
+            }
+            Some((format!("unknown:{}", nonempty(fold(written))?), None))
         }
     }
 }
@@ -269,7 +271,7 @@ fn reporter(citation: &Citation, registry: &Registry) -> Option<Vec<String>> {
     let page = num(fields.page.as_deref()?)?;
     let volume = fields.volume.as_deref().and_then(num);
     let bracketed = citation.span.text.trim_start().starts_with('[');
-    let with_year = year_volume.unwrap_or(bracketed) || volume.is_none();
+    let with_year = year_volume.unwrap_or(bracketed);
     let mut parts = vec!["reporter".to_owned(), component];
     if with_year {
         parts.push(year(fields.year.as_deref()?)?);
@@ -314,7 +316,9 @@ fn database(citation: &Citation, registry: &Registry) -> Option<Vec<String>> {
     Some(vec![
         "database".into(),
         nonempty(fold(trimmed))?,
-        year(fields.year.as_deref()?)?,
+        // Source reporter grammars capture a database's citation year as
+        // its volume. A parenthetical decision date is separate metadata.
+        year(fields.volume.as_deref().or(fields.year.as_deref())?)?,
         num(fields.number.as_deref().or(fields.page.as_deref())?)?,
     ])
 }
@@ -339,7 +343,7 @@ fn docket(citation: &Citation, registry: &Registry) -> Option<Vec<String>> {
 
 fn series_parts(citation: &Citation, registry: &Registry) -> (String, String) {
     let written = citation.fields.series.as_deref();
-    let known = written.and_then(|series| series_by_surface(registry, series));
+    let known = written.and_then(|series| selected_series(citation, registry, series));
     let series = match (known, written) {
         (Some(series), _) => series.id.clone(),
         (None, Some(written)) => nonempty(fold(written)).unwrap_or_else(|| "-".into()),
@@ -449,27 +453,48 @@ fn regulation_year(value: &str) -> Option<String> {
 fn code(citation: &Citation, registry: &Registry) -> Option<Vec<String>> {
     let fields = &citation.fields;
     let surface = fields.series.as_deref().or(fields.reporter.as_deref())?;
-    let series = match series_by_surface(registry, surface) {
+    let series = match selected_series(citation, registry, surface) {
         Some(series) => series.id.clone(),
-        None => nonempty(fold(surface))?,
+        None => nonempty(fold(fields.source_edition.as_ref()
+            .map_or(surface, |edition| edition.short_name.as_str())))?,
     };
     let section = fields
         .section
         .as_deref()
         .or(fields.page.as_deref())
-        .or_else(|| citation.pinpoints.first().map(|pinpoint| pinpoint.first.as_str()))?;
-    let section = section
-        .trim()
-        .trim_start_matches(['§', ' ', '\u{a0}'])
-        .split('(')
-        .next()
-        .unwrap_or_default();
+        .or_else(|| fields.source_groups.is_empty().then(||
+            citation.pinpoints.first().map(|pinpoint| pinpoint.first.as_str())).flatten());
+    let section = match section {
+        Some(section) => {
+            let captures = CODE_SECTION.captures(section.trim().trim_start_matches(['§', ' ', '\u{a0}']))?;
+            nonempty(ident(captures.name("section")?.as_str()))?
+        }
+        None if !fields.source_groups.is_empty() => "-".into(),
+        None => return None,
+    };
     let title = fields
         .volume
         .as_deref()
         .and_then(|value| nonempty(ident(value)))
         .unwrap_or_else(|| "-".into());
-    Some(vec!["code".into(), series, title, nonempty(ident(section))?])
+    let mut parts = vec!["code".into(), series, title, section];
+    // Eyecite ResourceCitation identity retains the complete source groups.
+    // Keep the shared title/section normalization, but do not discard the
+    // remaining hierarchy or publication identifiers supplied by that grammar.
+    for (name, value) in &fields.source_groups {
+        if matches!(name.as_str(), "reporter" | "section")
+            || matches!(name.as_str(), "title" | "volume") && fields.volume.is_some()
+            || name == "page" && fields.section.is_none()
+            // CFR's source `chapter` is already projected into the title slot.
+            || name == "chapter" && fields.chapter.is_none()
+        {
+            continue;
+        }
+        if let Some(value) = value.as_deref().and_then(|value| nonempty(ident(value))) {
+            parts.extend([ident(name), value]);
+        }
+    }
+    (parts[2] != "-" || parts[3] != "-" || parts.len() > 4).then_some(parts)
 }
 
 // ---------------------------------------------------------------------------
@@ -580,7 +605,35 @@ pub(crate) fn reporter_by_surface<'r>(
     })
 }
 
-pub(crate) fn journal_by_surface<'r>(registry: &'r Registry, surface: &str) -> Option<&'r Journal> {
+/// Reuse classification's selected identity in keys, ranking and URLs. Never
+/// perform a new first-match lookup that changes a jurisdictional choice.
+pub(crate) fn selected_reporter<'r>(citation: &Citation, registry: &'r Registry) -> Option<(&'r Reporter, &'r str)> {
+    let fields = &citation.fields;
+    if let Some(id) = &fields.reporter_id {
+        let reporter = registry.reporters.iter().find(|reporter| &reporter.id == id)?;
+        let canonical = fields.reporter_canonical.as_deref()?;
+        let edition = reporter.editions.iter().find(|edition| edition.abbreviation == canonical)?;
+        return Some((reporter, &edition.abbreviation));
+    }
+    if citation.interpretations.iter().any(|reading| reading.kind == "reporter") { return None; }
+    let surface = fields.reporter_canonical.as_deref().or(fields.reporter.as_deref())?;
+    if indexed(registry) {
+        let candidates = registry.reporters_by_surface(surface);
+        let compatible: Vec<_> = candidates.into_iter().filter(|(reporter, _)| {
+            citation.jurisdiction.as_deref().is_none_or(|jurisdiction| reporter.jurisdiction.as_deref().is_some_and(|candidate| {
+                jurisdiction == candidate || jurisdiction.strip_prefix(candidate).is_some_and(|rest| rest.starts_with('-'))
+            }))
+        }).collect();
+        return if let [only] = compatible.as_slice() { Some(*only) } else { None };
+    }
+    reporter_by_surface(registry, surface)
+}
+
+pub(crate) fn selected_journal<'r>(citation: &Citation, registry: &'r Registry, surface: &str) -> Option<&'r Journal> {
+    if citation.is_ambiguous() { return None; }
+    if let Some(chosen) = citation.interpretations.iter().find(|entry| entry.kind == "journal" && entry.selected) {
+        return registry.journals.iter().find(|journal| journal.id == chosen.id);
+    }
     if indexed(registry) {
         return registry.journal_by_surface(surface);
     }
@@ -595,7 +648,11 @@ pub(crate) fn journal_by_surface<'r>(registry: &'r Registry, surface: &str) -> O
     })
 }
 
-pub(crate) fn series_by_surface<'r>(registry: &'r Registry, surface: &str) -> Option<&'r Series> {
+pub(crate) fn selected_series<'r>(citation: &Citation, registry: &'r Registry, surface: &str) -> Option<&'r Series> {
+    if citation.is_ambiguous() { return None; }
+    if let Some(chosen) = citation.interpretations.iter().find(|entry| entry.kind == "series" && entry.selected) {
+        return registry.series.iter().find(|series| series.id == chosen.id);
+    }
     if indexed(registry) {
         return registry.series_by_surface(surface);
     }

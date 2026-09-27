@@ -22,17 +22,15 @@ short forms of statutes) map to ``FullCitation`` / ``UnknownCitation``.
 
 Differences from eyecite, by design:
 
-* ``tokenizer`` and ``remove_ambiguous`` are accepted and ignored; there is one
-  engine.
-* ``metadata.pin_cite`` is the pinpoint text as written (``"347-348"``,
-  ``"para 5"``) without eyecite's leading ``"at "`` on ``Id.`` citations.
-* Custom resolver callbacks to ``resolve_citations`` are not supported; the
-  engine resolves while extracting.
+* A custom ``tokenizer`` is rejected: discovery is owned by the Rust engine.
+* Built-in resolution runs separately in Rust; custom resolver callbacks run
+  at this Python boundary.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any, Callable, Iterable, Optional, Union
 
 from . import call, extract
@@ -99,10 +97,27 @@ class Metadata:
 
 
 @dataclass(frozen=True)
+class Reporter:
+    short_name: str
+    name: str
+    cite_type: str
+    source: str
+
+
+@dataclass(frozen=True)
 class Edition:
-    """The part of eyecite's ``Edition`` callers read: ``short_name``."""
+    """Source edition metadata represented as Python objects and dates."""
 
     short_name: str
+    reporter: Optional[Reporter] = None
+    start: Optional[datetime] = None
+    end: Optional[datetime] = None
+
+    @classmethod
+    def from_data(cls, data: dict) -> Edition:
+        return cls(data["short_name"], Reporter(**data["reporter"]),
+                   datetime.fromisoformat(data["start"]) if data.get("start") else None,
+                   datetime.fromisoformat(data["end"]) if data.get("end") else None)
 
 
 class CitationBase:
@@ -115,53 +130,78 @@ class CitationBase:
         self.index = data["index"]
         self.groups = self._groups()
         self.metadata = self._metadata()
-        year = (data.get("fields") or {}).get("year")
-        self.year = int(year) if year and str(year).isdigit() else None
-        reporter = (data.get("fields") or {}).get("reporterCanonical")
-        self.edition_guess = Edition(reporter) if reporter else None
-        self.all_editions = [self.edition_guess] if self.edition_guess else []
+        fields = data.get("fields") or {}
+        self.year = fields.get("yearNumber")
+        self.exact_editions = tuple(Edition.from_data(row) for row in fields.get("exactEditions", []))
+        self.variation_editions = tuple(Edition.from_data(row) for row in fields.get("variationEditions", []))
+        self.all_editions = self.exact_editions + self.variation_editions
+        source_edition = fields.get("sourceEdition")
+        self.edition_guess = Edition.from_data(source_edition) if source_edition else None
+        if not self.all_editions and fields.get("reporterId") and fields.get("reporterCanonical"):
+            self.edition_guess = Edition(fields["reporterCanonical"])
+            self.all_editions = (self.edition_guess,)
 
     # -- spans
 
     def span(self) -> tuple[int, int]:
-        return self.data["span"]["start"], self.data["span"]["end"]
+        source_name = (self.data.get("fields") or {}).get("sourceCaseName") or {}
+        span = source_name.get("referenceSpan") or self.data["span"]
+        return span["start"], span["end"]
 
     def full_span(self) -> tuple[int, int]:
         full = self.data["fullSpan"]
+        name = (self.data.get("fields") or {}).get("sourceCaseName")
+        if name is not None:
+            return name["fullSpanStart"], name.get("fullSpanEnd") or full["end"]
         return full["start"], full["end"]
 
     def span_with_pincite(self) -> tuple[int, int]:
         start, end = self.span()
-        pins = self.data.get("pinpoints") or []
-        if pins:
-            end = max(end, pins[-1]["span"]["end"])
-        return start, end
+        pin_start, pin_end = self.metadata.pin_cite_span_start, self.metadata.pin_cite_span_end
+        return min(start, pin_start if pin_start is not None else start), max(end, pin_end if pin_end is not None else end)
 
     def matched_text(self) -> str:
-        return self.data["span"]["text"]
+        source_name = (self.data.get("fields") or {}).get("sourceCaseName") or {}
+        return (source_name.get("referenceSpan") or self.data["span"])["text"]
 
     # -- corrected forms
 
     def corrected_reporter(self) -> Optional[str]:
-        fields = self.data.get("fields") or {}
-        return fields.get("reporterCanonical") or fields.get("reporter")
+        return self.edition_guess.short_name if self.edition_guess else self.groups.get("reporter")
 
-    def corrected_citation(self) -> str:
-        text = self.matched_text()
-        fields = self.data.get("fields") or {}
-        written, canonical = fields.get("reporter"), fields.get("reporterCanonical")
-        if written and canonical and written != canonical and written in text:
-            text = text.replace(written, canonical, 1)
-        return " ".join(text.split())
-
-    def corrected_citation_full(self) -> str:
+    def _correction(self) -> dict:
         start, end = self.full_span()
         core_start, core_end = self.span()
-        full = self.document_text[start:end]
-        corrected = (
-            full[: core_start - start] + self.corrected_citation() + full[core_end - start :]
-        )
-        return " ".join(corrected.split())
+        kind = next((name for cls, name in (
+            (ShortCaseCitation, "short_case"), (FullCaseCitation, "case"),
+            (FullLawCitation, "law"), (FullJournalCitation, "journal"),
+            (ResourceCitation, "resource"),
+        ) if isinstance(self, cls)), "plain")
+        return call("correctCitation", {
+            "text": self.matched_text(), "kind": kind,
+            "style": (self.data.get("style") or {}).get("text"),
+            "jurisdiction": self.data.get("jurisdiction"),
+            "sourceLayout": {
+                "prefix": self.document_text[start:core_start],
+                "suffix": self.document_text[core_end:end],
+            },
+            "reporter": self.groups.get("reporter"),
+            "correctedReporter": self.edition_guess.short_name if self.edition_guess else None,
+            "page": self.groups.get("page"),
+            "metadata": {name: getattr(self.metadata, name, None) for name in (
+                "pin_cite", "plaintiff", "defendant", "extra", "court", "year",
+                "month", "day", "publisher", "parenthetical", "antecedent_guess",
+            )},
+        })
+
+    def corrected_citation(self) -> str:
+        return self._correction()["citation"]
+
+    def corrected_citation_full(self) -> str:
+        return self._correction()["full"]
+
+    def corrected_page(self) -> Optional[str]:
+        return self._correction()["page"]
 
     # -- mapping helpers
 
@@ -173,6 +213,9 @@ class CitationBase:
         if not pins:
             return {}
         start, end = pins[0]["span"]["start"], pins[-1]["span"]["end"]
+        phrase = (self.data.get("fields") or {}).get("pinCite")
+        if phrase and self.data["form"] != "short":
+            start, end = phrase["start"], phrase["end"]
         return {
             "pin_cite": self.document_text[start:end],
             "pin_cite_span_start": start,
@@ -181,14 +224,20 @@ class CitationBase:
 
     def _metadata(self) -> Metadata:
         data = self.data
+        fields = data.get("fields") or {}
+        source_name = fields.get("sourceCaseName")
+        if data["form"] == "reference" and source_name is not None:
+            pin = source_name.get("pinCite")
+            return Metadata(plaintiff=source_name["plaintiff"], defendant=source_name["defendant"],
+                            pin_cite=pin["text"] if pin else None)
         values: dict = dict(self._pin())
         for parenthetical in data.get("parentheticals") or []:
             if parenthetical["kind"] == "explanatory":
                 values["parenthetical"] = parenthetical["content"]
                 break
-        fields = data.get("fields") or {}
-        if fields.get("year"):
-            values["year"] = fields["year"]
+        for name in ("year", "month", "day", "extra"):
+            if fields.get(name):
+                values[name] = fields[name]
         if data.get("court"):
             values["court"] = data["court"]["id"]
         if data.get("parties"):
@@ -196,33 +245,52 @@ class CitationBase:
             values["defendant"] = data["parties"]["defendant"] or None
         if fields.get("publisher"):
             values["publisher"] = fields["publisher"]
+        if data.get("form") == "reference" and data.get("shortName"):
+            values["resolved_case_name_short"] = data["shortName"]
         antecedent = data.get("antecedent")
-        if antecedent is not None and antecedent < len(self._citations):
-            target = self._citations[antecedent]
+        target = next((item for item in self._citations if item["index"] == antecedent), None)
+        if target is not None:
             values["resolved_case_name_short"] = target.get("shortName")
             if target.get("style"):
                 values["resolved_case_name"] = target["style"]["text"].strip().rstrip(",")
         if data.get("form") in ("short", "supra", "reference") and data.get("style"):
             values["antecedent_guess"] = data["style"]["text"].strip().rstrip(",").strip()
+        if source_name is not None:
+            values["plaintiff"] = source_name["plaintiff"]
+            values["defendant"] = source_name["defendant"]
+            values["antecedent_guess"] = source_name["antecedentGuess"]
+            if source_name.get("fullSpanEnd") is not None:
+                pin = source_name.get("pinCite")
+                values["pin_cite"] = pin["text"] if pin else None
+                values["pin_cite_span_start"] = None
+                values["pin_cite_span_end"] = source_name.get("pinCiteSpanEnd")
+                values["parenthetical"] = source_name.get("parenthetical")
+            if source_name.get("preCitation") is not None:
+                pin = source_name.get("pinCite")
+                values["pin_cite"] = pin["text"] if pin else None
+                if pin:
+                    values["pin_cite_span_start"] = source_name["preCitation"]["start"]
         return Metadata(**values)
 
     # -- identity
 
-    def comparison_hash(self) -> int:
+    def _identity(self):
         key = self.data.get("key")
         if key:
-            return hash((type(self).__name__, key))
-        return hash((type(self).__name__, self.corrected_citation(), self.index))
+            return type(self), key
+        # An unkeyed citation has no shared authority identity. In particular,
+        # matching text and document-local indices must not merge uncertain
+        # citations from different documents (or cases with missing pages).
+        return type(self), id(self)
+
+    def comparison_hash(self) -> int:
+        return hash(self._identity())
 
     def __hash__(self) -> int:
         return self.comparison_hash()
 
     def __eq__(self, other: object) -> bool:
-        return (
-            isinstance(other, CitationBase)
-            and type(self) is type(other)
-            and self.comparison_hash() == other.comparison_hash()
-        )
+        return isinstance(other, CitationBase) and self._identity() == other._identity()
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}({self.matched_text()!r}, groups={self.groups!r}, metadata={self.metadata!r})"
@@ -239,6 +307,8 @@ class CitationBase:
 class ResourceCitation(CitationBase):
     def _groups(self) -> dict:
         fields = self.data.get("fields") or {}
+        if fields.get("sourceGroups"):
+            return dict(fields["sourceGroups"])
         return {
             "volume": fields.get("volume"),
             "reporter": fields.get("reporter"),
@@ -269,6 +339,8 @@ class ShortCaseCitation(CaseCitation):
 class FullLawCitation(FullCitation):
     def _groups(self) -> dict:
         fields = self.data.get("fields") or {}
+        if fields.get("sourceGroups"):
+            return dict(fields["sourceGroups"])
         groups = {
             "title": fields.get("volume"),
             "reporter": fields.get("series") or fields.get("reporter"),
@@ -291,7 +363,7 @@ class IdCitation(CitationBase):
 
 
 class ReferenceCitation(CitationBase):
-    pass
+    name_fields = ("plaintiff", "defendant", "resolved_case_name_short", "resolved_case_name")
 
 
 class UnknownCitation(CitationBase):
@@ -333,29 +405,6 @@ def clean_text(text: str, steps: Iterable[Union[str, Callable[[str], str]]]) -> 
     return text
 
 
-# The named clean steps get_citations() applied to each source it cleaned, so
-# annotate_citations(plain_text, ..., source_text) can map offsets back
-# exactly (legal-citations keeps an offset map instead of diffing).
-_CLEANED_FROM: dict = {}
-_CANDIDATE_STEPS = (
-    ["html", "inline_whitespace"],
-    ["html", "all_whitespace"],
-    ["html"],
-    ["all_whitespace"],
-    ["inline_whitespace"],
-    ["html", "underscores", "inline_whitespace"],
-    ["html", "underscores", "all_whitespace"],
-    ["underscores"],
-)
-
-
-def _remember(source: str, steps: list, text: str) -> None:
-    if len(_CLEANED_FROM) > 64:
-        _CLEANED_FROM.clear()
-    if all(isinstance(step, str) for step in steps):
-        _CLEANED_FROM[(source, text)] = list(steps)
-
-
 def get_citations(
     plain_text: str = "",
     remove_ambiguous: bool = False,
@@ -364,21 +413,22 @@ def get_citations(
     clean_steps: Optional[Iterable[Union[str, Callable[[str], str]]]] = None,
 ) -> list:
     """eyecite's ``get_citations``: citations in document order."""
+    if tokenizer is not None:
+        raise NotImplementedError("custom tokenizers are not supported by the Rust citation engine")
+    clean_steps = list(clean_steps) if clean_steps is not None else None
     if plain_text and not markup_text:
         text = clean_text(plain_text, clean_steps) if clean_steps else plain_text
-        if clean_steps:
-            _remember(plain_text, list(clean_steps), text)
     elif markup_text and not plain_text:
         steps = list(clean_steps or [])
         if "html" not in steps:
             steps.insert(0, "html")
         text = clean_text(markup_text, steps)
-        _remember(markup_text, steps, text)
     elif not plain_text and not markup_text:
         raise ValueError("Both `markup_text` and `plain_text` are empty")
     else:
-        text = plain_text
-    records = extract(text)
+        text = clean_text(plain_text, clean_steps) if clean_steps else plain_text
+    records = call("extract", {"text": text, "markupText": markup_text or None,
+        "options": {"resolve": False, "removeAmbiguous": remove_ambiguous}, "offsetUnit": "char"})["citations"]
     return [_class_for(record)(record, text, records) for record in records]
 
 
@@ -398,39 +448,79 @@ class Resource:
         return f"Resource({self.citation!r})"
 
 
-def resolve_citations(citations: list, **resolvers: Any) -> dict:
-    """eyecite's ``resolve_citations``: ``{Resource: [citations]}``.
-
-    Resolution already happened during extraction (each record's
-    ``antecedent``); this regroups the objects the way eyecite does. Full
-    citations with the same key share one resource.
-    """
-    if resolvers:
-        raise NotImplementedError(
-            "custom resolver callbacks are not supported; legal_citations resolves while extracting"
-        )
-    by_index = {citation.index: citation for citation in citations}
+def resolve_citations(
+    citations: list,
+    resolve_full_citation=None,
+    resolve_shortcase_citation=None,
+    resolve_supra_citation=None,
+    resolve_reference_citation=None,
+    resolve_id_citation=None,
+) -> dict:
+    """Resolve the supplied records, invoking custom callbacks in Python."""
     resources: dict = {}
-    resource_of_index: dict = {}
+    resource_tokens: dict = {}
+    resource_objects: list = []
+    value_tokens: dict = {}
+    full_cites = []
+    last_resource = None
+
+    def token(value, mapping):
+        return mapping.setdefault(value, len(mapping))
+
+    def resource_token(resource):
+        if resource not in resource_tokens:
+            resource_tokens[resource] = len(resource_objects)
+            resource_objects.append(resource)
+        return resource_tokens[resource]
+
+    def record(citation, include_values=False):
+        metadata = vars(citation.metadata)
+        interpretations = citation.data.get("interpretations", [])
+        selected = {item["kind"] for item in interpretations if item["selected"]}
+        return {
+            "form": citation.form, "authority": citation.authority,
+            "format": citation.data.get("format"), "jurisdiction": citation.data.get("jurisdiction"),
+            "reporter": citation.corrected_reporter(),
+            "volume": citation.groups.get("volume"), "page": citation.groups.get("page"),
+            "plaintiff": metadata.get("plaintiff"), "defendant": metadata.get("defendant"),
+            "antecedentGuess": metadata.get("antecedent_guess"), "pinCite": metadata.get("pin_cite"),
+            "metadataValues": [token(value, value_tokens) for value in metadata.values() if value] if include_values else [],
+            "nameValues": [token(metadata[name], value_tokens) for name in ReferenceCitation.name_fields if metadata.get(name)] if include_values else [],
+            "ambiguous": any(item["kind"] not in selected for item in interpretations),
+        }
+
+    callbacks = (
+        (ShortCaseCitation, resolve_shortcase_citation),
+        (SupraCitation, resolve_supra_citation),
+        (ReferenceCitation, resolve_reference_citation),
+    )
     for citation in citations:
         if isinstance(citation, FullCitation):
-            resource = Resource(citation)
+            resource = resolve_full_citation(citation) if resolve_full_citation else Resource(citation)
+            full_cites.append((citation, resource))
+        elif isinstance(citation, IdCitation) and resolve_id_citation is not None:
+            resource = resolve_id_citation(citation, last_resource, resources)
+        else:
+            callback = next((callback for kind, callback in callbacks if isinstance(citation, kind)), None)
+            if callback is not None:
+                resource = callback(citation, full_cites)
+            else:
+                # Re-read live metadata after callbacks. Python objects are
+                # represented by equality-preserving tokens, never repr strings.
+                include_values = isinstance(citation, ReferenceCitation)
+                request = {"citation": record(citation, include_values)}
+                if isinstance(citation, IdCitation):
+                    if last_resource:
+                        request["previous"] = (record(resources[last_resource][0]), resource_token(last_resource))
+                else:
+                    request["fullCitations"] = [(record(full, include_values), resource_token(resource)) for full, resource in full_cites]
+                selected = call("resolveReference", request)
+                resource = resource_objects[selected] if selected is not None else None
+        last_resource = resource
+        if resource:
             resources.setdefault(resource, []).append(citation)
-            resource_of_index[citation.index] = next(
-                existing for existing in resources if existing == resource
-            )
-    for citation in citations:
-        if isinstance(citation, FullCitation):
-            continue
-        antecedent = citation.data.get("antecedent")
-        if antecedent is None or antecedent not in by_index:
-            continue
-        resource = resource_of_index.get(antecedent)
-        if resource is not None:
-            resources[resource].append(citation)
-    for members in resources.values():
-        members.sort(key=lambda citation: citation.index)
     return resources
+
 
 
 def annotate_citations(
@@ -445,45 +535,42 @@ def annotate_citations(
     """eyecite's ``annotate_citations``: insert ``before``/``after`` around each
     ``((start, end), before, after)`` span of ``plain_text``; with
     ``source_text`` the annotations are placed in the original markup."""
-    annotations = sorted(annotations, key=lambda item: item[0])
-    if not source_text or source_text == plain_text:
-        pieces, cursor = [], 0
-        for (start, end), before, after in annotations:
-            pieces.append(plain_text[cursor:start])
-            inner = plain_text[start:end]
-            pieces.append(
-                annotator(before, inner, after) if annotator else f"{before}{inner}{after}"
-            )
-            cursor = end
-        pieces.append(plain_text[cursor:])
-        return "".join(pieces)
-    if annotator is not None:
-        raise NotImplementedError("annotator callbacks are only supported without source_text")
-    steps = _CLEANED_FROM.get((source_text, plain_text))
-    if steps is None:
-        steps = next(
-            (
-                candidate
-                for candidate in _CANDIDATE_STEPS
-                if call("clean", {"text": source_text, "steps": candidate})["text"] == plain_text
-            ),
-            None,
-        )
-    if steps is None:
-        raise ValueError(
-            "plain_text is not source_text cleaned with a known step list; "
-            "extract with legal_citations.eyecite.get_citations() first, or use "
-            "legal_citations.annotate(..., source=..., clean_steps=[...])"
-        )
-    request = {
-        "text": plain_text,
-        "annotations": [
-            {"start": start, "end": end, "before": str(before), "after": str(after)}
-            for (start, end), before, after in annotations
-        ],
-        "source": source_text,
-        "cleanSteps": steps,
-        "unbalancedTags": unbalanced_tags,
-        "offsetUnit": "char",
-    }
-    return call("annotate", request)["text"]
+    from bisect import bisect_left, bisect_right
+    source = source_text or plain_text
+    annotations = sorted(annotations)
+    alignment = None
+    source_offsets = None
+    if offset_updater is not None:
+        source_offsets = [(offset_updater.update(start, bisect_right), offset_updater.update(end, bisect_left))
+                          for (start, end), _, _ in annotations]
+    elif not use_dmp and source != plain_text:
+        # The pinned SpanUpdater's stdlib diff steps. Rust owns their offset
+        # transitions, boundary selection and annotation handling.
+        from difflib import SequenceMatcher
+        placeholder = call("placeholderMarkup", {"text": source})
+        alignment = []
+        for operation, a1, a2, b1, b2 in SequenceMatcher(a=plain_text, b=placeholder, autojunk=False).get_opcodes():
+            if operation == "insert":
+                alignment.append(("+", b2 - b1))
+            elif operation == "replace":
+                alignment.extend((("-", a2 - a1), ("+", b2 - b1)))
+            elif operation == "delete":
+                alignment.append(("-", a2 - a1))
+            elif operation == "equal":
+                alignment.append(("=", a2 - a1))
+    request = {"text": plain_text, "source": source, "offsetUnit": "char",
+               "unbalancedTags": unbalanced_tags,
+               "alignment": alignment, "sourceOffsets": source_offsets,
+               "annotations": [{"start": start, "end": end,
+                                "before": str(before), "after": str(after)}
+                               for (start, end), before, after in annotations]}
+    if annotator is None:
+        return call("annotate", request)["text"]
+    pieces, cursor = [], 0
+    for item in call("annotationRanges", request):
+        start, end = item["start"], item["end"]
+        _, before, after = annotations[item["index"]]
+        pieces.extend((source[cursor:start], annotator(before, item["text"], after)))
+        cursor = end
+    pieces.append(source[cursor:])
+    return "".join(pieces)

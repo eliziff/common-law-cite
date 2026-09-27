@@ -32,7 +32,7 @@
    only translate names. A change to the serialized `Citation` updates
    `conformance/schema/citation.schema.json` (the schema test fails
    otherwise); a breaking change bumps `api::SCHEMA_VERSION`.
-5. **Key v2 is a contract.** Anything that changes an existing key needs a new
+5. **Key v3 is a contract.** Anything that changes an existing key needs a new
    `KEY_VERSION` (see `crates/legal-citations/src/key.rs`).
 
 ## Checks

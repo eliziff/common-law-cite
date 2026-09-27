@@ -1,0 +1,12 @@
+{
+  "en": {
+    "CSC": "SCC",
+    "CAF": "FCA",
+    "CF": "FC"
+  },
+  "fr": {
+    "SCC": "CSC",
+    "FCA": "CAF",
+    "FC": "CF"
+  }
+}

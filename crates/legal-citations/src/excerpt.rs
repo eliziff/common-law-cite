@@ -16,6 +16,7 @@ fn grammar(id: &str) -> Regex {
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct ExcerptClassification {
     pub kind: &'static str,
     pub cite_tokens: usize,

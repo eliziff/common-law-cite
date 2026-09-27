@@ -25,6 +25,17 @@
       "items": {
         "$ref": "#/$defs/citation"
       }
+    },
+    "authorities": {
+      "description": "Authority clusters containing citation indices; unresolved references are omitted.",
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
     }
   },
   "$defs": {
@@ -233,6 +244,16 @@
       "additionalProperties": false,
       "description": "Parsed components; which are present depends on authority and format.",
       "properties": {
+        "pinCite": {
+          "$ref": "#/$defs/span",
+          "description": "Written pinpoint phrase, including its locator label; individual pinpoint spans retain value-only offsets."
+        },
+        "month": {
+          "type": "string"
+        },
+        "day": {
+          "type": "string"
+        },
         "year": {
           "type": "string"
         },
@@ -301,6 +322,43 @@
           "type": "integer",
           "minimum": 0,
           "description": "The footnote a supra / above n / (n N) reference points to."
+        },
+        "reporterId": {
+          "type": "string"
+        },
+        "sourceGroups": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "exactEditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sourceEdition"
+          }
+        },
+        "variationEditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sourceEdition"
+          }
+        },
+        "sourceEdition": {
+          "$ref": "#/$defs/sourceEdition"
+        },
+        "extra": {
+          "type": "string"
+        },
+        "courtText": {
+          "type": "string"
+        },
+        "yearNumber": {
+          "type": "integer",
+          "minimum": 1600
         }
       }
     },
@@ -413,6 +471,114 @@
             "type": "string"
           },
           "description": "Grammar rules that produced this reading (audit/debugging; not a stable interface)."
+        },
+        "interpretations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "kind",
+              "id",
+              "canonical",
+              "selected",
+              "reason"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "canonical": {
+                "type": "string"
+              },
+              "jurisdiction": {
+                "type": "string"
+              },
+              "selected": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "alias": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "key",
+            "citation",
+            "records"
+          ],
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "citation": {
+              "type": "string"
+            },
+            "records": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "sourceEdition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "short_name",
+        "reporter",
+        "start",
+        "end"
+      ],
+      "properties": {
+        "short_name": {
+          "type": "string"
+        },
+        "reporter": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "short_name",
+            "name",
+            "cite_type",
+            "source"
+          ],
+          "properties": {
+            "short_name": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "cite_type": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            }
+          }
+        },
+        "start": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "end": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     }

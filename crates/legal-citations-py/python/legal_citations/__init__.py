@@ -35,19 +35,28 @@ __all__ = [
     "format",
     "format_pinpoint",
     "has_citation",
+    "has_citation_cue",
+    "has_citation_signal",
+    "is_citation_continuation",
+    "protected_citation_spans",
     "key",
     "key_for_text",
     "keys",
     "registry",
+    "resolve",
     "url",
     "version",
 ]
+
+
 
 _OPTION_NAMES = {
     "resolve": "resolve",
     "parallel": "parallel",
     "extended_us": "extendedUs",
     "notes": "notes",
+    "remove_ambiguous": "removeAmbiguous",
+    "jurisdiction_priority": "jurisdictionPriority",
 }
 
 
@@ -92,7 +101,13 @@ def _note(note: Any) -> dict:
     return out
 
 
-def extract(text: str, *, offset_unit: str = "char", **options: Any) -> list[dict]:
+def resolve(citations: Iterable[Mapping[str, Any]], *, notes=None, alias_groups=()) -> dict:
+    """Resolve existing records; notes and citation spans use the same units."""
+    return call("resolve", {"citations": list(citations), "notes": None if notes is None else [_note(note) for note in notes],
+                            "aliasGroups": list(alias_groups)})
+
+
+def extract(text: str, *, markup_text: Optional[str] = None, offset_unit: str = "char", **options: Any) -> list[dict]:
     """Find, classify, group and resolve every citation in ``text``.
 
     Options: ``resolve`` (default True), ``parallel`` (True), ``extended_us``
@@ -100,7 +115,7 @@ def extract(text: str, *, offset_unit: str = "char", **options: Any) -> list[dic
     or ``(number, start, end)`` tuples, in ``offset_unit``).
     """
     response = call(
-        "extract", {"text": text, "options": _options(options), "offsetUnit": offset_unit}
+        "extract", {"text": text, "markupText": markup_text, "options": _options(options), "offsetUnit": offset_unit}
     )
     return response["citations"]
 
@@ -252,6 +267,22 @@ def clean(text: str, steps: Iterable[str]) -> str:
     """Clean text with eyecite-compatible steps (``html``/``xml``,
     ``inline_whitespace``, ``all_whitespace``, ``underscores``) or ``zero_width``."""
     return call("clean", {"text": text, "steps": list(steps)})["text"]
+
+
+def has_citation_cue(text: str) -> bool:
+    return call("hasCitationCue", {"text": text})
+
+
+def has_citation_signal(text: str) -> bool:
+    return call("hasCitationSignal", {"text": text})
+
+
+def is_citation_continuation(text: str) -> bool:
+    return call("isCitationContinuation", {"text": text})
+
+
+def protected_citation_spans(text: str, *, offset_unit: str = "char") -> tuple[tuple[int, int], ...]:
+    return tuple(map(tuple, call("protectedCitationSpans", {"text": text, "offsetUnit": offset_unit})))
 
 
 def registry(table: Optional[str] = None, surface: Optional[str] = None) -> Any:

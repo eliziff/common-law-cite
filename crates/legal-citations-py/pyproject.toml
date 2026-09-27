@@ -21,8 +21,8 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/eliziff/legal-citations"
-Changelog = "https://github.com/eliziff/legal-citations/blob/main/CHANGELOG.md"
+Repository = "https://github.com/eliziff/common-law-cite"
+Changelog = "https://github.com/eliziff/common-law-cite/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 test = ["pytest>=7"]

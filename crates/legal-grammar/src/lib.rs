@@ -56,6 +56,8 @@ impl AsciiBoundedGrammar {
 pub const GRAMMAR_CORPUS_FORMAT: &str = "legal-grammar-corpus:v1";
 /// The embedded corpus, byte for byte, so consumers can fingerprint it.
 pub const GRAMMAR_CORPUS_JSON: &str = include_str!("../data/grammar-corpus.json");
+/// Pinned reporters-db extractors, retaining Eyecite's captures and editions.
+pub const US_EXTRACTORS_JSON: &str = include_str!("../data/us-extractors.json");
 pub const SOURCE_WHITESPACE: &str = concat!(
     r" \t\n\r\f\v\x1c-\x1f\x85\u00a0\u1680",
     r"\u2000-\u200a\u2028\u2029\u202f\u205f\u3000"
@@ -234,7 +236,7 @@ fn word_nonboundary_for(word: &str) -> String {
     format!("(?:(?<=[{word}])(?=[{word}])|(?<![{word}])(?![{word}]))")
 }
 
-fn expand_portable_with(source: &str, whitespace: &str, word: &str) -> Result<String> {
+fn expand_portable_with(source: &str, whitespace: &str, word: &str, digits: &str) -> Result<String> {
     let characters = source.chars().collect::<Vec<_>>();
     let mut output = String::with_capacity(source.len());
     let mut in_class = false;
@@ -263,7 +265,9 @@ fn expand_portable_with(source: &str, whitespace: &str, word: &str) -> Result<St
                     }
                 }
                 'd' => {
-                    output.push_str(if in_class { "0-9" } else { "[0-9]" });
+                    if !in_class { output.push('['); }
+                    output.push_str(digits);
+                    if !in_class { output.push(']'); }
                 }
                 'S' | 'W' | 'D' => {
                     if in_class {
@@ -274,7 +278,7 @@ fn expand_portable_with(source: &str, whitespace: &str, word: &str) -> Result<St
                     let fragment = match next {
                         'S' => whitespace,
                         'W' => word,
-                        _ => "0-9",
+                        _ => digits,
                     };
                     output.push_str("[^");
                     output.push_str(fragment);
@@ -309,11 +313,11 @@ fn expand_portable_with(source: &str, whitespace: &str, word: &str) -> Result<St
 }
 
 pub fn expand_portable(source: &str) -> Result<String> {
-    expand_portable_with(source, SOURCE_WHITESPACE, SOURCE_WORD)
+    expand_portable_with(source, SOURCE_WHITESPACE, SOURCE_WORD, "0-9")
 }
 
 pub fn expand_ecmascript_portable(source: &str) -> Result<String> {
-    let expanded = expand_portable_with(source, ECMASCRIPT_WHITESPACE, ECMASCRIPT_WORD)?;
+    let expanded = expand_portable_with(source, ECMASCRIPT_WHITESPACE, ECMASCRIPT_WORD, "0-9")?;
     Ok(expanded
         .replace(&word_boundary_for(ECMASCRIPT_WORD), r"(?-u:\b)")
         .replace(&word_nonboundary_for(ECMASCRIPT_WORD), r"(?-u:\B)"))
@@ -469,13 +473,19 @@ fn expanded_entry(entry: &GrammarEntry, defs: &HashMap<String, String>) -> Resul
 }
 
 pub fn compile_entry(entry: &GrammarEntry, defs: &HashMap<String, String>) -> Result<FancyRegex> {
+    compile_backtracking_entry(entry, defs, false)
+}
+
+fn compile_backtracking_entry(entry: &GrammarEntry, defs: &HashMap<String, String>, ecmascript: bool) -> Result<FancyRegex> {
     let expanded = expanded_entry(entry, defs)?;
     let source = if entry.flags.contains('i') {
         expand_ascii_case_insensitive(&expanded)
     } else {
         expanded
     };
-    let portable = expand_portable(&source)?;
+    let portable = if ecmascript {
+        expand_portable_with(&source, ECMASCRIPT_WHITESPACE, ECMASCRIPT_WORD, "0-9")?
+    } else { expand_portable(&source)? };
     let mut builder = RegexBuilder::new(&portable);
     builder
         .unicode_mode(true)
@@ -527,12 +537,50 @@ pub fn compile_ecmascript_pattern(
     compile_ecmascript_entry(&entry, &HashMap::new())
 }
 
+pub fn compile_ecmascript_backtracking_pattern(
+    id: &str, pattern: &str, flags: &str,
+) -> Result<FancyRegex> {
+    compile_backtracking_entry(&GrammarEntry {
+        id: id.to_owned(), pattern: pattern.to_owned(), flags: flags.to_owned(),
+    }, &HashMap::new(), true)
+}
+
 pub fn compile_table_entry(entry_id: &str) -> Result<FancyRegex> {
     let tables = load_tables()?;
     let value = tables
         .get(entry_id)
         .ok_or_else(|| Error::Message(format!("unknown grammar entry: {entry_id}")))?;
     compile_entry(&value.entry, &value.defs)
+}
+
+/// Python Unicode character classes for source routines that do not use re.ASCII.
+pub fn compile_python_table_entry(entry_id: &str) -> Result<FancyRegex> {
+    let tables = load_tables()?;
+    let value = tables.get(entry_id)
+        .ok_or_else(|| Error::Message(format!("unknown grammar entry: {entry_id}")))?;
+    let source = expanded_entry(&value.entry, &value.defs)?;
+    compile_python_pattern(&source, &value.entry.flags)
+}
+
+/// Compile source-owned Python grammar, including generated reporter extractors.
+pub fn compile_python_pattern(source: &str, flags: &str) -> Result<FancyRegex> {
+    let source = expand_portable_with(source, SOURCE_WHITESPACE, r"\p{L}\p{N}_", r"\p{Nd}")?;
+    RegexBuilder::new(&source)
+        .unicode_mode(true)
+        .case_insensitive(flags.contains('i'))
+        .multi_line(flags.contains('m'))
+        .dot_matches_new_line(flags.contains('s'))
+        .backtrack_limit(10_000_000)
+        .build()
+        .map_err(|error| Error::Message(format!("Python source grammar does not compile in Rust: {error}")))
+}
+
+/// ECMAScript word/whitespace rules for source patterns that require lookarounds.
+pub fn compile_ecmascript_backtracking_table_entry(entry_id: &str) -> Result<FancyRegex> {
+    let tables = load_tables()?;
+    let value = tables.get(entry_id)
+        .ok_or_else(|| Error::Message(format!("unknown grammar entry: {entry_id}")))?;
+    compile_backtracking_entry(&value.entry, &value.defs, true)
 }
 
 pub fn compile_ecmascript_table_entry(entry_id: &str) -> Result<CompiledEcmascriptGrammar> {

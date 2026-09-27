@@ -126,7 +126,8 @@
   "abbreviation": "O Reg",
   "variations": [
    "Règl de l'Ont",
-   "Ont Reg"
+   "Ont Reg",
+   "ontario Reg"
   ],
   "canlii": {
    "jurisdiction": "on",
@@ -184,7 +185,10 @@
   "canlii": {
    "jurisdiction": "bc",
    "database": "bcr"
-  }
+  },
+  "variations": [
+   "britishcolumbia Reg"
+  ]
  },
  {
   "id": "rsa",
@@ -221,7 +225,8 @@
   "jurisdiction": "ca-ab",
   "abbreviation": "Alta Reg",
   "variations": [
-   "AR"
+   "AR",
+   "alberta Reg"
   ],
   "canlii": {
    "jurisdiction": "ab",
@@ -278,7 +283,10 @@
   "canlii": {
    "jurisdiction": "sk",
    "database": "skr"
-  }
+  },
+  "variations": [
+   "saskatchewan Reg"
+  ]
  },
  {
   "id": "rsm",
@@ -341,7 +349,8 @@
   "jurisdiction": "ca-mb",
   "abbreviation": "Man Reg",
   "variations": [
-   "Règl du Man"
+   "Règl du Man",
+   "manitoba Reg"
   ],
   "canlii": {
    "jurisdiction": "mb",
@@ -392,7 +401,8 @@
   "jurisdiction": "ca-nb",
   "abbreviation": "NB Reg",
   "variations": [
-   "Règl du N-B"
+   "Règl du N-B",
+   "newbrunswick Reg"
   ],
   "canlii": {
    "jurisdiction": "nb",
@@ -436,7 +446,10 @@
   "canlii": {
    "jurisdiction": "ns",
    "database": "nsr"
-  }
+  },
+  "variations": [
+   "novascotia Reg"
+  ]
  },
  {
   "id": "rspei",
@@ -475,7 +488,10 @@
   "canlii": {
    "jurisdiction": "pe",
    "database": "per"
-  }
+  },
+  "variations": [
+   "princeedwardisland Reg"
+  ]
  },
  {
   "id": "rsnl",
@@ -518,7 +534,10 @@
   "jurisdiction": "ca-nl",
   "abbreviation": "NLR",
   "variations": [
-   "Nfld Reg"
+   "Nfld Reg",
+   "NL Reg",
+   "Newfoundland and Labrador Reg",
+   "Newfoundland and Labrador Regulation"
   ],
   "canlii": {
    "jurisdiction": "nl",
@@ -614,7 +633,10 @@
   "canlii": {
    "jurisdiction": "nt",
    "database": "ntr"
-  }
+  },
+  "variations": [
+   "northwestterritories Reg"
+  ]
  },
  {
   "id": "rrnwt",
@@ -666,7 +688,10 @@
   "canlii": {
    "jurisdiction": "nu",
    "database": "nur"
-  }
+  },
+  "variations": [
+   "nunavut Reg"
+  ]
  },
  {
   "id": "cqlr",
@@ -759,5 +784,19 @@
   "kind": "regulations",
   "jurisdiction": "uk-ni",
   "abbreviation": "SR"
+ },
+ {
+  "id": "dcmr",
+  "name": {
+   "en": "District of Columbia Municipal Regulations"
+  },
+  "kind": "regulations",
+  "jurisdiction": "us-dc",
+  "abbreviation": "DCMR",
+  "variations": [
+   "D.C. Mun. Regs.",
+   "D.C. Code Mun. Regs."
+  ],
+  "evidence": "https://dcregs.dc.gov/"
  }
 ]

@@ -3,6 +3,9 @@
 A deterministic legal citation engine in Rust for Canadian, Commonwealth and
 US legal text, with Python, JavaScript/WebAssembly and command-line bindings.
 
+This engine is under development; the packages described below are not yet
+certified for release.
+
 It finds citations, classifies them, parses their parts, groups parallel
 citations, resolves short forms, `supra`, `ibid`/`Id.` and case-name
 references, gives each authority a stable identity key, formats citations in
@@ -16,12 +19,12 @@ against the latest eyecite, reporters-db and courts-db.
 
 ## Install
 
-| Language | Package | Install |
-|---|---|---|
-| Rust | [`legal-citations`](https://crates.io/crates/legal-citations) | `cargo add legal-citations` |
-| Python ≥ 3.9 | [`legal-citations`](https://pypi.org/project/legal-citations/) (module `legal_citations`) | `pip install legal-citations` |
-| JavaScript (Node ≥ 18, Deno, browsers, MV3 extensions) | [`legal-citations`](https://www.npmjs.com/package/legal-citations) | `npm install legal-citations` |
-| CLI | [`legal-citations-cli`](https://crates.io/crates/legal-citations-cli) (binary `legal-citations`) | `cargo install legal-citations-cli`, or a binary from the GitHub release |
+The source repository builds the Rust crates, Python wheel/source distribution,
+and JavaScript/WebAssembly tarball. Until registry releases are certified, install
+the Python and JavaScript artifacts from the matching
+[GitHub release](https://github.com/eliziff/common-law-cite/releases), and pin
+Rust consumers to that release commit. All three bindings use the same engine
+source and embedded citation data.
 
 Python wheels are abi3 (one wheel per platform for every CPython ≥ 3.9) for
 manylinux, musllinux, macOS and Windows.
@@ -43,7 +46,7 @@ import legal_citations
 for c in legal_citations.extract("See R v Jordan, 2016 SCC 27 at para 5. Ibid at para 7."):
     print(c["form"], c["authority"], c["span"]["text"], c.get("antecedent"))
 
-legal_citations.key_for_text("R v Jordan, 2016 SCC 27")          # '2:neutral:2016:scc:27'
+legal_citations.key_for_text("R v Jordan, 2016 SCC 27")          # '3:neutral:2016:scc:27'
 legal_citations.format(text="R. v. Jordan, 2016 SCC 27, para. 5")  # McGill form
 legal_citations.format_pinpoint("paragraph", [("12", "14")])      # 'at paras 12-14'
 legal_citations.annotate(text, '<a href="{url}">', "</a>")
@@ -92,6 +95,12 @@ so all of them accept the same requests and return the same JSON:
 |---|---|---|
 | `extract` | `{text, options?, offsetUnit?}` | `{schemaVersion, offsetUnit, citations}` |
 | `key` | `{citation}` | `{keyVersion, key}` |
+| `resolve` | `{citations, notes?, aliasGroups?}` | `{citations, resolutions, authorities}` |
+| `referenceInfo` | `{text}` | `{kind, notes, normalized}` using ALR's reference-marker and normalization rules; note digits are strings in note/n/nn pattern precedence |
+| `bareCitation` | `{text, kind}` | ALR's bare authority text for lookup, retaining its signal, commentary and short-form removal rules |
+| `stripCitationTail` | `{text}` | citation text without ALR's administrative book-of-authorities tab suffix |
+| `legislationLookup` | `{text}` | `{candidates, jurisdiction}` using Pinpointer's CanLII index-ID spelling rules; candidates require an index match before becoming a URL |
+| `correctCitation` | `{text, kind, style?, jurisdiction?, sourceLayout?, reporter?, correctedReporter?, page?, metadata?}` | `{citation, full, page}` using Eyecite's corrected-citation routines; supplied source layout is retained outside an established U.S. jurisdiction |
 | `keyForText` | `{text, options?}` | `{keyVersion, key, reason?, keys}` |
 | `format` | `{citation}` \| `{text}` \| `{pinpoint}`, `language?`, `rangeDash?` | `{citations: [{index, formatted}]}` \| `{pinpoint}` |
 | `url` | `{citation}` \| `{text}`, `language?`, `anchor?` | `{urls: [{index, url}]}` |
@@ -102,7 +111,8 @@ so all of them accept the same requests and return the same JSON:
 | `hasCitation` | `{text}` | `{hasCitation}` |
 | `version` | `{}` | crate, schema, key and grammar versions, registry counts |
 
-`options` are `resolve`, `parallel`, `extendedUs` (all default `true`) and
+`options` are `resolve`, `parallel`, `extendedUs` (all default `true`),
+`removeAmbiguous` (default `false`), `jurisdictionPriority` (default empty), and
 `notes` (footnote ranges, so `supra note 4` resolves). Unknown keys are
 errors. Errors are `{code, message}` with `code` one of `unknown_method`,
 `invalid_request`, `invalid_offset`, `unimplemented`.
@@ -181,12 +191,39 @@ generated from reporters-db and courts-db at the commits pinned in
 returns every entry a surface names, preferred first — `FCA` is the Federal
 Court of Appeal before the Federal Court of Australia).
 
-## Identity keys (v2)
+## Identity keys (v3)
 
 `key` identifies an authority, not a spelling: `2015 SCC 5` and `2015 CSC 5`
-share `2:neutral:2015:scc:5`; `RSC 1985, c C-46` and `LRC 1985, ch C-46` share
-`2:statute:ca:rsc:1985:c-46`. The grammar is a durable contract that changes
+share `3:neutral:2015:scc:5`; `RSC 1985, c C-46` and `LRC 1985, ch C-46` share
+`3:statute:ca:rsc:1985:c-46`. The grammar is a durable contract that changes
 only with `keyVersion`; see the [`key` module documentation](crates/legal-citations/src/key.rs).
+
+Reporter keys include their registry id and edition. They preserve the year
+when the report's volume numbering resets annually. Incomplete or ambiguous
+citations have no key.
+
+Code keys retain captured chapters, subjects, acts and other identifying fields.
+Source-edition alternatives remain available when a date or contextual reading
+does not select one; unresolved editions do not acquire keys or authority merges.
+
+Known reporter parallels share their canonical authority's key. `alias` reports
+the canonical citation and evidence-record ids from
+[`registry/aliases.json`](crates/legal-citations/registry/aliases.json), which
+preserves every original ALR/A2AJ record and the source-backed corrections.
+Unresolved records remain available for inspection and do not create links.
+
+Applications with installed source indexes can pass their complete alias
+closures to `resolve` as `aliasGroups: [{index, keys}]`. The engine applies
+Beaver's reciprocal-closure checks before grouping cases and resolving their
+references. Conflicting closures or contradictory citation identities remain
+separate with a `source_alias_conflict` reason. Retrieval stays with the caller;
+the engine performs no database or network access.
+
+For shared abbreviations such as `CLR`, callers can pass
+`jurisdictionPriority: ["ca", "au"]` (Python: `jurisdiction_priority`).
+Explicit court evidence takes precedence over this order. `interpretations`
+retains competing meanings and explains the selected reading; equal-ranked
+meanings remain unresolved. A priority never repairs a conflicting source alias.
 
 ## Conformance
 
@@ -199,6 +236,13 @@ is `pass` or `pending`; CI fails on a `pass` case that regresses and on a
 `pending` case that starts passing, so the pending list only shrinks.
 
 ## Staying current with upstream
+
+`tools/sync-upstream.py` also generates `crates/legal-grammar/data/us-extractors.json`
+from the pinned reporters-db templates using Eyecite's extractor construction.
+It retains named captures, exact and variant edition candidates, original dates,
+and prefilter strings. Runtime discovery compiles only the extractors selected
+by the shared whitespace-insensitive prefilter. Citation fields expose these
+source records separately from registry corrections.
 
 `.github/workflows/upstream.yml` runs weekly: it moves the reporters-db and
 courts-db pins and regenerates the registry (`tools/sync-upstream.py`),

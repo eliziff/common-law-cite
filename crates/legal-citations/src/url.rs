@@ -31,13 +31,78 @@
 //!   `/ewhc/ch/2019/123`) and legislation.gov.uk ([`legislation_gov_uk`]) for
 //!   UK public general Acts by calendar year (from 1963) or regnal year.
 //! * CourtListener ([`courtlistener`]) citation lookup for US reporters.
+//! The independent ALR/Beaver court-route inventory supplies a CanLII URL
+//! when a written neutral code lacks a route in the curated court registry.
 
 use crate::format::Language;
 use crate::key;
 use crate::model::{Authority, Citation, Form, Format, PinpointKind};
 use crate::registry::{self, fold, Registry, SeriesKind};
 use regex::Regex;
+use std::collections::HashMap;
 use std::sync::LazyLock;
+use unicode_normalization::UnicodeNormalization;
+
+/// Pinpointer's candidate spellings for its external CanLII TSV index. These
+/// are lookup hints, never authority keys or unverified source URLs.
+#[derive(Clone, Debug, serde::Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct LegislationLookup {
+    pub candidates: Vec<String>,
+    pub jurisdiction: String,
+}
+
+pub fn legislation_lookup(value: &str) -> LegislationLookup {
+    #[derive(serde::Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct Rules {
+        series: std::collections::HashSet<String>,
+        regulation_prefixes: std::collections::HashMap<String, String>,
+        series_jurisdictions: std::collections::HashMap<String, String>,
+    }
+    static RULES: LazyLock<Rules> = LazyLock::new(||
+        serde_json::from_str(include_str!("../registry/canlii-index.json")).expect("CanLII index rules"));
+    static PATTERNS: LazyLock<[legal_grammar::CompiledEcmascriptGrammar; 7]> = LazyLock::new(|| {
+        ["statute", "regulation", "instrument", "crc", "jurisdiction-statute", "jurisdiction-instrument", "jurisdiction-crc"]
+            .map(|name| legal_grammar::compile_ecmascript_table_entry(&format!("lookup.canlii-legislation.{name}"))
+                .expect("Pinpointer index lookup grammar"))
+    });
+    let series_key = |value: &str| value.chars().filter(char::is_ascii_alphabetic).collect::<String>().to_ascii_lowercase();
+    let citation: String = value.nfkc().map(|c| if ('\u{2010}'..='\u{2015}').contains(&c) { '-' } else { c }).collect();
+    let mut candidates = Vec::new();
+    let mut add = |value: String| {
+        let value = value.to_lowercase();
+        if !value.is_empty() && !candidates.contains(&value) { candidates.push(value); }
+    };
+    for matched in PATTERNS[0].captures_iter(&citation) {
+        let series = series_key(&matched[1]);
+        if !RULES.series.contains(&series) { continue; }
+        let chapter = matched[3].to_lowercase();
+        for chapter in [chapter.clone(), chapter.replace('.', "-"), chapter.replace(['.', '-'], "")] {
+            add(format!("{series}-{}-c-{chapter}", &matched[2]));
+        }
+    }
+    if let Some(matched) = PATTERNS[1].captures(&citation) {
+        if let Some(prefix) = RULES.regulation_prefixes.get(&series_key(&matched[1])) {
+            add(format!("{prefix}-reg-{}-{}", &matched[2], &matched[3]));
+        }
+    }
+    if let Some(matched) = PATTERNS[2].captures(&citation) {
+        add(format!("{}-{}-{}", &matched[1], &matched[2], &matched[3]));
+    }
+    if let Some(matched) = PATTERNS[3].captures(&citation) { add(format!("crc-c-{}", &matched[1])); }
+    // The original jurisdiction lookup uses the written text, without the
+    // candidate spelling's NFKC/dash normalization.
+    let jurisdiction = if let Some(matched) = PATTERNS[4].captures(value) {
+        RULES.series_jurisdictions.get(&series_key(&matched[1])).cloned().unwrap_or_default()
+    } else if let Some(matched) = PATTERNS[1].captures(value) {
+        match RULES.regulation_prefixes.get(&series_key(&matched[1])).map(String::as_str).unwrap_or("") {
+            "alta" => "ab", "o" => "on", "man" => "mb", "sask" => "sk", prefix => prefix,
+        }.to_owned()
+    } else if PATTERNS[5].is_match(value) || PATTERNS[6].is_match(value) { "ca".to_owned() }
+    else { String::new() };
+    LegislationLookup { candidates, jurisdiction }
+}
 
 fn language_segment(language: Language) -> &'static str {
     match language {
@@ -76,11 +141,37 @@ const FRENCH_CODES: [(&str, &str, &str); 5] = [
 /// The CanLII decision page for a neutral or CanLII citation.
 pub fn canlii_case(citation: &Citation, language: Language) -> Option<String> {
     canlii_case_in(citation, language, registry::registry())
+        .or_else(|| source_canlii_case(citation, language))
+}
+
+pub fn source_canlii_routes() -> &'static HashMap<String, String> {
+    static ROUTES: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
+        let source: serde_json::Value = serde_json::from_str(include_str!("../registry/source-canlii-routes.json"))
+            .expect("source CanLII routes");
+        serde_json::from_value(source["routes"].clone()).expect("source CanLII court routes")
+    });
+    &ROUTES
+}
+
+fn source_canlii_case(citation: &Citation, language: Language) -> Option<String> {
+    if citation.form != Form::Full || citation.is_ambiguous() || citation.format != Some(Format::Neutral) {
+        return None;
+    }
+    let fields = &citation.fields;
+    let year = four_digit_year(fields.year.as_deref()?)?;
+    let number = fields.number.as_deref()?;
+    if number.is_empty() || !number.chars().all(|character| character.is_ascii_digit()) { return None; }
+    let written = fields.series.as_deref()?.trim();
+    if written.is_empty() || written.contains(char::is_whitespace) { return None; }
+    let route = source_canlii_routes().get(&written.to_ascii_uppercase())?;
+    let (jurisdiction, database) = route.split_once('/').unwrap_or(("", route));
+    let slug = format!("{year}{}{number}", written.to_ascii_lowercase());
+    Some(page_url(jurisdiction, database, &year, &slug, language))
 }
 
 /// [`canlii_case`] against `registry`.
 pub fn canlii_case_in(citation: &Citation, language: Language, registry: &Registry) -> Option<String> {
-    if citation.form != Form::Full {
+    if citation.form != Form::Full || citation.is_ambiguous() {
         return None;
     }
     let fields = &citation.fields;
@@ -158,6 +249,25 @@ pub fn canlii_case_in(citation: &Citation, language: Language, registry: &Regist
         }
         _ => None,
     }
+}
+
+/// Pinpointer's alias-index target: a citation or jurisdiction/database/caseId.
+/// The path is evidence supplied by the owning CanLII index, not inferred from
+/// a case name. Keep the original slug while selecting the published language.
+pub fn canlii_alias_target(target: &str, language: Language) -> Option<String> {
+    static PATH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(?:([a-z]{2})/)?([A-Za-z0-9-]+)/((\d{4})[a-z0-9]+)$").unwrap());
+    let value = target.split_whitespace().collect::<Vec<_>>().join(" ");
+    let Some(path) = PATH.captures(&value) else {
+        return crate::extract(&value, &crate::Options { resolve: false, ..Default::default() })
+            .iter().find_map(|citation| canlii_case(citation, language));
+    };
+    let jurisdiction = path.get(1).map_or("", |part| part.as_str());
+    let court = registry::registry().courts.iter().find(|court| court.canlii.as_ref()
+        .is_some_and(|route| route.jurisdiction == jurisdiction && route.database.eq_ignore_ascii_case(&path[2])));
+    let route = court.and_then(|court| if language == Language::Fr { court.canlii_fr.as_ref().or(court.canlii.as_ref()) } else { court.canlii.as_ref() });
+    Some(page_url(route.map_or(jurisdiction, |route| route.jurisdiction.as_str()),
+        route.map_or(&path[2], |route| route.database.as_str()), &path[4], &path[3],
+        if court.is_some() { language } else { Language::En }))
 }
 
 fn page_url(jurisdiction: &str, database: &str, year: &str, slug: &str, language: Language) -> String {
@@ -353,7 +463,7 @@ pub fn canlii_pdf_url(page_url: &str) -> Option<String> {
 /// regulation whose registry series CanLII publishes.
 fn canlii_legislation_id(citation: &Citation, registry: &Registry) -> Option<(String, String, &'static str)> {
     let fields = &citation.fields;
-    let series = key::series_by_surface(registry, fields.series.as_deref()?)?;
+    let series = key::selected_series(citation, registry, fields.series.as_deref()?)?;
     let route = series.canlii.as_ref()?;
     let path = match route.database.as_str() {
         "stat" => "stat",
@@ -639,7 +749,7 @@ pub fn courtlistener(citation: &Citation) -> Option<String> {
 
 /// [`courtlistener`] against `registry`.
 pub fn courtlistener_in(citation: &Citation, registry: &Registry) -> Option<String> {
-    if citation.form != Form::Full || citation.format != Some(Format::Reporter) {
+    if citation.form != Form::Full || citation.format != Some(Format::Reporter) || citation.is_ambiguous() {
         return None;
     }
     let fields = &citation.fields;
@@ -649,8 +759,7 @@ pub fn courtlistener_in(citation: &Citation, registry: &Registry) -> Option<Stri
     if !numeric(volume) || !numeric(page) {
         return None;
     }
-    let surface = fields.reporter_canonical.as_deref().or(fields.reporter.as_deref())?;
-    let (reporter, canonical) = key::reporter_by_surface(registry, surface)?;
+    let (reporter, canonical) = key::selected_reporter(citation, registry)?;
     let american = reporter.source == "reporters-db"
         || reporter
             .jurisdiction
@@ -676,12 +785,24 @@ pub fn courtlistener_in(citation: &Citation, registry: &Registry) -> Option<Stri
 /// CourtListener for decisions; CanLII, Justice Laws or legislation.gov.uk
 /// for legislation. `None` when no source is certain.
 pub fn url(citation: &Citation, language: Language) -> Option<String> {
+    if let Some(target) = crate::aliases::resolve(citation) {
+        let options = crate::Options { resolve: false, parallel: false, ..Default::default() };
+        let canonical = crate::extract(&target.citation, &options);
+        if let [only] = canonical.as_slice() {
+            if let Some(url) = url_in(only, language, registry::registry()) {
+                return Some(url);
+            }
+        }
+    }
+    if matches!(citation.format, Some(Format::Neutral | Format::CanLii)) {
+        if let Some(url) = canlii_case(citation, language) { return Some(url); }
+    }
     url_in(citation, language, registry::registry())
 }
 
 /// [`url`] against `registry`.
 pub fn url_in(citation: &Citation, language: Language, registry: &Registry) -> Option<String> {
-    if citation.form != Form::Full {
+    if citation.form != Form::Full || citation.is_ambiguous() {
         return None;
     }
     match citation.format? {

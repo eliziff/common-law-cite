@@ -2,17 +2,14 @@
 //!
 //! Steps, applied in order:
 //!
-//! * [`Step::Html`] — strip tags, comments, doctypes and the contents of
-//!   `script`, `style`, `title` and `template`; decode character references;
-//!   collapse HTML whitespace (except inside `pre`); turn block boundaries
-//!   into newlines (`\n\n` after paragraphs, headings, lists, tables and
-//!   quotes, `\n` after other blocks and for every `br`; table cells are
-//!   separated by a space). The tags are kept in [`Cleaned::tags`], in source
-//!   offsets, for [`crate::annotate`].
-//! * [`Step::InlineWhitespace`] — every run of whitespace other than `\n`
-//!   becomes one space (eyecite `inline_whitespace`).
-//! * [`Step::AllWhitespace`] — every run of whitespace becomes one space
-//!   (eyecite `all_whitespace`).
+//! * [`Step::Html`] preserves the structure-aware HTML text and source offsets
+//!   used by the existing Rust consumers. [`Step::EyeciteHtml`] selects and
+//!   joins text nodes in the pinned eyecite order.
+//! * [`Step::Xml`] — remove an opening XML declaration only.
+//! * [`Step::InlineWhitespace`] collapses source whitespace except newlines;
+//!   [`Step::EyeciteInlineWhitespace`] collapses spaces and tabs only.
+//! * [`Step::AllWhitespace`] collapses whitespace;
+//!   [`Step::EyeciteAllWhitespace`] also collapses zero-width spaces.
 //! * [`Step::Underscores`] — runs of two or more underscores are removed
 //!   (eyecite `underscores`, for blank signature and page lines).
 //! * [`Step::ZeroWidth`] — zero-width spaces and joiners, word joiners, byte
@@ -20,25 +17,63 @@
 //!
 //! Every cleaned character remembers the source byte range it came from (an
 //! entity maps to the whole `&amp;`, a collapsed run to the whole run), so a
-//! cleaned span maps back exactly with [`Cleaned::source_range`]. No diff is
-//! ever needed.
+//! cleaned span maps back exactly with [`Cleaned::source_range`]. Caller-supplied
+//! cleaned text uses Eyecite's Diff Match Patch alignment and boundary rules.
 
 use crate::model::Span;
+use crate::text::python_whitespace as is_space;
+use diff_match_patch_rs::{Compat, DiffMatchPatch, Ops};
+use serde::{Deserialize, Serialize};
 use std::ops::Range;
+use std::sync::LazyLock;
+
+#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub enum DiffOperation {
+    #[serde(rename = "=")]
+    Equal,
+    #[serde(rename = "+")]
+    Insert,
+    #[serde(rename = "-")]
+    Delete,
+}
+
+pub type DiffStep = (DiffOperation, usize);
+
+fn diff(before: &str, after: &str) -> Vec<diff_match_patch_rs::dmp::Diff<char>> {
+    let mut dmp = DiffMatchPatch::new();
+    dmp.set_timeout(None);
+    dmp.set_checklines(false);
+    // Eyecite requests no semantic/efficiency cleanup.
+    dmp.diff_main::<Compat>(before, after).expect("Unicode diff")
+}
+
+/// Eyecite utils.placeholder_markup, preserving character counts exactly.
+pub fn placeholder_markup(source: &str) -> String {
+    static TAG: LazyLock<regex::Regex> = LazyLock::new(|| regex::Regex::new(r"<([/a-z])[^>]+>").unwrap());
+    TAG.replace_all(source, |captures: &regex::Captures<'_>| {
+        let tag = captures.get(0).unwrap().as_str();
+        if tag.starts_with("</") { format!("</{}>", "X".repeat(tag.chars().count() - 3)) }
+        else { format!("<{}>", "X".repeat(tag.chars().count() - 2)) }
+    }).into_owned()
+}
 
 /// One cleaning step.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum Step {
     Html,
+    EyeciteHtml,
+    Xml,
     InlineWhitespace,
+    EyeciteInlineWhitespace,
     AllWhitespace,
+    EyeciteAllWhitespace,
     Underscores,
     ZeroWidth,
 }
 
 impl Step {
-    /// eyecite's step names: `html` (and `xml`), `inline_whitespace`,
-    /// `all_whitespace`, `underscores`, plus `zero_width`.
+    /// Names retained by the structure-aware Rust cleaning API.
     pub fn from_name(name: &str) -> Option<Self> {
         match name {
             "html" | "xml" => Some(Self::Html),
@@ -47,6 +82,18 @@ impl Step {
             "underscores" => Some(Self::Underscores),
             "zero_width" => Some(Self::ZeroWidth),
             _ => None,
+        }
+    }
+
+    /// The pinned eyecite facade's named steps. Their different HTML and
+    /// whitespace rules are explicit, while both use this engine's offset map.
+    pub fn from_eyecite_name(name: &str) -> Option<Self> {
+        match name {
+            "html" => Some(Self::EyeciteHtml),
+            "xml" => Some(Self::Xml),
+            "inline_whitespace" => Some(Self::EyeciteInlineWhitespace),
+            "all_whitespace" => Some(Self::EyeciteAllWhitespace),
+            _ => Self::from_name(name),
         }
     }
 }
@@ -82,6 +129,8 @@ pub struct Cleaned {
     starts: Vec<usize>,
     ends: Vec<usize>,
     source_len: usize,
+    initial_end: usize,
+    terminal_start: usize,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -92,6 +141,28 @@ struct Unit {
 }
 
 impl Cleaned {
+    /// Align caller-supplied text to this document's visible text, composing
+    /// the edit map with the existing source map. No cleaning recipe is guessed.
+    pub fn align(&self, text: &str) -> Self {
+        if self.text == text { return self.clone(); }
+        let original = self.units();
+        let mut at = 0;
+        let mut mapped = Vec::with_capacity(text.chars().count());
+        for change in diff(&self.text, text) {
+            for &character in change.data() {
+                match change.op() {
+                    Ops::Equal => { mapped.push(original[at]); at += 1; }
+                    Ops::Delete => at += 1,
+                    Ops::Insert => {
+                        let offset = original.get(at).map_or(self.source_len, |unit| unit.start);
+                        mapped.push(Unit { character, start: offset, end: offset });
+                    }
+                }
+            }
+        }
+        Self::from_units(mapped, self.source_len, self.tags.clone())
+    }
+
     /// The source unchanged, with an identity map.
     pub fn identity(source: &str) -> Self {
         Self::from_units(units(source), source.len(), Vec::new())
@@ -111,6 +182,8 @@ impl Cleaned {
         Self {
             text,
             tags,
+            initial_end: starts.first().copied().unwrap_or(source_len),
+            terminal_start: ends.last().copied().unwrap_or(source_len),
             starts,
             ends,
             source_len,
@@ -137,7 +210,7 @@ impl Cleaned {
     /// `text.len()` maps to the end of the last character's source.
     pub fn source_offset(&self, offset: usize) -> Option<usize> {
         if offset == self.text.len() {
-            return Some(self.ends.last().copied().unwrap_or(self.source_len));
+            return Some(self.terminal_start);
         }
         self.text.is_char_boundary(offset).then(|| self.starts[offset])
     }
@@ -152,11 +225,9 @@ impl Cleaned {
         {
             return None;
         }
-        if range.is_empty() {
-            let at = self.source_offset(range.start)?;
-            return Some(at..at);
-        }
-        Some(self.starts[range.start]..self.ends[range.end - 1])
+        let start = self.source_offset(range.start)?;
+        let end = if range.end == 0 { self.initial_end } else { self.ends[range.end - 1] };
+        Some(start..end)
     }
 
     /// A span of the cleaned text re-expressed in `source`.
@@ -167,6 +238,101 @@ impl Cleaned {
             start: range.start,
             end: range.end,
         })
+    }
+}
+
+/// Pinned Eyecite SpanUpdater: keep relative/absolute changes and apply the
+/// requested bisect boundary only when an offset is needed. Sparse coordinates
+/// translate between source scalars and the engine's UTF-8 byte boundaries.
+pub(crate) struct SpanUpdater<'a> {
+    before: crate::text::ScalarText<'a>,
+    after: crate::text::ScalarText<'a>,
+    updates: Vec<(usize, usize, bool)>,
+}
+
+impl<'a> SpanUpdater<'a> {
+    pub fn new(text: &'a str, source: &'a str, target: &str, supplied: Option<&[DiffStep]>) -> Result<Self, &'static str> {
+        let before = crate::text::ScalarText::new(text);
+        let after = crate::text::ScalarText::new(source);
+        let generated;
+        let steps = if let Some(steps) = supplied { steps } else {
+            generated = diff(text, target).into_iter().map(|change| (
+                match change.op() { Ops::Equal => DiffOperation::Equal, Ops::Insert => DiffOperation::Insert, Ops::Delete => DiffOperation::Delete },
+                change.size(),
+            )).collect::<Vec<_>>();
+            &generated
+        };
+        let (mut old, mut new) = (0usize, 0usize);
+        let (old_len, new_len) = (before.len(), after.len());
+        let mut updates = Vec::new();
+        for &(operation, amount) in steps {
+            match operation {
+                DiffOperation::Equal => {
+                    if amount > old_len - old || amount > new_len - new { return Err("alignment exceeds text length"); }
+                    updates.push((old, new, true));
+                    old += amount; new += amount;
+                },
+                DiffOperation::Insert => {
+                    if amount > new_len - new { return Err("alignment exceeds source length"); }
+                    new += amount;
+                },
+                DiffOperation::Delete => {
+                    if amount > old_len - old { return Err("alignment exceeds text length"); }
+                    updates.push((old, new, false));
+                    old += amount;
+                },
+            }
+        }
+        if old != old_len || new != new_len { return Err("alignment does not cover text and source"); }
+        Ok(Self { before, after, updates })
+    }
+
+    pub fn byte(&self, byte: usize, right: bool) -> Option<usize> {
+        let offset = self.before.scalar_at_byte(byte)?;
+        let position = self.updates.partition_point(|&(start, _, _)| if right { start <= offset } else { start < offset });
+        let &(start, target, relative) = self.updates.get(position.checked_sub(1).or_else(|| self.updates.len().checked_sub(1))?)?;
+        let mapped = if relative { target.checked_add(offset)?.checked_sub(start)? } else { target };
+        self.after.byte_at_scalar(mapped)
+    }
+}
+
+/// Eyecite Document's two SpanUpdaters. Reuse the annotation map, including
+/// its left/right boundary rules, for names and references in original markup.
+pub(crate) struct Markup<'a> {
+    pub source: &'a str,
+    to_source: SpanUpdater<'a>,
+    to_text: SpanUpdater<'a>,
+    emphasis: Vec<(Range<usize>, Range<usize>)>,
+}
+
+impl<'a> Markup<'a> {
+    pub fn new(text: &'a str, source: &'a str) -> Self {
+        static EMPHASIS: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
+            legal_grammar::compile_python_table_entry("markup.emphasis").expect("pinned emphasis tags"));
+        let to_source = SpanUpdater::new(text, source, &placeholder_markup(source), None).expect("plain-to-markup alignment");
+        let to_text = SpanUpdater::new(source, text, text, None).expect("markup-to-plain alignment");
+        let emphasis = EMPHASIS.find_iter(source).map(|matched| {
+            let matched = matched.expect("source emphasis match");
+            (matched.start()..matched.end(),
+                to_text.byte(matched.start(), true).unwrap()..to_text.byte(matched.end(), true).unwrap())
+        }).collect();
+        Self { source, to_source, to_text, emphasis }
+    }
+
+    pub fn source_offset(&self, position: usize) -> usize {
+        self.to_source.byte(position, true).expect("plain text boundary")
+    }
+
+    pub fn tag_at(&self, position: usize) -> Option<(usize, &Range<usize>)> {
+        let position = self.source_offset(position);
+        let mut tags = self.emphasis.iter().filter(|(source, _)| source.contains(&position));
+        let (source, range) = tags.next()?;
+        tags.next().is_none().then_some((source.start, range))
+    }
+
+    pub fn text_range(&self, source: Range<usize>) -> Range<usize> {
+        let start = self.to_text.byte(source.start, false).expect("markup start boundary");
+        start..self.to_text.byte(source.end, true).expect("markup end boundary")
     }
 }
 
@@ -197,8 +363,20 @@ fn apply(mut current: Vec<Unit>, mut tags: Vec<Tag>, source_len: usize, steps: &
     for step in steps {
         current = match step {
             Step::Html => html(&current, &mut tags),
+            Step::EyeciteHtml => eyecite_html(&current, &mut tags),
+            Step::Xml => {
+                // eyecite.clean.xml: ^<\?xml.*?\?> (without DOTALL).
+                let text: String = current.iter().map(|unit| unit.character).collect();
+                let end = text.strip_prefix("<?xml")
+                    .and_then(|tail| tail.split('\n').next()?.find("?>"))
+                    .map_or(0, |offset| text[..offset + 7].chars().count());
+                current.drain(..end);
+                current
+            }
             Step::InlineWhitespace => collapse(&current, |character| character != '\n' && is_space(character)),
+            Step::EyeciteInlineWhitespace => collapse(&current, |character| matches!(character, ' ' | '\t')),
             Step::AllWhitespace => collapse(&current, is_space),
+            Step::EyeciteAllWhitespace => collapse(&current, |character| character == '\u{200b}' || is_space(character)),
             Step::Underscores => underscores(&current),
             Step::ZeroWidth => current
                 .into_iter()
@@ -208,11 +386,6 @@ fn apply(mut current: Vec<Unit>, mut tags: Vec<Tag>, source_len: usize, steps: &
     }
     tags.sort_by_key(|tag: &Tag| tag.start);
     Cleaned::from_units(current, source_len, tags)
-}
-
-/// Python's `\s`: Unicode whitespace plus the ASCII information separators.
-fn is_space(character: char) -> bool {
-    character.is_whitespace() || ('\u{1c}'..='\u{1f}').contains(&character)
 }
 
 fn is_zero_width(character: char) -> bool {
@@ -282,10 +455,14 @@ const LINE_BLOCKS: [&str; 20] = [
     "nav", "tr", "caption", "body", "html", "tbody", "thead", "tfoot",
 ];
 
+#[derive(Clone, Copy, Eq, PartialEq)]
+enum HtmlMode { Structural, Eyecite }
+
 struct Html<'a> {
     input: &'a [Unit],
     output: Vec<Unit>,
     pre_depth: usize,
+    mode: HtmlMode,
 }
 
 impl Html<'_> {
@@ -440,7 +617,8 @@ impl Html<'_> {
                         position += 1;
                     }
                 },
-                character if self.pre_depth == 0 && matches!(character, ' ' | '\t' | '\n' | '\r' | '\u{c}') => {
+                character if self.mode == HtmlMode::Structural && self.pre_depth == 0
+                    && matches!(character, ' ' | '\t' | '\n' | '\r' | '\u{c}') => {
                     self.space(unit);
                     position += 1;
                 }
@@ -486,32 +664,36 @@ impl Html<'_> {
             kind,
         });
         let name = name.as_str();
-        if name == "br" && kind != TagKind::Close {
-            self.trim_trailing_spaces();
-            self.output.push(Unit {
-                character: '\n',
-                start: source.0,
-                end: source.1,
-            });
-        } else if PARAGRAPH_BLOCKS.contains(&name) {
-            self.block_break(2, source);
-        } else if LINE_BLOCKS.contains(&name) {
-            self.block_break(1, source);
-        } else if matches!(name, "td" | "th") && kind == TagKind::Close {
-            self.space(Unit {
-                character: ' ',
-                start: source.0,
-                end: source.1,
-            });
-        }
-        if name == "pre" {
-            match kind {
-                TagKind::Open => self.pre_depth += 1,
-                TagKind::Close => self.pre_depth = self.pre_depth.saturating_sub(1),
-                _ => {}
+        if self.mode == HtmlMode::Structural {
+            if name == "br" && kind != TagKind::Close {
+                self.trim_trailing_spaces();
+                self.output.push(Unit {
+                    character: '\n',
+                    start: source.0,
+                    end: source.1,
+                });
+            } else if PARAGRAPH_BLOCKS.contains(&name) {
+                self.block_break(2, source);
+            } else if LINE_BLOCKS.contains(&name) {
+                self.block_break(1, source);
+            } else if matches!(name, "td" | "th") && kind == TagKind::Close {
+                self.space(Unit {
+                    character: ' ',
+                    start: source.0,
+                    end: source.1,
+                });
+            }
+            if name == "pre" {
+                match kind {
+                    TagKind::Open => self.pre_depth += 1,
+                    TagKind::Close => self.pre_depth = self.pre_depth.saturating_sub(1),
+                    _ => {}
+                }
             }
         }
-        if kind == TagKind::Open && RAW_TEXT.contains(&name) {
+        let raw = if self.mode == HtmlMode::Structural { RAW_TEXT.contains(&name) }
+            else { matches!(name, "script" | "style") };
+        if kind == TagKind::Open && raw {
             let closing = format!("</{name}");
             if let Some(close) = self.find_ignore_case(end, &closing) {
                 if let Some(close_end) = self.tag_end(close) {
@@ -536,8 +718,34 @@ fn html(input: &[Unit], tags: &mut Vec<Tag>) -> Vec<Unit> {
         input,
         output: Vec::with_capacity(input.len()),
         pre_depth: 0,
+        mode: HtmlMode::Structural,
     }
     .run(tags)
+}
+
+fn eyecite_html(input: &[Unit], tags: &mut Vec<Tag>) -> Vec<Unit> {
+    let mapped = Html { input, output: Vec::with_capacity(input.len()),
+        pre_depth: 0, mode: HtmlMode::Eyecite }.run(tags);
+    let source: String = input.iter().map(|unit| unit.character).collect();
+    let document = scraper::Html::parse_document(&source);
+    // Port of eyecite.clean.html's XPath. normalize-space() is a predicate,
+    // not a transformation; retained text nodes keep their written whitespace.
+    let text = document.tree.root().descendants().filter_map(|node| {
+        let value = node.value().as_text()?;
+        if value.text.chars().all(|ch| matches!(ch, ' ' | '\t' | '\r' | '\n')) {
+            return None;
+        }
+        if let Some(parent) = node.parent().and_then(|parent| parent.value().as_element()) {
+            if matches!(parent.name(), "style" | "link" | "head" | "page-number" | "script")
+                || parent.attr("class") == Some("star-pagination")
+            {
+                return None;
+            }
+        }
+        Some(value.text.as_ref())
+    }).collect::<Vec<&str>>().join(" ");
+    Cleaned::from_units(mapped, input.last().map_or(0, |unit| unit.end), Vec::new())
+        .align(&text).units()
 }
 
 fn named_entity(name: &str) -> Option<char> {

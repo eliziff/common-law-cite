@@ -28,5 +28,5 @@ const api = makeApi(() => {
 
 export { LegalCitationsError };
 export const {
-  call, extract, key, keyForText, format, formatPinpoint, url, annotate, clean, registry, classifyExcerpt, hasCitation, version,
+  call, extract, resolve, key, keyForText, format, formatPinpoint, url, annotate, clean, registry, classifyExcerpt, hasCitation, version,
 } = api;
