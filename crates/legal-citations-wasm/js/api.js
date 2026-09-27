@@ -57,7 +57,7 @@ export function makeApi(getRawCall) {
   return {
     call,
     resolve(citations, options = {}) {
-      rejectUnknown(options, ["notes", "aliasGroups"]);
+      rejectUnknown(options, ["notes", "aliasGroups", "readingOrder"]);
       return call("resolve", { citations, ...options });
     },
     extract(text, options = {}) {

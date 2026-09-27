@@ -568,6 +568,9 @@ pub fn convert_citations(document: &ScalarText<'_>, citations: &mut [Citation], 
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct ResolveRequest {
     pub citations: Vec<Citation>,
+    /// Citation indices in document reading order, when footnote anchors are known.
+    #[serde(default)]
+    pub reading_order: Option<Vec<usize>>,
     #[serde(default)]
     pub notes: Option<Vec<crate::NoteRange>>,
     #[serde(default)]
@@ -606,7 +609,15 @@ pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
         return Err(ApiError::invalid("resolve: alias group refers to an unknown citation index"));
     }
     let links = crate::aliases::source_links(&mut citations, &request.alias_groups);
-    let resolutions = crate::resolve::resolve_with_links(&citations, request.notes.as_deref(), &links);
+    let order = request.reading_order.as_ref().map(|order| {
+        let positions = citations.iter().enumerate().map(|(position, citation)| (citation.index, position))
+            .collect::<std::collections::HashMap<_, _>>();
+        if order.len() != citations.len() || order.iter().copied().collect::<std::collections::HashSet<_>>() != indices {
+            return Err(ApiError::invalid("resolve: readingOrder must contain every citation index exactly once"));
+        }
+        Ok(order.iter().map(|index| positions[index]).collect::<Vec<_>>())
+    }).transpose()?;
+    let resolutions = crate::resolve::resolve_in_order(&citations, request.notes.as_deref(), &links, order);
     for resolution in &resolutions {
         if let Some(citation) = citations.iter_mut().find(|citation| citation.index == resolution.index) {
             citation.antecedent = resolution.antecedent;

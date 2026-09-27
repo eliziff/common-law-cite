@@ -210,6 +210,12 @@ pub(crate) fn resolve_with_links(citations: &[Citation], notes: Option<&[NoteRan
     Resolver::new(citations, notes, links).run()
 }
 
+pub(crate) fn resolve_in_order(citations: &[Citation], notes: Option<&[NoteRange]>, links: &[(usize, usize)], order: Option<Vec<usize>>) -> Vec<Resolution> {
+    let mut resolver = Resolver::new(citations, notes, links);
+    resolver.reading_order = order;
+    resolver.run()
+}
+
 struct Resolver<'a> {
     citations: &'a [Citation],
     notes: Option<&'a [NoteRange]>,
@@ -221,6 +227,7 @@ struct Resolver<'a> {
     resolved: Vec<Option<usize>>,
     done: Vec<bool>,
     full_authority: Vec<usize>,
+    reading_order: Option<Vec<usize>>,
 }
 
 impl<'a> Resolver<'a> {
@@ -259,12 +266,14 @@ impl<'a> Resolver<'a> {
             resolved: vec![None; citations.len()],
             done: vec![false; citations.len()],
             full_authority,
+            reading_order: None,
         }
     }
 
     /// Citations in reading order: notes in `(sequence, number)` order, and a
     /// citation outside every note after the last note that starts before it.
     fn order(&self) -> Vec<usize> {
+        if let Some(order) = &self.reading_order { return order.clone(); }
         let mut order = (0..self.citations.len()).collect::<Vec<_>>();
         if let Some(notes) = self.notes {
             let rank = |position: usize| -> (i64, usize) {
@@ -324,7 +333,10 @@ impl<'a> Resolver<'a> {
 
     fn ibid(&self, position: usize, previous: Option<usize>) -> (Option<usize>, &'static str) {
         let note = self.note_of[position];
-        let opens_note = note.is_some() && previous.is_none_or(|previous| self.note_of[previous] != note);
+        let anchored_to_body = self.reading_order.is_some()
+            && previous.is_some_and(|previous| self.note_of[previous].is_none());
+        let opens_note = note.is_some() && !anchored_to_body
+            && previous.is_none_or(|previous| self.note_of[previous] != note);
         let (authority, reason) = if let (Some(note), true) = (note, opens_note) {
             let rank = self.note_rank[note];
             let Some(previous_note) = rank.checked_sub(1)
