@@ -153,6 +153,7 @@ pub(crate) fn reference_candidates_for_hint(hint: &str) -> Vec<String> {
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct ReferenceSource {
     pub note: serde_json::Value,
+    pub sequence: Option<u32>,
     pub verbatim: Option<String>,
     pub link: Option<String>,
     pub short_form: Option<String>,
@@ -260,13 +261,23 @@ fn ref_base(link: &str) -> String {
 /// ALR's strict registry resolver. Keep numbered-note, short-form and final
 /// bracket-definition tiers in source order, including unlinked-target vetoes.
 pub fn resolve_registry(text: &str, registry: &[ReferenceSource], aggressive: bool) -> (String, &'static str) {
+    resolve_registry_scoped(text, registry, aggressive, None)
+}
+
+pub(crate) fn resolve_registry_scoped(text: &str, registry: &[ReferenceSource], aggressive: bool,
+    sequence: Option<u32>) -> (String, &'static str) {
     let hint = supra_hint(text, aggressive);
     let hint = if hint.is_empty() { fallback_hint(text) } else { hint };
-    resolve_registry_hint(text, &hint, registry)
+    resolve_registry_hint_scoped(text, &hint, registry, sequence)
 }
 
 /// The same registry tiers for a name already captured by citation discovery.
 pub(crate) fn resolve_registry_hint(text: &str, hint: &str, registry: &[ReferenceSource]) -> (String, &'static str) {
+    resolve_registry_hint_scoped(text, hint, registry, None)
+}
+
+fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSource],
+    sequence: Option<u32>) -> (String, &'static str) {
     let normalized = ref_normalize(hint);
     let normalized = normalized.trim_matches(['[', ']', '(', ')', ' ']);
     let tokens = ref_tokens(&hint);
@@ -281,9 +292,17 @@ pub(crate) fn resolve_registry_hint(text: &str, hint: &str, registry: &[Referenc
             .find_map(|pattern| pattern.captures(text))
             .and_then(|found| found[1].parse::<u64>().ok()).map(|number| number.to_string());
         if let Some(number) = number {
+            let local = sequence.filter(|&sequence| registry.iter().any(|entry|
+                entry.note.as_str() == Some(number.as_str()) && entry.sequence == Some(sequence)));
+            if local.is_none() && sequence.is_some() && registry.iter().filter(|entry|
+                entry.note.as_str() == Some(number.as_str()))
+                .filter_map(|entry| entry.sequence).collect::<HashSet<_>>().len() > 1 {
+                return (String::new(), "abstain_ambiguous_note_number_scope");
+            }
             // Source records have string note labels. Numeric JSON notes do
             // not satisfy the original Python equality against str(note_n).
-            let in_note = |entry: &&ReferenceSource| entry.note.as_str() == Some(number.as_str());
+            let in_note = |entry: &&ReferenceSource| entry.note.as_str() == Some(number.as_str())
+                && local.is_none_or(|sequence| entry.sequence == Some(sequence));
             if let Some(entry) = linked.iter().copied().filter(in_note)
                 .find(|entry| matches_tokens(&match_text(entry))) {
                 return (entry.link().to_owned(), "note_number");

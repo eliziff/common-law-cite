@@ -273,12 +273,6 @@ def beaver(repo):
     out.append(fixture("beaver--citator-graph-statute-series", header(repo, path, "STATUTE_RE series"), "series",
                        [{"key": k} for k in keys]))
 
-    path = "packages/alr-quote-splitter/deterministic_splitter.py"
-    joined = "".join(re.findall(r"r\"([^\"]*)\"", between(read(repo, path), "_STATUTE_RE = re.compile(", "\n)")))
-    keys = [k for group in re.findall(r"\(\?:([A-Za-z |/]+)\)", joined) for k in group.split("|")]
-    out.append(fixture("beaver--alr-quote-splitter-statute-series", header(repo, path, "_STATUTE_RE series"), "series",
-                       [{"key": k} for k in keys]))
-
     path = "experiments/a2aj_decision_roster_qwen/scrape_judge_registry.py"
     text = read(repo, path)
     entries = []

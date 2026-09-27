@@ -250,6 +250,9 @@ fn parenthetical(text: &str, range: Range<usize>) -> Parenthetical {
     let content = text[range.start + 1..range.end - 1].trim().to_owned();
     let kind = if SOURCE.is_match(&content) {
         ParentheticalKind::Source
+    } else if !content.is_empty() && content.bytes().all(|byte| byte.is_ascii_digit()) {
+        // A bare numbered subdivision after a pinpoint is not a court.
+        ParentheticalKind::Explanatory
     } else if let Some(reading) = read_court(&content) {
         if reading.court.is_some() {
             ParentheticalKind::Court

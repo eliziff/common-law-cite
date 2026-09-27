@@ -489,6 +489,12 @@ fn canlii_legislation_id(citation: &Citation, registry: &Registry) -> Option<(St
     let id = match citation.format? {
         Format::StatuteVolume => {
             let chapter = chapter_value(fields.chapter.as_deref()?)?;
+            // The Ontario 1990 consolidation's published ids close the
+            // letter-number chapter (D-16 -> d16); the other series retain
+            // the written separator (for example RSC C-46 -> c-46).
+            let chapter = if series_id == "rso" && fields.year.as_deref() == Some("1990") {
+                chapter.replace('-', "")
+            } else { chapter };
             match fields.year.as_deref() {
                 Some(year) => format!("{series_id}-{}-c-{}", slug(year), slug(&chapter)),
                 None => format!("{series_id}-c-{}", slug(&chapter)),

@@ -57,6 +57,8 @@ _OPTION_NAMES = {
     "notes": "notes",
     "remove_ambiguous": "removeAmbiguous",
     "jurisdiction_priority": "jurisdictionPriority",
+    "supra_hint_mode": "supraHintMode",
+    "supra_linking_mode": "supraLinkingMode",
 }
 
 
@@ -101,10 +103,14 @@ def _note(note: Any) -> dict:
     return out
 
 
-def resolve(citations: Iterable[Mapping[str, Any]], *, notes=None, alias_groups=()) -> dict:
-    """Resolve existing records; notes and citation spans use the same units."""
+def resolve(citations: Iterable[Mapping[str, Any]], *, notes=None, alias_groups=(),
+            source_parts=(), reading_order=None, supra_hint_mode="aggressive",
+            supra_linking_mode="safe") -> dict:
+    """Resolve existing records using extract's source parts and the same offset unit."""
     return call("resolve", {"citations": list(citations), "notes": None if notes is None else [_note(note) for note in notes],
-                            "aliasGroups": list(alias_groups)})
+                            "aliasGroups": list(alias_groups), "sourceParts": list(source_parts),
+                            "readingOrder": None if reading_order is None else list(reading_order),
+                            "supraHintMode": supra_hint_mode, "supraLinkingMode": supra_linking_mode})
 
 
 def extract(text: str, *, markup_text: Optional[str] = None, offset_unit: str = "char", **options: Any) -> list[dict]:
@@ -112,7 +118,8 @@ def extract(text: str, *, markup_text: Optional[str] = None, offset_unit: str = 
 
     Options: ``resolve`` (default True), ``parallel`` (True), ``extended_us``
     (True), ``notes`` (a list of ``{"number", "start", "end"}`` footnote ranges,
-    or ``(number, start, end)`` tuples, in ``offset_unit``).
+    or ``(number, start, end)`` tuples, in ``offset_unit``),
+    ``supra_hint_mode`` ("aggressive") and ``supra_linking_mode`` ("safe").
     """
     response = call(
         "extract", {"text": text, "markupText": markup_text, "options": _options(options), "offsetUnit": offset_unit}

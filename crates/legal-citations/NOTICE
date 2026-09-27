@@ -1,8 +1,14 @@
 legal-citations
 Copyright (c) 2026 legal-structure contributors. Licensed under the MIT License (see LICENSE).
 
-Copies of this file and LICENSE live in crates/legal-citations and
-crates/legal-grammar so `cargo package` ships them; keep the three in sync.
+Copies of this file and LICENSE live in the Rust crates and the Python and WASM
+packages so distributable archives ship the same terms; keep them in sync.
+
+Citation splitting, short-form resolution and related grammar are adapted from
+ALR-Quote-Verifier (https://github.com/AlbertaLawReview/ALR-Quote-Verifier),
+commit e27f683932be9f67c67635474c780f901206f168.
+Copyright 2026 Alberta Law Review. The original work is licensed under
+Apache License 2.0; its license terms are reproduced below.
 
 This product includes data and patterns derived from the following Free Law
 Project software, each distributed under the BSD 2-Clause License reproduced
@@ -2740,4 +2746,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-

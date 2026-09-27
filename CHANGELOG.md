@@ -10,6 +10,11 @@ versioned separately and noted here when they change.
 
 ## [Unreleased]
 
+- Extraction now returns split footnote source parts alongside citation spans;
+  separate resolution reuses those parts and offers safe or aggressive supra
+  linking. A part without a proven authority remains unlinked.
+- The ALR source splitter and short-form registry now share one Rust resolution
+  pass, including explicit names, inferred forms, numbered notes and ibid.
 - Pinned U.S. extractor captures and edition candidates now travel through the
   shared pipeline, including source post-citation metadata and markup references.
   Code identities retain the source's additional hierarchy fields.

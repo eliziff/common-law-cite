@@ -55,6 +55,15 @@ pub enum OffsetUnit {
     Utf16,
 }
 
+#[derive(Clone, Copy, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub enum SupraMode {
+    #[default]
+    Safe,
+    Aggressive,
+}
+
 /// Options for [`extract`].
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(default, rename_all = "camelCase", deny_unknown_fields)]
@@ -75,6 +84,10 @@ pub struct Options {
     /// Ordered jurisdiction preferences for ambiguous abbreviations, e.g.
     /// `["ca", "uk"]`. An explicit court takes precedence. Empty is neutral.
     pub jurisdiction_priority: Vec<String>,
+    /// ALR hint capture uses aggressive mode by default.
+    pub supra_hint_mode: SupraMode,
+    /// Inferred and bare-note linking runs only in aggressive mode.
+    pub supra_linking_mode: SupraMode,
 }
 
 impl Default for Options {
@@ -86,6 +99,8 @@ impl Default for Options {
             extended_us: true,
             notes: None,
             jurisdiction_priority: Vec::new(),
+            supra_hint_mode: SupraMode::Aggressive,
+            supra_linking_mode: SupraMode::Safe,
         }
     }
 }
@@ -111,6 +126,11 @@ pub fn extract(text: &str, options: &Options) -> Vec<Citation> {
 }
 
 pub fn extract_markup(text: &str, markup: Option<&str>, options: &Options) -> Vec<Citation> {
+    extract_markup_with_parts(text, markup, options).0
+}
+
+pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
+    -> (Vec<Citation>, Vec<source::SourcePart>) {
     let markup = markup.map(|source| clean::Markup::new(text, source));
     let mut citations = find::find_styled(text, options, markup.as_ref());
     metadata::attach(text, &mut citations);
@@ -125,13 +145,20 @@ pub fn extract_markup(text: &str, markup: Option<&str>, options: &Options) -> Ve
         citation.key = citation.alias.as_ref().map(|target| target.key.clone())
             .or_else(|| key::key_in(citation, registry::registry()));
     }
+    let parts = source::split_notes(text, options.notes.as_deref().unwrap_or(&[]), options.extended_us);
     if options.resolve {
-        resolve::resolve(&mut citations, options.notes.as_deref());
+        let resolutions = resolve::resolve_with_sources(&citations, options.notes.as_deref(), &[], None,
+            &parts, options.supra_hint_mode, options.supra_linking_mode);
+        for resolution in resolutions {
+            if let Some(citation) = citations.iter_mut().find(|citation| citation.index == resolution.index) {
+                citation.antecedent = resolution.antecedent;
+            }
+        }
     }
     if options.remove_ambiguous {
         citations.retain(|citation| !citation.is_ambiguous());
     }
-    citations
+    (citations, parts)
 }
 
 /// Whether `text` contains a citation or a two-party case name.

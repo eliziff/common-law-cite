@@ -6,13 +6,12 @@ build-backend = "maturin"
 name = "legal-citations"
 description = "Legal citation extraction, resolution and formatting for Canadian, Commonwealth and US law; an eyecite superset"
 readme = "../../README.md"
-license = "MIT"
+license = "MIT AND Apache-2.0 AND BSD-2-Clause"
 license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.9"
 dynamic = ["version"]
 keywords = ["legal", "citations", "law", "eyecite", "canlii", "mcgill"]
 classifiers = [
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Rust",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: Implementation :: CPython",

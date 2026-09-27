@@ -12,7 +12,7 @@
 //!
 //! | method            | request                                                        | response                                               |
 //! |-------------------|----------------------------------------------------------------|--------------------------------------------------------|
-//! | `extract`         | `{text, options?, offsetUnit?}`                                | `{schemaVersion, offsetUnit, citations}`               |
+//! | `extract`         | `{text, options?, offsetUnit?}`                                | `{schemaVersion, offsetUnit, citations, sourceParts}`  |
 //! | `key`             | `{citation}`                                                   | `{keyVersion, key}`                                    |
 //! | `keyForText`      | `{text, options?}`                                             | `{keyVersion, key, reason?, message?, keys}`           |
 //! | `format`          | `{citation}` / `{text, options?}` / `{pinpoint}`, `language?`, `rangeDash?`, `style?` | `{citations: [{index, formatted}]}` / `{pinpoint}` |
@@ -219,8 +219,8 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         "sourceFields" => {
             let request: SourceFieldsRequest = parse(method, request)?;
             match (&request.text, &request.part) {
-                (Some(text), None) => to_value(crate::source::extract_text_fields(text, request.extended_us)),
-                (None, Some(part)) => to_value(crate::source::extract_fields(part, request.extended_us)),
+                (Some(text), None) => to_value(crate::source::extract_text_fields(text, request.extended_us.unwrap_or(false))),
+                (None, Some(part)) => to_value(crate::source::extract_fields(part, request.extended_us.unwrap_or(part.extended_us))),
                 _ => Err(ApiError::invalid("sourceFields: pass exactly one of text or part")),
             }
         }
@@ -398,7 +398,7 @@ pub struct SourceFieldsRequest {
     pub text: Option<String>,
     pub part: Option<crate::source::SourcePart>,
     #[serde(default)]
-    pub extended_us: bool,
+    pub extended_us: Option<bool>,
 }
 
 pub fn split_sources(request: &SplitSourcesRequest) -> crate::source::SourceSplit {
@@ -410,6 +410,10 @@ pub fn split_sources(request: &SplitSourcesRequest) -> crate::source::SourceSpli
         OffsetUnit::Utf16 => document.utf16_at_byte(byte).unwrap(),
     };
     for part in &mut result.parts {
+        for (start, end) in &mut part.anchor_spans {
+            *start = convert(*start);
+            *end = convert(*end);
+        }
         part.start = convert(part.start);
         part.end = convert(part.end);
     }
@@ -449,18 +453,37 @@ pub struct ExtractResponse {
     pub schema_version: u32,
     pub offset_unit: OffsetUnit,
     pub citations: Vec<Citation>,
+    pub source_parts: Vec<crate::source::SourcePart>,
     pub authorities: Vec<Vec<usize>>,
 }
 
 /// [`crate::extract`] with offsets converted to `request.offset_unit`.
 pub fn extract(request: &ExtractRequest) -> Result<ExtractResponse, ApiError> {
-    let citations = extract_citations(&request.text, request.markup_text.as_deref(), &request.options, request.offset_unit)?;
+    let (citations, mut source_parts) = extract_citations(&request.text, request.markup_text.as_deref(), &request.options, request.offset_unit)?;
+    let document = ScalarText::new(&request.text);
+    for part in &mut source_parts {
+        for (start, end) in &mut part.anchor_spans {
+            *start = from_byte(&document, *start, request.offset_unit);
+            *end = from_byte(&document, *end, request.offset_unit);
+        }
+        part.start = from_byte(&document, part.start, request.offset_unit);
+        part.end = from_byte(&document, part.end, request.offset_unit);
+    }
     Ok(ExtractResponse {
         schema_version: SCHEMA_VERSION,
         offset_unit: request.offset_unit,
         authorities: crate::resolve::authorities(&citations),
         citations,
+        source_parts,
     })
+}
+
+fn from_byte(document: &ScalarText<'_>, byte: usize, unit: OffsetUnit) -> usize {
+    match unit {
+        OffsetUnit::Byte => byte,
+        OffsetUnit::Char => document.scalar_at_byte(byte).expect("source boundary"),
+        OffsetUnit::Utf16 => document.utf16_at_byte(byte).expect("source boundary"),
+    }
 }
 
 fn extract_citations(
@@ -468,7 +491,7 @@ fn extract_citations(
     markup: Option<&str>,
     options: &Options,
     unit: OffsetUnit,
-) -> Result<Vec<Citation>, ApiError> {
+) -> Result<(Vec<Citation>, Vec<crate::source::SourcePart>), ApiError> {
     let document = ScalarText::new(text);
     let mut options = options.clone();
     if let Some(notes) = options.notes.as_mut() {
@@ -482,10 +505,15 @@ fn extract_citations(
                 ));
             }
         }
+        let mut ranges = notes.iter().map(|note| (note.start, note.end)).collect::<Vec<_>>();
+        ranges.sort_unstable();
+        if ranges.windows(2).any(|pair| pair[0].1 > pair[1].0) {
+            return Err(ApiError::invalid("extract: note ranges overlap"));
+        }
     }
-    let mut citations = crate::extract_markup(text, markup, &options);
+    let (mut citations, parts) = crate::extract_markup_with_parts(text, markup, &options);
     convert_citations(&document, &mut citations, unit);
-    Ok(citations)
+    Ok((citations, parts))
 }
 
 fn to_byte(
@@ -568,6 +596,13 @@ pub fn convert_citations(document: &ScalarText<'_>, citations: &mut [Citation], 
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct ResolveRequest {
     pub citations: Vec<Citation>,
+    /// Source boundaries emitted by extract, in the same offset unit as citations and notes.
+    #[serde(default)]
+    pub source_parts: Vec<crate::source::SourcePart>,
+    #[serde(default)]
+    pub supra_hint_mode: Option<crate::SupraMode>,
+    #[serde(default)]
+    pub supra_linking_mode: Option<crate::SupraMode>,
     /// Citation indices in document reading order, when footnote anchors are known.
     #[serde(default)]
     pub reading_order: Option<Vec<usize>>,
@@ -604,6 +639,32 @@ pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
     if request.notes.as_ref().is_some_and(|notes| notes.iter().any(|note| note.start > note.end)) {
         return Err(ApiError::invalid("resolve: note start is after its end"));
     }
+    if let Some(notes) = request.notes.as_deref() {
+        let mut ranges = notes.iter().map(|note| (note.start, note.end)).collect::<Vec<_>>();
+        ranges.sort_unstable();
+        if ranges.windows(2).any(|pair| pair[0].1 > pair[1].0) {
+            return Err(ApiError::invalid("resolve: note ranges overlap"));
+        }
+    }
+    if !request.source_parts.is_empty() {
+        let Some(notes) = request.notes.as_deref().filter(|notes| !notes.is_empty()) else {
+            return Err(ApiError::invalid("resolve: sourceParts require note ranges"));
+        };
+        let mut parts = request.source_parts.iter().collect::<Vec<_>>();
+        parts.sort_by_key(|part| (part.start, part.end));
+        if parts.windows(2).any(|pair| pair[0].end > pair[1].start) {
+            return Err(ApiError::invalid("resolve: source parts overlap"));
+        }
+        for part in &parts {
+            if part.start >= part.end || !notes.iter().any(|note|
+                note.start <= part.start && part.end <= note.end)
+                || part.anchor_spans.iter().any(|&(start, end)|
+                    start >= end || start < part.start || end > part.end)
+                || part.anchor_spans.windows(2).any(|pair| pair[0] > pair[1]) {
+                return Err(ApiError::invalid("resolve: invalid source part extent or anchors"));
+            }
+        }
+    }
     citations.sort_by_key(|citation| (citation.span.start, citation.index));
     if request.alias_groups.iter().any(|group| !indices.contains(&group.index)) {
         return Err(ApiError::invalid("resolve: alias group refers to an unknown citation index"));
@@ -617,7 +678,9 @@ pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
         }
         Ok(order.iter().map(|index| positions[index]).collect::<Vec<_>>())
     }).transpose()?;
-    let resolutions = crate::resolve::resolve_in_order(&citations, request.notes.as_deref(), &links, order);
+    let resolutions = crate::resolve::resolve_with_sources(&citations, request.notes.as_deref(), &links,
+        order, &request.source_parts, request.supra_hint_mode.unwrap_or(crate::SupraMode::Aggressive),
+        request.supra_linking_mode.unwrap_or(crate::SupraMode::Safe));
     for resolution in &resolutions {
         if let Some(citation) = citations.iter_mut().find(|citation| citation.index == resolution.index) {
             citation.antecedent = resolution.antecedent;

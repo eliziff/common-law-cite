@@ -2,7 +2,7 @@
   "name": "legal-citations",
   "version": "0.1.0",
   "description": "Legal citation extraction, resolution and formatting for Canadian, Commonwealth and US law (WebAssembly; an eyecite superset)",
-  "license": "MIT",
+  "license": "MIT AND Apache-2.0 AND BSD-2-Clause",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eliziff/common-law-cite.git",

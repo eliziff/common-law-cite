@@ -91,12 +91,39 @@ pub fn derive_bare_citation(text: &str, kind: &str) -> String {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct SourcePart {
     pub start: usize,
     pub end: usize,
     pub text: String,
     pub anchors: Vec<String>,
+    #[serde(default)]
+    pub extended_us: bool,
+    /// Exact source-grammar anchors in the same coordinate system as start/end.
+    #[serde(default)]
+    pub anchor_spans: Vec<(usize, usize)>,
+}
+
+/// Split supplied note text in its original document coordinates. The
+/// splitter's part boundaries are independent of citation extents.
+pub fn split_notes(text: &str, notes: &[crate::NoteRange], extended_us: bool) -> Vec<SourcePart> {
+    let mut parts = Vec::new();
+    for note in notes {
+        if note.start > note.end || !text.is_char_boundary(note.start)
+            || !text.is_char_boundary(note.end) || note.end > text.len() { continue; }
+        for mut part in split(&text[note.start..note.end], true, extended_us).parts {
+            part.start += note.start;
+            part.end += note.start;
+            for (start, end) in &mut part.anchor_spans {
+                *start += note.start;
+                *end += note.start;
+            }
+            parts.push(part);
+        }
+    }
+    parts.sort_by_key(|part| (part.start, part.end));
+    parts
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -172,20 +199,39 @@ fn anchors(text: &str, extended_us: bool) -> Vec<Anchor> {
     deduped
 }
 
+/// Exact source-grammar anchors for connecting a discovered full citation to
+/// a split part. This does not alter the ALR splitter's boundary decisions.
+fn anchor_spans(text: &str, found: &[Anchor]) -> Vec<(usize, usize)> {
+    let mut spans = found.iter().map(|&(start, end, _)| (start, end)).collect::<Vec<_>>();
+    for pattern in [&*SECONDARY, &*QUOTED] {
+        spans.extend(pattern.find_iter(text).map(|found| {
+            let found = found.expect("source citation anchor");
+            (found.start(), found.end())
+        }));
+    }
+    spans.sort_unstable();
+    spans.dedup();
+    spans
+}
+
 fn part(text: &str, start: usize, end: usize, strict: bool, extended_us: bool) -> Option<SourcePart> {
     let raw = &text[start..end];
     let value = raw.trim();
     if value.is_empty() { return None; }
     let start = start + raw.len() - raw.trim_start().len();
-    let kinds = if full_match(&PURE_REFERENCE, value) { vec!["reference".into()] } else {
-        let found = anchors(value, extended_us);
+    let pure_reference = full_match(&PURE_REFERENCE, value);
+    let found = if pure_reference { Vec::new() } else { anchors(value, extended_us) };
+    let kinds = if pure_reference { vec!["reference".into()] } else {
         if strict && (found.is_empty() || found.windows(2).any(|pair| {
             let gap = &value[pair[0].1..pair[1].0];
             gap.trim() != "," && !(pair[1].2 == "url" && full_match(&LINK, gap))
         })) { return None; }
-        found.into_iter().map(|(_, _, kind)| kind.to_owned()).collect()
+        found.iter().map(|(_, _, kind)| (*kind).to_owned()).collect()
     };
-    Some(SourcePart { start, end: start + value.len(), text: value.into(), anchors: kinds })
+    let anchor_spans = anchor_spans(value, &found).into_iter().map(|(left, right)|
+        (start + left, start + right)).collect();
+    Some(SourcePart { start, end: start + value.len(), text: value.into(), anchors: kinds,
+        extended_us, anchor_spans })
 }
 
 fn inside_quotes(text: &str, position: usize) -> bool {
@@ -493,5 +539,6 @@ pub fn extract_text_fields(text: &str, extended_us: bool) -> SourceFields {
     let value = text.trim();
     let start = text.len() - text.trim_start().len();
     extract_fields(&SourcePart { start, end: start + value.len(), text: value.into(),
-        anchors: anchors(value, extended_us).into_iter().map(|(_, _, kind)| kind.to_owned()).collect() }, extended_us)
+        anchors: anchors(value, extended_us).into_iter().map(|(_, _, kind)| kind.to_owned()).collect(),
+        anchor_spans: Vec::new(), extended_us }, extended_us)
 }

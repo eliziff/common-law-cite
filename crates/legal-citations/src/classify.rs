@@ -73,6 +73,7 @@ fn priority(jurisdiction: Option<&str>, options: &crate::Options) -> usize {
 /// evidence, not absence of evidence; an ambiguous surface retains every court.
 fn written_courts(citation: &Citation) -> impl Iterator<Item = String> + '_ {
     citation.fields.court_text.iter().cloned().chain(citation.parentheticals.iter()
+        .filter(|part| part.kind == crate::ParentheticalKind::Court)
         .filter_map(|part| crate::metadata::read_court(&part.content).and_then(|reading| reading.court)))
 }
 

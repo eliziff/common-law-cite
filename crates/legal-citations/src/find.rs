@@ -96,6 +96,11 @@ static SECONDARY_ECMASCRIPT: LazyLock<[(&'static str, &'static str, CompiledEcma
 static JOURNAL_ARTICLE: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("cite.journal.article"));
 static ONLINE_SOURCE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.url"));
+// ALR's source evidence for secondary authorities without a reporter, book
+// imprint or routable URL. These matches remain citation extents, not document
+// splitting boundaries.
+static QUOTED_SOURCE: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("cite.quoted"));
+static SECONDARY_SOURCE: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("cite.secondary"));
 static CASE_VERSUS: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("party.versus"));
 // A balanced, uppercase-first parenthetical ("Quebec (Attorney General)")
 // counts as one party token; "(1998)", "(2d)" and "(see below)" do not.
@@ -323,6 +328,23 @@ fn secondary_hits(value: &str) -> Vec<Anchor> {
         }
         resolved.push(anchor);
     }
+    // A quoted/date source is already a first reference in ALR's splitter.
+    // Keep the more precise citation grammars above: a source frame does not
+    // create a second authority around an existing core or its styled name.
+    for (reason, pattern) in [("quoted_source_grammar", &*QUOTED_SOURCE),
+        ("secondary_source_grammar", &*SECONDARY_SOURCE)] {
+        for matched in pattern.find_iter(value).flatten() {
+            let span = matched.start()..matched.end();
+            if resolved.iter().any(|anchor| {
+                let start = if anchor.family == Some(("other", "online_grammar")) {
+                    work_style_start(value, anchor.span.start, 0)
+                } else { anchor.style_start.unwrap_or(anchor.span.start) };
+                start < span.end && span.start < anchor.span.end
+            }) { continue; }
+            resolved.push(Anchor { span, family: Some(("other", reason)), ..Anchor::default() });
+        }
+    }
+    resolved.sort_by_key(|anchor| anchor.span.start);
     resolved
 }
 
@@ -670,7 +692,10 @@ fn antecedent_name(text: &str, core_start: usize, floor: usize) -> Option<Hit> {
     if lead > 0 && text[start + lead..].starts_with(|character: char| character.is_uppercase()) {
         start += lead;
     }
-    let end = trim_style_end(text, start, floor + name.end());
+    let end = floor + name.end();
+    // Removing a signal can consume the entire captured name.
+    if start >= end { return None; }
+    let end = trim_style_end(text, start, end);
     (start < end).then_some(start..end)
 }
 
@@ -886,7 +911,8 @@ fn full_citation(
         // An online-only source is styled with the publisher and title in
         // front of the link; every other unclassified span carries no
         // styled prefix.
-        _ if kind_reason == "online_grammar" => work_style_start(text, core.start, previous_end),
+        _ if matches!(kind_reason, "online_grammar" | "quoted_source_grammar") =>
+            work_style_start(text, core.start, previous_end),
         _ => core.start,
     });
     let short_pin = anchor.reading.as_ref().and_then(|reading| reading.short_at).map(|at| core.start + at);
@@ -1380,7 +1406,7 @@ pub(crate) fn find_styled(text: &str, options: &Options, markup: Option<&crate::
     }
     let references = case_name_references(text, &citations, markup);
     citations.extend(references);
-    citations.sort_by_key(|citation| citation.full_span.start);
+    citations.sort_by_key(|citation| citation.span.start);
     for (index, citation) in citations.iter_mut().enumerate() {
         citation.index = index;
     }

@@ -839,8 +839,7 @@ pub fn choose_case_citation(request: &CaseCitationRequest) -> String {
         for citation in &cases {
             let core = normalize_citation(&citation.span.text);
             match citation.format {
-                Some(Format::Neutral) if citation.fields.series.as_deref().is_some_and(|surface|
-                    crate::registry::registry().courts_by_surface(surface).iter().any(|court| court.canlii.is_some() || court.canlii_fr.is_some())) => neutrals.push(core),
+                Some(Format::Neutral) if citation.court.is_some() => neutrals.push(core),
                 Some(Format::CanLii) => {
                     let mut core = format!("{} CanLII {}", citation.fields.year.as_deref().unwrap_or(""), citation.fields.number.as_deref().unwrap_or(""));
                     if let Some(court) = citation.parentheticals.iter().find(|part| part.kind == crate::ParentheticalKind::Court) {

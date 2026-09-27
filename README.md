@@ -183,6 +183,10 @@ values, Python string indices) or `utf16` (JavaScript string indices). The
 Python binding and the CLI default to `char`, the npm package to `utf16`.
 `span.text` is always the exact substring.
 
+`extract` also returns `sourceParts` for supplied note ranges. Pass those parts
+with the citations and notes to a separate `resolve` call; both use the same
+offset unit. `supraLinkingMode` selects `safe` (default) or `aggressive` linking.
+
 ## Registry
 
 Courts, reporters, statute and regulation series, journals and jurisdictions
