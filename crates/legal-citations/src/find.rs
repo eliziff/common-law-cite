@@ -1014,6 +1014,10 @@ fn full_citation(
             if let Some(year) = source_name.and_then(|name| name.year.clone()) {
                 reading.fields.year = Some(year);
             }
+        } else if reading.source_captured() {
+            reading.fields.source_case_name = Some(crate::SourceCaseName {
+                full_span_start: core.start, ..Default::default()
+            });
         }
         crate::classify::apply(&mut citation, reading, options);
         if core.end > anchor.span.end {
@@ -1048,7 +1052,7 @@ fn full_citation(
             }
         }
     }
-    citation.parties = if let Some(name) = citation.fields.source_case_name.as_mut() {
+    citation.parties = if let Some(name) = citation.fields.source_case_name.as_mut().filter(|_| kind == "case") {
         Some(crate::Parties { plaintiff: name.plaintiff.take(), defendant: name.defendant.take() })
     } else if citation.authority == Authority::Case {
         citation.style.as_ref().and_then(|style| metadata::parties(&style.text))
@@ -1081,9 +1085,17 @@ fn back_citation(
         citation.language = Some("fr".to_owned());
     }
     let name = (form == Form::Supra)
-        .then(|| antecedent_name(text, core.start, previous_end))
+        .then(|| {
+            if citation.fields.volume.is_some() {
+                source_name.and_then(|source| source.antecedent_guess.as_ref()
+                    .map(|name| source.full_span_start..source.full_span_start + name.len()))
+            } else {
+                antecedent_name(text, core.start, previous_end)
+            }
+        })
         .flatten();
-    let start = name.as_ref().map_or(core.start, |name| name.start);
+    let start = name.as_ref().map_or(core.start, |name| name.start)
+        .min(source_name.map_or(core.start, |name| name.full_span_start));
     if let Some(name) = name {
         citation.reasons.push("same_text_style".to_owned());
         citation.short_name = Some(text[name.clone()].to_owned());
@@ -1092,10 +1104,12 @@ fn back_citation(
     if !tail.pinpoints.is_empty() {
         citation.reasons.push("pinpoint_grammar".to_owned());
     }
-    citation.full_span = span(text, start..tail.end);
+    let source_pin = source_name.and_then(|name| name.pin_cite.as_ref());
+    citation.full_span = span(text, start..source_pin.map_or(tail.end, |pin| tail.end.max(pin.end)));
     citation.pinpoints = tail.pinpoints;
     citation.parentheticals = tail.parentheticals;
-    citation.fields.pin_cite = tail.pin_cite;
+    citation.fields.pin_cite = source_pin.filter(|pin|
+        tail.pin_cite.as_ref().is_none_or(|native| pin.end > native.end)).cloned().or(tail.pin_cite);
     citation
 }
 
@@ -1184,7 +1198,7 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
                 ..citation.full_span.end
         })
         .collect::<Vec<_>>();
-    let mut found = Vec::new();
+    let mut found: Vec<Citation> = Vec::new();
     for (name, after, authority, source_field) in names {
         let source_pattern = source_field.map(|_| legal_grammar::compile_python_pattern(
             &SOURCE_REFERENCE.replace("{{name}}", &regex::escape(&name)), "").expect("escaped reference name"));
@@ -1222,7 +1236,10 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
             let start = matched.start;
             let end = matched.end;
             let markup = styled.iter().find(|(range, _)| *range == matched).map(|(_, range)| range);
-            if overlaps(&(start..end), &taken) {
+            let existing = source_field.and_then(|_| found.iter().position(|citation|
+                citation.span.start <= start && end <= citation.span.end
+                    && citation.fields.source_case_name.is_none()));
+            if existing.is_none() && overlaps(&(start..end), &taken) {
                 continue;
             }
             let previous_end = taken
@@ -1285,6 +1302,16 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
                 }
             }
             citation.signal = signal(text, previous_end, start);
+            if let Some(index) = existing {
+                if citation.fields.source_case_name.is_some() {
+                    let original = &mut found[index];
+                    original.parties = citation.parties;
+                    original.fields.source_case_name = citation.fields.source_case_name;
+                    original.fields.pin_cite = citation.fields.pin_cite.or(original.fields.pin_cite.take());
+                    original.full_span = span(text, original.full_span.start..original.full_span.end.max(citation.full_span.end));
+                }
+                continue;
+            }
             taken.push(citation.signal.as_ref().map_or(start, |signal| signal.start)..citation.full_span.end);
             found.push(citation);
         }

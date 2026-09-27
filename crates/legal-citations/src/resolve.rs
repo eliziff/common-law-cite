@@ -422,7 +422,7 @@ impl<'a> Resolver<'a> {
     }
 
     fn by_name(&self, position: usize, hint: Option<String>) -> (Option<usize>, &'static str) {
-        if self.citations[position].fields.source_case_name.is_some() {
+        if self.citations[position].form == Form::Reference && self.citations[position].fields.source_case_name.is_some() {
             // Feed the same exact metadata-value matching used by the facade.
             // Resource tokens include ambiguous candidates; the shared resolver
             // keeps them in the pool and vetoes an uncertain identity.

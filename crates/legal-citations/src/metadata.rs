@@ -379,14 +379,14 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
         break;
     }
     if let Some((source, paragraph_end)) = rules.post_citation {
-        if source == PostCitation::Case { result.source_end = Some(start); }
+        result.source_end = Some(start);
         // Full cases may span parallel citation tokens. Other source forms
         // stop at the next citation as well as the paragraph boundary.
         let window = &text[start..if source == PostCitation::Case { paragraph_end } else { paragraph_end.min(limit) }];
         let end = window.char_indices().nth(300).map_or(window.len(), |(at, _)| at);
         if let Some(captures) = POST_CITATION[source as usize].captures(&window[..end]).expect("post-citation match") {
-            if matches!(source, PostCitation::Case | PostCitation::Short) {
-                let mut source_end = start + if source == PostCitation::Case { captures.get(0).unwrap().end() }
+            {
+                let mut source_end = start + if source != PostCitation::Short { captures.get(0).unwrap().end() }
                     else { captures.name("pin_cite").map_or(0, |pin| pin.as_str().trim_end_matches([',', ' ']).len()) };
                 // Eyecite process_parenthetical: stop at the first unmatched
                 // closing parenthesis, then exclude year-only parentheticals.
