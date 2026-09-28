@@ -76,6 +76,7 @@ pub const METHODS: &[&str] = &[
     "pinpointLayouts",
     "url",
     "sourceCanliiRoutes",
+    "canliiCitationUrl",
     "canliiAliasTarget",
     "canliiAliasTargetInfo",
     "annotate",
@@ -250,6 +251,13 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             to_value(request.values.iter().map(|values| format_stage::pinpoint_layout(&request.kind, values, request.style.as_deref() == Some("full"))).collect::<Vec<_>>())
         },
         "url" => to_value(url(&parse(method, request)?)?),
+        "canliiCitationUrl" => {
+            #[derive(Deserialize)]
+            #[serde(deny_unknown_fields)]
+            struct Request { text: String, language: Option<String> }
+            let request: Request = parse(method, request)?;
+            to_value(url_stage::canlii_citation_url(&request.text, request.language.as_deref().unwrap_or("en")))
+        },
         "sourceCanliiRoutes" => {
             #[derive(Deserialize)]
             #[serde(deny_unknown_fields)]

@@ -5850,6 +5850,48 @@
           "flags": "",
           "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_VERSUS, copied verbatim with native Rust regex semantics.",
           "rust": true
+        },
+        {
+          "id": "format.case-neutral",
+          "pattern": "\\b((?:18|19|20)\\d{2})\\s+([A-Z][A-Z0-9-]{1,15})\\s+(\\d+)\\b",
+          "flags": "",
+          "provenance": "Verbatim Legal Pinpointer core.js neutralCitations, reporterCandidates, canliiCitations, inHouseCitations and canliiUrlForCitation, revision 39d85cfcd5cfd24497ba85f0654f0fae20cb44e2. Display selection retains the original first-match rules.",
+          "vectors": []
+        },
+        {
+          "id": "format.reporter-bracketed",
+          "pattern": "\\[(?:18|19|20)\\d{2}\\]\\s+(?:\\d+\\s+)?[A-Z][A-Za-z?-?]*(?:\\s+[A-Z][A-Za-z?-?]*){0,4}(?:\\s*\\((?:\\d+(?:st|nd|d|rd|th|e)|NS|ns)\\))?\\s+\\d+(?:,\\d{3})*\\b",
+          "flags": "",
+          "provenance": "Verbatim Legal Pinpointer core.js neutralCitations, reporterCandidates, canliiCitations, inHouseCitations and canliiUrlForCitation, revision 39d85cfcd5cfd24497ba85f0654f0fae20cb44e2. Display selection retains the original first-match rules.",
+          "vectors": []
+        },
+        {
+          "id": "format.reporter-numbered",
+          "pattern": "\\b\\d+\\s+[A-Z][A-Za-z?-?]*(?:\\s+[A-Z][A-Za-z?-?]*){0,4}(?:\\s*\\((?:\\d+(?:st|nd|d|rd|th|e)|NS|ns)\\))?\\s+\\d+(?:,\\d{3})*\\b",
+          "flags": "",
+          "provenance": "Verbatim Legal Pinpointer core.js neutralCitations, reporterCandidates, canliiCitations, inHouseCitations and canliiUrlForCitation, revision 39d85cfcd5cfd24497ba85f0654f0fae20cb44e2. Display selection retains the original first-match rules.",
+          "vectors": []
+        },
+        {
+          "id": "format.case-canlii",
+          "pattern": "\\b(?:18|19|20)\\d{2}\\s+CanLII\\s+\\d+\\b(?:\\s*\\([A-Z0-9. -]+\\))?",
+          "flags": "i",
+          "provenance": "Verbatim Legal Pinpointer core.js neutralCitations, reporterCandidates, canliiCitations, inHouseCitations and canliiUrlForCitation, revision 39d85cfcd5cfd24497ba85f0654f0fae20cb44e2. Display selection retains the original first-match rules.",
+          "vectors": []
+        },
+        {
+          "id": "format.case-in-house",
+          "pattern": "\\b(?:18|19|20)\\d{2}\\s+Carswell[A-Za-z]+\\s+\\d+\\b|\\[(?:18|19|20)\\d{2}\\]\\s+[A-Z][A-Z.]{0,15}\\s+No\\.?\\s+\\d+\\b",
+          "flags": "i",
+          "provenance": "Verbatim Legal Pinpointer core.js neutralCitations, reporterCandidates, canliiCitations, inHouseCitations and canliiUrlForCitation, revision 39d85cfcd5cfd24497ba85f0654f0fae20cb44e2. Display selection retains the original first-match rules.",
+          "vectors": []
+        },
+        {
+          "id": "format.canlii-url",
+          "pattern": "\\b((?:18|19|20)\\d{2})\\s+CanLII\\s+(\\d+)\\s*\\(([A-Z0-9. -]+)\\)",
+          "flags": "i",
+          "provenance": "Verbatim Legal Pinpointer core.js neutralCitations, reporterCandidates, canliiCitations, inHouseCitations and canliiUrlForCitation, revision 39d85cfcd5cfd24497ba85f0654f0fae20cb44e2. Display selection retains the original first-match rules.",
+          "vectors": []
         }
       ]
     }

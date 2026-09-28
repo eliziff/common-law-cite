@@ -527,15 +527,12 @@ static ET_AL: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i),?\s+et al\.?$
 static AG_BARE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?i)\((?:the )?Attorney General(?: of)?\)").unwrap());
 static AG_OF: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"(?i)\((?:the )?Attorney General (?:of|for) ([^)]+)\)").unwrap());
+    LazyLock::new(|| Regex::new(r"(?i)\((?:the )?Attorney General of ([^)]+)\)").unwrap());
 static AG_LEAD: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?i)^(?:The )?Attorney General (?:of|for) ((?:the )?[A-Z][A-Za-z ]*?)(\s*\(.*)?$").unwrap()
+    Regex::new(r"(?i)^(?:The )?Attorney General of ([A-Z][A-Za-z ]*?)(\s*\(.*)?$").unwrap()
 });
 static PG_PAREN: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?i)\(Procureur(?:e)? g\u{e9}n\u{e9}ral(?:e)?(?: (du|de la|de l'|des|de) ([^)]+))?\)").unwrap()
-});
-static PG_LEAD: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?i)^(?:(?:Le|La) )?Procureur(?:e)? g\u{e9}n\u{e9}ral(?:e)? (?:du |de la |de l'|des |de )(.+?)(\s*\(.*)?$").unwrap()
+    Regex::new(r"(?i)\(Procureur(?:e)? g\u{e9}n\u{e9}ral(?:e)?(?: du ([^)]+))?\)").unwrap()
 });
 static UPPER_INITIALS: LazyLock<legal_grammar::CompiledGrammar> =
     LazyLock::new(|| format_pattern("format.upper-initials"));
@@ -547,11 +544,9 @@ static ABBREVIATION: LazyLock<Regex> = LazyLock::new(|| {
 static LOWER_INITIALS: LazyLock<legal_grammar::CompiledGrammar> =
     LazyLock::new(|| format_pattern("format.lower-initials"));
 static VERSUS: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"\s+(?:v|vs|c|versus)\.?\s+").unwrap());
+    LazyLock::new(|| Regex::new(r"\s+(?:v|c)\.?\s+").unwrap());
 static MATTER_SUFFIX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?i)^(.+?)(?:,\s*Re|\s+\(Re\))$").unwrap());
-static MATTER_PREFIX: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"(?i)^(?:In\s+re|In\s+the\s+matter\s+of|Re:?)\s+(.+)$").unwrap());
 static COURT_SUFFIX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?i)\s+\((?:S\.?C\.?C\.?|C\.?S\.?C\.?)\)\s*$").unwrap());
 
@@ -577,18 +572,9 @@ pub fn party(value: &str, language: Language) -> String {
         })
         .into_owned();
     party = PG_PAREN
-        .replace_all(&party, |captures: &regex::Captures| match (captures.get(1), captures.get(2)) {
-            (Some(article), Some(place)) => format!("(PG {} {})", article.as_str(), place.as_str()),
-            _ => "(PG)".into(),
-        })
-        .into_owned();
-    party = PG_LEAD
-        .replace(&party, |captures: &regex::Captures| {
-            format!(
-                "{} (PG){}",
-                captures[1].trim(),
-                captures.get(2).map_or("", |rest| rest.as_str())
-            )
+        .replace_all(&party, |captures: &regex::Captures| match captures.get(1) {
+            Some(place) => format!("(PG du {})", place.as_str()),
+            None => "(PG)".into(),
         })
         .into_owned();
     party = UPPER_INITIALS
@@ -612,14 +598,11 @@ pub fn case_name(style: &str, language: Language) -> String {
 }
 
 fn case_name_language(style: &str, language: Option<Language>) -> String {
-    let name = normalize_space(style.trim().trim_end_matches([',', ';']));
+    let name = normalize_space(style);
     let name = COURT_SUFFIX.replace(&name, "").into_owned();
     let has_versus = VERSUS.is_match(&name);
     if !has_versus {
         if let Some(captures) = MATTER_SUFFIX.captures(&name) {
-            return format!("Re {}", party(&captures[1], language.unwrap_or_default()));
-        }
-        if let Some(captures) = MATTER_PREFIX.captures(&name) {
             return format!("Re {}", party(&captures[1], language.unwrap_or_default()));
         }
         return party(&name, language.unwrap_or_default());
@@ -692,7 +675,12 @@ pub struct CaseHeading {
 
 /// Pinpointer's heading splitter; the provider removes its platform suffix first.
 pub fn case_heading(heading: &str) -> CaseHeading {
-    static START: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(|| format_pattern("format.heading-case-start"));
+    static START: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(|| {
+        // The source accepts only a match at offset zero. Anchor that same
+        // pattern instead of searching the remaining heading after each comma.
+        let pattern = format_pattern("format.heading-case-start");
+        legal_grammar::CompiledGrammar::new(&format!(r"\A(?:{})", pattern.as_str())).unwrap()
+    });
     static SEPARATOR: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(|| format_pattern("format.heading-case-separator"));
     static PREFIX: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(|| format_pattern("format.heading-case-prefix"));
     for separator in SEPARATOR.find_iter(heading).flatten() {
@@ -818,77 +806,62 @@ pub struct CaseCitationRequest {
     pub provider: Option<String>,
 }
 
-/// Pinpointer's selection order over shared discovery records. Source segment
-/// exclusions and stable ties are retained; no second citation parser runs here.
+/// Pinpointer `chooseCaseCitation`: apply its original display grammars and
+/// first-match order without extracting identities or resolving references.
 pub fn choose_case_citation(request: &CaseCitationRequest) -> String {
-    static SEPARATOR: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(|| format_pattern("format.reporter-separator"));
-    static EXCLUDED: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(|| format_pattern("format.not-reporter"));
-    static PREFERENCE: LazyLock<Vec<legal_grammar::CompiledGrammar>> = LazyLock::new(||
-        ["official", "fr", "en"].iter().map(|name| format_pattern(&format!("format.reporter-preference.{name}"))).collect());
+    static PATTERNS: LazyLock<[legal_grammar::CompiledGrammar; 10]> = LazyLock::new(||
+        ["case-neutral", "reporter-separator", "not-reporter", "reporter-bracketed",
+            "reporter-numbered", "case-canlii", "case-in-house", "reporter-preference.official",
+            "reporter-preference.fr", "reporter-preference.en"].map(|name| format_pattern(&format!("format.{name}"))));
     static TRANSLATIONS: LazyLock<std::collections::HashMap<String, std::collections::HashMap<String, String>>> = LazyLock::new(||
         serde_json::from_str(include_str!("../registry/neutral-translations.json")).expect("Pinpointer neutral translation preferences"));
-    let language = Language::from_code(request.language.as_deref().unwrap_or("en"));
+    static CANLII_NAME: LazyLock<Regex> = LazyLock::new(|| Regex::new("(?i)canlii").unwrap());
+    let french = request.language.as_deref().unwrap_or("en").to_lowercase().starts_with("fr");
+    let texts = request.texts.iter().chain(std::iter::once(&request.fallback)).collect::<Vec<_>>();
     let mut neutrals = Vec::new();
-    let mut reporters = Vec::new();
-    let mut canlii = Vec::new();
-    let mut in_house = Vec::new();
-    let options = crate::Options { resolve: false, parallel: false, ..crate::Options::default() };
-    for text in request.texts.iter().chain(std::iter::once(&request.fallback)) {
-        let citations = crate::extract(text, &options);
-        let cases = citations.iter().filter(|citation| citation.form == crate::Form::Full && citation.authority == Authority::Case).collect::<Vec<_>>();
-        for citation in &cases {
-            let core = normalize_citation(&citation.span.text);
-            match citation.format {
-                Some(Format::Neutral) if citation.court.is_some() => neutrals.push(core),
-                Some(Format::CanLii) => {
-                    let mut core = format!("{} CanLII {}", citation.fields.year.as_deref().unwrap_or(""), citation.fields.number.as_deref().unwrap_or(""));
-                    if let Some(court) = citation.parentheticals.iter().find(|part| part.kind == crate::ParentheticalKind::Court) {
-                        core.push_str(&format!(" ({})", normalize_citation(&court.content)));
-                    }
-                    canlii.push(core);
-                }
-                Some(Format::Database) if core.to_lowercase().contains("carswell") || core.to_lowercase().contains(" no ") => in_house.push(core),
-                _ => {}
+    for text in &texts {
+        for found in PATTERNS[0].captures_iter(&normalize_space(text)).flatten() {
+            let [year, code, number] = [1, 2, 3].map(|index| found.get(index).unwrap().as_str());
+            if crate::url::source_canlii_routes().contains_key(code)
+                || crate::url::source_canlii_french_routes().contains_key(code) {
+                neutrals.push(format!("{year} {code} {number}"));
             }
-        }
-        let mut start = 0;
-        for end in SEPARATOR.find_iter(text).flatten().map(|found| (found.start(), found.end()))
-            .chain(std::iter::once((text.len(), text.len()))) {
-            let segment = normalize_citation(&text[start..end.0]);
-            if !EXCLUDED.is_match(&segment).unwrap_or(false) {
-                if let Some(citation) = cases.iter().filter(|citation| citation.format == Some(Format::Reporter)
-                    && citation.span.start >= start && citation.span.start < end.0)
-                    .min_by_key(|citation| (!citation.span.text.starts_with('['), citation.span.start)) {
-                    // The source's numbered-reporter branch omits a preceding
-                    // parenthesized decision year; the parsed core stays intact.
-                    let core = &citation.span.text;
-                    let displayed = if core.starts_with('(') {
-                        core.split_once(')').map_or(core.as_str(), |(_, rest)| rest.trim_start_matches([',', ' ']))
-                    } else { core.as_str() };
-                    reporters.push(normalize_citation(displayed));
-                }
-            }
-            start = end.1;
         }
     }
     if let Some(first) = neutrals.first() {
         let parts = first.split_whitespace().collect::<Vec<_>>();
-        if let [year, code, number] = parts.as_slice() {
-            let lang = if language == Language::Fr { "fr" } else { "en" };
-            if let Some(equivalent) = TRANSLATIONS[lang].get(*code) {
-                let translated = format!("{year} {equivalent} {number}");
-                if neutrals.contains(&translated) { return translated; }
+        let translated = TRANSLATIONS[if french { "fr" } else { "en" }].get(parts[1])
+            .map(|code| format!("{} {code} {}", parts[0], parts[2]));
+        return translated.filter(|value| neutrals.contains(value)).unwrap_or_else(|| first.clone());
+    }
+    let mut reporters = Vec::new();
+    for text in &texts {
+        let mut start = 0;
+        for (end, next) in PATTERNS[1].find_iter(text).flatten().map(|m| (m.start(), m.end()))
+            .chain(std::iter::once((text.len(), text.len()))) {
+            let segment = normalize_citation(&text[start..end]);
+            if !PATTERNS[2].is_match(&segment).unwrap() {
+                if let Some(found) = PATTERNS[3].find(&segment).unwrap()
+                    .or_else(|| PATTERNS[4].find(&segment).unwrap()) {
+                    reporters.push(normalize_citation(found.as_str()));
+                }
             }
+            start = next;
         }
-        return first.clone();
     }
     if let Some((_, reporter)) = reporters.iter().enumerate().min_by_key(|(index, reporter)| {
         let upper = reporter.to_uppercase();
-        let score = 30 * i32::from(PREFERENCE[0].is_match(&upper).unwrap_or(false))
-            + 5 * i32::from(PREFERENCE[if language == Language::Fr { 1 } else { 2 }].is_match(&upper).unwrap_or(false));
+        let score = 30 * i32::from(PATTERNS[7].is_match(&upper).unwrap())
+            + 5 * i32::from(PATTERNS[if french { 8 } else { 9 }].is_match(&upper).unwrap());
         (-score, *index)
     }) { return reporter.clone(); }
-    if let Some(first) = canlii.first() { return first.clone(); }
+    let matches = |pattern: usize| texts.iter().flat_map(|text|
+        PATTERNS[pattern].find_iter(&normalize_space(text)).flatten()
+            .map(|found| normalize_citation(found.as_str())).collect::<Vec<_>>()).collect::<Vec<_>>();
+    if let Some(first) = matches(5).first() {
+        return CANLII_NAME.replace(first, "CanLII").into_owned();
+    }
+    let in_house = matches(6);
     if let Some(first) = in_house.first() {
         let preferred = in_house.iter().find(|citation| match request.provider.as_deref() {
             Some("westlaw") => citation.to_lowercase().contains("carswell"),

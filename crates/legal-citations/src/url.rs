@@ -145,12 +145,47 @@ pub fn canlii_case(citation: &Citation, language: Language) -> Option<String> {
 }
 
 pub fn source_canlii_routes() -> &'static HashMap<String, String> {
-    static ROUTES: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
-        let source: serde_json::Value = serde_json::from_str(include_str!("../registry/source-canlii-routes.json"))
-            .expect("source CanLII routes");
-        serde_json::from_value(source["routes"].clone()).expect("source CanLII court routes")
-    });
-    &ROUTES
+    &SOURCE_ROUTES.routes
+}
+
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct SourceRoutes {
+    routes: HashMap<String, String>,
+    french_routes: HashMap<String, String>,
+}
+
+static SOURCE_ROUTES: LazyLock<SourceRoutes> = LazyLock::new(||
+    serde_json::from_str(include_str!("../registry/source-canlii-routes.json")).expect("source CanLII routes"));
+
+pub(crate) fn source_canlii_french_routes() -> &'static HashMap<String, String> {
+    &SOURCE_ROUTES.french_routes
+}
+
+/// Pinpointer `canliiUrlForCitation` and `canliiCourtRoute`: the first written
+/// CanLII form precedes the first neutral form, including original abstentions.
+pub fn canlii_citation_url(text: &str, language: &str) -> Option<String> {
+    static PATTERNS: LazyLock<[legal_grammar::CompiledGrammar; 2]> = LazyLock::new(||
+        ["format.canlii-url", "format.case-neutral"].map(|id|
+            legal_grammar::compile_ecmascript_backtracking_table_entry(id).unwrap()));
+    let text = crate::text::normalize_javascript_whitespace(text);
+    let canlii = PATTERNS[0].captures(&text).unwrap();
+    let is_canlii = canlii.is_some();
+    let found = canlii.or_else(|| PATTERNS[1].captures(&text).unwrap())?;
+    let [year, second, third] = [1, 2, 3].map(|index| found.get(index).unwrap().as_str());
+    let code = if is_canlii { third } else { second };
+    if !is_canlii && ["CANLII", "CARSWELL"].iter().any(|name| code.eq_ignore_ascii_case(name)) { return None; }
+    let code = code.to_uppercase().chars().filter(|c| c.is_ascii_alphanumeric() || *c == '-').collect::<String>();
+    let french = language.to_lowercase().starts_with("fr") || SOURCE_ROUTES.french_routes.contains_key(&code);
+    let code = if french {
+        FRENCH_CODES.iter().find(|(en, _, _)| code.eq_ignore_ascii_case(en))
+            .map_or(code.clone(), |(_, fr, _)| fr.to_uppercase())
+    } else { code };
+    let route = SOURCE_ROUTES.french_routes.get(&code).or_else(|| SOURCE_ROUTES.routes.get(&code))?;
+    let (jurisdiction, database) = route.split_once('/')?;
+    let slug = if is_canlii { format!("{year}canlii{second}") }
+        else { format!("{year}{code}{third}").to_lowercase().chars().filter(char::is_ascii_alphanumeric).collect() };
+    Some(page_url(jurisdiction, database, year, &slug, if french { Language::Fr } else { Language::En }))
 }
 
 /// ALR `_resolve_footnote_part_link_unlocked`'s SCR override.
