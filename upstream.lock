@@ -19,5 +19,5 @@ license = "BSD-2-Clause"
 [reporters-db.sha256]
 "reporters_db/data/journals.json" = "acad477ad889f745afe09a738e0c0091fdb59ab05a40d0bf55deba9c0ae2d10f"
 "reporters_db/data/laws.json" = "cba1f8f2225a27600b4906c0ed6cb5ede00fbba0983538845e628f77fb0fce69"
-"reporters_db/data/reporters.json" = "2b20c0ff414a8003b1c164904e5f1db8ee2504a81ef49fba69c4413a83e3f10a"
 "reporters_db/data/regexes.json" = "c91ff836e1b73d75b3546448c324d77bee338d9014637c738efd16fcb75ea47a"
+"reporters_db/data/reporters.json" = "2b20c0ff414a8003b1c164904e5f1db8ee2504a81ef49fba69c4413a83e3f10a"

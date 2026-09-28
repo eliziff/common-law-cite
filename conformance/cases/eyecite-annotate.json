@@ -255,7 +255,7 @@
      "inline_whitespace"
     ]
    },
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "text": "<body>foo  <i><0>1   <b>U.S.</b></i>   1</0> bar</body>"
    },
@@ -290,7 +290,7 @@
     ],
     "unbalancedTags": "skip"
    },
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "text": "foo  <0><i>1 U.S.</i> 1</0>; <1>2 <i>U.S.</i> 2</1>"
    },
@@ -379,7 +379,7 @@
     "source": "1\nU.S. 1",
     "cleanSteps": []
    },
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "text": "<0>1\nU.S. 1</0>"
    },
@@ -520,7 +520,7 @@
     ],
     "unbalancedTags": "skip"
    },
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "text": "he has not agreed so to submit.’”  <i>Howsam v. Dean Witter Reynolds, Inc.</i>, <a href='something'>537 U.S. 79</a>, 83, <a href='something'>123 S. Ct. 588</a>, 591 (2002) (combined mandamus and interlocutory appeal) (citing <a href='something'><i>Howsam</i> at 84</a>, <a href='something'>123 S. Ct. at 592</a>)"
    },
@@ -596,7 +596,7 @@
     ],
     "unbalancedTags": "skip"
    },
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "text": "to act rationally. <i>See, e.g., </i><i>State v. Wingler,</i> <a href='something'>25 <i>N.J.</i> 161</a>, 175, <a href='something'>135 <i>A.</i>2d 468</a> (1957); <i>citing, ...  have been applied.' [<i>State v. Wingler</i> at 175, <a href='something'>135 <i>A.</i>2d 468</a>, <i>citing, </i><i>Minnesota ex rel.</i>"
    },
@@ -631,7 +631,7 @@
     ],
     "unbalancedTags": "skip"
    },
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "text": "<p index=\"143\"><0>2016 WL 4217254</0></p>.<p index=\"144\"><1>id.</1></p>"
    },
@@ -660,7 +660,7 @@
     ],
     "unbalancedTags": "skip"
    },
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "text": "contending it <12123 is < the most “apt.” “ ‘[A] vast enterprise usu. <p index=\"143\"><0>2016 WL 4217254</0></p>"
    },

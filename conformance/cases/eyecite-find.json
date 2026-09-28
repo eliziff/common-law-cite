@@ -7,7 +7,7 @@
   {
    "name": "FindTest.test_citation_fullspan#1",
    "input": "citation number one is Wilson v. Mar. Overseas Corp., 150 F.3d 1, 6-7 ( 1st Cir. 1998); This is different from Commonwealth v. Bauer, 604 A.2d 1098 (Pa.Super. 1992), my second example",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -243,7 +243,7 @@
   {
    "name": "FindTest.test_citation_fullspan#4",
    "input": "42 U.S.C. § 405(r)(2) (2019)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -756,7 +756,7 @@
   {
    "name": "FindTest.test_find_citations#1",
    "input": "1 U.S. 1",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -811,7 +811,7 @@
   {
    "name": "FindTest.test_find_citations#2",
    "input": "1 U. S. 1",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -871,7 +871,7 @@
   {
    "name": "FindTest.test_find_citations#3",
    "input": "lissner test 1 U.S. 1",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -926,7 +926,7 @@
   {
    "name": "FindTest.test_find_citations#4",
    "input": "Lissner v. Test 1 U.S. 1",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -987,7 +987,7 @@
   {
    "name": "FindTest.test_find_citations#5",
    "input": "Lissner v. Test 1 U.S. 1 (1982)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1170,7 +1170,7 @@
   {
    "name": "FindTest.test_find_citations#8",
    "input": "Lissner v. Test, 1 U.S. 1 (1982)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1233,7 +1233,7 @@
   {
    "name": "FindTest.test_find_citations#9",
    "input": "1 So.2d at 1",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1361,7 +1361,7 @@
   {
    "name": "FindTest.test_find_citations#11",
    "input": "bob Lissner v. Test 1 U.S. 12, 347-348 (Pa.Super. 1982)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1562,7 +1562,7 @@
   {
    "name": "FindTest.test_find_citations#14",
    "input": "Bob Lissner v. Test 1 U.S. 12, 347-348, 1 S. Ct. 2, 358 (4th Cir. 1982) (overruling foo)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1713,7 +1713,7 @@
   {
    "name": "FindTest.test_find_citations#15",
    "input": "Lissner v. Test 1 U.S. 1 (1982) (discussing abc (Holmes, J., concurring))",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1785,7 +1785,7 @@
   {
    "name": "FindTest.test_find_citations#16",
    "input": "Lissner v. Test 1 U.S. 1 (1982) (discussing abc); blah (something).",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1857,7 +1857,7 @@
   {
    "name": "FindTest.test_find_citations#17",
    "input": "asfd 22 U. S. 332 (1975) asdf",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2114,7 +2114,7 @@
   {
    "name": "FindTest.test_find_citations#22",
    "input": "2 U.S. 3, 4-5 (3 Atl. 33)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2215,7 +2215,7 @@
   {
    "name": "FindTest.test_find_citations#23",
    "input": "12 Neb. App. lxiv (2004)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2330,7 +2330,7 @@
   {
    "name": "FindTest.test_find_citations#26",
    "input": "1 U.S. ___",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2385,7 +2385,7 @@
   {
    "name": "FindTest.test_find_citations#27",
    "input": "1 U. S. ___,",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2440,7 +2440,7 @@
   {
    "name": "FindTest.test_find_citations#28",
    "input": "2007-NMCERT-008",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2490,7 +2490,7 @@
   {
    "name": "FindTest.test_find_citations#29",
    "input": "2006-Ohio-2095",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2540,7 +2540,7 @@
   {
    "name": "FindTest.test_find_citations#30",
    "input": "2017 IL App (4th) 160407",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2590,7 +2590,7 @@
   {
    "name": "FindTest.test_find_citations#31",
    "input": "2017 IL App (1st) 143684-B",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2640,7 +2640,7 @@
   {
    "name": "FindTest.test_find_citations#32",
    "input": "before Foo 1 U. S., at 2",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2697,7 +2697,7 @@
   {
    "name": "FindTest.test_find_citations#33",
    "input": "before Foo, 1 U. S., at 2",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2754,7 +2754,7 @@
   {
    "name": "FindTest.test_find_citations#34",
    "input": "before Foo,” 1 U. S., at 2",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2810,7 +2810,7 @@
   {
    "name": "FindTest.test_find_citations#35",
    "input": "before Johnson, 1 U. S., at 2",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2867,7 +2867,7 @@
   {
    "name": "FindTest.test_find_citations#36",
    "input": "before Foo, 1 U. S. at 2",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2988,7 +2988,7 @@
   {
    "name": "FindTest.test_find_citations#39",
    "input": "174 Cal.App.2d at p. 651",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -3043,7 +3043,7 @@
   {
    "name": "FindTest.test_find_citations#40",
    "input": "before Foo, 1 U. S., at 20-25",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -3100,7 +3100,7 @@
   {
    "name": "FindTest.test_find_citations#41",
    "input": "before Foo, 1 U. S., at 20-25\\& n. 4",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -3157,7 +3157,7 @@
   {
    "name": "FindTest.test_find_citations#42",
    "input": "before Foo, 1 U. S., at 2 (overruling xyz)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -3215,7 +3215,7 @@
   {
    "name": "FindTest.test_find_citations#43",
    "input": "before Foo, 1 U. S., at 2(overruling xyz)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -3273,7 +3273,7 @@
   {
    "name": "FindTest.test_find_citations#44",
    "input": "before Foo, 1 U. S., at 2 (discussing xyz (Holmes, J., concurring))",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -3331,7 +3331,7 @@
   {
    "name": "FindTest.test_find_citations#45",
    "input": "before Foo, 1 U. S., at 2 (2016)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -3388,7 +3388,7 @@
   {
    "name": "FindTest.test_find_citations#46",
    "input": "before Foo, 1 U. S., at 20-25 (overruling xyz)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -3446,7 +3446,7 @@
   {
    "name": "FindTest.test_find_citations#47",
    "input": "Foo, 1 U. S., at 4 (discussing abc). Some other nonsense (clarifying nonsense)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -3504,7 +3504,7 @@
   {
    "name": "FindTest.test_find_citations#48",
    "input": "1 Mich. at 1",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -3559,7 +3559,7 @@
   {
    "name": "FindTest.test_find_citations#49",
    "input": "1 U. S., at 2. Foo v. Bar 3 U. S. 4 (2010) (overruling xyz).",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -3673,7 +3673,7 @@
   {
    "name": "FindTest.test_find_citations#50",
    "input": "1 U. S., at 2 (criticizing xyz). Foo v. Bar 3 U. S. 4 (2010) (overruling xyz).",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -4080,7 +4080,7 @@
   {
    "name": "FindTest.test_find_citations#58",
    "input": "Foo v. Bar 1 U.S. 12. asdf. Ibid. foo bar lorem ipsum.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -4203,7 +4203,7 @@
   {
    "name": "FindTest.test_find_citations#60",
    "input": "Foo v. Bar 1 U.S. 12, 347-348. asdf. Id., at 123. foo bar",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -4358,7 +4358,7 @@
   {
    "name": "FindTest.test_find_citations#62",
    "input": "Foo v. Bar 1 U.S. 12, 347-348. asdf. Id. ¶ 34. foo bar",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -4461,7 +4461,7 @@
   {
    "name": "FindTest.test_find_citations#63",
    "input": "Foo v. Bar 1 U.S. 12, 347-348. asdf. Id. at 62-63, 67-68. f b",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -4555,7 +4555,7 @@
   {
    "name": "FindTest.test_find_citations#64",
    "input": "Foo v. Bar 1 U.S. 12, 347-348. asdf. Id., at *10. foo bar",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -4649,7 +4649,7 @@
   {
    "name": "FindTest.test_find_citations#65",
    "input": "Foo v. Bar 1 U.S. 12, 347-348. asdf. Id. at 7-9, ¶¶ 38-53. f b",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -4743,7 +4743,7 @@
   {
    "name": "FindTest.test_find_citations#66",
    "input": "Foo v. Bar 1 U.S. 12, 347-348. asdf. Id. at pp. 45, 64. foo bar",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -5026,7 +5026,7 @@
   {
    "name": "FindTest.test_find_citations#68",
    "input": "Rogers v Rogers (63 NY2d 582 [1984])",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -5144,7 +5144,7 @@
   {
    "name": "FindTest.test_find_citations#70",
    "input": "(Mo.); Bean v. State, — Nev. —, 398 P. 2d 251; ",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -5201,7 +5201,7 @@
   {
    "name": "FindTest.test_find_citations#71",
    "input": "Hurst v. Florida, — U.S. —, 136 S.Ct. 616, 193 L.Ed.2d 504 (2016)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -5379,7 +5379,7 @@
   {
    "name": "FindTest.test_find_citations#73",
    "input": "decision in Epic Systems Corporation v. Lewis (2018) __ U.S. __ [138 S.Ct. 1612] (Epic Systems)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -5630,7 +5630,7 @@
   {
    "name": "FindTest.test_find_citations#75",
    "input": "curiams. Spano v. People of State of New York, 360 U.S. 315",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -5752,7 +5752,7 @@
   {
    "name": "FindTest.test_find_citations#77",
    "input": "Mavrovich v Vanderpool, 427 F Supp 2d 1084 [D Kan 2006]",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -5878,7 +5878,7 @@
   {
    "name": "FindTest.test_find_citations#79",
    "input": "Foo v. Bar 1 U.S. 12, 347-348. asdf. id. 119:12-14. foo bar",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -5972,7 +5972,7 @@
   {
    "name": "FindTest.test_find_citations#80",
    "input": "Foo v. Bar 1 U.S. 12, 347-348. asdf. Id. No page number.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -6205,7 +6205,7 @@
   {
    "name": "FindTest.test_find_citations#86",
    "input": "Miles v. Smith 1 Ga. 1; asdfasdf asd Something v. Else, 1 Miles 3; 1 Miles at 10",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -6442,7 +6442,7 @@
   {
    "name": "FindTest.test_find_citations#88",
    "input": "Foo v. Bar 1 U.S. 12, 347-348. something something, In Foo at 62, we see that",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -6546,7 +6546,7 @@
   {
    "name": "FindTest.test_find_citations#89",
    "input": "Foo v. United States 1 U.S. 12, 347-348. something something ... the United States at 1776 we see that and Foo at 62",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -6650,7 +6650,7 @@
   {
    "name": "FindTest.test_find_citations#90",
    "input": "In Foo at 62 we see that, Foo v. Bar 1 U.S. 12, 347-348. something something,",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -6996,7 +6996,7 @@
   {
    "name": "FindTest.test_find_citations#94",
    "input": "we said in Morton v. Mancari, 417 U. S. 535, 552 (1974) “Literally every piece ....”. “asisovereign tribal entities . . . .” Id. In Mancari at 665",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -7123,7 +7123,7 @@
   {
    "name": "FindTest.test_find_citations#95",
    "input": "Failed to recognize 1993 Conn. Super. Ct. 5243-P",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -7173,7 +7173,7 @@
   {
    "name": "FindTest.test_find_citations#96",
    "input": "foo 1 U.S., 1 bar",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -7228,7 +7228,7 @@
   {
    "name": "FindTest.test_find_citations#97",
    "input": "blah blah Bankr. L. Rep. (CCH) P12,345. blah blah",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -7278,7 +7278,7 @@
   {
    "name": "FindTest.test_find_citations#98",
    "input": "blah blah, 2009 12345 (La.App. 1 Cir. 05/10/10). blah blah",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -7329,7 +7329,7 @@
   {
    "name": "FindTest.test_find_citations#99",
    "input": "1 U.S. 1 (",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -7384,7 +7384,7 @@
   {
    "name": "FindTest.test_find_citations#100",
    "input": "v. Bar, 1 U.S. 1",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -7440,7 +7440,7 @@
   {
    "name": "FindTest.test_find_citations#101",
    "input": "1 U.S., at 1",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -7496,7 +7496,7 @@
   {
    "name": "FindTest.test_find_citations#102",
    "input": ", 1 U.S., at 1",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -7787,7 +7787,7 @@
   {
    "name": "FindTest.test_find_citations#110",
    "input": "1 U.S. 1, 2277, 2278, 2279, 2280, 2281, 2282, 2283, 2284, 2286, 2287, 2288, 2289, 2290, 2291",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -7968,7 +7968,7 @@
   {
    "name": "FindTest.test_find_citations#113",
    "input": " 576 U.S. ___, 13",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -8038,7 +8038,7 @@
   {
    "name": "FindTest.test_find_citations#114",
    "input": "Shady Grove Farms v Goldsmith Seeds 1 U.S. 1",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -8104,7 +8104,7 @@
   {
    "name": "FindTest.test_find_citations#115",
    "input": "Shady Grove Farms v Goldsmith Seeds 1 U.S. 1 \b*\u0007\u0007΋þİ΋‬ڋ‪-\u0014V‬‬",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -8731,7 +8731,7 @@
   {
    "name": "FindTest.test_find_citations#121",
    "input": "Angelopoulos v. Keystone Orthopedic Specialists, S.C., Wachn, LCC, 2015 WL 2375225, at p. *4. yadda yadda yadda... Angelopoulos p. *4;",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -8813,7 +8813,7 @@
   {
    "name": "FindTest.test_find_citations#122",
    "input": "Angelopoulos v. Keystone Orthopedic Specialists, S.C., Wachn, LCC, 2015 WL 2375225",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -9385,7 +9385,7 @@
   {
    "name": "FindTest.test_find_journal_citations#6",
    "input": "77 Marq. L. Rev. 475 (1993-94)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -9437,7 +9437,7 @@
   {
    "name": "FindTest.test_find_law_citations#1",
    "input": "Mass. Gen. Laws ch. 1, § 2",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -9482,7 +9482,7 @@
   {
    "name": "FindTest.test_find_law_citations#2",
    "input": "1 Stat. 2",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -9571,7 +9571,7 @@
   {
    "name": "FindTest.test_find_law_citations#4",
    "input": "Ariz. Rev. Stat. Ann. § 36-3701 et seq. (West 2009)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -9619,7 +9619,7 @@
   {
    "name": "FindTest.test_find_law_citations#5",
    "input": "Mass. Gen. Laws ch. 1, §§ 2-3",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -9758,7 +9758,7 @@
   {
    "name": "FindTest.test_find_law_citations#8",
    "input": "Wis. Stat. § 655.002(2)(c) (2005-06)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -9805,7 +9805,7 @@
   {
    "name": "FindTest.test_find_law_citations#9",
    "input": "Ark. Code Ann. § 23-3-119(a)(2) and (d) (1987)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -9902,7 +9902,7 @@
   {
    "name": "FindTest.test_find_tc_citations#2",
    "input": "word T.C. Memo. 2019-233",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -9952,7 +9952,7 @@
   {
    "name": "FindTest.test_find_tc_citations#3",
    "input": "something T.C. Summary Opinion 2019-233",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -10002,7 +10002,7 @@
   {
    "name": "FindTest.test_find_tc_citations#4",
    "input": "T.C. Summary Opinion 2018-133",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -10052,7 +10052,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#1",
    "input": "and more and more Jin Fuey Moy v. United States, 254 U.S. 189. Petitioner contends",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -10119,7 +10119,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#2",
    "input": "Overruled and so on Jin Fuey Moy v. United States, 254 U.S. 189. Petitioner contends",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -10255,7 +10255,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#4",
    "input": "con-firmable. United States v. Am. Sav. Bank, 508 U.S. 324 (1993). That plan proposed to bifurcate the claim and",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -10579,7 +10579,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#8",
    "input": "the court in Smith Johnson , 1 U. S., at 2",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -10717,7 +10717,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#10",
    "input": "\n Smart v. Tatum,\n \n \n 541 U.S. 1085 (2004);\n ",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -10786,7 +10786,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#11",
    "input": "Craig v. Harrah, ___ Nev. ___ [201 P.2d 1081]. (",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -10843,7 +10843,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#12",
    "input": "United States v. Hodgson, ___ Iowa ___, 44 N.J. 151, 207 A. 2d 542;",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -11012,7 +11012,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#14",
    "input": "partially secured by a debtor’s principal residence was not con-firmable. Nobelman v. Am. Sav. Bank, 508 U.S. 324 (1993). That plan proposed to bifurcate the claim and... pay the unsecured... only by a lien on the debtor’s principal residence.” codifies the a lien on the debtor’s principal residence.” Nobelman at 332, decision in individual debtor chapter 11 cases.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -11177,7 +11177,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#16",
    "input": "§ 3.1 (2d ed. 1977), Strawberry Hill , 725 S.W.2d at 176 (Gonzalez, J., dissenting);",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -11259,7 +11259,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#17",
    "input": "§ 3.1 (2d ed. 1977), (See Hill , 725 S.W.2d at 176 (Gonzalez, J., dissenting));",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -11341,7 +11341,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#18",
    "input": "United States v. Carignan, 342 U. S. 36, 41;",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -11672,7 +11672,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#22",
    "input": "party.” Anderson, 477 U.S. at 248",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -11926,7 +11926,7 @@
   {
    "name": "FindTest.test_markup_plaintiff_and_antecedent_guesses#26",
    "input": "dentification. Stovall v. Denno, 388 U.S. 293, ",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -12411,7 +12411,7 @@
   {
    "name": "FindTest.test_markup_text_without_html_clean_step#1",
    "input": "Lissner v. Test,  1 U.S. 1  (1982)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -12527,7 +12527,7 @@
   {
    "name": "FindTest.test_no_duplicate_editions#2",
    "input": "410 U.S. 113",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -13134,7 +13134,7 @@
   {
    "name": "FindTest.test_nominative_reporter_overlaps#7",
    "input": "Gilmer, 500 U.S. at 25;",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -14159,7 +14159,7 @@
   {
    "name": "FindTest.test_reference_filtering#3",
    "input": "was not con-firmable. Nobelman v. Am. Sav. Bank, 508 U.S. 324, 113 S.Ct. 2106, 124 L.Ed.2d 228 (1993). That plan residence.” Nobelman at 332, 113 S.Ct. 2106. Section 1123(b)(5) codifies the ",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -14676,7 +14676,7 @@
   {
    "name": "FindTest.test_relaxed_reporter_whitespace#7",
    "input": "See Adarand, 799 N. Y. S. 2d, at 797",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
