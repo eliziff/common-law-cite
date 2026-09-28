@@ -494,8 +494,8 @@ pub struct ExtractResponse {
 
 /// [`crate::extract`] with offsets converted to `request.offset_unit`.
 pub fn extract(request: &ExtractRequest) -> Result<ExtractResponse, ApiError> {
-    let (citations, mut source_parts, resolutions) = extract_citations(&request.text, request.markup_text.as_deref(), &request.options, request.offset_unit)?;
     let document = ScalarText::new(&request.text);
+    let (citations, mut source_parts, resolutions) = extract_citations(&document, request.markup_text.as_deref(), &request.options, request.offset_unit)?;
     for part in &mut source_parts {
         for (start, end) in &mut part.anchor_spans {
             *start = from_byte(&document, *start, request.offset_unit);
@@ -522,15 +522,14 @@ fn from_byte(document: &ScalarText<'_>, byte: usize, unit: OffsetUnit) -> usize 
 }
 
 fn extract_citations(
-    text: &str,
+    document: &ScalarText<'_>,
     markup: Option<&str>,
     options: &Options,
     unit: OffsetUnit,
 ) -> Result<(Vec<Citation>, Vec<crate::source::SourcePart>, Vec<crate::resolve::Resolution>), ApiError> {
-    let document = ScalarText::new(text);
-    let options = byte_options(&document, options, unit)?;
-    let (mut citations, parts, resolutions) = crate::extract_markup_with_parts(text, markup, &options);
-    convert_citations(&document, &mut citations, unit);
+    let options = byte_options(document, options, unit)?;
+    let (mut citations, parts, resolutions) = crate::extract_markup_with_parts(document.value, markup, &options);
+    convert_citations(document, &mut citations, unit);
     Ok((citations, parts, resolutions))
 }
 
@@ -582,14 +581,7 @@ pub fn convert_citations(document: &ScalarText<'_>, citations: &mut [Citation], 
     if unit == OffsetUnit::Byte {
         return;
     }
-    let convert = |byte: usize| -> usize {
-        match unit {
-            OffsetUnit::Byte => Some(byte),
-            OffsetUnit::Char => document.scalar_at_byte(byte),
-            OffsetUnit::Utf16 => document.utf16_at_byte(byte),
-        }
-        .expect("engine offsets are character boundaries")
-    };
+    let convert = |byte| from_byte(document, byte, unit);
     let convert_span = |span: &mut Span| {
         span.start = convert(span.start);
         span.end = convert(span.end);
@@ -805,7 +797,7 @@ pub struct KeyForTextResponse {
 
 /// The key of the single citation in `text`, plus every citation's key.
 pub fn key_for_text(request: &TextRequest) -> Result<KeyForTextResponse, ApiError> {
-    let citations = extract_citations(&request.text, None, &request.options, request.offset_unit)?.0;
+    let citations = extract_citations(&ScalarText::new(&request.text), None, &request.options, request.offset_unit)?.0;
     let (key, reason, message) = match key_stage::single_key(&citations) {
         Ok(key) => (Some(key), None, None),
         Err(error) => {
@@ -957,7 +949,7 @@ fn request_citations(
     match (citation, text) {
         (Some(citation), None) => Ok((vec![citation.clone()], Vec::new())),
         (None, Some(text)) => {
-            let (citations, _, resolutions) = extract_citations(text, None, options, offset_unit)?;
+            let (citations, _, resolutions) = extract_citations(&ScalarText::new(text), None, options, offset_unit)?;
             Ok((citations, resolutions))
         }
         _ => Err(ApiError::invalid(format!(
@@ -1235,9 +1227,9 @@ fn planned_annotations(request: &AnnotateRequest) -> Result<Vec<annotate_stage::
             )))
         }
     };
+    let document = ScalarText::new(&request.text);
     let annotations = match &request.annotations {
         Some(annotations) => {
-            let document = ScalarText::new(&request.text);
             annotations
                 .iter()
                 .map(|annotation| {
@@ -1269,7 +1261,6 @@ fn planned_annotations(request: &AnnotateRequest) -> Result<Vec<annotate_stage::
                 .collect::<Result<Vec<_>, _>>()?
         }
         None => {
-            let document = ScalarText::new(&request.text);
             let options = byte_options(&document, &request.options, request.offset_unit)?;
             let citations = crate::extract(&request.text, &options);
             annotate_stage::citation_annotations(&citations, extent, |citation| {
@@ -1323,14 +1314,9 @@ pub fn annotate(request: &AnnotateRequest) -> Result<AnnotateResponse, ApiError>
 pub fn annotation_ranges(request: &AnnotateRequest) -> Result<Vec<annotate_stage::PreparedAnnotation>, ApiError> {
     let annotations = planned_annotations(request)?;
     let document = ScalarText::new(request.source.as_deref().unwrap_or(&request.text));
-    let convert = |byte| match request.offset_unit {
-        OffsetUnit::Byte => byte,
-        OffsetUnit::Char => document.scalar_at_byte(byte).unwrap(),
-        OffsetUnit::Utf16 => document.utf16_at_byte(byte).unwrap(),
-    };
     Ok(annotations.into_iter().map(|mut annotation| {
-        annotation.start = convert(annotation.start);
-        annotation.end = convert(annotation.end);
+        annotation.start = from_byte(&document, annotation.start, request.offset_unit);
+        annotation.end = from_byte(&document, annotation.end, request.offset_unit);
         annotation
     }).collect())
 }
@@ -1480,13 +1466,9 @@ pub struct ProtectedSpansRequest {
 
 pub fn protected_citation_spans(request: &ProtectedSpansRequest) -> Vec<[usize; 2]> {
     let text = ScalarText::new(&request.text);
-    let convert = |byte| match request.offset_unit {
-        OffsetUnit::Byte => byte,
-        OffsetUnit::Char => text.scalar_at_byte(byte).unwrap(),
-        OffsetUnit::Utf16 => text.utf16_at_byte(byte).unwrap(),
-    };
     crate::cues::protected_spans(&request.text).into_iter()
-        .map(|span| [convert(span.start), convert(span.end)]).collect()
+        .map(|span| [from_byte(&text, span.start, request.offset_unit),
+            from_byte(&text, span.end, request.offset_unit)]).collect()
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]

@@ -415,6 +415,16 @@ fn primary_ranges(value: &str) -> (Vec<Hit>, Vec<Hit>) {
 /// Trim a candidate styled start: drop any leading signal ("See also", "Cf")
 /// and reject a span that opens inside a parenthetical.
 fn style_span_start(text: &str, mut start: usize, core_start: usize) -> Option<usize> {
+    // Extracted PDF notes can put the footnote number on its own line before
+    // the authority. A work-style match may otherwise consume that number.
+    if start == 0 || text[..start].ends_with('\n') {
+        if let Some(line_end) = text[start..core_start].find('\n') {
+            let line = text[start..start + line_end].trim_end_matches('\r');
+            if !line.is_empty() && line.bytes().all(|byte| byte.is_ascii_digit()) {
+                start += line_end + 1;
+            }
+        }
+    }
     for _ in 0..4 {
         let Some(signal) = SIGNAL_PREFIX.find(&text[start..core_start]) else {
             break;

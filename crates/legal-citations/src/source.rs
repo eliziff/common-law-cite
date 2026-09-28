@@ -44,6 +44,20 @@ pattern! { legal_grammar::compile_python_table_entry;
     BARE_COMMENTARY => "format.bare.commentary", BARE_SENTENCE => "format.bare.sentence",
 }
 
+// ALR's pure-reference prefilter is narrower than the splitter grammar:
+// subsection parentheses, extra signal verbs, and mixed citing clauses must
+// continue through the ordinary recall splitter.
+static ALR_PURE_REFERENCE: LazyLock<regex::Regex> = LazyLock::new(|| {
+    let number = r"\d+(?:\.\d+)?[a-z]?(?:\s*[-–]\s*\d+(?:\.\d+)?[a-z]?)?";
+    let numbers = format!(r"{number}(?:\s*(?:,|and|&)\s*{number})*");
+    let provision = r"(?:ss?\.?|sections?|arts?\.?|articles?)";
+    let rule = r"(?:rr?\.?|rules?)";
+    let rule_number = r"\d+(?:\.\d+){0,3}[a-z]?";
+    let rule_numbers = format!(r"{rule_number}(?:\s*(?:,|and|&)\s*{rule_number})*");
+    let pin = format!(r"(?:at\s+(?:(?:{rule})\s+{rule_numbers}|(?:(?:paras?\.?|pp?\.?|pages?|{provision})\s+)?{numbers})(?:ff)?|(?:paras?\.?|{provision})\s+{numbers}(?:ff)?|(?:{rule})\s+{rule_numbers}(?:ff)?)");
+    regex::Regex::new(&format!(r"(?i)^\s*(?:(?:see(?:,?\s+e\.?g\.?,?)?(?:\s+also)?|but\s+see|contra|compare|cf\.?|see\s+generally)\s+)?(?:ibid\.?|(?:[^,;.]{{1,60}}\s*,\s*)?supra(?:\s+(?:note|nn?\.?)\s+\d+)?)(?:\s*,)?(?:\s+{pin})?\s*[.;]?\s*$")).expect("ALR pure-reference prefilter")
+});
+
 /// ALR's administrative-tail removal, also used before retrieval normalization.
 pub fn strip_administrative_tail(text: &str) -> String {
     BARE_ADMIN.replace_all(text, "").trim_matches(crate::text::python_whitespace).to_owned()
@@ -113,12 +127,34 @@ pub struct SourcePart {
 /// splitter's part boundaries are independent of citation extents.
 pub fn split_notes(text: &str, notes: &[crate::NoteRange]) -> Vec<SourcePart> {
     let mut parts = Vec::new();
+    let mut preceding_ibid_without_source = false;
     for note in notes {
         if note.start > note.end || !text.is_char_boundary(note.start)
             || !text.is_char_boundary(note.end) || note.end > text.len() { continue; }
-        // ALR's original splitter owns part boundaries. Additional citation
-        // families must not split a source and change the following ibid.
-        for mut part in split(&text[note.start..note.end], true, false).parts {
+        // ALR's pure-reference prefilter keeps each semicolon clause intact;
+        // recall splitting applies to notes with other source material.
+        let value = &text[note.start..note.end];
+        let clauses = value.split(';').collect::<Vec<_>>();
+        let leading_ibid = value.trim_start().to_ascii_lowercase().starts_with("ibid");
+        let pure = value.split_whitespace().collect::<Vec<_>>().join(" ").chars().count() <= 400
+            && matches(&REFERENCE, value) && clauses.len() <= 4
+            && !(leading_ibid && preceding_ibid_without_source)
+            && clauses.iter().all(|clause| !clause.trim().is_empty()
+                && ALR_PURE_REFERENCE.is_match(clause));
+        let selected = if pure {
+            let mut cursor = 0;
+            clauses.into_iter().filter_map(|clause| {
+                let start = cursor;
+                cursor += clause.len() + 1;
+                let trimmed = clause.trim();
+                if trimmed.is_empty() { return None; }
+                let start = start + clause.len() - clause.trim_start().len();
+                Some(SourcePart { start, end: start + trimmed.len(), text: trimmed.into(),
+                    anchors: vec!["reference".into()], resolved_url: None,
+                    extended_us: false, anchor_spans: Vec::new() })
+            }).collect()
+        } else { split(value, true, false).parts };
+        for mut part in selected {
             part.start += note.start;
             part.end += note.start;
             for (start, end) in &mut part.anchor_spans {
@@ -127,9 +163,43 @@ pub fn split_notes(text: &str, notes: &[crate::NoteRange]) -> Vec<SourcePart> {
             }
             parts.push(part);
         }
+        // A preceding ibid has no independent source in Phase 1. ALR declines
+        // the pure-reference shortcut for the next leading ibid in that case.
+        preceding_ibid_without_source = leading_ibid;
     }
     parts.sort_by_key(|part| (part.start, part.end));
     parts
+}
+
+/// The original prefilter admits a leading ibid after a preceding ibid only
+/// when that predecessor has a link. Extraction first splits conservatively;
+/// the caller can then reuse the resolver's link decision for these rare notes.
+pub(crate) fn linked_ibid_candidates(text: &str, notes: &[crate::NoteRange], parts: &[SourcePart]) -> Vec<usize> {
+    notes.iter().enumerate().skip(1).filter_map(|(index, note)| {
+        let previous = &notes[index - 1];
+        let prior = text.get(previous.start..previous.end)?;
+        let value = text.get(note.start..note.end)?;
+        let starts_ibid = |value: &str| value.trim_start().to_ascii_lowercase().starts_with("ibid");
+        (starts_ibid(prior) && starts_ibid(value) && !value.contains(';')
+            && ALR_PURE_REFERENCE.is_match(value)
+            && parts.iter().filter(|part| note.start <= part.start && part.end <= note.end).count() > 1)
+            .then_some(index)
+    }).collect()
+}
+
+pub(crate) fn merge_linked_ibids(text: &str, notes: &[crate::NoteRange], parts: &mut Vec<SourcePart>,
+    linked: &[usize]) {
+    for &index in linked {
+        let note = &notes[index];
+        parts.retain(|part| !(note.start <= part.start && part.end <= note.end));
+        let raw = &text[note.start..note.end];
+        let value = raw.trim();
+        let start = note.start + raw.len() - raw.trim_start().len();
+        parts.push(SourcePart { start, end: start + value.len(), text: value.into(),
+            anchors: vec!["reference".into()], resolved_url: None,
+            extended_us: false, anchor_spans: Vec::new() });
+    }
+    parts.sort_by_key(|part| (part.start, part.end));
 }
 
 #[derive(Clone, Debug, Serialize)]

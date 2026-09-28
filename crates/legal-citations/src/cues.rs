@@ -127,9 +127,13 @@ fn joined(legacy: &str, surfaces: BTreeSet<String>) -> String {
     format!("{legacy}|{}", surfaces.join("|"))
 }
 
-static DEFS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
+static BASE_DEFS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
     let tables = legal_grammar::load_tables().expect("grammar corpus");
-    let mut defs = (*tables["cue.citation"].defs).clone();
+    (*tables["cue.citation"].defs).clone()
+});
+
+static DEFS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
+    let mut defs = (*BASE_DEFS).clone();
     let registry = registry();
     let courts = registry
         .courts
@@ -187,10 +191,10 @@ static DEFS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
     defs
 });
 
-fn cue(id: &str) -> CompiledEcmascriptGrammar {
+fn cue_with_defs(id: &str, defs: &HashMap<String, String>) -> CompiledEcmascriptGrammar {
     let tables = legal_grammar::load_tables().expect("grammar corpus");
     let entry = &tables[id].entry;
-    let pattern = legal_grammar::expand_pattern(&entry.pattern, &DEFS).expect("cue defs");
+    let pattern = legal_grammar::expand_pattern(&entry.pattern, defs).expect("cue defs");
     // These primitives came from native Rust regexes; retain their Unicode
     // word, digit and whitespace semantics at the new owner.
     let mut builder = regex::RegexBuilder::new(&pattern);
@@ -202,12 +206,22 @@ fn cue(id: &str) -> CompiledEcmascriptGrammar {
     builder.build().unwrap_or_else(|error| panic!("{id}: {error}"))
 }
 
+fn cue(id: &str) -> CompiledEcmascriptGrammar {
+    cue_with_defs(id, &DEFS)
+}
+
+fn layout_cue(id: &str) -> CompiledEcmascriptGrammar {
+    cue_with_defs(id, &BASE_DEFS)
+}
+
 fn backtracking(id: &str) -> CompiledGrammar {
     legal_grammar::compile_table_entry(id).unwrap_or_else(|error| panic!("{error}"))
 }
 
 static CITATION: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| cue("cue.citation"));
 static CONTINUATION: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| cue("cue.continuation"));
+static LAYOUT_CITATION: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| layout_cue("cue.citation"));
+static LAYOUT_CONTINUATION: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| layout_cue("cue.continuation"));
 static PROTECTED: LazyLock<[CompiledEcmascriptGrammar; 6]> = LazyLock::new(|| {
     [
         "cue.protected.reporter",
@@ -219,9 +233,17 @@ static PROTECTED: LazyLock<[CompiledEcmascriptGrammar; 6]> = LazyLock::new(|| {
     ]
     .map(cue)
 });
+static LAYOUT_PROTECTED: LazyLock<[CompiledEcmascriptGrammar; 6]> = LazyLock::new(|| {
+    [
+        "cue.protected.reporter", "cue.protected.neutral", "cue.protected.statute",
+        "cue.protected.journal", "cue.protected.pinpoint", "cue.protected.code",
+    ].map(layout_cue)
+});
 static SIGNAL_CASED: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| cue("cue.signal.cased"));
 static SIGNAL_FOLDED: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| cue("cue.signal.folded"));
+static LAYOUT_SIGNAL_CASED: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| layout_cue("cue.signal.cased"));
+static LAYOUT_SIGNAL_FOLDED: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| layout_cue("cue.signal.folded"));
 static CITATION_TAIL: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| cue("cue.citation-tail"));
 // `\w` in a cross-reference short form is any letter, which is the Unicode
@@ -246,10 +268,20 @@ pub fn has_citation_cue(text: &str) -> bool {
     CITATION.is_match(text) || PROTECTED[5].is_match(text)
 }
 
+/// The frozen PDF layout cue uses the original table. Registry additions are
+/// valid citations, but a broader cue here can hide a document heading.
+pub fn layout_has_citation_cue(text: &str) -> bool {
+    LAYOUT_CITATION.is_match(text) || LAYOUT_PROTECTED[5].is_match(text)
+}
+
 /// Whether a line opens with a report series, continuing a citation broken
 /// across lines (`S.C.R. 631`).
 pub fn is_citation_continuation(text: &str) -> bool {
     CONTINUATION.is_match(text)
+}
+
+pub fn layout_is_citation_continuation(text: &str) -> bool {
+    LAYOUT_CONTINUATION.is_match(text)
 }
 
 fn has_pinpoint_prefix(text: &str) -> bool {
@@ -303,6 +335,14 @@ fn has_pinpoint_prefix(text: &str) -> bool {
 /// periodical blocks, pinpoints and U.S. Code sections, grouped by kind in
 /// that order.
 pub fn protected_spans(text: &str) -> Vec<Range<usize>> {
+    protected_spans_in(text, true)
+}
+
+pub fn layout_protected_spans(text: &str) -> Vec<Range<usize>> {
+    protected_spans_in(text, false)
+}
+
+fn protected_spans_in(text: &str, expanded: bool) -> Vec<Range<usize>> {
     if !text.chars().any(|character| character.is_numeric()) {
         return Vec::new();
     }
@@ -322,7 +362,7 @@ pub fn protected_spans(text: &str) -> Vec<Range<usize>> {
         || text
             .split(|character: char| !character.is_ascii_alphanumeric())
             .any(|token| {
-                DEFS["cue_statute_sources"]
+                (if expanded { &DEFS } else { &BASE_DEFS })["cue_statute_sources"]
                     .split('|')
                     .any(|source| token.eq_ignore_ascii_case(source))
             });
@@ -336,7 +376,7 @@ pub fn protected_spans(text: &str) -> Vec<Range<usize>> {
         {
             continue;
         }
-        let regex = &PROTECTED[index];
+        let regex = if expanded { &PROTECTED[index] } else { &LAYOUT_PROTECTED[index] };
         let mut offset = 0;
         while let Some(captures) = regex.captures_at(text, offset) {
             let found = captures.name("span").expect("protected span capture");
@@ -366,24 +406,30 @@ fn normalize(text: &str) -> Cow<'_, str> {
     )
 }
 
-fn reporter_citation_re(first: u8) -> Option<&'static Regex> {
+fn reporter_citation_re(first: u8, expanded: bool) -> Option<&'static Regex> {
     static RES: OnceLock<[OnceLock<Regex>; 26]> = OnceLock::new();
+    static LAYOUT_RES: OnceLock<[OnceLock<Regex>; 26]> = OnceLock::new();
     static ABBREVIATIONS: OnceLock<Vec<String>> = OnceLock::new();
+    static LAYOUT_ABBREVIATIONS: OnceLock<Vec<String>> = OnceLock::new();
     let index = first.checked_sub(b'A')? as usize;
-    let slot = RES
+    let slots = if expanded { &RES } else { &LAYOUT_RES };
+    let slot = slots
         .get_or_init(|| std::array::from_fn(|_| OnceLock::new()))
         .get(index)?;
-    let abbreviations = ABBREVIATIONS.get_or_init(|| {
+    let source = if expanded { &ABBREVIATIONS } else { &LAYOUT_ABBREVIATIONS };
+    let abbreviations = source.get_or_init(|| {
         let mut values: Vec<String> = serde_json::from_str(include_str!("../registry/mcgill-inventory.json"))
             .expect("source McGill abbreviation inventory");
-        // Retain original records and order; authored additions use the same
-        // proven spelling routine, without certifying the inventory entries.
-        let mut seen = values.iter().cloned().collect::<BTreeSet<_>>();
-        for reporter in &registry().reporters {
-            if reporter.source == "reporters-db" { continue; }
-            for surface in reporter.editions.iter().map(|edition| &edition.abbreviation)
-                .chain(reporter.variations.keys()) {
-                if seen.insert(surface.clone()) { values.push(surface.clone()); }
+        if expanded {
+            // Retain original records and order; authored additions use the same
+            // proven spelling routine, without certifying the inventory entries.
+            let mut seen = values.iter().cloned().collect::<BTreeSet<_>>();
+            for reporter in &registry().reporters {
+                if reporter.source == "reporters-db" { continue; }
+                for surface in reporter.editions.iter().map(|edition| &edition.abbreviation)
+                    .chain(reporter.variations.keys()) {
+                    if seen.insert(surface.clone()) { values.push(surface.clone()); }
+                }
             }
         }
         values
@@ -407,7 +453,7 @@ fn reporter_citation_re(first: u8) -> Option<&'static Regex> {
         })
 }
 
-fn has_reporter_citation(text: &str) -> bool {
+fn has_reporter_citation(text: &str, expanded: bool) -> bool {
     static PREFIX: OnceLock<Regex> = OnceLock::new();
     let prefix = PREFIX.get_or_init(|| {
         let tables = legal_grammar::load_tables().expect("citation grammar");
@@ -421,7 +467,7 @@ fn has_reporter_citation(text: &str) -> bool {
             return false;
         }
         tried |= bit;
-        reporter_citation_re(first).is_some_and(|regex| regex.is_match(text))
+        reporter_citation_re(first, expanded).is_some_and(|regex| regex.is_match(text))
     })
 }
 
@@ -429,19 +475,40 @@ fn has_reporter_citation(text: &str) -> bool {
 /// neutral, report or statute citation, a two-party case name, a section,
 /// paragraph or page pinpoint, `supra note`/`ibid`, or a periodical block.
 pub fn has_citation_signal(text: &str) -> bool {
+    has_citation_signal_in(text, true)
+}
+
+pub fn layout_has_citation_signal(text: &str) -> bool {
+    has_citation_signal_in(text, false)
+}
+
+fn has_citation_signal_in(text: &str, expanded: bool) -> bool {
     let normalized = normalize(text);
-    if SIGNAL_CASED.is_match(&normalized) || SIGNAL_FOLDED.is_match(&normalized) {
+    let (cased, folded) = if expanded {
+        (&SIGNAL_CASED, &SIGNAL_FOLDED)
+    } else {
+        (&LAYOUT_SIGNAL_CASED, &LAYOUT_SIGNAL_FOLDED)
+    };
+    if cased.is_match(&normalized) || folded.is_match(&normalized) {
         return true;
     }
     static DIGIT_RUN: OnceLock<Regex> = OnceLock::new();
     DIGIT_RUN.get_or_init(|| Regex::new(r"\d+").expect("digit run regex"))
         .find_iter(&normalized).take(2).count() >= 2
-        && has_reporter_citation(&normalized)
+        && has_reporter_citation(&normalized, expanded)
 }
 
 /// Whether a short line is plausibly a heading: capitalized, not ending in a
 /// number, carrying no citation cue or signal, and all caps or title case.
 pub fn heading_text_plausible(value: &str) -> bool {
+    heading_text_plausible_in(value, true)
+}
+
+pub fn layout_heading_text_plausible(value: &str) -> bool {
+    heading_text_plausible_in(value, false)
+}
+
+fn heading_text_plausible_in(value: &str, expanded: bool) -> bool {
     let text = value.trim();
     if text.is_empty() || text.chars().count() > 100 {
         return false;
@@ -453,7 +520,8 @@ pub fn heading_text_plausible(value: &str) -> bool {
         return false;
     }
     let citation_text = POSSESSIVE.replace_all(text, "$1");
-    if has_citation_cue(&citation_text) || has_citation_signal(&citation_text) {
+    let cue = if expanded { has_citation_cue(&citation_text) } else { layout_has_citation_cue(&citation_text) };
+    if cue || has_citation_signal_in(&citation_text, expanded) {
         return false;
     }
     let letters = text.chars().filter(|character| character.is_alphabetic()).collect::<Vec<_>>();

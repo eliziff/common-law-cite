@@ -446,6 +446,10 @@ impl<'a> Resolver<'a> {
         let origin = if let Some(url) = part.resolved_url.as_deref() {
             full.iter().find(|citation| !citation.is_ambiguous()
                 && citation.fields.url.as_deref() == Some(url)).map(|citation| citation.index)
+                .or_else(|| match full.as_slice() {
+                    [citation] if !citation.is_ambiguous() => Some(citation.index),
+                    _ => None,
+                })
         } else if explicit {
             full.iter().find(|citation| !citation.is_ambiguous()
                 && citation.fields.url.as_deref() == Some(fields.link_candidate.as_str()))

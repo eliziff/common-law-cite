@@ -151,7 +151,23 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
         citation.key = citation.alias.as_ref().map(|target| target.key.clone())
             .or_else(|| key::key_in(citation, registry::registry()));
     }
-    let parts = source::split_notes(text, options.notes.as_deref().unwrap_or(&[]));
+    let notes = options.notes.as_deref().unwrap_or(&[]);
+    let mut parts = source::split_notes(text, notes);
+    let candidates = source::linked_ibid_candidates(text, notes, &parts);
+    if !candidates.is_empty() {
+        let preview = resolve::resolve_with_sources(&citations, options.notes.as_deref(), &[], None,
+            &parts, options.supra_hint_mode, options.supra_linking_mode);
+        let linked = candidates.into_iter().filter(|&index| {
+            let previous = &notes[index - 1];
+            citations.iter().filter(|citation| previous.start <= citation.span.start
+                && citation.span.end <= previous.end)
+                .max_by_key(|citation| citation.span.start)
+                .and_then(|citation| preview.iter().find(|resolution| resolution.index == citation.index))
+                .and_then(|resolution| resolution.url.as_deref())
+                .is_some_and(|url| !url.is_empty() && !url.eq_ignore_ascii_case("other"))
+        }).collect::<Vec<_>>();
+        source::merge_linked_ibids(text, notes, &mut parts, &linked);
+    }
     let resolutions = if options.resolve {
         let resolutions = resolve::resolve_with_sources(&citations, options.notes.as_deref(), &[], None,
             &parts, options.supra_hint_mode, options.supra_linking_mode);
