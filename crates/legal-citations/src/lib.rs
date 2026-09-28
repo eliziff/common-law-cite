@@ -69,6 +69,9 @@ pub enum SupraMode {
 #[serde(default, rename_all = "camelCase", deny_unknown_fields)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct Options {
+    /// Return the pinned Eyecite token view of the shared discovery result.
+    /// Native/Commonwealth occurrence discovery remains available by default.
+    pub source_only: bool,
     /// Omit citations with unresolved registry interpretations.
     pub remove_ambiguous: bool,
     /// Attach short forms, supra, ibid and references to their antecedents.
@@ -93,6 +96,7 @@ pub struct Options {
 impl Default for Options {
     fn default() -> Self {
         Self {
+            source_only: false,
             remove_ambiguous: false,
             resolve: true,
             parallel: true,
@@ -133,6 +137,8 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     -> (Vec<Citation>, Vec<source::SourcePart>, Vec<resolve::Resolution>) {
     let markup = markup.map(|source| clean::Markup::new(text, source));
     let mut citations = find::find_styled(text, options, markup.as_ref());
+    if options.source_only { citations.retain(|citation| citation.fields.source_case_name.is_some()); }
+    let mut citations = find::filter_citations(citations);
     metadata::attach(text, &mut citations);
     for citation in &mut citations {
         us::finish(citation);
@@ -145,7 +151,7 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
         citation.key = citation.alias.as_ref().map(|target| target.key.clone())
             .or_else(|| key::key_in(citation, registry::registry()));
     }
-    let parts = source::split_notes(text, options.notes.as_deref().unwrap_or(&[]), options.extended_us);
+    let parts = source::split_notes(text, options.notes.as_deref().unwrap_or(&[]));
     let resolutions = if options.resolve {
         let resolutions = resolve::resolve_with_sources(&citations, options.notes.as_deref(), &[], None,
             &parts, options.supra_hint_mode, options.supra_linking_mode);

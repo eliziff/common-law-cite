@@ -17,7 +17,7 @@ macro_rules! pattern {
 }
 pattern! {
     URL => "cite.url", NEUTRAL => "cite.neutral", REPORTER => "cite.reporter.splitter",
-    STATUTE => "cite.statute.splitter", STATUTE_TOA => "cite.statute.toa",
+    STATUTE => "cite.statute.splitter",
     JOURNAL => "cite.journal.splitter", BOOK => "frame.book",
     REFERENCE => "ref.token", PURE_REFERENCE => "ref.pure.splitter", LINK => "attach.link",
     SIGNAL => "signal.prefix.splitter", SOURCE_SIGNAL => "signal.source",
@@ -99,6 +99,9 @@ pub struct SourcePart {
     pub end: usize,
     pub text: String,
     pub anchors: Vec<String>,
+    /// ALR FootnotePart.link after host retrieval, before reference resolution.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolved_url: Option<String>,
     #[serde(default)]
     pub extended_us: bool,
     /// Exact source-grammar anchors in the same coordinate system as start/end.
@@ -108,12 +111,14 @@ pub struct SourcePart {
 
 /// Split supplied note text in its original document coordinates. The
 /// splitter's part boundaries are independent of citation extents.
-pub fn split_notes(text: &str, notes: &[crate::NoteRange], extended_us: bool) -> Vec<SourcePart> {
+pub fn split_notes(text: &str, notes: &[crate::NoteRange]) -> Vec<SourcePart> {
     let mut parts = Vec::new();
     for note in notes {
         if note.start > note.end || !text.is_char_boundary(note.start)
             || !text.is_char_boundary(note.end) || note.end > text.len() { continue; }
-        for mut part in split(&text[note.start..note.end], true, extended_us).parts {
+        // ALR's original splitter owns part boundaries. Additional citation
+        // families must not split a source and change the following ibid.
+        for mut part in split(&text[note.start..note.end], true, false).parts {
             part.start += note.start;
             part.end += note.start;
             for (start, end) in &mut part.anchor_spans {
@@ -165,7 +170,7 @@ fn full_match(pattern: &CompiledGrammar, text: &str) -> bool {
 }
 
 fn us_matches(text: &str) -> Vec<Anchor> {
-    crate::us::find(text, true).into_iter().map(|found| {
+    crate::us::find(text, true, None).into_iter().map(|found| {
         // Preserve ALR's source-routing precedence independently of the
         // authority classification: laws, journals, then case reporters.
         let editions = found.fields.exact_editions.iter().chain(&found.fields.variation_editions);
@@ -179,13 +184,11 @@ fn us_matches(text: &str) -> Vec<Anchor> {
 fn anchors(text: &str, extended_us: bool) -> Vec<Anchor> {
     let mut found = Vec::new();
     for (kind, pattern) in [("neutral", &*NEUTRAL), ("reporter", &*REPORTER),
-        ("statute", &*STATUTE), ("statute", &*STATUTE_TOA),
+        ("statute", &*STATUTE),
         ("journal", &*JOURNAL), ("book", &*BOOK), ("url", &*URL)] {
         found.extend(pattern.find_iter(text).map(|found| {
             let found = found.expect("source anchor match");
-            let end = if kind == "url" { found.start() + crate::find::online_source_end(found.as_str()) }
-                else { found.end() };
-            (found.start(), end, kind)
+            (found.start(), found.end(), kind)
         }));
     }
     if extended_us {
@@ -235,7 +238,7 @@ fn part(text: &str, start: usize, end: usize, strict: bool, extended_us: bool) -
     let anchor_spans = anchor_spans(value, &found).into_iter().map(|(left, right)|
         (start + left, start + right)).collect();
     Some(SourcePart { start, end: start + value.len(), text: value.into(), anchors: kinds,
-        extended_us, anchor_spans })
+        extended_us, anchor_spans, resolved_url: None })
 }
 
 fn inside_quotes(text: &str, position: usize) -> bool {
@@ -267,7 +270,8 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor]) ->
         .filter(|found| {
             let prefix = &text[..found.start() + 1];
             !matches(&ABBREVIATION, prefix)
-                && !(matches(&COMPANY, prefix) && matches(&VERSUS, &text[found.end()..]))
+                && !(matches(&COMPANY, prefix) && VERSUS.find(&text[found.end()..])
+                    .expect("leading versus").is_some_and(|matched| matched.start() == 0))
         }).map(|found| found.end()).collect::<Vec<_>>();
     for (&start, end) in sentences.iter().zip(sentences.iter().copied().skip(1).chain([text.len()])) {
         if extended_us && whole_anchors.iter().any(|&(left, right, _)| left < start && start < right) { continue; }
@@ -499,8 +503,7 @@ fn bare_citation(text: &str, kind: &str, extended_us: bool) -> String {
     let mut start = match kind {
         "case" => [&*NEUTRAL, &*REPORTER].into_iter().flat_map(|pattern| pattern.find_iter(value))
             .map(|found| found.expect("case core").start()).min(),
-        "statute" => [&*STATUTE, &*STATUTE_TOA].into_iter().filter_map(|pattern|
-            pattern.find(value).expect("statute core").map(|found| found.start())).min(),
+        "statute" => STATUTE.find(value).expect("statute core").map(|found| found.start()),
         "journal" => JOURNAL.find(value).expect("journal core").map(|found| found.start()),
         _ => None,
     };
@@ -517,7 +520,7 @@ fn embedded_source(text: &str, extended_us: bool) -> bool {
         let signal = signal.expect("embedded source signal");
         if text[..signal.start()].chars().count() < 3 { continue; }
         let tail = text[signal.end()..].chars().take(320).collect::<String>();
-        if [&*REFERENCE, &*NEUTRAL, &*REPORTER, &*STATUTE, &*STATUTE_TOA, &*JOURNAL, &*BOOK]
+        if [&*REFERENCE, &*NEUTRAL, &*REPORTER, &*STATUTE, &*JOURNAL, &*BOOK]
             .into_iter().any(|pattern| matches(pattern, &tail)) || (extended_us && !us_matches(&tail).is_empty()) { return true; }
     }
     false
@@ -528,10 +531,8 @@ pub fn extract_fields(part: &SourcePart, extended_us: bool) -> SourceFields {
     let kind = kind(text, &part.anchors, extended_us);
     let styled = strip_signals(text);
     let (fragments, pages) = pinpoints(&styled, kind, extended_us);
-    let link = URL.find(text).expect("source URL").map_or("other", |found| {
-        let value = found.as_str().trim_matches(['<', '>', '.', ',', ';', ' ']);
-        &value[..crate::find::online_source_end(value)]
-    });
+    let link = URL.find(text).expect("source URL").map_or("other", |found|
+        found.as_str().trim_matches(['<', '>', '.', ',', ';', ' ']));
     let mut reasons = Vec::new();
     if embedded_source(&styled, extended_us) { reasons.push("embedded_second_source"); }
     if styled.is_empty() { reasons.push("missing_citation_surface"); }
@@ -548,5 +549,5 @@ pub fn extract_text_fields(text: &str, extended_us: bool) -> SourceFields {
     let start = text.len() - text.trim_start().len();
     extract_fields(&SourcePart { start, end: start + value.len(), text: value.into(),
         anchors: anchors(value, extended_us).into_iter().map(|(_, _, kind)| kind.to_owned()).collect(),
-        anchor_spans: Vec::new(), extended_us }, extended_us)
+        anchor_spans: Vec::new(), extended_us, resolved_url: None }, extended_us)
 }

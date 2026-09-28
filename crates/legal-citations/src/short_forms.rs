@@ -290,7 +290,7 @@ fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSou
     if !tokens.is_empty() {
         let number = [&*REGISTRY_NOTE, &*REGISTRY_N, &*REGISTRY_NN].into_iter()
             .find_map(|pattern| pattern.captures(text))
-            .and_then(|found| found[1].parse::<u64>().ok()).map(|number| number.to_string());
+            .and_then(|found| crate::text::decimal(&found[1])).map(|number| number.to_string());
         if let Some(number) = number {
             let local = sequence.filter(|&sequence| registry.iter().any(|entry|
                 entry.note.as_str() == Some(number.as_str()) && entry.sequence == Some(sequence)));
@@ -303,11 +303,10 @@ fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSou
             // not satisfy the original Python equality against str(note_n).
             let in_note = |entry: &&ReferenceSource| entry.note.as_str() == Some(number.as_str())
                 && local.is_none_or(|sequence| entry.sequence == Some(sequence));
-            let note_matches = linked.iter().copied().filter(in_note)
-                .filter(|entry| matches_tokens(&match_text(entry))).collect::<Vec<_>>();
-            let note_bases = note_matches.iter().map(|entry| ref_base(entry.link())).collect::<HashSet<_>>();
-            if note_bases.len() == 1 { return (note_matches[0].link().to_owned(), "note_number"); }
-            if !note_matches.is_empty() { return (String::new(), "abstain_ambiguous_note_number"); }
+            if let Some(entry) = linked.iter().copied().filter(in_note)
+                .find(|entry| matches_tokens(&match_text(entry))) {
+                return (entry.link().to_owned(), "note_number");
+            }
             let suffix = registry.iter().filter(in_note).filter(|entry| {
                 let short = ref_tokens(entry.short_form.as_deref().unwrap_or(""));
                 short.len() >= 2 && tokens.ends_with(&short)

@@ -232,10 +232,16 @@
       "additionalProperties": false,
       "properties": {
         "plaintiff": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "defendant": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     },
@@ -359,6 +365,31 @@
         "yearNumber": {
           "type": "integer",
           "minimum": 1600
+        },
+        "pinCiteKind": {
+          "$ref": "#/$defs/pinpointKind"
+        },
+        "explicitShortSpan": {
+          "$ref": "#/$defs/span"
+        },
+        "inlineReference": {
+          "type": "object",
+          "required": [
+            "span"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "span": {
+              "$ref": "#/$defs/span"
+            },
+            "note": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "sourceCaseName": {
+          "$ref": "#/$defs/sourceCaseName"
         }
       }
     },
@@ -579,6 +610,92 @@
             "string",
             "null"
           ]
+        }
+      }
+    },
+    "sourceCaseName": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fullSpanStart",
+        "fullSpanEnd",
+        "pinCiteSpanEnd",
+        "antecedentGuess",
+        "year",
+        "parenthetical",
+        "preCitation",
+        "pinCite",
+        "referenceSpan"
+      ],
+      "properties": {
+        "fullSpanStart": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fullSpanEnd": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "pinCiteSpanEnd": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "antecedentGuess": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "year": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "parenthetical": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "preCitation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/span"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pinCite": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/span"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "referenceSpan": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/span"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tokenSpan": {
+          "$ref": "#/$defs/span"
         }
       }
     }

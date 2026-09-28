@@ -3,8 +3,7 @@
 legal-citations is the only place where legal citation logic lives: grammar,
 court/reporter/series data, identity keys, short-form resolution, parallel
 grouping, formatting and public-source URLs. Beaver, AuthoritiesHelper,
-legal-pinpointer, legal-pdf-parser and legal-structure-parser call it and are
-checked for re-implementations by `tools/citation-boundary`
+legal-pinpointer, legal-pdf-parser and legal-structure-parser call it
 ([docs/boundary.md](docs/boundary.md)). A change that an application needs is
 made here, tested here, tagged, and then pinned by the application.
 
@@ -18,8 +17,7 @@ made here, tested here, tagged, and then pinned by the application.
 - `crates/legal-citations-{py,wasm,cli}`: bindings over `api.rs`.
 - `conformance/`: language-neutral cases (`cases/*.json`) and the Python/JS
   runners; the Rust runner is `crates/legal-citations-cli/tests/conformance.rs`.
-- `tools/`: `sync-upstream.py` (reporters-db/courts-db), `eyecite-diff.py`,
-  `citation-boundary/` (the consumer checker and Claude Code hook).
+- `tools/`: `sync-upstream.py` (reporters-db/courts-db), `eyecite-diff.py`.
 
 ## Rules
 
@@ -89,14 +87,6 @@ conformance case so all three runners exercise it.
   `tools/eyecite-diff.py` for a differential run over a text corpus. Port
   behaviour into the corpus and stages; do not vendor eyecite code.
 
-**The boundary checker moves with the engine.** Consumers run
-`tools/citation-boundary` from the tag they pin. When the engine gains a
-capability that applications used to implement, update the rule hints in
-`tools/citation-boundary/lib/rules.mjs` so findings point at it, and keep
-`docs/boundary.md` in step. Detector changes need fixtures in
-`tools/citation-boundary/test/fixtures` and a read-only rescan of the consumer
-repositories before and after.
-
 ## Validation
 
 - `cargo test -p legal-grammar -p legal-citations` for corpus vectors, stages
@@ -104,5 +94,4 @@ repositories before and after.
   conformance runner.
 - `python conformance/run.py --cli target/release/legal-citations` and, after
   `crates/legal-citations-wasm/build.sh`, `node conformance/run.mjs`.
-- `node --test tools/citation-boundary/test/*.test.mjs` for the checker.
 - `python3 tools/sync-upstream.py --check` when registry or pins change.

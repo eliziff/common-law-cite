@@ -109,6 +109,12 @@ static TABLE: LazyLock<Table> = LazyLock::new(|| {
     table
 });
 
+/// ALR A2AJClient._reporter_alias: an observed spelling is source evidence,
+/// including misspellings that have no structural reporter interpretation.
+pub(crate) fn observed_form(text: &str) -> bool {
+    TABLE.observed.contains_key(&registry::fold(text))
+}
+
 fn supports_court(citation: &Citation, court: &str) -> bool {
     let registry = registry::registry();
     let reporter = citation.fields.reporter_id.as_deref()

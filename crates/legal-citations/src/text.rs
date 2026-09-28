@@ -6,19 +6,22 @@
 
 use std::{borrow::Cow, ops::Range, sync::OnceLock};
 
-pub const JS_WHITESPACE_CLASS: &str = r"[\u{0009}-\u{000d}\u{0020}\u{00a0}\u{1680}\u{2000}-\u{200a}\u{2028}\u{2029}\u{202f}\u{205f}\u{3000}\u{feff}]";
-
-pub(crate) struct ScalarCoordinates {
-    offsets: Vec<[usize; 3]>,
+pub struct ScalarText<'a> {
+    pub(crate) value: &'a str,
+    /// Sparse `[scalar, byte, utf16]` checkpoints; ASCII is identity.
+    offsets: Cow<'a, [[usize; 3]]>,
+    lines: OnceLock<Vec<[usize; 3]>>,
     scalar_len: usize,
     utf16_len: usize,
 }
 
-impl ScalarCoordinates {
-    pub(crate) fn new(value: &str) -> Self {
+impl<'a> ScalarText<'a> {
+    pub fn new(value: &'a str) -> Self {
         if value.is_ascii() {
             return Self {
-                offsets: Vec::new(),
+                value,
+                offsets: Cow::Owned(Vec::new()),
+                lines: OnceLock::new(),
                 scalar_len: value.len(),
                 utf16_len: value.len(),
             };
@@ -38,41 +41,11 @@ impl ScalarCoordinates {
             offsets.push([scalar_len, value.len(), utf16_len]);
         }
         Self {
-            offsets,
+            value,
+            offsets: Cow::Owned(offsets),
+            lines: OnceLock::new(),
             scalar_len,
             utf16_len,
-        }
-    }
-}
-
-pub struct ScalarText<'a> {
-    pub(crate) value: &'a str,
-    /// Sparse `[scalar, byte, utf16]` checkpoints; ASCII is identity.
-    offsets: Cow<'a, [[usize; 3]]>,
-    scalar_len: usize,
-    utf16_len: usize,
-    lines: OnceLock<Vec<[usize; 3]>>,
-}
-
-impl<'a> ScalarText<'a> {
-    pub fn new(value: &'a str) -> Self {
-        let coordinates = ScalarCoordinates::new(value);
-        Self {
-            value,
-            offsets: Cow::Owned(coordinates.offsets),
-            scalar_len: coordinates.scalar_len,
-            utf16_len: coordinates.utf16_len,
-            lines: OnceLock::new(),
-        }
-    }
-
-    pub(crate) fn with_coordinates(value: &'a str, coordinates: &'a ScalarCoordinates) -> Self {
-        Self {
-            value,
-            offsets: Cow::Borrowed(&coordinates.offsets),
-            scalar_len: coordinates.scalar_len,
-            utf16_len: coordinates.utf16_len,
-            lines: OnceLock::new(),
         }
     }
 
@@ -87,9 +60,9 @@ impl<'a> ScalarText<'a> {
         ScalarText {
             value,
             offsets: Cow::Borrowed(self.offsets.as_ref()),
+            lines: OnceLock::new(),
             scalar_len: self.scalar_len,
             utf16_len: self.utf16_len,
-            lines: OnceLock::new(),
         }
     }
 
@@ -137,11 +110,6 @@ impl<'a> ScalarText<'a> {
         Some(offset[0] + self.value[offset[1]..byte].chars().count())
     }
 
-    pub(crate) fn scalar(&self, byte: usize) -> usize {
-        self.scalar_at_byte(byte)
-            .expect("byte offset must be an in-bounds UTF-8 boundary")
-    }
-
     pub fn byte_at_scalar(&self, scalar: usize) -> Option<usize> {
         if scalar > self.scalar_len {
             return None;
@@ -159,11 +127,6 @@ impl<'a> ScalarText<'a> {
             .map(|(byte, _)| offset[1] + byte)
     }
 
-    pub(crate) fn byte(&self, scalar: usize) -> usize {
-        self.byte_at_scalar(scalar)
-            .expect("scalar offset must be in bounds")
-    }
-
     pub(crate) fn utf16_at_scalar(&self, scalar: usize) -> Option<usize> {
         if scalar > self.scalar_len {
             return None;
@@ -177,11 +140,6 @@ impl<'a> ScalarText<'a> {
             .take(scalar - offset[0])
             .fold(offset[2], |sum, c| sum + c.len_utf16());
         Some(utf16)
-    }
-
-    pub(crate) fn utf16(&self, scalar: usize) -> usize {
-        self.utf16_at_scalar(scalar)
-            .expect("scalar offset must be in bounds")
     }
 
     pub fn scalar_at_utf16(&self, utf16: usize) -> Option<usize> {
@@ -262,22 +220,6 @@ pub fn utf16_len(value: &str) -> usize {
     }
 }
 
-/// Return the shortest valid UTF-8 prefix containing `limit` JavaScript code
-/// units. The final scalar is retained when the limit splits a surrogate pair.
-pub fn utf16_prefix_ceil(value: &str, limit: usize) -> &str {
-    if value.is_ascii() {
-        return &value[..value.len().min(limit)];
-    }
-    let mut utf16 = 0;
-    for (byte, character) in value.char_indices() {
-        if utf16 >= limit {
-            return &value[..byte];
-        }
-        utf16 += character.len_utf16();
-    }
-    value
-}
-
 /// Return at most the final `limit` Unicode scalars without indexing the prefix.
 pub fn last_scalars(value: &str, limit: usize) -> &str {
     if limit == 0 || value.is_ascii() {
@@ -286,38 +228,6 @@ pub fn last_scalars(value: &str, limit: usize) -> &str {
     let at = limit - 1;
     let byte = value.char_indices().nth_back(at).map_or(0, |at| at.0);
     &value[byte..]
-}
-
-pub(crate) fn equal_fold(left: &str, right: &str) -> bool {
-    if left.is_ascii() && right.is_ascii() {
-        left.eq_ignore_ascii_case(right)
-    } else {
-        left.to_lowercase() == right.to_lowercase()
-    }
-}
-
-pub fn normalize_decimal_digit(character: char) -> Option<char> {
-    Some(match character {
-        '\u{2070}' => '0',
-        '\u{00b9}' => '1',
-        '\u{00b2}' => '2',
-        '\u{00b3}' => '3',
-        '\u{2074}' => '4',
-        '\u{2075}' => '5',
-        '\u{2076}' => '6',
-        '\u{2077}' => '7',
-        '\u{2078}' => '8',
-        '\u{2079}' => '9',
-        value if value.is_ascii_digit() => value,
-        _ => return None,
-    })
-}
-
-pub fn normalize_note_symbol(character: char) -> char {
-    match character {
-        '\u{2217}' | '\u{f02a}' => '*',
-        other => other,
-    }
 }
 
 /// Python's `\s` and `str.isspace`: Unicode whitespace and ASCII information separators.
@@ -333,10 +243,6 @@ pub(crate) fn javascript_whitespace(character: char) -> bool {
 
 pub fn trim_javascript_whitespace(value: &str) -> &str {
     value.trim_matches(javascript_whitespace)
-}
-
-pub(crate) fn trim_javascript_start(value: &str) -> &str {
-    value.trim_start_matches(javascript_whitespace)
 }
 
 /// Collapse ECMAScript whitespace runs to one ASCII space and trim runs at

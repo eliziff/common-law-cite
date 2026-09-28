@@ -7,8 +7,8 @@
 //! does not know keeps its grammar reading, so an empty or partial registry
 //! degrades to fewer ids, never to a different classification.
 
-use crate::find::{us_journal, DATABASE, JOURNAL_CUE, PARLIAMENTARY_COMMONWEALTH, TREATY};
-use crate::model::{Authority, Citation, CourtRef, Fields, Form, Format, PinpointKind};
+use crate::find::{DATABASE, JOURNAL_CUE, PARLIAMENTARY_COMMONWEALTH, TREATY};
+use crate::model::{Authority, Citation, CourtRef, Fields, Format, PinpointKind};
 use crate::registry::{fold, registry, Court, Journal, Reporter, ReporterKind, SeriesKind};
 use legal_grammar::{CompiledEcmascriptGrammar, CompiledGrammar};
 use regex::Captures;
@@ -32,7 +32,7 @@ static STATUTE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.ca.statute.first"));
 static STATUTE_TITLED: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.statute.titled"));
-static ROUTING: LazyLock<CompiledEcmascriptGrammar> =
+pub(crate) static ROUTING: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.provider-routing"));
 static JOURNAL_ARTICLE: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("cite.journal.article"));
@@ -774,7 +774,7 @@ pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
         .or_else(|| treaty(core))
         .or_else(|| parliamentary(core))
         .or_else(|| legislation(core))
-        .or_else(|| (us_journal(core)).then(|| publication(true)).flatten())
+        .or_else(|| (crate::us::is_journal(core)).then(|| publication(true)).flatten())
         .or_else(|| publication(reason == "journal_grammar"))
         .or_else(|| book(core, style))
 }
@@ -917,24 +917,6 @@ fn resolve(reading: &mut Reading, citation: &mut Citation, options: &crate::Opti
         }
     }
     court
-}
-
-pub fn classify(text: &str, citation: &mut Citation) {
-    classify_with_options(text, citation, &crate::Options::default());
-}
-
-pub fn classify_with_options(_text: &str, citation: &mut Citation, options: &crate::Options) {
-    if !matches!(citation.form, Form::Full | Form::Short) {
-        return;
-    }
-    let style = citation.style.as_ref().map_or("", |style| style.text.as_str()).to_owned();
-    let reason = citation.reasons.first().map_or("", String::as_str);
-    let source = crate::us::find(&citation.span.text, options.extended_us).into_iter()
-        .find(|matched| matched.span.start == 0 && matched.span.end == citation.span.text.len())
-        .map(|matched| extracted(&citation.span.text, matched.fields, matched.short_at));
-    if let Some(reading) = source.or_else(|| read(&citation.span.text, reason, &style)) {
-        apply(citation, reading, options);
-    }
 }
 
 /// A core can be both a neutral citation and a publication citation. Resolve

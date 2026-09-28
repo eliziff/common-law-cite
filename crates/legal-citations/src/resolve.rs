@@ -51,9 +51,8 @@ pub struct Resolution {
     /// citation core. References inherit this same link from the registry.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
-    /// Unlinked ALR source-part provenance, indexed into ExtractResponse.sourceParts.
-    /// Ibid chains point to their ultimate source part. This is evidence for a
-    /// reference, not a citation identity or URL.
+    /// ALR chain origin, indexed into ExtractResponse.sourceParts. The original
+    /// chain metadata is independent of the registry's link decision.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_part: Option<usize>,
     /// Machine-readable reason:
@@ -236,8 +235,6 @@ struct Resolver<'a> {
     notes: Option<&'a [NoteRange]>,
     /// Note position (into `notes`) holding each citation.
     note_of: Vec<Option<usize>>,
-    /// Reading rank of each note: `(sequence, number)` order.
-    note_rank: Vec<usize>,
     /// Resolved authority of each citation position.
     resolved: Vec<Option<Target>>,
     done: Vec<bool>,
@@ -246,6 +243,7 @@ struct Resolver<'a> {
     source_parts: &'a [SourcePart],
     supra_hint_mode: SupraMode,
     supra_linking_mode: SupraMode,
+    source_authorities: HashMap<String, usize>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -257,7 +255,7 @@ enum Target {
 impl Target {
     fn from_registry(link: &str, reference: &str) -> Option<Self> {
         if let Ok(index) = link.parse() { return Some(Self::Authority(index)); }
-        (link.starts_with("https://") || link.starts_with("http://"))
+        (!link.trim().is_empty() && !link.trim().eq_ignore_ascii_case("other"))
             .then(|| Self::Url(short_forms::reanchor_reference(link, reference)))
     }
 
@@ -272,14 +270,13 @@ struct History {
     source_parts: Vec<Option<usize>>,
     inferred: Vec<ReferenceSource>,
     last_part_link: Option<Option<Target>>,
-    origins: HashMap<usize, usize>,
-    last_part_origin: Option<usize>,
 }
 
 impl History {
-    fn push(&mut self, record: ReferenceSource, source_part: Option<usize>, origin: Option<usize>, kind: &str,
+    fn push(&mut self, record: ReferenceSource, source_part: Option<usize>, kind: &str,
         linking_mode: SupraMode) {
-        if linking_mode == SupraMode::Aggressive && record.link.is_some() {
+        if linking_mode == SupraMode::Aggressive
+            && record.link.as_deref().is_some_and(|link| !link.is_empty() && link.to_lowercase() != "other") {
             for form in short_forms::infer(record.verbatim.as_deref().unwrap_or(""), kind) {
                 self.inferred.push(ReferenceSource {
                     note: record.note.clone(), sequence: record.sequence,
@@ -291,10 +288,6 @@ impl History {
         }
         self.records.push(record);
         self.source_parts.push(source_part);
-        if let Some(part) = source_part {
-            self.last_part_origin = origin;
-            if let Some(origin) = origin { self.origins.insert(part, origin); }
-        }
     }
 }
 
@@ -311,15 +304,6 @@ impl<'a> Resolver<'a> {
                 })
             })
             .collect();
-        let mut note_rank = Vec::new();
-        if let Some(notes) = notes {
-            let mut order = (0..notes.len()).collect::<Vec<_>>();
-            order.sort_by_key(|&position| (notes[position].sequence, notes[position].number, notes[position].start));
-            note_rank = vec![0; notes.len()];
-            for (rank, position) in order.into_iter().enumerate() {
-                note_rank[position] = rank;
-            }
-        }
         let clustered = authorities_with_links(citations, links).into_iter().flat_map(|cluster| {
             let first = cluster[0];
             cluster.into_iter().map(move |index| (index, first))
@@ -330,7 +314,6 @@ impl<'a> Resolver<'a> {
             citations,
             notes,
             note_of,
-            note_rank,
             resolved: vec![None; citations.len()],
             done: vec![false; citations.len()],
             full_authority,
@@ -338,10 +321,11 @@ impl<'a> Resolver<'a> {
             source_parts: &[],
             supra_hint_mode: SupraMode::Aggressive,
             supra_linking_mode: SupraMode::Safe,
+            source_authorities: HashMap::new(),
         }
     }
 
-    /// Citations in reading order: notes in `(sequence, number)` order, and a
+    /// Citations in reading order: notes in their supplied order, and a
     /// citation outside every note after the last note that starts before it.
     fn order(&self) -> Vec<usize> {
         if let Some(order) = &self.reading_order { return order.clone(); }
@@ -350,12 +334,12 @@ impl<'a> Resolver<'a> {
             let rank = |position: usize| -> (i64, usize) {
                 let citation = &self.citations[position];
                 let note_rank = match self.note_of[position] {
-                    Some(note) => self.note_rank[note] as i64,
+                    Some(note) => note as i64,
                     None => notes
                         .iter()
                         .enumerate()
                         .filter(|(_, note)| note.end <= citation.span.start)
-                        .map(|(note, _)| self.note_rank[note] as i64)
+                        .map(|(note, _)| note as i64)
                         .max()
                         .unwrap_or(-1),
                 };
@@ -378,10 +362,9 @@ impl<'a> Resolver<'a> {
         for position in self.order() {
             if seen[position] { continue; }
             if let Some(note) = self.note_of[position].filter(|_| !self.source_parts.is_empty()) {
-                let mut missing = (0..note_count).filter(|&other|
+                let missing = (0..note_count).filter(|&other|
                     !handled_notes[other] && !has_citations[other]
-                        && self.note_rank[other] < self.note_rank[note]).collect::<Vec<_>>();
-                missing.sort_by_key(|&other| self.note_rank[other]);
+                        && other < note).collect::<Vec<_>>();
                 for other in missing {
                     self.process_note(other, &mut history, &mut previous, &mut seen, &mut output);
                     handled_notes[other] = true;
@@ -397,12 +380,15 @@ impl<'a> Resolver<'a> {
             }
         }
         if !self.source_parts.is_empty() {
-            let mut remaining = (0..note_count).filter(|&note| !handled_notes[note] && !has_citations[note])
+            let remaining = (0..note_count).filter(|&note| !handled_notes[note] && !has_citations[note])
                 .collect::<Vec<_>>();
-            remaining.sort_by_key(|&note| self.note_rank[note]);
             for note in remaining {
                 self.process_note(note, &mut history, &mut previous, &mut seen, &mut output);
             }
+        }
+        let origins = source_chain_origins(&history, self.supra_hint_mode);
+        for resolution in &mut output {
+            resolution.source_part = resolution.source_part.and_then(|part| origins.get(&part).copied().flatten());
         }
         output.sort_by_key(|resolution| resolution.index);
         output
@@ -439,118 +425,85 @@ impl<'a> Resolver<'a> {
     fn process_part(&mut self, note: usize, part_index: usize, prior_records: usize,
         prior_inferred: usize, history: &mut History, previous: &mut Option<usize>,
         seen: &mut [bool], output: &mut Vec<Resolution>, sibling: &mut Option<Option<Target>>) {
-        let part = self.source_parts[part_index].clone();
+        let part = &self.source_parts[part_index];
         let range = &self.notes.expect("owned note")[note];
-        let fields = crate::source::extract_fields(&part, part.extended_us);
-        let part_reference = short_forms::reference_info(&part.text);
-        let part_origin = if part_reference.kind == "supra" && !part_reference.notes.is_empty() {
-            unlinked_source_target(&part.text, &history.records[..prior_records],
-                &history.source_parts[..prior_records], self.supra_hint_mode, Some(range.sequence))
-                .and_then(|part| history.origins.get(&part).copied())
-        } else if part_reference.kind == "ibid" {
-            history.last_part_origin
-        } else {
-            Some(part_index)
-        };
+        let fields = crate::source::extract_fields(part, part.extended_us);
         let mut positions = self.citations.iter().enumerate().filter(|(position, citation)|
             !seen[*position] && self.note_of[*position] == Some(note)
                 && part.start <= citation.span.start && citation.span.end <= part.end)
             .map(|(position, citation)| (citation.span.start, position)).collect::<Vec<_>>();
         positions.sort_unstable();
-        let exact_full = positions.iter().filter(|(_, position)| {
-            let citation = &self.citations[*position];
-            citation.form == Form::Full && part.anchor_spans.iter().any(|&(start, end)|
-                start == citation.span.start && end == citation.span.end)
-        }).map(|(_, position)| *position).collect::<Vec<_>>();
-        let whole_part = positions.len() == 1 && exact_full.len() == 1
-            && !fields.reasons.contains(&"embedded_second_source")
-            && part.anchor_spans.iter().all(|&(start, end)| {
-                let citation = &self.citations[exact_full[0]];
-                citation.full_span.start <= start && end <= citation.full_span.end
-            });
-        let mut local_previous = sibling.clone();
-        let mut links = Vec::new();
+        let reference = short_forms::reference_info(&part.text);
+        let full = positions.iter().map(|&(_, position)| &self.citations[position])
+            .filter(|citation| citation.form == Form::Full).collect::<Vec<_>>();
+        let fallback = crate::url::source_fallback(&full, &fields, part)
+            .filter(|(index, _)| full.iter().any(|citation| citation.index == *index && !citation.is_ambiguous()));
+        // ALR _deterministic_footnote_parts clears explicit URLs on reference
+        // parts before calling _resolve_footnote_part_link_unlocked.
+        let explicit = reference.kind.is_empty() && !fields.link_candidate.is_empty()
+            && fields.link_candidate.to_lowercase() != "other"
+            && !(fallback.is_some() && crate::url::source_prefers_fallback(fields.kind, &part.text));
+        let origin = if let Some(url) = part.resolved_url.as_deref() {
+            full.iter().find(|citation| !citation.is_ambiguous()
+                && citation.fields.url.as_deref() == Some(url)).map(|citation| citation.index)
+        } else if explicit {
+            full.iter().find(|citation| !citation.is_ambiguous()
+                && citation.fields.url.as_deref() == Some(fields.link_candidate.as_str()))
+                .map(|citation| citation.index)
+        } else { fallback.as_ref().map(|(index, _)| *index) };
+        let mut own_url = part.resolved_url.clone().or_else(|| if explicit { Some(fields.link_candidate.clone()) }
+            else { fallback.as_ref().map(|(_, url)| url.clone()) });
+        if let Some(url) = &mut own_url {
+            if part.resolved_url.is_none() {
+                *url = crate::url::source_first_pinpoint(url, &fields.pinpoint_fragments);
+            }
+            if let Some(index) = origin {
+                let position = positions.iter().find(|&&(_, position)| self.citations[position].index == index).unwrap().1;
+                self.source_authorities.entry(url.split('#').next().unwrap().to_owned())
+                    .or_insert(self.full_authority[position]);
+            }
+        }
+        // NoopHtmlResolver preserves "other" on non-reference source parts.
+        // It is truthy in ALR's ibid chain and must not trigger an own-link fallback.
+        let own_target = match own_url {
+            Some(url) => (!url.is_empty()).then_some(Target::Url(url)),
+            None => reference.kind.is_empty().then(|| Target::Url("other".into())),
+        };
+        // ALR _resolve_footnote_reference_links resolves each whole part once.
+        let part_result = match reference.kind {
+            "supra" => Some(self.resolve_supra_text(&part.text,
+                &history.records[..prior_records], &history.inferred[..prior_inferred],
+                Some(range.sequence))),
+            "ibid" => {
+                let target = sibling.clone().unwrap_or_else(|| history.last_part_link.clone().flatten())
+                    .or_else(|| own_target.clone());
+                let reason = if target.is_some() {
+                    if sibling.is_some() { "ibid_previous" } else { "ibid_previous_note" }
+                } else if sibling.is_some() || history.last_part_link.is_some() {
+                    "ibid_after_unresolved"
+                } else { "ibid_no_previous" };
+                Some((target.map(|target| match target {
+                    Target::Url(url) => Target::Url(short_forms::reanchor_reference(&url, &part.text)),
+                    target => target,
+                }), reason))
+            }
+            _ => None,
+        };
         for &(_, position) in &positions {
-            let citation = &self.citations[position];
-            let form = citation.form;
-            let contained_full = citation.full_span.start >= part.start
-                && citation.full_span.end <= part.end;
-            let text = if positions.len() == 1 && form != Form::Full { part.text.clone() }
-                else if !contained_full || citation.full_span.text.is_empty() { citation.span.text.clone() }
-                else { citation.full_span.text.clone() };
-            let override_result = match form {
-                Form::Supra => {
-                    let (target, reason) = self.resolve_supra_text(&text,
-                        &history.records[..prior_records], &history.inferred[..prior_inferred],
-                        Some(range.sequence));
-                    let provenance = if target.is_none() {
-                        unlinked_source_target(&text, &history.records[..prior_records],
-                            &history.source_parts[..prior_records], self.supra_hint_mode,
-                            Some(range.sequence))
-                    } else { None };
-                    Some((target, reason, provenance))
-                }
-                Form::Ibid => {
-                    let target = if let Some(link) = &local_previous { link.clone() }
-                        else { history.last_part_link.clone().flatten() };
-                    let target = target.map(|target| match target {
-                        Target::Url(url) => Target::Url(short_forms::reanchor_reference(&url, &text)),
-                        target => target,
-                    });
-                    let reason = if target.is_some() {
-                        if local_previous.is_some() { "ibid_previous" } else { "ibid_previous_note" }
-                    } else if local_previous.is_some() || history.last_part_link.is_some() {
-                        "ibid_after_unresolved"
-                    } else { "ibid_no_previous" };
-                    let provenance = if part_reference.kind == "ibid" {
-                        part_origin
-                    } else { None };
-                    Some((target, reason, provenance))
-                }
-                _ => None,
-            };
+            let override_result = matches!(self.citations[position].form, Form::Supra | Form::Ibid)
+                .then(|| part_result.clone()).flatten()
+                .map(|(target, reason)| (target, reason, Some(part_index)));
             self.process_citation(position, history, previous, output, override_result, false);
             seen[position] = true;
-            let link = self.resolved[position].clone();
-            links.push(link.clone());
-            local_previous = Some(link);
         }
-        let same_anchored_authority = positions.len() > 1 && exact_full.len() == positions.len()
-            && positions.iter().all(|&(_, position)| !self.citations[position].is_ambiguous())
-            && links.first().cloned().flatten().is_some_and(|first|
-                links.iter().all(|link| link.as_ref() == Some(&first)));
-        let part_safe = !positions.is_empty()
-            && (!fields.reasons.contains(&"embedded_second_source") || same_anchored_authority)
-            && (positions.len() != 1 || self.citations[positions[0].1].form != Form::Full || whole_part)
-            && positions.iter().all(|&(_, position)| {
-                let citation = &self.citations[position];
-                citation.form == Form::Full && exact_full.contains(&position)
-                    || citation.form != Form::Full && part.anchor_spans.iter().all(|&(start, end)|
-                        citation.full_span.start <= start && end <= citation.full_span.end)
-            })
-            && part.anchor_spans.iter().all(|&(start, end)| positions.iter().any(|&(_, position)| {
-                let citation = &self.citations[position];
-                citation.full_span.start <= start && end <= citation.full_span.end
-            }));
-        let part_link = if part_safe {
-            links.first().cloned().flatten().filter(|first|
-                links.iter().all(|link| link.as_ref() == Some(first)))
-        } else if positions.is_empty() && !fields.reasons.contains(&"embedded_second_source")
-            && part.anchors.iter().filter(|kind| kind.as_str() == "url").count() == 1
-            && (fields.link_candidate.starts_with("https://")
-                || fields.link_candidate.starts_with("http://")) {
-            Some(Target::Url(fields.link_candidate.clone()))
-        } else { None };
+        let part_link = part_result.map_or(own_target, |(target, _)| target);
         // ALR registers one emitted source part, after resolving every reference
         // in its note. Discovered cores remain separate Citation identities, but
         // must not multiply the source-part registry or make a numbered supra
         // look ambiguous by counting one part more than once.
-        let one_authority = positions.is_empty() && part_link.is_some() || positions.len() == 1
-            || (!exact_full.is_empty() && exact_full.len() == positions.len());
-        let record_link = if one_authority { part_link.clone() } else { None };
         let short_form = (!fields.short_form.is_empty()).then_some(fields.short_form);
-        history.push(source_record(Some(&range), part.text, record_link, short_form),
-            Some(part_index), part_origin, fields.kind, self.supra_linking_mode);
+        history.push(source_record(Some(&range), part.text.clone(), part_link.clone(), short_form),
+            Some(part_index), fields.kind, self.supra_linking_mode);
         *sibling = Some(part_link.clone());
         history.last_part_link = Some(part_link);
     }
@@ -562,10 +515,10 @@ impl<'a> Resolver<'a> {
         // matching numbering sequence, including aggressive fallbacks.
         let numbered = !short_forms::reference_info(text).notes.is_empty();
         let scoped_registry = registry.iter().filter(|entry|
-            !numbered || sequence.is_none_or(|sequence| entry.sequence == Some(sequence)))
+            !numbered || sequence.is_none_or(|sequence| entry.sequence.is_none_or(|owner| owner == sequence)))
             .cloned().collect::<Vec<_>>();
         let scoped_inferred = inferred.iter().filter(|entry|
-            !numbered || sequence.is_none_or(|sequence| entry.sequence == Some(sequence)))
+            !numbered || sequence.is_none_or(|sequence| entry.sequence.is_none_or(|owner| owner == sequence)))
             .cloned().collect::<Vec<_>>();
         let (strict, reason) = short_forms::resolve_registry_scoped(text, &scoped_registry,
             self.supra_hint_mode == SupraMode::Aggressive, sequence);
@@ -597,7 +550,7 @@ impl<'a> Resolver<'a> {
                     self.resolved[position].clone(),
                     citation.explicit_short_name.clone().or_else(|| citation.short_name.clone())
                         .or_else(|| citation.style.as_ref().map(|style| style.text.clone()))),
-                    None, None, inference_kind(citation), self.supra_linking_mode);
+                    None, inference_kind(citation), self.supra_linking_mode);
                 if self.source_parts.is_empty() {
                     history.last_part_link = Some(self.resolved[position].clone());
                 }
@@ -616,7 +569,7 @@ impl<'a> Resolver<'a> {
                     let (authority, reason) = self.supra_from_citations(position, history);
                     (authority.map(Target::Authority), reason, None)
                 }
-                Form::Ibid if self.note_of[position].is_none() => {
+                Form::Ibid => {
                     let (authority, reason) = self.previous_citation(position, *previous);
                     (authority, reason, None)
                 }
@@ -627,7 +580,10 @@ impl<'a> Resolver<'a> {
                         &history.records, &history.inferred, None);
                     (authority, reason, None)
                 }
-                Form::Supra | Form::Ibid => (None, "source_evidence_missing", None),
+                Form::Supra => {
+                    let (authority, reason) = self.supra_from_citations(position, history);
+                    (authority.map(Target::Authority), reason, None)
+                }
                 Form::Reference => {
                     let (authority, reason) = self.by_name(position, reference_name(citation),
                         &history.records);
@@ -649,13 +605,14 @@ impl<'a> Resolver<'a> {
             target = None;
             reason = "ambiguous_authority";
         }
-        let source_part = if target.is_none() { source_part } else { None };
         self.resolved[position] = target.clone();
         self.done[position] = true;
         *previous = Some(position);
         let (antecedent, url) = match target {
             Some(Target::Authority(index)) => (Some(index), None),
-            Some(Target::Url(url)) => (None, Some(url)),
+            Some(Target::Url(url)) if !url.trim().eq_ignore_ascii_case("other") =>
+                (self.source_authorities.get(url.split('#').next().unwrap()).copied(), Some(url)),
+            Some(Target::Url(_)) => (None, None),
             None => (None, None),
         };
         output.push(Resolution { index: citation.index, antecedent, url, source_part, reason });
@@ -669,11 +626,14 @@ impl<'a> Resolver<'a> {
         let Some(link) = self.resolved[previous].clone() else { return (None, "ibid_after_unresolved"); };
         let target = match &link {
             Target::Authority(index) => self.citations.iter().find(|citation| citation.index == *index),
-            Target::Url(_) => None,
+            Target::Url(url) => self.authority_for_link(url).and_then(|index|
+                self.citations.iter().find(|citation| citation.index == index)),
         };
         let citation = &self.citations[position];
-        let pin = citation.fields.pin_cite.as_ref()
-            .or_else(|| citation.pinpoints.first().map(|pin| &pin.span));
+        let pin = citation.fields.source_case_name.as_ref()
+            .filter(|source| source.full_span_end.is_some()).map(|source| source.pin_cite.as_ref())
+            .unwrap_or_else(|| citation.fields.pin_cite.as_ref()
+                .or_else(|| citation.pinpoints.first().map(|pin| &pin.span)));
         if target.is_some_and(|target| is_us(target) && invalid_id_pin(
             target.authority == crate::Authority::Case && target.format == Some(crate::Format::Reporter),
             target.fields.page.as_deref(), pin.map(|pin| pin.text.as_str()),
@@ -697,8 +657,7 @@ impl<'a> Resolver<'a> {
         if from_body || previous.is_some_and(|previous| self.note_of[previous] == Some(note)) {
             return self.previous_citation(position, previous);
         }
-        let Some(prior) = self.note_rank[note].checked_sub(1)
-            .and_then(|rank| self.note_rank.iter().position(|&candidate| candidate == rank))
+        let Some(prior) = note.checked_sub(1)
         else { return (None, "ibid_no_previous"); };
         let positions = (0..self.citations.len()).filter(|&other|
             self.note_of[other] == Some(prior) && self.done[other]).collect::<Vec<_>>();
@@ -724,7 +683,7 @@ impl<'a> Resolver<'a> {
             } else { &citation.full_span.text }, &history.records, &history.inferred,
                 self.note_of[position].map(|note| self.notes.unwrap()[note].sequence));
             return (target.and_then(|target| match target {
-                Target::Authority(index) => Some(index), Target::Url(_) => None,
+                Target::Authority(index) => Some(index), Target::Url(url) => self.authority_for_link(&url),
             }), reason);
         };
         let matches = notes.iter().enumerate().filter(|(_, note)|
@@ -804,10 +763,10 @@ impl<'a> Resolver<'a> {
         candidates: &[(usize, usize)], lsp_reference: bool) -> (Option<usize>, &'static str) {
         let allowed = candidates.iter().map(|(authority, _)| *authority).collect::<std::collections::HashSet<_>>();
         let pool = registry.iter().filter(|entry| entry.link.as_deref()
-            .and_then(|link| link.parse::<usize>().ok()).is_some_and(|authority| allowed.contains(&authority)))
+            .and_then(|link| self.authority_for_link(link)).is_some_and(|authority| allowed.contains(&authority)))
             .cloned().collect::<Vec<_>>();
         let (resource, reason) = short_forms::resolve_registry_hint("", hint, &pool);
-        if let Ok(authority) = resource.parse() { return (Some(authority), "name_only"); }
+        if let Some(authority) = self.authority_for_link(&resource) { return (Some(authority), "name_only"); }
         if reason != "abstain_no_match" || !lsp_reference {
             return (None, if reason.starts_with("abstain_ambiguous") { "ambiguous_name" } else { "no_match" });
         }
@@ -830,6 +789,10 @@ impl<'a> Resolver<'a> {
             if matches.len() > 1 { return (None, "ambiguous_name"); }
         }
         (None, "no_match")
+    }
+
+    fn authority_for_link(&self, link: &str) -> Option<usize> {
+        link.parse().ok().or_else(|| self.source_authorities.get(link.split('#').next().unwrap()).copied())
     }
 
     fn short(&self, position: usize, registry: &[ReferenceSource]) -> (Option<usize>, &'static str) {
@@ -887,20 +850,88 @@ fn source_record(note: Option<&NoteRange>, verbatim: String, link: Option<Target
     }
 }
 
-fn unlinked_source_target(text: &str, registry: &[ReferenceSource], parts: &[Option<usize>],
-    hint_mode: SupraMode, sequence: Option<u32>) -> Option<usize> {
-    let note = short_forms::reference_info(text).notes.into_iter().next()?;
-    let hint = short_forms::supra_hint(text, hint_mode == SupraMode::Aggressive);
-    let hint = if hint.is_empty() { short_forms::fallback_hint(text) } else { hint };
-    let hint = short_forms::normalize(&hint);
-    if hint.is_empty() { return None; }
-    let mut matches = registry.iter().enumerate().filter(|(_, entry)|
-        entry.note.as_str() == Some(note.as_str()) && entry.link.is_none()
-            && sequence.is_none_or(|sequence| entry.sequence == Some(sequence))
-            && entry.short_form.as_deref().is_some_and(|short| short_forms::normalize(short) == hint))
-        .filter_map(|(index, _)| parts[index]);
-    let target = matches.next()?;
-    matches.next().is_none().then_some(target)
+// ALR alr_quote_verifier.py::_choose_supra_target_part_index: retain its
+// first-on-tie scoring, last-word retry and default-to-first behavior.
+fn choose_source_part(text: &str, candidates: &[usize], records: &[&ReferenceSource],
+    hint_mode: SupraMode) -> Option<usize> {
+    let first = *candidates.first()?;
+    if candidates.len() == 1 { return Some(first); }
+    let hint = short_forms::supra_hint(text, hint_mode == SupraMode::Aggressive).to_lowercase();
+    if hint.is_empty() { return Some(first); }
+    static WORD: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(||
+        regex::Regex::new(r"[\p{L}\p{N}_]").unwrap());
+    let word = |character: Option<char>| character.is_some_and(|character|
+        WORD.is_match(character.encode_utf8(&mut [0; 4])));
+    for token in [hint.as_str(), hint.split_whitespace().last().unwrap()] {
+        let mut best = (first, 0);
+        for &candidate in candidates {
+            let record = records[candidate];
+            let value = record.verbatim.as_deref().unwrap_or("").to_lowercase();
+            let score = if value.contains(&format!("[{token}]"))
+                || record.short_form.as_deref().is_some_and(|form| !form.is_empty() && form.to_lowercase() == token) {
+                4
+            } else if value.match_indices(token).any(|(start, matched)|
+                word(value[..start].chars().next_back()) != word(token.chars().next())
+                    && word(value[start + matched.len()..].chars().next()) != word(token.chars().next_back())) {
+                2
+            } else if value.contains(token) { 1 } else { 0 };
+            if score > best.1 { best = (candidate, score); }
+        }
+        if best.1 > 0 { return Some(best.0); }
+    }
+    Some(first)
+}
+
+// ALR alr_quote_verifier.py::resolve_reference_chains. Chain origins are
+// computed over all emitted parts, including forward targets and unlinked
+// parts. They do not participate in registry URL resolution.
+fn source_chain_origins(history: &History, hint_mode: SupraMode) -> HashMap<usize, Option<usize>> {
+    let parts = history.source_parts.iter().enumerate().filter_map(|(index, part)|
+        part.map(|part| (part, &history.records[index]))).collect::<Vec<_>>();
+    let records = parts.iter().map(|(_, record)| *record).collect::<Vec<_>>();
+    let mut by_note = HashMap::<_, Vec<usize>>::new();
+    for (index, record) in records.iter().enumerate() {
+        by_note.entry((record.sequence, record.note.as_str().unwrap_or("")))
+            .or_default().push(index);
+    }
+    let targets = records.iter().enumerate().map(|(index, record)| {
+        let text = record.verbatim.as_deref().unwrap_or("");
+        let reference = short_forms::reference_info(text);
+        if let Some(note) = reference.notes.first() {
+            decimal(note).and_then(|number| {
+                let number = number.to_string();
+                by_note.get(&(record.sequence, number.as_str()))
+                    .and_then(|candidates| choose_source_part(text, candidates, &records, hint_mode))
+            })
+        } else if reference.kind == "ibid" {
+            index.checked_sub(1)
+        } else { Some(index) }
+    }).collect::<Vec<_>>();
+    let mut origins = vec![None; parts.len()];
+    let mut complete = vec![false; parts.len()];
+    let mut visiting = vec![false; parts.len()];
+    for start in 0..parts.len() {
+        let mut path = Vec::new();
+        let mut current = Some(start);
+        let origin = loop {
+            let Some(index) = current else { break None; };
+            if complete[index] { break origins[index]; }
+            if visiting[index] { break None; }
+            visiting[index] = true;
+            path.push(index);
+            if targets[index] == Some(index) {
+                let reference = short_forms::reference_info(records[index].verbatim.as_deref().unwrap_or(""));
+                break (reference.notes.is_empty() && reference.kind != "ibid").then_some(parts[index].0);
+            }
+            current = targets[index];
+        };
+        for index in path {
+            origins[index] = origin;
+            complete[index] = true;
+            visiting[index] = false;
+        }
+    }
+    parts.into_iter().zip(origins).map(|((part, _), origin)| (part, origin)).collect()
 }
 
 fn is_us(citation: &Citation) -> bool {

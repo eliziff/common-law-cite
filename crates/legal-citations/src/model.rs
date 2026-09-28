@@ -274,6 +274,12 @@ pub struct Fields {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub pin_cite: Option<Span>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pin_cite_kind: Option<PinpointKind>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub explicit_short_span: Option<Span>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub inline_reference: Option<InlineReference>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub year: Option<String>,
     /// Numeric year accepted by Eyecite (1600 through the current year plus one).
     /// The original year text remains in `year`, including dates outside that range.
@@ -333,10 +339,21 @@ pub struct Fields {
     pub note: Option<u32>,
 }
 
+/// Original inline-reference token, before the broader source-resolution extent.
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct InlineReference {
+    pub span: Span,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub note: Option<usize>,
+}
+
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct SourceCaseName {
+    #[serde(skip)]
+    pub reference_form: Option<Form>,
     pub full_span_start: usize,
     pub full_span_end: Option<usize>,
     // Discovery moves these parser-local values into Citation.parties.
@@ -351,6 +368,8 @@ pub struct SourceCaseName {
     pub pre_citation: Option<Span>,
     pub pin_cite: Option<Span>,
     pub reference_span: Option<Span>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub token_span: Option<Span>,
     pub pin_cite_span_end: Option<usize>,
     pub parenthetical: Option<String>,
 }

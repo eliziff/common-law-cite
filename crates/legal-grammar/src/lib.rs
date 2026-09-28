@@ -82,6 +82,9 @@ pub struct GrammarEntry {
     pub pattern: String,
     #[serde(default)]
     pub flags: String,
+    /// A frozen Rust regex: retain its native Unicode classes and boundaries.
+    #[serde(default)]
+    pub rust: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -466,8 +469,10 @@ fn expanded_entry(entry: &GrammarEntry, defs: &HashMap<String, String>) -> Resul
         )));
     }
     let expanded = expand_pattern(&entry.pattern, defs)?;
-    if let Some(violation) = validate_pattern(&expanded).into_iter().next() {
-        return Err(Error::Message(format!("{}: {violation}", entry.id)));
+    if !entry.rust {
+        if let Some(violation) = validate_pattern(&expanded).into_iter().next() {
+            return Err(Error::Message(format!("{}: {violation}", entry.id)));
+        }
     }
     Ok(expanded)
 }
@@ -478,18 +483,18 @@ pub fn compile_entry(entry: &GrammarEntry, defs: &HashMap<String, String>) -> Re
 
 fn compile_backtracking_entry(entry: &GrammarEntry, defs: &HashMap<String, String>, ecmascript: bool) -> Result<FancyRegex> {
     let expanded = expanded_entry(entry, defs)?;
-    let source = if entry.flags.contains('i') {
+    let source = if entry.flags.contains('i') && !entry.rust {
         expand_ascii_case_insensitive(&expanded)
     } else {
         expanded
     };
-    let portable = if ecmascript {
+    let portable = if entry.rust { source } else if ecmascript {
         expand_portable_with(&source, ECMASCRIPT_WHITESPACE, ECMASCRIPT_WORD, "0-9")?
     } else { expand_portable(&source)? };
     let mut builder = RegexBuilder::new(&portable);
     builder
         .unicode_mode(true)
-        .case_insensitive(false)
+        .case_insensitive(entry.rust && entry.flags.contains('i'))
         .multi_line(entry.flags.contains('m'))
         .dot_matches_new_line(entry.flags.contains('s'))
         .backtrack_limit(10_000_000);
@@ -502,7 +507,8 @@ pub fn compile_ecmascript_entry(
     entry: &GrammarEntry,
     defs: &HashMap<String, String>,
 ) -> Result<CompiledEcmascriptGrammar> {
-    let portable = expand_ecmascript_portable(&expanded_entry(entry, defs)?)?;
+    let source = expanded_entry(entry, defs)?;
+    let portable = if entry.rust { source } else { expand_ecmascript_portable(&source)? };
     let mut builder = LinearRegexBuilder::new(&portable);
     builder
         .case_insensitive(entry.flags.contains('i'))
@@ -519,6 +525,7 @@ pub fn compile_pattern(id: &str, pattern: &str, flags: &str) -> Result<FancyRege
             id: id.to_owned(),
             pattern: pattern.to_owned(),
             flags: flags.to_owned(),
+            rust: false,
         },
         &HashMap::new(),
     )
@@ -533,6 +540,7 @@ pub fn compile_ecmascript_pattern(
         id: id.to_owned(),
         pattern: pattern.to_owned(),
         flags: flags.to_owned(),
+        rust: false,
     };
     compile_ecmascript_entry(&entry, &HashMap::new())
 }
@@ -541,7 +549,7 @@ pub fn compile_ecmascript_backtracking_pattern(
     id: &str, pattern: &str, flags: &str,
 ) -> Result<FancyRegex> {
     compile_backtracking_entry(&GrammarEntry {
-        id: id.to_owned(), pattern: pattern.to_owned(), flags: flags.to_owned(),
+        id: id.to_owned(), pattern: pattern.to_owned(), flags: flags.to_owned(), rust: false,
     }, &HashMap::new(), true)
 }
 
@@ -558,6 +566,7 @@ pub fn compile_python_table_entry(entry_id: &str) -> Result<FancyRegex> {
     let tables = load_tables()?;
     let value = tables.get(entry_id)
         .ok_or_else(|| Error::Message(format!("unknown grammar entry: {entry_id}")))?;
+    if value.entry.rust { return compile_entry(&value.entry, &value.defs); }
     let source = expanded_entry(&value.entry, &value.defs)?;
     compile_python_pattern(&source, &value.entry.flags)
 }

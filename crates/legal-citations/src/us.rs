@@ -41,8 +41,8 @@ mod names {
     });
 
     #[derive(Clone, Copy)]
-    enum Kind { Text, Citation(bool), Stop(bool), Supra, Id, Placeholder, Other }
-    struct Word<'a> { text: &'a str, start: usize, end: usize, kind: Kind }
+    enum Kind<'a> { Text, Citation(Option<&'a str>), Stop(bool), Supra, Id, Placeholder, Section, Other }
+    struct Word<'a> { text: &'a str, start: usize, end: usize, kind: Kind<'a> }
 
     fn alphabetic(character: char) -> bool {
         // Python str.isalpha uses Unicode Letter, not Other_Alphabetic.
@@ -201,19 +201,22 @@ mod names {
 
     // helpers.match_on_tokens: stop at a non-string token and retain at most
     // 300 Unicode scalars when scanning backward.
-    fn before(text: &str, words: &[Word<'_>], cite: usize) -> Range<usize> {
-        let end = words[cite].start;
-        let (mut start, mut length) = (end, 0);
-        for word in words[..cite].iter().rev() {
-            if !matches!(word.kind, Kind::Text) { break; }
-            start = word.start;
-            length += word.text.chars().count();
+    fn before(words: &[Word<'_>], cite: usize) -> String {
+        let mut window = String::new();
+        for word in words[..cite].iter().rev().take_while(|word| matches!(word.kind, Kind::Text)) {
+            window.insert_str(0, word.text);
+            let length = window.chars().count();
             if length >= 300 {
-                start += text[start..end].char_indices().nth(length - 300).unwrap().0;
+                window.drain(..window.char_indices().nth(length - 300).unwrap().0);
                 break;
             }
         }
-        start..end
+        window
+    }
+
+    fn preceding_offset(text: &str, end: usize, suffix: &str) -> usize {
+        let length = suffix.chars().count();
+        if length == 0 { end } else { text[..end].char_indices().rev().nth(length - 1).map_or(0, |(at, _)| at) }
     }
 
     // helpers.add_pre_citation / match_on_tokens: stop at the first non-string
@@ -221,39 +224,35 @@ mod names {
     fn pre_citation(text: &str, words: &[Word<'_>], cite: usize, name: &mut SourceCaseName) {
         if name.plaintiff.as_ref().is_some_and(|value| !value.is_empty())
             || name.defendant.as_ref().is_some_and(|value| !value.is_empty()) { return; }
-        let Range { start, end } = before(text, words, cite);
-        let Some(captures) = PRE.captures(&text[start..end]).expect("source pre-citation") else { return; };
+        let window = before(words, cite);
+        let end = words[cite].start;
+        let Some(captures) = PRE.captures(&window).expect("source pre-citation") else { return; };
         let matched = captures.get(0).unwrap();
-        name.full_span_start = start + matched.start();
+        name.full_span_start = preceding_offset(text, end, &window[matched.start()..]);
         name.pre_citation = Some(crate::find::span(text, name.full_span_start..end));
         name.antecedent_guess = captures.name("antecedent").map(|value| value.as_str().to_owned());
-        name.pin_cite = captures.name("pin_cite").and_then(|pin| {
-            let trimmed = pin.as_str().trim_matches([',', ' ']);
-            let leading = pin.as_str().len() - pin.as_str().trim_start_matches([',', ' ']).len();
-            (!trimmed.is_empty()).then(|| crate::find::span(text,
-                start + pin.start() + leading..start + pin.start() + leading + trimmed.len()))
-        });
+        name.pin_cite = captures.name("pin_cite").and_then(|pin|
+            crate::metadata::clean_pin_cite(&window, pin.start()..pin.end())).map(|mut pin| {
+                pin.start = preceding_offset(text, end, &window[pin.start..]);
+                pin.end = preceding_offset(text, end, &window[pin.end..]);
+                pin
+            });
     }
 
     // find._extract_id_citation / _extract_supra_citation. The existing tail
     // parser carries the pinned POST_SHORT_CITATION_REGEX and parenthetical rules.
-    fn reference(text: &str, words: &[Word<'_>], index: usize) -> SourceCaseName {
+    fn reference(text: &str, words: &[Word<'_>], index: usize, prefix: &str) -> SourceCaseName {
         let token = &words[index];
         let limit = words[index + 1..].iter().take_while(|word| matches!(word.kind, Kind::Text))
             .last().map_or(token.end, |word| word.end);
-        let tail = crate::metadata::tail(text, token.end, limit, crate::metadata::TailRules {
-            post_citation: Some((crate::metadata::PostCitation::Short, limit)), ..Default::default()
-        });
-        let end = tail.source_end.unwrap_or(token.end);
-        let mut name = SourceCaseName {
-            full_span_start: token.start, full_span_end: Some(end),
-            reference_span: Some(crate::find::span(text, token.start..end)),
-            pin_cite: tail.source_pin, parenthetical: tail.source_parenthetical, ..Default::default()
+        let mut name = crate::metadata::short_reference(text, token.start..token.end, limit, prefix);
+        name.reference_form = match token.kind {
+            Kind::Supra => Some(crate::Form::Supra), Kind::Id => Some(crate::Form::Ibid), _ => None,
         };
         if matches!(token.kind, Kind::Supra) {
-            let range = before(text, words, index);
-            if let Some(captures) = SUPRA_ANTECEDENT.captures(&text[range.clone()]).expect("source supra antecedent") {
-                name.full_span_start = range.start + captures.get(0).unwrap().start();
+            let window = before(words, index);
+            if let Some(captures) = SUPRA_ANTECEDENT.captures(&window).expect("source supra antecedent") {
+                name.full_span_start = preceding_offset(text, token.start, &window[captures.get(0).unwrap().start()..]);
                 name.antecedent_guess = captures.name("antecedent").or_else(|| captures.name("antecedent_only"))
                     .map(|value| value.as_str().to_owned());
                 name.volume = captures.name("volume").or_else(|| captures.name("volume_only"))
@@ -263,12 +262,12 @@ mod names {
         name
     }
 
-    pub(super) fn extract(text: &str, citations: &[(Range<usize>, bool)], markup: Option<&crate::clean::Markup<'_>>) -> BTreeMap<usize, SourceCaseName> {
-        let mut tokens: Vec<_> = citations.iter().map(|(span, short)| Word {
-            text: &text[span.clone()], start: span.start, end: span.end, kind: Kind::Citation(*short),
+    pub(super) fn extract(text: &str, citations: &[(Range<usize>, Option<&str>, Option<usize>)], markup: Option<&crate::clean::Markup<'_>>) -> BTreeMap<usize, SourceCaseName> {
+        let mut tokens: Vec<_> = citations.iter().map(|(span, prefix, _)| Word {
+            text: &text[span.clone()], start: span.start, end: span.end, kind: Kind::Citation(*prefix),
         }).collect();
         for (pattern, kind) in [(&*ID, Kind::Id), (&*SUPRA, Kind::Supra), (&*PARAGRAPH, Kind::Other),
-            (&*STOP, Kind::Stop(false)), (&*PLACEHOLDER, Kind::Placeholder), (&*SECTION, Kind::Other)] {
+            (&*STOP, Kind::Stop(false)), (&*PLACEHOLDER, Kind::Placeholder), (&*SECTION, Kind::Section)] {
             for captures in pattern.captures_iter(text) {
                 let captures = captures.expect("source name token");
                 let matched = captures.get(1).expect("source token capture");
@@ -278,28 +277,46 @@ mod names {
                 tokens.push(Word { text: matched.as_str(), start: matched.start(), end: matched.end(), kind });
             }
         }
+        let omitted: Vec<_> = citations.iter().filter_map(|(span, _, end)|
+            end.map(|end| end..span.start)).collect();
+        tokens.retain(|word| !omitted.iter().any(|range| range.contains(&word.start)));
         tokens.sort_by_key(|word| (word.start, std::cmp::Reverse(word.end)));
         let (mut words, mut end) = (Vec::new(), 0);
         for token in tokens {
             if token.start < end { continue; }
-            append(&mut words, text, end, token.start);
+            let before = omitted.iter().find(|range| range.end == token.start)
+                .map_or(token.start, |range| range.start);
+            if end < before { append(&mut words, text, end, before); }
             end = token.end; words.push(token);
         }
         append(&mut words, text, end, text.len());
         words.iter().enumerate().filter_map(|(index, word)| match word.kind {
-            Kind::Citation(short) => {
+            Kind::Citation(prefix) => {
+                let short = prefix.is_some();
                 let mut found = markup.and_then(|markup| html_name(text, &words, index, short, markup))
                     .unwrap_or_else(|| name(text, &words, index, short));
-                if !short { pre_citation(text, &words, index, &mut found); }
+                found.token_span = Some(crate::find::span(text, word.start..word.end));
+                if let Some(prefix) = prefix {
+                    let pin = reference(text, &words, index, prefix);
+                    found.full_span_end = pin.full_span_end;
+                    found.reference_span = pin.reference_span;
+                    found.pin_cite = pin.pin_cite;
+                    found.parenthetical = pin.parenthetical;
+                } else { pre_citation(text, &words, index, &mut found); }
                 Some((word.start, found))
             },
-            Kind::Id | Kind::Supra => Some((word.start, reference(text, &words, index))),
+            Kind::Id | Kind::Supra => Some((word.start, reference(text, &words, index, ""))),
+            Kind::Section => Some((word.start, SourceCaseName {
+                full_span_start: word.start, full_span_end: Some(word.end),
+                reference_span: Some(crate::find::span(text, word.start..word.end)),
+                token_span: Some(crate::find::span(text, word.start..word.end)), ..Default::default()
+            })),
             _ => None,
         }).collect()
     }
 }
 
-pub(crate) fn case_names(text: &str, citations: &[(Range<usize>, bool)], markup: Option<&crate::clean::Markup<'_>>) -> BTreeMap<usize, crate::SourceCaseName> {
+pub(crate) fn case_names(text: &str, citations: &[(Range<usize>, Option<&str>, Option<usize>)], markup: Option<&crate::clean::Markup<'_>>) -> BTreeMap<usize, crate::SourceCaseName> {
     names::extract(text, citations, markup)
 }
 
@@ -348,19 +365,20 @@ pub(crate) struct Match {
     pub span: Range<usize>,
     pub fields: Fields,
     pub short_at: Option<usize>,
+    pub preceding_text_end: Option<usize>,
     short: bool,
     ecmascript: bool,
 }
 
-impl Match {
-    fn nominative(&self) -> bool {
-        // Eyecite token_is_from_nominative_reporter: source tagging is incomplete.
-        self.fields.exact_editions.first().or(self.fields.variation_editions.first())
-            .is_some_and(|edition| matches!(edition.reporter.short_name.as_str(),
-                "Thompson" | "Cooke" | "Holmes" | "Olcott" | "Chase" |
-                "Gilmer" | "Bee" | "Deady" | "Taney"))
-    }
+// Eyecite token_is_from_nominative_reporter: source tagging is incomplete.
+pub(crate) fn nominative(fields: &Fields) -> bool {
+    fields.exact_editions.first().or(fields.variation_editions.first())
+        .is_some_and(|edition| matches!(edition.reporter.short_name.as_str(),
+            "Thompson" | "Cooke" | "Holmes" | "Olcott" | "Chase" |
+            "Gilmer" | "Bee" | "Deady" | "Taney"))
+}
 
+impl Match {
     fn merge(&mut self, other: &Self) -> bool {
         if self.span != other.span || self.short != other.short
             || self.fields.source_groups != other.fields.source_groups { return false; }
@@ -379,7 +397,134 @@ impl Match {
     }
 }
 
-pub(crate) fn find(text: &str, extended: bool) -> Vec<Match> {
+// One catalogue lookup for discovery and classification. The original LSP
+// gives a shared reporter/journal spelling to reporters first.
+fn standard_source(surface: &str) -> Option<&'static str> {
+    static SURFACES: LazyLock<[regex::Regex; 2]> = LazyLock::new(|| {
+        let tables = legal_grammar::load_tables().unwrap();
+        let defs = &tables["cite.us.reporter.standard.full"].defs;
+        ["us_reporters", "us_journals"].map(|name| regex::Regex::new(
+            &format!("^(?:{})$", defs[name]).replace(r"\s*", "").replace(' ', "")).unwrap())
+    });
+    ["reporters", "journals"].into_iter().zip(SURFACES.iter())
+        .find_map(|(source, pattern)| pattern.is_match(surface).then_some(source))
+}
+
+pub(crate) fn is_journal(core: &str) -> bool {
+    static CANDIDATE: LazyLock<regex::Regex> = LazyLock::new(||
+        legal_grammar::compile_ecmascript_table_entry("cite.us.reporter.candidate").unwrap());
+    CANDIDATE.captures(core).is_some_and(|captures| {
+        let citation = captures.name("citation").unwrap();
+        citation.start() == 0 && citation.end() == core.len()
+            && standard_source(&captures["reporter"].chars()
+                .filter(|c| !crate::text::javascript_whitespace(*c)).collect::<String>()) == Some("journals")
+    })
+}
+
+// Frozen LSP citator.rs::standard_us_matches. Its catalogue lookup ignores
+// whitespace anywhere in the reporter surface, including dotless variants.
+fn standard_matches(text: &str, extended: bool) -> Vec<Match> {
+    static PATTERN: LazyLock<regex::Regex> = LazyLock::new(|| regex::Regex::new(
+        &legal_grammar::load_tables().unwrap()["cite.us.standard-candidate"].entry.pattern).unwrap());
+    static EXTENDED: LazyLock<regex::Regex> = LazyLock::new(|| {
+        let tables = legal_grammar::load_tables().unwrap();
+        regex::Regex::new(&tables["cite.us.standard-candidate"].entry.pattern
+            .replace("[0-9]+|_+", &tables["cite.us.reporter.full"].defs["us_page"])).unwrap()
+    });
+    static EDITIONS: LazyLock<BTreeMap<String, (BTreeSet<usize>, BTreeSet<usize>)>> = LazyLock::new(|| {
+        let mut map = BTreeMap::<String, (BTreeSet<usize>, BTreeSet<usize>)>::new();
+        for extractor in &DATA.extractors {
+            for surface in &extractor.strings {
+                let entry = map.entry(compact(surface)).or_default();
+                entry.0.extend(extractor.exact.iter().copied().filter(|&index|
+                    matches!(DATA.editions[index].reporter.source.as_str(), "reporters" | "journals")));
+                entry.1.extend(extractor.variations.iter().copied().filter(|&index|
+                    matches!(DATA.editions[index].reporter.source.as_str(), "reporters" | "journals")));
+            }
+        }
+        map
+    });
+    // Frozen LSP us_fallback_ranges: extended pages are scanned only on cue lines.
+    let mut ranges = vec![(0, text.len(), &*PATTERN)];
+    if extended {
+        ranges.extend(fallback_ranges(text).into_iter().map(|(start, end)| (start, end, &*EXTENDED)));
+    }
+    let mut found = Vec::new();
+    for (start, end, pattern) in ranges {
+        let value = &text[start..end];
+        let mut cursor = 0;
+        while let Some(captures) = pattern.captures_at(value, cursor) {
+            let core = captures.name("citation").unwrap();
+            let reporter = captures.name("reporter").unwrap().as_str().chars()
+                .filter(|character| !crate::text::javascript_whitespace(*character)).collect::<String>();
+            if standard_source(&reporter).is_some() {
+                let (exact, variations) = &EDITIONS[&reporter];
+                let short_at = captures.name("__short_at").map(|matched| matched.start() - core.start());
+                let fields = Fields {
+                    source_groups: ["volume", "reporter", "page"].into_iter().map(|name|
+                        (name.to_owned(), captures.name(name).map(|matched| matched.as_str().to_owned()))).collect(),
+                    exact_editions: exact.iter().map(|&index| DATA.editions[index].clone()).collect(),
+                    variation_editions: variations.difference(exact).map(|&index| DATA.editions[index].clone()).collect(),
+                    ..Fields::default()
+                };
+                found.push(Match { span: start + core.start()..start + core.end(), fields, short_at,
+                    short: short_at.is_some(), ecmascript: true, preceding_text_end: None });
+            }
+            cursor = core.start() + 1;
+        }
+    }
+    found
+}
+
+fn fallback_ranges(text: &str) -> BTreeSet<(usize, usize)> {
+    static CUE: LazyLock<regex::Regex> = LazyLock::new(||
+        legal_grammar::compile_ecmascript_table_entry("cite.us.fallback-cue").unwrap());
+    CUE.find_iter(text).map(|cue| (
+        text[..cue.start()].rfind('\n').map_or(0, |at| at + 1),
+        text[cue.end()..].find('\n').map_or(text.len(), |at| cue.end() + at),
+    )).collect()
+}
+
+static COMMON: LazyLock<legal_grammar::AsciiBoundedGrammar> = LazyLock::new(||
+        legal_grammar::compile_ascii_bounded_table_entry("cite.us.law.common").unwrap());
+static EXTENDED: LazyLock<[(&str, legal_grammar::AsciiBoundedGrammar); 4]> = LazyLock::new(||
+        ["cite.us.reporter.custom.full", "cite.us.reporter.custom.short",
+            "cite.us.law.full", "cite.us.law.short"].map(|id|
+            (id, legal_grammar::compile_ascii_bounded_table_entry(id).unwrap())));
+
+pub(crate) fn is_law(core: &str) -> bool {
+    let whole = |span: &Range<usize>| span.start == 0 && span.end == core.len();
+    COMMON.find_spans(core).iter().any(whole) || EXTENDED.iter().any(|(id, grammar)|
+        id.contains(".law.") && grammar.find_spans(core).iter().any(whole))
+}
+
+pub(crate) fn common_law_spans(text: &str) -> Vec<Range<usize>> {
+    COMMON.find_spans(text)
+}
+
+/// LSP's citation-hit evidence for excerpt scoring, before identity or metadata.
+/// Its four extended grammars only run on the original cue-selected lines.
+pub(crate) fn citation_spans(text: &str, extended: bool) -> Vec<Range<usize>> {
+    let mut spans = standard_matches(text, extended).into_iter().map(|hit| hit.span).collect::<Vec<_>>();
+    extend_native_spans(text, extended, &mut spans);
+    spans
+}
+
+fn extend_native_spans(text: &str, extended: bool, spans: &mut Vec<Range<usize>>) {
+    spans.extend(common_law_spans(text));
+    if extended {
+        for (start, end) in fallback_ranges(text) {
+            let candidate = &text[start..end];
+            for (id, grammar) in EXTENDED.iter() {
+                if id.ends_with(".short") && !candidate.contains(" at") { continue; }
+                spans.extend(grammar.find_spans(candidate).into_iter()
+                    .map(|hit| start + hit.start..start + hit.end));
+            }
+        }
+    }
+}
+
+pub(crate) fn find(text: &str, extended: bool, native: Option<&mut Vec<Range<usize>>>) -> Vec<Match> {
     let (automaton, indices, unfiltered) = &*FILTER;
     let mut selected: BTreeSet<usize> = unfiltered.iter().copied().collect();
     for matched in automaton.find_overlapping_iter(&compact(text)) {
@@ -421,18 +566,29 @@ pub(crate) fn find(text: &str, extended: bool) -> Vec<Match> {
                 variation_editions,
                 ..Fields::default()
             };
-            found.push(Match { span: core.start()..core.end(), fields, short: extractor.short, ecmascript: extractor.ecmascript,
+            found.push(Match { span: core.start()..core.end(), fields, short: extractor.short, ecmascript: extractor.ecmascript, preceding_text_end: None,
                 short_at: captures.name("__short_at").map(|at| at.start() - core.start()) });
         }
     }
+    let standard = standard_matches(text, extended);
+    if let Some(native) = native {
+        native.extend(standard.iter().map(|hit| hit.span.clone()));
+        extend_native_spans(text, extended, native);
+    }
+    found.extend(standard);
     // Preserve the pinned source token when a broader standard form also matches.
     found.sort_by_key(|m| (m.span.start, m.ecmascript, std::cmp::Reverse(m.span.end)));
     let mut kept: Vec<Match> = Vec::new();
-    for candidate in found {
+    for mut candidate in found {
         if let Some(previous) = kept.last_mut() {
             if previous.merge(&candidate) { continue; }
             if previous.span.end > candidate.span.start {
-                if previous.nominative() { kept.pop(); } else { continue; }
+                if nominative(&previous.fields) {
+                    // Tokenizer.tokenize pops the nominative token without
+                    // putting its covered text back into the word stream.
+                    candidate.preceding_text_end = Some(previous.preceding_text_end.unwrap_or(previous.span.start));
+                    kept.pop();
+                } else { continue; }
             }
         }
         kept.push(candidate);

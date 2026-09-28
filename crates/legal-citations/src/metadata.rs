@@ -31,16 +31,46 @@ static TOKEN: LazyLock<regex::Regex> = LazyLock::new(|| {
     let tables = legal_grammar::load_tables().unwrap();
     regex::Regex::new(&tables["pinpoint.token"].entry.pattern).unwrap()
 });
+static PINPOINT_PHRASES: LazyLock<[(PinpointKind, CompiledEcmascriptGrammar); 3]> = LazyLock::new(|| [
+    (PinpointKind::Paragraph, linear("pinpoint.para.toa")),
+    (PinpointKind::Section, linear("pinpoint.section.toa")),
+    (PinpointKind::Page, linear("pinpoint.page.toa")),
+]);
+static PINPOINT_BRIDGE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("pinpoint.bridge"));
+
+/// LSP pinpoint_hits: first eligible group, with its original tie ordering.
+fn pinpoint_phrase(text: &str, start: usize, limit: usize) -> Option<(PinpointKind, crate::Span)> {
+    let tail = &text[start..limit];
+    let mut selected = None;
+    for (kind, pattern) in PINPOINT_PHRASES.iter() {
+        let Some(captures) = pattern.captures(tail) else { continue };
+        let matched = captures.get(0).unwrap();
+        if !PINPOINT_BRIDGE.is_match(&tail[..matched.start()]) { continue; }
+        if selected.is_none_or(|(_, at, _)| matched.start() < at) {
+            selected = Some((*kind, matched.start(), matched.end()));
+        }
+    }
+    let (kind, _, end) = selected?;
+    Some((kind, clean_pin_cite(text, start..start + end)?))
+}
 
 /// Legal Structure Parser's numeric-token projection of a parsed locator.
 /// Keep the full range in `Pinpoint`; callers needing individual source tokens
 /// receive their original text and byte offsets here.
-pub fn pinpoint_tokens(pinpoint: &Pinpoint) -> impl Iterator<Item = crate::Span> + '_ {
-    TOKEN.find_iter(&pinpoint.span.text).map(|matched| crate::Span {
+pub fn pinpoint_tokens(span: &crate::Span) -> impl Iterator<Item = crate::Span> + '_ {
+    TOKEN.find_iter(&span.text).map(|matched| crate::Span {
         text: matched.as_str().to_owned(),
-        start: pinpoint.span.start + matched.start(),
-        end: pinpoint.span.start + matched.end(),
+        start: span.start + matched.start(),
+        end: span.start + matched.end(),
     })
+}
+
+/// Eyecite helpers.clean_pin_cite, retaining the cleaned text's source offsets.
+pub(crate) fn clean_pin_cite(text: &str, range: Range<usize>) -> Option<crate::Span> {
+    let raw = &text[range.clone()];
+    let trimmed = raw.trim_matches([',', ' ']);
+    let start = range.start + raw.len() - raw.trim_start_matches([',', ' ']).len();
+    (!trimmed.is_empty()).then(|| span(text, start..start + trimmed.len()))
 }
 static SHORT_FORM_SUFFIX: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("shortform.splitter"));
@@ -48,9 +78,9 @@ static SOURCE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("parenthetical.source"));
 static COURT: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("parenthetical.court"));
 static LAW_PUBLICATION: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("parenthetical.law"));
-static POST_CITATION: LazyLock<[CompiledGrammar; 4]> = LazyLock::new(|| {
+static POST_CITATION: LazyLock<[CompiledGrammar; 3]> = LazyLock::new(|| {
     ["parenthetical.us.post-full", "parenthetical.us.post-law",
-        "parenthetical.us.post-journal", "parenthetical.us.post-short"].map(|id|
+        "parenthetical.us.post-journal"].map(|id|
         legal_grammar::compile_python_table_entry(id).expect("pinned post-citation grammar"))
 });
 static SOURCE_YEAR: LazyLock<CompiledGrammar> = LazyLock::new(||
@@ -64,21 +94,22 @@ static BRACKETED_PARAGRAPH: LazyLock<CompiledEcmascriptGrammar> =
 const MAX_PARENTHETICAL: usize = 600;
 
 #[derive(Clone, Copy, PartialEq)]
-pub(crate) enum PostCitation { Case, Law, Journal, Short }
+pub(crate) enum PostCitation { Case, Law, Journal }
 
 /// What [`tail`] may read after a core.
 #[derive(Clone, Copy, Default)]
 pub(crate) struct TailRules {
-    /// Pinned source metadata grammar and paragraph boundary. Only a full
-    /// case's date can follow citation tokens beyond the next core boundary.
-    pub post_citation: Option<(PostCitation, usize)>,
+    /// Native core boundary when the source locator starts inside that core.
+    pub core_end: Option<usize>,
+    /// Pinned metadata grammar, source token end and paragraph boundary.
+    /// Only a full case's date can follow tokens beyond the next core boundary.
+    pub post_citation: Option<(PostCitation, usize, usize)>,
     /// A Bluebook pinpoint with no keyword: `410 U.S. 113, 153`.
     pub bare_page: bool,
     /// OSCOLA pinpoints after `(n 4)`: a bare page (`353`) or a bracketed
     /// paragraph (`[12]`).
     pub oscola: bool,
-    /// Pinpoints that sit inside the styled part (`Canadian Charter ..., s 7,
-    /// Part I ...`) and were read before the core.
+    /// Eyecite pinpoints preceding the citation token.
     pub inner: Option<(usize, usize)>,
 }
 
@@ -94,8 +125,10 @@ pub(crate) struct Tail {
     pub court_date: Option<CourtReading>,
     pub pinpoints: Vec<Pinpoint>,
     pub pin_cite: Option<crate::Span>,
+    pub pin_cite_kind: Option<PinpointKind>,
     pub parentheticals: Vec<Parenthetical>,
     pub short: Option<String>,
+    pub short_span: Option<crate::Span>,
     pub end: usize,
 }
 
@@ -181,11 +214,7 @@ fn pinpoint_group(
         });
     }
     let end = pinpoints.last()?.span.end;
-    // Eyecite's clean_pin_cite strips only commas and spaces. Keep the
-    // written label ("at", "¶", "p.") rather than reconstructing it.
-    let raw = &text[start..end];
-    let phrase_start = start + raw.len() - raw.trim_start_matches([',', ' ']).len();
-    Some((pinpoints, span(text, phrase_start..end)))
+    Some((pinpoints, clean_pin_cite(text, start..end)?))
 }
 
 /// A balanced parenthetical opening after optional spaces and a comma.
@@ -327,25 +356,38 @@ fn bracketed_paragraph(text: &str, start: usize, limit: usize) -> Option<(Pinpoi
     ))
 }
 
-/// Walk pinpoints, parentheticals and a bracketed short form from `start`,
-/// starting before `limit` (the next citation's core). An explanatory
-/// parenthetical can contain another citation and therefore end beyond it.
-pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> Tail {
+/// Original LSP pinpoint and explicit-short-form extent, shared by both views.
+pub(crate) fn native_tail(text: &str, start: usize, limit: usize) -> Tail {
     let mut result = Tail {
         end: start,
         ..Tail::default()
     };
+    if let Some((kind, phrase)) = pinpoint_phrase(text, start, limit) {
+        result.pin_cite = Some(phrase);
+        result.pin_cite_kind = Some(kind);
+    }
+    let local_end = result.pin_cite.as_ref().map_or(start, |pin| pin.end);
+    if let Some((short, end)) = explicit_short_form(text, local_end, limit) {
+        result.short = Some(short);
+        result.short_span = Some(span(text, local_end..end));
+    }
+    result.end = result.short_span.as_ref().map_or(local_end, |short| short.end);
+    result
+}
+
+/// Walk pinpoints and parentheticals after the native extent. An explanatory
+/// parenthetical can contain another citation and end beyond `limit`.
+pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> Tail {
+    let mut result = native_tail(text, rules.core_end.unwrap_or(start), limit);
     if let Some((inner_start, inner_end)) = rules.inner {
-        if let Some((pinpoints, phrase)) = pinpoint_group(text, inner_start, inner_end, false) {
+        if let Some((pinpoints, _)) = pinpoint_group(text, inner_start, inner_end, false) {
             result.pinpoints.extend(pinpoints);
-            result.pin_cite = Some(phrase);
         }
     }
     let mut cursor = start;
     let mut bare_page = rules.bare_page;
     if rules.oscola {
         if let Some((pinpoint, end)) = oscola_page(text, cursor, limit) {
-            result.pin_cite = Some(pinpoint.span.clone());
             result.pinpoints.push(pinpoint);
             cursor = end;
         }
@@ -353,18 +395,12 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
     while cursor < limit {
         if let Some((pinpoints, phrase)) = pinpoint_group(text, cursor, limit, bare_page) {
             let end = phrase.end;
-            match &mut result.pin_cite {
-                Some(previous) if previous.end == cursor => *previous = span(text, previous.start..end),
-                None => result.pin_cite = Some(phrase),
-                _ => {},
-            }
             result.pinpoints.extend(pinpoints);
             cursor = end;
             bare_page = false;
             continue;
         }
         if let Some((pinpoint, end)) = bracketed_paragraph(text, cursor, limit) {
-            if result.pin_cite.is_none() { result.pin_cite = Some(pinpoint.span.clone()); }
             result.pinpoints.push(pinpoint);
             cursor = end;
             continue;
@@ -381,7 +417,7 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
         }
         break;
     }
-    if let Some((source, paragraph_end)) = rules.post_citation {
+    if let Some((source, start, paragraph_end)) = rules.post_citation {
         result.source_end = Some(start);
         // Full cases may span parallel citation tokens. Other source forms
         // stop at the next citation as well as the paragraph boundary.
@@ -389,36 +425,19 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
         let end = window.char_indices().nth(300).map_or(window.len(), |(at, _)| at);
         if let Some(captures) = POST_CITATION[source as usize].captures(&window[..end]).expect("post-citation match") {
             {
-                let mut source_end = start + if source != PostCitation::Short { captures.get(0).unwrap().end() }
-                    else { captures.name("pin_cite").map_or(0, |pin| pin.as_str().trim_end_matches([',', ' ']).len()) };
-                // Eyecite process_parenthetical: stop at the first unmatched
-                // closing parenthesis, then exclude year-only parentheticals.
+                let mut source_end = start + captures.get(0).unwrap().end();
                 if let Some(part) = captures.name("parenthetical") {
-                    let mut balance = 0;
-                    let mut value = part.as_str();
-                    let mut closed = false;
-                    for (offset, character) in value.char_indices() {
-                        if character == '(' { balance += 1; }
-                        if character == ')' { balance -= 1; }
-                        if balance < 0 {
-                            closed = true;
-                            value = &value[..offset];
-                            if source == PostCitation::Case && !value.is_empty() { source_end -= part.as_str().len() - value.len(); }
-                            break;
+                    result.source_parenthetical = process_parenthetical(part.as_str());
+                    if source == PostCitation::Case {
+                        if let Some(value) = &result.source_parenthetical {
+                            source_end -= part.as_str().len() - value.len();
                         }
-                    }
-                    if !value.is_empty() && (closed || !SOURCE_YEAR.is_match(value).expect("source parenthetical year")) {
-                        result.source_parenthetical = Some(value.to_owned());
                     }
                 }
                 result.source_end = Some(source_end);
                 if let Some(pin) = captures.name("pin_cite").or_else(|| captures.name("pin_cite_2")) {
                     if !pin.as_str().is_empty() { result.source_pin_end = Some(start + pin.as_str().len()); }
-                    let trimmed = pin.as_str().trim_matches([',', ' ']);
-                    let leading = pin.as_str().len() - pin.as_str().trim_start_matches([',', ' ']).len();
-                    if !trimmed.is_empty() {
-                        result.source_pin = Some(span(text, start + pin.start() + leading..start + pin.start() + leading + trimmed.len()));
-                    }
+                    result.source_pin = clean_pin_cite(text, start + pin.start()..start + pin.end());
                 }
             }
             if let Some(extra) = captures.name("extra") {
@@ -450,23 +469,53 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
                     court: None, date: group("year"), year: group("year"),
                     month: group("month"), day: group("day"),
                 });
-                if let Some(pin) = captures.name("pin_cite") {
-                    let trimmed = pin.as_str().trim_matches([',', ' ']);
-                    if !trimmed.is_empty() {
-                        let leading = pin.as_str().len() - pin.as_str().trim_start_matches([',', ' ']).len();
-                        result.pin_cite = Some(span(text, start + pin.start() + leading..start + pin.start() + leading + trimmed.len()));
-                    }
-                }
                 cursor = cursor.max(start + captures.get(0).unwrap().end());
             }
         }
     }
-    result.end = cursor;
-    if cursor < limit {
-        if let Some((short, end)) = explicit_short_form(text, cursor, limit) {
-            result.short = Some(short);
-            result.end = end;
+    result.end = cursor.max(result.end);
+    result
+}
+
+/// Eyecite helpers.process_parenthetical, shared by full and short forms.
+fn process_parenthetical(value: &str) -> Option<String> {
+    let mut balance = 0;
+    for (at, character) in value.char_indices() {
+        if character == '(' { balance += 1; }
+        if character == ')' { balance -= 1; }
+        if balance < 0 { return (!value[..at].is_empty()).then(|| value[..at].to_owned()); }
+    }
+    (!value.is_empty() && !SOURCE_YEAR.is_match(value).expect("source parenthetical year"))
+        .then(|| value.to_owned())
+}
+
+/// Eyecite extract_pin_cite: prepend the token's page and stop at the caller's
+/// first non-string token. Prefix offsets are subtracted from the matched extent.
+pub(crate) fn short_reference(text: &str, token: Range<usize>, limit: usize, prefix: &str) -> crate::SourceCaseName {
+    static POST_SHORT: LazyLock<CompiledGrammar> = LazyLock::new(||
+        legal_grammar::compile_python_table_entry("parenthetical.us.post-short").unwrap());
+    let window: String = prefix.chars().chain(text[token.end..limit].chars()).take(300).collect();
+    let mut result = crate::SourceCaseName {
+        full_span_start: token.start, full_span_end: Some(token.end),
+        token_span: Some(span(text, token.clone())), reference_span: Some(span(text, token.clone())),
+        ..Default::default()
+    };
+    if let Some(captures) = POST_SHORT.captures(&window).expect("source short metadata") {
+        let base = token.end - prefix.len();
+        let mut extra = 0;
+        if let Some(pin) = captures.name("pin_cite").filter(|pin| !pin.as_str().is_empty()) {
+            let raw = pin.as_str();
+            let cleaned = raw.trim_matches([',', ' ']);
+            extra = raw.trim_end_matches([',', ' ']).len();
+            let start = base + pin.start() + raw.len() - raw.trim_start_matches([',', ' ']).len();
+            result.pin_cite = (!cleaned.is_empty()).then(|| crate::Span {
+                text: cleaned.to_owned(), start, end: start + cleaned.len(),
+            });
         }
+        let span_end = base + extra;
+        result.reference_span = Some(span(text, token.start..if span_end == 0 { token.end } else { span_end }));
+        result.full_span_end = Some(span_end.max(token.end));
+        result.parenthetical = captures.name("parenthetical").and_then(|part| process_parenthetical(part.as_str()));
     }
     result
 }

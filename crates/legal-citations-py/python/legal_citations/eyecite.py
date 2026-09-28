@@ -14,11 +14,9 @@ attributes eyecite users rely on: ``groups``, ``metadata.pin_cite``,
 ``metadata.plaintiff``, ``metadata.defendant``, ``span()``, ``full_span()``,
 ``matched_text()``, ``corrected_citation()``, ``year``, ``index``.
 
-Every object also carries the full legal-citations record as ``.data`` (with
-``form``, ``authority``, ``key``, ``jurisdiction``, parallel groups, ...), which
-is where Canadian and Commonwealth detail lives that eyecite's model has no
-slot for. Citations eyecite has no class for (books, parliamentary papers,
-short forms of statutes) map to ``FullCitation`` / ``UnknownCitation``.
+Every object also carries the shared engine record as ``.data``. This facade
+uses the pinned Eyecite token view; ``legal_citations.extract`` exposes the
+combined Canadian, Commonwealth and U.S. discovery result.
 
 Differences from eyecite, by design:
 
@@ -162,7 +160,7 @@ class CitationBase:
 
     def matched_text(self) -> str:
         source_name = (self.data.get("fields") or {}).get("sourceCaseName") or {}
-        return (source_name.get("referenceSpan") or self.data["span"])["text"]
+        return (source_name.get("tokenSpan") or source_name.get("referenceSpan") or self.data["span"])["text"]
 
     # -- corrected forms
 
@@ -431,7 +429,7 @@ def get_citations(
             raise ValueError("Both `markup_text` and `plain_text` were passed. Not clear which to apply `clean_steps` to")
         text = plain_text
     records = call("extract", {"text": text, "markupText": markup_text or None,
-        "options": {"resolve": False, "removeAmbiguous": remove_ambiguous}, "offsetUnit": "char"})["citations"]
+        "options": {"resolve": False, "removeAmbiguous": remove_ambiguous, "sourceOnly": True}, "offsetUnit": "char"})["citations"]
     return [_class_for(record)(record, text, records) for record in records]
 
 

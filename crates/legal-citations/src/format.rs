@@ -196,16 +196,16 @@ impl Style {
 // ---------------------------------------------------------------------------
 // Locators
 
-struct Locator {
-    root: String,
+pub(crate) struct Locator {
+    pub(crate) root: String,
     root_parts: Vec<u64>,
-    suffixes: Vec<String>,
+    pub(crate) suffixes: Vec<String>,
 }
 
 /// `7(2)(a)` → root `7`, suffixes `2`, `a`. Page and paragraph numbers are
 /// roots without suffixes; `xii` does not parse.
-fn parse_locator(value: &str) -> Option<Locator> {
-    let raw = value.trim();
+pub(crate) fn parse_locator(value: &str) -> Option<Locator> {
+    let raw = crate::text::normalize_javascript_whitespace(value);
     let root_end = raw
         .char_indices()
         .find(|&(position, character)| {

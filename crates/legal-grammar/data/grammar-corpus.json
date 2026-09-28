@@ -23,8 +23,26 @@
       },
       "entries": [
         {
+          "id": "cite.canlii.source-link",
+          "pattern": "(\\d{4})\\s+CanLII\\s+(\\d+)(?:\\s+at\\s+[^()]*)?\\s*\\(([A-Za-z ]+)\\)",
+          "flags": "i",
+          "provenance": "Frozen ALR alr_quote_verifier.py::_CANLII_RE used by _generate_fallback_url; parentheses are required by the original."
+        },
+        {
+          "id": "cite.reporter.scr.source-link",
+          "pattern": "\\[\\s*(?<year>\\d{4})\\s*\\]\\s+(?:(?<volume>\\d{1,4})\\s+)?SCR\\s+(?<first_page>\\d{1,4})",
+          "flags": "i",
+          "provenance": "Frozen ALR alr_quote_verifier.py::_SCR_REPORTED_CITATION_RE and _resolve_footnote_part_link_unlocked SCR override. Only named-group syntax is translated."
+        },
+        {
+          "id": "cite.us.standard-candidate",
+          "pattern": "(?:\\A|[^A-Za-z0-9])(?<citation>(?<volume>[1-9][0-9]*) (?<reporter>[^;\\r\\n]{1,180}?),? (?:(?<__short_at>at)\\s?(?:p(?:\\.|age)?)? )?(?<page>[0-9]+|_+))(?:\\z|[^A-Za-z0-9])",
+          "flags": "",
+          "provenance": "Frozen Legal Structure Parser citator.rs STANDARD_CANDIDATE and standard_us_matches. The additional named at group preserves the same accepted text while carrying the recognized short form."
+        },
+        {
           "id": "cite.in-text",
-          "pattern": "\\b(?:19|20)\\d{2}\\s+[A-Z]{2,8}\\s+\\d+\\b|\\[\\d{4}\\]\\s+[A-Z](?:\\.[A-Z]){1,4}\\.?\\s+No\\.?\\s+\\d+(?:\\s+\\([A-Z.]+\\))?|\\[\\d{4}\\]\\s+(?:\\d+\\s+)?[A-Z][A-Za-z.]{1,12}(?:\\s+[A-Z][A-Za-z.]{0,12}){0,3}(?:\\s*\\((?:\\d+(?:st|nd|rd|th|d|e)?|N\\.?\\s*S\\.?)\\))?\\s+\\d+|\\b\\d+\\s+[A-Z][A-Za-z.']{1,14}\\s*(?:\\((?:\\d+(?:st|nd|rd|th|d|e)?|N\\.?\\s*S\\.?)\\))?\\s+\\d+\\b|\\bCanLII\\s+\\d+\\b|\\(\\d{4}\\),?\\s+\\d+\\s+[A-Z][A-Za-z.]{1,14}(?:\\s*\\((?:\\d+(?:st|nd|rd|th|d|e)?|N\\.?\\s*S\\.?)\\))?(?:\\s+\\d+)?",
+          "pattern": "\\b(?:19|20)\\d{2}\\s+[A-Z]{2,8}\\s+\\d+\\b|\\[\\d{4}\\]\\s+[A-Z](?:\\.[A-Z]){1,4}\\.?\\s+No\\.?\\s+\\d+(?:\\s+\\([A-Z.]+\\))?|\\[\\d{4}\\]\\s+(?:\\d+\\s+)?[A-Z][A-Za-z.]{1,12}(?:\\s+[A-Z][A-Za-z.]{0,12}){0,3}\\s+\\d+|\\b\\d+\\s+[A-Z][A-Za-z.']{1,14}\\s*(?:\\(\\d[a-z]{0,2}\\))?\\s+\\d+\\b|\\bCanLII\\s+\\d+\\b|\\(\\d{4}\\),?\\s+\\d+\\s+[A-Z][A-Za-z.]{1,14}(?:\\s*\\(\\d[a-z]{0,2}\\))?(?:\\s+\\d+)?",
           "flags": "",
           "canonical": {},
           "provenance": "Extracted verbatim from Beaver citationKey.ts CITATION_IN_TEXT_SOURCE before the Rust cutover; broad in-text detection only, with identification remaining a separate operation.",
@@ -587,7 +605,7 @@
         },
         {
           "id": "cite.reporter.splitter",
-          "pattern": "(?<![\\w.])(?:\\[(?:17|18|19|20)\\d{2}\\]\\s+(?:\\d{1,4}\\s+)?{{reporter_words}}(?:\\s+\\((?:\\d+[A-Za-z]{0,3}|N\\.?\\s*S\\.?)\\))?\\s+\\d{1,5}|\\((?:17|18|19|20)\\d{2}\\),?\\s+(?:\\d{1,4}\\s+)?{{reporter_words}}(?:\\s+\\((?:\\d+[A-Za-z]{0,3}|N\\.?\\s*S\\.?)\\))?\\s+\\d{1,5}|\\d{1,4}\\s+{{reporter_words}}(?:\\s+\\((?:\\d+[A-Za-z]{0,3}|N\\.?\\s*S\\.?)\\))?\\s+\\d{1,5})(?=\\s*(?:[,;.]|\\bat\\b|\\band\\b|\\bwith\\b|\\(|\\[|$))",
+          "pattern": "(?<![\\w.])(?:\\[(?:17|18|19|20)\\d{2}\\]\\s+(?:\\d{1,4}\\s+)?{{reporter_words}}(?:\\s+\\(\\d+[A-Za-z]{0,3}\\))?\\s+\\d{1,5}|\\((?:17|18|19|20)\\d{2}\\),?\\s+(?:\\d{1,4}\\s+)?{{reporter_words}}(?:\\s+\\(\\d+[A-Za-z]{0,3}\\))?\\s+\\d{1,5}|\\d{1,4}\\s+{{reporter_words}}(?:\\s+\\(\\d+[A-Za-z]{0,3}\\))?\\s+\\d{1,5})(?=\\s*(?:[,;.]|\\bat\\b|\\band\\b|\\bwith\\b|\\(|\\[|$))",
           "flags": "i",
           "canonical": {},
           "provenance": "splitter.py:14-23 (_REPORTER_RE, three-branch: [year] / (year) / bare-volume, built on _REPORTER_WORDS which is the reporter_words def). Trailing lookahead bounds the match at clause edges. Recall-first routing evidence by design.",
@@ -785,6 +803,14 @@
               "groups": null
             }
           ]
+        },
+        {
+          "id": "url.source-candidate",
+          "pattern": "https?://\\S+",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "ALR alr_quote_verifier.py URL_RE used by _sanitize_url_candidate (frozen e27f683932be9f67c67635474c780f901206f168).",
+          "vectors": []
         },
         {
           "id": "cite.url",
@@ -1129,10 +1155,10 @@
         },
         {
           "id": "cite.ca.statute.first",
-          "pattern": "\\b(?<series>{{ca_statute_series}}|{{fr_statute_series}})\\s*,?\\s+\\(?(?<year>(?:1[6-9]|20)\\d{2})\\)?(?:\\s*,?\\s+c(?:h(?:ap)?)?\\.?\\s*(?<chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*(?:\\s+\\d+(?:\\.\\d+)?)?))?(?:\\s*,?\\s+Sched(?:ule)?\\.?\\s*(?<schedule>[A-Za-z0-9]+))?|\\b(?<compiled_series>C\\.?Q\\.?L\\.?R\\.?|C\\.?C\\.?S\\.?M\\.?|R\\.?L\\.?R\\.?Q\\.?)\\s*,?\\s+c(?:h(?:ap)?)?\\.?\\s*(?<compiled_chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*)|\\b(?<regnal>\\d{1,2}(?:\\s*&\\s*\\d{1,2})?\\s+(?:Vict|Geo|Eliz|Will|Anne?|Car|Jac|Hen|Edw)\\.?(?:\\s*[IVX]+)?),?\\s+c\\.?\\s*(?<regnal_chapter>\\d{1,4}[A-Za-z]?)|\\b(?<instrument>(?:SOR|SI|DORS|TR)/\\d{2,4}[-/]\\d{1,4})|\\bCRC,?\\s*c\\.?\\s*(?<consolidated_chapter>\\d{1,4}(?:\\.\\d+)?)|\\b(?<regulation>(?:(?:Alta|[A-Z][A-Za-z]{0,2})\\s+)?(?:Reg|OIC)\\.?\\s*\\d{1,4}[-/]\\d{1,4})|\\b(?<rr_series>R\\.?R\\.?O\\.?|R\\.?R\\.?A\\.?|R\\.?R\\.?M\\.?|R\\.?R\\.?S\\.?|R\\.?R\\.?N\\.?S\\.?|R\\.?R\\.?N\\.?B\\.?|R\\.?R\\.?P\\.?E\\.?I\\.?|R\\.?R\\.?N\\.?W\\.?T\\.?|R\\.?R\\.?Y\\.?)\\s*,?\\s+(?<rr_year>(?:19|20)\\d{2}),?\\s+(?:Reg|Règl)\\.?\\s*(?<rr_number>\\d{1,4}(?:/\\d{1,4})?)|(?<fr_regulation>R[èe]gl\\s+de\\s+l['’](?:Ont|Alb|Î-P-É|N-É|N-B|C-B|Man|Sask|T-N-L|Yn|T-N-O)\\s+\\d{1,4}/\\d{1,4})",
+          "pattern": "\\b(?<series>{{ca_statute_series}}|{{fr_statute_series}})\\s*,?\\s+\\(?(?<year>(?:1[6-9]|20)\\d{2})\\)?(?:\\s*,?\\s+c\\.?\\s*(?<chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*(?:\\s+\\d+(?:\\.\\d+)?)?))?(?:\\s*,?\\s+Sched(?:ule)?\\.?\\s*(?<schedule>[A-Za-z0-9]+))?|\\b(?<compiled_series>C\\.?Q\\.?L\\.?R\\.?|C\\.?C\\.?S\\.?M\\.?|R\\.?L\\.?R\\.?Q\\.?)\\s*,?\\s+c\\.?\\s*(?<compiled_chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*)|\\b(?<regnal>\\d{1,2}(?:\\s*&\\s*\\d{1,2})?\\s+(?:Vict|Geo|Eliz|Will|Anne?|Car|Jac|Hen|Edw)\\.?(?:\\s*[IVX]+)?),?\\s+c\\.?\\s*(?<regnal_chapter>\\d{1,4}[A-Za-z]?)|\\b(?<instrument>(?:SOR|SI)/\\d{2,4}[-/]\\d{1,4})|\\bCRC,?\\s*c\\.?\\s*(?<consolidated_chapter>\\d{1,4}(?:\\.\\d+)?)|\\b(?<regulation>(?:[A-Z][A-Za-z]{0,2}\\s+)?(?:Reg|OIC)\\.?\\s*\\d{1,4}[-/]\\d{1,4})",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored first-reference grammar for Canadian legislation, in the footnote (McGill Guide) dialect the judgment-side cite.statute.judgment entry cannot reach: the undotted series forms, the CQLR/CCSM/RLRQ compiled-statute forms that carry no year, the imperial regnal-year form (30 & 31 Vict, c 3), and the regulation instruments (SOR//SI//CRC//provincial Reg//OIC). Member list is the shared ca_statute_series//fr_statute_series defs unchanged, so the judgment and footnote dialects name the same series. Measured against the ALR fast-split field gold: the statute family scored 0 citation hits before this entry existed. legal-citations additions: 'ch'/'chap' chapter labels (LRC 1985, ch C-46 no longer reads chapter 'h'), the French and transitional instrument prefixes DORS/ and TR/, the revised-regulation volumes (RRO 1990, Reg 194) and the French provincial regulation form (Règl de l'Ont 191/11).",
+          "provenance": "Beaver-authored first-reference grammar for Canadian legislation, in the footnote (McGill Guide) dialect the judgment-side cite.statute.judgment entry cannot reach: the undotted series forms, the CQLR/CCSM/RLRQ compiled-statute forms that carry no year, the imperial regnal-year form (30 & 31 Vict, c 3), and the regulation instruments (SOR//SI//CRC//provincial Reg//OIC). Member list is the shared ca_statute_series//fr_statute_series defs unchanged, so the judgment and footnote dialects name the same series. Measured against the ALR fast-split field gold: the statute family scored 0 citation hits before this entry existed.",
           "vectors": [
             {
               "input": "Criminal Code, RSC 1985, c C-46, s 718.",
@@ -1356,10 +1382,10 @@
         },
         {
           "id": "cite.book.imprint",
-          "pattern": "(?:\\b(?<edition>\\d{1,2}(?:st|nd|rd|th)|rev(?:ised)?|2d|3d|new)\\s+ed\\b\\.?,?\\s*\\((?<edition_imprint>[^()\\n]{0,90}(?:1[6-9]|20)\\d{2}[^()\\n]{0,30})\\)|\\((?<place>[A-Z][^()\\n:]{0,60}):\\s*(?<imprint>[^()\\n]{0,90}(?:1[6-9]|20)\\d{2}[^()\\n]{0,30})\\))(?:\\s+(?<first_page>\\d{1,5})\\b)?",
+          "pattern": "\\b(?<edition>\\d{1,2}(?:st|nd|rd|th)|rev(?:ised)?|2d|3d|new)\\s+ed\\b\\.?,?\\s*\\((?<edition_imprint>[^()\\n]{0,90}(?:1[6-9]|20)\\d{2}[^()\\n]{0,30})\\)|\\((?<place>[A-Z][^()\\n:]{0,60}):\\s*(?<imprint>[^()\\n]{0,90}(?:1[6-9]|20)\\d{2}[^()\\n]{0,30})\\)",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored: the publication frame of a monograph or an edited collection - '(Place: Publisher, Year)', or an edition marker followed by a bare year parenthetical. Supersedes frame.book (splitter dialect, place class limited to [A-Za-z .,'-] and the year forced to sit last inside the parentheses) by admitting the forms the corpus shows: a trailing note inside the frame ('; online edn'), a publisher-first French frame ('(Themis: 2023, Montreal)'), and the edition-only frame ('2nd ed (2022)'). One entry serves both the book and the essay-collection families, which share the frame and differ only in the 'in Editor, ed,' lead-in. legal-citations: an essay's first page after the frame ('(New York: Oxford University Press, 2015) 45 at 50') is read as first_page, so the pinpoint after it stays a pinpoint.",
+          "provenance": "Beaver-authored: the publication frame of a monograph or an edited collection - '(Place: Publisher, Year)', or an edition marker followed by a bare year parenthetical. Supersedes frame.book (splitter dialect, place class limited to [A-Za-z .,'-] and the year forced to sit last inside the parentheses) by admitting the forms the corpus shows: a trailing note inside the frame ('; online edn'), a publisher-first French frame ('(Themis: 2023, Montreal)'), and the edition-only frame ('2nd ed (2022)'). One entry serves both the book and the essay-collection families, which share the frame and differ only in the 'in Editor, ed,' lead-in. Restored verbatim from frozen LSP 29c3f8d1b66f43a288fb921c6f72048ea327cbf1.",
           "vectors": [
             {
               "input": "Peter Hogg, Liability of the Crown, 4th ed (Toronto: Carswell, 2011) at 364",
@@ -1411,10 +1437,10 @@
         },
         {
           "id": "cite.parliamentary.paper",
-          "pattern": "\\b(?<body>(?:[A-Z][A-Za-z.'’-]*\\s+(?:(?:of|the|de|des|du|la|le|[A-Z][A-Za-z.'’-]*)\\s+){0,4})?)(?<record>Hansard|Debates)\\s*,?\\s*(?<session>\\d{1,3}\\s*[-–]\\s*\\d{1,3}|(?:\\d{1,3}(?:st|nd|rd|th)|First|Second|Third|Fourth|Fifth|Sixth)\\s+(?:Sess(?:ion)?|Parl(?:iament)?))(?:[^()\\n]{0,60}?\\((?<sitting>[^()\\n]{3,60})\\))?|\\b(?<bill>[Bb][Ii][Ll][Ll]\\s+(?:[CS]-)?\\d{1,4},\\s*(?:An?\\s+Act\\b[^,;\\n]{0,140}|[A-Z][A-Za-z'’.-]*(?:\\s+[A-Za-z'’.-]+){0,10}\\s+Act\\b))",
+          "pattern": "\\b(?<body>(?:[A-Z][A-Za-z.'’-]*\\s+){0,4})(?<record>Hansard|Debates)\\s*,?\\s*(?<session>\\d{1,3}\\s*[-–]\\s*\\d{1,3}|(?:\\d{1,3}(?:st|nd|rd|th)|First|Second|Third|Fourth|Fifth|Sixth)\\s+(?:Sess(?:ion)?|Parl(?:iament)?))(?:[^()\\n]{0,60}?\\((?<sitting>[^()\\n]{3,60})\\))?|\\b(?<bill>[Bb][Ii][Ll][Ll]\\s+(?:[CS]-)?\\d{1,4},\\s*(?:An?\\s+Act\\b[^,;\\n]{0,140}|[A-Z][A-Za-z'’.-]*(?:\\s+[A-Za-z'’.-]+){0,10}\\s+Act\\b))",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored: the two parliamentary-paper shapes a footnote actually cites - a debate record ('Alberta Hansard, 31-2 (8 December 2025)', 'House of Commons Debates, 42-1 (5 May 2017)') identified by the record word plus a session number or ordinal session/parliament, and a bill by its number followed by its title ('Bill C-25, An Act to amend the National Defence Act'). The record word alone is prose ('the debates were heated'), so the session is required, and a bare bill number is a cross-reference or part of an article title ('Bill C-14: A Step Backwards ...'), so the title is required. The page that follows ('at 797') is deliberately left to the pinpoint grammar. legal-citations: the body group admits lowercase connectors after its first word, so 'House of Commons Debates' is one record rather than 'Commons Debates' with 'House of' left over.",
+          "provenance": "Beaver-authored: the two parliamentary-paper shapes a footnote actually cites - a debate record ('Alberta Hansard, 31-2 (8 December 2025)', 'House of Commons Debates, 42-1 (5 May 2017)') identified by the record word plus a session number or ordinal session/parliament, and a bill by its number followed by its title ('Bill C-25, An Act to amend the National Defence Act'). The record word alone is prose ('the debates were heated'), so the session is required, and a bare bill number is a cross-reference or part of an article title ('Bill C-14: A Step Backwards ...'), so the title is required. The page that follows ('at 797') is deliberately left to the pinpoint grammar. Restored verbatim from frozen LSP 29c3f8d1b66f43a288fb921c6f72048ea327cbf1.",
           "vectors": [
             {
               "input": "See e.g. Alberta Hansard, 31-2 (8 December 2025) at 797 (Rakhi Pancholi)",
@@ -2915,6 +2941,12 @@
       },
       "entries": [
         {
+          "id": "pinpoint.source-first-paragraph",
+          "pattern": "(?:at\\s+)?(?:para(?:graph)?s?\\.?|¶)\\s*(\\d+)",
+          "flags": "i",
+          "provenance": "Frozen ALR alr_quote_verifier.py::_PARA_RE, used by _generate_fallback_url when the source kind supplies no paragraph fragment."
+        },
+        {
           "id": "pinpoint.para.splitter",
           "pattern": "(?:\\bparas?(?:graphs?)?\\.?|¶)\\s*(?<values>{{pin_seq_splitter}})",
           "flags": "i",
@@ -3402,6 +3434,14 @@
           "pattern": "(?:(?<antecedent>[A-Z][a-z\\-.]+)\\ ?,?(?<pin_cite>,?\\ ?(?:at\\ )?(?:(?:(?:&\\ )?note|(?:&\\ )?nn?\\.?|(?:&\\ )?fn?\\.?|¶{1,2}|§{1,2}|\\*{1,4}|pg\\.?|pp?\\.?)\\ ?)?(?:\\d+:\\d+(?:-\\d+(?::\\d+)?)?|[*]?\\d+(?:-\\d+)?)(?:,\\ ?(?:(?:(?:&\\ )?note|(?:&\\ )?nn?\\.?|(?:&\\ )?fn?\\.?|¶{1,2}|§{1,2}|\\*{1,4}|pg\\.?|pp?\\.?)\\ ?)?(?:\\d+:\\d+(?:-\\d+(?::\\d+)?)?|[*]?\\d+(?:-\\d+)?))*(?=[,.;)\\]\\\\]|\\ ?[(\\[]|$))?,?\\ ?)$",
           "flags": "",
           "provenance": "Pinned Eyecite regexes.PRE_FULL_CITATION_REGEX and helpers.match_on_tokens; verbose syntax expanded, end anchored.",
+          "vectors": []
+        },
+        {
+          "id": "pinpoint.bridge",
+          "pattern": "(?i)^[\\s,]*(?:at\\s+)?$",
+          "flags": "",
+          "rust": true,
+          "provenance": "Frozen Legal Structure Parser citator.rs PINPOINT_BRIDGE, used by pinpoint_hits; original native Rust regex preserved verbatim.",
           "vectors": []
         }
       ]
@@ -4226,10 +4266,10 @@
         },
         {
           "id": "ref.back",
-          "pattern": "(?<ibid>\\bibid(?:em)?\\b\\.?|\\bid\\.)|\\b(?<supra>supra)\\b(?:,?\\s+(?:note|n\\.?|nn\\.?)\\s+(?<supra_note>\\d+))?|\\b(?<above>above)\\s+(?:note|n\\.?)\\s+(?<above_note>\\d+)\\b|\\((?<oscola>n\\s+(?<oscola_note>\\d+))\\)|(?<precite>\\bpr[ée]cit[ée]e?s?)\\b(?:,?\\s+(?:note|n)\\s+(?<precite_note>\\d+))?|(?<opcit>\\bop\\.?\\s*cit\\.?)(?:,?\\s+(?:note|n\\.?)\\s+(?<opcit_note>\\d+))?",
+          "pattern": "(?<ibid>\\bibid(?:em)?\\b\\.?|\\bid\\.)|\\b(?<supra>supra)\\b(?:,?\\s+(?:note|n\\.?|nn\\.?)\\s+(?<supra_note>\\d+))?\\b\\.?|\\b(?<above>above)\\s+(?:note|n\\.?)\\s+(?<above_note>\\d+)\\b|\\((?<oscola>n\\s+(?<oscola_note>\\d+))\\)|(?<precite>\\bpr[ée]cit[ée]e?s?)\\b(?:,?\\s+(?:note|n)\\s+(?<precite_note>\\d+))?|(?<opcit>\\bop\\.?\\s*cit\\.?)(?:,?\\s+(?:note|n\\.?)\\s+(?<opcit_note>\\d+))?",
           "flags": "i",
           "canonical": {},
-          "provenance": "Beaver-authored for the legal-citations extraction stages. Superset of ref.inline.toa and ref.supra-note.linking: Ibid/ibidem, eyecite's Id./id., McGill supra (with or without a note), AGLC 'above n 4', OSCOLA '(n 4)', French précité and op. cit. Each branch is named so the form and the note number are read without a second scan.",
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Superset of ref.inline.toa and ref.supra-note.linking: Ibid/ibidem, eyecite's Id./id., McGill supra (with or without a note), AGLC 'above n 4', OSCOLA '(n 4)', French précité and op. cit. Each branch is named so the form and the note number are read without a second scan. McGill supra retains ref.inline.toa's terminal word boundary and optional period.",
           "vectors": [
             {
               "input": "Ibid at para 38.",
@@ -5393,10 +5433,10 @@
       "entries": [
         {
           "id": "style.case-name",
-          "pattern": "(?:^|[^{{letter}}])(?:R\\.|[A-Z][{{letter}}{{mark}}'’.&-]*(?:\\s+(?:of|the|and|&|[A-Z][{{letter}}{{mark}}'’.&-]*)){0,6})\\s+v(?:\\.|ersus)?\\s+[A-Z][{{letter}}{{mark}}'’.&-]*",
-          "flags": "m",
+          "pattern": "(?m)(?:^|[^\\p{L}])(?:R\\.|[A-Z][\\p{L}\\p{M}'’.&-]*(?:\\s+(?:of|the|and|&|[A-Z][\\p{L}\\p{M}'’.&-]*)){0,6})\\s+v(?:\\.|ersus)?\\s+[A-Z][\\p{L}\\p{M}'’.&-]*",
+          "flags": "",
           "canonical": {},
-          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_NAME, a two-party case name with no citation (has_citation's fallback).",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_NAME, copied verbatim with native Rust regex semantics.",
           "vectors": [
             {
               "input": "Éditions Écosociété Inc. v. Banro Corp.",
@@ -5410,14 +5450,15 @@
               "input": "no citation here at all",
               "groups": null
             }
-          ]
+          ],
+          "rust": true
         },
         {
           "id": "style.case-left",
-          "pattern": "(?<left>[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&()-]*(?:\\s+(?:[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&()-]*|\\([{{uc}}][^()\\n]{0,80}\\)|of|the|and|for|de|la|du)){0,12})\\s*$",
-          "flags": "m",
+          "pattern": "(?m)(?<left>[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()\\n]{0,80}\\)|of|the|and|for|de|la|du)){0,12})\\s*$",
+          "flags": "",
           "canonical": {},
-          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_LEFT, the party in front of the versus token; a balanced uppercase-first parenthetical ('Quebec (Attorney General)') is one party token, while '(1998)', '(2d)' and '(see below)' are not.",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_LEFT, copied verbatim with native Rust regex semantics.",
           "vectors": [
             {
               "input": "See Quebec (Attorney General) ",
@@ -5435,7 +5476,8 @@
               "input": "see below ",
               "groups": null
             }
-          ]
+          ],
+          "rust": true
         },
         {
           "id": "style.case-lead-in",
@@ -5456,10 +5498,10 @@
         },
         {
           "id": "style.floor",
-          "pattern": "(?:;|(?:[^\\s.][{{letter}}]{2,}|\\d)(?:[”’\\\"')\\]]*\\.[”’\\\"')\\]]*|[!?]))\\s",
-          "flags": "s",
+          "pattern": "(?s)(?:;|(?:[^\\s.][\\p{L}]{2,}|\\d)(?:[”’\"')\\]]*\\.[”’\"')\\]]*|[!?]))\\s",
+          "flags": "",
           "canonical": {},
-          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): STYLED_FLOOR, the hard delimiters between two authorities: a semicolon, or a sentence end that is not an abbreviation or an initial; a question or exclamation mark inside a closing quote is part of a title. The engine also ignores delimiters inside quotes and brackets and corporate-suffix periods (boundary.corporate-suffix).",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::STYLED_FLOOR, copied verbatim with native Rust regex semantics.",
           "vectors": [
             {
               "input": "Smith, supra note 3; R v Jones",
@@ -5473,14 +5515,15 @@
               "input": "per Smith J. R v Jones",
               "groups": null
             }
-          ]
+          ],
+          "rust": true
         },
         {
           "id": "style.case-single-party",
-          "pattern": "(?<name>(?:Reference\\s+re|In\\s+re|In\\s+the\\s+[Mm]atter\\s+of|Re|Ex\\s+parte)\\s+[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&()-]*(?:\\s+(?:[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&()-]*|\\([{{uc}}][^()\\n]{0,80}\\)|of|the|and|for|de|la|du|des|aux|en)){0,12}|Renvoi\\s+relatif\\s+(?:à\\s+la|à\\s+l['’]|à|au|aux)\\s*[{{letter}}{{mark}}0-9'’ -]{1,120}?|[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&-]*(?:\\s+(?:[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&-]*|of|the|and|de|la|du|des)){0,8}\\s+\\((?:Re|Renvoi)\\))(?:,\\s*(?:1[6-9]|20)\\d{2})?\\s*,?\\s*$",
-          "flags": "m",
+          "pattern": "(?m)(?<name>(?:Reference\\s+re|Renvoi\\s+relatif|In\\s+re|In\\s+the\\s+[Mm]atter\\s+of|Re)\\s+[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()\\n]{0,80}\\)|of|the|and|for|de|la|du|des|aux|en)){0,12})(?:,\\s*(?:1[6-9]|20)\\d{2})?\\s*,?\\s*$",
+          "flags": "",
           "canonical": {},
-          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_RE_STYLE, a style of cause with one party ('Re Moore', 'Reference re Secession of Quebec'), widened by legal-citations to 'Ex parte', the sentence-case French 'Renvoi relatif à ...' and the modern 'Moore (Re)'.",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_RE_STYLE; native Rust regex preserved verbatim.",
           "vectors": [
             {
               "input": "Re Moore, ",
@@ -5510,14 +5553,15 @@
               "input": "the parties agreed, ",
               "groups": null
             }
-          ]
+          ],
+          "rust": true
         },
         {
           "id": "style.statute-title",
-          "pattern": "(?<title>[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&()-]*(?:\\s+(?:[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&()-]*|of|the|and|to|for|in|on|de|la|du|des|et)){0,12}\\s+(?:Acts?|Codes?|Rules?|Regulations?|Charter|Convention|Treaty|Protocol|Declaration|Covenant|Agreement|Statute)|(?:[{{uc}}][{{letter}}{{mark}}'’-]*\\s+){0,4}(?:Acts?|Codes?|Rules?|Regulations?|Charte?r?|Loi|Règlement|Convention|Treaty|Protocol|Declaration|Covenant|Agreement|Pacte|Traité|Statute)(?:\\s+[{{lc}}]+)?\\s+(?:of|on|respecting|concerning|sur|de|du|des|pour|relatif|relative|between|for|to)(?:\\s+(?:[{{letter}}{{mark}}0-9.'’&()-]+)){1,12})(?:,\\s*(?:1[6-9]|20)\\d{2})?(?:\\s*\\([{{uc}}][^()\\n]{0,20}\\))?\\s*,?\\s*$",
-          "flags": "m",
+          "pattern": "(?m)(?<title>[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|of|the|and|to|for|in|on|de|la|du|des|et)){0,12}\\s+(?:Acts?|Codes?|Rules?|Regulations?|Charter|Convention|Treaty|Protocol|Declaration)|(?:Acts?|Codes?|Rules?|Regulations?|Charte?r?|Loi|R\\u{e8}glement|Convention|Treaty|Protocol|Declaration)\\s+(?:of|on|respecting|concerning|sur|de|du|des|pour)(?:\\s+(?:[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+)){1,12})(?:,\\s*(?:1[6-9]|20)\\d{2})?(?:\\s*\\([\\p{Lu}][^()\\n]{0,20}\\))?\\s*,?\\s*$",
+          "flags": "",
           "canonical": {},
-          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): STATUTE_TITLE, the title a statute or treaty citation is styled with: the instrument word ends it ('Criminal Code') or opens it ('Loi sur la protection'), optionally with its year and jurisdiction; widened by legal-citations to Covenant/Agreement/Statute/Pacte/Traité and up to four capitalized words before an opening instrument word ('International Covenant on Civil and Political Rights').",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::STATUTE_TITLE; native Rust regex preserved verbatim.",
           "vectors": [
             {
               "input": "Criminal Code, ",
@@ -5541,14 +5585,15 @@
               "input": "the parties agreed, ",
               "groups": null
             }
-          ]
+          ],
+          "rust": true
         },
         {
           "id": "style.quoted-work",
-          "pattern": "(?<work>[{{uc}}][{{letter}}{{mark}}0-9.'’&-]*(?:,?\\s+(?:[{{uc}}0-9][{{letter}}{{mark}}0-9.'’&-]*|&|et|al|eds?|de|la|du|des|van|von|di|le|of|the|and|for|in|on)){0,15},?\\s*[\\\"“][^\\\"“”\\n]{1,300}[\\\"”][^\\\"“”\\n]{0,120})\\s*$",
-          "flags": "s",
+          "pattern": "(?s)(?<work>[\\p{Lu}][\\p{L}\\p{M}\\p{N}.'’&-]*(?:,?\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'’&-]*|&|et|al|eds?|de|la|du|des|van|von|di|le|of|the|and|for|in|on)){0,15},?\\s*[\"“][^\"“”\n]{1,300}[\"”][^\"“”\n]{0,120})\\s*$",
+          "flags": "",
           "canonical": {},
-          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): QUOTED_WORK, an author list and quoted title (with any 'in Editor, ed,' lead-in) in front of a publication block; the lead-in is an author list, never arbitrary prose.",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::QUOTED_WORK, copied verbatim with native Rust regex semantics.",
           "vectors": [
             {
               "input": "Jane Doe, “A Title; With a Subtitle” ",
@@ -5560,14 +5605,15 @@
               "input": "the court said “no” and ",
               "groups": null
             }
-          ]
+          ],
+          "rust": true
         },
         {
           "id": "style.plain-work",
-          "pattern": "(?<work>[{{uc}}0-9][{{letter}}{{mark}}0-9.:'’&()-]*(?:,?\\s+(?:[{{uc}}0-9][{{letter}}{{mark}}0-9.:'’&()-]*|&|of|the|and|to|for|in|on|de|la|du|des|et|al|eds?)){0,24})\\s*,?\\s*$",
-          "flags": "m",
+          "pattern": "(?m)(?<work>[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.:'\\u{2019}&()-]*(?:,?\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.:'\\u{2019}&()-]*|&|of|the|and|to|for|in|on|de|la|du|des|et|al|eds?)){0,24})\\s*,?\\s*$",
+          "flags": "",
           "canonical": {},
-          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): PLAIN_WORK, the styled part of a work with no quoted title: a monograph, a debate record, a dictionary.",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::PLAIN_WORK, copied verbatim with native Rust regex semantics.",
           "vectors": [
             {
               "input": "Peter Hogg, Constitutional Law of Canada, ",
@@ -5579,7 +5625,8 @@
               "input": "as the court held, ",
               "groups": null
             }
-          ]
+          ],
+          "rust": true
         },
         {
           "id": "format.heading-case-start",
@@ -5796,6 +5843,13 @@
           "flags": "",
           "provenance": "Pinned Eyecite regexes.SUPRA_ANTECEDENT_REGEX and helpers.match_on_tokens; verbose syntax expanded, end anchored, repeated capture names suffixed for Rust.",
           "vectors": []
+        },
+        {
+          "id": "style.case-versus",
+          "pattern": "(?i)\\b(?:v|c)\\.?\\s+",
+          "flags": "",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_VERSUS, copied verbatim with native Rust regex semantics.",
+          "rust": true
         }
       ]
     }

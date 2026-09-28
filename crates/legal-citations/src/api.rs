@@ -592,6 +592,12 @@ pub fn convert_citations(document: &ScalarText<'_>, citations: &mut [Citation], 
         if let Some(pin_cite) = citation.fields.pin_cite.as_mut() {
             convert_span(pin_cite);
         }
+        if let Some(short) = citation.fields.explicit_short_span.as_mut() {
+            convert_span(short);
+        }
+        if let Some(reference) = citation.fields.inline_reference.as_mut() {
+            convert_span(&mut reference.span);
+        }
         if let Some(name) = citation.fields.source_case_name.as_mut() {
             name.full_span_start = convert(name.full_span_start);
             name.full_span_end = name.full_span_end.map(convert);
@@ -599,6 +605,7 @@ pub fn convert_citations(document: &ScalarText<'_>, citations: &mut [Citation], 
             if let Some(pre) = name.pre_citation.as_mut() { convert_span(pre); }
             if let Some(pin) = name.pin_cite.as_mut() { convert_span(pin); }
             if let Some(reference) = name.reference_span.as_mut() { convert_span(reference); }
+            if let Some(token) = name.token_span.as_mut() { convert_span(token); }
         }
         if let Some(signal) = citation.signal.as_mut() {
             convert_span(signal);

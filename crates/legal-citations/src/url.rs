@@ -153,8 +153,108 @@ pub fn source_canlii_routes() -> &'static HashMap<String, String> {
     &ROUTES
 }
 
+/// ALR `_resolve_footnote_part_link_unlocked`'s SCR override.
+pub(crate) fn source_prefers_fallback(kind: &str, text: &str) -> bool {
+    static SCR: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
+        legal_grammar::compile_python_table_entry("cite.reporter.scr.source-link").unwrap());
+    matches!(kind, "case" | "unreported") && SCR.is_match(text).expect("source SCR citation")
+}
+
+/// ALR _append_first_pinpoint_fragment, including its sanitizer's PDF sibling.
+/// Source candidates are HTTP(S) URLs or the splitter's bare www/perma/DOI forms.
+pub(crate) fn source_first_pinpoint(link: &str, fragments: &[String]) -> String {
+    static URL: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
+        legal_grammar::compile_python_table_entry("url.source-candidate").unwrap());
+    const PUNCT: &str = ".,;:!?)]}>\"'“”’‘";
+    let raw = link.trim_matches(crate::text::python_whitespace);
+    let candidate = URL.find(raw).expect("source URL").map(|hit| hit.as_str())
+        .unwrap_or_else(|| raw.split(crate::text::python_whitespace).next().unwrap_or(""))
+        .trim_end_matches(|c| PUNCT.contains(c));
+    let (base, fragment) = candidate.split_once('#').unwrap_or((candidate, ""));
+    if base.is_empty() || !fragment.is_empty() || !base.to_lowercase().contains("canlii.org") {
+        return link.to_owned();
+    }
+    // urlsplit/urlunsplit preserve escapes and dot segments, lowercase the
+    // scheme, and omit an empty query. Bare www/perma/DOI candidates are paths.
+    let mut base = base.to_owned();
+    let path_start = base.find("://").filter(|&colon|
+        base[..colon].eq_ignore_ascii_case("http") || base[..colon].eq_ignore_ascii_case("https"))
+        .map(|colon| {
+            base[..colon].make_ascii_lowercase();
+            let authority = colon + 3;
+            base[authority..].find(['/', '?']).map_or(base.len(), |at| authority + at)
+        }).unwrap_or(0);
+    let mut path = base[path_start..].split('?').next().unwrap().to_lowercase();
+    if base.find('?') == Some(base.len() - 1) { base.pop(); }
+    if path.ends_with(".pdf") {
+        // ALR substitutes at the end of the base, not before a nonempty query.
+        if !base.to_lowercase().ends_with(".pdf") { return link.to_owned(); }
+        base.truncate(base.len() - 4);
+        base.push_str(".html");
+        path.truncate(path.len() - 4);
+        path.push_str(".html");
+    }
+    let first = fragments.iter().find_map(|pin| {
+        let pin = pin.trim_matches(crate::text::python_whitespace).trim_start_matches('#')
+            .trim_matches(|c| PUNCT.contains(c)).chars()
+            .filter(|c| !crate::text::python_whitespace(*c)).collect::<String>();
+        (!pin.is_empty()).then_some(pin)
+    });
+    match first {
+        Some(pin) if pin.starts_with("par") && path.contains("/doc/")
+            || pin.starts_with("sec") && path.contains("/laws/") => format!("{base}#{pin}"),
+        _ => link.to_owned(),
+    }
+}
+
+/// ALR `_generate_fallback_url`'s offline selection order, using the fields
+/// already discovered in the source part and its original court-route table.
+pub(crate) fn source_fallback(citations: &[&Citation], source: &crate::source::SourceFields,
+    part: &crate::source::SourcePart) -> Option<(usize, String)> {
+    if let Some(citation) = citations.iter().find(|citation| citation.format == Some(Format::Neutral)
+        && citation.fields.series.as_deref().is_some_and(|court|
+            source_canlii_routes().contains_key(&court.to_uppercase()))) {
+        let route = &source_canlii_routes()[&citation.fields.series.as_deref()?.to_uppercase()];
+        let jurisdiction = route.split('/').next().unwrap();
+        let language = if matches!(jurisdiction, "qc" | "nb") { Language::Fr } else { Language::En };
+        let mut url = source_canlii_case(citation, language)?;
+        static PARAGRAPH: LazyLock<Regex> = LazyLock::new(|| {
+            let entry = &legal_grammar::load_tables().unwrap()["pinpoint.source-first-paragraph"].entry;
+            regex::RegexBuilder::new(&entry.pattern).case_insensitive(true).build().unwrap()
+        });
+        if let Some(pin) = source.pinpoint_fragments.first().filter(|pin| pin.starts_with("par")) {
+            url.push_str(&format!("#{pin}"));
+        } else if let Some(pin) = PARAGRAPH.captures(&source.citation_with_style) {
+            url.push_str(&format!("#par{}", &pin[1]));
+        }
+        return Some((citation.index, url));
+    }
+    static CANLII: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
+        legal_grammar::compile_python_table_entry("cite.canlii.source-link").unwrap());
+    // ALR searches the complete source, including its parenthesized court.
+    // Keep its first match and select the core at that original-text offset.
+    if let Some(matched) = CANLII.find(&source.citation_with_style).expect("source CanLII citation") {
+        let start = part.start + part.text.find(&source.citation_with_style)? + matched.start();
+        if let Some(citation) = citations.iter().find(|citation| citation.format == Some(Format::CanLii)
+            && citation.span.start <= start && start < citation.span.end) {
+            if let Some(url) = source_canlii_case(citation, Language::En) { return Some((citation.index, url)); }
+        }
+    }
+    if matches!(source.kind, "statute" | "gazette") {
+        if let Some(citation) = citations.iter().find(|citation| citation.format == Some(Format::StatuteVolume)
+            && citation.fields.series.as_deref().is_some_and(|series| fold(series) == "rsc")) {
+            let year = citation.fields.year.as_deref()?;
+            let chapter = citation.fields.chapter.as_deref()?.to_lowercase().replace('.', "-");
+            let id = format!("rsc-{year}-c-{}", chapter.trim_matches('-'));
+            return Some((citation.index, format!("https://www.canlii.org/en/ca/laws/stat/{id}/latest/{id}.html")));
+        }
+    }
+    None
+}
+
 fn source_canlii_case(citation: &Citation, language: Language) -> Option<String> {
-    if citation.form != Form::Full || citation.is_ambiguous() || citation.format != Some(Format::Neutral) {
+    if citation.form != Form::Full || citation.is_ambiguous()
+        || !matches!(citation.format, Some(Format::Neutral | Format::CanLii)) {
         return None;
     }
     let canadian = |jurisdiction: &str| jurisdiction == "ca" || jurisdiction.starts_with("ca-");
@@ -167,11 +267,15 @@ fn source_canlii_case(citation: &Citation, language: Language) -> Option<String>
     let year = four_digit_year(fields.year.as_deref()?)?;
     let number = fields.number.as_deref()?;
     if number.is_empty() || !number.chars().all(|character| character.is_ascii_digit()) { return None; }
-    let written = fields.series.as_deref()?.trim();
+    let surface = if citation.format == Some(Format::CanLii) {
+        citation.court.as_ref()?.text.replace(' ', "")
+    } else { fields.series.as_deref()?.trim().to_owned() };
+    let written = surface.as_str();
     if written.is_empty() || written.contains(char::is_whitespace) { return None; }
     let route = source_canlii_routes().get(&written.to_ascii_uppercase())?;
     let (jurisdiction, database) = route.split_once('/').unwrap_or(("", route));
-    let slug = format!("{year}{}{number}", written.to_ascii_lowercase());
+    let code = if citation.format == Some(Format::CanLii) { "canlii".to_owned() } else { written.to_ascii_lowercase() };
+    let slug = format!("{year}{code}{number}");
     Some(page_url(jurisdiction, database, &year, &slug, language))
 }
 
@@ -382,24 +486,15 @@ pub fn paragraph_anchor(paragraph: &str) -> String {
 /// provisions, and LégisQuébec's `#se:18_1` on Quebec statutes. Deeper
 /// provisions (`7(2)(a)`) have no stable id.
 pub fn canlii_anchor(kind: PinpointKind, locator: &str, page_url: &str) -> Option<String> {
-    let value = locator.split_whitespace().collect::<Vec<_>>().join(" ");
-    if value.is_empty() {
-        return None;
-    }
+    let value = crate::text::normalize_javascript_whitespace(locator);
     match kind {
         PinpointKind::Page => Some(format!("#:~:text={}", encode_component(&format!("[page {value}]")))),
         PinpointKind::Paragraph => Some(paragraph_anchor(&value)),
         PinpointKind::Section | PinpointKind::Subsection | PinpointKind::Rule | PinpointKind::Article => {
             static QUEBEC: LazyLock<Regex> =
                 LazyLock::new(|| Regex::new(r"//[^/]+/(?:en|fr)/qc/laws/").unwrap());
-            static LOCATOR: LazyLock<Regex> =
-                LazyLock::new(|| Regex::new(r"^(\d+(?:\.\d+)*)((?:\([^()]+\))*)$").unwrap());
-            let captures = LOCATOR.captures(&value)?;
-            let root = &captures[1];
-            let suffixes = captures[2]
-                .split(['(', ')'])
-                .filter(|part| !part.is_empty())
-                .collect::<Vec<_>>();
+            let parsed = crate::format::parse_locator(&value)?;
+            let (root, suffixes) = (&parsed.root, &parsed.suffixes);
             if QUEBEC.is_match(page_url) {
                 return Some(format!("#se:{}", root.replace('.', "_")));
             }
@@ -433,41 +528,8 @@ pub fn with_pinpoint(page_url: &str, citation: &Citation) -> String {
 /// The hostname of an absolute URL, lowercased, without a trailing root dot
 /// (the WHATWG parser's answer for the inputs the apps see).
 fn hostname(value: &str) -> Option<String> {
-    let value = value.trim_matches(|character: char| character <= ' ');
-    let colon = value.find(':')?;
-    let scheme = &value[..colon];
-    if scheme.is_empty()
-        || !scheme.starts_with(|character: char| character.is_ascii_alphabetic())
-        || !scheme
-            .chars()
-            .all(|character| character.is_ascii_alphanumeric() || "+-.".contains(character))
-    {
-        return None;
-    }
-    let scheme = scheme.to_ascii_lowercase();
-    let special = matches!(scheme.as_str(), "http" | "https" | "ftp" | "ws" | "wss" | "file");
-    let rest = &value[colon + 1..];
-    let authority_start = if special {
-        rest.trim_start_matches(['/', '\\'])
-    } else if let Some(stripped) = rest.strip_prefix("//") {
-        stripped
-    } else {
-        return Some(String::new());
-    };
-    let end = authority_start
-        .find(|character: char| character == '/' || character == '?' || character == '#' || (special && character == '\\'))
-        .unwrap_or(authority_start.len());
-    let authority = &authority_start[..end];
-    let host_port = authority.rsplit_once('@').map_or(authority, |(_, host)| host);
-    let host = if host_port.starts_with('[') {
-        host_port
-    } else {
-        host_port.rsplit_once(':').map_or(host_port, |(host, _)| host)
-    };
-    if special && host.is_empty() && scheme != "file" {
-        return None;
-    }
-    Some(host.to_lowercase().trim_end_matches('.').to_owned())
+    Some(url::Url::parse(value).ok()?.host_str().unwrap_or("")
+        .to_lowercase().trim_end_matches('.').to_owned())
 }
 
 /// Whether `value` is a URL on CanLII (`canlii.org`, `canlii.ca` or any
@@ -485,17 +547,22 @@ pub fn canlii_pdf_url(page_url: &str) -> Option<String> {
     static PATH: LazyLock<Regex> = LazyLock::new(|| {
         Regex::new(r"^/(?:en|fr)/(?:[A-Za-z0-9-]+/){1,2}doc/(\d{4})/([a-z0-9-]+)/([a-z0-9-]+)\.html$").unwrap()
     });
-    let rest = page_url.trim().strip_prefix("https://")?;
-    let slash = rest.find('/')?;
-    let (authority, path) = rest.split_at(slash);
-    if !authority.eq_ignore_ascii_case("www.canlii.org") || path.contains(['?', '#']) {
+    // Beaver buildCanliiPdfUrl uses the browser URL parser before these checks.
+    let mut parsed = url::Url::parse(page_url).ok()?;
+    if parsed.scheme() != "https" || parsed.host_str() != Some("www.canlii.org")
+        || parsed.port().is_some() || !parsed.username().is_empty()
+        || !parsed.password().unwrap_or("").is_empty()
+        || !parsed.query().unwrap_or("").is_empty() || !parsed.fragment().unwrap_or("").is_empty() {
         return None;
     }
+    let path = parsed.path();
     let captures = PATH.captures(path)?;
     if captures[2] != captures[3] || !captures[2].starts_with(&captures[1]) {
         return None;
     }
-    Some(format!("https://www.canlii.org{}.pdf", &path[..path.len() - ".html".len()]))
+    let path = format!("{}.pdf", &path[..path.len() - ".html".len()]);
+    parsed.set_path(&path);
+    Some(parsed.into())
 }
 
 // ---------------------------------------------------------------------------
