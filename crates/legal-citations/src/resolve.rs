@@ -52,7 +52,8 @@ pub struct Resolution {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
     /// Unlinked ALR source-part provenance, indexed into ExtractResponse.sourceParts.
-    /// This is evidence for a reference, not a citation identity or URL.
+    /// Ibid chains point to their ultimate source part. This is evidence for a
+    /// reference, not a citation identity or URL.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_part: Option<usize>,
     /// Machine-readable reason:
@@ -271,10 +272,12 @@ struct History {
     source_parts: Vec<Option<usize>>,
     inferred: Vec<ReferenceSource>,
     last_part_link: Option<Option<Target>>,
+    origins: HashMap<usize, usize>,
+    last_part_origin: Option<usize>,
 }
 
 impl History {
-    fn push(&mut self, record: ReferenceSource, source_part: Option<usize>, kind: &str,
+    fn push(&mut self, record: ReferenceSource, source_part: Option<usize>, origin: Option<usize>, kind: &str,
         linking_mode: SupraMode) {
         if linking_mode == SupraMode::Aggressive && record.link.is_some() {
             for form in short_forms::infer(record.verbatim.as_deref().unwrap_or(""), kind) {
@@ -288,6 +291,10 @@ impl History {
         }
         self.records.push(record);
         self.source_parts.push(source_part);
+        if let Some(part) = source_part {
+            self.last_part_origin = origin;
+            if let Some(origin) = origin { self.origins.insert(part, origin); }
+        }
     }
 }
 
@@ -435,6 +442,16 @@ impl<'a> Resolver<'a> {
         let part = self.source_parts[part_index].clone();
         let range = &self.notes.expect("owned note")[note];
         let fields = crate::source::extract_fields(&part, part.extended_us);
+        let part_reference = short_forms::reference_info(&part.text);
+        let part_origin = if part_reference.kind == "supra" && !part_reference.notes.is_empty() {
+            unlinked_source_target(&part.text, &history.records[..prior_records],
+                &history.source_parts[..prior_records], self.supra_hint_mode, Some(range.sequence))
+                .and_then(|part| history.origins.get(&part).copied())
+        } else if part_reference.kind == "ibid" {
+            history.last_part_origin
+        } else {
+            Some(part_index)
+        };
         let mut positions = self.citations.iter().enumerate().filter(|(position, citation)|
             !seen[*position] && self.note_of[*position] == Some(note)
                 && part.start <= citation.span.start && citation.span.end <= part.end)
@@ -485,7 +502,10 @@ impl<'a> Resolver<'a> {
                     } else if local_previous.is_some() || history.last_part_link.is_some() {
                         "ibid_after_unresolved"
                     } else { "ibid_no_previous" };
-                    Some((target, reason, None))
+                    let provenance = if part_reference.kind == "ibid" {
+                        part_origin
+                    } else { None };
+                    Some((target, reason, provenance))
                 }
                 _ => None,
             };
@@ -530,7 +550,7 @@ impl<'a> Resolver<'a> {
         let record_link = if one_authority { part_link.clone() } else { None };
         let short_form = (!fields.short_form.is_empty()).then_some(fields.short_form);
         history.push(source_record(Some(&range), part.text, record_link, short_form),
-            Some(part_index), fields.kind, self.supra_linking_mode);
+            Some(part_index), part_origin, fields.kind, self.supra_linking_mode);
         *sibling = Some(part_link.clone());
         history.last_part_link = Some(part_link);
     }
@@ -577,7 +597,7 @@ impl<'a> Resolver<'a> {
                     self.resolved[position].clone(),
                     citation.explicit_short_name.clone().or_else(|| citation.short_name.clone())
                         .or_else(|| citation.style.as_ref().map(|style| style.text.clone()))),
-                    None, inference_kind(citation), self.supra_linking_mode);
+                    None, None, inference_kind(citation), self.supra_linking_mode);
                 if self.source_parts.is_empty() {
                     history.last_part_link = Some(self.resolved[position].clone());
                 }
@@ -629,6 +649,7 @@ impl<'a> Resolver<'a> {
             target = None;
             reason = "ambiguous_authority";
         }
+        let source_part = if target.is_none() { source_part } else { None };
         self.resolved[position] = target.clone();
         self.done[position] = true;
         *previous = Some(position);

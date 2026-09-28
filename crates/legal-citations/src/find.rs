@@ -96,6 +96,29 @@ static SECONDARY_ECMASCRIPT: LazyLock<[(&'static str, &'static str, CompiledEcma
 static JOURNAL_ARTICLE: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("cite.journal.article"));
 static ONLINE_SOURCE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.url"));
+// The frozen URL grammar also matches adjacent sentence punctuation. Keep
+// balanced parentheses in the URL while leaving trailing prose outside it.
+pub(crate) fn online_source_end(value: &str) -> usize {
+    let mut end = value.len();
+    while end > 0 {
+        match value.as_bytes()[end - 1] {
+            b'.' | b',' | b';' | b'>' => end -= 1,
+            b')' => {
+                let mut open = 0usize;
+                for byte in value[..end - 1].bytes() {
+                    match byte {
+                        b'(' => open += 1,
+                        b')' => open = open.saturating_sub(1),
+                        _ => {}
+                    }
+                }
+                if open == 0 { end -= 1; } else { break; }
+            }
+            _ => break,
+        }
+    }
+    end
+}
 // ALR's source evidence for secondary authorities without a reporter, book
 // imprint or routable URL. These matches remain citation extents, not document
 // splitting boundaries.
@@ -302,7 +325,7 @@ fn secondary_hits(value: &str) -> Vec<Anchor> {
         Anchor::new(value, matched.start()..matched.end(), Some(("journal", "article_grammar")))
     }));
     found.extend(ONLINE_SOURCE.find_iter(value).map(|matched| {
-        Anchor::new(value, matched.start()..matched.end(), Some(("other", "online_grammar")))
+        Anchor::new(value, matched.start()..matched.start() + online_source_end(matched.as_str()), Some(("other", "online_grammar")))
     }));
     found.sort_by(|left, right| {
         left.span
@@ -548,7 +571,7 @@ fn style_span_start(text: &str, mut start: usize, core_start: usize) -> Option<u
 pub(crate) fn top_level(window: &str) -> Vec<bool> {
     let masked = ONLINE_SOURCE
         .find_iter(window)
-        .map(|matched| matched.start()..matched.end())
+        .map(|matched| matched.start()..matched.start() + online_source_end(matched.as_str()))
         .collect::<Vec<_>>();
     let mut positions = vec![false; window.len() + 1];
     let (mut round, mut square, mut curly, mut smart, mut straight) = (0u32, 0u32, 0u32, false, false);

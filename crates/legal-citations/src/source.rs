@@ -183,7 +183,9 @@ fn anchors(text: &str, extended_us: bool) -> Vec<Anchor> {
         ("journal", &*JOURNAL), ("book", &*BOOK), ("url", &*URL)] {
         found.extend(pattern.find_iter(text).map(|found| {
             let found = found.expect("source anchor match");
-            (found.start(), found.end(), kind)
+            let end = if kind == "url" { found.start() + crate::find::online_source_end(found.as_str()) }
+                else { found.end() };
+            (found.start(), end, kind)
         }));
     }
     if extended_us {
@@ -526,7 +528,10 @@ pub fn extract_fields(part: &SourcePart, extended_us: bool) -> SourceFields {
     let kind = kind(text, &part.anchors, extended_us);
     let styled = strip_signals(text);
     let (fragments, pages) = pinpoints(&styled, kind, extended_us);
-    let link = URL.find(text).expect("source URL").map_or("other", |found| found.as_str().trim_matches(['<', '>', '.', ',', ';', ' ']));
+    let link = URL.find(text).expect("source URL").map_or("other", |found| {
+        let value = found.as_str().trim_matches(['<', '>', '.', ',', ';', ' ']);
+        &value[..crate::find::online_source_end(value)]
+    });
     let mut reasons = Vec::new();
     if embedded_source(&styled, extended_us) { reasons.push("embedded_second_source"); }
     if styled.is_empty() { reasons.push("missing_citation_surface"); }
