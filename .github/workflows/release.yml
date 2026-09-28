@@ -33,6 +33,7 @@ env:
 jobs:
   check:
     name: Tag matches the workspace version; tests pass
+    if: ${{ !contains(github.ref_name, '-rc.') }}
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
