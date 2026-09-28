@@ -662,6 +662,7 @@ fn legislation(core: &str) -> Option<Reading> {
                 let (series, number) = instrument.split_once('/')?;
                 fields.series = Some(series.to_owned());
                 fields.regulation = Some(number.to_owned());
+                reading.jurisdiction = Some("ca".to_owned());
             } else if let Some(chapter) = group(&captures, "consolidated_chapter") {
                 fields.series = Some("CRC".to_owned());
                 fields.chapter = Some(chapter);
