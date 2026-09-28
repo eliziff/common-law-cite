@@ -157,6 +157,12 @@ fn source_canlii_case(citation: &Citation, language: Language) -> Option<String>
     if citation.form != Form::Full || citation.is_ambiguous() || citation.format != Some(Format::Neutral) {
         return None;
     }
+    let canadian = |jurisdiction: &str| jurisdiction == "ca" || jurisdiction.starts_with("ca-");
+    if citation.jurisdiction.as_deref().is_some_and(|jurisdiction| !canadian(jurisdiction))
+        || citation.court.as_ref().is_some_and(|court| key::court(registry::registry(), &court.id)
+            .is_none_or(|court| !canadian(&court.jurisdiction))) {
+        return None;
+    }
     let fields = &citation.fields;
     let year = four_digit_year(fields.year.as_deref()?)?;
     let number = fields.number.as_deref()?;
@@ -254,20 +260,56 @@ pub fn canlii_case_in(citation: &Citation, language: Language, registry: &Regist
 /// Pinpointer's alias-index target: a citation or jurisdiction/database/caseId.
 /// The path is evidence supplied by the owning CanLII index, not inferred from
 /// a case name. Keep the original slug while selecting the published language.
-pub fn canlii_alias_target(target: &str, language: Language) -> Option<String> {
+#[derive(Clone, Debug, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct AliasTargetInfo {
+    pub url: String,
+    pub year: String,
+    pub court_id: Option<String>,
+}
+
+fn citation_alias_target_info(citation: &Citation, language: Language) -> Option<AliasTargetInfo> {
+    Some(AliasTargetInfo {
+        url: canlii_case(citation, language)?,
+        year: four_digit_year(citation.fields.year.as_deref()?)?,
+        court_id: citation.court.as_ref().map(|court| court.id.clone()),
+    })
+}
+
+pub fn canlii_alias_target_info(target: &str, language: Language) -> Option<AliasTargetInfo> {
     static PATH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(?:([a-z]{2})/)?([A-Za-z0-9-]+)/((\d{4})[a-z0-9]+)$").unwrap());
     let value = target.split_whitespace().collect::<Vec<_>>().join(" ");
     let Some(path) = PATH.captures(&value) else {
-        return crate::extract(&value, &crate::Options { resolve: false, ..Default::default() })
-            .iter().find_map(|citation| canlii_case(citation, language));
+        // A CanLII alias target carries Canadian source provenance. Resolve an
+        // observed parallel to its canonical citation before reading route metadata.
+        let options = crate::Options { resolve: false, parallel: false,
+            jurisdiction_priority: vec!["ca".to_owned()], ..Default::default() };
+        return crate::extract(&value, &options).iter().find_map(|citation| {
+            if let Some(target) = crate::aliases::resolve(citation) {
+                let canonical = crate::extract(&target.citation, &options);
+                if let [only] = canonical.as_slice() {
+                    if let Some(info) = citation_alias_target_info(only, language) { return Some(info); }
+                }
+            }
+            citation_alias_target_info(citation, language)
+        });
     };
     let jurisdiction = path.get(1).map_or("", |part| part.as_str());
-    let court = registry::registry().courts.iter().find(|court| court.canlii.as_ref()
-        .is_some_and(|route| route.jurisdiction == jurisdiction && route.database.eq_ignore_ascii_case(&path[2])));
+    let court = registry::registry().courts.iter().find(|court| court.canlii.iter().chain(court.canlii_fr.iter())
+        .any(|route| route.jurisdiction == jurisdiction && route.database.eq_ignore_ascii_case(&path[2])));
     let route = court.and_then(|court| if language == Language::Fr { court.canlii_fr.as_ref().or(court.canlii.as_ref()) } else { court.canlii.as_ref() });
-    Some(page_url(route.map_or(jurisdiction, |route| route.jurisdiction.as_str()),
+    Some(AliasTargetInfo {
+        url: page_url(route.map_or(jurisdiction, |route| route.jurisdiction.as_str()),
         route.map_or(&path[2], |route| route.database.as_str()), &path[4], &path[3],
-        if court.is_some() { language } else { Language::En }))
+        if court.is_some() { language } else { Language::En }),
+        year: path[4].to_owned(),
+        court_id: court.map(|court| court.id.clone()),
+    })
+}
+
+pub fn canlii_alias_target(target: &str, language: Language) -> Option<String> {
+    canlii_alias_target_info(target, language).map(|info| info.url)
 }
 
 fn page_url(jurisdiction: &str, database: &str, year: &str, slug: &str, language: Language) -> String {

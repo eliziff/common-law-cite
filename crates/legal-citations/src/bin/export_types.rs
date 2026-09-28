@@ -14,7 +14,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         legal_citations::format::CitationCorrection, legal_citations::format::CorrectedCitation,
         KeyRequest, KeyResponse, TextRequest, KeyForTextResponse, FormatRequest, FormatResponse,
         legal_citations::format::Article, legal_citations::format::DocumentCitation,
-        legal_citations::format::CaseCitationRequest, legal_citations::format::FormattedDocument, legal_citations::format::CaseHeading, PinpointLayoutsRequest, legal_citations::format::PinpointLayout, UrlRequest, UrlResponse, AliasTargetRequest, AnnotateRequest, AnnotateResponse, legal_citations::annotate::PreparedAnnotation, CleanRequest, CleanResponse,
+        legal_citations::format::CaseCitationRequest, legal_citations::format::FormattedDocument, legal_citations::format::CaseHeading, PinpointLayoutsRequest, legal_citations::format::PinpointLayout, UrlRequest, UrlResponse, AliasTargetRequest, legal_citations::url::AliasTargetInfo, AnnotateRequest, AnnotateResponse, legal_citations::annotate::PreparedAnnotation, CleanRequest, CleanResponse,
         RegistryRequest, ExcerptRequest, HasCitationRequest, HasCitationResponse, ProtectedSpansRequest, ReporterHeaderRequest, VersionResponse, ApiError,
         legal_citations::excerpt::ExcerptClassification, legal_citations::url::LegislationLookup);
     for entry in std::fs::read_dir(config.out_dir())? {

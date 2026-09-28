@@ -9,7 +9,7 @@ export class LegalCitationsError extends Error {
   }
 }
 
-const OPTION_NAMES = new Set(["resolve", "parallel", "extendedUs", "notes", "removeAmbiguous", "jurisdictionPriority"]);
+const OPTION_NAMES = new Set(["resolve", "parallel", "extendedUs", "notes", "removeAmbiguous", "jurisdictionPriority", "supraHintMode", "supraLinkingMode"]);
 
 export function makeApi(getRawCall) {
   function call(method, request = {}) {
@@ -49,7 +49,10 @@ export function makeApi(getRawCall) {
   function citationOrText(input, options) {
     const [engine, rest] = splitOptions(options);
     const request = { options: engine };
-    if (typeof input === "string") request.text = input;
+    if (typeof input === "string") {
+      request.text = input;
+      request.offsetUnit = "utf16";
+    }
     else request.citation = input;
     return [request, rest];
   }
@@ -57,7 +60,7 @@ export function makeApi(getRawCall) {
   return {
     call,
     resolve(citations, options = {}) {
-      rejectUnknown(options, ["notes", "aliasGroups", "readingOrder"]);
+      rejectUnknown(options, ["notes", "aliasGroups", "readingOrder", "sourceParts", "supraHintMode", "supraLinkingMode"]);
       return call("resolve", { citations, ...options });
     },
     extract(text, options = {}) {
@@ -70,12 +73,13 @@ export function makeApi(getRawCall) {
     },
     keyForText(text, options = {}) {
       const [engine, rest] = splitOptions(options);
-      rejectUnknown(rest, []);
-      return call("keyForText", { text, options: engine });
+      rejectUnknown(rest, ["offsetUnit"]);
+      return call("keyForText", { text, options: engine, offsetUnit: "utf16", ...rest });
     },
     format(input, options = {}) {
       const [request, rest] = citationOrText(input, options);
-      rejectUnknown(rest, ["style", "language", "rangeDash"]);
+      rejectUnknown(rest, ["style", "language", "rangeDash", "offsetUnit"]);
+      if (typeof input !== "string" && "offsetUnit" in rest) throw new TypeError("offsetUnit requires text extraction");
       return call("format", { ...request, ...rest }).citations;
     },
     formatPinpoint(kind, locators, options = {}) {
@@ -84,7 +88,8 @@ export function makeApi(getRawCall) {
     },
     url(input, options = {}) {
       const [request, rest] = citationOrText(input, options);
-      rejectUnknown(rest, ["language", "anchor"]);
+      rejectUnknown(rest, ["language", "anchor", "offsetUnit"]);
+      if (typeof input !== "string" && "offsetUnit" in rest) throw new TypeError("offsetUnit requires text extraction");
       return call("url", { ...request, ...rest }).urls;
     },
     annotate(text, options = {}) {

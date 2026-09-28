@@ -427,7 +427,9 @@ def get_citations(
     elif not plain_text and not markup_text:
         raise ValueError("Both `markup_text` and `plain_text` are empty")
     else:
-        text = clean_text(plain_text, clean_steps) if clean_steps else plain_text
+        if clean_steps:
+            raise ValueError("Both `markup_text` and `plain_text` were passed. Not clear which to apply `clean_steps` to")
+        text = plain_text
     records = call("extract", {"text": text, "markupText": markup_text or None,
         "options": {"resolve": False, "removeAmbiguous": remove_ambiguous}, "offsetUnit": "char"})["citations"]
     return [_class_for(record)(record, text, records) for record in records]

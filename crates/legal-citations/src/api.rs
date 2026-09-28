@@ -77,6 +77,7 @@ pub const METHODS: &[&str] = &[
     "url",
     "sourceCanliiRoutes",
     "canliiAliasTarget",
+    "canliiAliasTargetInfo",
     "annotate",
     "annotationRanges",
     "clean",
@@ -229,7 +230,7 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             let request: ReporterHeaderRequest = parse(method, request)?;
             to_value(crate::cues::matches_reporter_header(&request.text, &request.citations))
         }
-        "keyForText" => to_value(key_for_text(&parse(method, request)?)),
+        "keyForText" => to_value(key_for_text(&parse(method, request)?)?),
         "format" => to_value(format(&parse(method, request)?)?),
         "formatArticle" => to_value(format_stage::article(&parse(method, request)?)),
         "chooseCaseCitation" => to_value(format_stage::choose_case_citation(&parse(method, request)?)),
@@ -243,6 +244,9 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         },
         "pinpointLayouts" => {
             let request: PinpointLayoutsRequest = parse(method, request)?;
+            if !matches!(request.style.as_deref(), None | Some("short" | "full")) {
+                return Err(ApiError::invalid("pinpointLayouts: style must be short or full"));
+            }
             to_value(request.values.iter().map(|values| format_stage::pinpoint_layout(&request.kind, values, request.style.as_deref() == Some("full"))).collect::<Vec<_>>())
         },
         "url" => to_value(url(&parse(method, request)?)?),
@@ -255,8 +259,19 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         },
         "canliiAliasTarget" => {
             let request: AliasTargetRequest = parse(method, request)?;
-            let page = url_stage::canlii_alias_target(&request.target, request.language.as_deref().map_or(Language::En, Language::from_code));
+            let page = url_stage::canlii_alias_target(&request.target, api_language("canliiAliasTarget", request.language.as_deref())?);
             to_value(if request.pdf { page.and_then(|page| url_stage::canlii_pdf_url(&page)) } else { page })
+        },
+        "canliiAliasTargetInfo" => {
+            let request: AliasTargetRequest = parse(method, request)?;
+            let mut info = url_stage::canlii_alias_target_info(&request.target, api_language("canliiAliasTargetInfo", request.language.as_deref())?);
+            if request.pdf {
+                info = info.and_then(|mut info| {
+                    info.url = url_stage::canlii_pdf_url(&info.url)?;
+                    Some(info)
+                });
+            }
+            to_value(info)
         },
         "annotate" => to_value(annotate(&parse(method, request)?)?),
         "annotationRanges" => to_value(annotation_ranges(&parse(method, request)?)?),
@@ -318,11 +333,23 @@ fn normalize_options(method: &str, request: &mut Value) -> Result<(), ApiError> 
             }
         }
     }
+    let has_extraction_options = !target.is_empty();
     let parsed: Options = serde_json::from_value(options.clone()).map_err(|error| ApiError::invalid(error.to_string()))?;
     for priority in &parsed.jurisdiction_priority {
         if registry_stage::registry().jurisdiction(priority).is_none() {
             return Err(ApiError::invalid(format!("unknown jurisdiction priority {priority:?}")));
         }
+    }
+    let extracts = match method {
+        "format" | "url" => object.get("text").is_some_and(|value| !value.is_null()),
+        "annotate" | "annotationRanges" => object.get("annotations").is_none_or(Value::is_null),
+        _ => true,
+    };
+    if !extracts && has_extraction_options {
+        return Err(ApiError::invalid(format!("{method}: extraction options require text extraction")));
+    }
+    if matches!(method, "format" | "url") && !extracts && object.contains_key("offsetUnit") {
+        return Err(ApiError::invalid(format!("{method}: offsetUnit requires text extraction")));
     }
     object.insert("options".into(), options);
     Ok(())
@@ -459,7 +486,7 @@ pub struct ExtractResponse {
 
 /// [`crate::extract`] with offsets converted to `request.offset_unit`.
 pub fn extract(request: &ExtractRequest) -> Result<ExtractResponse, ApiError> {
-    let (citations, mut source_parts) = extract_citations(&request.text, request.markup_text.as_deref(), &request.options, request.offset_unit)?;
+    let (citations, mut source_parts, resolutions) = extract_citations(&request.text, request.markup_text.as_deref(), &request.options, request.offset_unit)?;
     let document = ScalarText::new(&request.text);
     for part in &mut source_parts {
         for (start, end) in &mut part.anchor_spans {
@@ -472,7 +499,7 @@ pub fn extract(request: &ExtractRequest) -> Result<ExtractResponse, ApiError> {
     Ok(ExtractResponse {
         schema_version: SCHEMA_VERSION,
         offset_unit: request.offset_unit,
-        authorities: crate::resolve::authorities(&citations),
+        authorities: crate::resolve::authorities_with_resolutions(&citations, &[], &resolutions),
         citations,
         source_parts,
     })
@@ -491,13 +518,20 @@ fn extract_citations(
     markup: Option<&str>,
     options: &Options,
     unit: OffsetUnit,
-) -> Result<(Vec<Citation>, Vec<crate::source::SourcePart>), ApiError> {
+) -> Result<(Vec<Citation>, Vec<crate::source::SourcePart>, Vec<crate::resolve::Resolution>), ApiError> {
     let document = ScalarText::new(text);
+    let options = byte_options(&document, options, unit)?;
+    let (mut citations, parts, resolutions) = crate::extract_markup_with_parts(text, markup, &options);
+    convert_citations(&document, &mut citations, unit);
+    Ok((citations, parts, resolutions))
+}
+
+fn byte_options(document: &ScalarText<'_>, options: &Options, unit: OffsetUnit) -> Result<Options, ApiError> {
     let mut options = options.clone();
     if let Some(notes) = options.notes.as_mut() {
         for note in notes.iter_mut() {
-            note.start = to_byte(&document, note.start, unit, "options.notes[].start")?;
-            note.end = to_byte(&document, note.end, unit, "options.notes[].end")?;
+            note.start = to_byte(document, note.start, unit, "options.notes[].start")?;
+            note.end = to_byte(document, note.end, unit, "options.notes[].end")?;
             if note.start > note.end {
                 return Err(ApiError::new(
                     ErrorCode::InvalidOffset,
@@ -511,9 +545,7 @@ fn extract_citations(
             return Err(ApiError::invalid("extract: note ranges overlap"));
         }
     }
-    let (mut citations, parts) = crate::extract_markup_with_parts(text, markup, &options);
-    convert_citations(&document, &mut citations, unit);
-    Ok((citations, parts))
+    Ok(options)
 }
 
 fn to_byte(
@@ -634,7 +666,9 @@ pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
         // may have removed or edited citations since the previous resolution.
         citation.antecedent = None;
         citation.reasons.retain(|reason| reason != "source_alias_conflict");
-        citation.key = key_stage::key(citation);
+        citation.alias = crate::aliases::resolve(citation).cloned();
+        citation.key = citation.alias.as_ref().map(|target| target.key.clone())
+            .or_else(|| key_stage::key_in(citation, crate::registry::registry()));
     }
     if request.notes.as_ref().is_some_and(|notes| notes.iter().any(|note| note.start > note.end)) {
         return Err(ApiError::invalid("resolve: note start is after its end"));
@@ -686,7 +720,7 @@ pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
             citation.antecedent = resolution.antecedent;
         }
     }
-    let authorities = crate::resolve::authorities_with_links(&citations, &links);
+    let authorities = crate::resolve::authorities_with_resolutions(&citations, &links, &resolutions);
     Ok(ResolveResponse { citations, resolutions, authorities })
 }
 
@@ -723,6 +757,8 @@ pub struct TextRequest {
     pub text: String,
     #[serde(default)]
     pub options: Options,
+    #[serde(default)]
+    pub offset_unit: OffsetUnit,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -753,8 +789,8 @@ pub struct KeyForTextResponse {
 }
 
 /// The key of the single citation in `text`, plus every citation's key.
-pub fn key_for_text(request: &TextRequest) -> KeyForTextResponse {
-    let citations = crate::extract(&request.text, &request.options);
+pub fn key_for_text(request: &TextRequest) -> Result<KeyForTextResponse, ApiError> {
+    let citations = extract_citations(&request.text, None, &request.options, request.offset_unit)?.0;
     let (key, reason, message) = match key_stage::single_key(&citations) {
         Ok(key) => (Some(key), None, None),
         Err(error) => {
@@ -777,13 +813,13 @@ pub fn key_for_text(request: &TextRequest) -> KeyForTextResponse {
                 .or_else(|| citations.iter().find(|target| target.index == citation.authority_index())?.key.clone()),
         })
         .collect();
-    KeyForTextResponse {
+    Ok(KeyForTextResponse {
         key_version: key_stage::KEY_VERSION.to_owned(),
         key,
         reason,
         message,
         keys,
-    }
+    })
 }
 
 // ---------------------------------------------------------------- format
@@ -802,6 +838,8 @@ pub struct FormatRequest {
     pub pinpoint: Option<PinpointRequest>,
     #[serde(default)]
     pub options: Options,
+    #[serde(default)]
+    pub offset_unit: OffsetUnit,
     /// Citation style; only `mcgill` (the default) today.
     #[serde(default)]
     pub style: Option<String>,
@@ -869,10 +907,7 @@ fn format_style(request: &FormatRequest) -> Result<format_stage::Style, ApiError
             "format: unsupported style {style:?}; expected mcgill"
         )));
     }
-    let language = request
-        .language
-        .as_deref()
-        .map_or(Language::En, Language::from_code);
+    let language = api_language("format", request.language.as_deref())?;
     let range_dash = match request.range_dash.as_deref() {
         None | Some("-") => "-",
         Some("\u{2013}") => "\u{2013}",
@@ -888,15 +923,28 @@ fn format_style(request: &FormatRequest) -> Result<format_stage::Style, ApiError
     })
 }
 
+fn api_language(method: &str, code: Option<&str>) -> Result<Language, ApiError> {
+    let Some(code) = code else { return Ok(Language::En); };
+    match code.trim().to_ascii_lowercase().split('-').next() {
+        Some("en") => Ok(Language::En),
+        Some("fr") => Ok(Language::Fr),
+        _ => Err(ApiError::invalid(format!("{method}: language must be en or fr"))),
+    }
+}
+
 fn request_citations(
     method: &str,
     citation: &Option<Citation>,
     text: &Option<String>,
     options: &Options,
-) -> Result<Vec<Citation>, ApiError> {
+    offset_unit: OffsetUnit,
+) -> Result<(Vec<Citation>, Vec<crate::resolve::Resolution>), ApiError> {
     match (citation, text) {
-        (Some(citation), None) => Ok(vec![citation.clone()]),
-        (None, Some(text)) => Ok(crate::extract(text, options)),
+        (Some(citation), None) => Ok((vec![citation.clone()], Vec::new())),
+        (None, Some(text)) => {
+            let (citations, _, resolutions) = extract_citations(text, None, options, offset_unit)?;
+            Ok((citations, resolutions))
+        }
         _ => Err(ApiError::invalid(format!(
             "{method}: pass exactly one of `citation` or `text`"
         ))),
@@ -957,8 +1005,8 @@ pub fn format(request: &FormatRequest) -> Result<FormatResponse, ApiError> {
             pinpoint: Some(format_stage::pinpoint(pinpoint.kind, &items, style)),
         });
     }
-    let citations =
-        request_citations("format", &request.citation, &request.text, &request.options)?;
+    let (citations, _) =
+        request_citations("format", &request.citation, &request.text, &request.options, request.offset_unit)?;
     Ok(FormatResponse {
         citations: citations
             .iter()
@@ -983,6 +1031,8 @@ pub struct UrlRequest {
     pub text: Option<String>,
     #[serde(default)]
     pub options: Options,
+    #[serde(default)]
+    pub offset_unit: OffsetUnit,
     /// `en` (default) or `fr`: the language of the page to link.
     #[serde(default)]
     pub language: Option<String>,
@@ -1017,11 +1067,11 @@ pub struct UrlResponse {
 /// Law, legislation.gov.uk, CourtListener). A back reference gets its
 /// antecedent's URL; `null` when no source is certain.
 pub fn url(request: &UrlRequest) -> Result<UrlResponse, ApiError> {
-    let citations = request_citations("url", &request.citation, &request.text, &request.options)?;
-    let language = request
-        .language
-        .as_deref()
-        .map_or(Language::En, Language::from_code);
+    let (citations, resolutions) = request_citations("url", &request.citation, &request.text, &request.options, request.offset_unit)?;
+    let language = api_language("url", request.language.as_deref())?;
+    let source_urls = resolutions.into_iter().filter_map(|resolution|
+        resolution.url.map(|url| (resolution.index, url)))
+        .collect::<std::collections::HashMap<_, _>>();
     let urls = citations
         .iter()
         .map(|citation| {
@@ -1029,8 +1079,9 @@ pub fn url(request: &UrlRequest) -> Result<UrlResponse, ApiError> {
                 .iter()
                 .find(|candidate| candidate.index == citation.authority_index())
                 .unwrap_or(citation);
-            let url = url_stage::url(authority, language).map(|page| {
-                if request.anchor {
+            let explicit = source_urls.get(&citation.index).cloned();
+            let url = explicit.or_else(|| url_stage::url(authority, language)).map(|page| {
+                if request.anchor && !source_urls.contains_key(&citation.index) {
                     url_stage::with_pinpoint(&page, citation)
                 } else {
                     page
@@ -1203,7 +1254,9 @@ fn planned_annotations(request: &AnnotateRequest) -> Result<Vec<annotate_stage::
                 .collect::<Result<Vec<_>, _>>()?
         }
         None => {
-            let citations = crate::extract(&request.text, &request.options);
+            let document = ScalarText::new(&request.text);
+            let options = byte_options(&document, &request.options, request.offset_unit)?;
+            let citations = crate::extract(&request.text, &options);
             annotate_stage::citation_annotations(&citations, extent, |citation| {
                 Some((
                     template(&request.before, citation),

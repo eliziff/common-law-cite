@@ -47,6 +47,10 @@ pub struct Resolution {
     /// The authority it resolves to (a full citation's index, or its parallel
     /// group's first index).
     pub antecedent: Option<usize>,
+    /// Explicit URL of an ALR source part when that source has no discovered
+    /// citation core. References inherit this same link from the registry.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
     /// Unlinked ALR source-part provenance, indexed into ExtractResponse.sourceParts.
     /// This is evidence for a reference, not a citation identity or URL.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -234,7 +238,7 @@ struct Resolver<'a> {
     /// Reading rank of each note: `(sequence, number)` order.
     note_rank: Vec<usize>,
     /// Resolved authority of each citation position.
-    resolved: Vec<Option<usize>>,
+    resolved: Vec<Option<Target>>,
     done: Vec<bool>,
     full_authority: Vec<usize>,
     reading_order: Option<Vec<usize>>,
@@ -243,12 +247,30 @@ struct Resolver<'a> {
     supra_linking_mode: SupraMode,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+enum Target {
+    Authority(usize),
+    Url(String),
+}
+
+impl Target {
+    fn from_registry(link: &str, reference: &str) -> Option<Self> {
+        if let Ok(index) = link.parse() { return Some(Self::Authority(index)); }
+        (link.starts_with("https://") || link.starts_with("http://"))
+            .then(|| Self::Url(short_forms::reanchor_reference(link, reference)))
+    }
+
+    fn registry_link(&self) -> String {
+        match self { Self::Authority(index) => index.to_string(), Self::Url(url) => url.clone() }
+    }
+}
+
 #[derive(Default)]
 struct History {
     records: Vec<ReferenceSource>,
     source_parts: Vec<Option<usize>>,
     inferred: Vec<ReferenceSource>,
-    last_part_link: Option<Option<usize>>,
+    last_part_link: Option<Option<Target>>,
 }
 
 impl History {
@@ -395,7 +417,7 @@ impl<'a> Resolver<'a> {
         parts.sort_unstable();
         let prior_records = history.records.len();
         let prior_inferred = history.inferred.len();
-        let mut sibling: Option<Option<usize>> = None;
+        let mut sibling: Option<Option<Target>> = None;
         for (_, event, index) in parts {
             if event == 0 {
                 self.process_part(note, index, prior_records, prior_inferred, history,
@@ -409,7 +431,7 @@ impl<'a> Resolver<'a> {
 
     fn process_part(&mut self, note: usize, part_index: usize, prior_records: usize,
         prior_inferred: usize, history: &mut History, previous: &mut Option<usize>,
-        seen: &mut [bool], output: &mut Vec<Resolution>, sibling: &mut Option<Option<usize>>) {
+        seen: &mut [bool], output: &mut Vec<Resolution>, sibling: &mut Option<Option<Target>>) {
         let part = self.source_parts[part_index].clone();
         let range = &self.notes.expect("owned note")[note];
         let fields = crate::source::extract_fields(&part, part.extended_us);
@@ -425,14 +447,11 @@ impl<'a> Resolver<'a> {
         }).map(|(_, position)| *position).collect::<Vec<_>>();
         let whole_part = positions.len() == 1 && exact_full.len() == 1
             && !fields.reasons.contains(&"embedded_second_source")
-            && short_forms::normalize(&crate::source::derive_bare_citation(&part.text, fields.kind))
-                == short_forms::normalize(&crate::source::derive_bare_citation(
-                    &self.citations[exact_full[0]].full_span.text, fields.kind))
             && part.anchor_spans.iter().all(|&(start, end)| {
                 let citation = &self.citations[exact_full[0]];
                 citation.full_span.start <= start && end <= citation.full_span.end
             });
-        let mut local_previous = *sibling;
+        let mut local_previous = sibling.clone();
         let mut links = Vec::new();
         for &(_, position) in &positions {
             let citation = &self.citations[position];
@@ -455,8 +474,12 @@ impl<'a> Resolver<'a> {
                     Some((target, reason, provenance))
                 }
                 Form::Ibid => {
-                    let target = if let Some(link) = local_previous { link }
-                        else { history.last_part_link.flatten() };
+                    let target = if let Some(link) = &local_previous { link.clone() }
+                        else { history.last_part_link.clone().flatten() };
+                    let target = target.map(|target| match target {
+                        Target::Url(url) => Target::Url(short_forms::reanchor_reference(&url, &text)),
+                        target => target,
+                    });
                     let reason = if target.is_some() {
                         if local_previous.is_some() { "ibid_previous" } else { "ibid_previous_note" }
                     } else if local_previous.is_some() || history.last_part_link.is_some() {
@@ -468,45 +491,52 @@ impl<'a> Resolver<'a> {
             };
             self.process_citation(position, history, previous, output, override_result, false);
             seen[position] = true;
-            let link = if form == Form::Full { Some(self.full_authority[position]) }
-                else { self.resolved[position] };
-            links.push(link);
+            let link = self.resolved[position].clone();
+            links.push(link.clone());
             local_previous = Some(link);
         }
         let same_anchored_authority = positions.len() > 1 && exact_full.len() == positions.len()
             && positions.iter().all(|&(_, position)| !self.citations[position].is_ambiguous())
-            && links.first().copied().flatten().is_some_and(|first|
-                links.iter().all(|link| *link == Some(first)));
+            && links.first().cloned().flatten().is_some_and(|first|
+                links.iter().all(|link| link.as_ref() == Some(&first)));
         let part_safe = !positions.is_empty()
             && (!fields.reasons.contains(&"embedded_second_source") || same_anchored_authority)
             && (positions.len() != 1 || self.citations[positions[0].1].form != Form::Full || whole_part)
             && positions.iter().all(|&(_, position)| {
                 let citation = &self.citations[position];
                 citation.form == Form::Full && exact_full.contains(&position)
-                    || citation.form != Form::Full && part.anchor_spans.is_empty()
+                    || citation.form != Form::Full && part.anchor_spans.iter().all(|&(start, end)|
+                        citation.full_span.start <= start && end <= citation.full_span.end)
             })
-            && part.anchor_spans.iter().all(|&(start, end)| exact_full.iter().any(|&position| {
+            && part.anchor_spans.iter().all(|&(start, end)| positions.iter().any(|&(_, position)| {
                 let citation = &self.citations[position];
                 citation.full_span.start <= start && end <= citation.full_span.end
             }));
-        let part_link = if part_safe { links.first().copied().flatten().filter(|first|
-            links.iter().all(|link| *link == Some(*first))) } else { None };
+        let part_link = if part_safe {
+            links.first().cloned().flatten().filter(|first|
+                links.iter().all(|link| link.as_ref() == Some(first)))
+        } else if positions.is_empty() && !fields.reasons.contains(&"embedded_second_source")
+            && part.anchors.iter().filter(|kind| kind.as_str() == "url").count() == 1
+            && (fields.link_candidate.starts_with("https://")
+                || fields.link_candidate.starts_with("http://")) {
+            Some(Target::Url(fields.link_candidate.clone()))
+        } else { None };
         // ALR registers one emitted source part, after resolving every reference
         // in its note. Discovered cores remain separate Citation identities, but
         // must not multiply the source-part registry or make a numbered supra
         // look ambiguous by counting one part more than once.
-        let one_authority = positions.len() == 1
+        let one_authority = positions.is_empty() && part_link.is_some() || positions.len() == 1
             || (!exact_full.is_empty() && exact_full.len() == positions.len());
-        let record_link = if one_authority { part_link } else { None };
+        let record_link = if one_authority { part_link.clone() } else { None };
         let short_form = (!fields.short_form.is_empty()).then_some(fields.short_form);
         history.push(source_record(Some(&range), part.text, record_link, short_form),
             Some(part_index), fields.kind, self.supra_linking_mode);
-        *sibling = Some(part_link);
+        *sibling = Some(part_link.clone());
         history.last_part_link = Some(part_link);
     }
 
     fn resolve_supra_text(&self, text: &str, registry: &[ReferenceSource],
-        inferred: &[ReferenceSource], sequence: Option<u32>) -> (Option<usize>, &'static str) {
+        inferred: &[ReferenceSource], sequence: Option<u32>) -> (Option<Target>, &'static str) {
         // ALR's original note identifiers are globally unique. A host may have
         // restarted numbering, so a numbered reference can only consult the
         // matching numbering sequence, including aggressive fallbacks.
@@ -519,12 +549,12 @@ impl<'a> Resolver<'a> {
             .cloned().collect::<Vec<_>>();
         let (strict, reason) = short_forms::resolve_registry_scoped(text, &scoped_registry,
             self.supra_hint_mode == SupraMode::Aggressive, sequence);
-        if let Ok(authority) = strict.parse::<usize>() { return (Some(authority), reason); }
+        if let Some(target) = Target::from_registry(&strict, text) { return (Some(target), reason); }
         if self.supra_linking_mode == SupraMode::Aggressive {
             let (fallback, method) = short_forms::resolve_after_strict_abstention(text,
                 &scoped_registry, &scoped_inferred);
-            if let Ok(authority) = fallback.parse::<usize>() {
-                return (Some(authority), if method == "bare_note_unique_citation" {
+            if let Some(target) = Target::from_registry(&fallback, text) {
+                return (Some(target), if method == "bare_note_unique_citation" {
                     "bare_note_unique_citation"
                 } else { "inferred_short_form" });
             }
@@ -534,28 +564,29 @@ impl<'a> Resolver<'a> {
 
     fn process_citation(&mut self, position: usize, history: &mut History,
         previous: &mut Option<usize>, output: &mut Vec<Resolution>,
-        source_result: Option<(Option<usize>, &'static str, Option<usize>)>,
+        source_result: Option<(Option<Target>, &'static str, Option<usize>)>,
         record_full: bool) {
         let citation = &self.citations[position];
         if citation.form == Form::Full {
-            self.resolved[position] = (!citation.is_ambiguous()).then_some(self.full_authority[position]);
+            self.resolved[position] = (!citation.is_ambiguous())
+                .then_some(Target::Authority(self.full_authority[position]));
             self.done[position] = true;
             if record_full {
                 let range = self.note_of[position].and_then(|index| self.notes.map(|notes| &notes[index]));
                 history.push(source_record(range, citation.full_span.text.clone(),
-                    Some(self.full_authority[position]),
+                    self.resolved[position].clone(),
                     citation.explicit_short_name.clone().or_else(|| citation.short_name.clone())
                         .or_else(|| citation.style.as_ref().map(|style| style.text.clone()))),
                     None, inference_kind(citation), self.supra_linking_mode);
                 if self.source_parts.is_empty() {
-                    history.last_part_link = Some(Some(self.full_authority[position]));
+                    history.last_part_link = Some(self.resolved[position].clone());
                 }
             }
             *previous = Some(position);
             return;
         }
-        let (mut antecedent, mut reason, source_part) = match source_result {
-            Some((authority, reason, part)) => (authority, reason, part),
+        let (mut target, mut reason, source_part) = match source_result {
+            Some((target, reason, part)) => (target, reason, part),
             None => match citation.form {
                 Form::Ibid if self.source_parts.is_empty() => {
                     let (authority, reason) = self.ibid_from_citations(position, *previous);
@@ -563,7 +594,7 @@ impl<'a> Resolver<'a> {
                 }
                 Form::Supra if self.source_parts.is_empty() => {
                     let (authority, reason) = self.supra_from_citations(position, history);
-                    (authority, reason, None)
+                    (authority.map(Target::Authority), reason, None)
                 }
                 Form::Ibid if self.note_of[position].is_none() => {
                     let (authority, reason) = self.previous_citation(position, *previous);
@@ -580,34 +611,45 @@ impl<'a> Resolver<'a> {
                 Form::Reference => {
                     let (authority, reason) = self.by_name(position, reference_name(citation),
                         &history.records);
-                    (authority, reason, None)
+                    (authority.map(Target::Authority), reason, None)
                 }
                 Form::Short => {
                     let (authority, reason) = self.short(position, &history.records);
-                    (authority, reason, None)
+                    (authority.map(Target::Authority), reason, None)
                 }
                 Form::Unknown => (None, "unknown_form", None),
                 Form::Full => unreachable!(),
             },
         };
-        if antecedent.is_some_and(|index| citation.is_ambiguous() || self.citations.iter()
-            .any(|candidate| candidate.index == index && candidate.is_ambiguous())) {
-            antecedent = None;
+        if target.as_ref().is_some_and(|target| citation.is_ambiguous() || match target {
+            Target::Authority(index) => self.citations.iter()
+                .any(|candidate| candidate.index == *index && candidate.is_ambiguous()),
+            Target::Url(_) => false,
+        }) {
+            target = None;
             reason = "ambiguous_authority";
         }
-        self.resolved[position] = antecedent;
+        self.resolved[position] = target.clone();
         self.done[position] = true;
         *previous = Some(position);
-        output.push(Resolution { index: citation.index, antecedent, source_part, reason });
+        let (antecedent, url) = match target {
+            Some(Target::Authority(index)) => (Some(index), None),
+            Some(Target::Url(url)) => (None, Some(url)),
+            None => (None, None),
+        };
+        output.push(Resolution { index: citation.index, antecedent, url, source_part, reason });
         if record_full && self.source_parts.is_empty() {
-            history.last_part_link = Some(antecedent);
+            history.last_part_link = Some(self.resolved[position].clone());
         }
     }
 
-    fn previous_citation(&self, position: usize, previous: Option<usize>) -> (Option<usize>, &'static str) {
+    fn previous_citation(&self, position: usize, previous: Option<usize>) -> (Option<Target>, &'static str) {
         let Some(previous) = previous else { return (None, "ibid_no_previous"); };
-        let Some(authority) = self.resolved[previous] else { return (None, "ibid_after_unresolved"); };
-        let target = self.citations.iter().find(|citation| citation.index == authority);
+        let Some(link) = self.resolved[previous].clone() else { return (None, "ibid_after_unresolved"); };
+        let target = match &link {
+            Target::Authority(index) => self.citations.iter().find(|citation| citation.index == *index),
+            Target::Url(_) => None,
+        };
         let citation = &self.citations[position];
         let pin = citation.fields.pin_cite.as_ref()
             .or_else(|| citation.pinpoints.first().map(|pin| &pin.span));
@@ -617,13 +659,17 @@ impl<'a> Resolver<'a> {
         )) {
             return (None, "ibid_invalid_pinpoint");
         }
-        (Some(authority), "ibid_previous")
+        let link = match link {
+            Target::Url(url) => Target::Url(short_forms::reanchor_reference(&url, &citation.full_span.text)),
+            link => link,
+        };
+        (Some(link), "ibid_previous")
     }
 
     /// The same citation history supplies separate resolve calls when the host
     /// has note ranges but did not supply splitter parts. At a note boundary,
     /// all citations in the preceding note must agree before ibid can link.
-    fn ibid_from_citations(&self, position: usize, previous: Option<usize>) -> (Option<usize>, &'static str) {
+    fn ibid_from_citations(&self, position: usize, previous: Option<usize>) -> (Option<Target>, &'static str) {
         let Some(note) = self.note_of[position] else { return self.previous_citation(position, previous); };
         let from_body = self.reading_order.is_some()
             && previous.is_some_and(|previous| self.note_of[previous].is_none());
@@ -639,22 +685,26 @@ impl<'a> Resolver<'a> {
         if positions.iter().any(|&other| self.resolved[other].is_none()) {
             return (None, "ibid_after_unresolved");
         }
-        let authority = self.resolved[positions[0]].unwrap();
-        if positions.iter().any(|&other| self.resolved[other] != Some(authority)) {
+        let authority = self.resolved[positions[0]].as_ref().unwrap();
+        if positions.iter().any(|&other| self.resolved[other].as_ref() != Some(authority)) {
             return (None, "ibid_after_multiple");
         }
         let (linked, reason) = self.previous_citation(position, Some(positions[0]));
-        (linked, if linked.is_some() { "ibid_previous_note" } else { reason })
+        let reason = if linked.is_some() { "ibid_previous_note" } else { reason };
+        (linked, reason)
     }
 
     fn supra_from_citations(&self, position: usize, history: &History) -> (Option<usize>, &'static str) {
         let citation = &self.citations[position];
         let (Some(number), Some(notes), Some(own)) =
             (citation.fields.note, self.notes, self.note_of[position]) else {
-            return self.resolve_supra_text(if citation.full_span.text.is_empty() {
+            let (target, reason) = self.resolve_supra_text(if citation.full_span.text.is_empty() {
                 &citation.span.text
             } else { &citation.full_span.text }, &history.records, &history.inferred,
                 self.note_of[position].map(|note| self.notes.unwrap()[note].sequence));
+            return (target.and_then(|target| match target {
+                Target::Authority(index) => Some(index), Target::Url(_) => None,
+            }), reason);
         };
         let matches = notes.iter().enumerate().filter(|(_, note)|
             note.sequence == notes[own].sequence && note.number == number)
@@ -806,12 +856,12 @@ impl<'a> Resolver<'a> {
     }
 }
 
-fn source_record(note: Option<&NoteRange>, verbatim: String, link: Option<usize>,
+fn source_record(note: Option<&NoteRange>, verbatim: String, link: Option<Target>,
     short_form: Option<String>) -> ReferenceSource {
     ReferenceSource {
         note: note.map(|note| note.number.to_string()).unwrap_or_default().into(),
         sequence: note.map(|note| note.sequence), verbatim: Some(verbatim),
-        link: link.map(|link| link.to_string()), short_form,
+        link: link.map(|link| link.registry_link()), short_form,
         ..ReferenceSource::default()
     }
 }
@@ -975,6 +1025,10 @@ pub fn authorities(citations: &[Citation]) -> Vec<Vec<usize>> {
 }
 
 pub(crate) fn authorities_with_links(citations: &[Citation], links: &[(usize, usize)]) -> Vec<Vec<usize>> {
+    authorities_with_resolutions(citations, links, &[])
+}
+
+pub(crate) fn authorities_with_resolutions(citations: &[Citation], links: &[(usize, usize)], resolutions: &[Resolution]) -> Vec<Vec<usize>> {
     let position_of = citations
         .iter()
         .enumerate()
@@ -995,10 +1049,13 @@ pub(crate) fn authorities_with_links(citations: &[Citation], links: &[(usize, us
             parent[high] = low;
         }
     }
+    let source_urls = resolutions.iter().filter_map(|resolution|
+        resolution.url.as_deref().map(|url| (resolution.index, url)))
+        .collect::<HashMap<_, _>>();
     let member = |citation: &Citation| match citation.form {
         Form::Full => true,
         Form::Unknown => false,
-        _ => citation.antecedent.is_some(),
+        _ => citation.antecedent.is_some() || source_urls.contains_key(&citation.index),
     };
     let mut by_key: HashMap<String, usize> = HashMap::new();
     for (position, citation) in citations.iter().enumerate() {
@@ -1027,6 +1084,16 @@ pub(crate) fn authorities_with_links(citations: &[Citation], links: &[(usize, us
     for (left, right) in links {
         if let (Some(&left), Some(&right)) = (position_of.get(left), position_of.get(right)) {
             union(&mut parent, left, right);
+        }
+    }
+    let mut by_url: HashMap<&str, usize> = HashMap::new();
+    for (index, url) in &source_urls {
+        if let Some(&position) = position_of.get(index).filter(|&&position| !citations[position].is_ambiguous()) {
+            let page = url.split('#').next().unwrap_or(url);
+            match by_url.get(page) {
+                Some(&other) => union(&mut parent, position, other),
+                None => { by_url.insert(page, position); }
+            }
         }
     }
     let mut clusters: Vec<(usize, Vec<usize>)> = Vec::new();

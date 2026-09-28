@@ -17,7 +17,8 @@ macro_rules! pattern {
 }
 pattern! {
     URL => "cite.url", NEUTRAL => "cite.neutral", REPORTER => "cite.reporter.splitter",
-    STATUTE => "cite.statute.splitter", JOURNAL => "cite.journal.splitter", BOOK => "frame.book",
+    STATUTE => "cite.statute.splitter", STATUTE_TOA => "cite.statute.toa",
+    JOURNAL => "cite.journal.splitter", BOOK => "frame.book",
     REFERENCE => "ref.token", PURE_REFERENCE => "ref.pure.splitter", LINK => "attach.link",
     SIGNAL => "signal.prefix.splitter", SOURCE_SIGNAL => "signal.source",
     AUTHOR => "ref.quoted-work-author", SHORT_FORM => "shortform.splitter",
@@ -178,7 +179,8 @@ fn us_matches(text: &str) -> Vec<Anchor> {
 fn anchors(text: &str, extended_us: bool) -> Vec<Anchor> {
     let mut found = Vec::new();
     for (kind, pattern) in [("neutral", &*NEUTRAL), ("reporter", &*REPORTER),
-        ("statute", &*STATUTE), ("journal", &*JOURNAL), ("book", &*BOOK), ("url", &*URL)] {
+        ("statute", &*STATUTE), ("statute", &*STATUTE_TOA),
+        ("journal", &*JOURNAL), ("book", &*BOOK), ("url", &*URL)] {
         found.extend(pattern.find_iter(text).map(|found| {
             let found = found.expect("source anchor match");
             (found.start(), found.end(), kind)
@@ -495,7 +497,8 @@ fn bare_citation(text: &str, kind: &str, extended_us: bool) -> String {
     let mut start = match kind {
         "case" => [&*NEUTRAL, &*REPORTER].into_iter().flat_map(|pattern| pattern.find_iter(value))
             .map(|found| found.expect("case core").start()).min(),
-        "statute" => STATUTE.find(value).expect("statute core").map(|found| found.start()),
+        "statute" => [&*STATUTE, &*STATUTE_TOA].into_iter().filter_map(|pattern|
+            pattern.find(value).expect("statute core").map(|found| found.start())).min(),
         "journal" => JOURNAL.find(value).expect("journal core").map(|found| found.start()),
         _ => None,
     };
@@ -512,7 +515,7 @@ fn embedded_source(text: &str, extended_us: bool) -> bool {
         let signal = signal.expect("embedded source signal");
         if text[..signal.start()].chars().count() < 3 { continue; }
         let tail = text[signal.end()..].chars().take(320).collect::<String>();
-        if [&*REFERENCE, &*NEUTRAL, &*REPORTER, &*STATUTE, &*JOURNAL, &*BOOK]
+        if [&*REFERENCE, &*NEUTRAL, &*REPORTER, &*STATUTE, &*STATUTE_TOA, &*JOURNAL, &*BOOK]
             .into_iter().any(|pattern| matches(pattern, &tail)) || (extended_us && !us_matches(&tail).is_empty()) { return true; }
     }
     false

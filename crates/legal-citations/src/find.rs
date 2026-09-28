@@ -371,7 +371,7 @@ fn title_before_source(value: &str, anchor: &Anchor, next: &Anchor) -> bool {
     gap == ","
 }
 
-fn citation_anchors(value: &str, extended_us: bool) -> Vec<Anchor> {
+fn citation_anchors(value: &str, extended_us: bool, scopes: &[usize]) -> Vec<Anchor> {
     let primary: Vec<_> = primary_anchors(value, extended_us).into_iter()
         .map(|anchor| if anchor.reading.is_some() { anchor }
             else { Anchor::new(value, anchor.span, anchor.family) }).collect();
@@ -382,7 +382,7 @@ fn citation_anchors(value: &str, extended_us: bool) -> Vec<Anchor> {
     let mut floor = 0;
     for hit in &primary {
         let start = if hit.family.is_some_and(|(kind, _)| kind == "case") {
-            case_style_start(value, hit.span.start, floor)
+            case_style_start(value, hit.span.start, floor.max(scope_floor(scopes, hit.span.start)))
         } else {
             hit.span.start
         };
@@ -514,15 +514,6 @@ fn primary_anchors(value: &str, extended_us: bool) -> Vec<Anchor> {
     resolve(found)
 }
 
-pub(crate) fn verified_publication(core: &str) -> bool {
-    reporter_parts(core)
-        .and_then(|captures| captures.name("reporter").map(|surface| {
-            let registry = crate::registry::registry();
-            registry.reporters_by_surface(surface.as_str()).iter().any(|(reporter, _)| reporter.verified)
-                || registry.journals_by_surface(surface.as_str()).iter().any(|journal| journal.verified)
-        })).unwrap_or(false)
-}
-
 /// Trim a candidate styled start: drop any leading signal ("See also", "Cf")
 /// and reject a span that opens inside a parenthetical.
 fn style_span_start(text: &str, mut start: usize, core_start: usize) -> Option<usize> {
@@ -602,6 +593,13 @@ fn styled_floor(text: &str, floor: usize, core_start: usize) -> usize {
         })
         .last()
         .map_or(floor, |matched| floor + matched.end())
+}
+
+fn scope_floor(scopes: &[usize], at: usize) -> usize {
+    scopes[..scopes.partition_point(|&start| start <= at)]
+        .last()
+        .copied()
+        .unwrap_or(0)
 }
 
 fn matched_style(
@@ -1140,8 +1138,8 @@ fn back_citation(
 
 /// Every core in document order: full anchors, back references, then bare
 /// section symbols, never overlapping.
-fn cores(text: &str, options: &Options) -> Vec<Core> {
-    let mut cores = citation_anchors(text, options.extended_us)
+fn cores(text: &str, options: &Options, scopes: &[usize]) -> Vec<Core> {
+    let mut cores = citation_anchors(text, options.extended_us, scopes)
         .into_iter()
         .map(|anchor| Core {
             span: anchor.span.clone(),
@@ -1350,7 +1348,12 @@ pub fn find(text: &str, options: &Options) -> Vec<Citation> {
 }
 
 pub(crate) fn find_styled(text: &str, options: &Options, markup: Option<&crate::clean::Markup<'_>>) -> Vec<Citation> {
-    let cores = cores(text, options);
+    let mut scopes = options.notes.as_ref().map_or_else(
+        || text.match_indices("\n\n").map(|(at, _)| at + 2).collect::<Vec<_>>(),
+        |notes| notes.iter().map(|note| note.start).collect::<Vec<_>>(),
+    );
+    scopes.sort_unstable();
+    let cores = cores(text, options, &scopes);
     if cores.is_empty() { return Vec::new(); }
     let source_names = crate::us::case_names(text, &cores.iter().filter_map(|core| match &core.kind {
         CoreKind::Full(anchor) if anchor.reading.as_ref().is_some_and(|reading| reading.source_captured()) =>
@@ -1376,17 +1379,19 @@ pub(crate) fn find_styled(text: &str, options: &Options, markup: Option<&crate::
                 CoreKind::Full(anchor) => anchor.style_start.unwrap_or(next.span.start),
                 _ => next.span.start,
             });
-        let floor = previous_end.min(core.span.start);
+        let floor = previous_end.min(core.span.start).max(scope_floor(&scopes, core.span.start));
+        let source_name = source_names.get(&core.span.start)
+            .filter(|name| name.full_span_start >= floor);
         let mut citation = match &core.kind {
             CoreKind::Full(anchor) => full_citation(text, anchor, floor, limit,
                 paragraphs.get(paragraphs.partition_point(|at| *at < core.span.end)).copied().unwrap_or(text.len()),
-                source_names.get(&core.span.start), options),
+                source_name, options),
             CoreKind::Back {
                 form,
                 note,
                 oscola,
                 french,
-            } => back_citation(text, &core.span, (*form, *note, *oscola, *french), source_names.get(&core.span.start), floor, limit),
+            } => back_citation(text, &core.span, (*form, *note, *oscola, *french), source_name, floor, limit),
             CoreKind::Unknown(section) => {
                 let mut citation =
                     blank_citation(text, Form::Unknown, Authority::Unknown, core.span.clone(), "section_symbol");

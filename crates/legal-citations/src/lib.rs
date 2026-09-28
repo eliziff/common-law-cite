@@ -130,7 +130,7 @@ pub fn extract_markup(text: &str, markup: Option<&str>, options: &Options) -> Ve
 }
 
 pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
-    -> (Vec<Citation>, Vec<source::SourcePart>) {
+    -> (Vec<Citation>, Vec<source::SourcePart>, Vec<resolve::Resolution>) {
     let markup = markup.map(|source| clean::Markup::new(text, source));
     let mut citations = find::find_styled(text, options, markup.as_ref());
     metadata::attach(text, &mut citations);
@@ -146,19 +146,20 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
             .or_else(|| key::key_in(citation, registry::registry()));
     }
     let parts = source::split_notes(text, options.notes.as_deref().unwrap_or(&[]), options.extended_us);
-    if options.resolve {
+    let resolutions = if options.resolve {
         let resolutions = resolve::resolve_with_sources(&citations, options.notes.as_deref(), &[], None,
             &parts, options.supra_hint_mode, options.supra_linking_mode);
-        for resolution in resolutions {
+        for resolution in &resolutions {
             if let Some(citation) = citations.iter_mut().find(|citation| citation.index == resolution.index) {
                 citation.antecedent = resolution.antecedent;
             }
         }
-    }
+        resolutions
+    } else { Vec::new() };
     if options.remove_ambiguous {
         citations.retain(|citation| !citation.is_ambiguous());
     }
-    (citations, parts)
+    (citations, parts, resolutions)
 }
 
 /// Whether `text` contains a citation or a two-party case name.

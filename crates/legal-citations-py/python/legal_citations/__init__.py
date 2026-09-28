@@ -132,16 +132,16 @@ def key(citation: Mapping[str, Any]) -> Optional[str]:
     return call("key", {"citation": citation})["key"]
 
 
-def key_for_text(text: str, **options: Any) -> Optional[str]:
+def key_for_text(text: str, *, offset_unit: str = "char", **options: Any) -> Optional[str]:
     """The key of the one full citation ``text`` holds (``"R v Jordan, 2016 SCC 27"``);
     ``None`` when it holds none, several, or one without a stable identity
     (``call("keyForText", ...)["reason"]`` says which)."""
-    return call("keyForText", {"text": text, "options": _options(options)})["key"]
+    return call("keyForText", {"text": text, "options": _options(options), "offsetUnit": offset_unit})["key"]
 
 
-def keys(text: str, **options: Any) -> list[dict]:
+def keys(text: str, *, offset_unit: str = "char", **options: Any) -> list[dict]:
     """``[{"index", "text", "key"}]`` for every citation in ``text``."""
-    return call("keyForText", {"text": text, "options": _options(options)})["keys"]
+    return call("keyForText", {"text": text, "options": _options(options), "offsetUnit": offset_unit})["keys"]
 
 
 def _citation_or_text(citation, text, options) -> dict:
@@ -162,11 +162,16 @@ def format(
     style: Optional[str] = None,
     language: Optional[str] = None,
     range_dash: Optional[str] = None,
+    offset_unit: Optional[str] = None,
     **options: Any,
 ) -> list[dict]:
     """``[{"index", "formatted"}]``: one citation, or every citation in
     ``text``, rendered in McGill style (``language="fr"`` for French)."""
     request = _citation_or_text(citation, text, options)
+    if text is not None:
+        request["offsetUnit"] = "char" if offset_unit is None else offset_unit
+    elif offset_unit is not None:
+        raise TypeError("offset_unit requires text extraction")
     request.update(_format_options(style, language, range_dash))
     return call("format", request)["citations"]
 
@@ -211,11 +216,16 @@ def url(
     text: Optional[str] = None,
     language: Optional[str] = None,
     anchor: bool = False,
+    offset_unit: Optional[str] = None,
     **options: Any,
 ) -> list[dict]:
     """``[{"index", "url"}]``: the public-source URL of each citation (a back
     reference gets its antecedent's), ``None`` when no source is certain."""
     request = _citation_or_text(citation, text, options)
+    if text is not None:
+        request["offsetUnit"] = "char" if offset_unit is None else offset_unit
+    elif offset_unit is not None:
+        raise TypeError("offset_unit requires text extraction")
     if language is not None:
         request["language"] = language
     request["anchor"] = anchor
