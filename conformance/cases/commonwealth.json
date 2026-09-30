@@ -1698,6 +1698,108 @@
    "expect": {
     "citations": []
    }
+  },
+  {
+   "name": "supra/same-name-distinct-targets",
+   "input": "R v Smith, 2020 SCC 1; R v Smith, 2020 SCC 2.\n\nR v Smith, supra note 1 at para 4.",
+   "options": {
+    "notes": [
+     {
+      "number": 1,
+      "start": 0,
+      "end": 45
+     },
+     {
+      "number": 2,
+      "start": 47,
+      "end": 81
+     }
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full"
+     },
+     {
+      "form": "full"
+     },
+     {
+      "form": "supra",
+      "antecedent": null
+     }
+    ]
+   },
+   "note": "A numbered name must identify one authority, including when the note contains multiple source parts."
+  },
+  {
+   "name": "supra/repeated-same-target",
+   "input": "R v Smith, 2020 SCC 1; R v Smith, 2020 SCC 1.\n\nR v Smith, supra note 1 at para 4.",
+   "options": {
+    "notes": [
+     {
+      "number": 1,
+      "start": 0,
+      "end": 45
+     },
+     {
+      "number": 2,
+      "start": 47,
+      "end": 81
+     }
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full"
+     },
+     {
+      "form": "full"
+     },
+     {
+      "form": "supra",
+      "antecedent": 0
+     }
+    ]
+   },
+   "note": "A numbered name must identify one authority, including when the note contains multiple source parts."
+  },
+  {
+   "name": "supra/unique-name-in-shared-note",
+   "input": "R v Smith, 2020 SCC 1; R v Jones, 2020 SCC 2.\n\nR v Jones, supra note 1 at para 4.",
+   "options": {
+    "notes": [
+     {
+      "number": 1,
+      "start": 0,
+      "end": 45
+     },
+     {
+      "number": 2,
+      "start": 47,
+      "end": 81
+     }
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full"
+     },
+     {
+      "form": "full"
+     },
+     {
+      "form": "supra",
+      "antecedent": 1
+     }
+    ]
+   },
+   "note": "A numbered name must identify one authority, including when the note contains multiple source parts."
   }
  ]
 }
