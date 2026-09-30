@@ -310,7 +310,10 @@ fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSou
                 return (matching[0].link().to_owned(), "note_number");
             }
             if bases.len() > 1 {
-                return (String::new(), "abstain_ambiguous_note_number");
+                return match bracket_definition(normalized, matching.into_iter()) {
+                    Some(link) => (link, "bracket_definition"),
+                    None => (String::new(), "abstain_ambiguous_note_number"),
+                };
             }
             let suffix = registry.iter().filter(in_note).filter(|entry| {
                 let short = ref_tokens(entry.short_form.as_deref().unwrap_or(""));
@@ -349,24 +352,29 @@ fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSou
         abstain = ambiguous;
         break;
     }
-    if !normalized.is_empty() {
-        let mut bases = HashSet::new();
-        let mut best = "";
-        for entry in linked {
-            for bracket in EXPLICIT.captures_iter(entry.verbatim.as_deref().unwrap_or("")) {
-                if BRACKET_SKIP.is_match(bracket[1].trim()) { continue; }
-                for piece in bracket[1].split(';') {
-                    let piece = HEREINAFTER.replace(piece, "");
-                    if ref_normalize(&piece).trim_matches(['[', ']', '(', ')', ' ']) == normalized {
-                        bases.insert(ref_base(&entry.link().split_whitespace().collect::<Vec<_>>().join(" ")));
-                        best = entry.link();
-                    }
+    if let Some(link) = bracket_definition(normalized, linked.into_iter()) {
+        return (link, "bracket_definition");
+    }
+    (String::new(), abstain)
+}
+
+fn bracket_definition<'a>(normalized: &str, entries: impl Iterator<Item = &'a ReferenceSource>) -> Option<String> {
+    if normalized.is_empty() { return None; }
+    let mut bases = HashSet::new();
+    let mut best = "";
+    for entry in entries {
+        for bracket in EXPLICIT.captures_iter(entry.verbatim.as_deref().unwrap_or("")) {
+            if BRACKET_SKIP.is_match(bracket[1].trim()) { continue; }
+            for piece in bracket[1].split(';') {
+                let piece = HEREINAFTER.replace(piece, "");
+                if ref_normalize(&piece).trim_matches(['[', ']', '(', ')', ' ']) == normalized {
+                    bases.insert(ref_base(&entry.link().split_whitespace().collect::<Vec<_>>().join(" ")));
+                    best = entry.link();
                 }
             }
         }
-        if bases.len() == 1 { return (best.to_owned(), "bracket_definition"); }
     }
-    (String::new(), abstain)
+    (bases.len() == 1).then(|| best.to_owned())
 }
 
 /// ALR's resolve_after_strict_abstention, retaining its two existing tiers.

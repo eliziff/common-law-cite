@@ -1800,6 +1800,40 @@
     ]
    },
    "note": "A numbered name must identify one authority, including when the note contains multiple source parts."
+  },
+  {
+   "name": "supra/explicit-definition-disambiguates-shared-name",
+   "input": "R v Smith, 2020 SCC 1 [Smith]; R v Smith, 2020 SCC 2 [Other].\n\nSmith, supra note 1.",
+   "options": {
+    "notes": [
+     {
+      "number": 1,
+      "start": 0,
+      "end": 61
+     },
+     {
+      "number": 2,
+      "start": 63,
+      "end": 83
+     }
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full"
+     },
+     {
+      "form": "full"
+     },
+     {
+      "form": "supra",
+      "antecedent": 0
+     }
+    ]
+   },
+   "note": "The explicit short name identifies one source even when another source in the same note repeats its name."
   }
  ]
 }
