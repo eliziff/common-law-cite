@@ -1834,6 +1834,58 @@
     ]
    },
    "note": "The explicit short name identifies one source even when another source in the same note repeats its name."
+  },
+  {
+   "name": "style/floor-after-reference-pinpoint",
+   "input": "Campbell, supra note 122 at para 43. R v Lukacs, 2021 BCSC 1769 cites Smith, ibid at 4 and Jones v Brown, 2020 SCC 1.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "supra",
+      "fullSpan": {
+       "start": 0,
+       "end": 35,
+       "text": "Campbell, supra note 122 at para 43"
+      }
+     },
+     {
+      "form": "full",
+      "style": {
+       "start": 37,
+       "end": 47,
+       "text": "R v Lukacs"
+      },
+      "fullSpan": {
+       "start": 37,
+       "end": 63,
+       "text": "R v Lukacs, 2021 BCSC 1769"
+      }
+     },
+     {
+      "form": "ibid",
+      "fullSpan": {
+       "start": 77,
+       "end": 86,
+       "text": "ibid at 4"
+      }
+     },
+     {
+      "form": "full",
+      "style": {
+       "start": 91,
+       "end": 104,
+       "text": "Jones v Brown"
+      },
+      "fullSpan": {
+       "start": 91,
+       "end": 116,
+       "text": "Jones v Brown, 2020 SCC 1"
+      }
+     }
+    ]
+   },
+   "note": "A case name never reaches back into the pinpoint of a preceding supra or ibid reference."
   }
  ]
 }

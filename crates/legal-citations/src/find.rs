@@ -1295,15 +1295,13 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
     }).collect();
     let mut citations = Vec::with_capacity(cores.len());
     let mut previous_end = 0;
-    let mut previous_full_end = 0;
     for (index, core) in cores.iter().enumerate() {
         let limit = cores
             .get(index + 1)
             .map_or(text.len(), |next| next.span.start).min(if options.notes.is_some() {
                 scopes.get(scopes.partition_point(|at| *at <= core.span.start)).copied().unwrap_or(text.len())
             } else { text.len() });
-        let floor = if matches!(core.kind, CoreKind::Full(_)) { previous_full_end } else { previous_end };
-        let floor = floor.min(core.span.start).max(scope_floor(&scopes, core.span.start));
+        let floor = previous_end.min(core.span.start).max(scope_floor(&scopes, core.span.start));
         let source_start = match &core.kind {
             CoreKind::Full(anchor) => anchor.source_span.as_ref().map_or(core.span.start, |span| span.start),
             _ => core.span.start,
@@ -1329,10 +1327,11 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
         };
         if enrich { citation.signal = signal(text, floor, citation.full_span.start); }
         // LSP's style floor follows the native pinpoint/short-form suffix;
-        // source parentheticals retain their independent full extent.
+        // source parentheticals retain their independent full extent. Every
+        // citation is a floor, so a style never reaches back into a preceding
+        // supra/ibid pinpoint ("supra note 3 at para 43. R v Lukacs").
         previous_end = citation.fields.explicit_short_span.as_ref().or(citation.fields.pin_cite.as_ref())
             .map_or(core.span.end, |suffix| suffix.end.max(core.span.end));
-        if matches!(&core.kind, CoreKind::Full(anchor) if anchor.native) { previous_full_end = previous_end; }
         citations.push(citation);
     }
     // Eyecite's IdToken/SupraToken discovery is independent of LSP's longer
