@@ -1886,6 +1886,56 @@
     ]
    },
    "note": "A case name never reaches back into the pinpoint of a preceding supra or ibid reference."
+  },
+  {
+   "name": "extent/date-follows-parallels-only",
+   "input": "R v Stone, [1999] 2 S.C.R. 290, at para 162. The criteria followed. R v Fontaine, [2004] 1 S.C.R. 702, 2004 SCC 27. See Roe v. Wade, 410 U.S. 113, 153, 93 S. Ct. 705 (1973).",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "fullSpan": {
+       "start": 0,
+       "end": 43,
+       "text": "R v Stone, [1999] 2 S.C.R. 290, at para 162"
+      }
+     },
+     {
+      "form": "full",
+      "fullSpan": {
+       "start": 68,
+       "end": 101,
+       "text": "R v Fontaine, [2004] 1 S.C.R. 702"
+      }
+     },
+     {
+      "form": "full",
+      "fullSpan": {
+       "start": 103,
+       "end": 114,
+       "text": "2004 SCC 27"
+      }
+     },
+     {
+      "form": "full",
+      "fullSpan": {
+       "start": 120,
+       "end": 172,
+       "text": "Roe v. Wade, 410 U.S. 113, 153, 93 S. Ct. 705 (1973)"
+      }
+     },
+     {
+      "form": "full",
+      "fullSpan": {
+       "start": 152,
+       "end": 172,
+       "text": "93 S. Ct. 705 (1973)"
+      }
+     }
+    ]
+   },
+   "note": "A full case's trailing court or date may follow its parallel citations, never a later citation with other text in between: the next case's bracketed year is not this case's date."
   }
  ]
 }

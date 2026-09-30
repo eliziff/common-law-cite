@@ -101,8 +101,10 @@ pub(crate) enum PostCitation { Case, Law, Journal }
 pub(crate) struct TailRules {
     /// Native core boundary when the source locator starts inside that core.
     pub core_end: Option<usize>,
-    /// Pinned metadata grammar, source token end and paragraph boundary.
-    /// Only a full case's date can follow tokens beyond the next core boundary.
+    /// Pinned metadata grammar, source token end and the farthest point a
+    /// full case's date may follow: the paragraph boundary or the first later
+    /// citation not joined to it as a parallel. Only a full case's date can
+    /// follow tokens beyond the next core boundary.
     pub post_citation: Option<(PostCitation, usize, usize)>,
     /// A Bluebook pinpoint with no keyword: `410 U.S. 113, 153`.
     pub bare_page: bool,
@@ -356,6 +358,19 @@ fn bracketed_paragraph(text: &str, start: usize, limit: usize) -> Option<(Pinpoi
     ))
 }
 
+/// Whether only the first citation's pinpoints and commas separate two
+/// citation cores (`410 U.S. 113, 153, 93 S. Ct. 705`), which is how
+/// parallel citations are joined.
+pub(crate) fn parallel_gap(text: &str, start: usize, end: usize) -> bool {
+    let mut cursor = start;
+    while let Some(next) = pinpoint_group(text, cursor, end, true).map(|(_, phrase)| phrase.end)
+        .or_else(|| bracketed_paragraph(text, cursor, end).map(|(_, next)| next))
+        .filter(|next| *next > cursor) {
+        cursor = next;
+    }
+    text[cursor..end].chars().all(|character| character == ',' || javascript_whitespace(character))
+}
+
 /// Original LSP pinpoint and explicit-short-form extent, shared by both views.
 pub(crate) fn native_tail(text: &str, start: usize, limit: usize) -> Tail {
     let mut result = Tail {
@@ -417,11 +432,11 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
         }
         break;
     }
-    if let Some((source, start, paragraph_end)) = rules.post_citation {
+    if let Some((source, start, reach)) = rules.post_citation {
         result.source_end = Some(start);
         // Full cases may span parallel citation tokens. Other source forms
         // stop at the next citation as well as the paragraph boundary.
-        let window = &text[start..if source == PostCitation::Case { paragraph_end } else { paragraph_end.min(limit) }];
+        let window = &text[start..if source == PostCitation::Case { reach } else { reach.min(limit) }];
         let end = window.char_indices().nth(300).map_or(window.len(), |(at, _)| at);
         if let Some(captures) = POST_CITATION[source as usize].captures(&window[..end]).expect("post-citation match") {
             {

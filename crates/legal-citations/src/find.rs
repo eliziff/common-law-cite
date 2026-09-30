@@ -762,7 +762,7 @@ fn full_citation(
     anchor: &Anchor,
     previous_end: usize,
     limit: usize,
-    paragraph_end: usize,
+    reach: usize,
     source_name: Option<&crate::SourceCaseName>,
     options: Option<&Options>,
 ) -> Citation {
@@ -817,7 +817,7 @@ fn full_citation(
                         "journal" => metadata::PostCitation::Journal,
                         _ => metadata::PostCitation::Law,
                 };
-                (source, source_core.end, paragraph_end)
+                (source, source_core.end, reach)
             }),
             bare_page,
             oscola: false,
@@ -1296,20 +1296,28 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
     let mut citations = Vec::with_capacity(cores.len());
     let mut previous_end = 0;
     for (index, core) in cores.iter().enumerate() {
-        let limit = cores
-            .get(index + 1)
-            .map_or(text.len(), |next| next.span.start).min(if options.notes.is_some() {
-                scopes.get(scopes.partition_point(|at| *at <= core.span.start)).copied().unwrap_or(text.len())
-            } else { text.len() });
+        let scope_end = if options.notes.is_some() {
+            scopes.get(scopes.partition_point(|at| *at <= core.span.start)).copied().unwrap_or(text.len())
+        } else { text.len() };
+        let limit = cores.get(index + 1).map_or(text.len(), |next| next.span.start).min(scope_end);
         let floor = previous_end.min(core.span.start).max(scope_floor(&scopes, core.span.start));
         let source_start = match &core.kind {
             CoreKind::Full(anchor) => anchor.source_span.as_ref().map_or(core.span.start, |span| span.start),
             _ => core.span.start,
         };
         let source_name = source_names.get(&source_start);
+        // A full case's trailing court/date may follow its parallels, never
+        // a later citation with other text in between ("..., at para 162.
+        // The ... R v Fontaine, [2004] 1 SCR 702": that bracketed year is
+        // Fontaine's, not Stone's).
+        let paragraph_end = paragraphs.get(paragraphs.partition_point(|at| *at < core.span.end)).copied()
+            .unwrap_or(text.len()).min(scope_end);
+        let reach = cores[index + 1..].iter().zip(&cores[index..])
+            .find(|(next, previous)| next.span.start >= paragraph_end || !metadata::parallel_gap(text,
+                previous.span.end.min(next.span.start), next.span.start))
+            .map_or(paragraph_end, |(next, _)| next.span.start.min(paragraph_end));
         let mut citation = match &core.kind {
-            CoreKind::Full(anchor) => full_citation(text, anchor, floor, limit,
-                paragraphs.get(paragraphs.partition_point(|at| *at < core.span.end)).copied().unwrap_or(text.len()),
+            CoreKind::Full(anchor) => full_citation(text, anchor, floor, limit, reach,
                 source_name, enrich.then_some(options)),
             CoreKind::Back {
                 form,
