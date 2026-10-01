@@ -283,12 +283,26 @@ fn citation_anchors(value: &str, extended_us: bool, scopes: &[usize], enrich: bo
         found.extend(crate::us::citation_spans(value, extended_us));
         Vec::new()
     };
-    let primary: Vec<_> = resolve(found.into_iter().map(|span| Anchor {
-        span, ..Anchor::default()
-    }).collect()).into_iter().map(|anchor| {
-        let family = occurrence_family(&value[anchor.span.clone()]);
-        Anchor::new(anchor.span, family)
-    }).collect();
+    // A (year) volume publication page block the citation grammar read only
+    // part of is one citation: "(2023) 57:3 RJT 487" is not the issue "3 RJT
+    // 487", and "(2021), 25 Can. Crim L Rev 255" is not "(2021), 25 Can.".
+    // The block keeps the family its publication names ("(1879), 5 Ex D 264"
+    // is a case).
+    let mut secondary = secondary_hits(value);
+    let mut primary = Vec::new();
+    for anchor in resolve(found.into_iter().map(|span| Anchor { span, ..Anchor::default() }).collect()) {
+        let hit = &anchor.span;
+        match secondary.iter_mut().find(|whole| whole.family.is_some_and(|(_, reason)| reason == "article_grammar")
+            && whole.span.start <= hit.start && hit.end <= whole.span.end && whole.span != *hit) {
+            Some(whole) => if whole.reading.is_none() {
+                whole.read(value);
+                if let Some(kind) = whole.reading.as_ref().map(|reading| reading.family().0).filter(|kind| *kind != "other") {
+                    whole.family = Some((kind, "article_grammar"));
+                }
+            },
+            None => primary.push(Anchor::new(anchor.span.clone(), occurrence_family(&value[anchor.span]))),
+        }
+    }
     // A case claims its style of cause, and a style of cause can read as a
     // statute title ("Re Residential Tenancies Act, 1979, [1981] 1 SCR 714")
     // or as a work title; nothing inside that prefix is a second authority.
@@ -304,7 +318,7 @@ fn citation_anchors(value: &str, extended_us: bool, scopes: &[usize], enrich: bo
         floor = hit.span.end;
     }
     // LSP citation_anchors keeps the primary hit when a secondary span overlaps.
-    let mut anchors = secondary_hits(value)
+    let mut anchors = secondary
         .into_iter()
         .filter(|anchor| {
             !claimed

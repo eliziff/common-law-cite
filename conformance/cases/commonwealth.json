@@ -2037,6 +2037,42 @@
     ]
    },
    "note": "A parenthetical that is the author's own sentence (a capitalized subject and a finite verb) ends the citation; a citation parenthetical such as a concession, a judge or a 'holding' phrase stays in its extent."
+  },
+  {
+   "name": "journal/volume-issue-block",
+   "input": "Dana Kerr, “Le régime des permis: bilan” (2029) 61:2 RJT 211; Omar Basu, “Harbour Leases” (2028), 14 Can. Mar L Rev 90 at 92.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "fullSpan": {
+       "start": 0,
+       "end": 60,
+       "text": "Dana Kerr, “Le régime des permis: bilan” (2029) 61:2 RJT 211"
+      },
+      "style": {
+       "start": 0,
+       "end": 40,
+       "text": "Dana Kerr, “Le régime des permis: bilan”"
+      }
+     },
+     {
+      "form": "full",
+      "fullSpan": {
+       "start": 62,
+       "end": 124,
+       "text": "Omar Basu, “Harbour Leases” (2028), 14 Can. Mar L Rev 90 at 92"
+      },
+      "style": {
+       "start": 62,
+       "end": 89,
+       "text": "Omar Basu, “Harbour Leases”"
+      }
+     }
+    ]
+   },
+   "note": "The citation grammar's partial read of a periodical block (the issue '2 RJT 211' of '61:2', or '(2028), 14 Can.') gives way to the whole (year) volume journal page block, so the article keeps its author and title."
   }
  ]
 }
