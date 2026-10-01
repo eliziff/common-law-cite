@@ -2164,6 +2164,98 @@
     ]
    },
    "note": "A note citing a hearing transcript names the case, not its decision: a supra to that note, and an ibid after it, do not resolve to the decision; a supra to the note citing the decision does."
+  },
+  {
+   "name": "pinpoint/following-ff",
+   "input": "Halvorsen v Tidewater Ferries Ltd, 2030 SCC 12 at para 41ff (discussing the berth).",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "fullSpan": {
+       "text": "Halvorsen v Tidewater Ferries Ltd, 2030 SCC 12 at para 41ff (discussing the berth)"
+      },
+      "pinpoints": [
+       {
+        "kind": "paragraph",
+        "first": "41"
+       }
+      ]
+     }
+    ]
+   },
+   "note": "A pinpoint's 'ff' (and following) belongs to it, and the parenthetical after it to the citation."
+  },
+  {
+   "name": "bill/title-ends-with-its-sentence",
+   "input": "Bill C-77, An Act to amend the Ferry Services Act and the Harbours Code. The act added tidal berths to the list.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "fullSpan": {
+       "text": "Bill C-77, An Act to amend the Ferry Services Act and the Harbours Code"
+      }
+     }
+    ]
+   },
+   "note": "A bill's title ends at its sentence's end, never inside a later word."
+  },
+  {
+   "name": "webpage/bracketed-link-and-archive",
+   "input": "Port Authority, “Annual Berth Report” (2029), online: <https://example.org/berths/2029.pdf>. [https://web.archive.org/web/2030/https://example.org/berths/2029.pdf].",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "fullSpan": {
+       "text": "Port Authority, “Annual Berth Report” (2029), online: <https://example.org/berths/2029.pdf>. [https://web.archive.org/web/2030/https://example.org/berths/2029.pdf]"
+      }
+     }
+    ]
+   },
+   "note": "A link's closing bracket and the archived link written after it belong to the one source."
+  },
+  {
+   "name": "webpage/perma-pair",
+   "input": "Harbour Board, “Tidal Notices” (undated), online: [perma.cc/AB12-CD34] perma.cc/EF56-GH78 See also the notices.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "fullSpan": {
+       "text": "Harbour Board, “Tidal Notices” (undated), online: [perma.cc/AB12-CD34] perma.cc/EF56-GH78"
+      }
+     }
+    ]
+   },
+   "note": "A second link written right after a source's link is that source's, not a source of its own."
+  },
+  {
+   "name": "statute/title-chapter-reprint",
+   "input": "Harbours Act, 1871 (UK), 34 & 35 Vict, c 9, reprinted in RSC 1985, App II, No 7; Halvorsen v Tidewater Ferries Ltd, 2030 SCC 12.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "fullSpan": {
+       "text": "Harbours Act, 1871 (UK), 34 & 35 Vict, c 9, reprinted in RSC 1985, App II, No 7"
+      }
+     },
+     {
+      "form": "full",
+      "fullSpan": {
+       "text": "Halvorsen v Tidewater Ferries Ltd, 2030 SCC 12"
+      }
+     }
+    ]
+   },
+   "note": "A statute's title and chapter are one citation, and its reprint is part of it."
   }
  ]
 }

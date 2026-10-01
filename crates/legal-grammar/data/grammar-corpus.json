@@ -1437,11 +1437,23 @@
         },
         {
           "id": "cite.parliamentary.paper",
-          "pattern": "\\b(?<body>(?:[A-Z][A-Za-z.'’-]*\\s+){0,4})(?<record>Hansard|Debates)\\s*,?\\s*(?<session>\\d{1,3}\\s*[-–]\\s*\\d{1,3}|(?:\\d{1,3}(?:st|nd|rd|th)|First|Second|Third|Fourth|Fifth|Sixth)\\s+(?:Sess(?:ion)?|Parl(?:iament)?))(?:[^()\\n]{0,60}?\\((?<sitting>[^()\\n]{3,60})\\))?|\\b(?<bill>[Bb][Ii][Ll][Ll]\\s+(?:[CS]-)?\\d{1,4},\\s*(?:An?\\s+Act\\b[^,;\\n]{0,140}|[A-Z][A-Za-z'’.-]*(?:\\s+[A-Za-z'’.-]+){0,10}\\s+Act\\b))",
+          "pattern": "\\b(?<body>(?:[A-Z][A-Za-z.'’-]*\\s+){0,4})(?<record>Hansard|Debates)\\s*,?\\s*(?<session>\\d{1,3}\\s*[-–]\\s*\\d{1,3}|(?:\\d{1,3}(?:st|nd|rd|th)|First|Second|Third|Fourth|Fifth|Sixth)\\s+(?:Sess(?:ion)?|Parl(?:iament)?))(?:[^()\\n]{0,60}?\\((?<sitting>[^()\\n]{3,60})\\))?|\\b(?<bill>[Bb][Ii][Ll][Ll]\\s+(?:[CS]-)?\\d{1,4},\\s*(?:An?\\s+Act\\b(?:[ \\t]+[^\\s,;.]+(?:\\.[^\\s,;.]+)*){0,25}|[A-Z][A-Za-z'’.-]*(?:\\s+[A-Za-z'’.-]+){0,10}\\s+Act\\b))",
           "flags": "",
           "canonical": {},
           "provenance": "Beaver-authored: the two parliamentary-paper shapes a footnote actually cites - a debate record ('Alberta Hansard, 31-2 (8 December 2025)', 'House of Commons Debates, 42-1 (5 May 2017)') identified by the record word plus a session number or ordinal session/parliament, and a bill by its number followed by its title ('Bill C-25, An Act to amend the National Defence Act'). The record word alone is prose ('the debates were heated'), so the session is required, and a bare bill number is a cross-reference or part of an article title ('Bill C-14: A Step Backwards ...'), so the title is required. The page that follows ('at 797') is deliberately left to the pinpoint grammar. Restored verbatim from frozen LSP 29c3f8d1b66f43a288fb921c6f72048ea327cbf1.",
           "vectors": [
+            {
+              "input": "Bill C-77, An Act to amend the Ferry Services Act and the Harbours Code. The act added tidal berths to the list of",
+              "groups": {
+                "bill": "Bill C-77, An Act to amend the Ferry Services Act and the Harbours Code"
+              }
+            },
+            {
+              "input": "Bill S-9, An Act respecting the protection of wetlands and their many seasonal migratory and resident waterfowl populations in every province and territory of the country",
+              "groups": {
+                "bill": "Bill S-9, An Act respecting the protection of wetlands and their many seasonal migratory and resident waterfowl populations in every province and territory of the country"
+              }
+            },
             {
               "input": "See e.g. Alberta Hansard, 31-2 (8 December 2025) at 797 (Rakhi Pancholi)",
               "groups": {
@@ -2936,7 +2948,7 @@
         "pin_item_splitter": "\\d+(?:\\.\\d+)*(?:\\s*\\([A-Za-z0-9]+\\))*(?:\\s*[-–]\\s*\\d+(?:\\.\\d+)*(?:\\s*\\([A-Za-z0-9]+\\))*)?",
         "pin_sep_splitter": "(?:,\\s*(?:and|&)?\\s*|\\s+(?:and|&)\\s+)",
         "pin_seq_splitter": "{{pin_item_splitter}}(?:\\s*{{pin_sep_splitter}}\\s*{{pin_item_splitter}})*",
-        "pin_item_toa": "\\d+(?:\\.\\d+)*(?:\\([A-Za-z0-9]+\\))*",
+        "pin_item_toa": "\\d+(?:\\.\\d+)*(?:\\([A-Za-z0-9]+\\))*(?:\\s?ff\\b)?",
         "pin_seq_toa": "{{pin_item_toa}}(?:\\s*(?:,|and|to|[-–—])\\s*{{pin_item_toa}})*"
       },
       "entries": [
@@ -2996,6 +3008,10 @@
           "canonical": {},
           "provenance": "toa_maker.py:150 (_PAR_RE), moved verbatim with its positional capture.",
           "vectors": [
+            {
+              "input": "at para 110ff (discussing the test)",
+              "groups": {}
+            },
             {
               "input": "at paras 23 to 27",
               "groups": {}
@@ -3136,11 +3152,31 @@
         },
         {
           "id": "pinpoint.locator",
-          "pattern": "^(?<lead>[\\s,]*(?:(?<at>at|au|aux|à\\s+la|à)\\s+|(?<elided>à\\s+l['’]))?)(?<keyword>[Pp]aragraphs?|[Pp]aras?\\.?|[Pp][Aa][Rr][Ss]?\\.?|[Pp]ages?|[Pp]p?\\.?|[Ss]ubsections?|[Ss]ubs?\\.?|[Ss]ections?|[Ss]ecs?\\.?|[Ss]s?\\.?|[Aa]rticles?|[Aa]rts?\\.?|[Rr]ules?|[Rr]r?\\.?|[Ss]ch(?:ed(?:ule)?)?s?\\.?|[Aa]nnexes?|[Ff]ootnotes?|[Ff]ns?\\.?|[Nn]otes?|[Nn]n?\\.?|[Cc]lauses?|[Cc]ls?\\.?|¶¶?|§§?)?\\s*(?<values>(?:\\*?\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\*?\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))(?:\\s*(?:[-–—]|to|à)\\s*(?:(?:\\*?\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\*?\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))|(?:\\([A-Za-z0-9.]{1,5}\\))+))?(?:\\s*(?:,|and|&|et)\\s*(?:\\*?\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\*?\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))(?:\\s*(?:[-–—]|to|à)\\s*(?:(?:\\*?\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\*?\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))|(?:\\([A-Za-z0-9.]{1,5}\\))+))?)*)",
+          "pattern": "^(?<lead>[\\s,]*(?:(?<at>at|au|aux|à\\s+la|à)\\s+|(?<elided>à\\s+l['’]))?)(?<keyword>[Pp]aragraphs?|[Pp]aras?\\.?|[Pp][Aa][Rr][Ss]?\\.?|[Pp]ages?|[Pp]p?\\.?|[Ss]ubsections?|[Ss]ubs?\\.?|[Ss]ections?|[Ss]ecs?\\.?|[Ss]s?\\.?|[Aa]rticles?|[Aa]rts?\\.?|[Rr]ules?|[Rr]r?\\.?|[Ss]ch(?:ed(?:ule)?)?s?\\.?|[Aa]nnexes?|[Ff]ootnotes?|[Ff]ns?\\.?|[Nn]otes?|[Nn]n?\\.?|[Cc]lauses?|[Cc]ls?\\.?|¶¶?|§§?)?\\s*(?<values>(?:\\*?\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\*?\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))(?:\\s*(?:[-–—]|to|à)\\s*(?:(?:\\*?\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\*?\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))|(?:\\([A-Za-z0-9.]{1,5}\\))+))?(?:\\s?ff(?![A-Za-z]))?(?:\\s*(?:,|and|&|et)\\s*(?:\\*?\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\*?\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))(?:\\s*(?:[-–—]|to|à)\\s*(?:(?:\\*?\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\*?\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))|(?:\\([A-Za-z0-9.]{1,5}\\))+))?(?:\\s?ff(?![A-Za-z]))?)*)",
           "flags": "",
           "canonical": {},
           "provenance": "Beaver-authored for the legal-citations extraction stages. Converges pinpoint.para/section/page .splitter and .toa into one locator read at the start of the text after a citation core: English 'at', French 'au'/'aux'/'à la'/'à l'' and the keyword name the kind (paragraph, page, section, subsection, rule, article, schedule, footnote, clause, ¶, §); the value list keeps ranges whole ('62-64', '7(2)-(4)', '23 to 27', '12 à 15') and separates list items on ',', 'and', '&', 'et'. Unlike the toa dialect a dash never separates list items, so 'paras 62-64' keeps 63. Roman pages follow eyecite's page grammar and never swallow a following word. The case-insensitive par/pars spelling is ported from AuthoritiesHelper modern/highlight-authorities/domain.mjs, replacing its post-extraction adapter.",
           "vectors": [
+            {
+              "input": " at para 110ff (discussing the test)",
+              "groups": {
+                "keyword": "para",
+                "values": "110ff"
+              }
+            },
+            {
+              "input": " at 138 ff, 140",
+              "groups": {
+                "at": "at",
+                "values": "138 ff, 140"
+              }
+            },
+            {
+              "input": " at 12 fforts",
+              "groups": {
+                "values": "12"
+              }
+            },
             {
               "input": " at paras 62-64 and 70.",
               "groups": {
@@ -3352,11 +3388,24 @@
         },
         {
           "id": "pinpoint.item",
-          "pattern": "(?<first>(?:\\*?\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\*?\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z])))(?:\\s*(?<separator>[-–—]|to|à)\\s*(?<last>(?:\\*?\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\*?\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))|(?:\\([A-Za-z0-9.]{1,5}\\))+))?",
+          "pattern": "(?<first>(?:\\*?\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\*?\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z])))(?:\\s*(?<separator>[-–—]|to|à)\\s*(?<last>(?:\\*?\\d+(?:[a-z](?![A-Za-z]))?(?:[.:]\\*?\\d+(?:[a-z](?![A-Za-z]))?)*(?:\\([A-Za-z0-9.]{1,5}\\))*|(?:c?(?:xc|xl|l?x{1,3})(?:ix|iv|v?i{0,3})|(?:c?l?)(?:ix|iv|v?i{1,3})|(?:lv|cv|cl|clv))(?![A-Za-z]))|(?:\\([A-Za-z0-9.]{1,5}\\))+))?(?:\\s?ff(?![A-Za-z]))?",
           "flags": "",
           "canonical": {},
           "provenance": "Beaver-authored for the legal-citations extraction stages. One item of a pinpoint.locator value list: a locator or a range with its first and last locator.",
           "vectors": [
+            {
+              "input": "110ff",
+              "groups": {
+                "first": "110",
+                "last": null
+              }
+            },
+            {
+              "input": "87 ff",
+              "groups": {
+                "first": "87"
+              }
+            },
             {
               "input": "62-64",
               "groups": {
@@ -4682,6 +4731,52 @@
             },
             {
               "input": "Transcripted Records Act",
+              "groups": null
+            }
+          ]
+        },
+        {
+          "id": "ref.reprint",
+          "pattern": "^\\s*,?\\s*(?:reprinted|reproduced)\\s+in\\s*$",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The words between a statute and the consolidation that reprints it ('Constitution Act, 1867 (UK), 30 & 31 Vict, c 3, reprinted in RSC 1985, App II, No 5'): the reprint belongs to the statute it follows, not to an authority of its own.",
+          "vectors": [
+            {
+              "input": ", reprinted in ",
+              "groups": {}
+            },
+            {
+              "input": " reproduced in ",
+              "groups": {}
+            },
+            {
+              "input": ", see also ",
+              "groups": null
+            },
+            {
+              "input": ", reprinted in the newspaper of ",
+              "groups": null
+            }
+          ]
+        },
+        {
+          "id": "ref.reprint.location",
+          "pattern": "^\\s*,\\s*(?:App(?:endix)?\\.?|Sch(?:edule)?\\.?)\\s+[IVXLC0-9]+(?:\\s*,\\s*No\\.?\\s*[0-9]+)?",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Where a consolidation reprints a statute, written after it: ', App II, No 5', ', Appendix II, No 44', ', Schedule B'.",
+          "vectors": [
+            {
+              "input": ", Appendix II, No 5; Law Society v Mangat",
+              "groups": {}
+            },
+            {
+              "input": ", App II, No 44.",
+              "groups": {}
+            },
+            {
+              "input": ", s 91(24)",
               "groups": null
             }
           ]

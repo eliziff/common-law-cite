@@ -189,6 +189,10 @@ static QUOTED_WORK: LazyLock<Regex> = LazyLock::new(|| linear("style.quoted-work
 // The same styled part when the work carries no quoted title: a monograph, a
 // debate record, a dictionary.
 static PLAIN_WORK: LazyLock<Regex> = LazyLock::new(|| linear("style.plain-work"));
+static REPRINT: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("ref.reprint"));
+static REPRINT_LOCATION: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("ref.reprint.location"));
+// The words that introduce a work's link: "(June 2006), online: <".
+static LINK_LEAD: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("attach.link"));
 /// Names that open a style of cause but never identify a case on their own.
 const GENERIC_PARTIES: [&str; 18] = [
     "r", "r.", "rex", "regina", "the queen", "her majesty the queen", "his majesty the king",
@@ -249,10 +253,75 @@ fn secondary_hits(value: &str) -> Vec<Anchor> {
     found.extend(JOURNAL_ARTICLE.find_iter(value).flatten().map(|matched| {
         Anchor::new(matched.start()..matched.end(), ("journal", "article_grammar"))
     }));
-    found.extend(ONLINE_SOURCE.find_iter(value).map(|matched| {
-        Anchor::new(matched.start()..matched.end(), ("other", "online_grammar"))
-    }));
+    let mut link_end = None;
+    for matched in ONLINE_SOURCE.find_iter(value) {
+        let link = link_core(value, matched.start()..matched.end());
+        // An alternate or archived link written right after another one is
+        // that source's, not a source of its own.
+        let alternate = link_end.is_some_and(|end| alternate_link(value, end, link.start));
+        link_end = Some(link_end_with_closer(value, &link));
+        if !alternate {
+            found.push(Anchor::new(link, ("other", "online_grammar")));
+        }
+    }
     resolve(found)
+}
+
+/// A link without the sentence punctuation after it, or a closing bracket
+/// that encloses it rather than belonging to it ("<https://example.org/a>.",
+/// "[https://example.org/a]").
+fn link_core(text: &str, mut link: Hit) -> Hit {
+    while let Some(last) = text[link.clone()].chars().next_back() {
+        let unbalanced = |open: char| text[link.clone()].matches(open).count()
+            < text[link.clone()].matches(last).count();
+        let trailing = match last {
+            '.' | ',' | ';' | ':' | '!' | '?' | '\'' | '"' | '\u{2019}' | '\u{201d}' => true,
+            ')' => unbalanced('('),
+            ']' => unbalanced('['),
+            '}' => unbalanced('{'),
+            _ => false,
+        };
+        if !trailing || link.end - last.len_utf8() <= link.start { break; }
+        link.end -= last.len_utf8();
+    }
+    link
+}
+
+/// The end of a link and of the bracket that encloses it ("<url>", "[url]").
+fn link_end_with_closer(text: &str, link: &Hit) -> usize {
+    let closer = match text[..link.start].chars().next_back() {
+        Some('<') => '>',
+        Some('[') => ']',
+        _ => return link.end,
+    };
+    if text[link.end..].starts_with(closer) { link.end + closer.len_utf8() } else { link.end }
+}
+
+/// Only punctuation, brackets and spaces between one link and the next.
+fn alternate_link(text: &str, end: usize, start: usize) -> bool {
+    end <= start && text[end..start].chars().all(|character| javascript_whitespace(character)
+        || ".,;:\\[<(".contains(character))
+}
+
+/// Where the words that introduce a link begin ("(June 2006), online: <"),
+/// so the work they follow styles it; the link itself when none do.
+fn link_lead_start(text: &str, link_start: usize, floor: usize) -> usize {
+    let end = link_start - text[..link_start].strip_suffix(['<', '[']).map_or(0, |_| 1);
+    let from = floor.max(end.saturating_sub(200)).min(end);
+    (from..end).filter(|at| text.is_char_boundary(*at)).find(|&at| LINK_LEAD.find(&text[at..end]).ok()
+        .flatten().is_some_and(|found| found.start() == 0 && found.end() == end - at)).unwrap_or(link_start)
+}
+
+/// A link citation's extent: its own enclosing bracket and the alternate or
+/// archived links written right after it, each with its bracket.
+fn online_extent(text: &str, link: &Hit, limit: usize) -> usize {
+    let mut end = link_end_with_closer(text, link);
+    while let Some(next) = ONLINE_SOURCE.find_iter(&text[end..limit.max(end)]).next() {
+        let next = link_core(text, end + next.start()..end + next.end());
+        if !alternate_link(text, end, next.start) { break; }
+        end = link_end_with_closer(text, &next);
+    }
+    end
 }
 
 /// Frozen LSP citation_kind: occurrence family, not registry identity.
@@ -807,8 +876,10 @@ fn full_citation(
         // An online-only source is styled with the publisher and title in
         // front of the link; every other unclassified span carries no
         // styled prefix.
-        _ if kind_reason == "online_grammar" =>
-            work_style_start(text, core.start, previous_end),
+        _ if kind_reason == "online_grammar" => {
+            let lead = link_lead_start(text, core.start, previous_end);
+            Some(work_style_start(text, lead, previous_end)).filter(|start| *start < lead).unwrap_or(core.start)
+        }
         _ => core.start,
     };
     let short_pin = anchor.reading.as_ref().and_then(|reading| reading.short_at).map(|at| source_core.start + at);
@@ -906,7 +977,15 @@ fn full_citation(
         citation.reasons.push("short_form".to_owned());
     }
     citation.short_name = short_name;
-    citation.full_span = span(text, styled_start..tail.end);
+    let mut full_start = styled_start;
+    if kind_reason == "online_grammar" {
+        tail.end = tail.end.max(online_extent(text, &core, limit));
+        // An unstyled link keeps the bracket that encloses it whole.
+        if styled_start == core.start && link_end_with_closer(text, &core) > core.end {
+            full_start -= 1;
+        }
+    }
+    citation.full_span = span(text, full_start..tail.end);
     let source_span = (!short_form && *source_core != core).then(|| source_core.clone());
     citation.explicit_short_name = tail.short;
     citation.pinpoints = tail.pinpoints;
@@ -1370,6 +1449,7 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
         citation.fields.inline_reference = None;
         citations.push(citation);
     }
+    let mut citations = join_legislation(text, citations);
     if enrich {
         let references = case_name_references(text, &citations, markup);
         citations.extend(references);
@@ -1379,6 +1459,49 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
         citation.index = index;
     }
     citations
+}
+
+/// A statute's title and the chapter citation written right after it are one
+/// citation ("Constitution Act, 1867 (UK), 30 & 31 Vict, c 3"), and a reprint
+/// written after a statute is part of it ("reprinted in RSC 1985, App II,
+/// No 5"), not an authority of its own.
+fn join_legislation(text: &str, citations: Vec<Citation>) -> Vec<Citation> {
+    let mut joined: Vec<Citation> = Vec::with_capacity(citations.len());
+    for mut citation in citations {
+        let legislation = |citation: &Citation| citation.form == Form::Full && citation.authority.is_legislation();
+        let Some(previous) = joined.last_mut()
+            .filter(|previous| legislation(previous) && legislation(&citation)
+                && previous.full_span.end <= citation.full_span.start) else {
+            joined.push(citation);
+            continue;
+        };
+        let gap = &text[previous.full_span.end..citation.full_span.start];
+        if REPRINT.find(gap).ok().flatten().is_some() {
+            let end = citation.full_span.end + REPRINT_LOCATION.find(&text[citation.full_span.end..])
+                .ok().flatten().map_or(0, |found| found.end());
+            previous.full_span = span(text, previous.full_span.start..end);
+            continue;
+        }
+        let title_only = previous.fields.chapter.is_none() && previous.fields.series.is_none()
+            && previous.pinpoints.is_empty();
+        if title_only && citation.style.is_none() && citation.fields.chapter.is_some()
+            && gap.trim_matches(javascript_whitespace) == "," {
+            citation.style = Some(previous.style.clone().unwrap_or_else(|| previous.span.clone()));
+            citation.full_span = span(text, previous.full_span.start..citation.full_span.end);
+            citation.signal = citation.signal.take().or_else(|| previous.signal.take());
+            let mut parentheticals = std::mem::take(&mut previous.parentheticals);
+            parentheticals.append(&mut citation.parentheticals);
+            citation.parentheticals = parentheticals;
+            citation.short_name = citation.short_name.take().or_else(|| previous.short_name.take());
+            if !citation.reasons.iter().any(|reason| reason == "same_text_style") {
+                citation.reasons.push("same_text_style".to_owned());
+            }
+            *previous = citation;
+            continue;
+        }
+        joined.push(citation);
+    }
+    joined
 }
 
 /// Eyecite helpers.filter_citations: source extents order references and
