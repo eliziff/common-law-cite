@@ -2073,6 +2073,29 @@
     ]
    },
    "note": "The citation grammar's partial read of a periodical block (the issue '2 RJT 211' of '61:2', or '(2028), 14 Can.') gives way to the whole (year) volume journal page block, so the article keeps its author and title."
+  },
+  {
+   "name": "style/party-wrapped-across-lines",
+   "input": "NOTICE OF APPLICATION\n\n1. The marina asks the Court to quash the refusal.\n\n2. The standard is correctness: Ontario (Minister of Natural Resources and\n\nForestry) v Lakehead Marina, 2031 SCC 9 at para 22.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "fullSpan": {
+       "start": 107,
+       "end": 201,
+       "text": "Ontario (Minister of Natural Resources and\n\nForestry) v Lakehead Marina, 2031 SCC 9 at para 22"
+      },
+      "style": {
+       "start": 107,
+       "end": 178,
+       "text": "Ontario (Minister of Natural Resources and\n\nForestry) v Lakehead Marina"
+      }
+     }
+    ]
+   },
+   "note": "A parenthesized party wrapped across a line break stays one party, and the style of cause starts at the party in front of the versus, never at an earlier line end."
   }
  ]
 }

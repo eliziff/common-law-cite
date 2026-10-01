@@ -5491,10 +5491,10 @@
         },
         {
           "id": "style.case-left",
-          "pattern": "(?m)(?<left>[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()\\n]{0,80}\\)|of|the|and|for|de|la|du)){0,12})\\s*$",
+          "pattern": "(?<left>[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()]{0,80}\\)|of|the|and|for|de|la|du)){0,12})\\s*$",
           "flags": "",
           "canonical": {},
-          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_LEFT, copied verbatim with native Rust regex semantics.",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_LEFT with native Rust regex semantics, changed in two places: the party must end where the text in front of the versus ends (the frozen (?m) let $ match at any earlier line end, so the leftmost match could start lines or pages before the case and run the style over them), and a parenthesized party may wrap across lines, as a style of cause extracted from a PDF does.",
           "vectors": [
             {
               "input": "See Quebec (Attorney General) ",
@@ -5506,6 +5506,12 @@
               "input": "the court held that 40 Days for Life ",
               "groups": {
                 "left": "40 Days for Life"
+              }
+            },
+            {
+              "input": "1. The owner asks the Court.\n\n2. The standard is set: Canada (Minister of Citizenship and\n\nImmigration) ",
+              "groups": {
+                "left": "Canada (Minister of Citizenship and\n\nImmigration)"
               }
             },
             {
