@@ -76,6 +76,7 @@ static SHORT_FORM_SUFFIX: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("shortform.splitter"));
 static SOURCE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("parenthetical.source"));
+static REMARK: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("parenthetical.remark"));
 static COURT: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("parenthetical.court"));
 static LAW_PUBLICATION: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("parenthetical.law"));
 static POST_CITATION: LazyLock<[CompiledGrammar; 3]> = LazyLock::new(|| {
@@ -257,6 +258,12 @@ fn parenthetical_at(text: &str, start: usize, limit: usize) -> Option<Range<usiz
     None
 }
 
+/// A parenthetical that belongs to the citation: the author's own sentence
+/// after it ("(Mr. Moss did not argue the point)") ends the citation.
+fn citation_parenthetical(text: &str, start: usize, limit: usize) -> Option<Range<usize>> {
+    parenthetical_at(text, start, limit).filter(|range| !REMARK.is_match(text[range.start + 1..range.end - 1].trim()))
+}
+
 /// The court a parenthetical names, with its date.
 pub(crate) struct CourtReading {
     pub court: Option<String>,
@@ -415,7 +422,7 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
             cursor = end;
             continue;
         }
-        if let Some(range) = parenthetical_at(text, cursor, limit) {
+        if let Some(range) = citation_parenthetical(text, cursor, limit) {
             // The source-specific post-citation grammar below owns any
             // explanatory extent crossing the next recognized citation.
             if range.end > limit {
@@ -465,7 +472,7 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
                 // most one following explanation. Reuse the shared balanced
                 // extent reader so an explanation can contain another cite.
                 for _ in 0..2 {
-                    let Some(range) = parenthetical_at(text, at, matched_end) else { break };
+                    let Some(range) = citation_parenthetical(text, at, matched_end) else { break };
                     at = range.end;
                     if !result.parentheticals.iter().any(|part| part.span.start == range.start) {
                         result.parentheticals.push(parenthetical(text, range));

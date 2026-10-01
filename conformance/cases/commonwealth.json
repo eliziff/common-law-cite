@@ -2001,6 +2001,42 @@
     ]
    },
    "note": "The sentence period after a short-form bracket, a supra note number or an editorial bracket ends the sentence and stays outside the citation; the abbreviation period of Ibid. stays inside."
+  },
+  {
+   "name": "extent/author-remark-after-citation",
+   "input": "R v Halvorsen, 2031 ONCA 88 at para 14 (Ms. Halvorsen did not appeal the sentence). R v Pell, 2030 BCCA 12 at para 3 (concession of the Crown).",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "fullSpan": {
+       "start": 0,
+       "end": 38,
+       "text": "R v Halvorsen, 2031 ONCA 88 at para 14"
+      },
+      "style": {
+       "start": 0,
+       "end": 13,
+       "text": "R v Halvorsen"
+      }
+     },
+     {
+      "form": "full",
+      "fullSpan": {
+       "start": 84,
+       "end": 142,
+       "text": "R v Pell, 2030 BCCA 12 at para 3 (concession of the Crown)"
+      },
+      "style": {
+       "start": 84,
+       "end": 92,
+       "text": "R v Pell"
+      }
+     }
+    ]
+   },
+   "note": "A parenthetical that is the author's own sentence (a capitalized subject and a finite verb) ends the citation; a citation parenthetical such as a concession, a judge or a 'holding' phrase stays in its extent."
   }
  ]
 }

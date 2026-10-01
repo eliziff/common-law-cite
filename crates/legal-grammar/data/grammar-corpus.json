@@ -4613,6 +4613,35 @@
           ]
         },
         {
+          "id": "parenthetical.remark",
+          "pattern": "^[A-Z][^\\s,;:]*(?:\\s+[^\\s,;:]+){0,3}?\\s+(?:did|does|do|is|are|was|were|has|have|had|will|would|can|could|cannot|should|shall|may|might|must)\\b",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The content of a parenthetical that is the author's own sentence rather than part of the citation: a capitalized subject of at most four words followed by a finite auxiliary ('Mr. Moss did not argue the point'). Citation parentheticals are phrases (courts, dates, judges, 'holding ...', 'concession of the Crown'), so they stay with the citation.",
+          "vectors": [
+            {
+              "input": "Mr. Moss did not argue section 33.1",
+              "groups": {}
+            },
+            {
+              "input": "The appellant was not represented",
+              "groups": {}
+            },
+            {
+              "input": "Abella J dissenting",
+              "groups": null
+            },
+            {
+              "input": "holding that the statute is void",
+              "groups": null
+            },
+            {
+              "input": "Cory J, as he then was",
+              "groups": null
+            }
+          ]
+        },
+        {
           "id": "parenthetical.court",
           "pattern": "^(?<court>(?!(?:1[6-9]|20)\\d{2}\\b)(?:[A-Z0-9][A-Za-z0-9'&-]{0,5}\\.?|[A-Z][A-Za-z]*\\.|[A-Z][A-Z.&]{1,11})(?:(?:\\s+|(?<=\\.))(?:[A-Z0-9][A-Za-z0-9'&-]{0,5}\\.?|[A-Z][A-Za-z]*\\.|[A-Z][A-Z.&]{1,11}|of|&)){0,5}?)?\\s*,?\\s*(?<date>(?:(?:(?<day_before>1er|\\d{1,2})\\s+)?(?<month>(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?|(?:janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre))\\s+(?:(?<day>\\d{1,2}),\\s+)?)?(?<year>(?:1[6-9]|20)\\d{2})(?:-\\d{2,4})?)?$",
           "flags": "",
