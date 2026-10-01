@@ -4266,10 +4266,10 @@
         },
         {
           "id": "ref.back",
-          "pattern": "(?<ibid>\\bibid(?:em)?\\b\\.?|\\bid\\.)|\\b(?<supra>supra)\\b(?:,?\\s+(?:note|n\\.?|nn\\.?)\\s+(?<supra_note>\\d+))?\\b\\.?|\\b(?<above>above)\\s+(?:note|n\\.?)\\s+(?<above_note>\\d+)\\b|\\((?<oscola>n\\s+(?<oscola_note>\\d+))\\)|(?<precite>\\bpr[ée]cit[ée]e?s?)\\b(?:,?\\s+(?:note|n)\\s+(?<precite_note>\\d+))?|(?<opcit>\\bop\\.?\\s*cit\\.?)(?:,?\\s+(?:note|n\\.?)\\s+(?<opcit_note>\\d+))?",
+          "pattern": "(?<ibid>\\bibid(?:em)?\\b\\.?|\\bid\\.)|\\b(?<supra>supra)\\b(?:,?\\s+(?:note|n\\.?|nn\\.?)\\s+(?<supra_note>\\d+)\\b|\\.?)|\\b(?<above>above)\\s+(?:note|n\\.?)\\s+(?<above_note>\\d+)\\b|\\((?<oscola>n\\s+(?<oscola_note>\\d+))\\)|(?<precite>\\bpr[ée]cit[ée]e?s?)\\b(?:,?\\s+(?:note|n)\\s+(?<precite_note>\\d+))?|(?<opcit>\\bop\\.?\\s*cit\\.?)(?:,?\\s+(?:note|n\\.?)\\s+(?<opcit_note>\\d+))?",
           "flags": "i",
           "canonical": {},
-          "provenance": "Beaver-authored for the legal-citations extraction stages. Superset of ref.inline.toa and ref.supra-note.linking: Ibid/ibidem, eyecite's Id./id., McGill supra (with or without a note), AGLC 'above n 4', OSCOLA '(n 4)', French précité and op. cit. Each branch is named so the form and the note number are read without a second scan. McGill supra retains ref.inline.toa's terminal word boundary and optional period.",
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Superset of ref.inline.toa and ref.supra-note.linking: Ibid/ibidem, eyecite's Id./id., McGill supra (with or without a note), AGLC 'above n 4', OSCOLA '(n 4)', French précité and op. cit. Each branch is named so the form and the note number are read without a second scan. McGill supra retains ref.inline.toa's terminal word boundary; a bare supra keeps its optional period, but the period after a note number ends the sentence and stays outside the reference.",
           "vectors": [
             {
               "input": "Ibid at para 38.",
@@ -4288,6 +4288,13 @@
               "groups": {
                 "supra": "supra",
                 "supra_note": "243"
+              }
+            },
+            {
+              "input": "Wong, supra note 4. Next sentence.",
+              "groups": {
+                "supra": "supra",
+                "supra_note": "4"
               }
             },
             {

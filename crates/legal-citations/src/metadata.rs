@@ -300,16 +300,11 @@ fn parenthetical(text: &str, range: Range<usize>) -> Parenthetical {
     }
 }
 
-/// `[Hansman]` (and a following period) right after the pinpoints.
+/// `[Hansman]` right after the pinpoints. The sentence period after the
+/// bracket ends the sentence, not the citation.
 fn explicit_short_form(text: &str, start: usize, limit: usize) -> Option<(String, usize)> {
     let tail = &text[start..limit];
-    let close = tail.find(']')?;
-    let mut end = close + 1;
-    let remainder = &tail[end..];
-    let after_space = remainder.trim_start_matches(javascript_whitespace);
-    if after_space.starts_with('.') {
-        end += remainder.len() - after_space.len() + 1;
-    }
+    let end = tail.find(']')? + 1;
     let captures = SHORT_FORM_SUFFIX.captures(&tail[..end])?;
     if captures.get(0).unwrap().start() != 0 {
         return None;

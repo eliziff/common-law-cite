@@ -1936,6 +1936,71 @@
     ]
    },
    "note": "A full case's trailing court or date may follow its parallel citations, never a later citation with other text in between: the next case's bracketed year is not this case's date."
+  },
+  {
+   "name": "extent/sentence-period-outside-citation",
+   "input": "R v Tanaka, 2030 SCC 4 [Tanaka]. Fisheries Act, RSC 1985, c F-14, s 35 [Act]. Tanaka, supra note 2. Ibid at 6 [emphasis added]. Ibid.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "fullSpan": {
+       "start": 0,
+       "end": 31,
+       "text": "R v Tanaka, 2030 SCC 4 [Tanaka]"
+      },
+      "style": {
+       "start": 0,
+       "end": 10,
+       "text": "R v Tanaka"
+      }
+     },
+     {
+      "form": "full",
+      "fullSpan": {
+       "start": 33,
+       "end": 76,
+       "text": "Fisheries Act, RSC 1985, c F-14, s 35 [Act]"
+      },
+      "style": {
+       "start": 33,
+       "end": 46,
+       "text": "Fisheries Act"
+      }
+     },
+     {
+      "form": "supra",
+      "fullSpan": {
+       "start": 78,
+       "end": 98,
+       "text": "Tanaka, supra note 2"
+      },
+      "style": {
+       "start": 78,
+       "end": 84,
+       "text": "Tanaka"
+      }
+     },
+     {
+      "form": "ibid",
+      "fullSpan": {
+       "start": 100,
+       "end": 126,
+       "text": "Ibid at 6 [emphasis added]"
+      }
+     },
+     {
+      "form": "ibid",
+      "fullSpan": {
+       "start": 128,
+       "end": 133,
+       "text": "Ibid."
+      }
+     }
+    ]
+   },
+   "note": "The sentence period after a short-form bracket, a supra note number or an editorial bracket ends the sentence and stays outside the citation; the abbreviation period of Ibid. stays inside."
   }
  ]
 }
