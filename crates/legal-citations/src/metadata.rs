@@ -77,6 +77,7 @@ static SHORT_FORM_SUFFIX: LazyLock<CompiledEcmascriptGrammar> =
 static SOURCE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("parenthetical.source"));
 static REMARK: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("parenthetical.remark"));
+static RECORD: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("parenthetical.record"));
 static COURT: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("parenthetical.court"));
 static LAW_PUBLICATION: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("parenthetical.law"));
 static POST_CITATION: LazyLock<[CompiledGrammar; 3]> = LazyLock::new(|| {
@@ -288,6 +289,8 @@ fn parenthetical(text: &str, range: Range<usize>) -> Parenthetical {
     let content = text[range.start + 1..range.end - 1].trim().to_owned();
     let kind = if SOURCE.is_match(&content) {
         ParentheticalKind::Source
+    } else if RECORD.is_match(&content) {
+        ParentheticalKind::Record
     } else if !content.is_empty() && content.bytes().all(|byte| byte.is_ascii_digit()) {
         // A bare numbered subdivision after a pinpoint is not a court.
         ParentheticalKind::Explanatory

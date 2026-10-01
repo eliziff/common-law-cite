@@ -72,6 +72,47 @@ fn supra_with_explicit_short_form() {
     assert_eq!((resolution.antecedent, resolution.reason), (Some(0), "note_and_name"));
 }
 
+/// A note that cites a hearing transcript names the case but not its
+/// decision: a supra to that note, and an ibid after it, stay unresolved on
+/// both resolution paths (with and without the document's source parts),
+/// while a supra to the note citing the decision still resolves.
+#[test]
+fn references_to_a_record_document_do_not_resolve_to_the_decision() {
+    let notes = [
+        "Halvorsen v Tidewater Ferries Ltd, 2030 SCC 12 [Halvorsen].",
+        "See Halvorsen v Tidewater Ferries Ltd, 2030 SCC 12 (Transcript of hearing at 41 lines 3–8) [Halvorsen transcript].",
+        "Halvorsen transcript, supra note 2 at 44 lines 1–6.",
+        "Ibid at 45.",
+        "Halvorsen, supra note 1 at para 30.",
+    ];
+    let text = notes.join("\n\n");
+    let mut start = 0;
+    let ranges = notes.iter().enumerate().map(|(index, note)| {
+        let range = serde_json::json!({ "number": index + 1, "start": start, "end": start + note.len(), "sequence": 0 });
+        start += note.len() + 2;
+        range
+    }).collect::<Vec<_>>();
+    let extracted = legal_citations::api::call_value("extract", serde_json::json!({
+        "text": text, "options": { "resolve": false, "notes": ranges } })).unwrap();
+    let citations = extracted["citations"].as_array().unwrap();
+    let transcript = citations.iter().find(|citation| citation["fullSpan"]["text"].as_str()
+        .is_some_and(|value| value.contains("Transcript"))).unwrap();
+    assert_eq!(transcript["key"], citations[0]["key"], "the transcript's citation still names the case");
+    assert_eq!(transcript["parentheticals"][0]["kind"], "record");
+    let index = |needle: &str| citations.iter().find(|citation| citation["fullSpan"]["text"].as_str()
+        .is_some_and(|value| value.contains(needle))).unwrap()["index"].as_u64().unwrap();
+    for parts in [serde_json::json!([]), extracted["sourceParts"].clone()] {
+        let resolved = legal_citations::api::call_value("resolve", serde_json::json!({
+            "citations": extracted["citations"], "notes": ranges, "sourceParts": parts,
+            "supraHintMode": "aggressive", "supraLinkingMode": "safe" })).unwrap();
+        let antecedent = |reference: u64| resolved["resolutions"].as_array().unwrap().iter()
+            .find(|resolution| resolution["index"] == reference).unwrap()["antecedent"].clone();
+        assert_eq!(antecedent(index("supra note 2")), serde_json::Value::Null, "{parts}");
+        assert_eq!(antecedent(index("Ibid")), serde_json::Value::Null, "{parts}");
+        assert_eq!(antecedent(index("supra note 1")), citations[0]["index"], "{parts}");
+    }
+}
+
 #[test]
 fn keys_for_text() {
     assert_eq!(key_for_text("R v Jordan, 2016 SCC 27 at para 5").unwrap(), "2:neutral:2016:scc:27");

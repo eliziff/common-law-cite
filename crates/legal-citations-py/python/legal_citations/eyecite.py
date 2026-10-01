@@ -231,7 +231,7 @@ class CitationBase:
                             pin_cite=pin["text"] if pin else None)
         values: dict = dict(self._pin())
         for parenthetical in data.get("parentheticals") or []:
-            if parenthetical["kind"] == "explanatory":
+            if parenthetical["kind"] in ("explanatory", "record"):
                 values["parenthetical"] = parenthetical["content"]
                 break
         for name in ("year", "month", "day", "extra"):

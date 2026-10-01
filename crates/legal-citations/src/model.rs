@@ -172,6 +172,9 @@ pub enum ParentheticalKind {
     Explanatory,
     /// `(QL)`, `(WL Can)`, `(CanLII)`: the database the citation comes from.
     Source,
+    /// `(Transcript of hearing at 14)`, `(Factum of the Appellant at para 3)`: a
+    /// document of the proceeding's record, cited in place of its decision.
+    Record,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]

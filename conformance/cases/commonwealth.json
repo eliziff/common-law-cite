@@ -2096,6 +2096,74 @@
     ]
    },
    "note": "A parenthesized party wrapped across a line break stays one party, and the style of cause starts at the party in front of the versus, never at an earlier line end."
+  },
+  {
+   "name": "supra/record-document-note",
+   "input": "Halvorsen v Tidewater Ferries Ltd, 2030 SCC 12 [Halvorsen].\n\nSee Halvorsen v Tidewater Ferries Ltd, 2030 SCC 12 (Transcript of hearing at 41 lines 3–8) [Halvorsen transcript].\n\nHalvorsen transcript, supra note 2 at 44 lines 1–6.\n\nIbid at 45.\n\nHalvorsen, supra note 1 at para 30.",
+   "options": {
+    "notes": [
+     {
+      "number": 1,
+      "start": 0,
+      "end": 59
+     },
+     {
+      "number": 2,
+      "start": 61,
+      "end": 175
+     },
+     {
+      "number": 3,
+      "start": 177,
+      "end": 228
+     },
+     {
+      "number": 4,
+      "start": 230,
+      "end": 241
+     },
+     {
+      "number": 5,
+      "start": 243,
+      "end": 278
+     }
+    ]
+   },
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full"
+     },
+     {
+      "form": "full",
+      "parentheticals": [
+       {
+        "kind": "record"
+       }
+      ]
+     },
+     {
+      "form": "supra",
+      "fields": {
+       "note": 2
+      },
+      "antecedent": null
+     },
+     {
+      "form": "ibid",
+      "antecedent": null
+     },
+     {
+      "form": "supra",
+      "fields": {
+       "note": 1
+      },
+      "antecedent": 0
+     }
+    ]
+   },
+   "note": "A note citing a hearing transcript names the case, not its decision: a supra to that note, and an ibid after it, do not resolve to the decision; a supra to the note citing the decision does."
   }
  ]
 }

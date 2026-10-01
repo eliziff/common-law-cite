@@ -4642,6 +4642,51 @@
           ]
         },
         {
+          "id": "parenthetical.record",
+          "pattern": "^(?:transcript(?:ion)?s?|webcast)\\b|^(?:factum|memorandum\\s+of\\s+(?:fact\\s+and\\s+)?argument)\\s+of\\b",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The content of a parenthetical that names a document of the proceeding's record cited in place of its decision: a transcript or webcast of the hearing ('Transcript of hearing at 14', 'Transcription of hearing, at 3 lines 2-9'), a factum or memorandum of argument ('Factum of the Appellant at para 3'). Its pinpoints locate that document, not the reasons for judgment.",
+          "vectors": [
+            {
+              "input": "Transcript of hearing at 14",
+              "groups": {}
+            },
+            {
+              "input": "Transcription of hearing, at 3 lines 2–9 (Okafor)",
+              "groups": {}
+            },
+            {
+              "input": "Transcripts of proceedings, vol 2 at 41",
+              "groups": {}
+            },
+            {
+              "input": "Webcast of the hearing at 1:02:10",
+              "groups": {}
+            },
+            {
+              "input": "Factum of the Appellant at para 3",
+              "groups": {}
+            },
+            {
+              "input": "Memorandum of Fact and Argument of the Respondent at para 12",
+              "groups": {}
+            },
+            {
+              "input": "holding that the transcript was admissible",
+              "groups": null
+            },
+            {
+              "input": "Abella J dissenting",
+              "groups": null
+            },
+            {
+              "input": "Transcripted Records Act",
+              "groups": null
+            }
+          ]
+        },
+        {
           "id": "parenthetical.court",
           "pattern": "^(?<court>(?!(?:1[6-9]|20)\\d{2}\\b)(?:[A-Z0-9][A-Za-z0-9'&-]{0,5}\\.?|[A-Z][A-Za-z]*\\.|[A-Z][A-Z.&]{1,11})(?:(?:\\s+|(?<=\\.))(?:[A-Z0-9][A-Za-z0-9'&-]{0,5}\\.?|[A-Z][A-Za-z]*\\.|[A-Z][A-Z.&]{1,11}|of|&)){0,5}?)?\\s*,?\\s*(?<date>(?:(?:(?<day_before>1er|\\d{1,2})\\s+)?(?<month>(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?|(?:janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre))\\s+(?:(?<day>\\d{1,2}),\\s+)?)?(?<year>(?:1[6-9]|20)\\d{2})(?:-\\d{2,4})?)?$",
           "flags": "",

@@ -20,6 +20,10 @@
 //!   with the same reporter and volume;
 //!   several candidates are narrowed by name, else it stays unresolved.
 //!
+//! A full citation of a record document (`(Transcript of hearing at 14)`)
+//! names its case, so it keys and clusters with it, but a reference to it
+//! locates that document: it never resolves to the decision.
+//!
 //! Name matching reuses ALR's exact-short-form, token-short-form, verbatim
 //! and bracket-definition tiers, followed by its inferred-short-form lookup.
 //! U.S. reporter short forms use Eyecite's party-name matching primitive.
@@ -435,7 +439,7 @@ impl<'a> Resolver<'a> {
         positions.sort_unstable();
         let reference = short_forms::reference_info(&part.text);
         let full = positions.iter().map(|&(_, position)| &self.citations[position])
-            .filter(|citation| citation.form == Form::Full).collect::<Vec<_>>();
+            .filter(|citation| citation.form == Form::Full && !cites_record(citation)).collect::<Vec<_>>();
         let fallback = crate::url::source_fallback(&full, &fields, part)
             .filter(|(index, _)| full.iter().any(|citation| citation.index == *index && !citation.is_ambiguous()));
         // ALR _deterministic_footnote_parts clears explicit URLs on reference
@@ -545,7 +549,7 @@ impl<'a> Resolver<'a> {
         record_full: bool) {
         let citation = &self.citations[position];
         if citation.form == Form::Full {
-            self.resolved[position] = (!citation.is_ambiguous())
+            self.resolved[position] = (!citation.is_ambiguous() && !cites_record(citation))
                 .then_some(Target::Authority(self.full_authority[position]));
             self.done[position] = true;
             if record_full {
@@ -701,7 +705,10 @@ impl<'a> Resolver<'a> {
         if candidates.is_empty() { return (None, "note_without_authority"); }
         let Some(hint) = reference_name(citation) else {
             let authority = candidates[0].0;
-            return if candidates.iter().all(|&(candidate, _)| candidate == authority) {
+            let record = (0..self.citations.len()).any(|other| self.done[other]
+                && self.note_of[other] == Some(*target) && self.citations[other].form == Form::Full
+                && cites_record(&self.citations[other]));
+            return if !record && candidates.iter().all(|&(candidate, _)| candidate == authority) {
                 (Some(authority), "note_only")
             } else { (None, "ambiguous_note") };
         };
@@ -754,10 +761,12 @@ impl<'a> Resolver<'a> {
         self.name_in_registry(&hint, registry, &candidates, true)
     }
 
-    /// `(authority, position)` of every full citation read before `position`.
+    /// `(authority, position)` of every full citation read before `position`
+    /// that a reference can name: a record document's citation is not one.
     fn earlier_full(&self, position: usize) -> impl Iterator<Item = (usize, usize)> + '_ {
         (0..self.citations.len())
-            .filter(move |&other| other != position && self.done[other] && self.citations[other].form == Form::Full)
+            .filter(move |&other| other != position && self.done[other] && self.citations[other].form == Form::Full
+                && !cites_record(&self.citations[other]))
             .map(|other| (self.full_authority[other], other))
     }
 
@@ -936,6 +945,11 @@ fn source_chain_origins(history: &History, hint_mode: SupraMode) -> HashMap<usiz
         }
     }
     parts.into_iter().zip(origins).map(|((part, _), origin)| (part, origin)).collect()
+}
+
+/// A citation of a document of the proceeding's record, not of its decision.
+fn cites_record(citation: &Citation) -> bool {
+    citation.parentheticals.iter().any(|part| part.kind == crate::ParentheticalKind::Record)
 }
 
 fn is_us(citation: &Citation) -> bool {

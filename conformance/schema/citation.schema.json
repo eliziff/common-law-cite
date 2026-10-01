@@ -173,7 +173,8 @@
             "court",
             "date",
             "explanatory",
-            "source"
+            "source",
+            "record"
           ]
         },
         "span": {

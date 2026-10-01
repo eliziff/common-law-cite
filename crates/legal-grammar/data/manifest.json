@@ -1,7 +1,7 @@
 {
   "format": "legal-grammar-manifest:v1",
   "corpus": "grammar-corpus.json",
-  "sha256": "f12eba1d99444a9ecaa2770ac1be4f8d2bd394ed24bd3ab5cbedd9216dfaa95b",
+  "sha256": "3ce214d65aadb50fc41b9a4250b232f52a1874e3ea4676731a0242d5851a5223",
   "tables": [
     "citations",
     "excerpt",
@@ -11,6 +11,6 @@
     "references",
     "styles"
   ],
-  "entries": 282,
-  "vectors": 649
+  "entries": 283,
+  "vectors": 658
 }
