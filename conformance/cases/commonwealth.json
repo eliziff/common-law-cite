@@ -2638,6 +2638,44 @@
     ]
    },
    "note": "A registered journal written (year), volume keeps its author and title."
+  },
+  {
+   "name": "journal/title-closed-twice",
+   "input": "Ann Roe, “The History of Fens\"” (2003) 9 Fen L 97 at 111.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "journal",
+      "style": {
+       "start": 0,
+       "end": 31,
+       "text": "Ann Roe, “The History of Fens\"”"
+      }
+     }
+    ]
+   },
+   "note": "A title closed on a straight mark doubled by a curly one keeps its author."
+  },
+  {
+   "name": "book/edition-ed-by",
+   "input": "Jeremy Fenn, Of Reeds in General, ed by Ola Marsh (London: Fen Press, 1970) at 152.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "book",
+      "style": {
+       "start": 0,
+       "end": 49,
+       "text": "Jeremy Fenn, Of Reeds in General, ed by Ola Marsh"
+      }
+     }
+    ]
+   },
+   "note": "An edition 'ed by' its editor is a monograph, not a chapter in a collection."
   }
  ]
 }

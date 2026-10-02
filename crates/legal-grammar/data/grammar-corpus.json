@@ -5139,10 +5139,10 @@
         },
         {
           "id": "title.book-chapter",
-          "pattern": "[\\\"”“]\\s*,?\\s+(?:in|dans)\\s+[A-ZÀ-ÖØ-Þ].*\\b(?:eds?|éds?|dir)\\b\\.?|\\b(?:in|dans)\\s+[A-ZÀ-ÖØ-Þ][^,]{0,80},\\s*(?:eds?|éds?|dir)\\b\\.?",
+          "pattern": "[\\\"”“]\\s*,?\\s+(?:in|dans)\\s+[A-ZÀ-ÖØ-Þ].*\\b(?:eds?|éds?|dir)\\b\\.?|\\b(?:in|dans)\\s+[A-ZÀ-ÖØ-Þ][^,]{0,80},\\s*(?:eds?|éds?|dir)\\b\\.?(?!\\s*(?:by|par)\\b)",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored for the legal-citations extraction stages. The 'in Editor, ed, Title' lead-in that makes a work cited with a book imprint a chapter of an edited collection rather than a monograph (the essay_collection test in legal-pdf-language deterministic_citations.rs kind()).",
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The 'in Editor, ed, Title' lead-in that makes a work cited with a book imprint a chapter of an edited collection rather than a monograph (the essay_collection test in legal-pdf-language deterministic_citations.rs kind()). An edition 'ed by' its editor ('Of Reeds in General, ed by Ola Marsh') is a monograph's, not a collection's.",
           "vectors": [
             {
               "input": "Kasperbauer, \"Killing\" in Visak, ed, The Ethics of Killing",
@@ -5154,6 +5154,10 @@
             },
             {
               "input": "Peter Hogg, Constitutional Law of Canada",
+              "groups": null
+            },
+            {
+              "input": "Jeremy Fenn, Of Reeds in General, ed by Ola Marsh",
               "groups": null
             }
           ]
@@ -5991,10 +5995,10 @@
         },
         {
           "id": "style.quoted-work",
-          "pattern": "(?s)(?<work>[\\p{Lu}][\\p{L}\\p{M}\\p{N}.'’&-]*(?:,?\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'’&-]*|&|et|al|eds?|de|la|du|des|van|von|di|le|del|della|da|dos|das|der|of|the|and|for|in|on)){0,15},?\\s*[\"“][^\"“”\\n]{0,300}(?:“[^\"“”\\n]{1,200}”[^\"“”\\n]{0,300})?(?:”[^\"“”\\n]{1,300})?[\"”][^\"“”\\n]{0,120})\\s*$",
+          "pattern": "(?s)(?<work>[\\p{Lu}][\\p{L}\\p{M}\\p{N}.'’&-]*(?:,?\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'’&-]*|&|et|al|eds?|de|la|du|des|van|von|di|le|del|della|da|dos|das|der|of|the|and|for|in|on)){0,15},?\\s*[\"“](?:[^\"“”\\n]{1,300}(?:“[^\"“”\\n]{1,200}”[^\"“”\\n]{0,300})?|“[^\"“”\\n]{1,200}”[^\"“”\\n]{0,300})(?:”[^\"“”\\n]{1,300})?[\"”]{1,2}[^\"“”\\n]{0,120})\\s*$",
           "flags": "",
           "canonical": {},
-          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::QUOTED_WORK, copied verbatim with native Rust regex semantics. Changed in two places: the title may hold one nested quotation written with the same double marks, opening it (““A”: B”), closed inside it (“A “B” C”) or with its opening mark merged into the title's (“A”: B”), so the author and title stay with the publication block; and an author's name may hold the particles del, della, da, dos, das and der (Ana del Lago).",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::QUOTED_WORK, copied verbatim with native Rust regex semantics. Changed in two places: the title may hold one nested quotation written with the same double marks, opening it (““A”: B”), closed inside it (“A “B” C”) or with its opening mark merged into the title's (“A”: B”), so the author and title stay with the publication block, and it may close on a straight mark doubled by a curly one; and an author's name may hold the particles del, della, da, dos, das and der (Ana del Lago).",
           "vectors": [
             {
               "input": "Jane Doe, “A Title; With a Subtitle” ",
@@ -6035,13 +6039,23 @@
               "groups": {
                 "work": "Ana del Lago & Ida Wren, “Fen Reports” "
               }
+            },
+            {
+              "input": "Ann Roe, “The History of Fens\"” ",
+              "groups": {
+                "work": "Ann Roe, “The History of Fens\"” "
+              }
+            },
+            {
+              "input": "The History of Fens \"” ",
+              "groups": null
             }
           ],
           "rust": true
         },
         {
           "id": "style.quoted-title",
-          "pattern": "^\\s*(?<work>[\"“][^\"“”\\n]{0,300}(?:“[^\"“”\\n]{1,200}”[^\"“”\\n]{0,300})?(?:”[^\"“”\\n]{1,300})?[\"”][^\"“”\\n]{0,120})\\s*$",
+          "pattern": "^\\s*(?<work>[\"“](?:[^\"“”\\n]{1,300}(?:“[^\"“”\\n]{1,200}”[^\"“”\\n]{0,300})?|“[^\"“”\\n]{1,200}”[^\"“”\\n]{0,300})(?:”[^\"“”\\n]{1,300})?[\"”]{1,2}[^\"“”\\n]{0,120})\\s*$",
           "flags": "",
           "canonical": {},
           "provenance": "Beaver-authored sibling of style.quoted-work for an unsigned work (a news item, an editorial note) that opens with its quoted title: “Title” Publisher (date), online: <...>. find.rs matches it only from where the work begins, past the floor, a note number and any signal, so a quotation in running text before a citation is never styled as a work.",
@@ -6062,12 +6076,16 @@
             {
               "input": "the court said “no” and ",
               "groups": null
+            },
+            {
+              "input": "“” Fen Wire ",
+              "groups": null
             }
           ]
         },
         {
           "id": "style.authored-work",
-          "pattern": "(?<work>[\\p{Lu}][\\p{L}\\p{M}\\p{N}.'’&-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'’&-]*|&|and|et|al|de|la|du|des|van|von|di|le|del|della|da|dos|das|der|of|the|for)){0,12}(?:,\\s+eds?\\.?)?,\\s+[\\p{Lu}\\p{N}][^\"“”\\n;]{0,300}?)\\s*,?\\s*$",
+          "pattern": "(?<work>[\\p{Lu}][\\p{L}\\p{M}\\p{N}.'’&-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'’&-]*|&|and|et|al|de|la|du|des|van|von|di|le|del|della|da|dos|das|der|of|the|for|in|on)){0,12}(?:,\\s+eds?\\.?)?,\\s+[\\p{Lu}\\p{N}][^\"“”\\n;]{0,300}?)\\s*,?\\s*$",
           "flags": "",
           "canonical": {},
           "provenance": "Beaver-authored, tried after style.quoted-work and before style.plain-work: a monograph, report or web page styled 'Author, Title' whose title is written in sentence case or holds a parenthesis or an identifier ('Lou Park, Telling the Story of Moss', 'Fen Board, Review of the Reed Act (Water Levels) 2019', 'Moss Registry Deskbook, Catalogue No M41-7/2031E-PDF'). The author is a run of capitalized names before the first comma; the title starts capitalized and runs to the publication block.",
@@ -6106,6 +6124,12 @@
             {
               "input": "as the court held, the reeds were drained ",
               "groups": null
+            },
+            {
+              "input": "Single Convention on Reeds, 1971 as amended by the Protocol of 1980 ",
+              "groups": {
+                "work": "Single Convention on Reeds, 1971 as amended by the Protocol of 1980"
+              }
             }
           ]
         },
