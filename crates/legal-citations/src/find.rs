@@ -1503,7 +1503,10 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
             }
         };
         if enrich {
-            commented_work(text, &mut citation, &citations, &floors);
+            if let Some(subject) = commented_work(text, &mut citation, &citations, &floors) {
+                citations.truncate(subject);
+                floors.truncate(subject);
+            }
             citation.signal = signal(text, floor, citation.full_span.start);
         }
         // LSP's style floor follows the native pinpoint/short-form suffix;
@@ -1542,38 +1545,41 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
 }
 
 /// A commentary on a decision or another work ("Kim Day, “A Missed Turn”, Case
-/// Comment on R v Fir, 2030 BCCA 431 (2032) 48:2 Imag Law Rev 233"): the
-/// commented citation sits between the commentary's title and its publication
-/// block, so the commentary is styled from its author and title in front of
-/// that subject, which stays a citation of its own.
-fn commented_work(text: &str, citation: &mut Citation, previous: &[Citation], floors: &[usize]) {
+/// Comment on R v Fir, 2030 BCCA 431 (2032) 48:2 Imag Law Rev 233") is one
+/// citation: the commented decision, written between the commentary's title
+/// and its publication block, is its subject, not an authority of its own. The
+/// commentary is styled from its author and title; the position of its subject
+/// (and any parallel citation of it) among `previous` is returned, so they can
+/// be dropped.
+fn commented_work(text: &str, citation: &mut Citation, previous: &[Citation], floors: &[usize]) -> Option<usize> {
     if citation.form != Form::Full || citation.style.is_some()
         || !matches!(citation.authority, Authority::Journal | Authority::Book | Authority::BookChapter) {
-        return;
+        return None;
     }
-    // The subject and any parallel citation of it, back from the commentary's block.
     let mut end = citation.span.start;
     for (at, subject) in previous.iter().enumerate().rev() {
         if subject.form != Form::Full || subject.full_span.end > end
             || !text[subject.full_span.end..end].chars().all(|character| character == ',' || javascript_whitespace(character)) {
-            return;
+            return None;
         }
         let floor = floors[at].min(subject.full_span.start);
         if let Some(lead) = COMMENTED_SUBJECT.find(&text[floor..subject.full_span.start]) {
             let lead = floor + lead.start();
             let start = work_style_start(text, lead, floor);
-            if start < lead {
-                let style = span(text, start..trim_style_end(text, start, citation.span.start));
-                citation.short_name = Some(style.text.trim_matches(|character: char|
-                    javascript_whitespace(character) || ",;:.".contains(character)).to_owned());
-                citation.style = Some(style);
-                citation.full_span = span(text, start..citation.full_span.end);
-                citation.reasons.push("same_text_style".to_owned());
+            if start >= lead {
+                return None;
             }
-            return;
+            let style = span(text, start..trim_style_end(text, start, citation.span.start));
+            citation.short_name = Some(style.text.trim_matches(|character: char|
+                javascript_whitespace(character) || ",;:.".contains(character)).to_owned());
+            citation.style = Some(style);
+            citation.full_span = span(text, start..citation.full_span.end);
+            citation.reasons.push("same_text_style".to_owned());
+            return Some(at);
         }
         end = subject.full_span.start;
     }
+    None
 }
 
 /// A link written after a citation and its pinpoint and introduced as where the

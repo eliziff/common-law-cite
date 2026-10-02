@@ -2717,6 +2717,31 @@
           ]
         },
         {
+          "id": "cue.heading-trailing-date",
+          "pattern": "\\b(?:\\d{1,2}(?:st|nd|rd|th)?\\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?,?|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+\\d{1,2}(?:st|nd|rd|th)?,?)\\s+(?:17|18|19|20)\\d{2}\\s*[.,;]?\\s*$",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored for heading_text_plausible: a title ending in the date it bears (ORDER DATED 3 MARCH 2030, Reasons Delivered March 3, 2030) ends in a year, not in a page or list number; cues.rs lets it past cue.heading-trailing-digit when two or more capitalized words run on into the date, not a place or a label set before it (Ottawa, 3 March 2030; DATE: 3 MARCH 2030). Such a title read as a heading while a capitalized date was misread as a dated citation; a date is now never a citation.",
+          "vectors": [
+            {
+              "input": "ORDER DATED 3 MARCH 2030",
+              "groups": {}
+            },
+            {
+              "input": "Reasons Delivered March 3, 2030.",
+              "groups": {}
+            },
+            {
+              "input": "Contents 12",
+              "groups": null
+            },
+            {
+              "input": "Part 3.",
+              "groups": null
+            }
+          ]
+        },
+        {
           "id": "cue.heading-possessive",
           "pattern": "([A-Za-z])['’]s\\b",
           "flags": "i",
@@ -4367,7 +4392,7 @@
           "pattern": ",?\\s*\\b(?:case\\s+comment\\s+on|comment\\s+on|note\\s+on|book\\s+review\\s+of)\\s*$",
           "flags": "i",
           "canonical": {},
-          "provenance": "Beaver-authored for the legal-citations extraction stages, after McGill's case comment and book review forms: Author, “Title”, Case Comment on R v Fir, 2030 BCCA 431 (2032) 48:2 Imag Law Rev 233. Matched at the end of the text in front of the commented citation, it joins the commentary's author and title to its own publication block across that citation, which stays a citation of its own.",
+          "provenance": "Beaver-authored for the legal-citations extraction stages, after McGill's case comment and book review forms: Author, “Title”, Case Comment on R v Fir, 2030 BCCA 431 (2032) 48:2 Imag Law Rev 233. Matched at the end of the text in front of the commented citation, it makes that citation the commentary's subject, part of the commentary's one citation (one part, as the ALR split gold reads a case comment), styled from the commentary's author and title.",
           "vectors": [
             {
               "input": "Kim Day, “A Missed Turn”, Case Comment on ",

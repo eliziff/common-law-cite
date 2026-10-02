@@ -2418,25 +2418,16 @@
        "start": 0,
        "end": 64,
        "text": "Kim Day, “A Missed Turn”, Case Comment on R v Fir, 2030 BCCA 431"
-      }
-     },
-     {
-      "form": "full",
-      "authority": "case",
-      "style": {
-       "start": 42,
-       "end": 49,
-       "text": "R v Fir"
       },
       "fullSpan": {
-       "start": 42,
-       "end": 64,
-       "text": "R v Fir, 2030 BCCA 431"
+       "start": 0,
+       "end": 93,
+       "text": "Kim Day, “A Missed Turn”, Case Comment on R v Fir, 2030 BCCA 431 (2032) 48:2 Imag Law Rev 233"
       }
      }
     ]
    },
-   "note": "A case comment keeps its author and title across the decision it comments on, which stays a citation."
+   "note": "A case comment is one citation, styled from its author and title; the decision it comments on is its subject, not an authority of its own."
   },
   {
    "name": "book/link-after-pinpoint",

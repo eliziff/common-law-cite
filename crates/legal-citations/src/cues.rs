@@ -255,6 +255,8 @@ static CROSSREF_STOPWORD: LazyLock<CompiledEcmascriptGrammar> =
 static COUNTER_NOUN: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| cue("cue.counter-noun"));
 static TRAILING_DIGIT: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| cue("cue.heading-trailing-digit"));
+static TRAILING_DATE: LazyLock<CompiledEcmascriptGrammar> =
+    LazyLock::new(|| cue("cue.heading-trailing-date"));
 static POSSESSIVE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| cue("cue.heading-possessive"));
 
@@ -516,7 +518,16 @@ fn heading_text_plausible_in(value: &str, expanded: bool) -> bool {
     let Some(first) = text.chars().next() else {
         return false;
     };
-    if !first.is_alphabetic() || !first.is_uppercase() || TRAILING_DIGIT.is_match(text) {
+    // A line ending in a number is a list item or a citation, unless the number
+    // is the year of the date a title bears ("ORDER DATED 3 MARCH 2030"): two
+    // or more capitalized words run on into the date, not a place or a label
+    // set before it ("Ottawa, 3 March 2030", "DATE: 3 MARCH 2030").
+    let dated_title = TRAILING_DATE.find(text).is_some_and(|date| {
+        let title = text[..date.start()].trim_end();
+        !title.ends_with([',', ':']) && title.split_whitespace()
+            .filter(|word| word.chars().next().is_some_and(char::is_uppercase)).count() >= 2
+    });
+    if !first.is_alphabetic() || !first.is_uppercase() || (TRAILING_DIGIT.is_match(text) && !dated_title) {
         return false;
     }
     let citation_text = POSSESSIVE.replace_all(text, "$1");
@@ -672,6 +683,11 @@ mod tests {
         assert!(!heading_text_plausible("R v Jordan, 2016 SCC 27"));
         assert!(!heading_text_plausible("Part 3"));
         assert!(!heading_text_plausible("the court held that"));
+        assert!(layout_heading_text_plausible("ORDER DATED 3 MARCH 2030"));
+        assert!(heading_text_plausible("Reasons Delivered March 3, 2030"));
+        assert!(!layout_heading_text_plausible("DATE: 3 MARCH 2030"));
+        assert!(!layout_heading_text_plausible("Ottawa, Ontario, 3 March 2030"));
+        assert!(!layout_heading_text_plausible("Contents 12"));
         assert!(is_citation_shaped_tail(" SCR 631"));
         assert!(!is_citation_shaped_tail(" the court held"));
         let text = "as held in Jordan, supra note 4";
