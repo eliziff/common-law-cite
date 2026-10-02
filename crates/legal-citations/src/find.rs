@@ -95,6 +95,8 @@ fn backtracking(id: &str) -> CompiledGrammar {
 
 static CITATION_PATTERN: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.in-text"));
+static REPORTER_MONTH: LazyLock<CompiledEcmascriptGrammar> =
+    LazyLock::new(|| linear("cite.reporter.month"));
 // These source-owned styles retain LSP's native Unicode regex semantics.
 static CASE_NAME: LazyLock<Regex> = LazyLock::new(|| linear("style.case-name"));
 static SIGNAL_PREFIX: LazyLock<CompiledEcmascriptGrammar> =
@@ -186,9 +188,18 @@ static TRAILING_DATE: LazyLock<CompiledEcmascriptGrammar> =
 // the styled part of a secondary source sitting in front of its publication
 // block.
 static QUOTED_WORK: LazyLock<Regex> = LazyLock::new(|| linear("style.quoted-work"));
+// An unsigned work that opens with its quoted title.
+static QUOTED_TITLE: LazyLock<Regex> = LazyLock::new(|| linear("style.quoted-title"));
+// "Author, Title" when the title is written in sentence case or holds a
+// parenthesis or an identifier.
+static AUTHORED_WORK: LazyLock<Regex> = LazyLock::new(|| linear("style.authored-work"));
 // The same styled part when the work carries no quoted title: a monograph, a
 // debate record, a dictionary.
 static PLAIN_WORK: LazyLock<Regex> = LazyLock::new(|| linear("style.plain-work"));
+// "…", Case Comment on <decision>: the words that make a citation the subject
+// of the commentary cited after it.
+static COMMENTED_SUBJECT: LazyLock<CompiledEcmascriptGrammar> =
+    LazyLock::new(|| linear("attach.commented-subject"));
 static REPRINT: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("ref.reprint"));
 static REPRINT_LOCATION: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("ref.reprint.location"));
 // The words that introduce a work's link: "(June 2006), online: <".
@@ -450,6 +461,24 @@ fn citation_anchors(value: &str, extended_us: bool, scopes: &[usize], enrich: bo
     }
     anchors.extend(additional);
     anchors.sort_by_key(|anchor| anchor.span.start);
+    // A (year) volume publication page block keeps the family its publication
+    // names, as one holding a citation core does above, so it is styled as that
+    // family is: a law report or a court's identifier by the parties ("Lark v
+    // Lark (2003) 2 SCR 118", "Doe (AB) v Roe (CD) (2029) ABQB 812"), a
+    // periodical by the author and title in front of it ("…, “Fen Law” (2027),
+    // 71 Crim LQ 212").
+    for anchor in &mut anchors {
+        let read = anchor.reading.as_ref().map(|reading| reading.family().0);
+        let family = match (anchor.family, read) {
+            (Some(("journal", reason)), Some("case")) => Some(("case", reason)),
+            (Some(("case", reason)), Some("journal")) => Some(("journal", reason)),
+            _ => continue,
+        };
+        let core = &value[anchor.span.clone()];
+        if JOURNAL_ARTICLE.find(core).ok().flatten().is_some_and(|block| block.start() == 0 && block.end() == core.len()) {
+            anchor.family = family;
+        }
+    }
     anchors
 }
 
@@ -463,25 +492,7 @@ pub(crate) fn citation_hits(value: &str, extended_us: bool) -> Vec<Hit> {
 fn primary_ranges(value: &str) -> (Vec<Hit>, Vec<Hit>) {
     let mut found = CITATION_PATTERN
         .find_iter(value)
-        .filter(|matched| {
-            !matches!(
-                matched.as_str().split_whitespace().nth(1),
-                Some(
-                    "January"
-                        | "February"
-                        | "March"
-                        | "April"
-                        | "May"
-                        | "June"
-                        | "July"
-                        | "August"
-                        | "September"
-                        | "October"
-                        | "November"
-                        | "December"
-                )
-            )
-        })
+        .filter(|matched| !month_reporter(matched.as_str()))
         .map(|matched| matched.start()..matched.end())
         .collect::<Vec<_>>();
     // LSP citation_hits completes reports only at an already recognized start.
@@ -493,6 +504,18 @@ fn primary_ranges(value: &str) -> (Vec<Hit>, Vec<Hit>) {
         }
     }
     (found, reporters)
+}
+
+/// A date the in-text grammar read as volume, reporter and page ("12 Feb 2030",
+/// "[2030] May 5"): a month name is never an unregistered reporter, though one
+/// written exactly as a registered reporter is ("12 APR 345").
+fn month_reporter(hit: &str) -> bool {
+    REPORTER_MONTH.captures(hit).and_then(|captures| captures.name("month")).is_some_and(|month| {
+        let month = month.as_str();
+        !crate::registry::registry().reporters_by_surface(month).iter().any(|(reporter, _)|
+            reporter.editions.iter().any(|edition| edition.abbreviation == month)
+                || reporter.variations.contains_key(month))
+    })
 }
 
 /// Trim a candidate styled start: drop any leading signal ("See also", "Cf")
@@ -566,12 +589,42 @@ pub(crate) fn top_level(window: &str) -> Vec<bool> {
 
 /// Raise `floor` past the last semicolon or sentence end before the
 /// anchor, so a styled span never reaches back over the delimiter that
-/// separates it from the authority in front of it.
+/// separates it from the authority in front of it. A title's own punctuation
+/// is no such delimiter: one inside a quotation the window holds whole ("Why
+/// Ferns? Notes on …", "Reeds; or, …") is passed over.
 fn styled_floor(text: &str, floor: usize, core_start: usize) -> usize {
+    let window = &text[floor..core_start];
+    let quoted = quotations(window);
     STYLED_FLOOR
-        .find_iter(&text[floor..core_start])
+        .find_iter(window)
+        .filter(|matched| !quoted.iter().any(|quote| quote.start < matched.start() && matched.end() <= quote.end))
         .last()
         .map_or(floor, |matched| floor + matched.end())
+}
+
+/// The quotations `window` holds whole, each from its opening mark to the mark
+/// that closes it. Curly quotations nest; straight ones pair in turn.
+fn quotations(window: &str) -> Vec<Hit> {
+    let mut found = Vec::new();
+    let (mut depth, mut opened, mut straight) = (0usize, 0, None);
+    for (at, character) in window.char_indices() {
+        match character {
+            '\u{201c}' => {
+                if depth == 0 { opened = at; }
+                depth += 1;
+            }
+            '\u{201d}' if depth > 0 => {
+                depth -= 1;
+                if depth == 0 { found.push(opened..at); }
+            }
+            '"' if depth == 0 => match straight.take() {
+                Some(start) => found.push(start..at),
+                None => straight = Some(at),
+            },
+            _ => {}
+        }
+    }
+    found
 }
 
 fn scope_floor(scopes: &[usize], at: usize) -> usize {
@@ -621,7 +674,32 @@ fn work_style_start(text: &str, core_start: usize, floor: usize) -> usize {
     if quoted < core_start {
         return quoted;
     }
+    // An unsigned work opens with its quoted title where the work begins: past
+    // the floor, a note number and any signal, never in running text.
+    let floor = styled_floor(text, floor, core_start);
+    let blank = text[floor..core_start].len() - text[floor..core_start].trim_start_matches(javascript_whitespace).len();
+    if let Some(opening) = style_span_start(text, floor + blank, core_start) {
+        if let Some(work) = QUOTED_TITLE.captures(&text[opening..core_start]).and_then(|captures| captures.name("work")) {
+            return opening + work.start();
+        }
+    }
+    let authored = matched_style(&AUTHORED_WORK, "work", text, core_start, floor);
+    if authored < core_start {
+        return authored;
+    }
     matched_style(&PLAIN_WORK, "work", text, core_start, floor)
+}
+
+/// Past the label of a numbered paragraph and a leading "In" that open the
+/// sentence a case is cited in ("In R v Oak-Elm, 2030 BCPC 512", "12. Smith
+/// v Jones"): neither is part of its style of cause.
+fn past_lead_in(text: &str, start: usize, core_start: usize) -> usize {
+    let lead = CASE_LEAD_IN.find(&text[start..core_start]).map_or(0, |matched| matched.end());
+    if lead > 0 && text[start + lead..].starts_with(|character: char| character.is_uppercase()) {
+        start + lead
+    } else {
+        start
+    }
 }
 
 fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
@@ -646,7 +724,8 @@ fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
     else {
         return core_start;
     };
-    style_span_start(text, floor + left.start(), core_start).unwrap_or(core_start)
+    style_span_start(text, floor + left.start(), core_start)
+        .map_or(core_start, |start| past_lead_in(text, start, core_start))
 }
 
 /// The case name or author written in front of a `supra`, `(n 4)` or U.S.
@@ -655,11 +734,7 @@ fn antecedent_name(text: &str, core_start: usize, floor: usize) -> Option<Hit> {
     let floor = styled_floor(text, floor, core_start);
     let captures = ANTECEDENT_NAME.captures(&text[floor..core_start])?;
     let name = captures.name("name")?;
-    let mut start = style_span_start(text, floor + name.start(), core_start)?;
-    let lead = CASE_LEAD_IN.find(&text[start..core_start]).map_or(0, |matched| matched.end());
-    if lead > 0 && text[start + lead..].starts_with(|character: char| character.is_uppercase()) {
-        start += lead;
-    }
+    let start = past_lead_in(text, style_span_start(text, floor + name.start(), core_start)?, core_start);
     let end = floor + name.end();
     // Removing a signal can consume the entire captured name.
     if start >= end { return None; }
@@ -1387,6 +1462,7 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
         source_spans.get(next).is_none_or(|span| *at < span.start)
     }).collect();
     let mut citations = Vec::with_capacity(cores.len());
+    let mut floors = Vec::with_capacity(cores.len());
     let mut previous_end = 0;
     for (index, core) in cores.iter().enumerate() {
         let scope_end = if options.notes.is_some() {
@@ -1426,7 +1502,10 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
                 citation
             }
         };
-        if enrich { citation.signal = signal(text, floor, citation.full_span.start); }
+        if enrich {
+            commented_work(text, &mut citation, &citations, &floors);
+            citation.signal = signal(text, floor, citation.full_span.start);
+        }
         // LSP's style floor follows the native pinpoint/short-form suffix;
         // source parentheticals retain their independent full extent. Every
         // citation is a floor, so a style never reaches back into a preceding
@@ -1434,6 +1513,7 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
         previous_end = citation.fields.explicit_short_span.as_ref().or(citation.fields.pin_cite.as_ref())
             .map_or(core.span.end, |suffix| suffix.end.max(core.span.end));
         citations.push(citation);
+        floors.push(floor);
     }
     // Eyecite's IdToken/SupraToken discovery is independent of LSP's longer
     // note-reference core: a source token can survive an overlapping native
@@ -1449,7 +1529,7 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
         citation.fields.inline_reference = None;
         citations.push(citation);
     }
-    let mut citations = join_legislation(text, citations);
+    let mut citations = join_links(text, join_legislation(text, citations));
     if enrich {
         let references = case_name_references(text, &citations, markup);
         citations.extend(references);
@@ -1459,6 +1539,61 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
         citation.index = index;
     }
     citations
+}
+
+/// A commentary on a decision or another work ("Kim Day, “A Missed Turn”, Case
+/// Comment on R v Fir, 2030 BCCA 431 (2032) 48:2 Imag Law Rev 233"): the
+/// commented citation sits between the commentary's title and its publication
+/// block, so the commentary is styled from its author and title in front of
+/// that subject, which stays a citation of its own.
+fn commented_work(text: &str, citation: &mut Citation, previous: &[Citation], floors: &[usize]) {
+    if citation.form != Form::Full || citation.style.is_some()
+        || !matches!(citation.authority, Authority::Journal | Authority::Book | Authority::BookChapter) {
+        return;
+    }
+    // The subject and any parallel citation of it, back from the commentary's block.
+    let mut end = citation.span.start;
+    for (at, subject) in previous.iter().enumerate().rev() {
+        if subject.form != Form::Full || subject.full_span.end > end
+            || !text[subject.full_span.end..end].chars().all(|character| character == ',' || javascript_whitespace(character)) {
+            return;
+        }
+        let floor = floors[at].min(subject.full_span.start);
+        if let Some(lead) = COMMENTED_SUBJECT.find(&text[floor..subject.full_span.start]) {
+            let lead = floor + lead.start();
+            let start = work_style_start(text, lead, floor);
+            if start < lead {
+                let style = span(text, start..trim_style_end(text, start, citation.span.start));
+                citation.short_name = Some(style.text.trim_matches(|character: char|
+                    javascript_whitespace(character) || ",;:.".contains(character)).to_owned());
+                citation.style = Some(style);
+                citation.full_span = span(text, start..citation.full_span.end);
+                citation.reasons.push("same_text_style".to_owned());
+            }
+            return;
+        }
+        end = subject.full_span.start;
+    }
+}
+
+/// A link written after a citation and its pinpoint and introduced as where the
+/// work is read ("…, s 4, online (pdf): [perma.cc/…]", "… at 12, online:
+/// <https://…>") belongs to that citation, not to a source of its own.
+fn join_links(text: &str, citations: Vec<Citation>) -> Vec<Citation> {
+    let mut joined: Vec<Citation> = Vec::with_capacity(citations.len());
+    for citation in citations {
+        let link = citation.form == Form::Full && citation.authority == Authority::Webpage && citation.style.is_none();
+        let Some(previous) = joined.last_mut().filter(|previous| link && previous.form == Form::Full
+            && previous.full_span.end <= citation.full_span.start
+            && LINK_LEAD.find(&text[previous.full_span.end..citation.full_span.start]).ok().flatten()
+                .is_some_and(|lead| lead.start() == 0 && previous.full_span.end + lead.end() == citation.full_span.start)) else {
+            joined.push(citation);
+            continue;
+        };
+        previous.full_span = span(text, previous.full_span.start..citation.full_span.end);
+        previous.fields.url = previous.fields.url.take().or(citation.fields.url);
+    }
+    joined
 }
 
 /// A statute's title and the chapter citation written right after it are one

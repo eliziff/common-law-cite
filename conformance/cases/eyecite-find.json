@@ -5310,7 +5310,7 @@
   {
    "name": "FindTest.test_find_citations#72",
    "input": "In Viking River Cruises v. Moriana (2022) _ U.S. _ [213 L.Ed.2d 179, 200-201] (Viking River)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -5322,7 +5322,7 @@
        "text": "213 L.Ed.2d 179"
       },
       "fullSpan": {
-       "start": 0,
+       "start": 3,
        "end": 76
       },
       "fields": {
@@ -5374,7 +5374,8 @@
       }
      }
     ]
-   }
+   },
+   "divergence": "A leading 'In' opens the sentence, not the style of cause: the engine starts the citation at the case name, as eyecite does when a comma follows the name (test_find_citations#118). Eyecite starts it at 'In' only when no comma follows."
   },
   {
    "name": "FindTest.test_find_citations#73",
@@ -8398,7 +8399,7 @@
        "text": "1 U.S. 1"
       },
       "fullSpan": {
-       "start": 0,
+       "start": 3,
        "end": 22
       },
       "fields": {
@@ -8465,7 +8466,8 @@
       }
      }
     ]
-   }
+   },
+   "divergence": "A leading 'In' opens the sentence, not the style of cause: the engine starts the citation at the case name, as eyecite does when a comma follows the name (test_find_citations#118). Eyecite starts it at 'In' only when no comma follows."
   },
   {
    "name": "FindTest.test_find_citations#118",

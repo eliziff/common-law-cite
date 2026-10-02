@@ -70,6 +70,53 @@
           ]
         },
         {
+          "id": "cite.reporter.month",
+          "pattern": "^[\\[(]?\\d{1,4}[\\])]?,?\\s+(?<month>(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?)\\s+\\d",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. A cite.in-text hit whose reporter is a month name is a date (12 Feb 2030, [2030] May 5), never an unregistered reporter: find.rs drops it unless the month is written exactly as a registered reporter (APR, the Atlantic Provinces Reports). Generalizes the full-month-name filter find.rs carried in code to abbreviated and capitalized months.",
+          "vectors": [
+            {
+              "input": "12 Feb 2030",
+              "groups": {
+                "month": "Feb"
+              }
+            },
+            {
+              "input": "7 Sept. 2031",
+              "groups": {
+                "month": "Sept."
+              }
+            },
+            {
+              "input": "30 January 2031",
+              "groups": {
+                "month": "January"
+              }
+            },
+            {
+              "input": "[2030] May 5",
+              "groups": {
+                "month": "May"
+              }
+            },
+            {
+              "input": "12 APR 345",
+              "groups": {
+                "month": "APR"
+              }
+            },
+            {
+              "input": "12 Fen 2030",
+              "groups": null
+            },
+            {
+              "input": "45 OR (3d) 161",
+              "groups": null
+            }
+          ]
+        },
+        {
           "id": "cite.provider-routing",
           "pattern": "(?<uk_neutral>\\[(?<uk_year>(?:19|20)\\d{2})\\]\\s+(?<uk_court>UKSC|UKPC|EWCA\\s+(?:Civ|Crim)|EWHC|EWCC|EWFC|EWCOP|EWCR|UKUT|UKFTT|EAT)\\s+(?<uk_num>\\d+)(?:\\s+\\((?:Admin|Admlty|Ch|Comm|Fam|KB|QB|TCC|Pat|IPEC|SCCO|AAC|IAC|LC|GRC|TC|B)\\))?)|(?<ca_reporter>\\b\\d+\\s+S\\.?C\\.?R\\.?\\s+\\d+\\b)|(?<ca_statute>\\bR\\.?S\\.?[A-Z]\\.?\\s+\\d{4}\\b)|(?<ca_neutral>\\b(?<ca_year>\\d{4})\\s+(?<ca_court>[A-Z][A-Z0-9]{1,12})\\s+(?<ca_num>\\d+)\\b)|(?<us_reporter>\\b(?<us_volume>\\d{1,4})\\s+(?<us_reporter_name>U\\.?\\s*S\\.?|S\\.?\\s*Ct\\.?|L\\.?\\s*Ed\\.?(?:\\s*2d)?|F\\.?(?:\\s*Supp\\.?)?(?:\\s*2d|\\s*3d|\\s*4th)?)\\s+(?<us_page>\\d{1,6})\\b)|(?<neutral>\\b(?<year>\\d{4})\\s+(?<court>[A-Za-z][A-Za-z0-9-]{1,15})\\s+(?<num>\\d+)\\b)|(?<local_reporter>\\b(?<volume>\\d{1,4})\\s+(?<reporter>[A-Za-z][A-Za-z0-9.\\s]*?)\\s+(?<page>\\d{1,7})\\b)",
           "flags": "i",
@@ -314,6 +361,60 @@
                 "court": "BCCA",
                 "num": "349"
               }
+            }
+          ]
+        },
+        {
+          "id": "cite.neutral.parenthesized",
+          "pattern": "\\((?<year>(?:17|18|19|20)\\d{2})\\)\\s+(?<court>CanLII|[A-Z][A-Z0-9-]{1,15})\\s+(?<num>\\d+)\\b",
+          "flags": "",
+          "canonical": {
+            "lowercase": [
+              "court"
+            ],
+            "map": {
+              "court": {
+                "csc": "scc",
+                "caf": "fca",
+                "cf": "fc",
+                "cfpi": "fc",
+                "cci": "tcc"
+              }
+            }
+          },
+          "provenance": "Beaver-authored for the legal-citations extraction stages. A neutral citation or CanLII identifier written with its year in parentheses, as a law report's year is: 'Doe (AB) v Roe (CD) (2029) ABQB 812', 'Wren v Fenn (1986) CanLII 4471'. classify.rs reads it as the decision only when the identifier is a registered court (or CanLII), so '(1932) AC 562' stays a report and '(2021) Q J Marsh 41' a periodical.",
+          "vectors": [
+            {
+              "input": "Doe (AB) v Roe (CD) (2029) ABQB 812",
+              "groups": {
+                "year": "2029",
+                "court": "ABQB",
+                "num": "812"
+              }
+            },
+            {
+              "input": "Rowan v Ash (2028) ABPC 41;",
+              "groups": {
+                "year": "2028",
+                "court": "ABPC",
+                "num": "41"
+              }
+            },
+            {
+              "input": "Wren v Fenn (1986) CanLII 4471 (ON SC)",
+              "groups": {
+                "year": "1986",
+                "court": "CanLII",
+                "num": "4471"
+              }
+            },
+            {
+              "input": "(2019) 97 Can Bar Rev 1",
+              "groups": null
+            },
+            {
+              "input": "(2021) Q J Marsh 41",
+              "groups": null
             }
           ]
         },
@@ -1300,10 +1401,10 @@
         },
         {
           "id": "cite.journal.article",
-          "pattern": "\\((?<year>(?:1[6-9]|20)\\d{2}(?:\\s*[-–]\\s*(?:1[6-9]|20)?\\d{2})?)\\)\\s*[,.]?\\s*(?:(?<volume>\\d{1,4})(?:\\s*[:(]\\s*[0-9A-Za-z]{1,8}(?:[/.–\\-][0-9A-Za-z]{1,8})*\\)?)?(?:\\s*\\([0-9A-Za-z–\\-]{1,8}\\))?\\s+)?(?<journal>[A-Z][A-Za-z&.'’]*(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*|&|of|the|and|in|for|on|de|du|des|la|le|et)){0,30}(?:\\s*\\((?:\\d[a-z]{0,2}|[A-Za-z]{1,20})\\))?)\\s*,?\\s+(?:pp?\\.?\\s*)?(?<page>[a-z]?\\d{1,5})\\b|\\((?<unpaged_year>(?:1[6-9]|20)\\d{2})\\)\\s*[,.]?\\s*(?:(?<unpaged_volume>\\d{1,4})(?:\\s*[:(]\\s*[0-9A-Za-z]{1,8}\\)?)?\\s+)?(?<unpaged_journal>[A-Z][A-Za-z&.'’]*(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*|&|of|the|and|in|for|on)){0,30})(?=\\s*(?:at\\s+\\d|\\[[Ff]orthcoming|\\(no\\s+page))",
+          "pattern": "\\((?<year>(?:1[6-9]|20)\\d{2}(?:\\s*[-–]\\s*(?:1[6-9]|20)?\\d{2})?)\\)\\s*[,.]?\\s*(?:(?<volume>\\d{1,4})(?:\\s*[:(]\\s*[0-9A-Za-z]{1,8}(?:[/.–\\-][0-9A-Za-z]{1,8})*\\)?)?(?:\\s*\\([0-9A-Za-z–\\-]{1,8}\\))?\\s+)?(?<journal>[A-Z][A-Za-z&.'’]*(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*|&|of|the|and|in|for|on|de|du|des|la|le|et)){0,30}(?:\\s*\\((?:\\d[a-z]{0,2}|[A-Za-z]{1,20})\\))?)\\s*,?\\s+(?:pp?\\.?\\s*)?(?<page>[a-z]?\\d{1,7})\\b|\\((?<unpaged_year>(?:1[6-9]|20)\\d{2})\\)\\s*[,.]?\\s*(?:(?<unpaged_volume>\\d{1,4})(?:\\s*[:(]\\s*[0-9A-Za-z]{1,8}\\)?)?\\s+)?(?<unpaged_journal>[A-Z][A-Za-z&.'’]*(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*|&|of|the|and|in|for|on)){0,30})(?=\\s*(?:at\\s+\\d|\\[[Ff]orthcoming|\\(no\\s+page))|\\((?<open_year>(?:1[6-9]|20)\\d{2})\\)\\s*[,.]?\\s*(?<open_volume>\\d{1,4})(?:\\s*[:(]\\s*[0-9A-Za-z]{1,8}\\)?)?\\s+(?<open_journal>[A-Z][A-Za-z&.'’]*(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*|&|of|the|and|in|for|on)){0,30})(?<!\\.)(?=\\s*(?:[.;)]|,\\s*(?:online|available)\\b|\\(|$))",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored first-reference grammar for the periodical family: the (year) volume(:issue) journal first-page block that follows an author and a quoted article title in McGill footnote style. Sibling of cite.journal.toa, which is the classifier dialect (recall-first, used only to label a span the citation grammar already anchored); this entry adds the separators the corpus actually shows - '(2015). 52:1', '(1986-1987) 29', '(2020) 67(5)', '(1997) 23:1/2', ampersands and commas inside the journal name, lettered first pages (e482) - and a second branch for the unpaginated article, where the lookahead leaves 'at 1' to the pinpoint grammar instead of eating it.",
+          "provenance": "Beaver-authored first-reference grammar for the periodical family: the (year) volume(:issue) journal first-page block that follows an author and a quoted article title in McGill footnote style. Sibling of cite.journal.toa, which is the classifier dialect (recall-first, used only to label a span the citation grammar already anchored); this entry adds the separators the corpus actually shows - '(2015). 52:1', '(1986-1987) 29', '(2020) 67(5)', '(1997) 23:1/2', ampersands and commas inside the journal name, lettered first pages (e482) - and a second branch for the unpaginated article, where the lookahead leaves 'at 1' to the pinpoint grammar instead of eating it. A first page may be a six- or seven-digit article number (108772). A third branch reads a block with a volume and no first page that the citation itself ends: a sentence period, a semicolon, an explanatory parenthetical, a closing bracket, the link it is read online at, or the end of the text ('(2031) 88 Q J Fen Pol’y (surveying ...)'), so a journal the registry lacks is read whole instead of being cut to its first word.",
           "vectors": [
             {
               "input": "Alice Woolley, \"Lawyer Regulation in Canada\" (2017) 95:4 Can Bar Rev 893",
@@ -1376,6 +1477,52 @@
             },
             {
               "input": "the report was published in 2019 without a volume",
+              "groups": null
+            },
+            {
+              "input": "Cy Dunn, “Tidal Records” (2034) 41 Rev Marsh Hydrology 108772.",
+              "groups": {
+                "year": "2034",
+                "volume": "41",
+                "journal": "Rev Marsh Hydrology",
+                "page": "108772"
+              }
+            },
+            {
+              "input": "Kai Rowe, “Lichen Futures” (2033) 17 International Review of Moss Policy 220415 at 3",
+              "groups": {
+                "year": "2033",
+                "volume": "17",
+                "journal": "International Review of Moss Policy",
+                "page": "220415"
+              }
+            },
+            {
+              "input": "Bo Chan, “Moss and Memory” (2031) 88 Q J Fen Pol’y (surveying twelve growers).",
+              "groups": {
+                "open_year": "2031",
+                "open_volume": "88",
+                "open_journal": "Q J Fen Pol’y"
+              }
+            },
+            {
+              "input": "Lane Mott, “On Slow Water” (2030) 54 Notes of the Marsh, online: https://marsh.example/a",
+              "groups": {
+                "open_year": "2030",
+                "open_volume": "54",
+                "open_journal": "Notes of the Marsh"
+              }
+            },
+            {
+              "input": "Ivy Lake, “Fen Drift” (2032) 9 Q J Fen Pol’y.",
+              "groups": {
+                "open_year": "2032",
+                "open_volume": "9",
+                "open_journal": "Q J Fen Pol’y"
+              }
+            },
+            {
+              "input": "the fen survey (2030) 12 tables were drawn",
               "groups": null
             }
           ]
@@ -4025,10 +4172,10 @@
         },
         {
           "id": "signal.prefix.toa",
-          "pattern": "^(?:(?:but\\s+)?see(?:\\s+also|\\s+generally|,?\\s+e\\.?g\\.?)?|contra|compare|cf\\.?|citing|cited\\s+(?:in|by)|quoting|quoted\\s+in|discussing|discussed\\s+in|applying|applied\\s+in|relying\\s+on|relied\\s+on|following|followed\\s+in|rev[’']?[dg]|aff[’']?[dg]|and|or)\\s*[:,.]?\\s+",
+          "pattern": "^(?:(?:but\\s+)?see(?:\\s+also|\\s+generally|,?\\s+e\\.?g\\.?)?|e\\.\\s?g\\.?|contra|compare|cf\\.?|citing|cited\\s+(?:in|by)|quoting|quoted\\s+in|discussing|discussed\\s+in|applying|applied\\s+in|relying\\s+on|relied\\s+on|following|followed\\s+in|rev[’']?[dg]|aff[’']?[dg]|and|or)\\s*[:,.]?\\s+",
           "flags": "i",
           "canonical": {},
-          "provenance": "toa_maker.py:129-136 (_SIGNAL_PREFIX_RE). \\u2019 escapes written literal ’ (compiled-identical). Dialect vs signal.prefix.splitter: bare ^ (no leading whitespace tolerated — the indented vector), e.g. alternative ordered last without trailing comma, and the verb list grows the full cited/quoted/applied/relying/followed/rev'd/aff'd set.",
+          "provenance": "toa_maker.py:129-136 (_SIGNAL_PREFIX_RE). \\u2019 escapes written literal ’ (compiled-identical). Dialect vs signal.prefix.splitter: bare ^ (no leading whitespace tolerated — the indented vector), e.g. alternative ordered last without trailing comma, and the verb list grows the full cited/quoted/applied/relying/followed/rev'd/aff'd set. A bare 'e.g.' (E.g. Tamsin v Reed Estate) is a signal of its own, as it is after 'see'.",
           "vectors": [
             {
               "input": "See R v Oakes, [1986] 1 SCR 103 at 136.",
@@ -4049,6 +4196,10 @@
             {
               "input": "On related policy, see Dan Priel, “The Political Origins of English Private Law” (2013) 40:4 J Law and Society 481.",
               "groups": null
+            },
+            {
+              "input": "E.g. Tamsin v Reed Estate, 2031 ABQB 57",
+              "groups": {}
             }
           ]
         },
@@ -4172,10 +4323,10 @@
         },
         {
           "id": "attach.link",
-          "pattern": "^\\s*(?:\\([^()]{0,160}\\)\\s*)?,?\\s*(?:online:?|available\\s+at|at)\\s*<?\\s*$",
+          "pattern": "^\\s*(?:\\([^()]{0,160}\\)\\s*)?,?\\s*(?:online(?:\\s*\\([A-Za-z]{2,12}\\))?:?|available\\s+at|at)\\s*<?\\s*$",
           "flags": "i",
           "canonical": {},
-          "provenance": "splitter.py:55-58 == deterministic_citations.py:55-58 (_LINK_ATTACHMENT_RE). Matches a whole fragment that ENDS at the connective (optionally after a parenthetical, before an opening <) — glue between a work and its URL, not the URL itself.",
+          "provenance": "splitter.py:55-58 == deterministic_citations.py:55-58 (_LINK_ATTACHMENT_RE). Matches a whole fragment that ENDS at the connective (optionally after a parenthetical, before an opening <) — glue between a work and its URL, not the URL itself. Beaver-authored addition: the format McGill writes after 'online' (online (pdf): <...>).",
           "vectors": [
             {
               "input": "(10 October 2023), online:",
@@ -4195,6 +4346,43 @@
             },
             {
               "input": "cited online: https://example.com",
+              "groups": null
+            },
+            {
+              "input": ", online (pdf): ",
+              "groups": {}
+            },
+            {
+              "input": "(June 2031), online (PDF): <",
+              "groups": {}
+            },
+            {
+              "input": ", s 9, online (pdf):",
+              "groups": null
+            }
+          ]
+        },
+        {
+          "id": "attach.commented-subject",
+          "pattern": ",?\\s*\\b(?:case\\s+comment\\s+on|comment\\s+on|note\\s+on|book\\s+review\\s+of)\\s*$",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages, after McGill's case comment and book review forms: Author, “Title”, Case Comment on R v Fir, 2030 BCCA 431 (2032) 48:2 Imag Law Rev 233. Matched at the end of the text in front of the commented citation, it joins the commentary's author and title to its own publication block across that citation, which stays a citation of its own.",
+          "vectors": [
+            {
+              "input": "Kim Day, “A Missed Turn”, Case Comment on ",
+              "groups": {}
+            },
+            {
+              "input": "Ola Fenn, “Reeds”, Book Review of ",
+              "groups": {}
+            },
+            {
+              "input": "the court commented on ",
+              "groups": null
+            },
+            {
+              "input": "as its footnote on ",
               "groups": null
             }
           ]
@@ -5702,10 +5890,10 @@
         },
         {
           "id": "style.case-single-party",
-          "pattern": "(?m)(?<name>(?:Reference\\s+re|Renvoi\\s+relatif|In\\s+re|In\\s+the\\s+[Mm]atter\\s+of|Re)\\s+[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()\\n]{0,80}\\)|of|the|and|for|de|la|du|des|aux|en)){0,12})(?:,\\s*(?:1[6-9]|20)\\d{2})?\\s*,?\\s*$",
+          "pattern": "(?m)(?<name>(?:Reference\\s+re|Renvoi\\s+relatif|In\\s+re|In\\s+the\\s+[Mm]atter\\s+of|Re)\\s+[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()\\n]{0,80}\\)|of|the|and|for|de|la|du|des|aux|en)){0,12}|[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|of|the|and|for|de|la|du|des)){0,12}\\s+\\((?:Re|Renvoi)\\))(?:,\\s*(?:1[6-9]|20)\\d{2})?\\s*,?\\s*$",
           "flags": "",
           "canonical": {},
-          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_RE_STYLE; native Rust regex preserved verbatim.",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_RE_STYLE; native Rust regex preserved verbatim. Beaver-authored addition: the style whose marker follows the name, 'Moore (Re)', 'Harrow Fen Estate (Re) (2028) ABQB 3104'.",
           "vectors": [
             {
               "input": "Re Moore, ",
@@ -5734,6 +5922,12 @@
             {
               "input": "the parties agreed, ",
               "groups": null
+            },
+            {
+              "input": "Harrow Fen Estate (Re) ",
+              "groups": {
+                "name": "Harrow Fen Estate (Re)"
+              }
             }
           ],
           "rust": true
@@ -5772,10 +5966,10 @@
         },
         {
           "id": "style.quoted-work",
-          "pattern": "(?s)(?<work>[\\p{Lu}][\\p{L}\\p{M}\\p{N}.'’&-]*(?:,?\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'’&-]*|&|et|al|eds?|de|la|du|des|van|von|di|le|of|the|and|for|in|on)){0,15},?\\s*[\"“][^\"“”\n]{1,300}[\"”][^\"“”\n]{0,120})\\s*$",
+          "pattern": "(?s)(?<work>[\\p{Lu}][\\p{L}\\p{M}\\p{N}.'’&-]*(?:,?\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'’&-]*|&|et|al|eds?|de|la|du|des|van|von|di|le|del|della|da|dos|das|der|of|the|and|for|in|on)){0,15},?\\s*[\"“][^\"“”\\n]{0,300}(?:“[^\"“”\\n]{1,200}”[^\"“”\\n]{0,300})?(?:”[^\"“”\\n]{1,300})?[\"”][^\"“”\\n]{0,120})\\s*$",
           "flags": "",
           "canonical": {},
-          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::QUOTED_WORK, copied verbatim with native Rust regex semantics.",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::QUOTED_WORK, copied verbatim with native Rust regex semantics. Changed in two places: the title may hold one nested quotation written with the same double marks, opening it (““A”: B”), closed inside it (“A “B” C”) or with its opening mark merged into the title's (“A”: B”), so the author and title stay with the publication block; and an author's name may hold the particles del, della, da, dos, das and der (Ana del Lago).",
           "vectors": [
             {
               "input": "Jane Doe, “A Title; With a Subtitle” ",
@@ -5786,9 +5980,109 @@
             {
               "input": "the court said “no” and ",
               "groups": null
+            },
+            {
+              "input": "Uma Vale et al, “The Marsh Will Wait”: Notes on Slow Water” ",
+              "groups": {
+                "work": "Uma Vale et al, “The Marsh Will Wait”: Notes on Slow Water” "
+              }
+            },
+            {
+              "input": "Ida Wren, “Why “Green” Ferns Matter” ",
+              "groups": {
+                "work": "Ida Wren, “Why “Green” Ferns Matter” "
+              }
+            },
+            {
+              "input": "Ida Wren, “Fen Law” and Ola Fenn, “Moss Law” ",
+              "groups": {
+                "work": "Ola Fenn, “Moss Law” "
+              }
+            },
+            {
+              "input": "Sue Fenn, ““Bring the Boats In”: a note on river law” ",
+              "groups": {
+                "work": "Sue Fenn, ““Bring the Boats In”: a note on river law” "
+              }
+            },
+            {
+              "input": "see also Ana del Lago & Ida Wren, “Fen Reports” ",
+              "groups": {
+                "work": "Ana del Lago & Ida Wren, “Fen Reports” "
+              }
             }
           ],
           "rust": true
+        },
+        {
+          "id": "style.quoted-title",
+          "pattern": "^\\s*(?<work>[\"“][^\"“”\\n]{0,300}(?:“[^\"“”\\n]{1,200}”[^\"“”\\n]{0,300})?(?:”[^\"“”\\n]{1,300})?[\"”][^\"“”\\n]{0,120})\\s*$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored sibling of style.quoted-work for an unsigned work (a news item, an editorial note) that opens with its quoted title: “Title” Publisher (date), online: <...>. find.rs matches it only from where the work begins, past the floor, a note number and any signal, so a quotation in running text before a citation is never styled as a work.",
+          "rust": true,
+          "vectors": [
+            {
+              "input": "“Ferns Return to the Lake” Fen Wire ",
+              "groups": {
+                "work": "“Ferns Return to the Lake” Fen Wire "
+              }
+            },
+            {
+              "input": "“Two’s a Fen: Notes on Moss Bylaws” ",
+              "groups": {
+                "work": "“Two’s a Fen: Notes on Moss Bylaws” "
+              }
+            },
+            {
+              "input": "the court said “no” and ",
+              "groups": null
+            }
+          ]
+        },
+        {
+          "id": "style.authored-work",
+          "pattern": "(?<work>[\\p{Lu}][\\p{L}\\p{M}\\p{N}.'’&-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'’&-]*|&|and|et|al|de|la|du|des|van|von|di|le|del|della|da|dos|das|der|of|the|for)){0,12}(?:,\\s+eds?\\.?)?,\\s+[\\p{Lu}\\p{N}][^\"“”\\n;]{0,300}?)\\s*,?\\s*$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored, tried after style.quoted-work and before style.plain-work: a monograph, report or web page styled 'Author, Title' whose title is written in sentence case or holds a parenthesis or an identifier ('Lou Park, Telling the Story of Moss', 'Fen Board, Review of the Reed Act (Water Levels) 2019', 'Moss Registry Deskbook, Catalogue No M41-7/2031E-PDF'). The author is a run of capitalized names before the first comma; the title starts capitalized and runs to the publication block.",
+          "rust": true,
+          "vectors": [
+            {
+              "input": "Lou Park, Telling the Story of Moss ",
+              "groups": {
+                "work": "Lou Park, Telling the Story of Moss"
+              }
+            },
+            {
+              "input": "see also Nina Ash, Past lakes and rivers: a survey of wetlands in the north ",
+              "groups": {
+                "work": "Nina Ash, Past lakes and rivers: a survey of wetlands in the north"
+              }
+            },
+            {
+              "input": "Fen Board, Review of the Reed Act (Water Levels) 2019 ",
+              "groups": {
+                "work": "Fen Board, Review of the Reed Act (Water Levels) 2019"
+              }
+            },
+            {
+              "input": "Moss Registry Deskbook, Catalogue No M41-7/2031E-PDF ",
+              "groups": {
+                "work": "Moss Registry Deskbook, Catalogue No M41-7/2031E-PDF"
+              }
+            },
+            {
+              "input": "Ola Fenn & Ida Wren, eds, Reeds, or the Long Winter, ",
+              "groups": {
+                "work": "Ola Fenn & Ida Wren, eds, Reeds, or the Long Winter"
+              }
+            },
+            {
+              "input": "as the court held, the reeds were drained ",
+              "groups": null
+            }
+          ]
         },
         {
           "id": "style.plain-work",

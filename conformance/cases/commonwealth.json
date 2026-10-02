@@ -2256,6 +2256,397 @@
     ]
    },
    "note": "A statute's title and chapter are one citation, and its reprint is part of it."
+  },
+  {
+   "name": "date/month-is-no-reporter",
+   "input": "Ana Lee, “Ferry Tales”, (12 Feb 2030) River News, online: <https://rivernews.example/ferry>; Ola Fenn, “Moss Notes” (7 Sept. 2031) Fen Wire.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "webpage",
+      "span": {
+       "start": 59,
+       "end": 90,
+       "text": "https://rivernews.example/ferry"
+      }
+     }
+    ]
+   },
+   "note": "A day, month and year is a date, never a citation with a month for its reporter."
+  },
+  {
+   "name": "date/registered-reporter-written-as-registered",
+   "input": "Harbour Fen Ltd v Moss (1990), 12 APR 345 (NBCA).",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "fields": {
+       "volume": "12",
+       "reporterCanonical": "APR",
+       "page": "345"
+      }
+     }
+    ]
+   },
+   "note": "A reporter written exactly as registered stays a reporter though it spells a month."
+  },
+  {
+   "name": "journal/unregistered-without-first-page",
+   "input": "Bo Chan, “Moss and Memory” (2031) 88 Q J Fen Pol’y (surveying twelve growers).",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "journal",
+      "span": {
+       "start": 27,
+       "end": 50,
+       "text": "(2031) 88 Q J Fen Pol’y"
+      },
+      "style": {
+       "start": 0,
+       "end": 26,
+       "text": "Bo Chan, “Moss and Memory”"
+      },
+      "fields": {
+       "year": "2031",
+       "volume": "88",
+       "reporter": "Q J Fen Pol’y"
+      }
+     }
+    ]
+   },
+   "note": "A journal the registry lacks is read whole up to where the citation ends, with its author and title."
+  },
+  {
+   "name": "journal/article-number-and-online-link",
+   "input": "Cy Dunn, “Tidal Records” (2034) 41 Rev Marsh Hydrology 108772; Lane Mott, “On Slow Water” (2030) 54 Notes of the Marsh, online: <https://marsh.example/slow>.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "journal",
+      "span": {
+       "start": 25,
+       "end": 61,
+       "text": "(2034) 41 Rev Marsh Hydrology 108772"
+      },
+      "fields": {
+       "page": "108772"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "journal",
+      "span": {
+       "start": 90,
+       "end": 118,
+       "text": "(2030) 54 Notes of the Marsh"
+      },
+      "style": {
+       "start": 63,
+       "end": 89,
+       "text": "Lane Mott, “On Slow Water”"
+      },
+      "fullSpan": {
+       "start": 63,
+       "end": 156,
+       "text": "Lane Mott, “On Slow Water” (2030) 54 Notes of the Marsh, online: <https://marsh.example/slow>"
+      },
+      "fields": {
+       "url": "https://marsh.example/slow"
+      }
+     }
+    ]
+   },
+   "note": "An article number may run to six digits, and the link a journal is read online at is part of its citation."
+  },
+  {
+   "name": "case/lead-in-is-no-party",
+   "input": "The record was thin. In R v Oak-Elm, 2030 BCPC 512 [Oak-Elm], the court said so. E.g. Tamsin v Reed Estate, 2031 ABQB 57.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "style": {
+       "start": 24,
+       "end": 35,
+       "text": "R v Oak-Elm"
+      },
+      "parties": {
+       "plaintiff": "R",
+       "defendant": "Oak-Elm"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "style": {
+       "start": 86,
+       "end": 106,
+       "text": "Tamsin v Reed Estate"
+      }
+     }
+    ]
+   },
+   "note": "A sentence-opening 'In' and a bare 'E.g.' introduce a case; neither is part of its style of cause."
+  },
+  {
+   "name": "journal/case-comment",
+   "input": "Kim Day, “A Missed Turn”, Case Comment on R v Fir, 2030 BCCA 431 (2032) 48:2 Imag Law Rev 233.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "journal",
+      "span": {
+       "start": 65,
+       "end": 93,
+       "text": "(2032) 48:2 Imag Law Rev 233"
+      },
+      "style": {
+       "start": 0,
+       "end": 64,
+       "text": "Kim Day, “A Missed Turn”, Case Comment on R v Fir, 2030 BCCA 431"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "style": {
+       "start": 42,
+       "end": 49,
+       "text": "R v Fir"
+      },
+      "fullSpan": {
+       "start": 42,
+       "end": 64,
+       "text": "R v Fir, 2030 BCCA 431"
+      }
+     }
+    ]
+   },
+   "note": "A case comment keeps its author and title across the decision it comments on, which stays a citation."
+  },
+  {
+   "name": "book/link-after-pinpoint",
+   "input": "Moss Registry Deskbook, Catalogue No M41-7/2031E-PDF (Ottawa: MR, 2032), s 9, online (pdf): [perma.cc/QX7R-2LTM]; Pat Rowe, Lantern Studies (Halifax: Harbour Press, 2024) at 12, online (pdf): <https://example.org/lantern.pdf>.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "book",
+      "style": {
+       "start": 0,
+       "end": 52,
+       "text": "Moss Registry Deskbook, Catalogue No M41-7/2031E-PDF"
+      },
+      "fullSpan": {
+       "start": 0,
+       "end": 112,
+       "text": "Moss Registry Deskbook, Catalogue No M41-7/2031E-PDF (Ottawa: MR, 2032), s 9, online (pdf): [perma.cc/QX7R-2LTM]"
+      },
+      "fields": {
+       "url": "perma.cc/QX7R-2LTM"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "book",
+      "fullSpan": {
+       "start": 114,
+       "end": 225,
+       "text": "Pat Rowe, Lantern Studies (Halifax: Harbour Press, 2024) at 12, online (pdf): <https://example.org/lantern.pdf>"
+      },
+      "fields": {
+       "url": "https://example.org/lantern.pdf"
+      }
+     }
+    ]
+   },
+   "note": "A link written after a work's pinpoint belongs to the work, not to a source of its own."
+  },
+  {
+   "name": "journal/title-punctuation-and-nested-quotes",
+   "input": "Ida Wren, “Why Ferns? Notes on the “Green” Turn” (2030) 12:3 J Fern Stud 45; Uma Vale et al, “The Marsh Will Wait”: Notes on Slow Water” (2032) 21:4 Soc & Fen Studies 87; Jo Marsh, “Fen Law; or, What the Reeds Keep” (2029) 7 Q J Marsh 41.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "journal",
+      "style": {
+       "start": 0,
+       "end": 48,
+       "text": "Ida Wren, “Why Ferns? Notes on the “Green” Turn”"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "journal",
+      "style": {
+       "start": 77,
+       "end": 136,
+       "text": "Uma Vale et al, “The Marsh Will Wait”: Notes on Slow Water”"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "journal",
+      "style": {
+       "start": 171,
+       "end": 215,
+       "text": "Jo Marsh, “Fen Law; or, What the Reeds Keep”"
+      }
+     }
+    ]
+   },
+   "note": "A question mark, semicolon or nested quotation inside a title never cuts the author and title off."
+  },
+  {
+   "name": "book/sentence-case-title",
+   "input": "Lou Park, Telling the Story of Moss (Regina: Fen Press, 2031) at 19; see also Nina Ash, Past lakes and rivers: a survey of wetlands in the north (Boston: Reed Press, 2028).",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "book",
+      "style": {
+       "start": 0,
+       "end": 35,
+       "text": "Lou Park, Telling the Story of Moss"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "book",
+      "style": {
+       "start": 78,
+       "end": 144,
+       "text": "Nina Ash, Past lakes and rivers: a survey of wetlands in the north"
+      }
+     }
+    ]
+   },
+   "note": "A book's title keeps its lowercase words, after the author."
+  },
+  {
+   "name": "webpage/unsigned-quoted-title",
+   "input": "“Ferns Return to the Lake” Fen Wire (30 March 2031), online: <https://fenwire.example/ferns>.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "webpage",
+      "style": {
+       "start": 0,
+       "end": 62,
+       "text": "“Ferns Return to the Lake” Fen Wire (30 March 2031), online: <"
+      }
+     }
+    ]
+   },
+   "note": "An unsigned work is styled from its quoted title."
+  },
+  {
+   "name": "case/year-in-parentheses",
+   "input": "Doe (AB) v Roe (CD) (2029) ABQB 812; Rowan v Ash (2028) ABPC 41; Wren v Fenn (1986) CanLII 4471 (ON SC); Harrow Fen Estate (Re) (2028) ABQB 3104; Lark v Lark (2003) 2 SCR 118.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "style": {
+       "start": 0,
+       "end": 19,
+       "text": "Doe (AB) v Roe (CD)"
+      },
+      "fields": {
+       "year": "2029",
+       "number": "812"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "style": {
+       "start": 37,
+       "end": 48,
+       "text": "Rowan v Ash"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "can_lii",
+      "style": {
+       "start": 65,
+       "end": 76,
+       "text": "Wren v Fenn"
+      },
+      "fields": {
+       "year": "1986",
+       "number": "4471"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "neutral",
+      "style": {
+       "start": 105,
+       "end": 127,
+       "text": "Harrow Fen Estate (Re)"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "case",
+      "format": "reporter",
+      "style": {
+       "start": 146,
+       "end": 157,
+       "text": "Lark v Lark"
+      }
+     }
+    ]
+   },
+   "note": "A case whose year is written in parentheses before its neutral citation or report is a case, styled by its parties."
+  },
+  {
+   "name": "journal/round-year-comma",
+   "input": "Ada Fenn, “Testing the Fens” (2027), 71 Crim LQ 212 at 215.",
+   "status": "pass",
+   "expect": {
+    "citations": [
+     {
+      "form": "full",
+      "authority": "journal",
+      "style": {
+       "start": 0,
+       "end": 28,
+       "text": "Ada Fenn, “Testing the Fens”"
+      }
+     }
+    ]
+   },
+   "note": "A registered journal written (year), volume keeps its author and title."
   }
  ]
 }

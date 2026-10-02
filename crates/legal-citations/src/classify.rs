@@ -27,6 +27,8 @@ static TRIBUNAL: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.neutral.tribunal"));
 static BRACKETED: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.neutral.bracketed"));
+static PARENTHESIZED: LazyLock<CompiledEcmascriptGrammar> =
+    LazyLock::new(|| linear("cite.neutral.parenthesized"));
 static CANLII: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.canlii"));
 static STATUTE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.ca.statute.first"));
@@ -347,11 +349,22 @@ fn neutral(core: &str) -> Option<Reading> {
         ("cite.neutral.tribunal", &*TRIBUNAL, false),
         ("cite.neutral.bracketed", &*BRACKETED, true),
         ("cite.neutral", &*NEUTRAL, false),
+        ("cite.neutral.parenthesized", &*PARENTHESIZED, false),
     ] {
         let Some(captures) = whole(pattern, core) else {
             continue;
         };
         let mut surface = group(&captures, "court")?;
+        // A year written in parentheses, as a report's is, leaves only CanLII's
+        // or a registered court's identifier a decision ("(2029) ABQB 812").
+        if entry == "cite.neutral.parenthesized" {
+            if surface == "CanLII" {
+                return Some(canlii_reading(group(&captures, "year"), group(&captures, "num")));
+            }
+            if registry().courts_by_surface(&surface).is_empty() {
+                return None;
+            }
+        }
         if let Some(division) = group(&captures, "division") {
             let divided = format!("{surface} {division}");
             if !registry().courts_by_surface(&divided).is_empty() {
@@ -388,11 +401,15 @@ fn neutral(core: &str) -> Option<Reading> {
 
 fn canlii(core: &str) -> Option<Reading> {
     let captures = whole(&CANLII, core)?;
+    Some(canlii_reading(group(&captures, "year"), group(&captures, "number")))
+}
+
+fn canlii_reading(year: Option<String>, number: Option<String>) -> Reading {
     let mut reading = Reading::new(Authority::Case, Some(Format::CanLii), "canlii_grammar");
-    reading.fields.year = group(&captures, "year");
-    reading.fields.number = group(&captures, "number");
+    reading.fields.year = year;
+    reading.fields.number = number;
     reading.fields.reporter = Some("CanLII".to_owned());
-    Some(reading)
+    reading
 }
 
 fn database(core: &str) -> Option<Reading> {
@@ -602,9 +619,10 @@ fn journal_article(core: &str) -> Option<Reading> {
     }
     let mut reading = Reading::new(Authority::Journal, Some(Format::Publication), "article_grammar");
     let fields = &mut reading.fields;
-    fields.year = fancy_group(&captures, "year").or_else(|| fancy_group(&captures, "unpaged_year"));
-    fields.volume = fancy_group(&captures, "volume").or_else(|| fancy_group(&captures, "unpaged_volume"));
-    fields.reporter = fancy_group(&captures, "journal").or_else(|| fancy_group(&captures, "unpaged_journal"));
+    let first = |names: [&str; 3]| names.into_iter().find_map(|name| fancy_group(&captures, name));
+    fields.year = first(["year", "unpaged_year", "open_year"]);
+    fields.volume = first(["volume", "unpaged_volume", "open_volume"]);
+    fields.reporter = first(["journal", "unpaged_journal", "open_journal"]);
     fields.page = fancy_group(&captures, "page");
     Some(reading)
 }
@@ -757,7 +775,7 @@ pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
             return Some(reading);
         }
         "book_grammar" => return book(core, style),
-        "article_grammar" => return journal_article(core).or_else(|| publication(true)),
+        "article_grammar" => return neutral(core).or_else(|| journal_article(core)).or_else(|| publication(true)),
         "us_journal_grammar" => {
             return publication(true).map(|mut reading| {
                 reading.jurisdiction = Some("us".to_owned());
