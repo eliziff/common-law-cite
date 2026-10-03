@@ -706,10 +706,10 @@
         },
         {
           "id": "cite.reporter.splitter",
-          "pattern": "(?<![\\w.])(?:\\[(?:17|18|19|20)\\d{2}\\]\\s+(?:\\d{1,4}\\s+)?{{reporter_words}}(?:\\s+\\((?:\\d+[A-Za-z]{0,3}|[Nn]\\.?[Ss]\\.?)\\))?\\s+\\d{1,5}|\\((?:17|18|19|20)\\d{2}\\),?\\s+(?:\\d{1,4}\\s+)?{{reporter_words}}(?:\\s+\\((?:\\d+[A-Za-z]{0,3}|[Nn]\\.?[Ss]\\.?)\\))?\\s+\\d{1,5}|\\d{1,4}\\s+{{reporter_words}}(?:\\s+\\((?:\\d+[A-Za-z]{0,3}|[Nn]\\.?[Ss]\\.?)\\))?\\s+\\d{1,5})(?=\\s*(?:[,;.]|\\bat\\b|\\band\\b|\\bwith\\b|\\(|\\[|$))",
+          "pattern": "(?<![\\w.])(?:\\[(?:17|18|19|20)\\d{2}\\]\\s+(?:\\d{1,4}\\s+)?(?!(?:at|and|in|para|paras|of|to|by|online)\\b){{reporter_words}}(?:\\s+\\((?:\\d+[A-Za-z]{0,3}|[Nn]\\.?[Ss]\\.?)\\))?\\s+\\d{1,5}|\\((?:17|18|19|20)\\d{2}\\),?\\s+(?:\\d{1,4}\\s+)?(?!(?:at|and|in|para|paras|of|to|by|online)\\b){{reporter_words}}(?:\\s+\\((?:\\d+[A-Za-z]{0,3}|[Nn]\\.?[Ss]\\.?)\\))?\\s+\\d{1,5}|\\d{1,4}\\s+(?!(?:at|and|in|para|paras|of|to|by|online)\\b){{reporter_words}}(?:\\s+\\((?:\\d+[A-Za-z]{0,3}|[Nn]\\.?[Ss]\\.?)\\))?\\s+\\d{1,5})(?=\\s*(?:[,;.]|\\bat\\b|\\band\\b|\\bwith\\b|\\(|\\[|$))",
           "flags": "i",
           "canonical": {},
-          "provenance": "splitter.py:14-23 (_REPORTER_RE, three-branch: [year] / (year) / bare-volume, built on _REPORTER_WORDS which is the reporter_words def). Trailing lookahead bounds the match at clause edges. Recall-first routing evidence by design. The series qualifier also recognizes New Series (NS/N.S.), as established by its existing independent vectors.",
+          "provenance": "splitter.py:14-23 (_REPORTER_RE, three-branch: [year] / (year) / bare-volume, built on _REPORTER_WORDS which is the reporter_words def). Trailing lookahead bounds the match at clause edges. Recall-first routing evidence by design. The series qualifier also recognizes New Series (NS/N.S.), as established by its existing independent vectors. Beaver-authored: a pinpoint word is never a reporter, so '(2022) at 2' is a year and a pinpoint, not a report.",
           "vectors": [
             {
               "input": "R v Oakes, [1986] 1 SCR 103;",
@@ -968,6 +968,111 @@
           "flags": "",
           "canonical": {},
           "provenance": "Beaver-authored from the McGill Guide's secondary-source forms (unpublished manuscripts, theses, papers delivered, news and dated online works, international documents, encyclopedias and dictionaries). A dictionary entry: the dictionary, its edition and the headword it is cited for (sub verbo)."
+        },
+        {
+          "id": "cite.ca.code",
+          "pattern": "\\bArts?\\.?\\s+\\d+(?:\\.\\d+)*(?:\\s*[-—–]\\s*\\d+(?:\\.\\d+)*)?(?:\\s*(?:,|and|&|et)\\s*\\d+(?:\\.\\d+)*(?:\\s*[-—–]\\s*\\d+(?:\\.\\d+)*)?)*\\s+(?:CCQ|CcQ|C\\.c\\.Q\\.|CCP|CPC|Cpc|C\\.p\\.c\\.|CCLC|C\\.c\\.B\\.C\\.|CcBC|CCRP|CSA|NCPC|C civ|C\\.\\s?civ\\.|C pén)\\b(?:\\s*\\((?:1[6-9]|20)\\d{2}\\))?",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). A civil-law code cited by its article and abbreviation ('Arts 1457-58 CCQ', 'Art 477 CCP (1965)')."
+        },
+        {
+          "id": "cite.ca.bylaw",
+          "pattern": "\\b(?:[Rr]evised\\s+)?[Bb]y-?[Ll]aw\\s+(?:[Nn]o\\.?\\s+)?(?:[A-Z]\\s+)?[A-Z0-9][\\w.]*(?:[-/][\\w.]+)*\\d[\\w.]*",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). A municipal by-law by its number ('by-law No 97-42', 'revised by-law C S-0.1.1')."
+        },
+        {
+          "id": "cite.ca.court-rules",
+          "pattern": "\\b(?:[A-Z][\\w'’]*\\s+){0,8}(?:Rules(?:\\s+of\\s+(?:Court|Civil\\s+Procedure|Practice|Procedure|Criminal\\s+Procedure|the\\s+[A-Z][\\w']*(?:\\s+[A-Z][\\w']*){0,4}))?|R[èe]gles\\s+de\\s+(?:pratique|proc[ée]dure)(?:\\s+[\\w'’]+){0,6})(?=,\\s*rr?\\.?\\s+\\d)",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). Rules of court cited by their title before a rule pinpoint ('Federal Court Immigration Rules, r 18')."
+        },
+        {
+          "id": "cite.parliamentary.record",
+          "pattern": "\\b(?<record>Journals(?:\\s+of\\s+the\\s+(?:Legislative\\s+Assembly|House\\s+of\\s+Commons|Senate|National\\s+Assembly))?|Order\\s+Paper|Notice\\s+Paper|Order\\s+Paper\\s+and\\s+Notice\\s+Paper|Feuilleton(?:\\s+et\\s+pr[ée]avis)?|Votes\\s+and\\s+Proceedings|Proc[èe]s-verbaux|Sessional\\s+Papers?|Official\\s+Report\\s+of\\s+Debates(?:\\s+\\(Hansard\\))?|Journal\\s+des\\s+d[ée]bats)\\s*,\\s*(?:(?:(?<session>\\d{1,3}\\s*[-–]\\s*\\d{1,3})\\s*,\\s*)?(?:vol\\s+\\d+\\s*,\\s*)?(?:No\\s+[\\w-]+\\s*)?\\((?:(?:\\d{1,2}\\s+)?(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?:\\d{1,2},?\\s+)?(?:1[6-9]|20)\\d{2}|(?:1[6-9]|20)\\d{2})\\)|\\d{1,3}\\s*[-–]\\s*\\d{1,3}\\s*,\\s*No\\s+[\\w-]+)",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). Parliamentary journals, order and notice papers, votes and proceedings, sessional papers and official reports, by session, number and date."
+        },
+        {
+          "id": "cite.parliamentary.petition",
+          "pattern": "\\b(?:e-)?\\d{3,}(?:-\\d{3,})?\\s+\\([^()\\n]{2,60}\\),\\s*\\d{1,3}-\\d{1,3},\\s*(?:paper\\s+|e-)petition\\b",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). A paper or electronic petition by its number, subject and session."
+        },
+        {
+          "id": "cite.secondary.committee-report",
+          "pattern": "\\((?:(?:\\d{1,2}\\s+)?(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?:\\d{1,2},?\\s+)?(?:1[6-9]|20)\\d{2}|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?:1[6-9]|20)\\d{2}|(?:1[6-9]|20)\\d{2})\\)\\s*\\((?:Chair|Co-Chairs?|Président[e]?)\\s*:\\s*[^()\\n]{2,80}\\)",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). A committee report closing with its date and chair ('(June 2002) (Chair: Charles Hubbard)')."
+        },
+        {
+          "id": "cite.secondary.periodical",
+          "pattern": "(?:(?<=[\\\"”], )|(?<=[\\\"”] ))(?:[Tt]he\\s+)?(?:\\[[A-Z][\\w ]{1,30}\\]\\s+)?[A-Z][\\w&.'’-]*(?:\\s+(?:[A-Z][\\w&.'’-]*|of|and|&|the|de|du|la|le|des)){0,6}(?:\\s+\\d{1,4}(?::\\d{1,5})?)?\\s+\\((?:(?:\\d{1,2}\\s+)?(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?:\\d{1,2},?\\s+)?(?:1[6-9]|20)\\d{2}|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?:1[6-9]|20)\\d{2}|[A-Z][a-z]+\\s+(?:1[6-9]|20)\\d{2})\\)(?:\\s+[A-Z]?\\d{1,4}\\b)?",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). A magazine or newspaper by its name, volume and issue, and date after the quoted title ('Harper's Magazine 309:1855 (December 2004)')."
+        },
+        {
+          "id": "cite.secondary.letter-to-editor",
+          "pattern": "\\bLetter\\s+to\\s+the\\s+Editor,\\s*(?:[Tt]he\\s+)?(?:\\[[A-Z][\\w ]{1,30}\\]\\s+)?[A-Z][\\w&.'’-]*(?:\\s+(?:[A-Z][\\w&.'’-]*|of|and|the)){0,6}\\s+\\((?:\\d{1,2}\\s+)?(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?:\\d{1,2},?\\s+)?(?:1[6-9]|20)\\d{2}\\)(?:\\s+[A-Z]?\\d{1,4}\\b)?",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). A letter to the editor of a newspaper with its date and page."
+        },
+        {
+          "id": "cite.secondary.coursepack",
+          "pattern": "\\b[Cc]oursepack\\b[^()\\n]{0,120}?\\([^()\\n]{2,100}(?:1[6-9]|20)\\d{2}\\)|\\([^()\\n]{0,30}(?:Faculty|Facult[ée])[^()\\n]{2,100}(?:1[6-9]|20)\\d{2}\\)",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). Course materials: the coursepack and its faculty, institution and term."
+        },
+        {
+          "id": "cite.secondary.intellectual-property",
+          "pattern": "\\b(?:(?:Can|US|PCT|EP|UK)\\s+Patent\\s+(?:Application\\s+)?No\\s+[\\w/]+(?:,\\s*(?:Can|US|PCT|EP|UK)\\s+Patent\\s+No\\s+[\\w/]+)*|(?:Can|USA|US|UK|EU)\\s+(?:No\\s+)?(?:TMA)?\\d{5,}|USA\\s+[A-Za-z]{2,4}\\d{6,})\\s*\\((?:(?:\\d{1,2}\\s+)?(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?:\\d{1,2},?\\s+)?(?:1[6-9]|20)\\d{2}|(?:1[6-9]|20)\\d{2}\\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+\\d{1,2})\\)",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). A patent, trademark or copyright registration by its office, number and date."
+        },
+        {
+          "id": "cite.secondary.encyclopedia-ced",
+          "pattern": "\\bCED\\s+(?:\\d(?:st|nd|rd|th)|\\(?(?:Ont|West|Ont\\.|West\\.)\\s+\\d(?:st|nd|rd|th)\\)?)(?:\\s*\\(online\\))?(?:\\s*,\\s*(?:[\\\"“][^\\\"”\\n]{1,200}[\\\"”]|[A-Z][^,;\\\"“\\n]{1,120}))*",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). The Canadian Encyclopedic Digest by its edition, title and entry ('CED 4th, Constitutional, \"...\" at § 9')."
+        },
+        {
+          "id": "cite.secondary.jurisclasseur",
+          "pattern": "\\bin\\s+[^,;\\n]{2,80},\\s*eds?,\\s*(?:JCQ|JurisClasseur\\s+Qu[ée]bec)\\b[^;\\n(]{0,80}(?:\\s*\\((?:\\d{1,2}\\s+)?(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?:\\d{1,2},?\\s+)?(?:1[6-9]|20)\\d{2}\\))?",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). A JurisClasseur Québec fascicle in its collection."
+        },
+        {
+          "id": "cite.journal.bracket-year",
+          "pattern": "\\[(?:1[6-9]|20)\\d{2}\\]\\s+(?:RTD\\s+(?:civ|com|eur)|D(?:\\s+(?:Jur|Chron|Somm))?|JCP|Gaz\\s+Pal|Rev\\s+crit\\s+DIP|RDI|Rev\\s+soc|LPA)\\b\\.?(?:\\s+[IV]{1,3}\\b)?(?:\\s+\\d{1,5})",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). A French periodical cited by bracketed year, title and page ('[2001] RTD civ 487')."
+        },
+        {
+          "id": "cite.case.international",
+          "pattern": "\\b(?:PCIJ\\s+\\((?:Ser(?:ies)?\\s+[ABC](?:/B)?)\\)\\s+No\\s+\\d+|\\[(?:1[6-9]|20)\\d{2}\\]\\s+ICJ\\s+(?:Rep|Acts\\s+&\\s+Doc|Pleadings)\\s+\\d+|ICJ\\s+Pleadings\\s+\\d+|Inter-Am\\s+(?:Ct|Comm)\\s+HR(?:\\s+\\(Ser\\s+[A-Z]\\)\\s+No\\s+\\d+|,\\s+No\\s+[\\d/]+)|(?:ECHR|EHRR|Eur\\s+Ct\\s+HR)\\s*\\(?Ser\\s+[A-Z]\\)?\\s*\\d*|No\\s+\\d{3,6}/\\d{2}\\s+\\((?:\\d{1,2}\\s+)?(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?:\\d{1,2},?\\s+)?(?:1[6-9]|20)\\d{2}\\)|(?:GATT|WTO)\\s+Doc\\s+[A-Z][\\w/.-]+|OEA/Ser\\.?\\s*[A-Z][\\w./\\s-]{2,40}?(?=[,(]|\\s\\d)|\\b(?:USA|CDA|MEX|ECC)-[\\w,-]{4,30}|PCA\\s+\\(Permanent\\s+Court\\s+of\\s+Arbitration\\)|\\[(?:1[6-9]|20)\\d{2}\\]\\s+\\d+\\s+IMT\\s+\\d+)",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). International tribunals: PCIJ series, ICJ Reports and pleadings, the Inter-American system, European Court of Human Rights applications, WTO and GATT documents, OAS documents, trade panels, the PCA and military tribunals."
+        },
+        {
+          "id": "cite.international.organization",
+          "pattern": "\\b(?:Council\\s+of\\s+Europe,\\s*(?:CA|PA|CM)|OECD|OAS|UNCTAD|UNESCO|WHO|ILO|FAO|IMF|World\\s+Bank)\\b,\\s*(?:[^;\\n]{0,200}?)(?:Doc(?:ument)?s?\\.?\\s+(?:No\\s+)?[A-Z]*[\\w/.()-]*\\d[\\w/.()-]*|Rec\\s+\\d+|Working\\s+Paper\\s+No\\s+\\d+|No\\s+\\d+)\\s*(?:\\((?:1[6-9]|20)\\d{2}\\))?",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). Documents of international organizations by organization, body, session and document number."
         },
         {
           "id": "cite.url",
@@ -1312,10 +1417,10 @@
         },
         {
           "id": "cite.ca.statute.first",
-          "pattern": "\\b(?<series>{{ca_statute_series}}|{{fr_statute_series}})\\s*,?\\s+\\(?(?<year>(?:1[6-9]|20)\\d{2})\\)?(?:\\s*,?\\s+c(?:h)?\\.?\\s*(?<chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*(?:\\s+\\d+(?:\\.\\d+)?)?))?(?:\\s*,?\\s+Sched(?:ule)?\\.?\\s*(?<schedule>[A-Za-z0-9]+))?|\\b(?<compiled_series>C\\.?Q\\.?L\\.?R\\.?|C\\.?C\\.?S\\.?M\\.?|R\\.?L\\.?R\\.?Q\\.?)\\s*,?\\s+c\\.?\\s*(?<compiled_chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*)|\\b(?<regnal>\\d{1,2}(?:\\s*&\\s*\\d{1,2})?\\s+(?:Vict|Geo|Eliz|Will|Anne?|Car|Jac|Hen|Edw)\\.?(?:\\s*[IVX]+)?),?\\s+c\\.?\\s*(?<regnal_chapter>\\d{1,4}[A-Za-z]?)|\\b(?<instrument>(?:SOR|SI|DORS|TR)/\\d{2,4}[-/]\\d{1,4})|\\bCRC,?\\s*c\\.?\\s*(?<consolidated_chapter>\\d{1,4}(?:\\.\\d+)?)|\\b(?<regulation>(?:[A-Z][A-Za-z]{0,3}\\s+)?(?:Reg|OIC)\\.?\\s*\\d{1,4}[-/]\\d{1,4}|(?<fr_regulation>R[\\u00e8e]gl\\s+de\\s+l[\\u2019']Ont\\s*\\d{1,4}/\\d{2,4}))|\\b(?<rr_series>RRO)\\s+(?<rr_year>(?:1[6-9]|20)\\d{2}),?\\s+Reg\\.?\\s+(?<rr_number>\\d{1,5})\\b",
+          "pattern": "\\b(?<series>{{ca_statute_series}}|{{fr_statute_series}})\\s*,?\\s+\\(?(?<year>(?:1[6-9]|20)\\d{2})\\)?(?:\\s*,?\\s+c(?:h)?\\.?\\s*(?<chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*(?:\\s+\\d+(?:\\.\\d+)?)?))?(?:\\s*,?\\s+Sched(?:ule)?\\.?\\s*(?<schedule>[A-Za-z0-9]+))?|\\b(?<historical_series>S\\s?(?:Prov|UC|LC|NS|NB|Nfld)\\s?C?)\\s+(?<historical_year>(?:1[6-9])\\d{2})(?:\\s*\\([^()\\n]{2,30}\\))?,?\\s+c\\.?\\s*(?<historical_chapter>\\d{1,4})|\\b(?<compiled_series>C\\.?Q\\.?L\\.?R\\.?|C\\.?C\\.?S\\.?M\\.?|R\\.?L\\.?R\\.?Q\\.?|RSQ)\\s*,?\\s+c\\.?\\s*(?<compiled_chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*)|\\b(?<regnal>\\d{1,2}(?:\\s*&\\s*\\d{1,2})?\\s+(?:Vict|Geo|Eliz|Will|Anne?|Car|Jac|Hen|Edw)\\.?(?:\\s*[IVX]+)?),?\\s+c\\.?\\s*(?<regnal_chapter>\\d{1,4}[A-Za-z]?)|\\b(?<instrument>(?:SOR|SI|DORS|TR)/\\d{2,4}[-/]\\d{1,4})|\\bCRC,?\\s*c\\.?\\s*(?<consolidated_chapter>\\d{1,4}(?:\\.\\d+)?)|\\b(?<regulation>(?:[A-Z][A-Za-z]{0,3}\\s+)?(?:Reg|OIC)\\.?\\s*\\d{1,4}[-/]\\d{1,4}|(?<fr_regulation>R[\\u00e8e]gl\\s+de\\s+l[\\u2019']Ont\\s*\\d{1,4}/\\d{2,4}))|\\b(?<rr_series>RRO)\\s+(?<rr_year>(?:1[6-9]|20)\\d{2}),?\\s+Reg\\.?\\s+(?<rr_number>\\d{1,5})\\b",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored first-reference grammar for Canadian legislation, in the footnote (McGill Guide) dialect the judgment-side cite.statute.judgment entry cannot reach: the undotted series forms, the CQLR/CCSM/RLRQ compiled-statute forms that carry no year, the imperial regnal-year form (30 & 31 Vict, c 3), and the regulation instruments (SOR//SI//CRC//provincial Reg//OIC). Member list is the shared ca_statute_series//fr_statute_series defs unchanged, so the judgment and footnote dialects name the same series. Measured against the ALR fast-split field gold: the statute family scored 0 citation hits before this entry existed. McGill Canadian regulation extension: retain the four-letter Alta jurisdiction prefix rather than anchoring generic Reg. New vectors are independently invented. McGill French ch and DORS/TR forms, revised Ontario regulations and the French Ontario regulation series retain their complete cores; additional vectors are independently invented.",
+          "provenance": "Beaver-authored first-reference grammar for Canadian legislation, in the footnote (McGill Guide) dialect the judgment-side cite.statute.judgment entry cannot reach: the undotted series forms, the CQLR/CCSM/RLRQ compiled-statute forms that carry no year, the imperial regnal-year form (30 & 31 Vict, c 3), and the regulation instruments (SOR//SI//CRC//provincial Reg//OIC). Member list is the shared ca_statute_series//fr_statute_series defs unchanged, so the judgment and footnote dialects name the same series. Measured against the ALR fast-split field gold: the statute family scored 0 citation hits before this entry existed. McGill Canadian regulation extension: retain the four-letter Alta jurisdiction prefix rather than anchoring generic Reg. New vectors are independently invented. McGill French ch and DORS/TR forms, revised Ontario regulations and the French Ontario regulation series retain their complete cores; additional vectors are independently invented. Pre-Confederation statutes ('S Prov C 1859 (22 Vict), c 9', 'S UC 1793 (33 Geo III), c 73') and the Revised Statutes of Quebec without a year ('RSQ c C-3').",
           "vectors": [
             {
               "input": "Criminal Code, RSC 1985, c C-46, s 718.",
@@ -3043,13 +3148,13 @@
         },
         {
           "id": "cite.case.unreported",
-          "pattern": "\\((?<day>\\d{1,2})\\s+(?<month>Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?<year>(?:1[6-9]|20)\\d{2})\\),?\\s*(?:(?<place>[A-Z][A-Za-z .\\'-]{1,50})\\s+)?(?<docket>[0-9][A-Za-z0-9-]{2,30})\\s+\\((?<court>[A-Z][A-Za-z .]{1,30})\\)(?:\\s*\\[(?:unreported|unpublished)\\])?",
+          "pattern": "\\((?<day>\\d{1,2})\\s+(?<month>Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?<year>(?:1[6-9]|20)\\d{2})\\),?\\s*(?:(?<place>[A-Z][A-Za-z .\\'-]{1,50}),?\\s+)?(?:(?<court_code>[A-Z]{2,6})\\s+)?(?<docket>[0-9][A-Za-z0-9/.-]{2,30})\\s+\\((?<court>[A-Z][A-Za-z .]{1,30}(?:\\s*\\([A-Za-z .]{1,10}\\))?|[a-z][a-z ]{3,40})\\)(?:\\s*\\[(?:unreported|unpublished)\\])?",
           "flags": "",
           "canonical": {},
           "conventions": [
             "mcgill"
           ],
-          "provenance": "Authored McGill Canadian unreported-decision date, file-number and court form. Independently invented vectors. A full case style is required by discovery, so a dated administrative file or meeting does not become a case citation. Retrieval availability is application policy; this grammar only identifies the citation.",
+          "provenance": "Authored McGill Canadian unreported-decision date, file-number and court form. Independently invented vectors. A full case style is required by discovery, so a dated administrative file or meeting does not become a case citation. Retrieval availability is application policy; this grammar only identifies the citation. A file number may hold slashes and dots, may follow the place's comma and a court code, and the court may carry its division ('(ONCJ (GD))').",
           "vectors": [
             {
               "input": "Polder Council v Mere Holdings (21 March 2036), Calgary 2601-08164 (Alta KB) [unreported]",
@@ -6146,10 +6251,10 @@
         },
         {
           "id": "style.statute-title",
-          "pattern": "(?m)(?<title>[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|of|the|and|to|for|in|on|de|la|du|des|et)){0,12}\\s+(?:Acts?|Codes?|Rules?|Regulations?|Charter|Convention|Treaty|Protocol|Declaration)|(?:International\\s+)?(?:Covenant|Acts?|Codes?|Rules?|Regulations?|Charte?r?|Loi|R\\u{e8}glement|Convention|Treaty|Protocol|Declaration)\\s+(?:of|on|respecting|concerning|sur|de|du|des|pour)(?:\\s+(?:[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+)){1,12})(?:,\\s*(?:1[6-9]|20)\\d{2})?(?:\\s*\\([\\p{Lu}][^()\\n]{0,20}\\))?\\s*,?\\s*$",
+          "pattern": "(?m)(?<title>\\p{Lu}[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:\\p{Lu}[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()/-]*|\\p{N}+\\p{L}[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()/-]*|\\(\\p{Lu}[^()\\n]{0,40}\\)|of|the|and|to|for|in|on|respecting|concerning|relating|relative|de|la|le|les|du|des|et|sur|à|au|aux|en)){0,16}\\s+(?:Acts?|Codes?|Rules?|Regulations?|Charter|Convention|Treaty|Protocol|Declaration|Covenant|Agreement|Accord|Bill\\s+of\\s+Rights|Ordinance|Constitution|By-law)|An?\\s+Act\\s+to|(?:An?\\s+)?(?:International\\s+)?(?:Covenant|Acts?|Codes?|Rules?|Regulations?|Charte?r?|Loi|R\\u{e8}glement|Convention|Treaty|Protocol|Declaration|Agreement|Accord)\\s+(?:of|on|respecting|concerning|sur|de|du|des|pour|for|relating|relative|between|establishing|regarding|concernant|modifiant|visant|portant|relatif|relative)(?:\\s+(?:[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+)){1,12})(?:,\\s*(?:1[6-9]|20)\\d{2})?(?:\\s*\\([\\p{Lu}][^()\\n]{0,20}\\))?\\s*,?\\s*$",
           "flags": "",
           "canonical": {},
-          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::STATUTE_TITLE; native Rust regex preserved verbatim. Covenant titles retain their complete heading, including the optional International qualifier.",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::STATUTE_TITLE; native Rust regex preserved verbatim. Covenant titles retain their complete heading, including the optional International qualifier. Titles may hold short connecting words and parenthesized words ('Proceeds of Crime (Money Laundering) and Terrorist Financing Act', 'Offset of Taxes by a Refund or a Rebate (GST/HST) Regulations') and end in Covenant, Agreement, Accord, Bill of Rights, Ordinance or Constitution. A title may also open with its instrument word ('An Act to amend ...', 'Convention for the Protection of ...', 'Treaty Relating to ...'). A title opens with a capital letter, never with the section number written before it ('s 69(1) of the Bankruptcy and Insolvency Act').",
           "vectors": [
             {
               "input": "Criminal Code, ",

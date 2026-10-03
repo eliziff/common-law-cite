@@ -163,17 +163,32 @@ static SECONDARY_ECMASCRIPT: LazyLock<[(&'static str, &'static str, CompiledEcma
 static JOURNAL_ARTICLE: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("cite.journal.article"));
 static ONLINE_SOURCE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.url"));
-// McGill secondary sources that carry no reporter, journal or imprint of their own.
-static SECONDARY_SOURCES: LazyLock<[(&'static str, &'static str, CompiledGrammar); 8]> = LazyLock::new(|| [
+// The McGill Guide's forms that carry no reporter, journal or imprint the grammars above read.
+static SECONDARY_SOURCES: LazyLock<Vec<(&'static str, &'static str, CompiledGrammar)>> = LazyLock::new(|| [
     ("journal", "manuscript_grammar", "cite.secondary.manuscript"),
     ("book", "thesis_grammar", "cite.secondary.thesis"),
     ("journal", "paper_grammar", "cite.secondary.paper"),
     ("journal", "dated_work_grammar", "cite.secondary.dated"),
     ("journal", "news_grammar", "cite.secondary.news"),
+    ("journal", "news_grammar", "cite.secondary.periodical"),
+    ("journal", "news_grammar", "cite.secondary.letter-to-editor"),
+    ("journal", "article_grammar", "cite.journal.bracket-year"),
     ("government", "international_grammar", "cite.secondary.international"),
+    ("government", "international_grammar", "cite.international.organization"),
+    ("case", "international_case_grammar", "cite.case.international"),
     ("book", "encyclopedia_grammar", "cite.secondary.encyclopedia"),
+    ("book", "encyclopedia_grammar", "cite.secondary.encyclopedia-ced"),
+    ("book", "encyclopedia_fascicle_grammar", "cite.secondary.jurisclasseur"),
     ("book", "dictionary_grammar", "cite.secondary.dictionary"),
-].map(|(kind, reason, id)| (kind, reason, backtracking(id))));
+    ("book", "coursepack_grammar", "cite.secondary.coursepack"),
+    ("government", "intellectual_property_grammar", "cite.secondary.intellectual-property"),
+    ("statute", "code_grammar", "cite.ca.code"),
+    ("statute", "bylaw_grammar", "cite.ca.bylaw"),
+    ("court_rule", "court_rules_grammar", "cite.ca.court-rules"),
+    ("parliamentary", "parliamentary_grammar", "cite.parliamentary.record"),
+    ("parliamentary", "parliamentary_grammar", "cite.parliamentary.petition"),
+    ("parliamentary", "parliamentary_grammar", "cite.secondary.committee-report"),
+].into_iter().map(|(kind, reason, id)| (kind, reason, backtracking(id))).collect());
 static ACCESS_DATE: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("attach.access-date"));
 static CASE_VERSUS: LazyLock<Regex> = LazyLock::new(|| linear("style.case-versus"));
 // A balanced, uppercase-first parenthetical ("Quebec (Attorney General)")
@@ -802,6 +817,7 @@ fn authority(kind: &str) -> Authority {
         "parliamentary" => Authority::ParliamentaryPaper,
         "treaty" => Authority::Treaty,
         "government" => Authority::GovernmentDocument,
+        "court_rule" => Authority::CourtRule,
         _ => Authority::Unknown,
     }
 }
