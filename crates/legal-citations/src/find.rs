@@ -163,6 +163,18 @@ static SECONDARY_ECMASCRIPT: LazyLock<[(&'static str, &'static str, CompiledEcma
 static JOURNAL_ARTICLE: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("cite.journal.article"));
 static ONLINE_SOURCE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.url"));
+// McGill secondary sources that carry no reporter, journal or imprint of their own.
+static SECONDARY_SOURCES: LazyLock<[(&'static str, &'static str, CompiledGrammar); 8]> = LazyLock::new(|| [
+    ("journal", "manuscript_grammar", "cite.secondary.manuscript"),
+    ("book", "thesis_grammar", "cite.secondary.thesis"),
+    ("journal", "paper_grammar", "cite.secondary.paper"),
+    ("journal", "dated_work_grammar", "cite.secondary.dated"),
+    ("journal", "news_grammar", "cite.secondary.news"),
+    ("government", "international_grammar", "cite.secondary.international"),
+    ("book", "encyclopedia_grammar", "cite.secondary.encyclopedia"),
+    ("book", "dictionary_grammar", "cite.secondary.dictionary"),
+].map(|(kind, reason, id)| (kind, reason, backtracking(id))));
+static ACCESS_DATE: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("attach.access-date"));
 static CASE_VERSUS: LazyLock<Regex> = LazyLock::new(|| linear("style.case-versus"));
 // A balanced, uppercase-first parenthetical ("Quebec (Attorney General)")
 // counts as one party token; "(1998)", "(2d)" and "(see below)" do not.
@@ -278,6 +290,10 @@ fn secondary_hits(value: &str, primary: &[Hit]) -> Vec<Anchor> {
     found.extend(JOURNAL_ARTICLE.find_iter(value).flatten().map(|matched| {
         Anchor::new(matched.start()..matched.end(), ("journal", "article_grammar"))
     }));
+    for (kind, reason, pattern) in SECONDARY_SOURCES.iter() {
+        found.extend(pattern.find_iter(value).flatten()
+            .map(|matched| Anchor::new(matched.start()..matched.end(), (*kind, *reason))));
+    }
     let mut link_end = None;
     for matched in ONLINE_SOURCE.find_iter(value) {
         let link = link_core(value, matched.start()..matched.end());
@@ -296,6 +312,8 @@ fn secondary_hits(value: &str, primary: &[Hit]) -> Vec<Anchor> {
 /// that encloses it rather than belonging to it ("<https://example.org/a>.",
 /// "[https://example.org/a]").
 fn link_core(text: &str, mut link: Hit) -> Hit {
+    // A link written without its scheme is found with the bracket that opens it.
+    link.start = link.end - text[link.clone()].trim_start_matches(['<', ' ']).len();
     while let Some(last) = text[link.clone()].chars().next_back() {
         let unbalanced = |open: char| text[link.clone()].matches(open).count()
             < text[link.clone()].matches(last).count();
@@ -346,7 +364,8 @@ fn online_extent(text: &str, link: &Hit, limit: usize) -> usize {
         if !alternate_link(text, end, next.start) { break; }
         end = link_end_with_closer(text, &next);
     }
-    end
+    // The date it was visited closes the link: "<...> (last visited 1 July 2024)".
+    end + ACCESS_DATE.find(&text[end..limit.max(end)]).ok().flatten().map_or(0, |found| found.end())
 }
 
 /// Frozen LSP citation_kind: occurrence family, not registry identity.
@@ -782,6 +801,7 @@ fn authority(kind: &str) -> Authority {
         "book" => Authority::Book,
         "parliamentary" => Authority::ParliamentaryPaper,
         "treaty" => Authority::Treaty,
+        "government" => Authority::GovernmentDocument,
         _ => Authority::Unknown,
     }
 }
@@ -961,7 +981,9 @@ fn full_citation(
         "case" => case_style_start(text, core.start, previous_end),
         "statute" => statute_style_start(text, core.start, previous_end),
         "treaty" => treaty_style_start(text, core.start, previous_end),
-        "journal" | "book" | "parliamentary" => work_style_start(text, core.start, previous_end),
+        // A dictionary or encyclopedia entry opens with its own title.
+        _ if matches!(kind_reason, "dictionary_grammar" | "encyclopedia_grammar") => core.start,
+        "journal" | "book" | "parliamentary" | "government" => work_style_start(text, core.start, previous_end),
         // An online-only source is styled with the publisher and title in
         // front of the link; every other unclassified span carries no
         // styled prefix.

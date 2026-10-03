@@ -91,6 +91,16 @@ static HISTORY: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("r
 static VERSUS: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("party.versus"));
 static BRACKETED_PARAGRAPH: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("pinpoint.bracketed-paragraph"));
+static EDITORIAL: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("bracket.editorial"));
+
+/// The end of an editorial bracket that closes a citation ("[unpublished]", "[emphasis added]").
+fn editorial_bracket(text: &str, start: usize, limit: usize) -> Option<usize> {
+    let rest = &text[start..limit];
+    let open = rest.len() - rest.trim_start().len();
+    let body = rest[open..].strip_prefix('[')?;
+    let close = body.find(']')?;
+    EDITORIAL.is_match(body[..close].trim_start()).ok()?.then_some(start + open + close + 2)
+}
 
 /// A parenthetical may hold nested parentheses but never runs on for pages.
 const MAX_PARENTHETICAL: usize = 600;
@@ -320,7 +330,7 @@ fn explicit_short_form(text: &str, start: usize, limit: usize) -> Option<(String
         return None;
     }
     let short = captures.name("short").unwrap().as_str().trim();
-    if short.chars().all(|character| character.is_ascii_digit()) {
+    if short.chars().all(|character| character.is_ascii_digit()) || EDITORIAL.is_match(short).unwrap_or(false) {
         return None;
     }
     Some((short.to_owned(), start + end))
@@ -422,6 +432,10 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
         }
         if let Some((pinpoint, end)) = bracketed_paragraph(text, cursor, limit) {
             result.pinpoints.push(pinpoint);
+            cursor = end;
+            continue;
+        }
+        if let Some(end) = editorial_bracket(text, cursor, limit) {
             cursor = end;
             continue;
         }
