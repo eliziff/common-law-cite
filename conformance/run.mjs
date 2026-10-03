@@ -6,7 +6,7 @@
 // Same statuses and matcher semantics as conformance/run.py and the Rust
 // runner (see conformance/README.md). --promote is only in run.py.
 import { readFileSync, readdirSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -14,7 +14,7 @@ const args = process.argv.slice(2);
 const flag = (name) => args.includes(name);
 const value = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
 const packagePath = value("--package") ?? join(here, "../crates/legal-citations-wasm/js/node.js");
-const lc = await import(packagePath);
+const lc = await import(pathToFileURL(packagePath).href);
 const filter = value("--filter");
 const verbose = flag("--verbose");
 

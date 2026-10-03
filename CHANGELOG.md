@@ -26,7 +26,8 @@ versioned separately and noted here when they change.
   against family collisions.
 - Reference-only occurrences now use the shared discovery path, retaining the
   written short name while exposing the marker and pinpoint separately. The
-  CLI conformance runner explicitly exchanges UTF-8 on every platform.
+  CLI conformance runner explicitly exchanges UTF-8 on every platform, and the
+  npm runner loads absolute package paths on Windows.
 
 - Extraction now returns split footnote source parts alongside citation spans;
   separate resolution reuses those parts and offers safe or aggressive supra
