@@ -218,6 +218,16 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             let request: SplitSourcesRequest = parse(method, request)?;
             to_value(split_sources(&request))
         }
+        "splitNotes" => to_value(split_notes(&parse(method, request)?)?),
+        "noteReferences" => {
+            let request: NoteReferencesRequest = parse(method, request)?;
+            to_value(crate::source::references(&request.parts, request.citations.as_deref(),
+                request.kinds.as_deref(), |prefix| match request.offset_unit {
+                    OffsetUnit::Byte => prefix.len(),
+                    OffsetUnit::Char => prefix.chars().count(),
+                    OffsetUnit::Utf16 => prefix.encode_utf16().count(),
+                }))
+        }
         "sourceFields" => {
             let request: SourceFieldsRequest = parse(method, request)?;
             match (&request.text, &request.part) {
@@ -459,6 +469,52 @@ pub fn split_sources(request: &SplitSourcesRequest) -> crate::source::SourceSpli
     result
 }
 
+/// Note splitting: every part of every note, prose included, as `extract` splits them.
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct SplitNotesRequest {
+    pub text: String,
+    pub notes: Vec<crate::NoteRange>,
+    #[serde(default)]
+    pub offset_unit: OffsetUnit,
+}
+
+/// Authority references: what the split parts cite (see [`crate::source::references`]).
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct NoteReferencesRequest {
+    pub parts: Vec<crate::source::SourcePart>,
+    #[serde(default)]
+    pub citations: Option<Vec<Citation>>,
+    /// The kinds of authority wanted ("case", "statute", "journal", ...); every kind when absent.
+    #[serde(default)]
+    pub kinds: Option<Vec<crate::Authority>>,
+    #[serde(default)]
+    pub offset_unit: OffsetUnit,
+}
+
+pub fn split_notes(request: &SplitNotesRequest) -> Result<Vec<crate::source::SourcePart>, ApiError> {
+    let document = ScalarText::new(&request.text);
+    let options = byte_options(&document, &Options { notes: Some(request.notes.clone()), ..Options::default() },
+        request.offset_unit)?;
+    let mut parts = crate::source::split_notes(&request.text, options.notes.as_deref().unwrap_or(&[]));
+    convert_parts(&document, &mut parts, request.offset_unit);
+    Ok(parts)
+}
+
+fn convert_parts(document: &ScalarText<'_>, parts: &mut [crate::source::SourcePart], unit: OffsetUnit) {
+    for part in parts {
+        for (start, end) in &mut part.anchor_spans {
+            *start = from_byte(document, *start, unit);
+            *end = from_byte(document, *end, unit);
+        }
+        part.start = from_byte(document, part.start, unit);
+        part.end = from_byte(document, part.end, unit);
+    }
+}
+
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
@@ -496,14 +552,7 @@ pub struct ExtractResponse {
 pub fn extract(request: &ExtractRequest) -> Result<ExtractResponse, ApiError> {
     let document = ScalarText::new(&request.text);
     let (citations, mut source_parts, resolutions) = extract_citations(&document, request.markup_text.as_deref(), &request.options, request.offset_unit)?;
-    for part in &mut source_parts {
-        for (start, end) in &mut part.anchor_spans {
-            *start = from_byte(&document, *start, request.offset_unit);
-            *end = from_byte(&document, *end, request.offset_unit);
-        }
-        part.start = from_byte(&document, part.start, request.offset_unit);
-        part.end = from_byte(&document, part.end, request.offset_unit);
-    }
+    convert_parts(&document, &mut source_parts, request.offset_unit);
     Ok(ExtractResponse {
         schema_version: SCHEMA_VERSION,
         offset_unit: request.offset_unit,

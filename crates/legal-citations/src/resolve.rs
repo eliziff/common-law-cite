@@ -280,6 +280,8 @@ struct History {
     records: Vec<ReferenceSource>,
     inferred: Vec<ReferenceSource>,
     last_part_target: Option<Option<Target>>,
+    /// Numbering sequence of the note that set `last_part_target`; ibid stays within its own.
+    last_part_sequence: u32,
 }
 
 impl History {
@@ -435,6 +437,7 @@ impl<'a> Resolver<'a> {
         history.last_part_target = Some(if note_targets.len() == 1 {
             note_targets.into_iter().next().flatten().and_then(Target::from_registry)
         } else { None });
+        history.last_part_sequence = range.sequence;
     }
 
     fn process_part(&mut self, note: usize, part_index: usize, prior_records: usize,
@@ -491,7 +494,8 @@ impl<'a> Resolver<'a> {
                 &history.records[..prior_records], &history.inferred[..prior_inferred],
                 Some(range.sequence))),
             "ibid" => {
-                let prior = sibling.clone().or_else(|| history.last_part_target.clone());
+                let prior = sibling.clone().or_else(|| history.last_part_target.clone()
+                    .filter(|_| history.last_part_sequence == range.sequence));
                 Some(if let Some(target) = prior {
                     let reason = if target.is_none() { "ibid_after_unresolved" }
                         else if sibling.is_some() { "ibid_previous" } else { "ibid_previous_note" };

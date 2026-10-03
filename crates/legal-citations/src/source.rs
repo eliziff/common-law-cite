@@ -613,6 +613,80 @@ pub fn extract_fields(part: &SourcePart, extended_us: bool) -> SourceFields {
         citation_with_style: styled, reasons }
 }
 
+/// What a part cites, in the caller's offsets: a recognized "citation", or the "bare"
+/// citation or "link" of a source the finder does not recognize. Prose is never one.
+/// `link` is the URL the citation writes, when it writes one; `citation` is the index of a
+/// citation the caller supplied.
+#[derive(Clone, Debug, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct Reference {
+    pub start: usize,
+    pub end: usize,
+    pub text: String,
+    pub form: &'static str,
+    pub authority: crate::Authority,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub link: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub citation: Option<usize>,
+}
+
+/// A split part that cites, with what it cites.
+#[derive(Clone, Debug, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct ReferencePart { pub part: SourcePart, pub references: Vec<Reference> }
+
+/// Authority references, built on the note split: only the parts that cite one of `kinds`
+/// (every kind when absent). `citations` share the parts' offsets, and each part is searched
+/// without them; `measure` counts a prefix of a part's text in those offsets.
+pub fn references(parts: &[SourcePart], citations: Option<&[crate::Citation]>,
+    kinds: Option<&[crate::Authority]>, measure: impl Fn(&str) -> usize) -> Vec<ReferencePart> {
+    use crate::Authority;
+    let link_in = |text: &str| URL.find(text).expect("source URL")
+        .map(|found| found.as_str().trim_matches(['<', '>', '.', ',', ';', ' ']).to_owned());
+    parts.iter().filter_map(|part| {
+        let at = |byte: usize| part.start + measure(&part.text[..byte]);
+        let cited = |citation: &crate::Citation, start, end, index| Reference { start, end,
+            text: citation.span.text.clone(), form: "citation", authority: citation.authority,
+            link: citation.fields.url.clone().or_else(|| link_in(&citation.full_span.text)), citation: index };
+        let mut references = match citations {
+            Some(citations) => citations.iter().filter(|citation| citation.form != crate::Form::Unknown
+                && citation.span.start < part.end && part.start < citation.span.end)
+                .map(|citation| cited(citation, citation.span.start, citation.span.end, Some(citation.index)))
+                .collect::<Vec<_>>(),
+            None => crate::extract(&part.text, &crate::Options { resolve: false, ..Default::default() }).iter()
+                .filter(|citation| citation.form != crate::Form::Unknown)
+                .map(|citation| cited(citation, at(citation.span.start), at(citation.span.end), None)).collect(),
+        };
+        // A source the finder misses cites through its grammar anchors: its bare citation,
+        // or its link when a link is all it has, else the anchors' own extent.
+        if references.is_empty() && !part.anchors.is_empty() {
+            let fields = extract_fields(part, part.extended_us);
+            let linked = part.anchors.iter().all(|anchor| anchor == "url");
+            let core = if linked { fields.link_candidate.clone() } else { derive_bare_citation(&part.text, fields.kind) };
+            let span = part.text.find(core.as_str()).filter(|_| !core.is_empty())
+                .map(|start| (start, start + core.len())).or_else(|| {
+                    let found = anchors(&part.text, part.extended_us);
+                    Some((found.first()?.0, found.iter().map(|anchor| anchor.1).max()?))
+                });
+            let authority = match fields.kind {
+                "case" | "unreported" => Authority::Case,
+                "statute" => Authority::Statute,
+                "regulation" => Authority::Regulation,
+                "journal" | "article" => Authority::Journal,
+                "book" | "essay_collection" => Authority::Book,
+                _ if linked => Authority::Webpage,
+                _ => Authority::Unknown,
+            };
+            references.extend(span.map(|(start, end)| Reference { start: at(start), end: at(end),
+                text: part.text[start..end].into(), form: if linked { "link" } else { "bare" }, authority,
+                link: (fields.link_candidate != "other").then(|| fields.link_candidate.clone()), citation: None }));
+        }
+        references.retain(|reference| kinds.is_none_or(|kinds| kinds.contains(&reference.authority)));
+        (!references.is_empty()).then(|| ReferencePart { part: part.clone(), references })
+    }).collect()
+}
+
 pub fn extract_text_fields(text: &str, extended_us: bool) -> SourceFields {
     let value = text.trim();
     let start = text.len() - text.trim_start().len();
