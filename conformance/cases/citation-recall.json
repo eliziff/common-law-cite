@@ -1,0 +1,331 @@
+{
+  "format": "legal-citations-conformance:v1",
+  "source": "Independently invented citations and prose controls; McGill conventions are descriptive and are not engine modes.",
+  "cases": [
+    {
+      "name": "mcgill/book-publisher-and-year-without-city",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Lena Tern, Shore Access (Reed Press, 2036) at 54.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "book",
+            "format": "publication",
+            "style": {
+              "text": "Lena Tern, Shore Access"
+            },
+            "fullSpan": {
+              "text": "Lena Tern, Shore Access (Reed Press, 2036) at 54"
+            },
+            "fields": {
+              "publisher": "Reed Press",
+              "year": "2036",
+              "place": null
+            },
+            "pinpoints": [
+              {
+                "kind": "page",
+                "first": "54"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/regulation-retains-alberta-jurisdiction",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Coastal Drainage Rules, Alta Reg 64/2036, s 9.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "regulation",
+            "style": {
+              "text": "Coastal Drainage Rules"
+            },
+            "span": {
+              "text": "Alta Reg 64/2036"
+            },
+            "fields": {
+              "series": "Alta Reg",
+              "regulation": "64/2036"
+            },
+            "jurisdiction": "ca-ab",
+            "pinpoints": [
+              {
+                "kind": "section",
+                "first": "9"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/unreported-decision-date-file-and-court",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Polder Council v Mere Holdings (21 March 2036), Calgary 2601-08164 (Alta KB) [unreported] at para 16.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "case",
+            "format": "docket",
+            "style": {
+              "text": "Polder Council v Mere Holdings"
+            },
+            "fields": {
+              "year": "2036",
+              "month": "March",
+              "day": "21",
+              "docket": "2601-08164"
+            },
+            "pinpoints": [
+              {
+                "kind": "paragraph",
+                "first": "16"
+              }
+            ],
+            "key": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "general/westlaw-keeps-identity-without-public-url",
+      "status": "pass",
+      "input": "Moor Council v Vale Office, 2035 WL 651882.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "case",
+            "format": "database",
+            "fields": {
+              "number": "651882",
+              "year": "2035"
+            },
+            "key": "3:database:wl:2035:651882"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/quicklaw-keeps-identity-without-public-url",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Moor Council v Vale Office, [2035] AJ No 416 (QL).",
+      "expect": {
+        "citations": [
+          {
+            "authority": "case",
+            "format": "database",
+            "fields": {
+              "number": "416",
+              "year": "2035"
+            },
+            "key": "3:database:aj:2035:416"
+          }
+        ]
+      }
+    },
+    {
+      "name": "general/dated-administrative-file-is-not-an-unreported-case",
+      "status": "pass",
+      "input": "Meeting minutes (21 March 2036), Calgary 2601-08164 (Alta KB) [unreported].",
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "general/publisher-year-parenthetical-without-a-work-is-not-a-book",
+      "status": "pass",
+      "input": "The group met again (Reed Press, 2036).",
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "mixed/us-reporter-and-mcgill-book-retain-their-families",
+      "status": "pass",
+      "input": "61 F.4th 218; Lena Tern, Shore Access (Reed Press, 2036) at 54.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "case",
+            "format": "reporter",
+            "span": {
+              "text": "61 F.4th 218"
+            }
+          },
+          {
+            "authority": "book",
+            "format": "publication",
+            "style": {
+              "text": "Lena Tern, Shore Access"
+            },
+            "fields": {
+              "publisher": "Reed Press",
+              "year": "2036"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/french-revised-statute-chapter",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Loi sur les habitats, LRC 1985, ch W-6, art 7.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "statute",
+            "fields": {
+              "chapter": "W-6",
+              "year": "1985",
+              "series": "LRC"
+            },
+            "language": "fr"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/french-federal-regulation",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "R\u00e8glement des marais, DORS/2036-64, art 3.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "regulation",
+            "fields": {
+              "series": "DORS",
+              "regulation": "2036-64"
+            },
+            "language": "fr"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/revised-ontario-regulation",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Coastal Procedure Rules, RRO 1990, Reg 68, r 5.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "regulation",
+            "span": {
+              "text": "RRO 1990, Reg 68"
+            },
+            "fields": {
+              "series": "RRO",
+              "year": "1990",
+              "regulation": "68"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/chapter-starting-page-and-pinpoint",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ivo Gull, \"Reed Plots\" in Lena Tern, ed, Shore Rights (Reed Press, 2036) 41 at 58.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "book_chapter",
+            "fields": {
+              "publisher": "Reed Press",
+              "year": "2036",
+              "page": "41"
+            },
+            "pinpoints": [
+              {
+                "kind": "page",
+                "first": "58"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/decisions-in-one-file-are-not-one-authority",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Polder Council v Mere Holdings (21 March 2036), Calgary 2601-08164 (Alta KB) [unreported]; Polder Council v Mere Holdings (24 April 2036), Calgary 2601-08164 (Alta KB) [unreported].",
+      "expect": {
+        "citations": [
+          {
+            "format": "docket",
+            "key": null
+          },
+          {
+            "format": "docket",
+            "key": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "mixed-style/court-date-is-not-a-publisher-imprint",
+      "status": "pass",
+      "input": "Basin Agency v Cedar Weir, 287 F.3d 618 (9th Cir. Mar. 12, 2037).",
+      "expect": {
+        "citations": [
+          {
+            "authority": "case",
+            "format": "reporter",
+            "span": {
+              "text": "287 F.3d 618"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/initialled-author-still-owns-publisher-imprint",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "C V Linn, Waterways (Reed Press, 2036).",
+      "expect": {
+        "citations": [
+          {
+            "authority": "book",
+            "style": {
+              "text": "C V Linn, Waterways"
+            },
+            "fields": {
+              "publisher": "Reed Press",
+              "year": "2036"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mixed/french-renvoi-retains-subject",
+      "status": "pass",
+      "input": "Renvoi relatif aux chenaux de Lune, 2035 QCCA 613.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "case",
+            "style": {
+              "text": "Renvoi relatif aux chenaux de Lune"
+            },
+            "span": {
+              "text": "2035 QCCA 613"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

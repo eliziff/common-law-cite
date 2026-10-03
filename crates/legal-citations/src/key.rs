@@ -324,6 +324,10 @@ fn database(citation: &Citation, registry: &Registry) -> Option<Vec<String>> {
 }
 
 fn docket(citation: &Citation, registry: &Registry) -> Option<Vec<String>> {
+    // A dated unreported decision is not the file itself: several decisions
+    // can share a docket. Keep a document-local identity until its decision
+    // identity can be represented without conflating those decisions.
+    if citation.reasons.iter().any(|reason| reason == "unreported_grammar") { return None; }
     let fields = &citation.fields;
     let court = citation
         .court

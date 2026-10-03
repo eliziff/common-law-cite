@@ -139,7 +139,7 @@ static LAW_SUBDIVISION: LazyLock<CompiledEcmascriptGrammar> =
 // announces itself with a publication block instead, one family per entry.
 // These only ever add anchors: a secondary hit that touches a case-law hit is
 // dropped, so the case lane is byte-identical with and without them.
-static SECONDARY_ECMASCRIPT: LazyLock<[(&'static str, &'static str, CompiledEcmascriptGrammar); 9]> =
+static SECONDARY_ECMASCRIPT: LazyLock<[(&'static str, &'static str, CompiledEcmascriptGrammar); 10]> =
     LazyLock::new(|| {
         [
             // Multi-word tribunal identifiers (2020 Comp Trib 6, 2000 CIRB LD
@@ -153,6 +153,7 @@ static SECONDARY_ECMASCRIPT: LazyLock<[(&'static str, &'static str, CompiledEcma
             ("parliamentary", "westminster_grammar", "cite.parliamentary.commonwealth"),
             ("treaty", "treaty_grammar", "cite.treaty"),
             ("case", "database_grammar", "cite.database"),
+            ("case", "unreported_grammar", "cite.case.unreported"),
         ]
         .map(|(kind, reason, id)| (kind, reason, linear(id)))
     });
@@ -252,14 +253,27 @@ fn resolve(mut found: Vec<Anchor>) -> Vec<Anchor> {
 /// First references to the authorities that never carry a reporter: statutes
 /// and regulations, journal articles, monographs and edited collections,
 /// parliamentary papers, treaties, database identifiers and online-only sources.
-fn secondary_hits(value: &str) -> Vec<Anchor> {
+fn secondary_hits(value: &str, primary: &[Hit]) -> Vec<Anchor> {
     let mut found = Vec::new();
     for (kind, reason, pattern) in SECONDARY_ECMASCRIPT.iter() {
-        found.extend(
-            pattern
-                .find_iter(value)
-                .map(|matched| Anchor::new(matched.start()..matched.end(), (*kind, *reason))),
-        );
+        for matched in pattern.find_iter(value) {
+            let start = matched.start();
+            if *reason == "unreported_grammar" && case_style_start(value, start, 0) == start {
+                continue;
+            }
+            if *reason == "book_grammar" && pattern.captures(matched.as_str())
+                .is_some_and(|capture| capture.name("publisher_imprint").is_some()) {
+                let authored = matched_style(&AUTHORED_WORK, "work", value, start, 0);
+                // A court/date tail is not a publisher imprint. An authored
+                // work cannot claim a recognised case core as its title.
+                if authored == start || primary.iter().any(|core|
+                    authored <= core.start && core.end <= start
+                        && occurrence_family(&value[core.clone()]).0 == "case") {
+                    continue;
+                }
+            }
+            found.push(Anchor::new(start..matched.end(), (*kind, *reason)));
+        }
     }
     found.extend(JOURNAL_ARTICLE.find_iter(value).flatten().map(|matched| {
         Anchor::new(matched.start()..matched.end(), ("journal", "article_grammar"))
@@ -368,7 +382,7 @@ fn citation_anchors(value: &str, extended_us: bool, scopes: &[usize], enrich: bo
     // 487", and "(2021), 25 Can. Crim L Rev 255" is not "(2021), 25 Can.".
     // The block keeps the family its publication names ("(1879), 5 Ex D 264"
     // is a case).
-    let mut secondary = secondary_hits(value);
+    let mut secondary = secondary_hits(value, &found);
     let mut primary = Vec::new();
     for anchor in resolve(found.into_iter().map(|span| Anchor { span, ..Anchor::default() }).collect()) {
         let hit = &anchor.span;
@@ -1412,24 +1426,11 @@ pub fn find_occurrences(text: &str, options: &Options) -> Vec<Citation> {
     discover(text, options, None, false)
 }
 
-/// Frozen LSP authority_references_in_text: materialize only reference markers,
-/// using the same anchor selection and pinpoint reader as full occurrences.
+/// Reference occurrences use the same discovery, written names and pinpoint
+/// extents as citation occurrences. The inline marker remains a separate span.
 pub fn find_references(text: &str) -> Vec<Citation> {
-    let anchors = citation_anchors(text, true, &[], false);
-    let references: Vec<_> = INLINE_REFERENCE.find_iter(text).map(|matched| matched.range())
-        .filter(|reference| !anchors.iter().any(|anchor|
-            reference.start < anchor.span.end && anchor.span.start < reference.end)).collect();
-    references.iter().enumerate().map(|(index, token)| {
-        let next = anchors.partition_point(|anchor| anchor.span.start < token.end);
-        let limit = references.get(index + 1).map_or(text.len(), |next| next.start)
-            .min(anchors.get(next).map_or(text.len(), |next| next.span.start));
-        let form = if text[token.clone()].get(..4).is_some_and(|prefix| prefix.eq_ignore_ascii_case("ibid")) {
-            Form::Ibid
-        } else { Form::Supra };
-        let mut citation = back_citation(text, token, (form, None, false, false), None, token.start, limit);
-        citation.index = index;
-        citation
-    }).collect()
+    find_styled(text, &Options::default(), None).into_iter()
+        .filter(|citation| citation.fields.inline_reference.is_some()).collect()
 }
 
 pub(crate) fn find_styled(text: &str, options: &Options, markup: Option<&crate::clean::Markup<'_>>) -> Vec<Citation> {

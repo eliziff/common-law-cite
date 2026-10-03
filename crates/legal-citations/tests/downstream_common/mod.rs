@@ -48,6 +48,8 @@ pub fn cite(index: usize, form: Form, authority: Authority, core: &str, start: u
         short_name: None,
         explicit_short_name: None,
         parallel_group: None,
+        alias: None,
+        interpretations: Vec::new(),
         antecedent: None,
         key: None,
         reasons: Vec::new(),
@@ -111,8 +113,8 @@ impl B {
     }
     pub fn parties(mut self, plaintiff: &str, defendant: &str) -> Self {
         self.0.parties = Some(Parties {
-            plaintiff: plaintiff.into(),
-            defendant: defendant.into(),
+            plaintiff: Some(plaintiff.into()),
+            defendant: Some(defendant.into()),
         });
         self
     }

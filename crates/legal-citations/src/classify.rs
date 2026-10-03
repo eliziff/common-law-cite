@@ -39,6 +39,7 @@ pub(crate) static ROUTING: LazyLock<CompiledEcmascriptGrammar> =
 static JOURNAL_ARTICLE: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("cite.journal.article"));
 static BOOK: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.book.imprint"));
+static UNREPORTED: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.case.unreported"));
 static PARLIAMENTARY: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.parliamentary.paper"));
 static FRENCH_REPORTER: LazyLock<CompiledEcmascriptGrammar> =
@@ -462,6 +463,18 @@ fn treaty(core: &str) -> Option<Reading> {
     Some(reading)
 }
 
+fn unreported(core: &str) -> Option<Reading> {
+    let captures = whole(&UNREPORTED, core)?;
+    let mut reading = Reading::new(Authority::Case, Some(Format::Docket), "unreported_grammar");
+    reading.fields.year = group(&captures, "year");
+    reading.fields.month = group(&captures, "month");
+    reading.fields.day = group(&captures, "day");
+    reading.fields.place = group(&captures, "place");
+    reading.fields.docket = group(&captures, "docket");
+    reading.court = group(&captures, "court");
+    Some(reading)
+}
+
 fn parliamentary(core: &str) -> Option<Reading> {
     if let Some(captures) = whole(&PARLIAMENTARY_COMMONWEALTH, core) {
         let debate = ["house", "au_record", "nz_record"]
@@ -639,7 +652,8 @@ fn book(core: &str, style: &str) -> Option<Reading> {
     fields.edition = group(&captures, "edition");
     fields.page = group(&captures, "first_page");
     fields.place = group(&captures, "place");
-    let imprint = group(&captures, "imprint").or_else(|| group(&captures, "edition_imprint"));
+    let imprint = group(&captures, "imprint").or_else(|| group(&captures, "edition_imprint"))
+        .or_else(|| group(&captures, "publisher_imprint"));
     if let Some(imprint) = imprint {
         fields.year = last_year(&imprint);
         let publisher = imprint
@@ -652,6 +666,8 @@ fn book(core: &str, style: &str) -> Option<Reading> {
         } else if let Some((place, publisher)) = imprint.split_once(':') {
             fields.place = Some(place.trim().to_owned());
             fields.publisher = publisher.split(',').next().map(|value| value.trim().to_owned());
+        } else {
+            fields.publisher = publisher;
         }
     }
     Some(reading)
@@ -789,6 +805,7 @@ pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
         if let Some(reading) = neutral(core) { return Some(neutral_with_publication(reading)); }
     }
     canlii(core)
+        .or_else(|| unreported(core))
         .or_else(|| treaty(core))
         .or_else(|| parliamentary(core))
         .or_else(|| legislation(core))

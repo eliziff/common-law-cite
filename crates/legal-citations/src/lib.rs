@@ -163,8 +163,7 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
                 && citation.span.end <= previous.end)
                 .max_by_key(|citation| citation.span.start)
                 .and_then(|citation| preview.iter().find(|resolution| resolution.index == citation.index))
-                .and_then(|resolution| resolution.url.as_deref())
-                .is_some_and(|url| !url.is_empty() && !url.eq_ignore_ascii_case("other"))
+                .is_some_and(|resolution| resolution.antecedent.is_some() || resolution.source_part.is_some())
         }).collect::<Vec<_>>();
         source::merge_linked_ibids(text, notes, &mut parts, &linked);
     }

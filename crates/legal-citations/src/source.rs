@@ -171,9 +171,8 @@ pub fn split_notes(text: &str, notes: &[crate::NoteRange]) -> Vec<SourcePart> {
     parts
 }
 
-/// The original prefilter admits a leading ibid after a preceding ibid only
-/// when that predecessor has a link. Extraction first splits conservatively;
-/// the caller can then reuse the resolver's link decision for these rare notes.
+/// Extraction first splits consecutive ibids conservatively; the caller can
+/// merge a continuation once its predecessor has an identified antecedent.
 pub(crate) fn linked_ibid_candidates(text: &str, notes: &[crate::NoteRange], parts: &[SourcePart]) -> Vec<usize> {
     notes.iter().enumerate().skip(1).filter_map(|(index, note)| {
         let previous = &notes[index - 1];

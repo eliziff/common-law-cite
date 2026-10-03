@@ -199,11 +199,11 @@ fn supra_prefers_its_own_numbering_sequence() {
 }
 
 #[test]
-fn supra_falls_back_to_a_unique_note_elsewhere() {
+fn supra_does_not_cross_an_explicit_numbering_sequence() {
     let citations = vec![jordan(0, 10), supra(1, None, Some(1), 210)];
     let notes = [note_in(0, 1, 0, 100), note_in(1, 2, 200, 300)];
     let resolutions = resolve_with_reasons(&citations, Some(&notes));
-    assert_eq!(find(&resolutions, 1), (Some(0), "note_only"));
+    assert_eq!(find(&resolutions, 1), (None, "note_out_of_range"));
 }
 
 #[test]

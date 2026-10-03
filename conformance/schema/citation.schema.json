@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/eliziff/legal-citations/blob/main/conformance/schema/citation.schema.json",
   "title": "legal-citations extract response",
-  "description": "Output of the `extract` API method (Rust api::extract, Python legal_citations.call('extract'), npm call('extract'), CLI `legal-citations extract`). Schema version 2: breaking changes bump `schemaVersion`; new optional properties are added here without a bump. Written from crates/legal-citations/src/model.rs; crates/legal-citations-cli/tests/schema.rs fails when the two drift.",
+  "description": "Output of the `extract` API method (Rust api::extract, Python legal_citations.call('extract'), npm call('extract'), CLI `legal-citations extract`). Schema version 3: breaking changes bump `schemaVersion`; new optional properties are added here without a bump. Written from crates/legal-citations/src/model.rs; crates/legal-citations-cli/tests/schema.rs fails when the two drift.",
   "type": "object",
   "required": [
     "schemaVersion",
@@ -14,7 +14,7 @@
     "schemaVersion": {
       "type": "integer",
       "enum": [
-        2
+        3
       ]
     },
     "offsetUnit": {
@@ -35,6 +35,13 @@
           "type": "integer",
           "minimum": 0
         }
+      }
+    },
+    "sourceParts": {
+      "description": "Source boundaries in supplied footnotes, independent of citation cores and retrieval URLs.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sourcePart"
       }
     }
   },
@@ -697,6 +704,53 @@
         },
         "tokenSpan": {
           "$ref": "#/$defs/span"
+        }
+      }
+    },
+    "sourcePart": {
+      "type": "object",
+      "required": [
+        "start",
+        "end",
+        "text",
+        "anchors",
+        "extendedUs",
+        "anchorSpans"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "text": {
+          "type": "string"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resolvedUrl": {
+          "type": "string"
+        },
+        "extendedUs": {
+          "type": "boolean"
+        },
+        "anchorSpans": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
         }
       }
     }

@@ -10,9 +10,28 @@ versioned separately and noted here when they change.
 
 ## [Unreleased]
 
+- Supra registry matching returns opaque source identifiers (`target`) rather
+  than requiring a `link`; optional URLs enrich an association afterward.
+  Registry records also retain inherited source names. JSON schema version 3
+  marks this registry contract change; existing identity-key algorithms remain
+  version 3.
+- URL-free authorities resolve through numbered notes, safe unique sources and
+  supra/ibid chains. Source ambiguity and conflicting note numbers abstain.
+- McGill convention metadata labels Canadian publication, legislation and
+  unreported-decision grammar without adding style modes. Recognition adds
+  publisher/year book frames, chapter pages, complete Alberta regulation
+  prefixes, French and revised Ontario legislation, and date/file/court case
+  forms. New Series reporters, complete legislative body names and French
+  Renvoi headings retain their source text. Mixed U.S./Canadian cases guard
+  against family collisions.
+- Reference-only occurrences now use the shared discovery path, retaining the
+  written short name while exposing the marker and pinpoint separately. The
+  CLI conformance runner explicitly exchanges UTF-8 on every platform.
+
 - Extraction now returns split footnote source parts alongside citation spans;
   separate resolution reuses those parts and offers safe or aggressive supra
-  linking. A part without a proven authority remains unlinked.
+  linking. Supplied source parts without citation keys keep document-local
+  identities rather than acquiring bibliographic keys.
 - The ALR source splitter and short-form registry now share one Rust resolution
   pass, including explicit names, inferred forms, numbered notes and ibid.
 - Pinned U.S. extractor captures and edition candidates now travel through the

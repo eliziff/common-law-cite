@@ -1,0 +1,790 @@
+{
+  "format": "legal-citations-conformance:v1",
+  "source": "Independently invented source records and references; no private document or report data.",
+  "description": "Supra association uses source identity without a retrieval URL.",
+  "cases": [
+    {
+      "name": "registry/named-source-without-url",
+      "method": "resolveRegistryReference",
+      "request": {
+        "text": "Wren, supra note 4 at 75.",
+        "aggressive": false,
+        "registry": [
+          {
+            "note": 4,
+            "target": "essay:riverbank",
+            "short_form": "Wren"
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": [
+        "essay:riverbank",
+        "note_number"
+      ]
+    },
+    {
+      "name": "registry/bare-note-with-one-source",
+      "method": "resolveRegistryReference",
+      "request": {
+        "text": "Supra note 4 at 75.",
+        "aggressive": false,
+        "registry": [
+          {
+            "note": "4",
+            "target": "essay:riverbank",
+            "short_form": "Wren"
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": [
+        "essay:riverbank",
+        "note_only"
+      ]
+    },
+    {
+      "name": "registry/repeated-one-authority-is-unambiguous",
+      "method": "resolveRegistryReference",
+      "request": {
+        "text": "Supra note 4.",
+        "aggressive": false,
+        "registry": [
+          {
+            "note": "4",
+            "target": "essay:riverbank"
+          },
+          {
+            "note": "4",
+            "target": "essay:riverbank"
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": [
+        "essay:riverbank",
+        "note_only"
+      ]
+    },
+    {
+      "name": "registry/bare-note-with-two-sources",
+      "method": "resolveRegistryReference",
+      "request": {
+        "text": "Supra note 4.",
+        "aggressive": true,
+        "registry": [
+          {
+            "note": "4",
+            "target": "essay:riverbank"
+          },
+          {
+            "note": "4",
+            "target": "book:riparian"
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": [
+        "",
+        "ambiguous_note"
+      ]
+    },
+    {
+      "name": "registry/name-cannot-override-numbered-note",
+      "method": "resolveRegistryReference",
+      "request": {
+        "text": "Wren, supra note 8.",
+        "aggressive": true,
+        "registry": [
+          {
+            "note": "4",
+            "target": "essay:riverbank",
+            "short_form": "Wren"
+          },
+          {
+            "note": "8",
+            "target": "book:riparian",
+            "short_form": "Kestrel"
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": [
+        "",
+        "note_name_conflict"
+      ]
+    },
+    {
+      "name": "registry/identifiers-are-opaque",
+      "method": "resolveRegistryReference",
+      "request": {
+        "text": "Wren, supra.",
+        "aggressive": false,
+        "registry": [
+          {
+            "target": "Book:Note#A",
+            "short_form": "Wren"
+          },
+          {
+            "target": "book:note#A",
+            "short_form": "Wren"
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": [
+        "",
+        "abstain_ambiguous_exact_sf"
+      ]
+    },
+    {
+      "name": "registry/inferred-acronym-without-url",
+      "method": "resolveInferredReference",
+      "request": {
+        "text": "WCA, supra note 4 at s 9.",
+        "registry": [
+          {
+            "note": "4",
+            "target": "legislation:wetland",
+            "verbatim": "Wetland Corridors Act, SC 2034, c 18."
+          }
+        ],
+        "inferredForms": [
+          {
+            "note": "4",
+            "target": "legislation:wetland",
+            "short_form": "WCA",
+            "short_form_norm": "wca",
+            "rule": "legislation_acronym"
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": [
+        "legislation:wetland",
+        "inferred_short_form:legislation_acronym"
+      ]
+    },
+    {
+      "name": "identity/url-free-supra-chain",
+      "status": "pass",
+      "input": "Lena Tern, Shore Access (Reed Press, 2036).\n\nTern, supra note 4 at 54.\n\nTern, supra note 8 at 58.",
+      "options": {
+        "notes": [
+          {
+            "number": 4,
+            "start": 0,
+            "end": 43
+          },
+          {
+            "number": 8,
+            "start": 45,
+            "end": 70
+          },
+          {
+            "number": 12,
+            "start": 72,
+            "end": 97
+          }
+        ]
+      },
+      "expect": {
+        "authorities": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "citations": [
+          {
+            "authority": "book"
+          },
+          {
+            "style": {
+              "text": "Tern"
+            },
+            "fullSpan": {
+              "text": "Tern, supra note 4 at 54"
+            },
+            "antecedent": 0
+          },
+          {
+            "style": {
+              "text": "Tern"
+            },
+            "fullSpan": {
+              "text": "Tern, supra note 8 at 58"
+            },
+            "antecedent": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "identity/source-only-chain-without-reference-parts",
+      "method": "resolve",
+      "status": "pass",
+      "request": {
+        "citations": [
+          {
+            "index": 0,
+            "form": "supra",
+            "authority": "unknown",
+            "span": {
+              "start": 77,
+              "end": 89,
+              "text": "supra note 4"
+            },
+            "fullSpan": {
+              "start": 56,
+              "end": 95,
+              "text": "Advisory Memorandum, supra note 4 at 7."
+            },
+            "fields": {
+              "note": 4
+            },
+            "reasons": [],
+            "style": {
+              "start": 56,
+              "end": 75,
+              "text": "Advisory Memorandum"
+            }
+          },
+          {
+            "index": 1,
+            "form": "supra",
+            "authority": "unknown",
+            "span": {
+              "start": 118,
+              "end": 130,
+              "text": "supra note 8"
+            },
+            "fullSpan": {
+              "start": 97,
+              "end": 136,
+              "text": "Advisory Memorandum, supra note 8 at 9."
+            },
+            "fields": {
+              "note": 8
+            },
+            "reasons": [],
+            "style": {
+              "start": 97,
+              "end": 116,
+              "text": "Advisory Memorandum"
+            }
+          }
+        ],
+        "notes": [
+          {
+            "number": 4,
+            "start": 0,
+            "end": 54
+          },
+          {
+            "number": 8,
+            "start": 56,
+            "end": 95
+          },
+          {
+            "number": 12,
+            "start": 97,
+            "end": 136
+          }
+        ],
+        "sourceParts": [
+          {
+            "start": 0,
+            "end": 54,
+            "text": "Wetland Board, Advisory Memorandum, File WB-62 (2036).",
+            "anchors": [
+              "document"
+            ]
+          }
+        ]
+      },
+      "expect": {
+        "authorities": [
+          [
+            0,
+            1
+          ]
+        ],
+        "resolutions": [
+          {
+            "index": 0,
+            "antecedent": null,
+            "sourcePart": 0,
+            "url": null
+          },
+          {
+            "index": 1,
+            "antecedent": null,
+            "sourcePart": 0,
+            "url": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "identity/leading-ibid-obeys-body-reading-order",
+      "method": "resolve",
+      "status": "pass",
+      "request": {
+        "citations": [
+          {
+            "index": 0,
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "start": 31,
+              "end": 44,
+              "text": "2037 BCSC 842"
+            },
+            "fullSpan": {
+              "start": 0,
+              "end": 45,
+              "text": "Cedar Weir Ltd v Basin Agency, 2037 BCSC 842."
+            },
+            "fields": {
+              "year": "2037",
+              "series": "BCSC",
+              "number": "842"
+            },
+            "reasons": [],
+            "style": {
+              "start": 0,
+              "end": 29,
+              "text": "Cedar Weir Ltd v Basin Agency"
+            },
+            "format": "neutral"
+          },
+          {
+            "index": 1,
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "start": 77,
+              "end": 90,
+              "text": "2038 BCSC 523"
+            },
+            "fullSpan": {
+              "start": 47,
+              "end": 91,
+              "text": "Channel Trust v Wicket Board, 2038 BCSC 523."
+            },
+            "fields": {
+              "year": "2038",
+              "series": "BCSC",
+              "number": "523"
+            },
+            "reasons": [],
+            "style": {
+              "start": 47,
+              "end": 75,
+              "text": "Channel Trust v Wicket Board"
+            },
+            "format": "neutral"
+          },
+          {
+            "index": 2,
+            "form": "ibid",
+            "authority": "unknown",
+            "span": {
+              "start": 93,
+              "end": 97,
+              "text": "Ibid"
+            },
+            "fullSpan": {
+              "start": 93,
+              "end": 109,
+              "text": "Ibid at para 17."
+            },
+            "fields": {},
+            "reasons": []
+          }
+        ],
+        "notes": [
+          {
+            "number": 12,
+            "start": 93,
+            "end": 109
+          }
+        ],
+        "sourceParts": [
+          {
+            "start": 93,
+            "end": 109,
+            "text": "Ibid at para 17.",
+            "anchors": [
+              "reference"
+            ]
+          }
+        ],
+        "readingOrder": [
+          0,
+          2,
+          1
+        ]
+      },
+      "expect": {
+        "authorities": [
+          [
+            0,
+            2
+          ],
+          [
+            1
+          ]
+        ],
+        "resolutions": [
+          {
+            "index": 2,
+            "antecedent": 0,
+            "url": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "identity/ibid-inherits-resolved-reporter-short-form",
+      "status": "pass",
+      "input": "Basin Agency v Cedar Weir, 287 F.3d 618 (9th Cir. 2017).\n\n287 F.3d at 622.\n\nIbid at 625.",
+      "options": {
+        "notes": [
+          {
+            "number": 4,
+            "start": 0,
+            "end": 56
+          },
+          {
+            "number": 8,
+            "start": 58,
+            "end": 74
+          },
+          {
+            "number": 12,
+            "start": 76,
+            "end": 88
+          }
+        ]
+      },
+      "expect": {
+        "authorities": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "citations": [
+          {
+            "form": "full"
+          },
+          {
+            "form": "short",
+            "antecedent": 0
+          },
+          {
+            "form": "ibid",
+            "antecedent": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "identity/parsed-name-remains-available-without-note-ranges",
+      "method": "resolve",
+      "status": "pass",
+      "request": {
+        "citations": [
+          {
+            "index": 0,
+            "form": "full",
+            "authority": "case",
+            "format": "neutral",
+            "span": {
+              "start": 31,
+              "end": 44,
+              "text": "2037 BCSC 842"
+            },
+            "fullSpan": {
+              "start": 0,
+              "end": 44,
+              "text": "Cedar Weir Ltd v Basin Agency, 2037 BCSC 842"
+            },
+            "style": {
+              "start": 0,
+              "end": 29,
+              "text": "Cedar Weir Ltd v Basin Agency"
+            },
+            "fields": {
+              "year": "2037",
+              "series": "BCSC",
+              "number": "842"
+            },
+            "reasons": []
+          },
+          {
+            "index": 1,
+            "form": "supra",
+            "authority": "unknown",
+            "span": {
+              "start": 46,
+              "end": 51,
+              "text": "supra"
+            },
+            "fullSpan": {
+              "start": 46,
+              "end": 51,
+              "text": "supra"
+            },
+            "shortName": "Cedar Weir",
+            "fields": {},
+            "reasons": []
+          }
+        ]
+      },
+      "expect": {
+        "authorities": [
+          [
+            0,
+            1
+          ]
+        ],
+        "resolutions": [
+          {
+            "index": 1,
+            "antecedent": 0,
+            "reason": "name_only"
+          }
+        ]
+      }
+    },
+    {
+      "name": "identity/stored-offsets-do-not-override-note-numbers",
+      "status": "pass",
+      "input": "Ibid at 72.\n\nLena Tern, Shore Access (Reed Press, 2036).",
+      "options": {
+        "notes": [
+          {
+            "number": 8,
+            "start": 0,
+            "end": 11
+          },
+          {
+            "number": 4,
+            "start": 13,
+            "end": 56
+          }
+        ]
+      },
+      "expect": {
+        "authorities": [
+          [
+            0,
+            1
+          ]
+        ],
+        "citations": [
+          {
+            "form": "ibid",
+            "antecedent": 1
+          },
+          {
+            "form": "full",
+            "authority": "book"
+          }
+        ]
+      }
+    },
+    {
+      "name": "identity/distinct-articles-sharing-a-journal-issue-pdf",
+      "method": "resolve",
+      "status": "pass",
+      "request": {
+        "citations": [
+          {
+            "index": 0,
+            "form": "full",
+            "authority": "journal",
+            "span": {
+              "start": 0,
+              "end": 52,
+              "text": "Lena Tern, \"Shore Access\" (2036) 22:1 Harbour LJ 31."
+            },
+            "fullSpan": {
+              "start": 0,
+              "end": 52,
+              "text": "Lena Tern, \"Shore Access\" (2036) 22:1 Harbour LJ 31."
+            },
+            "fields": {},
+            "shortName": "Lena Tern",
+            "style": {
+              "start": 0,
+              "end": 9,
+              "text": "Lena Tern"
+            },
+            "reasons": []
+          },
+          {
+            "index": 1,
+            "form": "full",
+            "authority": "journal",
+            "span": {
+              "start": 54,
+              "end": 104,
+              "text": "Ivo Gull, \"Reed Routes\" (2036) 22:1 Harbour LJ 65."
+            },
+            "fullSpan": {
+              "start": 54,
+              "end": 104,
+              "text": "Ivo Gull, \"Reed Routes\" (2036) 22:1 Harbour LJ 65."
+            },
+            "fields": {},
+            "shortName": "Ivo Gull",
+            "style": {
+              "start": 54,
+              "end": 62,
+              "text": "Ivo Gull"
+            },
+            "reasons": []
+          },
+          {
+            "index": 2,
+            "form": "supra",
+            "authority": "unknown",
+            "span": {
+              "start": 112,
+              "end": 124,
+              "text": "supra note 4"
+            },
+            "fullSpan": {
+              "start": 106,
+              "end": 131,
+              "text": "Tern, supra note 4 at 54."
+            },
+            "fields": {
+              "note": 4
+            },
+            "shortName": "Tern",
+            "style": {
+              "start": 106,
+              "end": 110,
+              "text": "Tern"
+            },
+            "reasons": []
+          },
+          {
+            "index": 3,
+            "form": "supra",
+            "authority": "unknown",
+            "span": {
+              "start": 139,
+              "end": 151,
+              "text": "supra note 8"
+            },
+            "fullSpan": {
+              "start": 133,
+              "end": 158,
+              "text": "Gull, supra note 8 at 58."
+            },
+            "fields": {
+              "note": 8
+            },
+            "shortName": "Gull",
+            "style": {
+              "start": 133,
+              "end": 137,
+              "text": "Gull"
+            },
+            "reasons": []
+          }
+        ],
+        "notes": [
+          {
+            "number": 4,
+            "start": 0,
+            "end": 52
+          },
+          {
+            "number": 8,
+            "start": 54,
+            "end": 104
+          },
+          {
+            "number": 12,
+            "start": 106,
+            "end": 131
+          },
+          {
+            "number": 16,
+            "start": 133,
+            "end": 158
+          }
+        ],
+        "sourceParts": [
+          {
+            "start": 0,
+            "end": 52,
+            "text": "Lena Tern, \"Shore Access\" (2036) 22:1 Harbour LJ 31.",
+            "anchors": [
+              "journal"
+            ],
+            "resolvedUrl": "https://example.test/journal/2036/issue-1.pdf"
+          },
+          {
+            "start": 54,
+            "end": 104,
+            "text": "Ivo Gull, \"Reed Routes\" (2036) 22:1 Harbour LJ 65.",
+            "anchors": [
+              "journal"
+            ],
+            "resolvedUrl": "https://example.test/journal/2036/issue-1.pdf"
+          },
+          {
+            "start": 106,
+            "end": 131,
+            "text": "Tern, supra note 4 at 54.",
+            "anchors": [
+              "reference"
+            ],
+            "resolvedUrl": "https://example.test/journal/2036/issue-1.pdf"
+          },
+          {
+            "start": 133,
+            "end": 158,
+            "text": "Gull, supra note 8 at 58.",
+            "anchors": [
+              "reference"
+            ],
+            "resolvedUrl": "https://example.test/journal/2036/issue-1.pdf"
+          }
+        ]
+      },
+      "expect": {
+        "authorities": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "resolutions": [
+          {
+            "index": 2,
+            "antecedent": 0
+          },
+          {
+            "index": 3,
+            "antecedent": 1
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -108,7 +108,7 @@ class CliBackend:
             for index, (method, request) in enumerate(calls)
         )
         completed = subprocess.run(
-            [self.binary, "batch"], input=lines, capture_output=True, text=True, check=True
+            [self.binary, "batch"], input=lines, capture_output=True, encoding="utf-8", check=True
         )
         results = [None] * len(calls)
         for line in completed.stdout.splitlines():

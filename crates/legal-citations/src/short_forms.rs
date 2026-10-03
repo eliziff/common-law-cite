@@ -1,5 +1,8 @@
 //! Port of ALR verifier_core/supra_fallbacks.py's short-form inference.
 //! Patterns retain their source definitions in the grammar corpus.
+//! Canadian/McGill-oriented author and title inference is an aggressive
+//! fallback. Exact source identity, note scope and ambiguity are general
+//! resolution contracts and do not depend on that inference or on retrieval.
 
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -147,7 +150,8 @@ pub(crate) fn reference_candidates_for_hint(hint: &str) -> Vec<String> {
     candidates
 }
 
-/// Source records already produced by the caller's retrieval pipeline.
+/// Sources already identified by the caller. Targets are opaque authority or
+/// source identifiers; matching never depends on a URL or retrieval status.
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(default)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
@@ -155,22 +159,16 @@ pub struct ReferenceSource {
     pub note: serde_json::Value,
     pub sequence: Option<u32>,
     pub verbatim: Option<String>,
-    pub link: Option<String>,
+    pub target: Option<String>,
+    /// Names of the identified source, also inherited by references to it.
+    pub names: Vec<String>,
     pub short_form: Option<String>,
     pub short_form_norm: Option<String>,
     pub rule: Option<String>,
 }
 
 impl ReferenceSource {
-    fn link(&self) -> &str { self.link.as_deref().unwrap_or("") }
-    fn usable(&self) -> bool {
-        let link = self.link().trim();
-        !link.is_empty() && link.case_fold().collect::<String>() != "other"
-    }
-    fn base(&self) -> String {
-        self.link().split('#').next().unwrap_or("").trim_end_matches('/')
-            .case_fold().collect()
-    }
+    fn target(&self) -> &str { self.target.as_deref().unwrap_or("") }
     fn note(&self) -> String {
         match &self.note {
             serde_json::Value::String(note) => note.clone(),
@@ -249,17 +247,17 @@ pub(crate) fn supra_position(text: &str) -> Option<usize> {
 }
 
 fn match_text(entry: &ReferenceSource) -> String {
-    ref_normalize(&format!("{} {}", entry.short_form.as_deref().unwrap_or(""),
+    ref_normalize(&format!("{} {} {}", entry.short_form.as_deref().unwrap_or(""), entry.names.join(" "),
         entry.verbatim.as_deref().unwrap_or("").chars().take(200).collect::<String>()))
 }
 
-fn ref_base(link: &str) -> String {
-    // The strict registry source trims whitespace, not trailing slashes.
-    link.split('#').next().unwrap_or("").trim().to_lowercase()
+fn unique_target<'a>(entries: impl IntoIterator<Item = &'a ReferenceSource>) -> Option<&'a str> {
+    let targets = entries.into_iter().map(ReferenceSource::target).collect::<HashSet<_>>();
+    (targets.len() == 1).then(|| *targets.iter().next().unwrap()).filter(|target| !target.is_empty())
 }
 
-/// ALR's strict registry resolver. Keep numbered-note, short-form and final
-/// bracket-definition tiers in source order, including unlinked-target vetoes.
+/// Match note numbers, short forms, names and bracket definitions to source
+/// identities. An unresolved source remains in the ambiguity pool.
 pub fn resolve_registry(text: &str, registry: &[ReferenceSource], aggressive: bool) -> (String, &'static str) {
     resolve_registry_scoped(text, registry, aggressive, None)
 }
@@ -281,79 +279,73 @@ fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSou
     let normalized = ref_normalize(hint);
     let normalized = normalized.trim_matches(['[', ']', '(', ')', ' ']);
     let tokens = ref_tokens(&hint);
-    if normalized.is_empty() && tokens.is_empty() { return (String::new(), "abstain_no_hint"); }
-    let linked = registry.iter().filter(|entry| {
-        let link = entry.link().trim();
-        !link.is_empty() && link.to_lowercase() != "other"
-    }).collect::<Vec<_>>();
     let matches_tokens = |value: &str| tokens.iter().all(|token| value.contains(token.as_str()));
-    if !tokens.is_empty() {
-        let number = [&*REGISTRY_NOTE, &*REGISTRY_N, &*REGISTRY_NN].into_iter()
-            .find_map(|pattern| pattern.captures(text))
-            .and_then(|found| crate::text::decimal(&found[1])).map(|number| number.to_string());
-        if let Some(number) = number {
+    let number = [&*REGISTRY_NOTE, &*REGISTRY_N, &*REGISTRY_NN].into_iter()
+        .find_map(|pattern| pattern.captures(text))
+        .and_then(|found| crate::text::decimal(&found[1])).map(|number| number.to_string());
+    if let Some(number) = number {
             let local = sequence.filter(|&sequence| registry.iter().any(|entry|
-                entry.note.as_str() == Some(number.as_str()) && entry.sequence == Some(sequence)));
+                entry.note() == number && entry.sequence == Some(sequence)));
             if local.is_none() && sequence.is_some() && registry.iter().filter(|entry|
-                entry.note.as_str() == Some(number.as_str()))
+                entry.note() == number)
                 .filter_map(|entry| entry.sequence).collect::<HashSet<_>>().len() > 1 {
                 return (String::new(), "abstain_ambiguous_note_number_scope");
             }
-            // Source records have string note labels. Numeric JSON notes do
-            // not satisfy the original Python equality against str(note_n).
-            let in_note = |entry: &&ReferenceSource| entry.note.as_str() == Some(number.as_str())
+            let in_note = |entry: &&ReferenceSource| entry.note() == number
                 && local.is_none_or(|sequence| entry.sequence == Some(sequence));
-            let matching = linked.iter().copied().filter(in_note)
-                .filter(|entry| matches_tokens(&match_text(entry))).collect::<Vec<_>>();
-            let bases = matching.iter().map(|entry| ref_base(entry.link())).collect::<HashSet<_>>();
-            if bases.len() == 1 {
-                return (matching[0].link().to_owned(), "note_number");
+            let note_sources = registry.iter().filter(in_note).collect::<Vec<_>>();
+            if note_sources.is_empty() { return (String::new(), "note_without_authority"); }
+            if normalized.is_empty() && tokens.is_empty() {
+                return match unique_target(note_sources) {
+                    Some(target) => (target.to_owned(), "note_only"),
+                    None => (String::new(), "ambiguous_note"),
+                };
             }
-            if bases.len() > 1 {
+            let matching = note_sources.iter().copied()
+                .filter(|entry| matches_tokens(&match_text(entry))).collect::<Vec<_>>();
+            if let Some(target) = unique_target(matching.iter().copied()) {
+                return (target.to_owned(), "note_number");
+            }
+            if !matching.is_empty() {
                 return match bracket_definition(normalized, matching.into_iter()) {
-                    Some(link) => (link, "bracket_definition"),
+                    Some(target) => (target, "bracket_definition"),
                     None => (String::new(), "abstain_ambiguous_note_number"),
                 };
             }
-            let suffix = registry.iter().filter(in_note).filter(|entry| {
+            let suffix = note_sources.iter().copied().filter(|entry| {
                 let short = ref_tokens(entry.short_form.as_deref().unwrap_or(""));
                 short.len() >= 2 && tokens.ends_with(&short)
             }).collect::<Vec<_>>();
-            let linked_suffix = suffix.iter().copied().filter(|entry| {
-                let link = entry.link().trim();
-                !link.is_empty() && link.to_lowercase() != "other"
-            }).collect::<Vec<_>>();
-            let bases = linked_suffix.iter().map(|entry| ref_base(entry.link())).collect::<HashSet<_>>();
-            if bases.len() == 1 { return (linked_suffix[0].link().to_owned(), "note_number_short_form_suffix"); }
-            if !linked_suffix.is_empty() { return (String::new(), "abstain_ambiguous_note_number_suffix"); }
-            if !suffix.is_empty() || registry.iter().filter(in_note).any(|entry| matches_tokens(&match_text(entry))) {
-                return (String::new(), "abstain_unlinked_target");
+            if let Some(target) = unique_target(suffix.iter().copied()) {
+                return (target.to_owned(), "note_number_short_form_suffix");
             }
-        }
+            if !suffix.is_empty() { return (String::new(), "abstain_ambiguous_note_number_suffix"); }
+            return match bracket_definition(normalized, note_sources.into_iter()) {
+                Some(target) => (target, "bracket_definition"),
+                None => (String::new(), "note_name_conflict"),
+            };
     }
+    if normalized.is_empty() && tokens.is_empty() { return (String::new(), "abstain_no_hint"); }
     let mut abstain = "abstain_no_match";
     for (method, ambiguous) in [
         ("exact_sf", "abstain_ambiguous_exact_sf"),
         ("token_sf", "abstain_ambiguous_token_sf"),
         ("token_verb", "abstain_ambiguous_token_verb"),
     ] {
-        let pool = linked.iter().copied().filter(|entry| match method {
+        let pool = registry.iter().filter(|entry| match method {
             "exact_sf" => !normalized.is_empty() && ref_normalize(entry.short_form.as_deref().unwrap_or(""))
                 .trim_matches(['[', ']', '(', ')', ' ']) == normalized,
             "token_sf" => !tokens.is_empty() && entry.short_form.as_ref().is_some_and(|short|
                 !short.is_empty() && matches_tokens(&ref_normalize(short))),
-            _ => !tokens.is_empty() && entry.verbatim.as_ref().is_some_and(|verbatim|
-                !verbatim.is_empty() && matches_tokens(&match_text(entry))),
+            _ => !tokens.is_empty() && matches_tokens(&match_text(entry)),
         }).collect::<Vec<_>>();
         if pool.is_empty() { continue; }
-        let bases = pool.iter().map(|entry| ref_base(&entry.link().split_whitespace()
-            .collect::<Vec<_>>().join(" "))).collect::<HashSet<_>>();
-        if bases.len() == 1 { return (pool[0].link().to_owned(), method); }
+        if let Some(target) = unique_target(pool) { return (target.to_owned(), method); }
         abstain = ambiguous;
         break;
     }
-    if let Some(link) = bracket_definition(normalized, linked.into_iter()) {
-        return (link, "bracket_definition");
+    if let Some(target) = bracket_definition(normalized, registry.iter()) {
+        return (target, "bracket_definition");
     }
     (String::new(), abstain)
 }
@@ -368,13 +360,13 @@ fn bracket_definition<'a>(normalized: &str, entries: impl Iterator<Item = &'a Re
             for piece in bracket[1].split(';') {
                 let piece = HEREINAFTER.replace(piece, "");
                 if ref_normalize(&piece).trim_matches(['[', ']', '(', ')', ' ']) == normalized {
-                    bases.insert(ref_base(&entry.link().split_whitespace().collect::<Vec<_>>().join(" ")));
-                    best = entry.link();
+                    bases.insert(entry.target());
+                    best = entry.target();
                 }
             }
         }
     }
-    (bases.len() == 1).then(|| best.to_owned())
+    (bases.len() == 1 && !best.is_empty()).then(|| best.to_owned())
 }
 
 /// ALR's resolve_after_strict_abstention, retaining its two existing tiers.
@@ -382,14 +374,18 @@ pub fn resolve_after_strict_abstention(
     text: &str, registry: &[ReferenceSource], inferred_forms: &[ReferenceSource],
 ) -> (String, String) {
     let candidates = reference_candidates(text);
+    let note_numbers = reference_info(text).notes;
+    let in_note = |item: &&ReferenceSource| note_numbers.is_empty() || note_numbers.contains(&item.note());
+    let registry = registry.iter().filter(in_note).cloned().collect::<Vec<_>>();
+    let inferred_forms = inferred_forms.iter().filter(in_note).cloned().collect::<Vec<_>>();
     if let Some(note) = NOTE.captures(text).filter(|_| candidates.is_empty()) {
         let pool = registry.iter().filter(|item| item.note() == note[1]
             && !REFERENCE.is_match(item.verbatim.as_deref().unwrap_or(""))).collect::<Vec<_>>();
-        if let [item] = pool.as_slice() {
-            if item.usable() { return (item.link().to_owned(), "bare_note_unique_citation".into()); }
+        if let Some(target) = unique_target(pool) {
+            return (target.to_owned(), "bare_note_unique_citation".into());
         }
     }
-    resolve_inferred_candidates(&candidates, registry, inferred_forms)
+    resolve_inferred_candidates(&candidates, &registry, &inferred_forms)
 }
 
 pub(crate) fn resolve_inferred_candidates(
@@ -399,11 +395,11 @@ pub(crate) fn resolve_inferred_candidates(
     let inferred = inferred_forms.iter().filter(|item|
         item.short_form_norm.as_ref().is_some_and(|key| keys.contains(key))).collect::<Vec<_>>();
     let Some(chosen) = inferred.last() else { return (String::new(), String::new()); };
-    let authoritative = registry.iter().filter(|item| item.usable()
-        && keys.contains(&normalize(item.short_form.as_deref().unwrap_or(""))));
-    let bases = inferred.iter().copied().chain(authoritative).map(ReferenceSource::base).collect::<HashSet<_>>();
-    if bases.len() != 1 { return (String::new(), String::new()); }
-    (chosen.link().to_owned(), format!("inferred_short_form:{}", chosen.rule.as_deref().unwrap_or("")))
+    let authoritative = registry.iter().filter(|item|
+        keys.contains(&normalize(item.short_form.as_deref().unwrap_or(""))));
+    let Some(target) = unique_target(inferred.iter().copied().chain(authoritative))
+        else { return (String::new(), String::new()); };
+    (target.to_owned(), format!("inferred_short_form:{}", chosen.rule.as_deref().unwrap_or("")))
 }
 
 /// ALR's _reanchor_ref_link: own-scope pinpoints replace inherited fragments;

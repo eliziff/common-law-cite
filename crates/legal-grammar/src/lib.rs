@@ -85,6 +85,9 @@ pub struct GrammarEntry {
     /// A frozen Rust regex: retain its native Unicode classes and boundaries.
     #[serde(default)]
     pub rust: bool,
+    /// Citation conventions illustrated by an entry; descriptive, not a filter.
+    #[serde(default)]
+    pub conventions: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -526,6 +529,7 @@ pub fn compile_pattern(id: &str, pattern: &str, flags: &str) -> Result<FancyRege
             pattern: pattern.to_owned(),
             flags: flags.to_owned(),
             rust: false,
+            conventions: Vec::new(),
         },
         &HashMap::new(),
     )
@@ -541,6 +545,7 @@ pub fn compile_ecmascript_pattern(
         pattern: pattern.to_owned(),
         flags: flags.to_owned(),
         rust: false,
+        conventions: Vec::new(),
     };
     compile_ecmascript_entry(&entry, &HashMap::new())
 }
@@ -549,7 +554,7 @@ pub fn compile_ecmascript_backtracking_pattern(
     id: &str, pattern: &str, flags: &str,
 ) -> Result<FancyRegex> {
     compile_backtracking_entry(&GrammarEntry {
-        id: id.to_owned(), pattern: pattern.to_owned(), flags: flags.to_owned(), rust: false,
+        id: id.to_owned(), pattern: pattern.to_owned(), flags: flags.to_owned(), rust: false, conventions: Vec::new(),
     }, &HashMap::new(), true)
 }
 

@@ -7,7 +7,7 @@
   {
    "name": "ModelsTest.test_citation_comparison_with_nominative_reporter#1",
    "input": "5 U.S. 137",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -62,7 +62,7 @@
   {
    "name": "ModelsTest.test_citation_comparison_with_nominative_reporter#2",
    "input": "5 U.S. (1 Cranch) 137",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -119,7 +119,7 @@
   {
    "name": "ModelsTest.test_corrected_full_citation_includes_closing_parenthesis#1",
    "input": "Originalism without Foundations, 65 N.Y.U. L. Rev. 1373 (1990)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -171,7 +171,7 @@
   {
    "name": "ModelsTest.test_corrected_full_citation_includes_closing_parenthesis#2",
    "input": "Meritor Sav. Bank v. Vinson, 477 U.S. 57, 60 (1986)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -244,7 +244,7 @@
   {
    "name": "ModelsTest.test_missing_page_cite_conversion#1",
    "input": "2 U.S. __",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -399,7 +399,7 @@
   {
    "name": "ModelsTest.test_page_correction#3",
    "input": "11 Misc 3d 134[A]",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -449,7 +449,7 @@
   {
    "name": "ModelsTest.test_page_correction#4",
    "input": "83 Misc.3d 126(A)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -598,7 +598,7 @@
   {
    "name": "ModelsTest.test_tax_court_citation_comparison#1",
    "input": "T.C.M. (RIA) ¶ 95,342",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -647,7 +647,7 @@
   {
    "name": "UtilsTest.test_dump_citations#1",
    "input": "blah. Foo v. Bar, 1 U.S. 2, 3-4 (1999). blah",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
