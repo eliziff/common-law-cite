@@ -6,7 +6,7 @@ edition.workspace = true
 license.workspace = true
 repository.workspace = true
 rust-version.workspace = true
-include = ["src/**", "registry/**", "build.rs", "Cargo.toml", "LICENSE", "NOTICE"]
+include = ["src/**", "registry/**", "vendor/**", "build.rs", "Cargo.toml", "LICENSE", "NOTICE"]
 
 [build-dependencies]
 serde_json.workspace = true
@@ -24,7 +24,7 @@ unicode-casefold = "0.2"
 num-bigint = "0.4"
 url = "2.5.8"
 # 0.5.1 with only the missing WASI chrono dependency declaration corrected.
-diff-match-patch-rs = { git = "https://github.com/eliziff/diff-match-patch-rs.git", rev = "30daa5ab7e4fac48fcb520641e537c89e6fdc40c" }
+diff-match-patch-rs = { path = "vendor/diff-match-patch-rs", version = "0.5.1" }
 roxmltree = "0.21"
 ts-rs = { version = "12", optional = true, features = ["serde-json-impl"] }
 scraper = { version = "0.27", default-features = false }
