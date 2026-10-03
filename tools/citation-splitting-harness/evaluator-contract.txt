@@ -1,0 +1,84 @@
+Draft evaluator contract, version 1 — not yet frozen
+
+Status: retained draft for integration review. No fixture suite, runtime
+manifest, or parser baseline is included. Corpus selection, schema adaptation,
+path configuration, and evaluator manifest freeze remain unfinished.
+See README.md for portability limitations; these examples are not ready to run.
+
+This experiment calls the existing common-law-cite JSON CLI batch API. It does
+not contain a citation parser or use URL availability as correctness evidence.
+Scorer unit-test outputs are independently specified doubles, never a parser
+baseline or evidence that citation splitting improved.
+
+Inputs
+  fixtures/dev.json is the only default cohort. fixtures/manifest.json contains
+  immutable content hashes. sealed/holdout.json is opened only after explicit
+  --split holdout --final-incumbent FILE verification and exclusive creation of
+  sealed-evaluation-started.json. A second holdout attempt is refused. Freeze
+  takes only a completed lossless development receipt from the current binary,
+  source inventory, evaluator and fixture bytes; it does not read holdout text.
+  Gold strings and character spans are authored independently of parser output.
+
+API calls, pinned in evaluate.py and covered by evaluator-manifest.json
+  splitSources: recallFirst=true, extendedUs=false, offsetUnit=char.
+  extract (only explicit extraction_cores cases): extendedUs=false,
+  resolve=false, parallel=false, removeAmbiguous=false, offsetUnit=char.
+  This split configuration matches Beaver's splitQuoteCitationUnits wrapper.
+  Cross-language UTF-16 conversion and alternate extended-US profiles are separate
+  gates. No claim about them follows from this experiment.
+
+Losslessness and full spans (full-authority-left-v1)
+  Raw part text must equal its exact source slice. Offsets must be integer,
+  ordered, nonoverlapping and in bounds. Every adjacent raw gap must have exactly
+  one delimiter carrying its exact offsets and text, including whitespace.
+  Only whitespace may be omitted before the first raw part or after the last.
+  Prefix + raw parts + raw delimiters + suffix must equal the source byte-for-byte
+  when UTF-8 encoded, with no trimming, Unicode normalization or punctuation loss.
+  The full partition uses 0, each subsequent raw part start, then len(source).
+  Delimiters and intervening whitespace belong to the left part; prefix belongs
+  to the first part and suffix to the last. The full strings concatenate exactly
+  to the source. A dropped terminal semicolon is a failure, not whitespace.
+  Empty source with raw [] normalizes to []; whitespace-only source with raw []
+  normalizes to one full span, explicitly flagged as whitespace-only normalization.
+  Raw abstention remains recorded. Any substantive nonempty abstention fails.
+
+Metrics
+  Primary: exact ordered whole-string partition count, requiring valid raw
+  accounting and identical full-span pairs. No acceptable/fuzzy normalization.
+  Exact span-pair P/R/F1 uses (start,end) pairs within each case, then sums counts.
+  Internal boundary P/R/F1 uses subsequent full-part starts (excludes 0/end).
+  Both count duplicate predictions against precision. Equal text at a different
+  source occurrence earns no match. Case-local matching prevents cross-case TPs.
+  Extraction uses explicit manually authored Citation.span core pairs, independently
+  of split scores, only on annotated cases. Omitted extraction_cores is unscored;
+  [] is an explicitly annotated negative. URLs and link_candidates are irrelevant.
+  Empty gold and empty prediction: P=R=F1=1. Only one empty: P=R=F1=0.
+  Invalid split output contributes no predicted spans/boundaries and fails exact
+  partition and mandatory losslessness. Thus its empty-boundary score can be 1
+  when gold has no internal boundaries; boundary_metrics_valid=false and the
+  invalid_split_cases count disclose this. No metric overrides the raw validity
+  gate. All cases must preserve every character before a candidate can be kept.
+
+Receipts and immutability
+  CLI absence returns exit 2 and a blocked receipt, with parser_executed=false,
+  no score fields and holdout_read=false. Execution/protocol errors likewise
+  produce failure receipts; semantic failures yield completed measurements with
+  mandatory_losslessness_pass=false and exit 1. Existing output files are never
+  overwritten. Raw split responses remain in detail records alongside normalized
+  spans. Extraction diagnostics retain predicted core spans.
+  The evaluator verifies its frozen manifest, includes binary/evaluator/fixture/
+  manifest/source hashes, and checks the binary and source again after execution.
+  Source inventory includes tracked and nonignored untracked common-law-cite
+  files, as sorted compact JSON mapping relative filenames to content hashes,
+  ensure_ascii=false, encoded UTF-8.
+  The initial source-manifest hash is recorded separately from candidate inventory.
+  Initial baseline and candidate records must use identical evaluator/fixture/options.
+
+Illustrative commands (only after portability and corpus configuration)
+  python3 -m unittest -v test_evaluate.py
+  python3 evaluate.py --cli BUILT_REAL_CLI --split dev --output receipts/baseline.json
+  python3 evaluate.py --freeze-incumbent receipts/accepted-dev.json --output receipts/final-incumbent.json
+  python3 evaluate.py --cli BUILT_REAL_CLI --split holdout --final-incumbent receipts/final-incumbent.json --output receipts/final-holdout.json
+
+A separately built real Rust CLI is required. The evaluator commands never
+install, upgrade, download, build, or patch a parser.

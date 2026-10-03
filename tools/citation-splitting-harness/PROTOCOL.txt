@@ -1,0 +1,249 @@
+CITATION SPLITTING HILLCLIMB — DRAFT EXPERIMENT CONTRACT
+
+Scope and status
+---------------
+This is a deterministic splitting experiment over common-law-cite's real Rust
+splitSources API. The implementation is
+crates/legal-citations/src/source.rs and its existing API dispatch. No alternate
+parser, reimplementation, mocked response, URL score, or extraction-only score
+counts as a splitting result. Keep runtime inputs and receipts in a private,
+ignored experiment directory. No production source changes are allowed before
+an executable baseline. The initial source inventory is initial-source-sha256.json; its exact
+bytes and every recorded source digest are retained.
+
+This branch preserves draft source for review. Runtime inputs and baseline
+evidence are not included. Path configuration and corpus integration are
+unfinished; see README.md. The workflow below is a proposed future experiment,
+not authorization to execute it as part of this preservation handoff.
+
+This document is a proposed contract until ledger.py freeze records its SHA-256,
+the evaluator SHA-256, the fixture-manifest SHA-256, and the dev-fixture SHA-256.
+Fixture authoring and evaluator corrections/self-tests must finish before that
+freeze. Once frozen, these files cannot change during the experiment. A necessary
+harness correction invalidates the affected comparison and requires an explicitly
+new experiment and baseline; it cannot silently improve a score.
+
+Access separation
+-----------------
+Use an explicitly authorized, independently labeled full citation-splitting
+corpus as the PRIMARY accuracy corpus. Its verified source manifest, existing split
+assignment, literal inputs, and independent expected spans must be retained.
+It is not interchangeable with extraction-only gold or unrelated corpora. Do not
+start tuning or freeze the primary accuracy benchmark until that gold is available
+and the evaluator has verified its schema. Any independently invented synthetic
+fixtures are AUXILIARY and retain their family-based development and sealed-holdout
+assignments. Report auxiliary metrics separately; they cannot
+change primary denominators, replace the required primary baseline, or substitute
+for a primary accuracy gain.
+
+The PRIMARY development split may be inspected, scored, and used to design
+candidates.
+The independently authored sealed holdout must not be read, searched, previewed,
+used for candidate selection, or executed during development. Only the evaluator
+may open it after the final accepted candidate is locked. Keep the sealed
+manifest's hashes, counts, and declared categories as opaque metadata. Do not use
+material outside the corpus authorized by the verified source manifest.
+Do not expand, re-label, or cherry-pick the
+fixture scope after freeze. Independently invented provenance is mandatory for
+new publishable fixture examples under the repository's AGENTS.md.
+
+Deterministic contract
+----------------------
+The fixture manifest and evaluator define the exact API options, character-offset
+unit, partition normalization, invalid-output policy, and metric denominators.
+Use the same options and normalization for baseline, every candidate, and holdout.
+Offsets are Unicode code-point indices; never silently treat UTF-8 byte offsets
+or UTF-16 code units as characters. Confirm that API option at execution.
+
+The splitting target is an ordered partition of the COMPLETE original input.
+Every nonempty input must have contiguous positive-length spans from zero through
+len(text), preserving every character including whitespace, delimiters, footnote
+markers, combining marks, and supplementary Unicode characters. The empty input
+has the empty partition. An explicitly reported whitespace-only abstention may
+normalize to one full whitespace span, with a recorded normalization reason. This
+structural special case cannot repair a substantive abstention. Delimiters and whitespace belong to their deterministic
+side under the evaluator's frozen convention. A semantic extraction abstention
+must not be converted into a successful non-whitespace partition by a fallback.
+Malformed offsets, overlaps, reordered parts, mismatched text, dropped characters,
+or invented characters fail preservation and receive no successful partition.
+The evaluator must validate raw API spans and delimiter evidence BEFORE any
+normalization. Normalization cannot repair a semantic omission.
+
+Primary metric: exact whole-partition accuracy, compared as integer correct-case
+counts on the SAME fixed dev cases. A case succeeds only when the complete ordered
+predicted span list exactly matches gold and character preservation succeeds.
+Secondary gates: micro exact-span F1 and micro internal-boundary precision and
+recall. Exact spans match only identical (case id, start, end) triples; boundaries
+match only identical (case id, internal character offset). Input endpoints are
+not internal boundaries. Compute score comparisons from integer TP/FP/FN counts
+using rational arithmetic, avoiding rounded-display comparisons. Empty-denominator
+conventions must be fixed in the evaluator before baseline. Extraction diagnostics
+are reported separately and never substitute for splitting scores or move the
+fixture scope. URL generation/correctness is outside this experiment.
+
+Baseline and source controls
+----------------------------
+1. Verify the initial repository inventory and working-tree provenance. Build the
+   real engine only with an authorized existing or isolated toolchain. Record the
+   exact build/check commands, return codes, compiler version when available,
+   source inventory SHA-256, CLI binary SHA-256, and timestamps. No downloaded
+   parser or alternate language implementation may stand in for this engine.
+2. Run evaluator self-tests, including malformed spans, delimiters, Unicode
+   offsets, invalid-output scoring, abstention, and metric-denominator edge cases.
+   Independently review the assertions and compare hand-computed metric examples.
+3. Freeze the contract after fixture and evaluator review. Run the exact dev
+   baseline command through ledger.py baseline. The command receipt records
+   argv, cwd, source inventory and binary hashes, output and return code. A missing
+   compiler/binary, failed build, failed evaluator, or partial timeout is a BLOCKED
+   or FAILED RUN with no baseline metrics. Do not invent scores or claim success.
+4. Save all baseline case outcomes. The set of original baseline-success case ids
+   is immutable for retention checks. Baseline invalid cases remain visible;
+   do not silently drop them or redefine denominator size.
+
+Candidate cycle
+---------------
+Every candidate gets a unique attempt id, a concrete hypothesis, and an exact
+binary-capable git patch against the unchanged repository HEAD, including new
+untracked source/conformance files. Save a content-hashed source inventory too.
+The ledger refuses to open an attempt without an executable baseline and refuses
+a new attempt until the checkout matches the accepted incumbent. It detects
+changes to the frozen contract and original source before baseline. Direct edits
+outside the ledger are still subject to these protocol restrictions.
+
+Each production behavior change must carry the repository-required conformance
+cases. Citation regexes belong in the grammar corpus with vectors and manifest
+updates; registry data stays in JSON; bindings stay thin. Do not turn passing
+conformance cases into pending or weaken expected outputs to fit a candidate.
+
+For each attempt:
+  a. Open an attempt while the checkout is exactly the accepted incumbent.
+  b. Make one coherent parser change plus required conformance/vector changes.
+  c. Capture exact patch and source inventory before measurement.
+  d. Run cheap correctness checks first, recording argv/cwd/log/return code and
+     source hash. At minimum use the evaluator's fast contract checks and the
+     targeted engine tests for affected behavior. Checks must exit successfully
+     against the candidate source; a check that changes source is invalid.
+  e. Build the real candidate CLI as necessary, record binary and source hashes,
+     then run the COMPLETE frozen dev split, never a hand-selected subset. The
+     latest ledger build receipt for that CLI must succeed with the exact measured
+     source inventory and output binary hash; unrelated or stale binaries fail.
+  f. Accept only if ALL gates below pass. Record every rejection and its reasons.
+     Roll back rejected production changes to the accepted incumbent before
+     opening another attempt. The ledger does not perform destructive resets.
+
+Acceptance gates, all mandatory:
+  - Full dev execution succeeds with the frozen contract and the same case ids.
+  - All-character preservation succeeds on EVERY dev input.
+  - Whole-partition exact count is STRICTLY higher than the current incumbent.
+  - Every ORIGINAL BASELINE-success case remains a whole-partition success.
+  - Every CURRENT INCUMBENT-success case also remains a whole-partition success;
+    accepted new wins cannot be traded away by later candidates.
+  - Exact-span F1 is nondecreasing relative to the current incumbent.
+  - Internal-boundary precision AND recall are each nondecreasing relative to
+    the current incumbent.
+  - Required cheap correctness/conformance checks pass against the measured
+    source, and report/binary/source hashes match the actual measured artifacts.
+
+Ties are rejections. A diagnostic improvement, speed difference, better URL,
+extraction gain, or changed fixture count cannot override a gate. Record runtime
+only as execution evidence; no timing-optimization claim is supported here.
+No arbitrary attempt count or elapsed-time budget is a stopping criterion.
+Continue while useful, authorized work is possible, stopping only for a genuine
+blocker, an explicit user stop, or demonstrated exhaustion of the frozen scope.
+Scope exhaustion requires evidence that remaining misses were examined and the
+bounded plausible correction routes were exhausted, not a convenient batch size.
+Agree reporting checkpoints before the experiment. A reporting milestone is not
+an automatic stop.
+
+Final lock and holdout
+----------------------
+After the final dev decision, restore the accepted incumbent, rerun any checks
+required by actual later source changes, and create the evaluator's final-
+incumbent lock. The lock identifies the exact dev receipt, frozen contract,
+source inventory, options, and CLI SHA-256. Append a final-lock event to the
+ledger. This ends candidate mutation and development selection in this experiment.
+
+The evaluator may now run holdout EXACTLY ONCE against that locked binary and
+contract. Its durable one-shot marker must be created before opening the sealed
+input, so a failed or interrupted execution cannot be silently retried. Save the
+holdout receipt separately. Do not adapt the parser, fixtures, evaluator, or
+normalization using the holdout result. A holdout failure is reported as such.
+If no real dev baseline or final lock exists, holdout remains unopened.
+
+Evidence and reporting
+----------------------
+Use append-only JSONL events chained by SHA-256. Every run identifies the actual
+command, UTC timestamp, source and binary hashes, receipt/log hashes, and status.
+Every measured candidate identifies its exact patch, scores, constraint checks,
+and keep/reject reason. Preserve failed builds and toolchain probes without
+mislabeling them as measured candidate attempts. Never fabricate a baseline,
+score, elapsed time, test execution, independent review, or holdout result.
+The final report distinguishes what was authored, executed, measured, accepted,
+and blocked. It links artifacts and states the remaining blocker plainly.
+
+Local command interface (requires portability work and corpus/harness review)
+------------------------------------------------------------------------
+ledger.py freeze records the actual reviewed --evaluator, --fixture-manifest,
+--dev-fixture, --protocol, --initial-source and --harness-manifest files. Override
+fixture paths for the verified primary corpus; do not point the primary contract
+at auxiliary synthetic data. --required-check-label may be supplied repeatedly
+at freeze; its defaults are source-tests and conformance. Freezing opens no holdout and does not
+create an executable baseline.
+
+Typical sequence, using actual paths from the verified manifest:
+  python3 ledger.py freeze --fixture-manifest VERIFIED_MANIFEST \
+    --dev-fixture VERIFIED_PRIMARY_DEV
+  python3 ledger.py build --cli BUILT_REAL_CLI -- \
+    cargo build --locked \
+    -p legal-citations-cli --release
+  python3 ledger.py baseline --cli BUILT_REAL_CLI
+  python3 ledger.py begin --id candidate-001 --reason 'Concrete hypothesis'
+  [make the candidate's production and required conformance changes]
+  python3 ledger.py check --label source-tests -- \
+    cargo test --locked \
+    -p legal-citations --lib
+  python3 ledger.py build --cli BUILT_REAL_CLI -- \
+    cargo build --locked \
+    -p legal-citations-cli --release
+  python3 ledger.py check --label conformance -- python3 \
+    check_conformance.py --cli BUILT_REAL_CLI \
+    --output UNIQUE_CANDIDATE_CONFORMANCE_RECEIPT
+  python3 ledger.py measure --cli BUILT_REAL_CLI
+  [restore the accepted incumbent after any rejected candidate]
+  python3 ledger.py lock
+
+Run required broader repository checks for the final change. The ledger's lock
+only creates the final-incumbent receipt; it does not read or evaluate holdout.
+The evaluator owns the guarded one-time holdout invocation. 'probe' is suitable
+for environment, build and self-test evidence and never declares a parser score.
+'attempts.jsonl' is a local append-only hash-chained audit trail, not a defense
+against intentional replacement of the complete audit directory.
+
+Preexisting repository-check failures
+------------------------------------
+For a future experiment, capture the untouched baseline's actual check failures
+in private baseline-checks.json with raw command return codes and log hashes.
+These are not candidate gains and must not be called passing repository tests.
+Record declared-pass successes and pending cases that already satisfy their
+expected results. Do not bulk-promote or weaken preexisting baseline debt.
+
+conformance-baseline.json records all baseline case identities and content hashes
+without exposing their citation text. check_conformance.py runs the original
+repository runner and retains its actual return code/report/log. Its separate
+regression gate requires unchanged inputs and expectations for every existing
+case, no deleted or demoted declared-pass case, every original success retained,
+exactly the same recorded preexisting NOW PASSING maintenance failures, and no new
+failures. Additional candidate conformance cases must be declared pass and pass.
+A legitimate newly passing pending case outside that recorded set must have its local
+status corrected with the behavior change, per AGENTS.md; no unrelated status
+promotion is allowed. The wrapper's success explicitly means no new regression
+relative to this frozen baseline, not that the raw command succeeded.
+
+The future frozen ledger includes baseline-checks.json, conformance-baseline.json,
+the wrapper and its tests. Any preexisting repository failures remain reported as
+baseline limitations; do not silently exclude them from reports or claim they
+were fixed. Required targeted
+engine checks must execute tests (the example runs all engine library tests);
+zero matched tests are not meaningful correctness evidence. A grammar/corpus
+change must address the corresponding grammar validation; the known grammar
+failures do not grant blanket permission to ignore new failures.
