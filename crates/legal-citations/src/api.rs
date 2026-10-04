@@ -551,7 +551,7 @@ pub struct ReporterHeaderRequest {
     pub citations: Vec<Citation>,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct ExtractResponse {
@@ -560,6 +560,10 @@ pub struct ExtractResponse {
     pub citations: Vec<Citation>,
     pub source_parts: Vec<crate::source::SourcePart>,
     pub authorities: Vec<Vec<usize>>,
+    /// How each reference resolved (with `options.resolve`), its source part indexed into
+    /// `source_parts`: the antecedent of a reference to a book, report or page no citation names.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub resolutions: Vec<crate::resolve::Resolution>,
 }
 
 /// [`crate::extract`] with offsets converted to `request.offset_unit`.
@@ -573,6 +577,7 @@ pub fn extract(request: &ExtractRequest) -> Result<ExtractResponse, ApiError> {
         authorities: crate::resolve::authorities_with_resolutions(&citations, &[], &resolutions),
         citations,
         source_parts,
+        resolutions,
     })
 }
 

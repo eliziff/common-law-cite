@@ -59,4 +59,16 @@ series?: string | null, chapter?: string | null, schedule?: string | null, secti
 /**
  * The note a `supra`/`above n` reference points to.
  */
-note?: number | null, };
+note?: number | null, 
+/**
+ * The title of an untitled legislation citation in a note, as the sentence the note hangs
+ * from writes it right before the note's marker ("… enacted the Good Samaritan Drug
+ * Overdose Act.¹" for "¹ SC 2017, c 4.").
+ */
+anchorTitle?: Span | null, 
+/**
+ * The instrument's own name where the citation writes only where it is enacted: the
+ * Charter for "Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982
+ * (UK), 1982, c 11".
+ */
+instrumentTitle?: string | null, };

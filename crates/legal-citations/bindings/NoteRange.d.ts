@@ -10,4 +10,8 @@ export type NoteRange = { number: number, start: number, end: number,
  * numbering (per chapter, per part) repeat numbers across sequences; a
  * reference prefers a note in its own sequence.
  */
-sequence: number, };
+sequence: number, 
+/**
+ * Where the note's marker stands in the text it annotates, when the caller knows it.
+ */
+anchor?: number | null, };

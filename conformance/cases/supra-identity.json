@@ -1244,6 +1244,37 @@
           }
         ]
       }
+    },
+    {
+      "name": "extract/resolutions-name-uncited-source-part",
+      "input": "Jane Wren, Riverbank Essays (Toronto: Riverbank Press, 2001).\n\nWren, supra note 1 at 75.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 61
+          },
+          {
+            "number": 2,
+            "start": 63,
+            "end": 88
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": {
+        "resolutions": {
+          "$contains": [
+            {
+              "sourcePart": 0
+            }
+          ]
+        }
+      },
+      "note": "extract returns how each reference resolved; a supra naming a book no citation names resolves to the note part that holds it."
     }
   ]
 }

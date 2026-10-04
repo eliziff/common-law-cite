@@ -29,7 +29,8 @@ sourcePart?: number | null,
  *   `ibid_no_previous`, `ibid_invalid_pinpoint`;
  * * supra and references: `note_and_name`, `note_only`, `name_only`,
  *   `ambiguous_note`, `ambiguous_name`, `note_out_of_range`,
- *   `note_without_authority`, `note_name_conflict`, `no_match`, `no_hint`;
+ *   `note_without_authority`, `note_name_conflict`, `no_match`, `no_hint`,
+ *   `named_short_form` (linking mode [`SupraMode::Named`]), `acronym`;
  * * short forms: `short_reporter`, `short_name`, `short_ambiguous`,
  *   `short_no_match`;
  * * `unknown_form` for [`Form::Unknown`].
