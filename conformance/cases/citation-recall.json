@@ -2187,6 +2187,27 @@
           }
         ]
       }
+    },
+    {
+      "name": "style/numbered-name-after-a-signal-keeps-its-number",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "See 40 Fen for Ash v. Dietrich, 2034 ONCA 599 at para 2.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2034 ONCA 599"
+            },
+            "style": {
+              "text": "40 Fen for Ash v. Dietrich"
+            }
+          }
+        ]
+      }
     }
   ]
 }

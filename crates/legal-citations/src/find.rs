@@ -945,7 +945,14 @@ fn work_style_start(text: &str, core_start: usize, floor: usize) -> usize {
 /// v Jones"): neither is part of its style of cause.
 fn past_lead_in(text: &str, start: usize, core_start: usize) -> usize {
     let lead = CASE_LEAD_IN.find(&text[start..core_start]).map_or(0, |matched| matched.end());
-    if lead > 0 && text[start + lead..].starts_with(|character: char| character.is_uppercase() || character.is_ascii_digit()) {
+    // A number alone is a list's paragraph column where a line begins or the row's citation before
+    // it ends ("…, [2035] 2 SCR 91 12 Safilo Canada Inc. v. …"); after a word ("See 40 Days for Life
+    // v. Dietrich") it is the name's own.
+    let number = text[start..start + lead].chars().all(|character| character.is_ascii_digit()
+        || character.is_whitespace() || ",.-–".contains(character));
+    let after_word = text[..start].trim_end_matches([' ', '\t']).ends_with(char::is_alphabetic);
+    if lead > 0 && !(number && after_word)
+        && text[start + lead..].starts_with(|character: char| character.is_uppercase() || character.is_ascii_digit()) {
         start + lead
     } else {
         start
