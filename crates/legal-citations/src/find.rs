@@ -2031,6 +2031,11 @@ pub(crate) fn anchor_titles(text: &str, citations: &mut [Citation], notes: &[cra
         let Some(citation) = citations.iter_mut()
             .filter(|citation| note.start <= citation.full_span.start && citation.full_span.start < note.end)
             .min_by_key(|citation| citation.full_span.start) else { continue };
+        if citation.form == Form::Full && citation.authority == Authority::Case
+            && citation.style.as_ref().is_none_or(|style| style.text.trim().is_empty()) {
+            citation.fields.anchor_title = anchor_case_name(text, anchor, citation.fields.explicit_short_span.as_ref());
+            continue;
+        }
         if citation.form != Form::Full || !citation.authority.is_legislation() || citation.style.is_some() {
             continue;
         }
@@ -2047,6 +2052,48 @@ pub(crate) fn anchor_titles(text: &str, citations: &mut [Citation], notes: &[cra
             citation.fields.anchor_title = Some(span(text, start..end));
         }
     }
+}
+
+/// A note that cites a decision without its style of cause, because the text names the decision
+/// right before the note's marker (McGill: a style of cause given in the text is not repeated in the
+/// note), takes that style of cause: "In R v Mabior,¹" with "¹ 2012 SCC 47 [Mabior]." It is read as
+/// a style of cause is read before a citation, past the closing punctuation and an aside in
+/// parentheses ("R v Mann and Mann (which affirmed …)²"), and kept only when the note's short form
+/// names one of its parties or, the note giving none, it is the only style of cause in its sentence.
+fn anchor_case_name(text: &str, anchor: usize, short: Option<&Span>) -> Option<Span> {
+    let closing = |value: &str| value.trim_end_matches(|character: char| character.is_whitespace()
+        || ".,;:\u{201d}\u{2019}\"'".contains(character)).len();
+    let mut end = closing(&text[..anchor]);
+    if text[..end].ends_with(')') {
+        let mut depth = 0;
+        let open = text[..end].char_indices().rev().find(|&(_, character)| {
+            depth += match character { ')' => 1, '(' => -1, _ => 0 };
+            depth == 0
+        })?.0;
+        // An aside, not a court or a party's own parenthetical ("Quebec (Attorney General)").
+        if !text[open + 1..].starts_with(char::is_lowercase) { return None; }
+        end = closing(&text[..open]);
+    }
+    let mut floor = end.saturating_sub(300);
+    while !text.is_char_boundary(floor) { floor += 1; }
+    let floor = styled_floor(text, floor, end);
+    let start = case_style_start(text, end, floor);
+    if start >= end { return None; }
+    // The text runs on past a party's name to the marker ("R v Toth in 52,³", "R v Le, the Supreme
+    // Court held …⁴"): a word in lower case that no party name takes ends it, and no name is read.
+    let parties = CASE_VERSUS.find_iter(&text[start..end]).last().map_or(start, |versus| start + versus.end());
+    if text[parties..end].split(|character: char| character.is_whitespace() || character == ',').any(|word|
+        word.starts_with(char::is_lowercase) && !matches!(word, "and" | "of" | "the" | "de" | "du" | "des" | "la" | "le"
+            | "les" | "et" | "for" | "à" | "van" | "von" | "ex" | "rel" | "en")) { return None; }
+    let words = |value: &str| value.split(|character: char| !character.is_alphanumeric() && character != '-')
+        .filter(|word| word.chars().count() > 2 && word.starts_with(char::is_uppercase))
+        .map(str::to_lowercase).collect::<Vec<_>>();
+    let name = words(&text[start..end]);
+    let agrees = match short {
+        Some(short) => words(&short.text).iter().any(|word| name.contains(word)),
+        None => CASE_VERSUS.find_iter(&text[styled_floor(text, floor, end)..end]).count() == 1,
+    };
+    agrees.then(|| span(text, start..end))
 }
 
 /// The citations a document's own list or table of authorities holds: after its heading, each

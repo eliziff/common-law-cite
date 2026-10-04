@@ -6734,10 +6734,10 @@
         },
         {
           "id": "style.case-lead-in",
-          "pattern": "^(?:(?:\\d{1,4}\\.|\\[\\d{1,4}\\]|\\((?:\\d{1,4}|[{{lc}}]{1,4})\\)|(?:TAB|Tab)\\s+\\d{1,4}[A-Za-z]?|(?:Case\\s*/\\s*)?(?:Paragraph|Para|Pinpoint|Page)\\s+References?|\\d{1,4}(?:\\.\\d{1,3})?(?:[-–]\\d{1,3}|\\s*[-–]\\s+\\d{1,4}|\\s+[-–]\\s*\\d{1,4})?(?:,\\s*\\d{1,4}(?:\\.\\d{1,3})?(?:\\s*[-–]\\s*\\d{1,4})?)*)\\s+)?(?:(?:and|In|As\\s+(?:for|in|with)|Like|Unlike|Following)\\s+)?",
+          "pattern": "^(?:(?:\\d{1,4}\\.|\\[\\d{1,4}\\]|\\((?:\\d{1,4}|[{{lc}}]{1,4})\\)|(?:TAB|Tab)\\s+\\d{1,4}[A-Za-z]?|(?:Case\\s*/\\s*)?(?:Paragraph|Para|Pinpoint|Page)\\s+References?|\\d{1,4}(?:\\.\\d{1,3})?(?:[-–]\\d{1,3}|\\s*[-–]\\s+\\d{1,4}|\\s+[-–]\\s*\\d{1,4})?(?:,\\s*\\d{1,4}(?:\\.\\d{1,3})?(?:\\s*[-–]\\s*\\d{1,4})?)*)\\s+)?(?:(?:and|In|As\\s+(?:for|in|with)|Like|Unlike|Following|Consider)\\s+)?",
           "flags": "",
           "canonical": {},
-          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_LEAD_IN, a numbered paragraph's own label ('12.', '[12]', '(a)') and a leading 'In' in front of the first party. Beaver-authored: the sentence openers As for, As in, As with, Like, Unlike and Following are lead-ins too (As for Fell & Moss, supra note 3). A brief's own list of its authorities opens each line with its book tab ('TAB 8 Ash v Fen, 2036 ABKB 4'), which is no part of the style of cause. Beaver-authored: a list of authorities that gives the paragraphs each authority is cited at puts that column in front of the next line's style of cause ('…, [2005] 2 SCR 91 12 Safilo Canada Inc. v. Contour Optik Inc.', '57-58, 59, 342- 347 Canadian Human Rights Commission v. Canada'), as does a decimal paragraph number ('4.13 McLean v Canada'); a numbered company keeps its number, which is longer than four digits or written as two four-digit groups ('1705221 Alberta Ltd', '2747-3174 Québec Inc.'). A citation joined to the one before it opens with 'and' ('at TAB 18 and Skyepharma PLC v Hyal'). Beaver-authored: a table's column headers read into its first row ('Case / Paragraph References Bank of Montreal v Dynex Petroleum') are no part of the style of cause.",
+          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_LEAD_IN, a numbered paragraph's own label ('12.', '[12]', '(a)') and a leading 'In' in front of the first party. Beaver-authored: the sentence openers As for, As in, As with, Like, Unlike and Following are lead-ins too (As for Fell & Moss, supra note 3), and so is Consider (Consider R v Drakes-Simon, where a note gives the citation). A brief's own list of its authorities opens each line with its book tab ('TAB 8 Ash v Fen, 2036 ABKB 4'), which is no part of the style of cause. Beaver-authored: a list of authorities that gives the paragraphs each authority is cited at puts that column in front of the next line's style of cause ('…, [2005] 2 SCR 91 12 Safilo Canada Inc. v. Contour Optik Inc.', '57-58, 59, 342- 347 Canadian Human Rights Commission v. Canada'), as does a decimal paragraph number ('4.13 McLean v Canada'); a numbered company keeps its number, which is longer than four digits or written as two four-digit groups ('1705221 Alberta Ltd', '2747-3174 Québec Inc.'). A citation joined to the one before it opens with 'and' ('at TAB 18 and Skyepharma PLC v Hyal'). Beaver-authored: a table's column headers read into its first row ('Case / Paragraph References Bank of Montreal v Dynex Petroleum') are no part of the style of cause.",
           "vectors": [
             {
               "input": "Paragraph References Fen v Ash",
@@ -6773,6 +6773,10 @@
             },
             {
               "input": "As for Fell & Moss",
+              "groups": {}
+            },
+            {
+              "input": "Consider R v Drakes-Simon",
               "groups": {}
             }
           ]

@@ -1384,6 +1384,224 @@
       }
     },
     {
+      "name": "style/note-decision-named-before-its-marker",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "In R v Ashfen,\n\n2037 SCC 47 [Ashfen].",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 16,
+            "end": 37,
+            "anchor": 14
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 SCC 47"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": {
+                "text": "R v Ashfen"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/note-decision-named-past-a-sentence-and-a-signal-word",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "The court relied on Fenwick. Consider R v Moss-Ash.\n\n2037 ONSC 130 [Moss-Ash].",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 53,
+            "end": 78,
+            "anchor": 51
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 ONSC 130"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": {
+                "text": "R v Moss-Ash"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/note-decision-named-past-an-aside",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "the affirmation of R v Fell and Fell (which affirmed a trial decision)\n\n2037 BCCA 265 [Fell BCCA].",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 72,
+            "end": 98,
+            "anchor": 70
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 BCCA 265"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": {
+                "text": "R v Fell and Fell"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/note-decision-without-short-form-named-when-alone",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "In Ash v Fen,\n\n2037 SCC 4.",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 15,
+            "end": 26,
+            "anchor": 13
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 SCC 4"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": {
+                "text": "Ash v Fen"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/note-decision-not-named-when-short-form-disagrees",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "In R v Ashfen,\n\n2037 SCC 47 [Mossley].",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 16,
+            "end": 38,
+            "anchor": 14
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 SCC 47"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/note-decision-not-named-when-text-runs-past-the-name",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ashfen is cited in 54 decisions, R v Moss in 52,\n\n2037 BCSC 501 [Moss].",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 50,
+            "end": 71,
+            "anchor": 48
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 BCSC 501"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/note-decision-not-named-from-prose",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "The trial judge found that police had lied under oath.\n\n2037 ONCA 213 at para 43.",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 56,
+            "end": 81,
+            "anchor": 54
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 ONCA 213"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": null
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "style/adjective-led-instrument-title",
       "convention": "mcgill",
       "status": "pass",
