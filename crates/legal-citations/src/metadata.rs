@@ -271,7 +271,7 @@ fn parenthetical_at(text: &str, start: usize, limit: usize) -> Option<Range<usiz
 
 /// A parenthetical that belongs to the citation: the author's own sentence
 /// after it ("(Mr. Moss did not argue the point)") ends the citation.
-fn citation_parenthetical(text: &str, start: usize, limit: usize) -> Option<Range<usize>> {
+pub(crate) fn citation_parenthetical(text: &str, start: usize, limit: usize) -> Option<Range<usize>> {
     parenthetical_at(text, start, limit).filter(|range| !REMARK.is_match(text[range.start + 1..range.end - 1].trim()))
 }
 

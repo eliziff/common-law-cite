@@ -222,7 +222,7 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         "noteReferences" => {
             let request: NoteReferencesRequest = parse(method, request)?;
             to_value(crate::source::references(&request.parts, request.citations.as_deref(),
-                request.kinds.as_deref(), |prefix| match request.offset_unit {
+                request.kinds.as_deref(), request.styles.as_deref(), |prefix| match request.offset_unit {
                     OffsetUnit::Byte => prefix.len(),
                     OffsetUnit::Char => prefix.chars().count(),
                     OffsetUnit::Utf16 => prefix.encode_utf16().count(),
@@ -491,6 +491,10 @@ pub struct NoteReferencesRequest {
     /// The kinds of authority wanted ("case", "statute", "journal", ...); every kind when absent.
     #[serde(default)]
     pub kinds: Option<Vec<crate::Authority>>,
+    /// The citation guides whose own forms count ("mcgill", "coal", "bluebook", "aglc", "oscola",
+    /// "nzlsg"); every guide's when absent. Supplied citations were found under the extract's own.
+    #[serde(default)]
+    pub styles: Option<Vec<crate::CitationStyle>>,
     #[serde(default)]
     pub offset_unit: OffsetUnit,
 }

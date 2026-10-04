@@ -637,10 +637,11 @@ pub struct Reference {
 pub struct ReferencePart { pub part: SourcePart, pub references: Vec<Reference> }
 
 /// Authority references, built on the note split: only the parts that cite one of `kinds`
-/// (every kind when absent). `citations` share the parts' offsets, and each part is searched
+/// (every kind when absent), as the guides in `styles` write them (every guide when absent).
+/// `citations` share the parts' offsets, and each part is searched
 /// without them; `measure` counts a prefix of a part's text in those offsets.
-pub fn references(parts: &[SourcePart], citations: Option<&[crate::Citation]>,
-    kinds: Option<&[crate::Authority]>, measure: impl Fn(&str) -> usize) -> Vec<ReferencePart> {
+pub fn references(parts: &[SourcePart], citations: Option<&[crate::Citation]>, kinds: Option<&[crate::Authority]>,
+    styles: Option<&[crate::CitationStyle]>, measure: impl Fn(&str) -> usize) -> Vec<ReferencePart> {
     use crate::Authority;
     let link_in = |text: &str| URL.find(text).expect("source URL")
         .map(|found| found.as_str().trim_matches(['<', '>', '.', ',', ';', ' ']).to_owned());
@@ -654,7 +655,7 @@ pub fn references(parts: &[SourcePart], citations: Option<&[crate::Citation]>,
                 && citation.span.start < part.end && part.start < citation.span.end)
                 .map(|citation| cited(citation, citation.span.start, citation.span.end, Some(citation.index)))
                 .collect::<Vec<_>>(),
-            None => crate::extract(&part.text, &crate::Options { resolve: false, ..Default::default() }).iter()
+            None => crate::extract(&part.text, &crate::Options { resolve: false, styles: styles.map(<[_]>::to_vec), ..Default::default() }).iter()
                 .filter(|citation| citation.form != crate::Form::Unknown)
                 .map(|citation| cited(citation, at(citation.span.start), at(citation.span.end), None)).collect(),
         };

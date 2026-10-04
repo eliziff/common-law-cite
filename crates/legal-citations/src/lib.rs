@@ -64,6 +64,12 @@ pub enum SupraMode {
     Aggressive,
 }
 
+/// A citation guide whose forms the finder recognizes beyond the forms every guide shares.
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub enum CitationStyle { Mcgill, Coal, Bluebook, Aglc, Oscola, Nzlsg }
+
 /// Options for [`extract`].
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(default, rename_all = "camelCase", deny_unknown_fields)]
@@ -91,6 +97,8 @@ pub struct Options {
     pub supra_hint_mode: SupraMode,
     /// Inferred and bare-note linking runs only in aggressive mode.
     pub supra_linking_mode: SupraMode,
+    /// The guides whose own forms are recognized; every guide's when absent.
+    pub styles: Option<Vec<CitationStyle>>,
 }
 
 impl Default for Options {
@@ -105,6 +113,7 @@ impl Default for Options {
             jurisdiction_priority: Vec::new(),
             supra_hint_mode: SupraMode::Aggressive,
             supra_linking_mode: SupraMode::Safe,
+            styles: None,
         }
     }
 }

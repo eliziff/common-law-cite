@@ -11,7 +11,7 @@ use crate::model::{
     Authority, Citation, Fields, Form, NoteDirection, NoteReference, Pinpoint, PinpointKind, Span,
 };
 use crate::text::javascript_whitespace;
-use crate::Options;
+use crate::{CitationStyle, Options};
 use legal_grammar::{CompiledEcmascriptGrammar, CompiledGrammar};
 use regex::Regex;
 use std::ops::Range;
@@ -163,33 +163,76 @@ static SECONDARY_ECMASCRIPT: LazyLock<[(&'static str, &'static str, CompiledEcma
 static JOURNAL_ARTICLE: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("cite.journal.article"));
 static ONLINE_SOURCE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.url"));
-// The McGill Guide's forms that carry no reporter, journal or imprint the grammars above read.
-static SECONDARY_SOURCES: LazyLock<Vec<(&'static str, &'static str, CompiledGrammar)>> = LazyLock::new(|| [
-    ("journal", "manuscript_grammar", "cite.secondary.manuscript"),
-    ("book", "thesis_grammar", "cite.secondary.thesis"),
-    ("journal", "paper_grammar", "cite.secondary.paper"),
-    ("journal", "dated_work_grammar", "cite.secondary.dated"),
-    ("journal", "news_grammar", "cite.secondary.news"),
-    ("journal", "news_grammar", "cite.secondary.periodical"),
-    ("journal", "news_grammar", "cite.secondary.letter-to-editor"),
-    ("journal", "article_grammar", "cite.journal.bracket-year"),
-    ("government", "international_grammar", "cite.secondary.international"),
-    ("government", "international_grammar", "cite.international.organization"),
-    ("case", "international_case_grammar", "cite.case.international"),
-    ("book", "encyclopedia_grammar", "cite.secondary.encyclopedia"),
-    ("book", "encyclopedia_grammar", "cite.secondary.encyclopedia-ced"),
-    ("book", "encyclopedia_fascicle_grammar", "cite.secondary.jurisclasseur"),
-    ("book", "dictionary_grammar", "cite.secondary.dictionary"),
-    ("book", "coursepack_grammar", "cite.secondary.coursepack"),
-    ("government", "intellectual_property_grammar", "cite.secondary.intellectual-property"),
-    ("statute", "code_grammar", "cite.ca.code"),
-    ("statute", "bylaw_grammar", "cite.ca.bylaw"),
-    ("court_rule", "court_rules_grammar", "cite.ca.court-rules"),
-    ("parliamentary", "parliamentary_grammar", "cite.parliamentary.record"),
-    ("parliamentary", "parliamentary_grammar", "cite.parliamentary.petition"),
-    ("parliamentary", "parliamentary_grammar", "cite.secondary.committee-report"),
-].into_iter().map(|(kind, reason, id)| (kind, reason, backtracking(id))).collect());
+// Forms that carry no reporter, journal or imprint the grammars above read, with the guides that
+// prescribe them: a guide's own forms run only when the caller asks for that guide or for none.
+type Guides = &'static [CitationStyle];
+const EVERY: Guides = &[];
+const CANADA: Guides = &[CitationStyle::Mcgill, CitationStyle::Coal];
+const MCGILL: Guides = &[CitationStyle::Mcgill];
+const COMMONWEALTH: Guides = &[CitationStyle::Mcgill, CitationStyle::Oscola, CitationStyle::Aglc, CitationStyle::Nzlsg];
+const TITLE_YEAR: Guides = &[CitationStyle::Oscola, CitationStyle::Aglc, CitationStyle::Nzlsg];
+const EUROPE: Guides = &[CitationStyle::Mcgill, CitationStyle::Oscola];
+const UNITED_STATES: Guides = &[CitationStyle::Mcgill, CitationStyle::Bluebook];
+const BLUEBOOK: Guides = &[CitationStyle::Bluebook];
+const AGLC: Guides = &[CitationStyle::Aglc];
+static SECONDARY_SOURCES: LazyLock<Vec<(&'static str, &'static str, CompiledGrammar, Guides)>> = LazyLock::new(|| [
+    ("journal", "manuscript_grammar", "cite.secondary.manuscript", EVERY),
+    ("book", "thesis_grammar", "cite.secondary.thesis", EVERY),
+    ("journal", "paper_grammar", "cite.secondary.paper", EVERY),
+    ("journal", "dated_work_grammar", "cite.secondary.dated", EVERY),
+    ("journal", "news_grammar", "cite.secondary.news", EVERY),
+    ("journal", "news_grammar", "cite.secondary.periodical", EVERY),
+    ("journal", "news_grammar", "cite.secondary.letter-to-editor", EVERY),
+    ("journal", "article_grammar", "cite.journal.bracket-year", EVERY),
+    ("government", "international_grammar", "cite.secondary.international", EVERY),
+    ("government", "international_grammar", "cite.international.organization", EVERY),
+    ("case", "international_case_grammar", "cite.case.international", EVERY),
+    ("book", "encyclopedia_grammar", "cite.secondary.encyclopedia", EVERY),
+    ("book", "encyclopedia_grammar", "cite.secondary.encyclopedia-ced", CANADA),
+    ("book", "encyclopedia_fascicle_grammar", "cite.secondary.jurisclasseur", CANADA),
+    ("book", "dictionary_grammar", "cite.secondary.dictionary", EVERY),
+    ("book", "coursepack_grammar", "cite.secondary.coursepack", EVERY),
+    ("government", "intellectual_property_grammar", "cite.secondary.intellectual-property", EVERY),
+    ("statute", "code_grammar", "cite.ca.code", CANADA),
+    ("statute", "bylaw_grammar", "cite.ca.bylaw", CANADA),
+    ("court_rule", "court_rules_grammar", "cite.ca.court-rules", CANADA),
+    ("parliamentary", "parliamentary_grammar", "cite.parliamentary.record", CANADA),
+    ("parliamentary", "parliamentary_grammar", "cite.parliamentary.petition", CANADA),
+    ("parliamentary", "parliamentary_grammar", "cite.secondary.committee-report", CANADA),
+    ("statute", "foreign_statute_grammar", "cite.foreign.titled-statute", MCGILL),
+    ("statute", "foreign_statute_grammar", "cite.foreign.uk-instrument", COMMONWEALTH),
+    ("constitution", "constitution_grammar", "cite.foreign.us-constitution", UNITED_STATES),
+    ("statute", "foreign_statute_grammar", "cite.foreign.us-code", UNITED_STATES),
+    ("parliamentary", "foreign_parliamentary_grammar", "cite.foreign.us-legislative", UNITED_STATES),
+    ("case", "foreign_reporter_grammar", "cite.foreign.us-reporter", MCGILL),
+    ("statute", "foreign_statute_grammar", "cite.foreign.civil-code", MCGILL),
+    ("case", "foreign_court_grammar", "cite.foreign.civil-court", MCGILL),
+    ("statute", "foreign_statute_grammar", "cite.foreign.french-instrument", MCGILL),
+    ("journal", "foreign_doctrine_grammar", "cite.foreign.french-doctrine", MCGILL),
+    ("statute", "foreign_statute_grammar", "cite.foreign.eu", EUROPE),
+    ("case", "foreign_court_grammar", "cite.foreign.eu-case", EUROPE),
+    ("statute", "title_year_statute_grammar", "cite.statute.title-year", TITLE_YEAR),
+    ("case", "unreported_grammar", "cite.case.unreported-commonwealth", TITLE_YEAR),
+    ("government", "report_grammar", "cite.secondary.law-reform", EVERY),
+    ("statute", "foreign_statute_grammar", "cite.us.code-section", BLUEBOOK),
+    ("court_rule", "court_rules_grammar", "cite.us.court-rule", BLUEBOOK),
+    ("government", "report_grammar", "cite.us.opinion", BLUEBOOK),
+    ("book", "book_edition_grammar", "cite.us.book-edition", BLUEBOOK),
+    ("journal", "news_grammar", "cite.us.periodical", BLUEBOOK),
+    ("book", "encyclopedia_grammar", "cite.aglc.online-at", AGLC),
+    ("parliamentary", "foreign_parliamentary_grammar", "cite.foreign.commonwealth-parliament", MCGILL),
+    ("parliamentary", "foreign_parliamentary_grammar", "cite.foreign.french-parliament", MCGILL),
+    ("statute", "securities_grammar", "cite.ca.securities", CANADA),
+    ("statute", "securities_grammar", "cite.ca.gazette", CANADA),
+    ("government", "report_grammar", "cite.secondary.report", EVERY),
+    ("document", "correspondence_grammar", "cite.secondary.correspondence", EVERY),
+    ("document", "archival_grammar", "cite.secondary.archival", EVERY),
+    ("book", "religious_text_grammar", "cite.secondary.religious", EVERY),
+].into_iter().map(|(kind, reason, id, guides)| (kind, reason, backtracking(id), guides)).collect());
 static ACCESS_DATE: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("attach.access-date"));
+static SUPRA_AFTER: LazyLock<Regex> = LazyLock::new(|| linear("ref.supra-follows"));
+static GOVERNMENT_AUTHOR: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("style.government-author"));
+static LEGISLATIVE_TITLE: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("style.legislative-title"));
 static CASE_VERSUS: LazyLock<Regex> = LazyLock::new(|| linear("style.case-versus"));
 // A balanced, uppercase-first parenthetical ("Quebec (Attorney General)")
 // counts as one party token; "(1998)", "(2d)" and "(see below)" do not.
@@ -280,7 +323,7 @@ fn resolve(mut found: Vec<Anchor>) -> Vec<Anchor> {
 /// First references to the authorities that never carry a reporter: statutes
 /// and regulations, journal articles, monographs and edited collections,
 /// parliamentary papers, treaties, database identifiers and online-only sources.
-fn secondary_hits(value: &str, primary: &[Hit]) -> Vec<Anchor> {
+fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>) -> Vec<Anchor> {
     let mut found = Vec::new();
     for (kind, reason, pattern) in SECONDARY_ECMASCRIPT.iter() {
         for matched in pattern.find_iter(value) {
@@ -288,8 +331,8 @@ fn secondary_hits(value: &str, primary: &[Hit]) -> Vec<Anchor> {
             if *reason == "unreported_grammar" && case_style_start(value, start, 0) == start {
                 continue;
             }
-            if *reason == "book_grammar" && pattern.captures(matched.as_str())
-                .is_some_and(|capture| capture.name("publisher_imprint").is_some()) {
+            if *reason == "book_grammar" && pattern.captures(matched.as_str()).is_some_and(|capture|
+                ["publisher_imprint", "oscola_imprint", "aglc_imprint"].iter().any(|group| capture.name(group).is_some())) {
                 let authored = matched_style(&AUTHORED_WORK, "work", value, start, 0);
                 // A court/date tail is not a publisher imprint. An authored
                 // work cannot claim a recognised case core as its title.
@@ -302,13 +345,15 @@ fn secondary_hits(value: &str, primary: &[Hit]) -> Vec<Anchor> {
             found.push(Anchor::new(start..matched.end(), (*kind, *reason)));
         }
     }
+    for (kind, reason, pattern, guides) in SECONDARY_SOURCES.iter() {
+        if guides.is_empty() || styles.is_none_or(|styles| styles.iter().any(|style| guides.contains(style))) {
+            found.extend(pattern.find_iter(value).flatten()
+            .map(|matched| Anchor::new(matched.start()..matched.end(), (*kind, *reason))));
+        }
+    }
     found.extend(JOURNAL_ARTICLE.find_iter(value).flatten().map(|matched| {
         Anchor::new(matched.start()..matched.end(), ("journal", "article_grammar"))
     }));
-    for (kind, reason, pattern) in SECONDARY_SOURCES.iter() {
-        found.extend(pattern.find_iter(value).flatten()
-            .map(|matched| Anchor::new(matched.start()..matched.end(), (*kind, *reason))));
-    }
     let mut link_end = None;
     for matched in ONLINE_SOURCE.find_iter(value) {
         let link = link_core(value, matched.start()..matched.end());
@@ -379,8 +424,10 @@ fn online_extent(text: &str, link: &Hit, limit: usize) -> usize {
         if !alternate_link(text, end, next.start) { break; }
         end = link_end_with_closer(text, &next);
     }
-    // The date it was visited closes the link: "<...> (last visited 1 July 2024)".
-    end + ACCESS_DATE.find(&text[end..limit.max(end)]).ok().flatten().map_or(0, |found| found.end())
+    // The date it was visited closes the link: "<...> (last visited 1 July 2024)", and an
+    // explanation in parentheses after it belongs to the citation.
+    let end = end + ACCESS_DATE.find(&text[end..limit.max(end)]).ok().flatten().map_or(0, |found| found.end());
+    metadata::citation_parenthetical(text, end, limit.max(end)).map_or(end, |range| range.end)
 }
 
 /// Frozen LSP citation_kind: occurrence family, not registry identity.
@@ -403,7 +450,7 @@ fn occurrence_family(core: &str) -> (&'static str, &'static str) {
     (if core.contains("CanLII") { "case" } else { "other" }, "citation_grammar")
 }
 
-fn citation_anchors(value: &str, extended_us: bool, scopes: &[usize], enrich: bool) -> Vec<Anchor> {
+fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationStyle]>, scopes: &[usize], enrich: bool) -> Vec<Anchor> {
     let (mut found, reporters) = primary_ranges(value);
     let captured = if enrich {
         crate::us::find(value, extended_us, Some(&mut found))
@@ -416,18 +463,22 @@ fn citation_anchors(value: &str, extended_us: bool, scopes: &[usize], enrich: bo
     // 487", and "(2021), 25 Can. Crim L Rev 255" is not "(2021), 25 Can.".
     // The block keeps the family its publication names ("(1879), 5 Ex D 264"
     // is a case).
-    let mut secondary = secondary_hits(value, &found);
+    let mut secondary = secondary_hits(value, &found, styles);
     let mut primary = Vec::new();
     for anchor in resolve(found.into_iter().map(|span| Anchor { span, ..Anchor::default() }).collect()) {
         let hit = &anchor.span;
-        match secondary.iter_mut().find(|whole| whole.family.is_some_and(|(_, reason)| reason == "article_grammar")
+        // A treaty series block ("Can TS 1994 No 2") holds the number the in-text grammar reads.
+        match secondary.iter_mut().find(|whole| whole.family.is_some_and(|(_, reason)| reason == "article_grammar" || reason == "treaty_grammar")
             && whole.span.start <= hit.start && hit.end <= whole.span.end && whole.span != *hit) {
-            Some(whole) => if whole.reading.is_none() {
+            Some(whole) => if whole.reading.is_none() && whole.family.is_some_and(|(_, reason)| reason == "article_grammar") {
                 whole.read(value);
                 if let Some(kind) = whole.reading.as_ref().map(|reading| reading.family().0).filter(|kind| *kind != "other") {
                     whole.family = Some((kind, "article_grammar"));
                 }
             },
+            // A report written right before ", supra" is the short title a supra names ("Nortel
+            // 2014, supra note 15"), never a citation of its own.
+            None if SUPRA_AFTER.is_match(&value[anchor.span.end..]) => {}
             None => primary.push(Anchor::new(anchor.span.clone(), occurrence_family(&value[anchor.span]))),
         }
     }
@@ -751,6 +802,10 @@ fn past_lead_in(text: &str, start: usize, core_start: usize) -> usize {
 }
 
 fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
+    // A style of cause never runs across a blank line, as a table's rows or headings do.
+    let window = &text[floor..core_start];
+    let floor = window.match_indices('\n').map(|(at, _)| at).filter(|&at| window[..at].trim_end_matches([' ', '\t', '\r'])
+        .ends_with('\n')).last().map_or(floor, |at| floor + at + 1);
     let prefix = text[floor..core_start]
         .trim_end_matches(|character: char| javascript_whitespace(character) || character == ',');
     let Some(versus) = CASE_VERSUS.find_iter(prefix).last() else {
@@ -818,6 +873,7 @@ fn authority(kind: &str) -> Authority {
         "treaty" => Authority::Treaty,
         "government" => Authority::GovernmentDocument,
         "court_rule" => Authority::CourtRule,
+        "constitution" => Authority::Constitution,
         _ => Authority::Unknown,
     }
 }
@@ -977,6 +1033,8 @@ fn full_citation(
     let core = anchor.span.clone();
     let source_core = anchor.source_span.as_ref().unwrap_or(&anchor.span);
     let (kind, kind_reason) = anchor.family.unwrap_or(("other", "citation_grammar"));
+    // A treaty series the in-text grammar found first is still styled by the treaty's title.
+    let kind = if anchor.reading.as_ref().is_some_and(|reading| reading.family().0 == "treaty") { "treaty" } else { kind };
     let has_section = anchor.reading.as_ref().is_some_and(|reading| reading.has_section());
     // Parentheses inside a section identifier (1.401(a)-1) are not a
     // subdivision. Retain the section suffix in fields without widening the
@@ -999,7 +1057,7 @@ fn full_citation(
         "treaty" => treaty_style_start(text, core.start, previous_end),
         // A dictionary or encyclopedia entry opens with its own title.
         _ if matches!(kind_reason, "dictionary_grammar" | "encyclopedia_grammar") => core.start,
-        "journal" | "book" | "parliamentary" | "government" => work_style_start(text, core.start, previous_end),
+        "journal" | "book" | "parliamentary" | "government" | "document" => work_style_start(text, core.start, previous_end),
         // An online-only source is styled with the publisher and title in
         // front of the link; every other unclassified span carries no
         // styled prefix.
@@ -1035,7 +1093,10 @@ fn full_citation(
             oscola: false,
             inner: source_name
                 .filter(|name| name.pre_citation.is_some()).and_then(|name| name.pin_cite.as_ref())
-                .map(|pin| (pin.start, pin.end)),
+                .map(|pin| (pin.start, pin.end))
+                // An online work's pinpoint precedes its link: "(2022) at 2, 13 online: <...>".
+                .or_else(|| (kind_reason == "online_grammar").then(|| text[styled_start..core.start]
+                    .rfind(" at ").map(|at| (styled_start + at + 1, core.start))).flatten()),
         },
     ) };
     if let Some(range) = subdivision {
@@ -1140,6 +1201,18 @@ fn full_citation(
             }
         }
         crate::classify::apply(&mut citation, reading, options);
+        // A work a government body wrote is a government document, and a link whose title
+        // names an enactment or a treaty cites that enactment or treaty.
+        let style = citation.style.as_ref().map_or("", |style| style.text.as_str());
+        citation.authority = match citation.authority {
+            Authority::Book | Authority::Journal if GOVERNMENT_AUTHOR.is_match(style).unwrap_or(false) =>
+                Authority::GovernmentDocument,
+            Authority::Webpage if LEGISLATIVE_TITLE.is_match(style).unwrap_or(false) =>
+                if ["Treaty", "Agreement", "Convention", "Accord", "Covenant", "Protocol"].iter().any(|word| style.contains(word)) {
+                    Authority::Treaty
+                } else { Authority::Statute },
+            authority => authority,
+        };
         if let Some(suffix) = section_suffix {
             if let Some(section) = &mut citation.fields.section {
                 section.push_str(&text[suffix]);
@@ -1252,7 +1325,7 @@ fn cores(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<C
 }
 
 fn cores_in(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<Core> {
-    let mut cores = citation_anchors(text, options.extended_us, scopes, enrich)
+    let mut cores = citation_anchors(text, options.extended_us, options.styles.as_deref(), scopes, enrich)
         .into_iter()
         .map(|anchor| Core {
             span: anchor.span.clone(),

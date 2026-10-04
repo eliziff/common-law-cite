@@ -774,6 +774,27 @@ pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
         if let Some(reading) = neutral(core) { return Some(neutral_with_publication(reading)); }
         if let Some(reading) = publication(reason == "journal_grammar") { return Some(reading); }
     }
+    // The Guide forms the finder's own grammars name keep the family their grammar read.
+    const NAMED: [(&str, Authority); 24] = [
+        ("manuscript_grammar", Authority::Journal), ("paper_grammar", Authority::Journal),
+        ("dated_work_grammar", Authority::Journal), ("news_grammar", Authority::Journal),
+        ("foreign_doctrine_grammar", Authority::Journal), ("thesis_grammar", Authority::Book),
+        ("encyclopedia_grammar", Authority::Book), ("encyclopedia_fascicle_grammar", Authority::Book),
+        ("dictionary_grammar", Authority::Book), ("coursepack_grammar", Authority::Book), ("book_edition_grammar", Authority::Book),
+        ("religious_text_grammar", Authority::Book), ("international_grammar", Authority::GovernmentDocument),
+        ("intellectual_property_grammar", Authority::GovernmentDocument), ("report_grammar", Authority::GovernmentDocument),
+        ("international_case_grammar", Authority::Case), ("foreign_reporter_grammar", Authority::Case),
+        ("foreign_court_grammar", Authority::Case), ("code_grammar", Authority::Statute),
+        ("bylaw_grammar", Authority::Statute), ("foreign_statute_grammar", Authority::Statute),
+        ("title_year_statute_grammar", Authority::Statute), ("securities_grammar", Authority::Regulation),
+        ("court_rules_grammar", Authority::CourtRule),
+    ];
+    const MORE: [(&str, Authority); 4] = [("constitution_grammar", Authority::Constitution),
+        ("foreign_parliamentary_grammar", Authority::ParliamentaryPaper),
+        ("correspondence_grammar", Authority::Unknown), ("archival_grammar", Authority::Unknown)];
+    if let Some((name, authority)) = NAMED.iter().chain(MORE.iter()).find(|(name, _)| *name == reason) {
+        return Some(Reading::new(*authority, None, name));
+    }
     match reason {
         "online_grammar" => {
             let mut reading = Reading::new(Authority::Webpage, Some(Format::Url), "online_grammar");
