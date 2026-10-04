@@ -1183,7 +1183,9 @@ fn full_citation(
         // The date or the order nearest the file number, in the paragraph that cites it.
         let at = previous_end + window.match_indices(" (").map(|(at, _)| at)
             .filter(|at| window[at + 2..].starts_with(|character: char| character.is_ascii_digit()))
-            .chain(ORDER_OF.find_iter(window).map(|found| found.start())).max()?;
+            // An order's words may open the citation itself ("…, Order of Madam Justice Ash dated …, No. S-1").
+            .chain(ORDER_OF.find_iter(&text[previous_end..core.end]).map(|found| found.start())
+                .filter(|at| previous_end + at < core.start)).max()?;
         let floor = text[previous_end..at].rfind("\n\n").map_or(previous_end, |blank| previous_end + blank + 2);
         Some((case_style_start(text, at, floor), at)).filter(|(start, _)| *start < at)
     }).flatten();
@@ -1885,9 +1887,9 @@ fn commented_work(text: &str, citation: &mut Citation, previous: &[Citation], fl
 
 /// A statute's chapter read with a recognizer's confusion ("R.S.C. 1985, c. G-36" for "c C-36":
 /// G for C, O or Q for 0, l or I for 1, S for 5, B for 8) is the chapter the document cites more
-/// often in the same year and jurisdiction whose letters and digits it confuses with. It takes
-/// that citation's chapter and key, and says so in its reasons ("ocr_twin"). Chapters cited as
-/// often as each other are left as written.
+/// often in the same year and jurisdiction whose letters and digits it confuses with, or, cited as
+/// often, the one cited with its Act's title. It takes that citation's chapter and key, and says so
+/// in its reasons ("ocr_twin"). Chapters cited alike are left as written.
 pub(crate) fn ocr_twins(citations: &mut [Citation]) {
     let confused = |chapter: &str| chapter.chars().map(|character| match character {
         'G' => 'C', 'O' | 'o' | 'Q' => '0', 'l' | 'I' => '1', 'S' => '5', 'B' => '8',
@@ -1902,9 +1904,14 @@ pub(crate) fn ocr_twins(citations: &mut [Citation]) {
         let mut counts = std::collections::HashMap::<&str, usize>::new();
         for &at in &members { *counts.entry(citations[at].fields.chapter.as_deref().unwrap()).or_default() += 1; }
         if counts.len() < 2 { continue; }
-        let mut ranked = counts.into_iter().collect::<Vec<_>>();
-        ranked.sort_by(|left, right| right.1.cmp(&left.1));
-        if ranked[0].1 == ranked[1].1 { continue; }
+        // The form cited more often is the chapter; between forms cited as often, the one cited with
+        // its Act's title is ("Companies' Creditors Arrangement Act, RSC 1985, c C-36" over a
+        // heading's "R.S.C. 1985, c. G-36").
+        let titled = |chapter: &str| members.iter().filter(|&&at| citations[at].fields.chapter.as_deref() == Some(chapter)
+            && citations[at].style.as_ref().is_some_and(|style| !style.text.trim().is_empty())).count();
+        let mut ranked = counts.into_iter().map(|(chapter, count)| (chapter, count, titled(chapter))).collect::<Vec<_>>();
+        ranked.sort_by(|left, right| (right.1, right.2).cmp(&(left.1, left.2)));
+        if (ranked[0].1, ranked[0].2) == (ranked[1].1, ranked[1].2) { continue; }
         let chapter = ranked[0].0.to_owned();
         let Some(twin) = members.iter().find(|&&at| citations[at].fields.chapter.as_deref() == Some(chapter.as_str())).copied() else { continue };
         let key = citations[twin].key.clone();
