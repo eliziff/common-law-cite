@@ -6604,6 +6604,27 @@
           "rust": true
         },
         {
+          "id": "style.case-floor",
+          "pattern": "\\n[ \\t]*\\n[ \\t]*(?:\\d{1,4}\\.|[A-Z]\\.|\\([a-z0-9]{1,4}\\))[ \\t]|[”\"][.,;:]?[ \\t\\n]",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from filed Canadian briefs: where a style of cause cannot start before, though no sentence ends there: a new numbered paragraph or lettered heading after a blank line ('…to\n\n52. Claims bar dates…', 'C. Litigation'), and the end of a quotation ('…to help it decide”. Re SemCanada Crude Company'). A quotation is never part of a style of cause.",
+          "vectors": [
+            {
+              "input": "intends to\n\n52. Claims bar dates",
+              "groups": {}
+            },
+            {
+              "input": "to help it decide”. Re",
+              "groups": {}
+            },
+            {
+              "input": "Canada (Minister of Citizenship and\n\nImmigration) v Vavilov",
+              "groups": null
+            }
+          ]
+        },
+        {
           "id": "style.case-lead-in",
           "pattern": "^(?:(?:\\d{1,4}\\.|\\[\\d{1,4}\\]|\\((?:\\d{1,4}|[{{lc}}]{1,4})\\)|(?:TAB|Tab)\\s+\\d{1,4}[A-Za-z]?)\\s+)?(?:(?:In|As\\s+(?:for|in|with)|Like|Unlike|Following)\\s+)?",
           "flags": "",

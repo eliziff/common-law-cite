@@ -233,6 +233,7 @@ static SECONDARY_SOURCES: LazyLock<Vec<(&'static str, &'static str, CompiledGram
     ("book", "religious_text_grammar", "cite.secondary.religious", EVERY),
 ].into_iter().map(|(kind, reason, id, guides)| (kind, reason, backtracking(id), guides)).collect());
 static CHARTER: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("cite.ca.charter"));
+static CASE_FLOOR: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("style.case-floor"));
 // A document's own list or table of authorities: its heading, and the heading that ends it.
 static AUTHORITY_LIST: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("section.authority-list"));
 static AUTHORITY_LIST_END: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("section.authority-list.end"));
@@ -856,6 +857,12 @@ fn past_lead_in(text: &str, start: usize, core_start: usize) -> usize {
 }
 
 fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
+    // A style of cause starts after a quotation and within its own paragraph.
+    let floor = CASE_FLOOR.find_iter(&text[floor..core_start]).last().map_or(floor, |found| {
+        let matched = found.as_str();
+        if matched.starts_with('\n') { floor + found.start() + matched.len() - matched.trim_start().len() }
+        else { floor + found.end() }
+    });
     let prefix = text[floor..core_start]
         .trim_end_matches(|character: char| javascript_whitespace(character) || character == ',');
     let Some(versus) = CASE_VERSUS.find_iter(prefix).last() else {
