@@ -1384,6 +1384,27 @@
       }
     },
     {
+      "name": "style/case-party-with-a-standing-ampersand",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "See Fell & Moss Workers Union Local 50 v. Ash, 2037 BCSC 65.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 BCSC 65"
+            },
+            "style": {
+              "text": "Fell & Moss Workers Union Local 50 v. Ash"
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "style/note-decision-named-before-its-marker",
       "convention": "mcgill",
       "status": "pass",
