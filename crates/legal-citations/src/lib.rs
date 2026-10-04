@@ -106,6 +106,10 @@ pub struct Options {
     /// Leave out what a document's own list or table of authorities holds: its entries list the
     /// authorities the document cites elsewhere, and its tab numbers cite nothing.
     pub skip_authority_lists: bool,
+    /// Read a case's name with a pinpoint written before the case is first cited in full
+    /// ("Oakes at 138" … "R v Oakes, [1986] 1 SCR 103") as a reference to it, which has no
+    /// earlier citation. Eyecite reads references only after the full citation.
+    pub early_references: bool,
 }
 
 impl Default for Options {
@@ -122,6 +126,7 @@ impl Default for Options {
             supra_linking_mode: SupraMode::Safe,
             styles: None,
             skip_authority_lists: false,
+            early_references: false,
         }
     }
 }

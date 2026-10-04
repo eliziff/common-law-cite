@@ -1558,7 +1558,8 @@ static SOURCE_NAME_EXCLUDED: LazyLock<CompiledGrammar> = LazyLock::new(|| {
 /// Bare case-name references (`Jordan at para 12`, `Roe at 240`) to a full
 /// citation earlier in the text, and a name conjoined to the citation in
 /// front of it (`...; see Oakes, supra note 4 and Jordan.`).
-fn case_name_references(text: &str, citations: &[Citation], source_markup: Option<&crate::clean::Markup<'_>>) -> Vec<Citation> {
+fn case_name_references(text: &str, citations: &[Citation], source_markup: Option<&crate::clean::Markup<'_>>,
+    early_references: bool) -> Vec<Citation> {
     let mut names = Vec::new();
     for citation in citations.iter().filter(|citation| citation.form == Form::Full) {
         for name in reference_names(citation) {
@@ -1567,10 +1568,10 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
                 else if parties.defendant.as_deref() == Some(&name) { Some(false) }
                 else { None }
             });
-            names.push((name, citation.span.end, citation.authority, source_field));
+            names.push((name, citation.span.end, citation.full_span.start, citation.authority, source_field));
         }
     }
-    names.sort_by_key(|(name, _, _, _)| std::cmp::Reverse(name.len()));
+    names.sort_by_key(|(name, ..)| std::cmp::Reverse(name.len()));
     names.dedup_by(|left, right| left.0 == right.0);
     let mut taken = citations
         .iter()
@@ -1580,7 +1581,7 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
         })
         .collect::<Vec<_>>();
     let mut found: Vec<Citation> = Vec::new();
-    for (name, after, authority, source_field) in names {
+    for (name, after, before, authority, source_field) in names {
         let source_pattern = source_field.map(|_| legal_grammar::compile_python_pattern(
             &SOURCE_REFERENCE.replace("{{name}}", &regex::escape(&name)), "").expect("escaped reference name"));
         let source_pins = source_pattern.as_ref().map(|pattern| pattern.captures_iter(&text[after..])
@@ -1608,9 +1609,14 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
                     .then_some((name, full))
             }).collect::<Vec<_>>()
         }).unwrap_or_default();
+        // A brief may refer to a case by its name and a pinpoint before it first cites it in full
+        // ("Oakes at 138" … "R v Oakes, [1986] 1 SCR 103"): such a reference has no earlier citation.
+        let early = if early_references {
+            text[..before].match_indices(name.as_str()).map(|(at, _)| at..at + name.len()).collect::<Vec<_>>()
+        } else { Vec::new() };
         let mut matches: Vec<_> = text[after..].match_indices(name.as_str())
             .map(|(at, _)| after + at..after + at + name.len())
-            .chain(styled.iter().map(|(range, _)| range.clone())).collect();
+            .chain(styled.iter().map(|(range, _)| range.clone())).chain(early.iter().cloned()).collect();
         matches.sort_by_key(|range| (range.start, range.end));
         matches.dedup();
         for matched in matches {
@@ -1650,6 +1656,9 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
                         .is_none_or(|character| ".;".contains(character))
             };
             if tail.pinpoints.is_empty() && source_pin.is_none() && !conjoined && markup.is_none() {
+                continue;
+            }
+            if early.contains(&matched) && (tail.pinpoints.is_empty() || markup.is_some() || source_pin.is_some()) {
                 continue;
             }
             let mut citation =
@@ -1820,7 +1829,7 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
     }
     let mut citations = join_links(text, join_legislation(text, citations));
     if enrich {
-        let references = case_name_references(text, &citations, markup);
+        let references = case_name_references(text, &citations, markup, options.early_references);
         citations.extend(references);
     }
     citations.sort_by_key(|citation| citation.span.start);
