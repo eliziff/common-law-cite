@@ -139,6 +139,9 @@ pub struct NoteRange {
     /// reference prefers a note in its own sequence.
     #[serde(default)]
     pub sequence: u32,
+    /// Where the note's marker stands in the text it annotates, when the caller knows it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub anchor: Option<usize>,
 }
 
 /// Find, classify and (optionally) resolve every citation in `text`.
@@ -162,6 +165,7 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
         for (index, citation) in citations.iter_mut().enumerate() { citation.index = index; }
     }
     metadata::attach(text, &mut citations);
+    find::anchor_titles(text, &mut citations, options.notes.as_deref().unwrap_or(&[]));
     for citation in &mut citations {
         us::finish(citation);
     }

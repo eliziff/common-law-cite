@@ -340,6 +340,11 @@ pub struct Fields {
     /// The note a `supra`/`above n` reference points to.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub note: Option<u32>,
+    /// The title of an untitled legislation citation in a note, as the sentence the note hangs
+    /// from writes it right before the note's marker ("… enacted the Good Samaritan Drug
+    /// Overdose Act.¹" for "¹ SC 2017, c 4.").
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub anchor_title: Option<Span>,
 }
 
 /// Original inline-reference token, before the broader source-resolution extent.

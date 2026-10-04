@@ -1320,6 +1320,86 @@
           }
         ]
       }
+    },
+    {
+      "name": "style/note-act-named-by-its-anchoring-sentence",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "In 2037, Parliament enacted the Coastal Overdose Act.\n\nSC 2037, c 4.",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 55,
+            "end": 68,
+            "anchor": 53
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "SC 2037, c 4"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": {
+                "text": "Coastal Overdose Act"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/note-act-not-named-when-the-sentence-names-two",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Parliament amended the Fen Act and enacted the Coastal Overdose Act.\n\nSC 2037, c 4.",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 70,
+            "end": 83,
+            "anchor": 68
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "SC 2037, c 4"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/adjective-led-instrument-title",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "a breach of the European Convention on Ash Rights, 4 November 2030, 213 UNTS 221.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "style": {
+              "text": "European Convention on Ash Rights"
+            }
+          }
+        ]
+      }
     }
   ]
 }

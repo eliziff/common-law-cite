@@ -1856,6 +1856,35 @@ fn commented_work(text: &str, citation: &mut Citation, previous: &[Citation], fl
     None
 }
 
+/// An untitled legislation citation that opens a note ("¹ SC 2017, c 4.") takes its title from the
+/// sentence the note hangs from, when that sentence names one instrument and names it right
+/// before the note's marker ("… the federal government enacted the Good Samaritan Drug Overdose
+/// Act.¹"). A sentence naming no instrument there, or several, gives none.
+pub(crate) fn anchor_titles(text: &str, citations: &mut [Citation], notes: &[crate::NoteRange]) {
+    for note in notes {
+        let Some(anchor) = note.anchor.filter(|&anchor| anchor <= text.len() && text.is_char_boundary(anchor)
+            && (anchor <= note.start || note.end <= anchor)) else { continue };
+        let Some(citation) = citations.iter_mut()
+            .filter(|citation| note.start <= citation.full_span.start && citation.full_span.start < note.end)
+            .min_by_key(|citation| citation.full_span.start) else { continue };
+        if citation.form != Form::Full || !citation.authority.is_legislation() || citation.style.is_some() {
+            continue;
+        }
+        let end = text[..anchor].trim_end_matches(|character: char| character.is_whitespace()
+            || ".,;:)\u{201d}\u{2019}\"'".contains(character)).len();
+        let mut floor = end.saturating_sub(600);
+        while !text.is_char_boundary(floor) { floor += 1; }
+        let start = statute_style_start(text, end, floor);
+        let sentence = &text[styled_floor(text, floor, end)..end];
+        let instruments = sentence.split(|character: char| !character.is_alphanumeric())
+            .filter(|word| matches!(*word, "Act" | "Acts" | "Code" | "Regulation" | "Regulations" | "Rules" | "Charter"))
+            .count();
+        if start < end && instruments == 1 {
+            citation.fields.anchor_title = Some(span(text, start..end));
+        }
+    }
+}
+
 /// The citations a document's own list or table of authorities holds: after its heading, each
 /// one written close after the last (its entries follow one another), up to the next heading of
 /// the document's body ("PART I – FACTS", "I. INTRODUCTION") or a schedule after it. The list

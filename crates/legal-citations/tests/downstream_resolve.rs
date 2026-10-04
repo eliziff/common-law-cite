@@ -26,6 +26,7 @@ fn note(number: u32, start: usize, end: usize) -> NoteRange {
         start,
         end,
         sequence: 0,
+        anchor: None,
     }
 }
 
@@ -35,6 +36,7 @@ fn note_in(sequence: u32, number: u32, start: usize, end: usize) -> NoteRange {
         start,
         end,
         sequence,
+        anchor: None,
     }
 }
 

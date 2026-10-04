@@ -64,8 +64,8 @@ fn supra_with_explicit_short_form() {
     assert_eq!(supra.antecedent, Some(0));
     let split = text.find("Jordan, supra").unwrap();
     let notes = [
-        NoteRange { number: 1, start: 0, end: split, sequence: 0 },
-        NoteRange { number: 2, start: split, end: text.len(), sequence: 0 },
+        NoteRange { number: 1, start: 0, end: split, sequence: 0, anchor: None },
+        NoteRange { number: 2, start: split, end: text.len(), sequence: 0, anchor: None },
     ];
     let resolutions = resolve_with_reasons(&citations, Some(&notes));
     let resolution = resolutions.iter().find(|r| r.index == supra.index).unwrap();

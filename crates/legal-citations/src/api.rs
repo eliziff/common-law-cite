@@ -592,6 +592,9 @@ fn byte_options(document: &ScalarText<'_>, options: &Options, unit: OffsetUnit) 
         for note in notes.iter_mut() {
             note.start = to_byte(document, note.start, unit, "options.notes[].start")?;
             note.end = to_byte(document, note.end, unit, "options.notes[].end")?;
+            if let Some(anchor) = note.anchor {
+                note.anchor = Some(to_byte(document, anchor, unit, "options.notes[].anchor")?);
+            }
             if note.start > note.end {
                 return Err(ApiError::new(
                     ErrorCode::InvalidOffset,
@@ -650,6 +653,9 @@ pub fn convert_citations(document: &ScalarText<'_>, citations: &mut [Citation], 
         }
         if let Some(reference) = citation.fields.inline_reference.as_mut() {
             convert_span(&mut reference.span);
+        }
+        if let Some(title) = citation.fields.anchor_title.as_mut() {
+            convert_span(title);
         }
         if let Some(name) = citation.fields.source_case_name.as_mut() {
             name.full_span_start = convert(name.full_span_start);
