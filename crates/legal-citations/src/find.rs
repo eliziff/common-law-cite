@@ -916,6 +916,12 @@ fn paragraph_floor(text: &str, floor: usize, core_start: usize) -> usize {
 
 fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
     let floor = paragraph_floor(text, floor, core_start);
+    // A style of cause opens after a sentence that ends before its signal ("… on the Crown. See
+    // R v Oakes"); an abbreviation's period ("Mar. Overseas Corp.") is no sentence's end.
+    let floor = STYLED_FLOOR.find_iter(&text[floor..core_start])
+        .filter(|matched| matched.as_str().trim_end().ends_with('.')
+            && SIGNAL_PREFIX.find(&text[floor + matched.end()..core_start]).is_some())
+        .last().map_or(floor, |matched| floor + matched.end());
     let prefix = text[floor..core_start]
         .trim_end_matches(|character: char| javascript_whitespace(character) || character == ',');
     let Some(versus) = CASE_VERSUS.find_iter(prefix).last() else {

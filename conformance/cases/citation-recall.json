@@ -1420,6 +1420,27 @@
           }
         ]
       }
+    },
+    {
+      "name": "style/opens-after-a-sentence-ending-before-its-signal",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "As the Court said, the onus is on the Crown. See R v Fen, [2036] 1 SCR 103.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "[2036] 1 SCR 103"
+            },
+            "style": {
+              "text": "R v Fen"
+            }
+          }
+        ]
+      }
     }
   ]
 }
