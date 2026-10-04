@@ -1149,6 +1149,14 @@ fn full_citation(
         }
         _ => core.start,
     };
+    // A name runs over at most three lines of a page and a few hundred characters: one longer
+    // took in a letterhead, an index or a record's prose ("Canada (AG) v. Northrop Grumman
+    // Overseas ⏎ ss. 50, 18.2 Rule 398 ⏎ 13, 14, 214, …"), and the citation has no name.
+    // A bill's citation holds its own title ("Bill C-9, An Act to …"): what comes before it is
+    // no name of it.
+    let styled_start = if charter.is_none() && (text[styled_start..core.start].matches("\n\n").count() > 2
+        || text[styled_start..core.start].chars().count() > 250
+        || core_text.starts_with("Bill ") && core_text.contains(',')) { core.start } else { styled_start };
     let short_pin = anchor.reading.as_ref().and_then(|reading| reading.short_at).map(|at| source_core.start + at);
     let short_form = short_pin.is_some();
     // A Bluebook pinpoint follows a comma with no keyword ("410 U.S. 113, 153").

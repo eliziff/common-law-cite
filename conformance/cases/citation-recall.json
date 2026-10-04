@@ -1105,6 +1105,42 @@
       "expect": {
         "citations": []
       }
+    },
+    {
+      "name": "style/bill-holds-its-own-title",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "C-469 \u2014 October 25, 2036 \u2014 Mr. Fen (Ash) \u2014 Second reading of Bill C-469, An Act to amend the Coastal Protection Act (bill of rights), 1st Sess, 39th Parl, 2036",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "authority": "bill",
+            "style": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/no-name-across-an-index",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Canada (AG) v. Fen Overseas\n\nss. 50, 18.2 Rule 398\n\n13, 14, 214, 225\n\n87-110, 456-467, 2036 FCA 336",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2036 FCA 336"
+            },
+            "style": null
+          }
+        ]
+      }
     }
   ]
 }
