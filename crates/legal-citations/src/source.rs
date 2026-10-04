@@ -129,6 +129,24 @@ pub fn pure_reference_clauses(note: &str) -> Option<Vec<PureReferenceClause>> {
     }).collect()
 }
 
+static DOUBLE_QUOTED_TITLE: LazyLock<regex::Regex> = LazyLock::new(||
+    regex::Regex::new("[\"\u{201c}]([^\"\u{201c}\u{201d}]+?)[\"\u{201d}]").expect("double-quoted title"));
+static SINGLE_QUOTED_TITLE: LazyLock<regex::Regex> = LazyLock::new(||
+    regex::Regex::new("['\u{2018}]([^'\u{2018}\u{2019}]+?)['\u{2019}]").expect("single-quoted title"));
+
+/// The quoted titles a secondary-source citation writes, double-quoted first, each once
+/// (ALR-Quote-Verifier journal_search._extract_titles).
+pub fn quoted_titles(text: &str) -> Vec<String> {
+    let key = |value: &str| value.to_lowercase().chars()
+        .filter(|c| c.is_alphanumeric() || c.is_whitespace() || *c == '_')
+        .collect::<String>().split_whitespace().collect::<Vec<_>>().join(" ");
+    let mut seen = BTreeSet::new();
+    [&*DOUBLE_QUOTED_TITLE, &*SINGLE_QUOTED_TITLE].into_iter()
+        .flat_map(|pattern| pattern.captures_iter(text).map(|found| found[1].trim().to_owned()).collect::<Vec<_>>())
+        .filter(|title| !title.is_empty() && !key(title).is_empty() && seen.insert(key(title)))
+        .collect()
+}
+
 /// ALR's administrative-tail removal, also used before retrieval normalization.
 pub fn strip_administrative_tail(text: &str) -> String {
     BARE_ADMIN.replace_all(text, "").trim_matches(crate::text::python_whitespace).to_owned()
