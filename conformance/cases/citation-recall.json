@@ -533,6 +533,260 @@
           }
         ]
       }
+    },
+    {
+      "name": "mcgill/order-by-court-file-number",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "In the Matter of the Compromise or Arrangement of Ash Holdings Ltd, Court File No 2601-04417, Initial Order granted 3 March 2036.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "Court File No 2601-04417"
+            },
+            "fullSpan": {
+              "text": "In the Matter of the Compromise or Arrangement of Ash Holdings Ltd, Court File No 2601-04417"
+            },
+            "style": {
+              "text": "In the Matter of the Compromise or Arrangement of Ash Holdings Ltd"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/ontario-commercial-list-file",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen Mills Inc. (Re) (4 May 2036), Toronto, Ont Sup Ct J [Commercial List] CV-36-00712345-00CL (Endorsement of Lake J).",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "CV-36-00712345-00CL"
+            },
+            "fullSpan": {
+              "text": "Fen Mills Inc. (Re) (4 May 2036), Toronto, Ont Sup Ct J [Commercial List] CV-36-00712345-00CL (Endorsement of Lake J)"
+            },
+            "style": {
+              "text": "Fen Mills Inc. (Re) (4 May 2036), Toronto, Ont Sup Ct J [Commercial List]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/tribunal-decision-number",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Moss v Lake Air, Canadian Transportation Agency, Decision No. 41-C-A-2036.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "Decision No. 41-C-A-2036"
+            },
+            "fullSpan": {
+              "text": "Moss v Lake Air, Canadian Transportation Agency, Decision No. 41-C-A-2036"
+            },
+            "style": {
+              "text": "Moss v Lake Air, Canadian Transportation Agency"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/heading-and-page-numbers-are-no-report",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "34 Conclusion 35. 59 ARTICLE 9. Telephone 2921 Facsimile 403-555-0100.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "mcgill/chapter-ends-before-a-note-number",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Coastal Corporations Act, RSA 2036, c C-15  7 The parties agreed.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "statute",
+            "span": {
+              "text": "RSA 2036, c C-15"
+            },
+            "fullSpan": {
+              "text": "Coastal Corporations Act, RSA 2036, c C-15"
+            },
+            "style": {
+              "text": "Coastal Corporations Act"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/volume-without-chapter-or-title",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "the RSA 2036 revision applies.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "mcgill/alberta-regulation-and-rule",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Coastal Rules of Court, AR 124/2036; Coastal Rules of Court, Rule 13.5.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "court_rule",
+            "span": {
+              "text": "AR 124/2036"
+            },
+            "fullSpan": {
+              "text": "Coastal Rules of Court, AR 124/2036"
+            },
+            "style": {
+              "text": "Coastal Rules of Court"
+            }
+          },
+          {
+            "form": "full",
+            "authority": "court_rule",
+            "span": {
+              "text": "Coastal Rules of Court"
+            },
+            "fullSpan": {
+              "text": "Coastal Rules of Court, Rule 13.5"
+            },
+            "style": null,
+            "pinpoints": [
+              {
+                "kind": "rule",
+                "first": "13.5"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/dotted-sor-and-crc",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Lake Transport Regulations, S.O.R./36-58; Fen General Rules, C.R.C., c. 368.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "regulation",
+            "span": {
+              "text": "S.O.R./36-58"
+            },
+            "fullSpan": {
+              "text": "Lake Transport Regulations, S.O.R./36-58"
+            },
+            "style": {
+              "text": "Lake Transport Regulations"
+            }
+          },
+          {
+            "form": "full",
+            "authority": "regulation",
+            "span": {
+              "text": "C.R.C., c. 368"
+            },
+            "fullSpan": {
+              "text": "Fen General Rules, C.R.C., c. 368"
+            },
+            "style": {
+              "text": "Fen General Rules"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/re-after-a-corporate-name",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Tacit Fen Inc. (Re), 2036 ONSC 412.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2036 ONSC 412"
+            },
+            "fullSpan": {
+              "text": "Tacit Fen Inc. (Re), 2036 ONSC 412"
+            },
+            "style": {
+              "text": "Tacit Fen Inc. (Re)"
+            }
+          }
+        ]
+      }
     }
   ]
 }

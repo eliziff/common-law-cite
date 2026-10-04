@@ -70,6 +70,54 @@
           ]
         },
         {
+          "id": "cite.reporter.word",
+          "pattern": "^(?<volume>\\d+)\\s+(?<word>[A-Z](?:[a-z]+|[A-Z]+)\\.?)\\s+\\d",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored for the legal-citations extraction stages. A cite.in-text hit whose reporter is one plain word: find.rs drops it unless the word is a registered reporter, since a paragraph, heading or telephone number around an ordinary word ('34 Conclusion 35', '59 ARTICLE 9', '2921 Facsimile 403') is no report. An all-capital word after a year is left to the neutral-citation reading ('2015 ABCA 31').",
+          "vectors": [
+            {
+              "input": "34 Conclusion 35",
+              "groups": {
+                "volume": "34",
+                "word": "Conclusion"
+              }
+            },
+            {
+              "input": "59 ARTICLE 9",
+              "groups": {
+                "volume": "59",
+                "word": "ARTICLE"
+              }
+            },
+            {
+              "input": "2921 Facsimile 403",
+              "groups": {
+                "volume": "2921",
+                "word": "Facsimile"
+              }
+            },
+            {
+              "input": "80\n\nThe 2019",
+              "groups": {
+                "volume": "80",
+                "word": "The"
+              }
+            },
+            {
+              "input": "12 WWR 345",
+              "groups": {
+                "volume": "12",
+                "word": "WWR"
+              }
+            },
+            {
+              "input": "12 Alta LR 3",
+              "groups": null
+            }
+          ]
+        },
+        {
           "id": "cite.reporter.month",
           "pattern": "^[\\[(]?\\d{1,4}[\\])]?,?\\s+(?<month>(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?)\\s+\\d",
           "flags": "i",
@@ -985,10 +1033,20 @@
         },
         {
           "id": "cite.ca.court-rules",
-          "pattern": "\\b(?:[A-Z][\\w'’]*\\s+){0,8}(?:Rules(?:\\s+of\\s+(?:Court|Civil\\s+Procedure|Practice|Procedure|Criminal\\s+Procedure|the\\s+[A-Z][\\w']*(?:\\s+[A-Z][\\w']*){0,4}))?|R[èe]gles\\s+de\\s+(?:pratique|proc[ée]dure)(?:\\s+[\\w'’]+){0,6})(?=,\\s*rr?\\.?\\s+\\d)",
+          "pattern": "\\b(?:[A-Z][\\w'’]*\\s+){0,8}(?:Rules(?:\\s+of\\s+(?:Court|Civil\\s+Procedure|Practice|Procedure|Criminal\\s+Procedure|the\\s+[A-Z][\\w']*(?:\\s+[A-Z][\\w']*){0,4}))?|R[èe]gles\\s+de\\s+(?:pratique|proc[ée]dure)(?:\\s+[\\w'’]+){0,6})(?=,\\s*(?:rr?\\.?|Rules?)\\s+\\d)",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored from the McGill Guide (10th ed). Rules of court cited by their title before a rule pinpoint ('Federal Court Immigration Rules, r 18')."
+          "provenance": "Beaver-authored from the McGill Guide (10th ed). Rules of court cited by their title before a rule pinpoint ('Federal Court Immigration Rules, r 18'). Beaver-authored: a rule may be written out ('Alberta Rules of Court, Rule 13.5').",
+          "vectors": [
+            {
+              "input": "Coastal Rules of Court, Rule 13.5",
+              "groups": {}
+            },
+            {
+              "input": "Coastal Rules of Court, r 13.5",
+              "groups": {}
+            }
+          ]
         },
         {
           "id": "cite.parliamentary.record",
@@ -1620,11 +1678,60 @@
         },
         {
           "id": "cite.ca.statute.first",
-          "pattern": "\\b(?<series>{{ca_statute_series}}|{{fr_statute_series}})\\s*,?\\s+\\(?(?<year>(?:1[6-9]|20)\\d{2})(?:-\\d{2}){0,3}\\)?(?:\\s*,?\\s+c(?:h)?\\.?\\s*(?<chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*(?:\\s+\\d+(?:\\.\\d+)?)?))?(?:\\s*,?\\s+Sched(?:ule)?\\.?\\s*(?<schedule>[A-Za-z0-9]+))?|\\b(?<historical_series>S\\s?(?:Prov|UC|LC|NS|NB|Nfld)\\s?C?)\\s+(?<historical_year>(?:1[6-9])\\d{2})(?:\\s*\\([^()\\n]{2,30}\\))?,?\\s+c\\.?\\s*(?<historical_chapter>\\d{1,4})|\\b(?<compiled_series>C\\.?Q\\.?L\\.?R\\.?|C\\.?C\\.?S\\.?M\\.?|R\\.?L\\.?R\\.?Q\\.?|RSQ)\\s*,?\\s+c\\.?\\s*(?<compiled_chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*)|\\b(?<regnal>\\d{1,2}(?:\\s*&\\s*\\d{1,2})?\\s+(?:Vict|Geo|Eliz|Will|Anne?|Car|Jac|Hen|Edw)\\.?(?:\\s*[IVX]+)?),?\\s+c\\.?\\s*(?<regnal_chapter>\\d{1,4}[A-Za-z]?)|\\b(?<instrument>(?:SOR|SI|DORS|TR)/\\d{2,4}[-/]\\d{1,4})|\\bCRC,?\\s*c\\.?\\s*(?<consolidated_chapter>\\d{1,4}(?:\\.\\d+)?)|\\b(?<regulation>(?:[A-Z][A-Za-z]{0,3}\\s+)?(?:Reg|OIC)\\.?\\s*\\d{1,4}[-/]\\d{1,4}|(?<fr_regulation>R[\\u00e8e]gl\\s+de\\s+l[\\u2019']Ont\\s*\\d{1,4}/\\d{2,4}))|\\b(?<rr_series>RRO)\\s+(?<rr_year>(?:1[6-9]|20)\\d{2}),?\\s+Reg\\.?\\s+(?<rr_number>\\d{1,5})\\b",
+          "pattern": "\\b(?<series>{{ca_statute_series}}|{{fr_statute_series}})\\s*,?\\s+\\(?(?<year>(?:1[6-9]|20)\\d{2})(?:-\\d{2}){0,3}\\)?(?:\\s*,?\\s+[cC](?:h)?\\.?\\s*(?<chapter>[A-Za-z]{1,2} \\d+(?:\\.\\d+)?|[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*))?(?:\\s*,?\\s+Sched(?:ule)?\\.?\\s*(?<schedule>[A-Za-z0-9]+))?|\\b(?<historical_series>S\\s?(?:Prov|UC|LC|NS|NB|Nfld)\\s?C?)\\s+(?<historical_year>(?:1[6-9])\\d{2})(?:\\s*\\([^()\\n]{2,30}\\))?,?\\s+c\\.?\\s*(?<historical_chapter>\\d{1,4})|\\b(?<compiled_series>C\\.?Q\\.?L\\.?R\\.?|C\\.?C\\.?S\\.?M\\.?|R\\.?L\\.?R\\.?Q\\.?|RSQ)\\s*,?\\s+c\\.?\\s*(?<compiled_chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*)|\\b(?<regnal>\\d{1,2}(?:\\s*&\\s*\\d{1,2})?\\s+(?:Vict|Geo|Eliz|Will|Anne?|Car|Jac|Hen|Edw)\\.?(?:\\s*[IVX]+)?),?\\s+c\\.?\\s*(?<regnal_chapter>\\d{1,4}[A-Za-z]?)|\\b(?<instrument>(?:S\\.?O\\.?R\\.?|SI|DORS|TR)/\\d{2,4}[-/]\\d{1,4})|\\bC\\.?R\\.?C\\.?,?\\s*c\\.?\\s*(?<consolidated_chapter>\\d{1,4}(?:\\.\\d+)?)|\\b(?<regulation>(?:[A-Z][A-Za-z]{0,3}\\s+)?(?:Reg|OIC)\\.?\\s*\\d{1,4}[-/]\\d{1,4}|A\\.?R\\.?\\s+\\d{1,4}/\\d{2,4}|(?<fr_regulation>R[\\u00e8e]gl\\s+de\\s+l[\\u2019']Ont\\s*\\d{1,4}/\\d{2,4}))|\\b(?<rr_series>RRO)\\s+(?<rr_year>(?:1[6-9]|20)\\d{2}),?\\s+Reg\\.?\\s+(?<rr_number>\\d{1,5})\\b",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored first-reference grammar for Canadian legislation, in the footnote (McGill Guide) dialect the judgment-side cite.statute.judgment entry cannot reach: the undotted series forms, the CQLR/CCSM/RLRQ compiled-statute forms that carry no year, the imperial regnal-year form (30 & 31 Vict, c 3), and the regulation instruments (SOR//SI//CRC//provincial Reg//OIC). Member list is the shared ca_statute_series//fr_statute_series defs unchanged, so the judgment and footnote dialects name the same series. Measured against the ALR fast-split field gold: the statute family scored 0 citation hits before this entry existed. McGill Canadian regulation extension: retain the four-letter Alta jurisdiction prefix rather than anchoring generic Reg. New vectors are independently invented. McGill French ch and DORS/TR forms, revised Ontario regulations and the French Ontario regulation series retain their complete cores; additional vectors are independently invented. Pre-Confederation statutes ('S Prov C 1859 (22 Vict), c 9', 'S UC 1793 (33 Geo III), c 73') and the Revised Statutes of Quebec without a year ('RSQ c C-3'). Beaver-authored from the McGill Guide (10th ed): a volume spanning years keeps them all ('SC 1980-81-82-83', 'SY 1989-90').",
+          "provenance": "Beaver-authored first-reference grammar for Canadian legislation, in the footnote (McGill Guide) dialect the judgment-side cite.statute.judgment entry cannot reach: the undotted series forms, the CQLR/CCSM/RLRQ compiled-statute forms that carry no year, the imperial regnal-year form (30 & 31 Vict, c 3), and the regulation instruments (SOR//SI//CRC//provincial Reg//OIC). Member list is the shared ca_statute_series//fr_statute_series defs unchanged, so the judgment and footnote dialects name the same series. Measured against the ALR fast-split field gold: the statute family scored 0 citation hits before this entry existed. McGill Canadian regulation extension: retain the four-letter Alta jurisdiction prefix rather than anchoring generic Reg. New vectors are independently invented. McGill French ch and DORS/TR forms, revised Ontario regulations and the French Ontario regulation series retain their complete cores; additional vectors are independently invented. Pre-Confederation statutes ('S Prov C 1859 (22 Vict), c 9', 'S UC 1793 (33 Geo III), c 73') and the Revised Statutes of Quebec without a year ('RSQ c C-3'). Beaver-authored from the McGill Guide (10th ed): a volume spanning years keeps them all ('SC 1980-81-82-83', 'SY 1989-90'). Beaver-authored: a chapter's number written after a space is part of it only after a letter ('c P 33'), so a footnote or file number after the chapter ('c C-15  7', 'c B-3 / 2501') is not. Beaver-authored: the dotted SOR and CRC forms ('S.O.R./88-58', 'C.R.C., c. 368') and Alberta's own regulation form ('AR 124/2010'). find.rs keeps a series and year without a chapter only where an appendix follows ('RSC 1985, App II, No 5'); 'RSA 2000' alone is no citation. A chapter may be written with a capital ('RSA 2000, Ch O-6').",
           "vectors": [
+            {
+              "input": "Pipeline Act, RSA 2000, Ch P-15",
+              "groups": {
+                "series": "RSA",
+                "year": "2000",
+                "chapter": "P-15"
+              }
+            },
+            {
+              "input": "reprinted in RSC 1985, App II, No 7",
+              "groups": {
+                "series": "RSC",
+                "year": "1985"
+              }
+            },
+            {
+              "input": "Lake Transport Regulations, S.O.R./36-58",
+              "groups": {
+                "instrument": "S.O.R./36-58"
+              }
+            },
+            {
+              "input": "Fen Rules, C.R.C., c. 368.",
+              "groups": {
+                "consolidated_chapter": "368"
+              }
+            },
+            {
+              "input": "Coastal Rules of Court, AR 124/2036",
+              "groups": {
+                "regulation": "AR 124/2036"
+              }
+            },
+            {
+              "input": "Business Corporations Act, RSA 2000, c B-9  7 The",
+              "groups": {
+                "series": "RSA",
+                "year": "2000",
+                "chapter": "B-9"
+              }
+            },
+            {
+              "input": "the RSA 2000 revision",
+              "groups": {
+                "series": "RSA",
+                "year": "2000",
+                "chapter": null
+              }
+            },
             {
               "input": "Criminal Code, RSC 1985, c C-46, s 718.",
               "groups": {
@@ -3355,6 +3462,49 @@
           "flags": "i",
           "provenance": "Legal Pinpointer canlii-legislation.js: original index-ID candidate and jurisdiction lookup expression; not authority identity.",
           "vectors": []
+        },
+        {
+          "id": "cite.ca.court-file",
+          "pattern": "\\bCourt\\s+File\\s+(?:No\\.?|Number|#)\\s*:?\\s*(?<docket>(?:[A-Z]{1,3}-)?\\d{2,4}(?:[- ]\\d{2,10}){1,3}(?:-\\d{2}[A-Z]{2})?)\\b|\\b(?<commercial_docket>CV-\\d{2}-\\d{5,10}-\\d{2}CL)\\b|\\bDecision\\s+No\\.?\\s*(?<decision>\\d{1,4}(?:-[A-Z]{1,3})+-(?:19|20)\\d{2})\\b",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from filed Canadian books of authorities (Alberta and Ontario insolvency, Federal Court): an unreported order, endorsement or decision is cited by its style and the court file number it was made under ('Re Ash Holdings Ltd, Court File No 2601-04417, Initial Order granted 3 March 2036'), by an Ontario Commercial List file number ('CV-36-00712345-00CL'), or by a tribunal's decision number ('Decision No. 41-C-A-2036'). The file number is the citation's core; its style of cause is read before it. Independently invented vectors.",
+          "vectors": [
+            {
+              "input": "Re Ash Holdings Ltd, Court File No 2601-04417, Initial Order granted 3 March 2036",
+              "groups": {
+                "docket": "2601-04417"
+              }
+            },
+            {
+              "input": "Court File Number 2603-11872 Judicial Centre Calgary",
+              "groups": {
+                "docket": "2603-11872"
+              }
+            },
+            {
+              "input": "Court File No. CV-36-00712345-00CL",
+              "groups": {
+                "docket": "CV-36-00712345-00CL"
+              }
+            },
+            {
+              "input": "Fen Mills Inc (Re) (4 May 2036), Toronto, Ont Sup Ct J [Commercial List] CV-36-00712345-00CL",
+              "groups": {
+                "commercial_docket": "CV-36-00712345-00CL"
+              }
+            },
+            {
+              "input": "Moss v Lake Air, Canadian Transportation Agency, Decision No. 41-C-A-2036",
+              "groups": {
+                "decision": "41-C-A-2036"
+              }
+            },
+            {
+              "input": "the court file was sealed",
+              "groups": null
+            }
+          ]
         },
         {
           "id": "cite.case.unreported",
@@ -6472,11 +6622,17 @@
         },
         {
           "id": "style.statute-title",
-          "pattern": "(?m)(?<title>\\p{Lu}[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:\\p{Lu}[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()/-]*|\\p{N}+\\p{L}[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()/-]*|\\(\\p{Lu}[^()\\n]{0,40}\\)|of|the|and|to|for|in|on|respecting|concerning|relating|relative|de|la|le|les|du|des|et|sur|à|au|aux|en)){0,16}\\s+(?:Acts?|Codes?|Rules?|Regulations?|Charter|Convention|Treaty|Protocol|Declaration|Covenant|Agreement|Accord|Bill\\s+of\\s+Rights|Ordinance|Constitution|By-law)|An?\\s+Act\\s+to|(?:An?\\s+)?(?:International\\s+)?(?:Covenant|Acts?|Codes?|Rules?|Regulations?|Charte?r?|Loi|R\\u{e8}glement|Convention|Treaty|Protocol|Declaration|Agreement|Accord)\\s+(?:of|on|respecting|concerning|sur|de|du|des|pour|for|relating|relative|between|establishing|regarding|concernant|modifiant|visant|portant|relatif|relative)(?:\\s+(?:[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+)){1,12})(?:,\\s*(?:1[6-9]|20)\\d{2})?(?:\\s*\\([\\p{Lu}][^()\\n]{0,20}\\))?\\s*,?\\s*$",
+          "pattern": "(?m)(?<title>\\p{Lu}[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:\\p{Lu}[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()/-]*|\\p{N}+\\p{L}[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()/-]*|\\(\\p{Lu}[^()\\n]{0,40}\\)|of|the|and|to|for|in|on|respecting|concerning|relating|relative|de|la|le|les|du|des|et|sur|à|au|aux|en)){0,16}\\s+(?:Acts?|Codes?|Rules\\s+of\\s+(?:Court|Civil\\s+Procedure|Criminal\\s+Procedure|Practice|Procedure)|Rules?|Regulations?|Charter|Convention|Treaty|Protocol|Declaration|Covenant|Agreement|Accord|Bill\\s+of\\s+Rights|Ordinance|Constitution|By-law)|An?\\s+Act\\s+to|(?:An?\\s+)?(?:International\\s+)?(?:Covenant|Acts?|Codes?|Rules?|Regulations?|Charte?r?|Loi|R\\u{e8}glement|Convention|Treaty|Protocol|Declaration|Agreement|Accord)\\s+(?:of|on|respecting|concerning|sur|de|du|des|pour|for|relating|relative|between|establishing|regarding|concernant|modifiant|visant|portant|relatif|relative)(?:\\s+(?:[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+)){1,12})(?:,\\s*(?:1[6-9]|20)\\d{2})?(?:\\s*\\([\\p{Lu}][^()\\n]{0,20}\\))?\\s*,?\\s*$",
           "flags": "",
           "canonical": {},
-          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::STATUTE_TITLE; native Rust regex preserved verbatim. Covenant titles retain their complete heading, including the optional International qualifier. Titles may hold short connecting words and parenthesized words ('Proceeds of Crime (Money Laundering) and Terrorist Financing Act', 'Offset of Taxes by a Refund or a Rebate (GST/HST) Regulations') and end in Covenant, Agreement, Accord, Bill of Rights, Ordinance or Constitution. A title may also open with its instrument word ('An Act to amend ...', 'Convention for the Protection of ...', 'Treaty Relating to ...'). A title opens with a capital letter, never with the section number written before it ('s 69(1) of the Bankruptcy and Insolvency Act').",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::STATUTE_TITLE; native Rust regex preserved verbatim. Covenant titles retain their complete heading, including the optional International qualifier. Titles may hold short connecting words and parenthesized words ('Proceeds of Crime (Money Laundering) and Terrorist Financing Act', 'Offset of Taxes by a Refund or a Rebate (GST/HST) Regulations') and end in Covenant, Agreement, Accord, Bill of Rights, Ordinance or Constitution. A title may also open with its instrument word ('An Act to amend ...', 'Convention for the Protection of ...', 'Treaty Relating to ...'). A title opens with a capital letter, never with the section number written before it ('s 69(1) of the Bankruptcy and Insolvency Act'). Beaver-authored: a jurisdiction's rules of court keep the words before them ('Alberta Rules of Court', 'Coastal Rules of Civil Procedure').",
           "vectors": [
+            {
+              "input": "Coastal Rules of Court, ",
+              "groups": {
+                "title": "Coastal Rules of Court"
+              }
+            },
             {
               "input": "Criminal Code, ",
               "groups": {

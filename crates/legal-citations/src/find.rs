@@ -97,6 +97,8 @@ static CITATION_PATTERN: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.in-text"));
 static REPORTER_MONTH: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.reporter.month"));
+static REPORTER_WORD: LazyLock<CompiledEcmascriptGrammar> =
+    LazyLock::new(|| linear("cite.reporter.word"));
 // These source-owned styles retain LSP's native Unicode regex semantics.
 static CASE_NAME: LazyLock<Regex> = LazyLock::new(|| linear("style.case-name"));
 static SIGNAL_PREFIX: LazyLock<CompiledEcmascriptGrammar> =
@@ -193,6 +195,7 @@ static SECONDARY_SOURCES: LazyLock<Vec<(&'static str, &'static str, CompiledGram
     ("book", "dictionary_grammar", "cite.secondary.dictionary", EVERY),
     ("book", "coursepack_grammar", "cite.secondary.coursepack", EVERY),
     ("government", "intellectual_property_grammar", "cite.secondary.intellectual-property", EVERY),
+    ("case", "court_file_grammar", "cite.ca.court-file", CANADA),
     ("statute", "code_grammar", "cite.ca.code", CANADA),
     ("statute", "bylaw_grammar", "cite.ca.bylaw", CANADA),
     ("court_rule", "court_rules_grammar", "cite.ca.court-rules", CANADA),
@@ -330,6 +333,15 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
         for matched in pattern.find_iter(value) {
             let start = matched.start();
             if *reason == "unreported_grammar" && case_style_start(value, start, 0) == start {
+                continue;
+            }
+            // A revised volume and year without a chapter ("RSA 2000") cites nothing unless an Act's
+            // title leads it ("Companies' Creditors Arrangement Act, R.S.C. 1985") or it is cited for
+            // its appendix ("RSC 1985, App II, No 5").
+            if *reason == "ca_statute_grammar" && pattern.captures(matched.as_str()).is_some_and(|capture|
+                capture.name("series").is_some() && capture.name("chapter").is_none() && capture.name("schedule").is_none())
+                && !value[matched.end()..].trim_start_matches([',', ' ']).starts_with("App")
+                && statute_style_start(value, start, 0) == start {
                 continue;
             }
             if *reason == "book_grammar" && pattern.captures(matched.as_str()).is_some_and(|capture|
@@ -600,7 +612,7 @@ pub(crate) fn citation_hits(value: &str, extended_us: bool) -> Vec<Hit> {
 fn primary_ranges(value: &str) -> (Vec<Hit>, Vec<Hit>) {
     let mut found = CITATION_PATTERN
         .find_iter(value)
-        .filter(|matched| !month_reporter(matched.as_str()))
+        .filter(|matched| !month_reporter(matched.as_str()) && !word_reporter(matched.as_str()))
         .map(|matched| matched.start()..matched.end())
         .collect::<Vec<_>>();
     // LSP citation_hits completes reports only at an already recognized start.
@@ -623,6 +635,22 @@ fn month_reporter(hit: &str) -> bool {
         !crate::registry::registry().reporters_by_surface(month).iter().any(|(reporter, _)|
             reporter.editions.iter().any(|edition| edition.abbreviation == month)
                 || reporter.variations.contains_key(month))
+    })
+}
+
+/// A paragraph, heading or telephone number read as volume, reporter and page around one
+/// plain word ("34 Conclusion 35", "59 ARTICLE 9", "2921 Facsimile 403"): an ordinary word is
+/// never an unregistered reporter, and an all-capital word after a year is a neutral citation's
+/// court, read as such.
+fn word_reporter(hit: &str) -> bool {
+    REPORTER_WORD.captures(hit).is_some_and(|captures| {
+        let word = captures.name("word").unwrap().as_str();
+        let year = captures.name("volume").is_some_and(|volume| volume.as_str().len() == 4
+            && (volume.as_str().starts_with("19") || volume.as_str().starts_with("20")));
+        !(year && word.chars().all(|character| character.is_ascii_uppercase()))
+            && !crate::registry::registry().reporters_by_surface(word).iter().any(|(reporter, _)|
+                reporter.editions.iter().any(|edition| edition.abbreviation == word)
+                    || reporter.variations.contains_key(word))
     })
 }
 
@@ -706,6 +734,10 @@ fn styled_floor(text: &str, floor: usize, core_start: usize) -> usize {
     STYLED_FLOOR
         .find_iter(window)
         .filter(|matched| !quoted.iter().any(|quote| quote.start < matched.start() && matched.end() <= quote.end))
+        // An abbreviation's period before a parenthesis or a lowercase word ends no sentence:
+        // "Tacora Resources Inc. (Re)", "Fen Mills Ltd. v Ash".
+        .filter(|matched| !(matched.as_str().trim_end().ends_with('.')
+            && window[matched.end()..].starts_with(|character: char| character == '(' || character.is_lowercase())))
         .last()
         .map_or(floor, |matched| floor + matched.end())
 }
@@ -1063,6 +1095,15 @@ fn full_citation(
             captures.name("pin").map(|pin| previous_end + pin.start()..previous_end + pin.end()))))).flatten();
     let styled_start = match kind {
         _ if charter.is_some() => charter.as_ref().unwrap().0,
+        // An order or endorsement known by its file number is named by the words before it in
+        // its clause when they hold no style of cause ("In the Matter of the Compromise or
+        // Arrangement of Ash Ltd, Court File No 2601-04417").
+        "case" if kind_reason == "court_file_grammar" => Some(case_style_start(text, core.start, previous_end))
+            .filter(|start| *start < core.start).or_else(|| {
+                let floor = styled_floor(text, previous_end, core.start);
+                let blank = text[floor..core.start].len() - text[floor..core.start].trim_start_matches(javascript_whitespace).len();
+                style_span_start(text, floor + blank, core.start)
+            }).unwrap_or(core.start),
         "case" => case_style_start(text, core.start, previous_end),
         "statute" => statute_style_start(text, core.start, previous_end),
         "treaty" => treaty_style_start(text, core.start, previous_end),

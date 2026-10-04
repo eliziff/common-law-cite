@@ -40,6 +40,7 @@ static JOURNAL_ARTICLE: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("cite.journal.article"));
 static BOOK: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.book.imprint"));
 static UNREPORTED: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.case.unreported"));
+static COURT_FILE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.ca.court-file"));
 static PARLIAMENTARY: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.parliamentary.paper"));
 static FRENCH_REPORTER: LazyLock<CompiledEcmascriptGrammar> =
@@ -799,6 +800,15 @@ pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
         "online_grammar" => {
             let mut reading = Reading::new(Authority::Webpage, Some(Format::Url), "online_grammar");
             reading.fields.url = Some(core.to_owned());
+            return Some(reading);
+        }
+        "court_file_grammar" => {
+            // An unreported order, endorsement or decision, known by the file it was made under.
+            let captures = whole(&COURT_FILE, core)?;
+            let mut reading = Reading::new(Authority::Case, Some(Format::Docket), "court_file_grammar");
+            reading.fields.docket = group(&captures, "docket").or_else(|| group(&captures, "commercial_docket"))
+                .or_else(|| group(&captures, "decision"));
+            reading.jurisdiction = Some("ca".to_owned());
             return Some(reading);
         }
         "charter_grammar" => {
