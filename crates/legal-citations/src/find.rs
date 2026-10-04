@@ -239,6 +239,8 @@ static AUTHORITY_LIST: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking
 static AUTHORITY_LIST_END: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("section.authority-list.end"));
 // "In the Matter of ...": a proceeding a court file names when no style of cause does.
 static MATTER_STYLE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("style.matter"));
+// ", Order of Madam Justice Ash": which order of which judge the matter before it names.
+static ORDER_OF: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("style.order-lead"));
 static ACCESS_DATE: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("attach.access-date"));
 static SUPRA_AFTER: LazyLock<Regex> = LazyLock::new(|| linear("ref.supra-follows"));
 static GOVERNMENT_AUTHOR: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("style.government-author"));
@@ -1174,20 +1176,26 @@ fn full_citation(
             captures.name("pin").map(|pin| previous_end + pin.start()..previous_end + pin.end()))))).flatten();
     // An unreported order's style of cause written before its date, place and court: "Fen Mills
     // Inc. (Re) (4 May 2036), Toronto, Ont Sup Ct J [Commercial List] CV-36-00712345-00CL".
+    // So is one written before the order it names: "Re Fen Ltd, Order of Madam Justice Ash dated
+    // July 21, 2036, Court File No. CV-36-11363-00CL".
     let dated_style = (kind_reason == "court_file_grammar").then(|| {
         let window = &text[previous_end..core.start];
+        // The date or the order nearest the file number, in the paragraph that cites it.
         let at = previous_end + window.match_indices(" (").map(|(at, _)| at)
-            .find(|at| window[at + 2..].starts_with(|character: char| character.is_ascii_digit()))?;
-        Some((case_style_start(text, at, previous_end), at)).filter(|(start, _)| *start < at)
+            .filter(|at| window[at + 2..].starts_with(|character: char| character.is_ascii_digit()))
+            // An order's words may open the citation itself ("…, Order of Madam Justice Ash dated …, No. S-1").
+            .chain(ORDER_OF.find_iter(&text[previous_end..core.end]).map(|found| found.start())
+                .filter(|at| previous_end + at < core.start)).max()?;
+        let floor = text[previous_end..at].rfind("\n\n").map_or(previous_end, |blank| previous_end + blank + 2);
+        Some((case_style_start(text, at, floor), at)).filter(|(start, _)| *start < at)
     }).flatten();
     let styled_start = match kind {
         _ if charter.is_some() => charter.as_ref().unwrap().0,
         // An order or endorsement known by its file number is named by the matter its clause
         // opens with when it has no style of cause ("In the Matter of the Compromise or
         // Arrangement of Ash Ltd, Court File No 2601-04417").
-        "case" if kind_reason == "court_file_grammar" => Some(case_style_start(text, core.start, previous_end))
-            .filter(|start| *start < core.start)
-            .or_else(|| dated_style.map(|(start, _)| start)).or_else(|| {
+        "case" if kind_reason == "court_file_grammar" => dated_style.map(|(start, _)| start)
+            .or_else(|| Some(case_style_start(text, core.start, previous_end)).filter(|start| *start < core.start)).or_else(|| {
                 let floor = styled_floor(text, previous_end, core.start);
                 let blank = text[floor..core.start].len() - text[floor..core.start].trim_start_matches(javascript_whitespace).len();
                 style_span_start(text, floor + blank, core.start)
@@ -1875,6 +1883,45 @@ fn commented_work(text: &str, citation: &mut Citation, previous: &[Citation], fl
         end = subject.full_span.start;
     }
     None
+}
+
+/// A statute's chapter read with a recognizer's confusion ("R.S.C. 1985, c. G-36" for "c C-36":
+/// G for C, O or Q for 0, l or I for 1, S for 5, B for 8) is the chapter the document cites more
+/// often in the same year and jurisdiction whose letters and digits it confuses with, or, cited as
+/// often, the one cited with its Act's title. It takes that citation's chapter and key, and says so
+/// in its reasons ("ocr_twin"). Chapters cited alike are left as written.
+pub(crate) fn ocr_twins(citations: &mut [Citation]) {
+    let confused = |chapter: &str| chapter.chars().map(|character| match character {
+        'G' => 'C', 'O' | 'o' | 'Q' => '0', 'l' | 'I' => '1', 'S' => '5', 'B' => '8',
+        other => other.to_ascii_uppercase() }).collect::<String>();
+    let mut groups = std::collections::HashMap::<(Option<String>, Option<String>, String), Vec<usize>>::new();
+    for (at, citation) in citations.iter().enumerate() {
+        let Some(chapter) = citation.fields.chapter.as_deref() else { continue };
+        if citation.form != Form::Full || !citation.authority.is_legislation() || citation.key.is_none() { continue; }
+        groups.entry((citation.jurisdiction.clone(), citation.fields.year.clone(), confused(chapter))).or_default().push(at);
+    }
+    for members in groups.into_values() {
+        let mut counts = std::collections::HashMap::<&str, usize>::new();
+        for &at in &members { *counts.entry(citations[at].fields.chapter.as_deref().unwrap()).or_default() += 1; }
+        if counts.len() < 2 { continue; }
+        // The form cited more often is the chapter; between forms cited as often, the one cited with
+        // its Act's title is ("Companies' Creditors Arrangement Act, RSC 1985, c C-36" over a
+        // heading's "R.S.C. 1985, c. G-36").
+        let titled = |chapter: &str| members.iter().filter(|&&at| citations[at].fields.chapter.as_deref() == Some(chapter)
+            && citations[at].style.as_ref().is_some_and(|style| !style.text.trim().is_empty())).count();
+        let mut ranked = counts.into_iter().map(|(chapter, count)| (chapter, count, titled(chapter))).collect::<Vec<_>>();
+        ranked.sort_by(|left, right| (right.1, right.2).cmp(&(left.1, left.2)));
+        if (ranked[0].1, ranked[0].2) == (ranked[1].1, ranked[1].2) { continue; }
+        let chapter = ranked[0].0.to_owned();
+        let Some(twin) = members.iter().find(|&&at| citations[at].fields.chapter.as_deref() == Some(chapter.as_str())).copied() else { continue };
+        let key = citations[twin].key.clone();
+        for &at in &members {
+            if citations[at].fields.chapter.as_deref() == Some(chapter.as_str()) { continue; }
+            citations[at].fields.chapter = Some(chapter.clone());
+            citations[at].key = key.clone();
+            citations[at].reasons.push("ocr_twin".to_owned());
+        }
+    }
 }
 
 /// An untitled legislation citation that opens a note ("¹ SC 2017, c 4.") takes its title from the

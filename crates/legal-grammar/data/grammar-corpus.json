@@ -3535,11 +3535,23 @@
         },
         {
           "id": "cite.ca.court-file",
-          "pattern": "\\bCourt\\s+File\\s+(?:No\\.?|Number|#)\\s*:?\\s*(?<docket>(?:[A-Z]{1,3}-)?\\d{2,4}(?:[- ]\\d{2,10}){1,3}(?:-\\d{2}[A-Z]{2})?)\\b|\\b(?<commercial_docket>CV-\\d{2}-\\d{5,10}-\\d{2}CL)\\b|\\bDecision\\s+No\\.?\\s*(?<decision>\\d{1,4}(?:-[A-Z]{1,3})+-(?:19|20)\\d{2})\\b",
+          "pattern": "\\bCourt\\s+File\\s+(?:No\\.?|Number|#)\\s*:?\\s*(?<docket>(?:[A-Z]{1,3}-)?\\d{2,4}(?:[- ]\\d{2,10}){1,3}(?:-\\d{2}[A-Z]{2})?)\\b|\\b(?<commercial_docket>CV-\\d{2}-\\d{5,10}-\\d{2}CL)\\b|\\bOrder\\s+of\\s+(?:the\\s+Honourable\\s+)?(?:(?:Mr|Mme|Madam|Madame|Associate\\s+Chief|Chief)\\.?\\s+)?Justice\\s+[A-Z][A-Za-z'’-]+\\s+(?:dated|granted|made|pronounced)\\s+[A-Z][a-z]+\\.?\\s+\\d{1,2},?\\s+(?:19|20)\\d{2},\\s+(?:Court\\s+File\\s+)?(?:No\\.?|Number|#|[A-Za-z]{1,3}[.,])\\s*(?<order_docket>(?:[A-Z]{1,3}-?)?\\d{4,10}(?:-\\d{1,10}){0,2})\\b|\\bDecision\\s+No\\.?\\s*(?<decision>\\d{1,4}(?:-[A-Z]{1,3})+-(?:19|20)\\d{2})\\b",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored from filed Canadian books of authorities (Alberta and Ontario insolvency, Federal Court): an unreported order, endorsement or decision is cited by its style and the court file number it was made under ('Re Ash Holdings Ltd, Court File No 2601-04417, Initial Order granted 3 March 2036'), by an Ontario Commercial List file number ('CV-36-00712345-00CL'), or by a tribunal's decision number ('Decision No. 41-C-A-2036'). The file number is the citation's core; its style of cause is read before it. Independently invented vectors.",
+          "provenance": "Beaver-authored from filed Canadian books of authorities (Alberta and Ontario insolvency, Federal Court): an unreported order, endorsement or decision is cited by its style and the court file number it was made under ('Re Ash Holdings Ltd, Court File No 2601-04417, Initial Order granted 3 March 2036'), by an Ontario Commercial List file number ('CV-36-00712345-00CL'), or by a tribunal's decision number ('Decision No. 41-C-A-2036'). The file number is the citation's core; its style of cause is read before it. Independently invented vectors. Beaver-authored: an order cited by the judge who made it, its date and the registry's number alone ('Order of Mr. Justice Butler dated August 13, 2015, No. S-154746'), as British Columbia numbers its files. Beaver-authored: after an order's judge and date, the file number may be written with 'Court File No.' or under its court's own numbering ('1601-06131'), and a recognizer may misread the word 'No.' itself ('Court File hJo. 1601-06131'): the judge and date already say it is an order.",
           "vectors": [
+            {
+              "input": "Order of Madam Justice Ash dated May 17, 2037, Court File hJo. 1601-06131",
+              "groups": {
+                "order_docket": "1601-06131"
+              }
+            },
+            {
+              "input": "Order of Mr. Justice Ash dated August 13, 2035, No. S-154746",
+              "groups": {
+                "order_docket": "S-154746"
+              }
+            },
             {
               "input": "Re Ash Holdings Ltd, Court File No 2601-04417, Initial Order granted 3 March 2036",
               "groups": {
@@ -6640,11 +6652,15 @@
         },
         {
           "id": "style.case-floor",
-          "pattern": "\\n[ \\t]*\\n[ \\t]*(?:\\d{1,4}\\.|[A-Z]\\.|\\([a-z0-9]{1,4}\\))[ \\t]|[”\"][.,;:]?[ \\t\\n]|\\b(?:Authorities|Cases|Case Law|Jurisprudence|Legislation|Statutes|Regulations?|Doctrine|Secondary Sources)[ \\t]*:?[ \\t]*\\n",
+          "pattern": "\\n[ \\t]*\\n[ \\t]*(?:\\d{1,4}\\.|[A-Z]\\.|\\([a-z0-9]{1,4}\\))[ \\t]|[”\"][.,;:]?[ \\t\\n]|\\d[.;][ \\t]*\\n[ \\t]*\\n|\\b(?:Authorities|Cases|Case Law|Jurisprudence|Legislation|Statutes|Regulations?|Doctrine|Secondary Sources)[ \\t]*:?[ \\t]*\\n",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored from filed Canadian briefs: where a style of cause cannot start before, though no sentence ends there: a new numbered paragraph or lettered heading after a blank line ('…to\n\n52. Claims bar dates…', 'C. Litigation'), and the end of a quotation ('…to help it decide”. Re SemCanada Crude Company'). A quotation is never part of a style of cause. Beaver-authored: a list of authorities' group heading on the line before ('2. Appendix B – Authorities', 'Statute or Regulation', 'Jurisprudence') is no part of the style or title of the authority under it.",
+          "provenance": "Beaver-authored from filed Canadian briefs: where a style of cause cannot start before, though no sentence ends there: a new numbered paragraph or lettered heading after a blank line ('…to\n\n52. Claims bar dates…', 'C. Litigation'), and the end of a quotation ('…to help it decide”. Re SemCanada Crude Company'). A quotation is never part of a style of cause. Beaver-authored: a list of authorities' group heading on the line before ('2. Appendix B – Authorities', 'Statute or Regulation', 'Jurisprudence') is no part of the style or title of the authority under it. Beaver-authored: a line that ends a sentence with a number ('... Court File No. 1601-06131.') before a blank line closes its entry; the next entry's style of cause starts after it.",
           "vectors": [
+            {
+              "input": "Court File No. 1601-06131.\n\nSierra Fen v Canada",
+              "groups": {}
+            },
             {
               "input": "1. Appendix A – Statute or Regulation\n\nFederal Courts Act",
               "groups": {}
@@ -6731,6 +6747,23 @@
           "rust": true
         },
         {
+          "id": "style.order-lead",
+          "pattern": ",\\s+(?:(?:Initial|Amended|Approval|Vesting|Sale\\s+Approval|Stay\\s+Extension)\\s+)?(?:Order|Endorsement|Reasons|Judgment)\\s+of\\s+(?:the\\s+Honourable\\s+)?(?:(?:Mr|Mme|Madam|Madame|Associate\\s+Chief|Chief)\\.?\\s+)?Justice\\b",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from filed Alberta and Ontario briefs: the words after an unreported order's matter that say which order of which judge it is ('Re Fen Ltd, Order of Madam Justice Ash dated July 21, 2036, Court File No. CV-36-11363-00CL'). The matter before them names the order.",
+          "vectors": [
+            {
+              "input": "Re Fen Ltd, Order of Madam Justice Ash",
+              "groups": {}
+            },
+            {
+              "input": "Re Fen Ltd, Initial Order of the Honourable Mr. Justice Ash",
+              "groups": {}
+            }
+          ]
+        },
+        {
           "id": "style.matter",
           "pattern": "^(?:In\\s+the\\s+Matter\\s+of|IN\\s+THE\\s+MATTER\\s+OF)\\s",
           "flags": "",
@@ -6749,11 +6782,29 @@
         },
         {
           "id": "style.case-single-party",
-          "pattern": "(?m)(?<name>Renvoi\\s+(?:relatif\\s+)?[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+(?:\\s+[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+){0,15}|(?:Reference\\s+re|Renvoi\\s+relatif|In\\s+re|In\\s+the\\s+[Mm]atter\\s+of|Re)\\s+[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()\\n]{0,80}\\)|of|the|and|for|de|la|du|des|aux|en|et\\s+al\\.?)){0,12}|[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|of|the|and|for|de|la|du|des)){0,12}\\s+\\((?:Re|Renvoi)\\))(?:,\\s*(?:1[6-9]|20)\\d{2})?\\s*,?\\s*$",
+          "pattern": "(?m)(?<name>Renvoi\\s+(?:relatif\\s+)?[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+(?:\\s+[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+){0,15}|(?:Reference\\s+re|Renvoi\\s+relatif|In\\s+re|In\\s+the\\s+[Mm]atter\\s+of|Re)\\s+[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()\\n]{0,80}\\)|of|the|and|&|&\\p{Lu}[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|for|de|la|du|des|aux|en|et\\s+a[li1]\\.?)){0,12}|[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|of|the|and|for|de|la|du|des)){0,12}\\s+\\((?:Re|Renvoi)\\))(?:,\\s*(?:1[6-9]|20)\\d{2})?\\s*,?\\s*$",
           "flags": "",
           "canonical": {},
-          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_RE_STYLE; native Rust regex preserved verbatim. Beaver-authored addition: the style whose marker follows the name, 'Moore (Re)', 'Harrow Fen Estate (Re) (2028) ABQB 3104'. French Renvoi headings also accept sentence-case subject words. Beaver-authored: a matter of several companies ends 'et al' ('Re Nortel Networks Corporation et al').",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_RE_STYLE; native Rust regex preserved verbatim. Beaver-authored addition: the style whose marker follows the name, 'Moore (Re)', 'Harrow Fen Estate (Re) (2028) ABQB 3104'. French Renvoi headings also accept sentence-case subject words. Beaver-authored: a matter of several companies ends 'et al' ('Re Nortel Networks Corporation et al'). Beaver-authored: an ampersand standing alone joins a company's name as 'and' does ('Re Connacher Oil & Gas Limited'). Beaver-authored: an ampersand a recognizer runs into the next word ('Re Connacher Oil &Gas Limited') joins the name as one standing alone does. Beaver-authored: 'et al.' as a recognizer reads its l ('et ai.', 'et a1.').",
           "vectors": [
+            {
+              "input": "Re Fen Exploration Corporation et ai.",
+              "groups": {
+                "name": "Re Fen Exploration Corporation et ai."
+              }
+            },
+            {
+              "input": "Re Fen Oil &Gas Limited",
+              "groups": {
+                "name": "Re Fen Oil &Gas Limited"
+              }
+            },
+            {
+              "input": "Re Fen Oil & Gas Limited",
+              "groups": {
+                "name": "Re Fen Oil & Gas Limited"
+              }
+            },
             {
               "input": "Re Fen Networks Corporation et al, ",
               "groups": {

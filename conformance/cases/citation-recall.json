@@ -1474,6 +1474,202 @@
           }
         ]
       }
+    },
+    {
+      "name": "case/order-by-judge-date-and-registry-number",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Re Fen Mining Corporation et al, Order of Mr. Justice Ash dated August 13, 2035, No. S-154746 [TAB 3].",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "format": "docket",
+            "style": {
+              "text": "Re Fen Mining Corporation et al"
+            },
+            "fields": {
+              "docket": "S-154746"
+            },
+            "explicitShortName": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "case/order-named-before-its-court-file",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Re Fen Oil & Gas Limited, Order of Madam Justice Ash dated May 17, 2036, Court File No. 1601-06131.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "format": "docket",
+            "style": {
+              "text": "Re Fen Oil & Gas Limited"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "statute/chapter-misread-by-a-recognizer",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "IN THE MATTER OF THE FEN CREDITORS ACT, R.S.C. 2035, c. G-36\n\nFen Creditors Act, RSC 2035, c C-36, s 11.\n\nFen Creditors Act, RSC 2035, c C-36, s 11.2.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "R.S.C. 2035, c. G-36"
+            },
+            "fields": {
+              "chapter": "C-36"
+            }
+          },
+          {
+            "fields": {
+              "chapter": "C-36"
+            }
+          },
+          {
+            "fields": {
+              "chapter": "C-36"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ref/name-written-as-a-bracketed-short-form",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen Steel Canada Inc. (Re), unreported endorsement indexed at 2035 ONSC 5103 [Fen Steel S.C.], aff'd in Fen Steel Canada Inc. (Re), 2036 ONCA 662.\n\nThe court may act; Fen Steel S.C. at para. 84.",
+      "options": {
+        "resolve": true
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2035 ONSC 5103"
+            }
+          },
+          {
+            "span": {
+              "text": "2036 ONCA 662"
+            }
+          },
+          {
+            "form": "reference",
+            "antecedent": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "statute/misread-chapter-tied-goes-to-the-titled-form",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "IN THE MATTER OF THE F~N CREDITORS ACT, R.S.C. 2035, c. G-36, AS AMENDED\n\n1. Fen Creditors Act, RSC 2035, c C-36, section 11.2",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "R.S.C. 2035, c. G-36"
+            },
+            "fields": {
+              "chapter": "C-36"
+            }
+          },
+          {
+            "fields": {
+              "chapter": "C-36"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "case/order-with-a-misread-file-number-label",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "4. Re Fen Oil &Gas Limited, Order of Madam Justice Ash dated May 17, 2037, Court File hJo. 1601-06131.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "format": "docket",
+            "style": {
+              "text": "Re Fen Oil &Gas Limited"
+            },
+            "fields": {
+              "docket": "1601-06131"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "case/order-matter-with-a-misread-et-al",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Re Fen Exploration &Production Corporation et ai., Order of Madam Justice Ash dated July 21, 2036, Court File No. CV-36-11363",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "style": {
+              "text": "Re Fen Exploration &Production Corporation et ai."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "case/order-across-a-line-break-stays-one-and-apart-from-the-next-entry",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Re Fen Oil & Gas Limited, Order of Madam Justice Ash dated May 17, 2037,\n\nCourt File No. 1601-06131.\n\nSierra Fen of Canada v Canada (Minister of Finance), 2032 SCC 41.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "format": "docket",
+            "style": {
+              "text": "Re Fen Oil & Gas Limited"
+            },
+            "fields": {
+              "docket": "1601-06131"
+            }
+          },
+          {
+            "span": {
+              "text": "2032 SCC 41"
+            },
+            "style": {
+              "text": "Sierra Fen of Canada v Canada (Minister of Finance)"
+            }
+          }
+        ]
+      }
     }
   ]
 }

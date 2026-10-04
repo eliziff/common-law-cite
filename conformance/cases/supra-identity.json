@@ -854,7 +854,7 @@
       }
     },
     {
-      "name": "identity/named-short-form-over-a-stale-note-number",
+      "name": "identity/named-linking-holds-a-lone-conflicting-note-unresolved",
       "status": "pass",
       "input": "2031 ONCA 518 [Pell].\n\nR v Dunn, 2032 ONSC 54 [Dunn].\n\nPell, supra note 2 at para 4.",
       "options": {
@@ -915,7 +915,7 @@
             "style": {
               "text": "Pell"
             },
-            "antecedent": 0,
+            "antecedent": null,
             "pinpoints": [
               {
                 "kind": "paragraph",
@@ -1168,6 +1168,79 @@
           {
             "form": "supra",
             "antecedent": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "identity/named-linking-over-a-renumbered-documents-notes",
+      "status": "pass",
+      "input": "2031 ONCA 518 [Pell].\n\n2032 ONSC 54 [Dunn].\n\n2033 BCCA 7 [Fir].\n\n2034 ABCA 9 [Ash].\n\nPell, supra note 2 at para 4.\n\nDunn, supra note 3 at para 5.\n\nFir, supra note 4 at para 6.",
+      "options": {
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 21
+          },
+          {
+            "number": 2,
+            "start": 23,
+            "end": 43
+          },
+          {
+            "number": 3,
+            "start": 45,
+            "end": 63
+          },
+          {
+            "number": 4,
+            "start": 65,
+            "end": 83
+          },
+          {
+            "number": 5,
+            "start": 85,
+            "end": 114
+          },
+          {
+            "number": 6,
+            "start": 116,
+            "end": 145
+          },
+          {
+            "number": 7,
+            "start": 147,
+            "end": 175
+          }
+        ],
+        "supraLinkingMode": "named"
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full"
+          },
+          {
+            "form": "full"
+          },
+          {
+            "form": "full"
+          },
+          {
+            "form": "full"
+          },
+          {
+            "form": "supra",
+            "antecedent": 0
+          },
+          {
+            "form": "supra",
+            "antecedent": 1
+          },
+          {
+            "form": "supra",
+            "antecedent": 2
           }
         ]
       }
