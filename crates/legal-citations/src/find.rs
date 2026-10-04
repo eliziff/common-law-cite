@@ -233,6 +233,11 @@ static SECONDARY_SOURCES: LazyLock<Vec<(&'static str, &'static str, CompiledGram
     ("book", "religious_text_grammar", "cite.secondary.religious", EVERY),
 ].into_iter().map(|(kind, reason, id, guides)| (kind, reason, backtracking(id), guides)).collect());
 static CHARTER: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("cite.ca.charter"));
+// A document's own list or table of authorities: its heading, and the heading that ends it.
+static AUTHORITY_LIST: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("section.authority-list"));
+static AUTHORITY_LIST_END: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("section.authority-list.end"));
+// "In the Matter of ...": a proceeding a court file names when no style of cause does.
+static MATTER_STYLE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("style.matter"));
 static ACCESS_DATE: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("attach.access-date"));
 static SUPRA_AFTER: LazyLock<Regex> = LazyLock::new(|| linear("ref.supra-follows"));
 static GOVERNMENT_AUTHOR: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("style.government-author"));
@@ -638,17 +643,25 @@ fn month_reporter(hit: &str) -> bool {
     })
 }
 
-/// A paragraph, heading or telephone number read as volume, reporter and page around one
-/// plain word ("34 Conclusion 35", "59 ARTICLE 9", "2921 Facsimile 403"): an ordinary word is
-/// never an unregistered reporter, and an all-capital word after a year is a neutral citation's
-/// court, read as such.
+/// A paragraph, heading, telephone number or clerk's stamp read as volume, reporter and page
+/// around one plain word ("34 Conclusion 35", "59 ARTICLE 9", "2921 Facsimile 403", a stamp's
+/// "2025", "EDMONTON" and "12" on lines of their own): an ordinary word is never an unregistered
+/// reporter, and an all-capital word after a year is a neutral citation's court unless it names
+/// none and reads as a stamp or a date.
 fn word_reporter(hit: &str) -> bool {
     REPORTER_WORD.captures(hit).is_some_and(|captures| {
         let word = captures.name("word").unwrap().as_str();
         let year = captures.name("volume").is_some_and(|volume| volume.as_str().len() == 4
             && (volume.as_str().starts_with("19") || volume.as_str().starts_with("20")));
-        !(year && word.chars().all(|character| character.is_ascii_uppercase()))
-            && !crate::registry::registry().reporters_by_surface(word).iter().any(|(reporter, _)|
+        let registry = crate::registry::registry();
+        // An unregistered court on a line of its own, of two letters, or numbering its decision
+        // like a year ("2023 AT 3" from "2023 AT 3:00 PM", "2021 CBC 2021") is no court.
+        let page_year = captures.name("page").is_some_and(|page| page.as_str().len() == 4
+            && (page.as_str().starts_with("19") || page.as_str().starts_with("20")));
+        let unnamed = registry.courts_by_surface(word).is_empty()
+            && (hit.contains('\n') || word.len() <= 2 || page_year);
+        !(year && word.chars().all(|character| character.is_ascii_uppercase()) && !unnamed)
+            && !registry.reporters_by_surface(word).iter().any(|(reporter, _)|
                 reporter.editions.iter().any(|edition| edition.abbreviation == word)
                     || reporter.variations.contains_key(word))
     })
@@ -1093,16 +1106,26 @@ fn full_citation(
         .filter(|captures| captures.name("source").is_some_and(|source| previous_end + source.end() == core.end))
         .last().and_then(|captures| captures.name("title").map(|title| (previous_end + title.start(), previous_end + title.end(),
             captures.name("pin").map(|pin| previous_end + pin.start()..previous_end + pin.end()))))).flatten();
+    // An unreported order's style of cause written before its date, place and court: "Fen Mills
+    // Inc. (Re) (4 May 2036), Toronto, Ont Sup Ct J [Commercial List] CV-36-00712345-00CL".
+    let dated_style = (kind_reason == "court_file_grammar").then(|| {
+        let window = &text[previous_end..core.start];
+        let at = previous_end + window.match_indices(" (").map(|(at, _)| at)
+            .find(|at| window[at + 2..].starts_with(|character: char| character.is_ascii_digit()))?;
+        Some((case_style_start(text, at, previous_end), at)).filter(|(start, _)| *start < at)
+    }).flatten();
     let styled_start = match kind {
         _ if charter.is_some() => charter.as_ref().unwrap().0,
-        // An order or endorsement known by its file number is named by the words before it in
-        // its clause when they hold no style of cause ("In the Matter of the Compromise or
+        // An order or endorsement known by its file number is named by the matter its clause
+        // opens with when it has no style of cause ("In the Matter of the Compromise or
         // Arrangement of Ash Ltd, Court File No 2601-04417").
         "case" if kind_reason == "court_file_grammar" => Some(case_style_start(text, core.start, previous_end))
-            .filter(|start| *start < core.start).or_else(|| {
+            .filter(|start| *start < core.start)
+            .or_else(|| dated_style.map(|(start, _)| start)).or_else(|| {
                 let floor = styled_floor(text, previous_end, core.start);
                 let blank = text[floor..core.start].len() - text[floor..core.start].trim_start_matches(javascript_whitespace).len();
                 style_span_start(text, floor + blank, core.start)
+                    .filter(|start| MATTER_STYLE.is_match(&text[*start..core.start]))
             }).unwrap_or(core.start),
         "case" => case_style_start(text, core.start, previous_end),
         "statute" => statute_style_start(text, core.start, previous_end),
@@ -1172,7 +1195,9 @@ fn full_citation(
     }
     // An online work's name and title end where the words that introduce its link, or its
     // pinpoint, begin: “Title” (22 October 2024) online: [...], “Title” (2022) at 2, 13 online: <...>.
-    let name_end = if let Some((_, title_end, _)) = &charter { *title_end } else if kind_reason == "online_grammar" {
+    let name_end = if let Some((_, title_end, _)) = &charter { *title_end }
+        else if let Some(end) = dated_style.filter(|(start, _)| *start == styled_start).map(|(_, end)| end) { end }
+        else if kind_reason == "online_grammar" {
         let lead = link_lead_start(text, core.start, styled_start);
         text[styled_start..lead].rfind(" at ").filter(|at| text[styled_start + at + 4..].starts_with(|c: char| c.is_ascii_digit()))
             .map_or(lead, |at| styled_start + at)
@@ -1761,6 +1786,23 @@ fn commented_work(text: &str, citation: &mut Citation, previous: &[Citation], fl
     None
 }
 
+/// Where a document's own list or table of authorities runs: from its heading through the short
+/// blocks of its entries, up to the next heading of the document's body ("PART I – FACTS", "I.
+/// INTRODUCTION"), a schedule after it, or the first block of prose (thirty words or more).
+pub(crate) fn authority_lists(text: &str) -> Vec<Hit> {
+    AUTHORITY_LIST.find_iter(text).flatten().map(|heading| {
+        let heading_end = AUTHORITY_LIST_END.find_iter(&text[heading.end()..]).flatten().next()
+            .map_or(text.len(), |found| heading.end() + found.start());
+        let mut end = heading.end();
+        for block in text[heading.end()..heading_end].split("\n\n") {
+            let start = end;
+            end += block.len() + 2;
+            if block.split_whitespace().count() >= 30 { end = start; break; }
+        }
+        heading.start()..end.min(heading_end)
+    }).collect()
+}
+
 /// A link written after a citation and its pinpoint and introduced as where the
 /// work is read ("…, s 4, online (pdf): [perma.cc/…]", "… at 12, online:
 /// <https://…>") belongs to that citation, not to a source of its own.
@@ -1768,10 +1810,14 @@ fn join_links(text: &str, citations: Vec<Citation>) -> Vec<Citation> {
     let mut joined: Vec<Citation> = Vec::with_capacity(citations.len());
     for citation in citations {
         let link = citation.form == Form::Full && citation.authority == Authority::Webpage && citation.style.is_none();
+        // A link written right after a citation, with only a comma between, is where it is read
+        // ("Siler (Re), 2018 ABQB 465 (CanLII), <https://canlii.ca/t/hsjtk>").
+        let bare = |gap: &str| gap.trim_matches(|character: char| javascript_whitespace(character) || character == ',').is_empty();
         let Some(previous) = joined.last_mut().filter(|previous| link && previous.form == Form::Full
             && previous.full_span.end <= citation.full_span.start
-            && LINK_LEAD.find(&text[previous.full_span.end..citation.full_span.start]).ok().flatten()
-                .is_some_and(|lead| lead.start() == 0 && previous.full_span.end + lead.end() == citation.full_span.start)) else {
+            && (bare(&text[previous.full_span.end..citation.full_span.start])
+                || LINK_LEAD.find(&text[previous.full_span.end..citation.full_span.start]).ok().flatten()
+                .is_some_and(|lead| lead.start() == 0 && previous.full_span.end + lead.end() == citation.full_span.start))) else {
             joined.push(citation);
             continue;
         };

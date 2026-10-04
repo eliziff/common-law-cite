@@ -584,7 +584,7 @@
               "text": "Fen Mills Inc. (Re) (4 May 2036), Toronto, Ont Sup Ct J [Commercial List] CV-36-00712345-00CL (Endorsement of Lake J)"
             },
             "style": {
-              "text": "Fen Mills Inc. (Re) (4 May 2036), Toronto, Ont Sup Ct J [Commercial List]"
+              "text": "Fen Mills Inc. (Re)"
             }
           }
         ]
@@ -786,6 +786,324 @@
             }
           }
         ]
+      }
+    },
+    {
+      "name": "mcgill/link-after-a-comma-is-the-citations",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash Mills (Re), 2036 ABKB 465 (CanLII), <https://canlii.example/t/abc12> [Ash Mills].",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2036 ABKB 465"
+            },
+            "fullSpan": {
+              "text": "Ash Mills (Re), 2036 ABKB 465 (CanLII), <https://canlii.example/t/abc12>"
+            },
+            "style": {
+              "text": "Ash Mills (Re)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/history-after-a-pinpoint-and-tab",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen Estate v Ash Metals Corp, 2036 ABKB 242 at para 32, BOA TAB 8, aff\u2019d in 2037 ABCA 191.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2036 ABKB 242"
+            },
+            "fullSpan": {
+              "text": "Fen Estate v Ash Metals Corp, 2036 ABKB 242 at para 32"
+            },
+            "style": {
+              "text": "Fen Estate v Ash Metals Corp"
+            },
+            "history": [
+              {
+                "relation": "affirmed",
+                "span": {
+                  "text": "aff\u2019d in"
+                },
+                "target": 1
+              }
+            ],
+            "pinpoints": [
+              {
+                "kind": "paragraph",
+                "first": "32"
+              }
+            ]
+          },
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2037 ABCA 191"
+            },
+            "fullSpan": {
+              "text": "2037 ABCA 191"
+            },
+            "style": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/leave-refused-abbreviated",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash Corp v Fen Investments Corp, 2036 ONSC 2777, leave to appeal ref\u2019d 2037 ONCA 479, at para 29.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2036 ONSC 2777"
+            },
+            "fullSpan": {
+              "text": "Ash Corp v Fen Investments Corp, 2036 ONSC 2777"
+            },
+            "style": {
+              "text": "Ash Corp v Fen Investments Corp"
+            },
+            "history": [
+              {
+                "relation": "leave_refused",
+                "span": {
+                  "text": "leave to appeal ref\u2019d"
+                },
+                "target": 1
+              }
+            ]
+          },
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2037 ONCA 479"
+            },
+            "fullSpan": {
+              "text": "2037 ONCA 479, at para 29"
+            },
+            "style": null,
+            "pinpoints": [
+              {
+                "kind": "paragraph",
+                "first": "29"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/chapter-without-a-number-is-no-chapter",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "IN THE MATTER OF THE COASTAL ARRANGEMENT ACT, RSC 1985, c\n\nFeb 7, 2036",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "mcgill/chapter-joined-by-a-comma",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "section 13(2) of the Coastal Judicature Act, RSA 2036,c J-2; and",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "statute",
+            "span": {
+              "text": "RSA 2036,c J-2"
+            },
+            "fullSpan": {
+              "text": "Coastal Judicature Act, RSA 2036,c J-2"
+            },
+            "style": {
+              "text": "Coastal Judicature Act"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/clerk-stamp-is-no-citation",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "2603 17258 Sep 15, 2036\n\nEDMONTON\n\n12:00 PM",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "mcgill/file-number-in-a-sentence-is-unnamed",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "The plan approved the agreement. For example, Court File No. 2601-03468, May 5, 2036, Order.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "Court File No. 2601-03468"
+            },
+            "fullSpan": {
+              "text": "Court File No. 2601-03468"
+            },
+            "style": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/tab-label-before-a-style",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "TAB 8 Fen Estate v Ash Metals Corp, 2036 ABKB 242",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2036 ABKB 242"
+            },
+            "fullSpan": {
+              "text": "Fen Estate v Ash Metals Corp, 2036 ABKB 242"
+            },
+            "style": {
+              "text": "Fen Estate v Ash Metals Corp"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "document/own-list-of-authorities-skipped-on-request",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "TABLE OF AUTHORITIES\n\nTAB AUTHORITY\n\n1.   Ash v Fen, 2036 ABKB 12\n\n2.   Coastal Act, RSA 2036, c C-9\n\nPART I \u2013 FACTS\n\n1. The applicant relies on Ash v Fen, 2036 ABKB 12 at para 4, and on the Coastal Act, RSA 2036, c C-9, s 3, which together settle the question the respondent raises in its brief.",
+      "options": {
+        "resolve": false,
+        "skipAuthorityLists": true
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2036 ABKB 12",
+              "start": 156
+            }
+          },
+          {
+            "span": {
+              "text": "RSA 2036, c C-9",
+              "start": 204
+            }
+          }
+        ]
+      },
+      "note": "The list's entries list what the brief cites in its body; only the body's citations are read."
+    },
+    {
+      "name": "document/own-list-of-authorities-read-by-default",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "TABLE OF AUTHORITIES\n\nTAB AUTHORITY\n\n1.   Ash v Fen, 2036 ABKB 12\n\n2.   Coastal Act, RSA 2036, c C-9\n\nPART I \u2013 FACTS\n\n1. The applicant relies on Ash v Fen, 2036 ABKB 12 at para 4, and on the Coastal Act, RSA 2036, c C-9, s 3, which together settle the question the respondent raises in its brief.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "start": 53
+            }
+          },
+          {
+            "span": {
+              "start": 85
+            }
+          },
+          {
+            "span": {
+              "start": 156
+            }
+          },
+          {
+            "span": {
+              "start": 204
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "date/year-and-time-are-no-neutral-citation",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "The hearing was set for 4 May 2036 AT 3:00 PM before the panel; see 2036 CBC 2036 coverage.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": []
       }
     }
   ]

@@ -103,6 +103,9 @@ pub struct Options {
     pub supra_linking_mode: SupraMode,
     /// The guides whose own forms are recognized; every guide's when absent.
     pub styles: Option<Vec<CitationStyle>>,
+    /// Leave out what a document's own list or table of authorities holds: its entries list the
+    /// authorities the document cites elsewhere, and its tab numbers cite nothing.
+    pub skip_authority_lists: bool,
 }
 
 impl Default for Options {
@@ -118,6 +121,7 @@ impl Default for Options {
             supra_hint_mode: SupraMode::Aggressive,
             supra_linking_mode: SupraMode::Safe,
             styles: None,
+            skip_authority_lists: false,
         }
     }
 }
@@ -152,6 +156,10 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     let mut citations = find::find_styled(text, options, markup.as_ref());
     if options.source_only { citations.retain(|citation| citation.fields.source_case_name.is_some()); }
     let mut citations = find::filter_citations(citations);
+    if options.skip_authority_lists {
+        let lists = find::authority_lists(text);
+        citations.retain(|citation| !lists.iter().any(|list| list.contains(&citation.span.start)));
+    }
     metadata::attach(text, &mut citations);
     for citation in &mut citations {
         us::finish(citation);

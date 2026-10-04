@@ -598,6 +598,18 @@ fn relation(phrase: &str) -> &'static str {
 /// The history phrase at the start of the gap after `citation`, and whether
 /// the gap holds nothing else before `next_start`.
 fn history(text: &str, from: usize, to: usize) -> Option<(History, bool)> {
+    let whole = &text[from..to];
+    let reaches = |gap: &str, end: usize| gap[end..]
+        .trim_matches(|character: char| javascript_whitespace(character) || character == ',').is_empty();
+    // A phrase may also follow the citation's pinpoint, a book tab or an opening parenthesis, as
+    // long as it introduces the next citation: "…at para 32, BOA TAB 8, aff'd in 2010 ABCA 191",
+    // "…at para 42 (leave to appeal to MBCA ref'd, 2009 MBCA 110)".
+    let from = if HISTORY.captures(whole).is_some() { from } else {
+        from + whole.char_indices().filter(|&(_, character)| character == ',' || character == '(' || character == ';')
+            .map(|(at, character)| at + character.len_utf8())
+            .find(|&at| HISTORY.captures(&whole[at..]).and_then(|captures| captures.get(0))
+                .is_some_and(|matched| reaches(&whole[at..], matched.end())))?
+    };
     let gap = &text[from..to];
     let captures = HISTORY.captures(gap)?;
     let matched = captures.get(0)?;

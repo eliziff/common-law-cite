@@ -71,11 +71,19 @@
         },
         {
           "id": "cite.reporter.word",
-          "pattern": "^(?<volume>\\d+)\\s+(?<word>[A-Z](?:[a-z]+|[A-Z]+)\\.?)\\s+\\d",
+          "pattern": "^(?<volume>\\d+)\\s+(?<word>[A-Z](?:[a-z]+|[A-Z]+)\\.?)\\s+(?<page>\\d+)",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored for the legal-citations extraction stages. A cite.in-text hit whose reporter is one plain word: find.rs drops it unless the word is a registered reporter, since a paragraph, heading or telephone number around an ordinary word ('34 Conclusion 35', '59 ARTICLE 9', '2921 Facsimile 403') is no report. An all-capital word after a year is left to the neutral-citation reading ('2015 ABCA 31').",
+          "provenance": "Beaver-authored for the legal-citations extraction stages. A cite.in-text hit whose reporter is one plain word: find.rs drops it unless the word is a registered reporter, since a paragraph, heading or telephone number around an ordinary word ('34 Conclusion 35', '59 ARTICLE 9', '2921 Facsimile 403') is no report. An all-capital word after a year is left to the neutral-citation reading ('2015 ABCA 31'). The page is captured too: a page that is itself a year ('2021 CBC 2021') reads as a date, not a report.",
           "vectors": [
+            {
+              "input": "2021 CBC 2021",
+              "groups": {
+                "volume": "2021",
+                "word": "CBC",
+                "page": "2021"
+              }
+            },
             {
               "input": "34 Conclusion 35",
               "groups": {
@@ -1678,11 +1686,27 @@
         },
         {
           "id": "cite.ca.statute.first",
-          "pattern": "\\b(?<series>{{ca_statute_series}}|{{fr_statute_series}})\\s*,?\\s+\\(?(?<year>(?:1[6-9]|20)\\d{2})(?:-\\d{2}){0,3}\\)?(?:\\s*,?\\s+[cC](?:h)?\\.?\\s*(?<chapter>[A-Za-z]{1,2} \\d+(?:\\.\\d+)?|[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*))?(?:\\s*,?\\s+Sched(?:ule)?\\.?\\s*(?<schedule>[A-Za-z0-9]+))?|\\b(?<historical_series>S\\s?(?:Prov|UC|LC|NS|NB|Nfld)\\s?C?)\\s+(?<historical_year>(?:1[6-9])\\d{2})(?:\\s*\\([^()\\n]{2,30}\\))?,?\\s+c\\.?\\s*(?<historical_chapter>\\d{1,4})|\\b(?<compiled_series>C\\.?Q\\.?L\\.?R\\.?|C\\.?C\\.?S\\.?M\\.?|R\\.?L\\.?R\\.?Q\\.?|RSQ)\\s*,?\\s+c\\.?\\s*(?<compiled_chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*)|\\b(?<regnal>\\d{1,2}(?:\\s*&\\s*\\d{1,2})?\\s+(?:Vict|Geo|Eliz|Will|Anne?|Car|Jac|Hen|Edw)\\.?(?:\\s*[IVX]+)?),?\\s+c\\.?\\s*(?<regnal_chapter>\\d{1,4}[A-Za-z]?)|\\b(?<instrument>(?:S\\.?O\\.?R\\.?|SI|DORS|TR)/\\d{2,4}[-/]\\d{1,4})|\\bC\\.?R\\.?C\\.?,?\\s*c\\.?\\s*(?<consolidated_chapter>\\d{1,4}(?:\\.\\d+)?)|\\b(?<regulation>(?:[A-Z][A-Za-z]{0,3}\\s+)?(?:Reg|OIC)\\.?\\s*\\d{1,4}[-/]\\d{1,4}|A\\.?R\\.?\\s+\\d{1,4}/\\d{2,4}|(?<fr_regulation>R[\\u00e8e]gl\\s+de\\s+l[\\u2019']Ont\\s*\\d{1,4}/\\d{2,4}))|\\b(?<rr_series>RRO)\\s+(?<rr_year>(?:1[6-9]|20)\\d{2}),?\\s+Reg\\.?\\s+(?<rr_number>\\d{1,5})\\b",
+          "pattern": "\\b(?<series>{{ca_statute_series}}|{{fr_statute_series}})\\s*,?\\s+\\(?(?<year>(?:1[6-9]|20)\\d{2})(?:-\\d{2}){0,3}\\)?(?:(?:\\s*,\\s*|\\s+)[cC](?:h)?\\.?\\s*(?<chapter>[A-Za-z]{1,2} \\d+(?:\\.\\d+)?|(?:[A-Za-z]+(?:[.\\-][A-Za-z]+)*[.\\-])?\\d[A-Za-z0-9]*(?:[.\\-][A-Za-z0-9]+)*))?(?:\\s*,?\\s+Sched(?:ule)?\\.?\\s*(?<schedule>[A-Za-z0-9]+))?|\\b(?<historical_series>S\\s?(?:Prov|UC|LC|NS|NB|Nfld)\\s?C?)\\s+(?<historical_year>(?:1[6-9])\\d{2})(?:\\s*\\([^()\\n]{2,30}\\))?,?\\s+c\\.?\\s*(?<historical_chapter>\\d{1,4})|\\b(?<compiled_series>C\\.?Q\\.?L\\.?R\\.?|C\\.?C\\.?S\\.?M\\.?|R\\.?L\\.?R\\.?Q\\.?|RSQ)\\s*,?\\s+c\\.?\\s*(?<compiled_chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*)|\\b(?<regnal>\\d{1,2}(?:\\s*&\\s*\\d{1,2})?\\s+(?:Vict|Geo|Eliz|Will|Anne?|Car|Jac|Hen|Edw)\\.?(?:\\s*[IVX]+)?),?\\s+c\\.?\\s*(?<regnal_chapter>\\d{1,4}[A-Za-z]?)|\\b(?<instrument>(?:S\\.?O\\.?R\\.?|SI|DORS|TR)/\\d{2,4}[-/]\\d{1,4})|\\bC\\.?R\\.?C\\.?,?\\s*c\\.?\\s*(?<consolidated_chapter>\\d{1,4}(?:\\.\\d+)?)|\\b(?<regulation>(?:[A-Z][A-Za-z]{0,3}\\s+)?(?:Reg|OIC)\\.?\\s*\\d{1,4}[-/]\\d{1,4}|A\\.?R\\.?\\s+\\d{1,4}/\\d{2,4}|(?<fr_regulation>R[\\u00e8e]gl\\s+de\\s+l[\\u2019']Ont\\s*\\d{1,4}/\\d{2,4}))|\\b(?<rr_series>RRO)\\s+(?<rr_year>(?:1[6-9]|20)\\d{2}),?\\s+Reg\\.?\\s+(?<rr_number>\\d{1,5})\\b",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored first-reference grammar for Canadian legislation, in the footnote (McGill Guide) dialect the judgment-side cite.statute.judgment entry cannot reach: the undotted series forms, the CQLR/CCSM/RLRQ compiled-statute forms that carry no year, the imperial regnal-year form (30 & 31 Vict, c 3), and the regulation instruments (SOR//SI//CRC//provincial Reg//OIC). Member list is the shared ca_statute_series//fr_statute_series defs unchanged, so the judgment and footnote dialects name the same series. Measured against the ALR fast-split field gold: the statute family scored 0 citation hits before this entry existed. McGill Canadian regulation extension: retain the four-letter Alta jurisdiction prefix rather than anchoring generic Reg. New vectors are independently invented. McGill French ch and DORS/TR forms, revised Ontario regulations and the French Ontario regulation series retain their complete cores; additional vectors are independently invented. Pre-Confederation statutes ('S Prov C 1859 (22 Vict), c 9', 'S UC 1793 (33 Geo III), c 73') and the Revised Statutes of Quebec without a year ('RSQ c C-3'). Beaver-authored from the McGill Guide (10th ed): a volume spanning years keeps them all ('SC 1980-81-82-83', 'SY 1989-90'). Beaver-authored: a chapter's number written after a space is part of it only after a letter ('c P 33'), so a footnote or file number after the chapter ('c C-15  7', 'c B-3 / 2501') is not. Beaver-authored: the dotted SOR and CRC forms ('S.O.R./88-58', 'C.R.C., c. 368') and Alberta's own regulation form ('AR 124/2010'). find.rs keeps a series and year without a chapter only where an appendix follows ('RSC 1985, App II, No 5'); 'RSA 2000' alone is no citation. A chapter may be written with a capital ('RSA 2000, Ch O-6').",
+          "provenance": "Beaver-authored first-reference grammar for Canadian legislation, in the footnote (McGill Guide) dialect the judgment-side cite.statute.judgment entry cannot reach: the undotted series forms, the CQLR/CCSM/RLRQ compiled-statute forms that carry no year, the imperial regnal-year form (30 & 31 Vict, c 3), and the regulation instruments (SOR//SI//CRC//provincial Reg//OIC). Member list is the shared ca_statute_series//fr_statute_series defs unchanged, so the judgment and footnote dialects name the same series. Measured against the ALR fast-split field gold: the statute family scored 0 citation hits before this entry existed. McGill Canadian regulation extension: retain the four-letter Alta jurisdiction prefix rather than anchoring generic Reg. New vectors are independently invented. McGill French ch and DORS/TR forms, revised Ontario regulations and the French Ontario regulation series retain their complete cores; additional vectors are independently invented. Pre-Confederation statutes ('S Prov C 1859 (22 Vict), c 9', 'S UC 1793 (33 Geo III), c 73') and the Revised Statutes of Quebec without a year ('RSQ c C-3'). Beaver-authored from the McGill Guide (10th ed): a volume spanning years keeps them all ('SC 1980-81-82-83', 'SY 1989-90'). Beaver-authored: a chapter's number written after a space is part of it only after a letter ('c P 33'), so a footnote or file number after the chapter ('c C-15  7', 'c B-3 / 2501') is not. Beaver-authored: the dotted SOR and CRC forms ('S.O.R./88-58', 'C.R.C., c. 368') and Alberta's own regulation form ('AR 124/2010'). find.rs keeps a series and year without a chapter only where an appendix follows ('RSC 1985, App II, No 5'); 'RSA 2000' alone is no citation. A chapter may be written with a capital ('RSA 2000, Ch O-6'). A chapter holds a number ('c Feb' is a date's month, as when a heading runs into it), and a comma may join it without a space ('RSA 2000,c J-2').",
           "vectors": [
+            {
+              "input": "Judicature Act, RSA 2036,c J-2; and",
+              "groups": {
+                "series": "RSA",
+                "year": "2036",
+                "chapter": "J-2"
+              }
+            },
+            {
+              "input": "ARRANGEMENT ACT, RSC 1985, c\n\nFeb 7, 2036",
+              "groups": {
+                "series": "RSC",
+                "year": "1985",
+                "chapter": null
+              }
+            },
             {
               "input": "Pipeline Act, RSA 2000, Ch P-15",
               "groups": {
@@ -2551,6 +2575,52 @@
             },
             {
               "input": "R v Jordan, 2016 SCC 27",
+              "groups": null
+            }
+          ]
+        },
+        {
+          "id": "section.authority-list",
+          "pattern": "^[ \\t]*(?:schedule\\s+[\\\"“]?[a-z][\\\"”]?[ \\t]*[-–—:.]?[ \\t]*)?(?:list|table|index)\\s+of\\s+authorities[ \\t]*(?:\\.{3,}[^\\n]{0,12})?$",
+          "flags": "im",
+          "canonical": {},
+          "provenance": "Beaver-authored from filed Canadian briefs: the heading of a brief's own list or table of authorities, on a line of its own ('TABLE OF AUTHORITIES', 'SCHEDULE \"A\" – LIST OF AUTHORITIES'), or its line in a table of contents. find.rs reads the list from it to the next heading of the brief's body.",
+          "vectors": [
+            {
+              "input": "                           TABLE OF AUTHORITIES\n",
+              "groups": {}
+            },
+            {
+              "input": "SCHEDULE \"A\" – LIST OF AUTHORITIES",
+              "groups": {}
+            },
+            {
+              "input": "the list of authorities was filed late",
+              "groups": null
+            }
+          ]
+        },
+        {
+          "id": "section.authority-list.end",
+          "pattern": "^[ \\t]*(?:PART[ \\t]+(?:[IVX]+|\\d+|ONE|TWO|THREE)\\b|[IVX]+\\.[ \\t]+[A-Z]|(?:INTRODUCTION|OVERVIEW|SUMMARY|FACTS|STATEMENT OF FACTS|BACKGROUND|ISSUES?|LAW AND ARGUMENT|ARGUMENT|ANALYSIS|SUBMISSIONS|RELIEF SOUGHT|ORDER SOUGHT|REMEDY)\\b[^\\n]{0,40}$|SCHEDULE[ \\t]+[\\\"“]?[B-Z][\\\"”]?\\b)",
+          "flags": "m",
+          "canonical": {},
+          "provenance": "Beaver-authored from filed Canadian briefs: a heading of a brief's body, or the schedule after its list of authorities, which ends that list ('PART I – FACTS', 'I. INTRODUCTION', 'SCHEDULE \"B\"'). A list's own group headings (CASES, LEGISLATION, SECONDARY SOURCES) do not end it.",
+          "vectors": [
+            {
+              "input": "PART I – FACTS",
+              "groups": {}
+            },
+            {
+              "input": "I. INTRODUCTION",
+              "groups": {}
+            },
+            {
+              "input": "SCHEDULE \"B\" – TEXT OF STATUTES",
+              "groups": {}
+            },
+            {
+              "input": "CASES",
               "groups": null
             }
           ]
@@ -5335,15 +5405,21 @@
         },
         {
           "id": "ref.history",
-          "pattern": "^[\\s,;]*(?<relation>aff['’]?d|aff['’]?g|affirmed|affirming|rev['’]?d|rev['’]?g|reversed|reversing|var['’]?d|var['’]?g|varied|varying|overruled|overruling|leave\\s+to\\s+appeal(?:\\s+to\\s+(?:the\\s+)?[A-Z][A-Za-z. ]{1,40}?)?\\s+(?:refused|denied|dismissed|granted|allowed)|appeal\\s+(?:dismissed|allowed|quashed|abandoned)|cert\\.?\\s+(?:denied|granted|dismissed)|autorisation\\s+d['’]appel\\s+(?:à\\s+la\\s+(?:CSC|Cour\\s+suprême(?:\\s+du\\s+Canada)?)\\s+)?(?:refusée|accordée)|confirmé(?:e|s)?|infirmé(?:e|s)?|modifié(?:e|s)?|conf\\.|inf\\.)(?<qualifier>\\s+(?:on\\s+other\\s+grounds|in\\s+part|sub\\s+nom\\.?\\s+[^,;]{1,80}?|by|in|on|par|pour\\s+d['’]autres\\s+motifs))?(?:\\s*,?\\s*\\((?<court>[^()]{1,40})\\))?\\s*,?\\s*",
+          "pattern": "^[\\s,;]*(?<relation>aff['’]?d|aff['’]?g|affirmed|affirming|rev['’]?d|rev['’]?g|reversed|reversing|var['’]?d|var['’]?g|varied|varying|overruled|overruling|leave\\s+to\\s+appeal(?:\\s+to\\s+(?:the\\s+)?[A-Z][A-Za-z. ]{1,40}?)?\\s+(?:refused|ref['’]?d|denied|dismissed|granted|allowed)|appeal\\s+(?:dismissed|allowed|quashed|abandoned)|cert\\.?\\s+(?:denied|granted|dismissed)|autorisation\\s+d['’]appel\\s+(?:à\\s+la\\s+(?:CSC|Cour\\s+suprême(?:\\s+du\\s+Canada)?)\\s+)?(?:refusée|accordée)|confirmé(?:e|s)?|infirmé(?:e|s)?|modifié(?:e|s)?|conf\\.|inf\\.)(?<qualifier>\\s+(?:on\\s+other\\s+grounds|in\\s+part|sub\\s+nom\\.?\\s+[^,;]{1,80}?|by|in|on|par|pour\\s+d['’]autres\\s+motifs))?(?:\\s*,?\\s*\\((?<court>[^()]{1,40})\\))?\\s*,?\\s*",
           "flags": "i",
           "canonical": {
             "lowercase": [
               "relation"
             ]
           },
-          "provenance": "Beaver-authored for the legal-citations extraction stages. Subsequent and prior history read at the start of the gap after a citation: a superset of ref.history.toa (aff'd/rev'd/varied/leave to appeal) that adds overruled, appeal dismissed/allowed, cert. denied, 'leave to appeal to SCC refused' with its court, and the French forms (autorisation d'appel refusée, conf., inf.). The following citation is the one the relation names.",
+          "provenance": "Beaver-authored for the legal-citations extraction stages. Subsequent and prior history read at the start of the gap after a citation: a superset of ref.history.toa (aff'd/rev'd/varied/leave to appeal) that adds overruled, appeal dismissed/allowed, cert. denied, 'leave to appeal to SCC refused' with its court, and the French forms (autorisation d'appel refusée, conf., inf.). The following citation is the one the relation names. Beaver-authored: a refusal abbreviated as Canadian briefs write it ('leave to appeal ref'd').",
           "vectors": [
+            {
+              "input": ", leave to appeal ref’d ",
+              "groups": {
+                "relation": "leave to appeal ref’d"
+              }
+            },
             {
               "input": ", aff'd ",
               "groups": {
@@ -6529,11 +6605,15 @@
         },
         {
           "id": "style.case-lead-in",
-          "pattern": "^(?:(?:\\d{1,4}\\.|\\[\\d{1,4}\\]|\\((?:\\d{1,4}|[{{lc}}]{1,4})\\))\\s+)?(?:(?:In|As\\s+(?:for|in|with)|Like|Unlike|Following)\\s+)?",
+          "pattern": "^(?:(?:\\d{1,4}\\.|\\[\\d{1,4}\\]|\\((?:\\d{1,4}|[{{lc}}]{1,4})\\)|(?:TAB|Tab)\\s+\\d{1,4}[A-Za-z]?)\\s+)?(?:(?:In|As\\s+(?:for|in|with)|Like|Unlike|Following)\\s+)?",
           "flags": "",
           "canonical": {},
-          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_LEAD_IN, a numbered paragraph's own label ('12.', '[12]', '(a)') and a leading 'In' in front of the first party. Beaver-authored: the sentence openers As for, As in, As with, Like, Unlike and Following are lead-ins too (As for Fell & Moss, supra note 3).",
+          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_LEAD_IN, a numbered paragraph's own label ('12.', '[12]', '(a)') and a leading 'In' in front of the first party. Beaver-authored: the sentence openers As for, As in, As with, Like, Unlike and Following are lead-ins too (As for Fell & Moss, supra note 3). A brief's own list of its authorities opens each line with its book tab ('TAB 8 Ash v Fen, 2036 ABKB 4'), which is no part of the style of cause.",
           "vectors": [
+            {
+              "input": "TAB 8 Ash v Fen",
+              "groups": {}
+            },
             {
               "input": "1. In R v Oakes",
               "groups": {}
@@ -6569,6 +6649,23 @@
             }
           ],
           "rust": true
+        },
+        {
+          "id": "style.matter",
+          "pattern": "^(?:In\\s+the\\s+Matter\\s+of|IN\\s+THE\\s+MATTER\\s+OF)\\s",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from filed Canadian books of authorities: an order known by its court file number is named by the matter its clause opens with ('In the Matter of the Compromise or Arrangement of Ash Ltd, Court File No 2601-04417'); find.rs uses it only when no style of cause is read, so a sentence before a file number never names it.",
+          "vectors": [
+            {
+              "input": "In the Matter of the Compromise or Arrangement of Ash Ltd, ",
+              "groups": {}
+            },
+            {
+              "input": "The order approved the agreement. For example, ",
+              "groups": null
+            }
+          ]
         },
         {
           "id": "style.case-single-party",
