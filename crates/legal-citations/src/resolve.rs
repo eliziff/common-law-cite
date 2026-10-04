@@ -231,6 +231,7 @@ pub(crate) fn resolve_with_sources(
     resolver.source_parts = parts;
     resolver.supra_hint_mode = hint_mode;
     resolver.supra_linking_mode = linking_mode;
+    if linking_mode == SupraMode::Named { resolver.renumbered = resolver.renumbering(); }
     resolver.run()
 }
 
@@ -249,6 +250,9 @@ struct Resolver<'a> {
     supra_linking_mode: SupraMode,
     source_urls: HashMap<Target, String>,
     source_origins: HashMap<Target, usize>,
+    /// Whether a document's supra note numbers drift from the notes their names cite (its notes
+    /// were renumbered and its supras were not).
+    renumbered: bool,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Hash)]
@@ -335,7 +339,37 @@ impl<'a> Resolver<'a> {
             supra_linking_mode: SupraMode::Safe,
             source_urls: HashMap::new(),
             source_origins: HashMap::new(),
+            renumbered: false,
         }
+    }
+
+    /// The note a supra's name cites, and the note its number names, where the name is exactly
+    /// one earlier full citation's short form or name and the numbered note cites something else.
+    fn name_note_drift(&self, position: usize) -> Option<std::cmp::Ordering> {
+        let citation = &self.citations[position];
+        let text = if citation.full_span.text.is_empty() { &citation.span.text } else { &citation.full_span.text };
+        let written = short_forms::reference_info(text).notes.first().and_then(|number| number.parse::<u64>().ok())?;
+        let hint = short_forms::normalize(&short_forms::supra_hint(text, true));
+        if hint.is_empty() { return None; }
+        let notes = self.notes?;
+        let mut named = self.citations.iter().enumerate().filter(|(at, other)| other.form == Form::Full
+            && other.span.start < citation.span.start && self.note_of[*at].is_some()
+            && [other.explicit_short_name.as_deref(), other.short_name.as_deref()].into_iter().flatten()
+                .any(|name| short_forms::normalize(name) == hint))
+            .filter_map(|(at, _)| self.note_of[at]).map(|note| u64::from(notes[note].number)).collect::<Vec<_>>();
+        named.dedup();
+        let [cited] = named.as_slice() else { return None };
+        let numbered_cites = self.citations.iter().enumerate().any(|(at, other)| other.form == Form::Full
+            && self.note_of[at].is_some_and(|note| u64::from(notes[note].number) == written));
+        (numbered_cites && *cited != written).then(|| cited.cmp(&written))
+    }
+
+    /// A document renumbered its notes when at least three supras each name exactly one earlier
+    /// citation in another note than the one they number.
+    fn renumbering(&self) -> bool {
+        let drifts = (0..self.citations.len()).filter(|&at| self.citations[at].form == Form::Supra)
+            .filter_map(|at| self.name_note_drift(at)).collect::<Vec<_>>();
+        drifts.len() >= 3
     }
 
     /// Citations in reading order: notes in their supplied order, and a
@@ -585,7 +619,13 @@ impl<'a> Resolver<'a> {
         let (strict, reason) = short_forms::resolve_registry_scoped(text, &scoped_registry,
             self.supra_hint_mode == SupraMode::Aggressive, sequence);
         if let Some(target) = Target::from_registry(&strict) { return (Some(target), reason); }
-        if matches!(reason, "note_name_conflict" | "note_without_authority") {
+        // A note that holds no authority leaves the name to say which one is meant. A note that
+        // cites another work than the name is a conflict, and stays unresolved, unless the document
+        // renumbered its notes: several supras name works their numbered notes do not cite.
+        if reason == "note_without_authority" {
+            if let Some(target) = named() { return (Some(target), "named_short_form"); }
+        }
+        if reason == "note_name_conflict" && self.renumbered {
             if let Some(target) = named() { return (Some(target), "named_short_form"); }
         }
         if self.supra_linking_mode == SupraMode::Aggressive {
