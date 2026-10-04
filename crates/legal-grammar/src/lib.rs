@@ -500,7 +500,8 @@ fn compile_backtracking_entry(entry: &GrammarEntry, defs: &HashMap<String, Strin
         .case_insensitive(entry.rust && entry.flags.contains('i'))
         .multi_line(entry.flags.contains('m'))
         .dot_matches_new_line(entry.flags.contains('s'))
-        .backtrack_limit(10_000_000);
+        .backtrack_limit(10_000_000)
+        .seek(true);
     builder
         .build()
         .map_err(|error| Error::Message(format!("{}: does not compile in Rust: {error}", entry.id)))
