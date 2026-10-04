@@ -65,7 +65,7 @@ pub struct Resolution {
     /// * supra and references: `note_and_name`, `note_only`, `name_only`,
     ///   `ambiguous_note`, `ambiguous_name`, `note_out_of_range`,
     ///   `note_without_authority`, `note_name_conflict`, `no_match`, `no_hint`,
-    ///   `named_short_form` (linking mode [`SupraMode::Named`]);
+    ///   `named_short_form` (linking mode [`SupraMode::Named`]), `acronym`;
     /// * short forms: `short_reporter`, `short_name`, `short_ambiguous`,
     ///   `short_no_match`;
     /// * `unknown_form` for [`Form::Unknown`].
@@ -864,6 +864,21 @@ impl<'a> Resolver<'a> {
             if let [authority] = matches.as_slice() { return (Some(*authority), "name_only"); }
             if matches.len() > 1 { return (None, "ambiguous_name"); }
         }
+        // An acronym names the one enactment the document cites in full whose title's words it
+        // spells ("CCAA" for the Companies' Creditors Arrangement Act). A brief may give that
+        // title only in its heading, in capitals, or in its list of authorities at its end.
+        if hint.len() >= 2 && hint.len() <= 8 && hint.chars().all(|character| character.is_ascii_uppercase()) {
+            let mut spelled = Vec::new();
+            for (other, citation) in self.citations.iter().enumerate() {
+                let authority = self.full_authority[other];
+                if citation.form != Form::Full || !citation.authority.is_legislation()
+                    || spelled.contains(&authority) { continue; }
+                if citation.style.as_ref().is_some_and(|style| acronym_of(&style.text) == hint) {
+                    spelled.push(authority);
+                }
+            }
+            if let [authority] = spelled.as_slice() { return (Some(*authority), "acronym"); }
+        }
         (None, "no_match")
     }
 
@@ -985,6 +1000,24 @@ fn words(value: &str) -> Vec<String> {
     }).collect::<Vec<_>>();
     if output.first().is_some_and(|word| word == "the") { output.remove(0); }
     output
+}
+
+/// The initials of a title's words, without its articles and conjunctions ("Bankruptcy and
+/// Insolvency Act" spells BIA, "Companies' Creditors Arrangement Act" CCAA).
+fn acronym_of(title: &str) -> String {
+    // Words in parentheses ("Income Tax Act (Canada)") are no part of it.
+    let mut depth = 0usize;
+    let title = title.chars().filter(|&character| {
+        match character { '(' => depth += 1, ')' => { depth = depth.saturating_sub(1); return false; } _ => {} }
+        depth == 0
+    }).collect::<String>();
+    title.split(|character: char| character.is_whitespace() || character == '-')
+        .map(|word| word.trim_matches(|character: char| !character.is_alphanumeric()))
+        .filter(|word| !word.is_empty() && !matches!(word.to_lowercase().as_str(),
+            "and" | "of" | "the" | "for" | "to" | "on" | "in" | "respecting" | "et" | "de" | "la" | "le" | "des" | "du"))
+        .filter(|word| word.chars().next().is_some_and(char::is_alphabetic))
+        .map(|word| word.chars().next().unwrap().to_ascii_uppercase())
+        .collect()
 }
 
 fn is_crown(words: &[String]) -> bool {

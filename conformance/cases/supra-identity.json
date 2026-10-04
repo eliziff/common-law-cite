@@ -1091,6 +1091,86 @@
           }
         ]
       }
+    },
+    {
+      "name": "identity/defined-term-in-quotation-marks-names-a-reference",
+      "status": "pass",
+      "input": "Ash Mills Inc. v. Fen (Attorney General), 2036 SCC 60 at para. 16 (“Ash Mills”), BOA [TAB 8].\n\nAsh Mills, at para. 15, BOA [TAB 8].\n\nIbid, at para. 59.",
+      "options": {
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 93
+          },
+          {
+            "number": 2,
+            "start": 95,
+            "end": 131
+          },
+          {
+            "number": 3,
+            "start": 133,
+            "end": 151
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "explicitShortName": "Ash Mills"
+          },
+          {
+            "form": "reference",
+            "antecedent": 0
+          },
+          {
+            "form": "ibid",
+            "antecedent": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "identity/acronym-names-the-enactment-it-spells",
+      "status": "pass",
+      "input": "Coastal Harbours Arrangement Act, RSC 1985, c C-99.\n\nThe applicants rely on CHAA, s. 11.",
+      "options": {},
+      "expect": {
+        "citations": [
+          {
+            "form": "full"
+          },
+          {
+            "form": "reference",
+            "span": {
+              "text": "CHAA"
+            },
+            "antecedent": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "identity/named-supra-without-a-note-number",
+      "status": "pass",
+      "input": "Re Fen Networks Corporation et al, 2036 ONSC 673 at para 13.\n\nMore text.\n\nRe Fen Networks Corporation et al, supra, at para 14.",
+      "options": {},
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "style": {
+              "text": "Re Fen Networks Corporation et al"
+            }
+          },
+          {
+            "form": "supra",
+            "antecedent": 0
+          }
+        ]
+      }
     }
   ]
 }

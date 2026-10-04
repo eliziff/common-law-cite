@@ -1793,21 +1793,31 @@ fn commented_work(text: &str, citation: &mut Citation, previous: &[Citation], fl
     None
 }
 
-/// Where a document's own list or table of authorities runs: from its heading through the short
-/// blocks of its entries, up to the next heading of the document's body ("PART I – FACTS", "I.
-/// INTRODUCTION"), a schedule after it, or the first block of prose (thirty words or more).
-pub(crate) fn authority_lists(text: &str) -> Vec<Hit> {
-    AUTHORITY_LIST.find_iter(text).flatten().map(|heading| {
-        let heading_end = AUTHORITY_LIST_END.find_iter(&text[heading.end()..]).flatten().next()
-            .map_or(text.len(), |found| heading.end() + found.start());
-        let mut end = heading.end();
-        for block in text[heading.end()..heading_end].split("\n\n") {
-            let start = end;
-            end += block.len() + 2;
-            if block.split_whitespace().count() >= 30 { end = start; break; }
+/// The citations a document's own list or table of authorities holds: after its heading, each
+/// one written close after the last (its entries follow one another), up to the next heading of
+/// the document's body ("PART I – FACTS", "I. INTRODUCTION") or a schedule after it. The list
+/// ends where text runs on without a citation, as the body's prose does, so a line of a table of
+/// contents naming the list holds none. A note is never part of the list, and the first note after
+/// the heading ends it (a PDF's notes follow its page's text).
+pub(crate) fn authority_list_citations(text: &str, citations: &[Citation], notes: &[crate::NoteRange]) -> Vec<usize> {
+    const ENTRY_GAP: usize = 320;
+    let mut listed = Vec::new();
+    for heading in AUTHORITY_LIST.find_iter(text).flatten() {
+        if notes.iter().any(|note| note.start <= heading.start() && heading.start() < note.end) { continue; }
+        let note_start = notes.iter().map(|note| note.start).filter(|&start| start >= heading.end()).min();
+        let limit = AUTHORITY_LIST_END.find_iter(&text[heading.end()..]).flatten().next()
+            .map_or(text.len(), |found| heading.end() + found.start()).min(note_start.unwrap_or(text.len()));
+        let mut inside = citations.iter().filter(|citation| heading.end() <= citation.full_span.start
+            && citation.full_span.start < limit).collect::<Vec<_>>();
+        inside.sort_by_key(|citation| citation.full_span.start);
+        let mut cursor = heading.end();
+        for citation in inside {
+            if citation.full_span.start > cursor + ENTRY_GAP { break; }
+            listed.push(citation.index);
+            cursor = cursor.max(citation.full_span.end);
         }
-        heading.start()..end.min(heading_end)
-    }).collect()
+    }
+    listed
 }
 
 /// A link written after a citation and its pinpoint and introduced as where the

@@ -5094,6 +5094,41 @@
           "provenance": "Beaver-authored from the McGill Guide's online sources: the date of access or modification written after a link closes that link's citation ('<...> (last visited 1 July 2024)')."
         },
         {
+          "id": "attach.defined-term",
+          "pattern": "^(?:(?:the|hereinafter(?:\\s+the)?|hereinafter\\s+referred\\s+to\\s+as(?:\\s+the)?)\\s+)?[\"“](?<short>[^\"“”]{2,60}?)[\"”]$",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from filed Canadian briefs: a parenthetical after a citation that defines the short name the brief uses for it, in quotation marks ('(\"Century Services\")', '(the \"CCAA\")', '(hereinafter \"Fen\")'), as the McGill bracket does ('[Fen]'). metadata.rs reads it as the citation's explicit short form.",
+          "vectors": [
+            {
+              "input": "\"Ash Mills\"",
+              "groups": {
+                "short": "Ash Mills"
+              }
+            },
+            {
+              "input": "the “CCAA”",
+              "groups": {
+                "short": "CCAA"
+              }
+            },
+            {
+              "input": "hereinafter \"Fen\"",
+              "groups": {
+                "short": "Fen"
+              }
+            },
+            {
+              "input": "emphasis added",
+              "groups": null
+            },
+            {
+              "input": "“the court held that the stay should be lifted”, citing an earlier decision",
+              "groups": null
+            }
+          ]
+        },
+        {
           "id": "attach.commented-subject",
           "pattern": ",?\\s*\\b(?:case\\s+comment\\s+on|comment\\s+on|note\\s+on|book\\s+review\\s+of)\\s*$",
           "flags": "i",
@@ -6690,11 +6725,17 @@
         },
         {
           "id": "style.case-single-party",
-          "pattern": "(?m)(?<name>Renvoi\\s+(?:relatif\\s+)?[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+(?:\\s+[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+){0,15}|(?:Reference\\s+re|Renvoi\\s+relatif|In\\s+re|In\\s+the\\s+[Mm]atter\\s+of|Re)\\s+[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()\\n]{0,80}\\)|of|the|and|for|de|la|du|des|aux|en)){0,12}|[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|of|the|and|for|de|la|du|des)){0,12}\\s+\\((?:Re|Renvoi)\\))(?:,\\s*(?:1[6-9]|20)\\d{2})?\\s*,?\\s*$",
+          "pattern": "(?m)(?<name>Renvoi\\s+(?:relatif\\s+)?[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+(?:\\s+[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+){0,15}|(?:Reference\\s+re|Renvoi\\s+relatif|In\\s+re|In\\s+the\\s+[Mm]atter\\s+of|Re)\\s+[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()\\n]{0,80}\\)|of|the|and|for|de|la|du|des|aux|en|et\\s+al\\.?)){0,12}|[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|of|the|and|for|de|la|du|des)){0,12}\\s+\\((?:Re|Renvoi)\\))(?:,\\s*(?:1[6-9]|20)\\d{2})?\\s*,?\\s*$",
           "flags": "",
           "canonical": {},
-          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_RE_STYLE; native Rust regex preserved verbatim. Beaver-authored addition: the style whose marker follows the name, 'Moore (Re)', 'Harrow Fen Estate (Re) (2028) ABQB 3104'. French Renvoi headings also accept sentence-case subject words.",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_RE_STYLE; native Rust regex preserved verbatim. Beaver-authored addition: the style whose marker follows the name, 'Moore (Re)', 'Harrow Fen Estate (Re) (2028) ABQB 3104'. French Renvoi headings also accept sentence-case subject words. Beaver-authored: a matter of several companies ends 'et al' ('Re Nortel Networks Corporation et al').",
           "vectors": [
+            {
+              "input": "Re Fen Networks Corporation et al, ",
+              "groups": {
+                "name": "Re Fen Networks Corporation et al"
+              }
+            },
             {
               "input": "Re Moore, ",
               "groups": {

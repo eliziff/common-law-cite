@@ -74,6 +74,7 @@ pub(crate) fn clean_pin_cite(text: &str, range: Range<usize>) -> Option<crate::S
 }
 static SHORT_FORM_SUFFIX: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("shortform.splitter"));
+static DEFINED_TERM: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("attach.defined-term"));
 static SOURCE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("parenthetical.source"));
 static REMARK: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("parenthetical.remark"));
@@ -505,6 +506,15 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
                 });
                 cursor = cursor.max(start + captures.get(0).unwrap().end());
             }
+        }
+    }
+    // A parenthetical that defines the short name the document uses for the citation
+    // ("(“Century Services”)", "(the “CCAA”)") is its explicit short form, as a bracket is.
+    if result.short.is_none() {
+        if let Some((short, span)) = result.parentheticals.iter().find_map(|part| DEFINED_TERM.captures(part.content.trim())
+            .and_then(|captures| captures.name("short")).map(|short| (short.as_str().trim().to_owned(), part.span.clone()))) {
+            result.short = Some(short);
+            result.short_span = Some(span);
         }
     }
     result.end = cursor.max(result.end);

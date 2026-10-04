@@ -157,8 +157,9 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     if options.source_only { citations.retain(|citation| citation.fields.source_case_name.is_some()); }
     let mut citations = find::filter_citations(citations);
     if options.skip_authority_lists {
-        let lists = find::authority_lists(text);
-        citations.retain(|citation| !lists.iter().any(|list| list.contains(&citation.span.start)));
+        let listed = find::authority_list_citations(text, &citations, options.notes.as_deref().unwrap_or(&[]));
+        citations.retain(|citation| !listed.contains(&citation.index));
+        for (index, citation) in citations.iter_mut().enumerate() { citation.index = index; }
     }
     metadata::attach(text, &mut citations);
     for citation in &mut citations {
