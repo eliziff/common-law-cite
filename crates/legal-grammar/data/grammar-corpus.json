@@ -2690,6 +2690,33 @@
           ]
         },
         {
+          "id": "cite.ca.constitution-name",
+          "pattern": "\\b(?<title>Canadian\\s+Charter\\s+[oa]f\\s+Rights\\s+and\\s+Freedoms|Charte\\s+canadienne\\s+des\\s+droits\\s+et\\s+libert[ée]s|Loi\\s+constitutionnelle\\s+de\\s+(?:1867|1982))\\b",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored: the Charter and the French Constitution Acts cited by name alone, with or without a pinpoint ('Canadian Charter of Rights and Freedoms, s 7', 'Loi constitutionnelle de 1982, art 35'): the name is the citation; the English Constitution Acts are titled statutes already.",
+          "vectors": [
+            {
+              "input": "Canadian Charter of Rights and Freedoms, s 7",
+              "groups": {
+                "title": "Canadian Charter of Rights and Freedoms"
+              }
+            },
+            {
+              "input": "Charte canadienne des droits et libertés, art 7",
+              "groups": {
+                "title": "Charte canadienne des droits et libertés"
+              }
+            },
+            {
+              "input": "Loi constitutionnelle de 1867, art 92",
+              "groups": {
+                "title": "Loi constitutionnelle de 1867"
+              }
+            }
+          ]
+        },
+        {
           "id": "cite.parliamentary.commonwealth",
           "pattern": "\\b(?<house>HC|HL)\\s+Deb\\s+(?<sitting>\\d{1,2}\\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+\\d{4}),?\\s+vol\\.?\\s+(?<volume>\\d{1,4}),?\\s+cols?\\.?\\s+(?<column>\\d{1,5}[WS]{0,2}(?:[-–]\\d{1,5}[WS]{0,2})?)|\\b(?<au_record>Parliamentary\\s+Debates),\\s*(?<chamber>House\\s+of\\s+Representatives|Senate|Legislative\\s+(?:Assembly|Council)|House\\s+of\\s+Assembly),\\s*(?<au_sitting>\\d{1,2}\\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+\\d{4})|\\b(?<nz_volume>\\d{1,4})\\s+(?<nz_record>NZPD)\\s+(?<nz_page>\\d{1,6})\\b|\\((?<command_series>Cm|Cmnd|Cmd|Cd)\\s+(?<command_number>\\d{1,5})(?:,\\s*(?<command_year>\\d{4}(?:-\\d{2,4})?))?\\)|\\b(?<paper_house>HC|HL)\\s+(?:Paper\\s+)?(?<paper_number>\\d{1,4}(?:-[IVX]+)?)\\s+\\((?<paper_session>\\d{4}[-–]\\d{2,4})\\)",
           "flags": "",

@@ -197,6 +197,7 @@ static SECONDARY_SOURCES: LazyLock<Vec<(&'static str, &'static str, CompiledGram
     ("government", "intellectual_property_grammar", "cite.secondary.intellectual-property", EVERY),
     ("case", "court_file_grammar", "cite.ca.court-file", CANADA),
     ("statute", "code_grammar", "cite.ca.code", CANADA),
+    ("constitution", "constitution_name_grammar", "cite.ca.constitution-name", CANADA),
     ("statute", "bylaw_grammar", "cite.ca.bylaw", CANADA),
     ("court_rule", "court_rules_grammar", "cite.ca.court-rules", CANADA),
     ("parliamentary", "parliamentary_grammar", "cite.parliamentary.record", CANADA),
@@ -399,6 +400,10 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             // A file number in parentheses identifies the proceeding a sentence speaks of
             // ("the class proceeding (Court File No. T-402-19) was filed"); it cites no decision.
             found.extend(pattern.find_iter(value).flatten()
+            // The Charter's name before its enacting instrument styles that citation; it is no other.
+            .filter(|matched| *reason != "constitution_name_grammar" || !CHARTER.captures_iter(&value[matched.start()..])
+                .flatten().next().is_some_and(|captures| captures.name("title").is_some_and(|title| title.start() == 0)
+                    && captures.name("source").is_some()))
             .filter(|matched| *reason != "court_file_grammar" || !(value[..matched.start()].ends_with('(')
                 && value[matched.end()..].starts_with(')')))
             // So does one a sentence names after a word of its prose ("a Notice of Discontinuance
@@ -2107,6 +2112,14 @@ fn join_legislation(text: &str, citations: Vec<Citation>) -> Vec<Citation> {
         }
         let title_only = previous.fields.chapter.is_none() && previous.fields.series.is_none()
             && previous.pinpoints.is_empty();
+        // What a titled Act is enacted as is its source, not another authority ("Constitution Act,
+        // 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11").
+        let being = gap.trim_matches(javascript_whitespace).strip_prefix(',').map(|rest| rest.trim_start_matches(javascript_whitespace))
+            .is_some_and(|rest| matches!(rest, "being" | "constituant" | "soit"));
+        if title_only && being {
+            previous.full_span = span(text, previous.full_span.start..citation.full_span.end);
+            continue;
+        }
         if title_only && citation.style.is_none() && citation.fields.chapter.is_some()
             && gap.trim_matches(javascript_whitespace) == "," {
             citation.style = Some(previous.style.clone().unwrap_or_else(|| previous.span.clone()));

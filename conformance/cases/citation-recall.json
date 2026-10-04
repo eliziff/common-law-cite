@@ -2041,6 +2041,152 @@
           }
         ]
       }
+    },
+    {
+      "name": "statute/charter-by-its-name-alone-with-a-pinpoint",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Canadian Charter of Rights and Freedoms, s 7",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "authority": "constitution",
+            "key": "3:statute:ca:-:1982:11",
+            "span": {
+              "text": "Canadian Charter of Rights and Freedoms"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "statute/charte-by-its-french-name-alone",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Charte canadienne des droits et libert\u00e9s, art 7",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "authority": "constitution",
+            "key": "3:statute:ca:-:1982:11"
+          }
+        ]
+      }
+    },
+    {
+      "name": "statute/constitution-act-1982-by-name-with-a-pinpoint",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Constitution Act, 1982, s 35",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:statute:ca:-:1982:11"
+          }
+        ]
+      }
+    },
+    {
+      "name": "statute/constitution-act-1982-with-what-it-is-enacted-as-is-one-citation",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:statute:ca:-:1982:11",
+            "span": {
+              "text": "Constitution Act, 1982"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "statute/constitution-act-1867-by-name-with-a-pinpoint",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Constitution Act, 1867, s 92(14)",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:statute:-:-:30-31-vict:3"
+          }
+        ]
+      }
+    },
+    {
+      "name": "statute/loi-constitutionnelle-de-1867-by-name",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Loi constitutionnelle de 1867, art 92",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "authority": "constitution",
+            "key": "3:statute:-:-:30-31-vict:3"
+          }
+        ]
+      }
+    },
+    {
+      "name": "statute/british-north-america-act-is-the-constitution-act-1867",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "British North America Act, 1867, s 91",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:statute:-:-:30-31-vict:3"
+          }
+        ]
+      }
+    },
+    {
+      "name": "statute/charter-full-form-is-one-citation-after-its-name-in-prose",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "The Canadian Charter of Rights and Freedoms protects it: Canadian Charter of Rights and Freedoms, s 8, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:statute:ca:-:1982:11",
+            "span": {
+              "text": "Canadian Charter of Rights and Freedoms"
+            }
+          },
+          {
+            "key": "3:statute:ca:-:1982:11",
+            "style": {
+              "text": "Canadian Charter of Rights and Freedoms"
+            }
+          }
+        ]
+      }
     }
   ]
 }

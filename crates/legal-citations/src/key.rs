@@ -112,6 +112,14 @@ pub fn key_in(citation: &Citation, registry: &Registry) -> Option<String> {
     if citation.is_ambiguous() {
         return None;
     }
+    // The Constitution Acts and the Charter are known by their names, whatever chapter is written.
+    if citation.authority.is_legislation() {
+        let title = citation.style.as_ref().map(|style| style.text.as_str())
+            .or(citation.fields.instrument_title.as_deref()).unwrap_or(&citation.span.text);
+        if let Some(key) = named_constitution(title) {
+            return Some(format!("{KEY_VERSION}:{key}"));
+        }
+    }
     let parts = match citation.format? {
         Format::Neutral => neutral(citation, registry)?,
         Format::Reporter if citation.authority == Authority::Journal => journal(citation, registry)?,
@@ -172,7 +180,47 @@ pub fn key_for_text(text: &str) -> Result<String, KeyError> {
         ..Default::default()
     };
     let citations = crate::extract(text, &options);
-    single_key(&citations)
+    match single_key(&citations) {
+        // The Charter by its short name alone, with a pinpoint ("Charter, s 8", "s 7 of the Charter").
+        Err(KeyError::NoCitation) if charter_short_name(text) => Ok(format!("{KEY_VERSION}:{CHARTER_KEY}")),
+        result => result,
+    }
+}
+
+const CHARTER_KEY: &str = "statute:ca:-:1982:11";
+const CONSTITUTION_1867_KEY: &str = "statute:-:-:30-31-vict:3";
+
+/// The key of a constitutional instrument named by its title, English or French: the Charter and the
+/// Constitution Act, 1982 are chapter 11 of the Canada Act 1982; the Constitution Act, 1867 (the British
+/// North America Act, 1867) is 30 & 31 Vict, c 3.
+fn named_constitution(title: &str) -> Option<&'static str> {
+    let folded = title.nfkc().collect::<String>().to_lowercase().replace('’', "'");
+    let words = folded.split(|c: char| !c.is_alphanumeric() && c != '\'')
+        .filter(|word| !word.is_empty()).collect::<Vec<_>>();
+    let words = match words.as_slice() {
+        ["the" | "la" | "le", rest @ ..] => rest,
+        all => all,
+    };
+    // A parenthetical jurisdiction after the title ("Constitution Act, 1867 (UK)") is no part of it.
+    let words = words.strip_suffix(&["uk"][..]).unwrap_or(words);
+    match words {
+        ["canadian", "charter", "of" | "af", "rights", "and", "freedoms"]
+        | ["charte", "canadienne", "des", "droits", "et", "libertés" | "libertes"]
+        | ["constitution", "act", "1982"] | ["loi", "constitutionnelle", "de", "1982"] => Some(CHARTER_KEY),
+        ["constitution", "act", "1867"] | ["british", "north", "america", "act", "1867"]
+        | ["loi", "constitutionnelle", "de", "1867"]
+        | ["acte", "de", "l'amérique" | "l'amerique", "du", "nord", "britannique", "1867"] => Some(CONSTITUTION_1867_KEY),
+        _ => None,
+    }
+}
+
+/// Whether `text` is the Charter's short name and a pinpoint, and nothing else.
+fn charter_short_name(text: &str) -> bool {
+    let words = text.split(|c: char| !c.is_alphanumeric()).filter(|word| !word.is_empty()).collect::<Vec<_>>();
+    words.iter().any(|word| matches!(*word, "Charter" | "Charte")) && words.iter().all(|word| matches!(*word,
+        "Charter" | "Charte" | "s" | "ss" | "art" | "arts" | "section" | "sections" | "article" | "articles"
+        | "of" | "the" | "la" | "de" | "and" | "et" | "to" | "à")
+        || word.chars().next().is_some_and(|c| c.is_ascii_digit()) && word.len() <= 6)
 }
 
 pub(crate) fn single_key(citations: &[Citation]) -> Result<String, KeyError> {
