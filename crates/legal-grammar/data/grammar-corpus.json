@@ -936,10 +936,10 @@
         },
         {
           "id": "cite.secondary.dated",
-          "pattern": "(?:(?<=[\\\"”] )|(?<=[\\\"”], )|(?<=[\\\"”]))\\((?:(?:last\\s+(?:modified|updated|revised|visited)|accessed|updated|posted)\\s+)?(?:\\d{1,2}\\s+)?(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\\.?\\s+(?:\\d{1,2},?\\s+)?(?:1[6-9]|20)\\d{2}\\)(?!\\s*,?\\s*online\\b)",
+          "pattern": "(?:(?<=[\\\"”] )|(?<=[\\\"”], )|(?<=[\\\"”]))\\((?:(?:(?:last\\s+(?:modified|updated|revised|visited)|accessed|updated|posted)\\s+)?(?:\\d{1,2}\\s+)?(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\\.?\\s+(?:\\d{1,2},?\\s+)?(?:1[6-9]|20)\\d{2}\\)(?!\\s*,?\\s*online\\b)(?:,?\\s+(?:[Tt]he\\s+)?[A-Z](?:[\\w&'’-]|\\.(?=[\\w&'’-]))*(?:\\s+(?:[A-Z](?:[\\w&'’-]|\\.(?=[\\w&'’-]))*|of|and|&|the|de|du|la|le|des|for|on)){0,6}(?=\\s*(?:[,.;:(\\[]|$)))?|(?:1[6-9]|20)\\d{2}\\)\\s+(?:[Tt]he\\s+)?[A-Z](?:[\\w&'’-]|\\.(?=[\\w&'’-]))*(?:\\s+(?:[A-Z](?:[\\w&'’-]|\\.(?=[\\w&'’-]))*|of|and|&|the|de|du|la|le|des|for|on)){0,6}(?=\\s*(?:[,.;:(\\[]|$)))",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored from the McGill Guide's secondary-source forms (unpublished manuscripts, theses, papers delivered, news and dated online works, international documents, encyclopedias and dictionaries). A dated work after its quoted title: a news release, post or other online or unpublished document with its date. A link that follows makes the citation instead."
+          "provenance": "Beaver-authored from the McGill Guide's secondary-source forms (unpublished manuscripts, theses, papers delivered, news and dated online works, international documents, encyclopedias and dictionaries). A dated work after its quoted title: a news release, post or other online or unpublished document with its date. A link that follows makes the citation instead. Beaver-authored: the publication an author names after the date belongs to the work (“Title” (3 May 2017) City News; “Title”, (12 Feb 2020) Daily Courier, online: <...>), and a periodical cited by year alone names its publication after the year (“Title” (2017) Trade Gazette)."
         },
         {
           "id": "cite.secondary.news",
@@ -2450,10 +2450,10 @@
         },
         {
           "id": "cite.ca.charter",
-          "pattern": "(?<title>Canadian\\s+Charter\\s+of\\s+Rights\\s+and\\s+Freedoms|Charte\\s+canadienne\\s+des\\s+droits\\s+et\\s+libertés)(?<pin>,\\s*(?:ss?|arts?)\\.?\\s*\\d[\\dA-Za-z().]*(?:\\s*(?:[-–]|,|and|et|à|to)\\s*\\d[\\dA-Za-z().]*)*)?\\s*,\\s*(?<source>(?:Part\\s+I\\s+of\\s+the\\s+Constitution\\s+Act,\\s*1982|partie\\s+I\\s+de\\s+la\\s+Loi\\s+constitutionnelle\\s+de\\s+1982)\\s*,\\s*(?:being\\s+Schedule\\s+B\\s+to\\s+the\\s+Canada\\s+Act\\s+1982|constituant\\s+l['’]annexe\\s+B\\s+de\\s+la\\s+Loi\\s+de\\s+1982\\s+sur\\s+le\\s+Canada)\\s*\\((?:UK|U\\.K\\.|R-U|R\\.-U\\.)\\)\\s*,\\s*1982\\s*,\\s*c\\.?\\s*11)",
+          "pattern": "(?:(?<title>Canadian\\s+Charter\\s+of\\s+Rights\\s+and\\s+Freedoms|Charte\\s+canadienne\\s+des\\s+droits\\s+et\\s+libertés)(?<pin>,\\s*(?:ss?|arts?)\\.?\\s*\\d[\\dA-Za-z().]*(?:\\s*(?:[-–]|,|and|et|à|to)\\s*\\d[\\dA-Za-z().]*)*)?\\s*,\\s*)?(?<source>(?:Part\\s+I\\s+of\\s+the\\s+Constitution\\s+Act,\\s*1982|partie\\s+I\\s+de\\s+la\\s+Loi\\s+constitutionnelle\\s+de\\s+1982)\\s*,\\s*(?:being\\s+Schedule\\s+B\\s+to\\s+the\\s+Canada\\s+Act\\s+1982|constituant\\s+l['’]annexe\\s+B\\s+de\\s+la\\s+Loi\\s+de\\s+1982\\s+sur\\s+le\\s+Canada)\\s*\\((?:UK|U\\.K\\.|R-U|R\\.-U\\.)\\)\\s*,\\s*1982\\s*,\\s*c\\.?\\s*11)",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored for the legal-citations extraction stages. The McGill full citation of the Charter, in which the pinpoint sits between the title and the enacting instrument ('Canadian Charter of Rights and Freedoms, s 7, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11'), English and French. The named groups keep the title, the pinpoint and the source apart so the pinpoint is never swallowed into the core; the Constitution Act inside the source is not a second authority.",
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The McGill full citation of the Charter, in which the pinpoint sits between the title and the enacting instrument ('Canadian Charter of Rights and Freedoms, s 7, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11'), English and French. The named groups keep the title, the pinpoint and the source apart so the pinpoint is never swallowed into the core; the Constitution Act inside the source is not a second authority. Beaver-authored: a brief that names the Charter in its text cites only the enacting instrument in its note ('Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11 [Charter]'), so the title and pinpoint are optional; the source alone is the citation's core and the title before it styles it.",
           "vectors": [
             {
               "input": "Canadian Charter of Rights and Freedoms, s 7, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11.",
@@ -2475,6 +2475,13 @@
               "groups": {
                 "title": "Charte canadienne des droits et libertés",
                 "pin": ", art 7"
+              }
+            },
+            {
+              "input": "Part I of the Constitution Act,1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11 [Charter].",
+              "groups": {
+                "title": null,
+                "source": "Part I of the Constitution Act,1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11"
               }
             },
             {
@@ -6372,10 +6379,10 @@
         },
         {
           "id": "style.case-lead-in",
-          "pattern": "^(?:(?:\\d{1,4}\\.|\\[\\d{1,4}\\]|\\((?:\\d{1,4}|[{{lc}}]{1,4})\\))\\s+)?(?:In\\s+)?",
+          "pattern": "^(?:(?:\\d{1,4}\\.|\\[\\d{1,4}\\]|\\((?:\\d{1,4}|[{{lc}}]{1,4})\\))\\s+)?(?:(?:In|As\\s+(?:for|in|with)|Like|Unlike|Following)\\s+)?",
           "flags": "",
           "canonical": {},
-          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_LEAD_IN, a numbered paragraph's own label ('12.', '[12]', '(a)') and a leading 'In' in front of the first party.",
+          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_LEAD_IN, a numbered paragraph's own label ('12.', '[12]', '(a)') and a leading 'In' in front of the first party. Beaver-authored: the sentence openers As for, As in, As with, Like, Unlike and Following are lead-ins too (As for Fell & Moss, supra note 3).",
           "vectors": [
             {
               "input": "1. In R v Oakes",
@@ -6383,6 +6390,10 @@
             },
             {
               "input": "(b) In Smith v Jones",
+              "groups": {}
+            },
+            {
+              "input": "As for Fell & Moss",
               "groups": {}
             }
           ]
@@ -6507,10 +6518,10 @@
         },
         {
           "id": "style.quoted-work",
-          "pattern": "(?s)(?<work>[\\p{Lu}][\\p{L}\\p{M}\\p{N}.'’&-]*(?:,?\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'’&-]*|&|et|al|eds?|de|la|du|des|van|von|di|le|del|della|da|dos|das|der|of|the|and|for|in|on)){0,15},?\\s*(?:[\"“](?:[^\"“”\\n]{1,300}(?:“[^\"“”\\n]{1,200}”[^\"“”\\n]{0,300})?|“[^\"“”\\n]{1,200}”[^\"“”\\n]{0,300})(?:”[^\"“”\\n]{1,300})?[\"”]{1,2}|[‘'][^\\n]{1,300}[’'])[^\"“”\\n]{0,120})\\s*$",
+          "pattern": "(?s)(?<work>[\\p{Lu}][\\p{L}\\p{M}\\p{N}.'’&-]*(?:,?\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'’&-]*|&|et|al|eds?|de|la|du|des|van|von|di|le|del|della|da|dos|das|der|of|the|and|for|in|on)){0,15},?\\s*(?:[\"“](?:[^\"“”]{1,300}(?:“[^\"“”]{1,200}”[^\"“”]{0,300})?|“[^\"“”]{1,200}”[^\"“”]{0,300})(?:”[^\"“”]{1,300})?[\"”]{1,2}|[‘'][^\\n]{1,300}[’']|[\"“][^\"“”]{1,300})[^\"“”\\n]{0,120})\\s*$",
           "flags": "",
           "canonical": {},
-          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::QUOTED_WORK, copied verbatim with native Rust regex semantics. Changed in two places: the title may hold one nested quotation written with the same double marks, opening it (““A”: B”), closed inside it (“A “B” C”) or with its opening mark merged into the title's (“A”: B”), so the author and title stay with the publication block, and it may close on a straight mark doubled by a curly one; and an author's name may hold the particles del, della, da, dos, das and der (Ana del Lago). Beaver-authored from OSCOLA (4th ed, official PDF) and AGLC4 (University of Queensland Library guide). Titles in single quotation marks, as OSCOLA and the AGLC write them.",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::QUOTED_WORK, copied verbatim with native Rust regex semantics. Changed in two places: the title may hold one nested quotation written with the same double marks, opening it (““A”: B”), closed inside it (“A “B” C”) or with its opening mark merged into the title's (“A”: B”), so the author and title stay with the publication block, and it may close on a straight mark doubled by a curly one; and an author's name may hold the particles del, della, da, dos, das and der (Ana del Lago). Beaver-authored from OSCOLA (4th ed, official PDF) and AGLC4 (University of Queensland Library guide). Titles in single quotation marks, as OSCOLA and the AGLC write them. Beaver-authored: a quoted title may wrap across lines, as a PDF note's does, and a title whose closing quotation mark the author left out runs to the publication ('“What is Right with Section 33.1, (2021)').",
           "vectors": [
             {
               "input": "Jane Doe, “A Title; With a Subtitle” ",
@@ -6567,10 +6578,10 @@
         },
         {
           "id": "style.quoted-title",
-          "pattern": "^\\s*(?<work>(?:[\"“](?:[^\"“”\\n]{1,300}(?:“[^\"“”\\n]{1,200}”[^\"“”\\n]{0,300})?|“[^\"“”\\n]{1,200}”[^\"“”\\n]{0,300})(?:”[^\"“”\\n]{1,300})?[\"”]{1,2}|[‘'][^\\n]{1,300}[’'])[^\"“”\\n]{0,120})\\s*$",
+          "pattern": "^\\s*(?<work>(?:[\"“](?:[^\"“”]{1,300}(?:“[^\"“”]{1,200}”[^\"“”]{0,300})?|“[^\"“”]{1,200}”[^\"“”]{0,300})(?:”[^\"“”]{1,300})?[\"”]{1,2}|[‘'][^\\n]{1,300}[’']|[\"“][^\"“”]{1,300})[^\"“”\\n]{0,120})\\s*$",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored sibling of style.quoted-work for an unsigned work (a news item, an editorial note) that opens with its quoted title: “Title” Publisher (date), online: <...>. find.rs matches it only from where the work begins, past the floor, a note number and any signal, so a quotation in running text before a citation is never styled as a work. Beaver-authored from OSCOLA (4th ed, official PDF) and AGLC4 (University of Queensland Library guide). Titles in single quotation marks.",
+          "provenance": "Beaver-authored sibling of style.quoted-work for an unsigned work (a news item, an editorial note) that opens with its quoted title: “Title” Publisher (date), online: <...>. find.rs matches it only from where the work begins, past the floor, a note number and any signal, so a quotation in running text before a citation is never styled as a work. Beaver-authored from OSCOLA (4th ed, official PDF) and AGLC4 (University of Queensland Library guide). Titles in single quotation marks. Beaver-authored: a quoted title may wrap across lines, as a PDF note's does, and a title whose closing quotation mark the author left out runs to the publication ('“What is Right with Section 33.1, (2021)').",
           "rust": true,
           "vectors": [
             {

@@ -2270,16 +2270,24 @@
     "citations": [
      {
       "form": "full",
-      "authority": "webpage",
+      "authority": "journal",
       "span": {
-       "start": 59,
-       "end": 90,
-       "text": "https://rivernews.example/ferry"
+       "text": "(12 Feb 2030) River News"
+      },
+      "fullSpan": {
+       "text": "Ana Lee, “Ferry Tales”, (12 Feb 2030) River News, online: <https://rivernews.example/ferry>"
+      }
+     },
+     {
+      "form": "full",
+      "authority": "journal",
+      "span": {
+       "text": "(7 Sept. 2031) Fen Wire"
       }
      }
     ]
    },
-   "note": "A day, month and year is a date, never a citation with a month for its reporter."
+   "note": "A date is never a reporter: each dated news item is a citation of its publication, its link with it."
   },
   {
    "name": "date/registered-reporter-written-as-registered",
@@ -2546,16 +2554,20 @@
     "citations": [
      {
       "form": "full",
-      "authority": "webpage",
+      "authority": "journal",
+      "span": {
+       "text": "Fen Wire (30 March 2031)"
+      },
       "style": {
-       "start": 0,
-       "end": 62,
-       "text": "“Ferns Return to the Lake” Fen Wire (30 March 2031), online: <"
+       "text": "“Ferns Return to the Lake”"
+      },
+      "fullSpan": {
+       "text": "“Ferns Return to the Lake” Fen Wire (30 March 2031), online: <https://fenwire.example/ferns>"
       }
      }
     ]
    },
-   "note": "An unsigned work is styled from its quoted title."
+   "note": "An unsigned news item is styled by its quoted title alone; the words that introduce its link are not its name."
   },
   {
    "name": "case/year-in-parentheses",

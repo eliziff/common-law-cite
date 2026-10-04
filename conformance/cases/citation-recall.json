@@ -326,6 +326,213 @@
           }
         ]
       }
+    },
+    {
+      "name": "mcgill/news-publication-after-date",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ola Fenn, \u201cMoss Notes\u201d (7 Sept. 2031) Fen Wire.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "journal",
+            "span": {
+              "text": "(7 Sept. 2031) Fen Wire"
+            },
+            "fullSpan": {
+              "text": "Ola Fenn, \u201cMoss Notes\u201d (7 Sept. 2031) Fen Wire"
+            },
+            "style": {
+              "text": "Ola Fenn, \u201cMoss Notes\u201d"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/news-publication-and-link-after-date",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ana Lee, \u201cFerry Tales\u201d, (12 Feb 2030) River News, online: <rivernews.example/ferry>.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "journal",
+            "span": {
+              "text": "(12 Feb 2030) River News"
+            },
+            "fullSpan": {
+              "text": "Ana Lee, \u201cFerry Tales\u201d, (12 Feb 2030) River News, online: <rivernews.example/ferry>"
+            },
+            "style": {
+              "text": "Ana Lee, \u201cFerry Tales\u201d"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/periodical-cited-by-year",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ida Moor, \u201cDust and Doors\u201d (2033) Harbour Gazette (\u201cthe doors were shut\u201d).",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "journal",
+            "span": {
+              "text": "(2033) Harbour Gazette"
+            },
+            "fullSpan": {
+              "text": "Ida Moor, \u201cDust and Doors\u201d (2033) Harbour Gazette (\u201cthe doors were shut\u201d)"
+            },
+            "style": {
+              "text": "Ida Moor, \u201cDust and Doors\u201d"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/charter-instrument-without-title",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11 [Charter].",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "constitution",
+            "span": {
+              "text": "Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11"
+            },
+            "fullSpan": {
+              "text": "Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11 [Charter]"
+            },
+            "style": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/charter-title-and-pinpoint",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Canadian Charter of Rights and Freedoms, s 8, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "constitution",
+            "span": {
+              "text": "Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11"
+            },
+            "fullSpan": {
+              "text": "Canadian Charter of Rights and Freedoms, s 8, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11"
+            },
+            "style": {
+              "text": "Canadian Charter of Rights and Freedoms"
+            },
+            "pinpoints": [
+              {
+                "kind": "section",
+                "first": "8"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/title-without-closing-quotation-mark",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Mark Fell & Cara Moss, \"What is Right with Section 9, (2031), 25 Can Crim L Rev 255.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "journal",
+            "span": {
+              "text": "(2031), 25 Can Crim L Rev 255"
+            },
+            "fullSpan": {
+              "text": "Mark Fell & Cara Moss, \"What is Right with Section 9, (2031), 25 Can Crim L Rev 255"
+            },
+            "style": {
+              "text": "Mark Fell & Cara Moss, \"What is Right with Section 9"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/supra-after-sentence-opener",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "As for Fell & Moss, supra note 3 at 260, the argument fails.",
+      "options": {
+        "styles": [
+          "mcgill"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "supra",
+            "authority": "unknown",
+            "span": {
+              "text": "supra note 3"
+            },
+            "fullSpan": {
+              "text": "Fell & Moss, supra note 3 at 260"
+            },
+            "style": {
+              "text": "Fell & Moss"
+            },
+            "antecedent": null,
+            "pinpoints": [
+              {
+                "kind": "page",
+                "first": "260"
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

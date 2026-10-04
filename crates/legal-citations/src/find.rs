@@ -229,6 +229,7 @@ static SECONDARY_SOURCES: LazyLock<Vec<(&'static str, &'static str, CompiledGram
     ("document", "archival_grammar", "cite.secondary.archival", EVERY),
     ("book", "religious_text_grammar", "cite.secondary.religious", EVERY),
 ].into_iter().map(|(kind, reason, id, guides)| (kind, reason, backtracking(id), guides)).collect());
+static CHARTER: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("cite.ca.charter"));
 static ACCESS_DATE: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("attach.access-date"));
 static SUPRA_AFTER: LazyLock<Regex> = LazyLock::new(|| linear("ref.supra-follows"));
 static GOVERNMENT_AUTHOR: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("style.government-author"));
@@ -350,6 +351,11 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             found.extend(pattern.find_iter(value).flatten()
             .map(|matched| Anchor::new(matched.start()..matched.end(), (*kind, *reason))));
         }
+    }
+    // The Charter's enacting instrument is its core; the title before it styles it.
+    if styles.is_none_or(|styles| styles.iter().any(|style| CANADA.contains(style))) {
+        found.extend(CHARTER.captures_iter(value).flatten().filter_map(|captures| captures.name("source"))
+            .map(|source| Anchor::new(source.start()..source.end(), ("statute", "charter_grammar"))));
     }
     found.extend(JOURNAL_ARTICLE.find_iter(value).flatten().map(|matched| {
         Anchor::new(matched.start()..matched.end(), ("journal", "article_grammar"))
@@ -1050,7 +1056,13 @@ fn full_citation(
         .flatten()
         .map(|matched| subdivision_start..subdivision_start + matched.end());
     let core_text = &text[core.clone()];
+    // The Charter's title and the pinpoint written between it and its enacting instrument.
+    let charter = (kind_reason == "charter_grammar").then(|| CHARTER.captures_iter(&text[previous_end..core.end]).flatten()
+        .filter(|captures| captures.name("source").is_some_and(|source| previous_end + source.end() == core.end))
+        .last().and_then(|captures| captures.name("title").map(|title| (previous_end + title.start(), previous_end + title.end(),
+            captures.name("pin").map(|pin| previous_end + pin.start()..previous_end + pin.end()))))).flatten();
     let styled_start = match kind {
+        _ if charter.is_some() => charter.as_ref().unwrap().0,
         "case" => case_style_start(text, core.start, previous_end),
         "statute" => statute_style_start(text, core.start, previous_end),
         "treaty" => treaty_style_start(text, core.start, previous_end),
@@ -1098,6 +1110,14 @@ fn full_citation(
                     .rfind(" at ").map(|at| (styled_start + at + 1, core.start))).flatten()),
         },
     ) };
+    if let Some(pin) = charter.as_ref().and_then(|(_, _, pin)| pin.clone()) {
+        let written = text[pin.clone()].trim_start_matches(|character: char| character == ',' || javascript_whitespace(character));
+        let start = pin.end - written.len();
+        let first = written.trim_start_matches(|character: char| !character.is_ascii_digit());
+        let first = first.split(|character: char| !(character.is_ascii_alphanumeric() || character == '.')).next().unwrap_or("");
+        tail.pinpoints.insert(0, Pinpoint { kind: PinpointKind::Section, first: first.to_owned(),
+            span: span(text, start..pin.end), last: None });
+    }
     if let Some(range) = subdivision {
         tail.pinpoints.insert(
             0,
@@ -1109,7 +1129,14 @@ fn full_citation(
             },
         );
     }
-    let style_end = trim_style_end(text, styled_start, core.start);
+    // An online work's name and title end where the words that introduce its link, or its
+    // pinpoint, begin: “Title” (22 October 2024) online: [...], “Title” (2022) at 2, 13 online: <...>.
+    let name_end = if let Some((_, title_end, _)) = &charter { *title_end } else if kind_reason == "online_grammar" {
+        let lead = link_lead_start(text, core.start, styled_start);
+        text[styled_start..lead].rfind(" at ").filter(|at| text[styled_start + at + 4..].starts_with(|c: char| c.is_ascii_digit()))
+            .map_or(lead, |at| styled_start + at)
+    } else { core.start };
+    let style_end = trim_style_end(text, styled_start, name_end);
     let observed_name = text[styled_start..style_end].trim_matches(|character: char| {
         javascript_whitespace(character) || ",;:.".contains(character)
     });

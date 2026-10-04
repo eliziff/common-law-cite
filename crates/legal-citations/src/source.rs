@@ -595,13 +595,17 @@ fn embedded_source(text: &str, extended_us: bool) -> bool {
     false
 }
 
+/// A link without the brackets that enclose it or the punctuation after it ("[perma.cc/KN7T-FJ4C].").
+fn bare_link(found: &str) -> &str {
+    found.trim_matches(['<', '>', '[', ']', '.', ',', ';', ' '])
+}
+
 pub fn extract_fields(part: &SourcePart, extended_us: bool) -> SourceFields {
     let text = part.text.trim();
     let kind = kind(text, &part.anchors, extended_us);
     let styled = strip_signals(text);
     let (fragments, pages) = pinpoints(&styled, kind, extended_us);
-    let link = URL.find(text).expect("source URL").map_or("other", |found|
-        found.as_str().trim_matches(['<', '>', '.', ',', ';', ' ']));
+    let link = URL.find(text).expect("source URL").map_or("other", |found| bare_link(found.as_str()));
     let mut reasons = Vec::new();
     if embedded_source(&styled, extended_us) { reasons.push("embedded_second_source"); }
     if styled.is_empty() { reasons.push("missing_citation_surface"); }
@@ -643,8 +647,7 @@ pub struct ReferencePart { pub part: SourcePart, pub references: Vec<Reference> 
 pub fn references(parts: &[SourcePart], citations: Option<&[crate::Citation]>, kinds: Option<&[crate::Authority]>,
     styles: Option<&[crate::CitationStyle]>, measure: impl Fn(&str) -> usize) -> Vec<ReferencePart> {
     use crate::Authority;
-    let link_in = |text: &str| URL.find(text).expect("source URL")
-        .map(|found| found.as_str().trim_matches(['<', '>', '.', ',', ';', ' ']).to_owned());
+    let link_in = |text: &str| URL.find(text).expect("source URL").map(|found| bare_link(found.as_str()).to_owned());
     parts.iter().filter_map(|part| {
         let at = |byte: usize| part.start + measure(&part.text[..byte]);
         let cited = |citation: &crate::Citation, start, end, index| Reference { start, end,
