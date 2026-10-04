@@ -841,6 +841,18 @@ impl<'a> Resolver<'a> {
         let pool = registry.iter().filter(|entry| entry.target.as_deref()
             .and_then(|target| self.authority_for_target(target)).is_none_or(|authority| allowed.contains(&authority)))
             .cloned().collect::<Vec<_>>();
+        // A reference written word for word as one earlier citation's own name or bracketed short
+        // form ("U.S. Steel S.C." for "… 2015 ONSC 5103 [U.S. Steel S.C.]") names it, though
+        // another citation shares some of its words ("U.S. Steel Canada Inc. (Re)").
+        if lsp_reference {
+            let hint_words = words(hint);
+            let mut exact = candidates.iter().filter(|(_, other)| candidate_names(&self.citations[*other]).iter()
+                .any(|name| words(name) == hint_words)).map(|(authority, _)| *authority).collect::<Vec<_>>();
+            exact.dedup();
+            if !hint_words.is_empty() && !is_crown(&hint_words) {
+                if let [authority] = exact.as_slice() { return (Some(*authority), "name_only"); }
+            }
+        }
         let (resource, reason) = short_forms::resolve_registry_hint("", hint, &pool);
         if let Some(authority) = self.authority_for_target(&resource) { return (Some(authority), "name_only"); }
         if reason != "abstain_no_match" || !lsp_reference {

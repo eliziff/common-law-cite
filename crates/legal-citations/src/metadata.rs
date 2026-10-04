@@ -334,6 +334,12 @@ fn explicit_short_form(text: &str, start: usize, limit: usize) -> Option<(String
     if short.chars().all(|character| character.is_ascii_digit()) || EDITORIAL.is_match(short).unwrap_or(false) {
         return None;
     }
+    // A book's tab ("[TAB 2]", "[BOA TAB 1]", "[Monitor's BOA, Tab 16]") says where the authority
+    // is filed; it names nothing.
+    let words = short.split(|character: char| !character.is_alphanumeric()).collect::<Vec<_>>();
+    if words.windows(2).any(|pair| pair[0].eq_ignore_ascii_case("tab") && pair[1].chars().next().is_some_and(|c| c.is_ascii_digit())) {
+        return None;
+    }
     Some((short.to_owned(), start + end))
 }
 

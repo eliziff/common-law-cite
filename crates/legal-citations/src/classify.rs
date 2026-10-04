@@ -807,7 +807,7 @@ pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
             let captures = whole(&COURT_FILE, core)?;
             let mut reading = Reading::new(Authority::Case, Some(Format::Docket), "court_file_grammar");
             reading.fields.docket = group(&captures, "docket").or_else(|| group(&captures, "commercial_docket"))
-                .or_else(|| group(&captures, "decision"));
+                .or_else(|| group(&captures, "decision")).or_else(|| group(&captures, "order_docket"));
             reading.jurisdiction = Some("ca".to_owned());
             return Some(reading);
         }
