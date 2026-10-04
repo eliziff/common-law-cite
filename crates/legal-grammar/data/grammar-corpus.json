@@ -1181,10 +1181,10 @@
         },
         {
           "id": "cite.us.court-rule",
-          "pattern": "\\b(?:(?:Fed|[A-Z][a-z]{1,6}|[A-Z]\\.[A-Z]\\.|Pa|Super|Sup|Ill|Iowa|Minn|Mass|Utah|UTAH)\\.?\\s*(?:(?:S\\.|Sup\\.|Super\\.|Ct\\.|Civ\\.|Crim\\.|App\\.|Evid\\.|Bankr\\.|CIV\\.)\\s*)*R\\.\\s*(?:(?:Civ|Crim|App|Evid|Bankr|Juv|CIV)\\.\\s*)?(?:P\\.\\s*)?\\d[\\w.:-]*(?:\\([\\w]+\\))*|\\b(?:[A-Z][a-z]+\\s+){1,3}Rules?\\s+(?:of\\s+Court,\\s+rule\\s+)?\\d[\\w.-]*(?:\\([\\w]+\\))*|\\b(?:MCR|SDCL|HRCP\\s+Rule|M\\.R\\.C\\.P\\.|N\\.D\\.R\\.Civ\\.P\\.|Pa\\.R\\.C\\.P\\.)\\s*\\d[\\w.:-]*(?:\\([\\w]+\\))*)",
+          "pattern": "\\b(?:(?:Fed|[A-Z][a-z]{1,6}|[A-Z]\\.[A-Z]\\.|Pa|Super|Sup|Ill|Iowa|Minn|Mass|Utah|UTAH)\\.?\\s*(?:(?:S\\.|Sup\\.|Super\\.|Ct\\.|Civ\\.|Crim\\.|App\\.|Evid\\.|Bankr\\.|CIV\\.)\\s*)*R\\.\\s*(?:(?:Civ|Crim|App|Evid|Bankr|Juv|CIV)\\.\\s*)?(?:P\\.\\s*)?\\d[\\w.:-]*(?:\\([\\w]+\\))*|\\b(?!(?:Under|Since|Citing|See|Per|By|In|As|Pursuant|Existing|Proposed|The|This|That|Its|Their|Our|Each|Every|Any|New|Former|Current)\\b)(?:[A-Z][a-z]+\\s+){1,3}Rules?\\s+(?:of\\s+Court,\\s+rule\\s+)?\\d[\\w.-]*(?:\\([\\w]+\\))*|\\b(?:MCR|SDCL|HRCP\\s+Rule|M\\.R\\.C\\.P\\.|N\\.D\\.R\\.Civ\\.P\\.|Pa\\.R\\.C\\.P\\.)\\s*\\d[\\w.:-]*(?:\\([\\w]+\\))*)",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored from the Bluebook forms in Cornell LII's Introduction to Basic Legal Citation. Federal and state rules of court ('Fed. R. Civ. P. 12(b)(6)', 'N.J. Ct. R. 3:8-3', 'Maryland Rule 4-351')."
+          "provenance": "Beaver-authored from the Bluebook forms in Cornell LII's Introduction to Basic Legal Citation. Federal and state rules of court ('Fed. R. Civ. P. 12(b)(6)', 'N.J. Ct. R. 3:8-3', 'Maryland Rule 4-351'). A sentence's own opening word ('Under Rule 6.8') is not part of the rules' name."
         },
         {
           "id": "cite.us.opinion",
