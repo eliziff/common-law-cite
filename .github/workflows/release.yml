@@ -164,8 +164,8 @@ jobs:
           registry-url: https://registry.npmjs.org
       - name: build
         run: |
-          npm install -g binaryen npm@latest
-          crates/legal-citations-wasm/build.sh
+          npm install -g npm@latest
+          crates/legal-citations-wasm/build.sh --release
       - name: test the package
         run: node conformance/run.mjs && (cd crates/legal-citations-wasm/js && node smoke.mjs)
       - name: publish

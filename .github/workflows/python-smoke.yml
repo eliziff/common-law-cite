@@ -1,0 +1,58 @@
+name: python-smoke
+
+on:
+  push:
+    branches: [main]
+    paths: &source_paths
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.cargo/config.toml'
+      - 'crates/legal-grammar/src/**'
+      - 'crates/legal-grammar/data/**'
+      - 'crates/legal-grammar/tests/**'
+      - 'crates/legal-grammar/Cargo.toml'
+      - 'crates/legal-grammar/build.rs'
+      - 'crates/legal-citations/src/**'
+      - 'crates/legal-citations/registry/**'
+      - 'crates/legal-citations/vendor/**'
+      - 'crates/legal-citations/tests/**'
+      - 'crates/legal-citations/Cargo.toml'
+      - 'crates/legal-citations/build.rs'
+      - 'crates/legal-citations-py/**'
+      - '!crates/legal-citations-py/**/*.md'
+      - '.github/workflows/python-smoke.yml'
+      - '!**/*.md'
+  pull_request:
+    paths: *source_paths
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: python-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_BUILD_JOBS: 1
+
+jobs:
+  python:
+    name: Python adapter smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Load development extension and smoke its transport
+        shell: bash
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install maturin pytest
+          maturin develop --locked -m crates/legal-citations-py/Cargo.toml
+          python -m pytest -q crates/legal-citations-py/tests

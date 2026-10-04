@@ -1,0 +1,63 @@
+name: wasm-smoke
+
+on:
+  push:
+    branches: [main]
+    paths: &source_paths
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.cargo/config.toml'
+      - 'crates/legal-grammar/src/**'
+      - 'crates/legal-grammar/data/**'
+      - 'crates/legal-grammar/tests/**'
+      - 'crates/legal-grammar/Cargo.toml'
+      - 'crates/legal-grammar/build.rs'
+      - 'crates/legal-citations/src/**'
+      - 'crates/legal-citations/registry/**'
+      - 'crates/legal-citations/vendor/**'
+      - 'crates/legal-citations/tests/**'
+      - 'crates/legal-citations/Cargo.toml'
+      - 'crates/legal-citations/build.rs'
+      - 'crates/legal-citations/bindings/**'
+      - 'crates/legal-citations-wasm/**'
+      - '!crates/legal-citations-wasm/**/*.md'
+      - '.github/workflows/wasm-smoke.yml'
+      - '!**/*.md'
+  pull_request:
+    paths: *source_paths
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wasm-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_BUILD_JOBS: 1
+
+jobs:
+  wasm:
+    name: WebAssembly adapter smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - id: bindgen
+        run: echo "version=$(sed -n 's/^wasm-bindgen = "=\(.*\)"/\1/p' crates/legal-citations-wasm/Cargo.toml)" >> "$GITHUB_OUTPUT"
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-bindgen@${{ steps.bindgen.outputs.version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: build
+        run: crates/legal-citations-wasm/build.sh
+      - name: smoke (Node)
+        working-directory: crates/legal-citations-wasm/js
+        run: node smoke.mjs

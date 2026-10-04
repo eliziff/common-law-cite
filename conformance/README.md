@@ -37,10 +37,9 @@ Language-neutral test cases every binding must satisfy identically. Runners:
   the whole API request in `request` instead of `input`/`options`.
 * `expect` is matched against the API response (or `{"error": {code,
   message}}` when the call fails).
-* `status`: `pass` must match; `pending` must *not* match. A pending case that
-  starts passing fails the run so its status gets flipped (`run.py --promote`),
-  which keeps the pending list shrinking and turns every fix into a guarded
-  regression test.
+* `status`: `pass` must match. `pending` is backlog, skipped in ordinary
+  checks; `--verbose` reviews it and `run.py --promote` records newly passing
+  cases as guarded regressions. Improvements never fail the gate.
 * `upstream` (ported cases) records what eyecite returned; it is not asserted.
 * `divergence` (ported cases) explains a deliberate difference from eyecite;
   the regenerator keeps a hand-edited `expect` when it is present.

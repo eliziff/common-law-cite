@@ -3,11 +3,19 @@
 #
 # Needs: rustup target wasm32-unknown-unknown, and wasm-bindgen-cli at the exact
 # version pinned in Cargo.toml (cargo install wasm-bindgen-cli --version <v>).
-# wasm-opt (binaryen) is used when on PATH.
 set -euo pipefail
+profile=debug
+build_args=()
+if [[ "${1:-}" == --release ]]; then
+  profile=release
+  build_args+=(--release)
+  shift
+fi
+if (( $# )); then echo "Usage: build.sh [--release]" >&2; exit 2; fi
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root="$(cd "$here/../.." && pwd)"
-target_dir="${CARGO_TARGET_DIR:-$root/target}"
+cd "$root"
+target_dir="$(cargo metadata --locked --offline --no-deps --format-version 1 | node -e 'let s="";process.stdin.on("data",c=>s+=c).on("end",()=>process.stdout.write(JSON.parse(s).target_directory.replace(/\\/g,"/")))')"
 
 pinned="$(sed -n 's/^wasm-bindgen = "=\(.*\)"/\1/p' "$here/Cargo.toml")"
 installed="$(wasm-bindgen --version | awk '{print $2}')"
@@ -17,27 +25,18 @@ if [ "$pinned" != "$installed" ]; then
   exit 1
 fi
 
-(cd "$here/js" && cargo run --manifest-path "$root/Cargo.toml" -p legal-citations --features binding-types --bin export-types)
+# Development is incremental; optimized delivery is explicit. Both reuse Cargo's target.
+cargo build --locked --manifest-path "$root/Cargo.toml" -p legal-citations-wasm \
+  --target wasm32-unknown-unknown --jobs 1 "${build_args[@]}"
 
-# Size-oriented profile for this build only; the workspace release profile
-# stays tuned for native speed.
-CARGO_PROFILE_RELEASE_OPT_LEVEL=z \
-CARGO_PROFILE_RELEASE_LTO=true \
-CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1 \
-CARGO_PROFILE_RELEASE_PANIC=abort \
-  cargo build --manifest-path "$root/Cargo.toml" -p legal-citations-wasm \
-    --target wasm32-unknown-unknown --release
-
+wasm="$target_dir/wasm32-unknown-unknown/$profile/legal_citations_wasm.wasm"
+# Bind the selected profile even when another profile's package is newer.
 rm -rf "$here/js/pkg"
-wasm-bindgen --target web --no-typescript --out-dir "$here/js/pkg" \
-  "$target_dir/wasm32-unknown-unknown/release/legal_citations_wasm.wasm"
+wasm-bindgen --target web --no-typescript --out-dir "$here/js/pkg" "$wasm"
 rm -f "$here/js/pkg/.gitignore" "$here/js/pkg/package.json"
+rm -rf "$here/js/bindings"
 
-if command -v wasm-opt >/dev/null; then
-  wasm-opt -Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext \
-    -o "$here/js/pkg/legal_citations_wasm_bg.wasm" "$here/js/pkg/legal_citations_wasm_bg.wasm"
-fi
-
+cp -R "$root/crates/legal-citations/bindings" "$here/js/bindings"
 cp "$root/LICENSE" "$here/js/LICENSE"
 cp "$root/NOTICE" "$here/js/NOTICE"
 cp "$root/README.md" "$here/js/README.md"

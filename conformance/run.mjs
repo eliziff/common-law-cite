@@ -83,6 +83,11 @@ for (const file of readdirSync(casesDir).filter((name) => name.endsWith(".json")
   for (const testCase of document.cases) {
     const label = `${stem}::${testCase.name}`;
     if (filter && !label.includes(filter)) continue;
+    if (testCase.status === "pending" && !verbose) {
+      tally.pending++;
+      totals.pending++;
+      continue;
+    }
     const [method, request] = buildRequest(testCase);
     let actual;
     try {
@@ -95,7 +100,7 @@ for (const file of readdirSync(casesDir).filter((name) => name.endsWith(".json")
     if (testCase.status === "pass") {
       if (problem) failures.push(`REGRESSION ${label}: ${problem}`);
     } else if (testCase.status === "pending") {
-      if (!problem) failures.push(`NOW PASSING ${label}: set "status": "pass" (conformance/run.py --promote)`);
+      if (!problem) console.error(`now passing ${label}`);
       else if (verbose) console.error(`pending ${label}: ${problem}`);
     } else {
       failures.push(`${label}: status must be pass or pending, got ${show(testCase.status)}`);

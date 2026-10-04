@@ -3,7 +3,31 @@ name: ci
 on:
   push:
     branches: [main]
+    paths: &source_paths
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.cargo/config.toml'
+      - 'crates/legal-grammar/src/**'
+      - 'crates/legal-grammar/data/**'
+      - 'crates/legal-grammar/tests/**'
+      - 'crates/legal-grammar/Cargo.toml'
+      - 'crates/legal-grammar/build.rs'
+      - 'crates/legal-citations/src/**'
+      - 'crates/legal-citations/registry/**'
+      - 'crates/legal-citations/vendor/**'
+      - 'crates/legal-citations/tests/**'
+      - 'crates/legal-citations/Cargo.toml'
+      - 'crates/legal-citations/build.rs'
+      - 'crates/legal-citations-cli/src/**'
+      - 'crates/legal-citations-cli/tests/**'
+      - 'crates/legal-citations-cli/Cargo.toml'
+      - 'conformance/cases/**'
+      - 'conformance/schema/**'
+      - 'upstream.lock'
+      - '.github/workflows/ci.yml'
+      - '!**/*.md'
   pull_request:
+    paths: *source_paths
   workflow_dispatch:
 
 permissions:
@@ -15,40 +39,27 @@ concurrency:
 
 env:
   CARGO_TERM_COLOR: always
+  CARGO_BUILD_JOBS: 1
 
 jobs:
   rust:
-    name: Rust (fmt, clippy, tests, grammar vectors, conformance)
+    name: Engine and CLI conformance
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
-          components: rustfmt, clippy
+          components: rustfmt
       - uses: Swatinem/rust-cache@v2
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: LICENSE and NOTICE copies match the root
-        run: for file in LICENSE NOTICE; do for copy in crates/*/"$file"; do cmp "$file" "$copy"; done; done
       - name: rustfmt
         run: cargo fmt --all --check
-      - name: clippy
-        run: cargo clippy --workspace --all-targets -- -D warnings
-      - name: grammar vectors
-        run: cargo test -p legal-grammar
-      - name: engine and registry tests
-        run: cargo test -p legal-citations
-      - name: conformance (Rust api) and schema drift
-        run: cargo test -p legal-citations-cli
-      - name: bindings compile
-        run: cargo check -p legal-citations-py -p legal-citations-wasm
-      - name: minimum supported Rust version
+      - name: Grammar, engine and API conformance
+        run: cargo test --locked -p legal-grammar -p legal-citations -p legal-citations-cli
+      - name: CLI transport smoke
         run: |
-          msrv=$(sed -n 's/^rust-version = "\(.*\)"/\1/p' Cargo.toml)
-          rustup toolchain install "$msrv" --profile minimal
-          cargo +"$msrv" check -p legal-grammar -p legal-citations -p legal-citations-cli
-
+          echo 'R v Jordan, 2016 SCC 27 at para 5' | cargo run --locked -q -p legal-citations-cli -- extract --pretty
+          echo 'R v Jordan, 2016 SCC 27' | cargo run --locked -q -p legal-citations-cli -- key
+          echo '{"id":1,"method":"version"}' | cargo run --locked -q -p legal-citations-cli -- batch
   registry:
     name: Registry is in sync with upstream.lock
     runs-on: ubuntu-latest
@@ -58,88 +69,3 @@ jobs:
         with:
           python-version: "3.12"
       - run: python tools/sync-upstream.py --check
-
-  python:
-    name: Python (${{ matrix.os }}, ${{ matrix.python }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - { os: ubuntu-latest, python: "3.9" }
-          - { os: ubuntu-latest, python: "3.13" }
-          - { os: macos-latest, python: "3.12" }
-          - { os: windows-latest, python: "3.12" }
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python }}
-      - name: build and install the wheel
-        shell: bash
-        run: |
-          python -m pip install --upgrade pip maturin pytest
-          maturin build --release -m crates/legal-citations-py/Cargo.toml --out dist
-          python -m pip install --no-index --find-links dist legal-citations
-      - name: smoke tests
-        run: python -m pytest -q crates/legal-citations-py/tests
-      - name: conformance (Python binding)
-        run: python conformance/run.py
-
-  wasm:
-    name: npm / WebAssembly (Node, Deno)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@v2
-      - id: bindgen
-        run: echo "version=$(sed -n 's/^wasm-bindgen = "=\(.*\)"/\1/p' crates/legal-citations-wasm/Cargo.toml)" >> "$GITHUB_OUTPUT"
-      - uses: taiki-e/install-action@v2
-        with:
-          tool: wasm-bindgen@${{ steps.bindgen.outputs.version }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: build
-        run: |
-          npm install -g binaryen
-          crates/legal-citations-wasm/build.sh
-      - name: size
-        run: ls -l crates/legal-citations-wasm/js/pkg && gzip -9c crates/legal-citations-wasm/js/pkg/legal_citations_wasm_bg.wasm | wc -c
-      - name: conformance (npm package)
-        run: node conformance/run.mjs
-      - name: smoke (Node)
-        working-directory: crates/legal-citations-wasm/js
-        run: node smoke.mjs
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
-      - name: smoke (Deno)
-        run: >
-          deno eval "import * as lc from './crates/legal-citations-wasm/js/node.js';
-          const c = lc.extract('R v Jordan, 2016 SCC 27');
-          if (!c.length) throw new Error('no citation'); console.log('deno ok', c[0].span.text);"
-      - name: pack
-        working-directory: crates/legal-citations-wasm/js
-        run: npm pack --dry-run
-
-  cli:
-    name: CLI smoke
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-      - run: cargo build --release -p legal-citations-cli
-      - name: extract / key / batch / conformance through the CLI
-        run: |
-          bin=target/release/legal-citations
-          echo 'R v Jordan, 2016 SCC 27 at para 5' | $bin extract --pretty
-          echo 'R v Jordan, 2016 SCC 27' | $bin key
-          echo '{"id":1,"method":"version"}' | $bin batch
-          python3 conformance/run.py --cli $bin

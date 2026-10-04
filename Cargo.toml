@@ -1,5 +1,6 @@
 [workspace]
 members = ["crates/*"]
+default-members = ["crates/legal-grammar", "crates/legal-citations"]
 exclude = ["crates/legal-citations/vendor/diff-match-patch-rs"]
 resolver = "2"
 

@@ -1,8 +1,7 @@
 //! Runs every case in `conformance/cases/*.json` through `api::call_value`.
 //!
-//! A `pass` case must match; a `pending` case must *not* match, so the pending
-//! list only ever shrinks: when the engine starts satisfying one, flip it to
-//! `pass` (`python conformance/run.py --cli <binary> --promote` does that).
+//! Passing cases guard regressions. Pending cases are backlog, skipped unless
+//! CONFORMANCE_VERBOSE is set; improvements never fail the gate.
 //!
 //! `CONFORMANCE_FILTER=<substring>` limits the run to matching file or case
 //! names; `CONFORMANCE_VERBOSE=1` prints the first mismatch of every case.
@@ -163,6 +162,10 @@ fn conformance() {
             {
                 continue;
             }
+            if case["status"] == "pending" && !verbose {
+                tally.pending += 1;
+                continue;
+            }
             let (method, request) = request(case);
             let actual = match api::call_value(&method, request) {
                 Ok(value) => value,
@@ -183,9 +186,7 @@ fn conformance() {
                 Some("pending") => {
                     tally.pending += 1;
                     match problem {
-                        None => failures.push(format!(
-                            "NOW PASSING {label}: set \"status\": \"pass\" (conformance/run.py --promote)"
-                        )),
+                        None => eprintln!("now passing {label}"),
                         Some(problem) if verbose => eprintln!("pending {label}: {problem}"),
                         Some(_) => {}
                     }

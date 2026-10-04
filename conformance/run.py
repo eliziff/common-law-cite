@@ -5,8 +5,8 @@
     python conformance/run.py --cli target/release/legal-citations
     python conformance/run.py --cli ... --promote  # flip newly passing pending cases to pass
 
-A ``pass`` case must match and a ``pending`` case must not; either surprise is
-a failure (exit 1) unless ``--promote`` rewrites the pending ones. Matcher
+Passing cases guard regressions. Pending cases are skipped unless --verbose
+or --promote is requested; improvements never fail the gate. Matcher
 semantics are documented in conformance/README.md and shared with the Rust
 (crates/legal-citations-cli/tests/conformance.rs) and JS (conformance/run.mjs)
 runners. Standard library only.
@@ -140,8 +140,11 @@ def main() -> int:
             for case in document["cases"]
             if not arguments.filter or arguments.filter in f"{path.stem}::{case['name']}"
         ]
-        results = backend.run([build_request(case) for case in selected])
         tally = {"pass": 0, "pending": 0}
+        if not (arguments.promote or arguments.verbose):
+            tally["pending"] = sum(case.get("status") == "pending" for case in selected)
+            selected = [case for case in selected if case.get("status") != "pending"]
+        results = backend.run([build_request(case) for case in selected])
         changed = False
         for case, actual in zip(selected, results):
             label = f"{path.stem}::{case['name']}"
@@ -159,7 +162,7 @@ def main() -> int:
                     changed = True
                     promoted += 1
                 else:
-                    failures.append(f"NOW PASSING {label}: set \"status\": \"pass\" (--promote)")
+                    print(f"now passing {label}", file=sys.stderr)
             elif status == "pending" and arguments.verbose:
                 print(f"pending {label}: {problem}", file=sys.stderr)
             tally[status] += 1

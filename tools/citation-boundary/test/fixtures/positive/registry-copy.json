@@ -1,7 +1,0 @@
-[
-  { "id": "scc", "neutral": ["SCC", "CSC"], "canlii": { "jurisdiction": "ca", "database": "scc" }, "level": "apex" },
-  { "id": "onca", "neutral": ["ONCA"], "canlii": { "jurisdiction": "on", "database": "onca" }, "level": "appellate" },
-  { "id": "bcca", "neutral": ["BCCA"], "canlii": { "jurisdiction": "bc", "database": "bcca" }, "level": "appellate" },
-  { "id": "abca", "neutral": ["ABCA"], "canlii": { "jurisdiction": "ab", "database": "abca" }, "level": "appellate" },
-  { "id": "fca", "neutral": ["FCA", "CAF"], "canlii": { "jurisdiction": "ca", "database": "fca" }, "level": "appellate" }
-]

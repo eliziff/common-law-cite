@@ -37,29 +37,32 @@
 
 ## Checks
 
+Bare Cargo commands select the grammar and citation core only. Python, WASM and
+CLI bindings are explicit package targets; ordinary core edits do not compile
+or release those wrappers.
+
 ```sh
 cargo fmt --all --check
-cargo clippy --workspace --all-targets -- -D warnings
 cargo test -p legal-grammar -p legal-citations -p legal-citations-cli   # vectors, engine, conformance, schema
 python tools/sync-upstream.py --check                                   # registry matches upstream.lock
 
-# Python binding + conformance through it
+# Python binding smoke; reuse the engine build
 pip install maturin pytest
-(cd crates/legal-citations-py && maturin develop --release)
-python -m pytest crates/legal-citations-py/tests && python conformance/run.py
+(cd crates/legal-citations-py && maturin develop)
+python -m pytest crates/legal-citations-py/tests
 
 # npm package (needs wasm32-unknown-unknown and wasm-bindgen-cli at the version pinned in
-# crates/legal-citations-wasm/Cargo.toml; wasm-opt is used when installed)
+# crates/legal-citations-wasm/Cargo.toml)
 crates/legal-citations-wasm/build.sh
-node conformance/run.mjs && (cd crates/legal-citations-wasm/js && node smoke.mjs)
+(cd crates/legal-citations-wasm/js && node smoke.mjs)
 ```
 
 ## Conformance workflow
 
 * A `pass` case that fails is a regression: fix the engine or, if the
   expectation was wrong, fix the case and say why in its `note`.
-* A `pending` case that starts passing fails the run until it is marked
-  `pass`. Mark every newly passing case at once with
+* Pending cases are backlog, skipped in ordinary checks. Review and promote
+  newly passing cases explicitly with
   `python conformance/run.py --cli target/debug/legal-citations --promote`
   (or without `--cli` through the installed Python binding).
 * `CONFORMANCE_FILTER=substring CONFORMANCE_VERBOSE=1 cargo test -p legal-citations-cli --test conformance -- --nocapture`

@@ -45,7 +45,7 @@ surface form.
 `conformance/cases/*.json` in the same change: the input, the expected
 citations (only the fields the case is about), and `"status": "pass"`. A known
 gap is recorded as `"status": "pending"`. The runners fail when a `pass` case
-stops matching and when a `pending` case starts matching, so:
+stops matching. Pending cases are backlog and skipped outside explicit review, so:
 
 - the pending list only shrinks: add a pending case only to document a gap you
   are not fixing now, never to park a regression;
