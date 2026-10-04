@@ -58,6 +58,77 @@ static ALR_PURE_REFERENCE: LazyLock<regex::Regex> = LazyLock::new(|| {
     regex::Regex::new(&format!(r"(?i)^\s*(?:(?:see(?:,?\s+e\.?g\.?,?)?(?:\s+also)?|but\s+see|contra|compare|cf\.?|see\s+generally)\s+)?(?:ibid\.?|(?:[^,;.]{{1,60}}\s*,\s*)?supra(?:\s+(?:note|nn?\.?)\s+\d+)?)(?:\s*,)?(?:\s+{pin})?\s*[.;]?\s*$")).expect("ALR pure-reference prefilter")
 });
 
+/// One clause of a note made only of ibid/supra references (ALR's pure-reference prefilter).
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct PureReferenceClause {
+    pub text: String,
+    /// The short form written before "supra", empty for ibid.
+    pub name: String,
+    pub pinpoint_fragments: Vec<String>,
+    pub page_pinpoints: Vec<u32>,
+}
+
+static PURE_CLAUSE: LazyLock<regex::Regex> = LazyLock::new(|| {
+    let number = r"\d+(?:\.\d+)?[a-z]?(?:\s*[-–]\s*\d+(?:\.\d+)?[a-z]?)?";
+    let numbers = format!(r"{number}(?:\s*(?:,|and|&)\s*{number})*");
+    let provision = r"(?:ss?\.?|sections?|arts?\.?|articles?)";
+    let rule = r"(?:rr?\.?|rules?)";
+    let rule_number = r"\d+(?:\.\d+){0,3}[a-z]?";
+    let rule_numbers = format!(r"{rule_number}(?:\s*(?:,|and|&)\s*{rule_number})*");
+    let pin = format!(r"(?:at\s+(?:{rule}\s+{rule_numbers}|(?:(?:paras?\.?|pp?\.?|pages?|{provision})\s+)?{numbers})(?:ff)?|(?:paras?\.?|{provision})\s+{numbers}(?:ff)?|{rule}\s+{rule_numbers}(?:ff)?)");
+    regex::Regex::new(&format!(r"(?i)^\s*(?:(?:see(?:,?\s+e\.?g\.?,?)?(?:\s+also)?|but\s+see|contra|compare|cf\.?|see\s+generally)\s+)?(?:ibid\.?|(?:(?P<name>[^,;.]{{1,60}})\s*,\s*)?supra(?:\s+(?:note|nn?\.?)\s+\d+)?)(?:\s*,)?(?:\s+(?P<pin>{pin}))?\s*[.;]?\s*$")).expect("pure reference clause")
+});
+static PURE_TOKEN: LazyLock<regex::Regex> = LazyLock::new(||
+    regex::Regex::new(r"(?i)\b(?:supra|ibid)\b").expect("reference token"));
+static PURE_PIN_NUMBER: LazyLock<regex::Regex> = LazyLock::new(||
+    regex::Regex::new(r"(\d+(?:\.\d+)?)[a-z]?(?:\s*[-–]\s*(\d+(?:\.\d+)?)[a-z]?)?").expect("pin number"));
+static PURE_PIN_PARAGRAPH: LazyLock<regex::Regex> = LazyLock::new(||
+    regex::Regex::new(r"^(?:at\s+)?paras?\b").expect("paragraph pin"));
+static PURE_PIN_PROVISION: LazyLock<regex::Regex> = LazyLock::new(|| regex::Regex::new(
+    r"^(?:at\s+)?(?:s\b|ss\b|s\.|ss\.|sections?\b|arts?\.?\b|articles?\b|rr?\.?\b|rules?\b)").expect("provision pin"));
+static PURE_PIN_PAGE: LazyLock<regex::Regex> = LazyLock::new(|| regex::Regex::new(r"^at\b").expect("page pin"));
+
+/// ALR's _prefilter_pure_ref_parts: one part per semicolon clause when every clause is a
+/// mechanical ibid/supra reference, None when any clause needs the ordinary splitter.
+pub fn pure_reference_clauses(note: &str) -> Option<Vec<PureReferenceClause>> {
+    let text = note.split_whitespace().collect::<Vec<_>>().join(" ");
+    if text.is_empty() || text.chars().count() > 400 || !PURE_TOKEN.is_match(&text) { return None; }
+    let clauses = text.split(';').map(str::trim).collect::<Vec<_>>();
+    if !(1..=4).contains(&clauses.len()) || clauses.iter().any(|clause| clause.is_empty()) { return None; }
+    clauses.into_iter().map(|clause| {
+        let found = PURE_CLAUSE.captures(clause)?;
+        let pin = found.name("pin").map_or("", |pin| pin.as_str());
+        let head = pin.trim_start().to_lowercase();
+        let mut numbers = Vec::new();
+        for value in PURE_PIN_NUMBER.captures_iter(pin) {
+            let first = value[1].to_owned();
+            numbers.push(first.clone());
+            if let Some(second) = value.get(2) {
+                let mut second = second.as_str().to_owned();
+                let (first_whole, second_whole) = (first.split('.').next().unwrap_or(""), second.split('.').next().unwrap_or("").to_owned());
+                if !second.contains('.') && second_whole.len() < first_whole.len()
+                    && second_whole.parse::<u64>().ok() < first_whole.parse::<u64>().ok() {
+                    second = format!("{}{second_whole}", &first_whole[..first_whole.len() - second_whole.len()]);
+                }
+                numbers.push(second);
+            }
+        }
+        let (mut fragments, mut pages) = (Vec::new(), Vec::new());
+        if PURE_PIN_PARAGRAPH.is_match(&head) {
+            fragments = numbers.iter().filter(|n| !n.contains('.')).map(|n| format!("par{n}")).collect();
+        } else if PURE_PIN_PROVISION.is_match(&head) {
+            fragments = numbers.iter().map(|n| format!("sec{n}")).collect();
+        } else if PURE_PIN_PAGE.is_match(&head) {
+            pages = numbers.iter().filter(|n| !n.contains('.')).filter_map(|n| n.parse().ok()).collect();
+        }
+        Some(PureReferenceClause { text: clause.to_owned(),
+            name: found.name("name").map_or("", |name| name.as_str()).trim().to_owned(),
+            pinpoint_fragments: fragments, page_pinpoints: pages })
+    }).collect()
+}
+
 /// ALR's administrative-tail removal, also used before retrieval normalization.
 pub fn strip_administrative_tail(text: &str) -> String {
     BARE_ADMIN.replace_all(text, "").trim_matches(crate::text::python_whitespace).to_owned()

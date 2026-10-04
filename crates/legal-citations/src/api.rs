@@ -61,6 +61,7 @@ pub const METHODS: &[&str] = &[
     "supraHint",
     "reanchorReference",
     "splitSources",
+    "pureReferenceClauses",
     "sourceFields",
     "bareCitation",
     "legislationLookup",
@@ -219,6 +220,10 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             to_value(split_sources(&request))
         }
         "splitNotes" => to_value(split_notes(&parse(method, request)?)?),
+        "pureReferenceClauses" => {
+            let request: HasCitationRequest = parse(method, request)?;
+            to_value(crate::source::pure_reference_clauses(&request.text))
+        }
         "noteReferences" => {
             let request: NoteReferencesRequest = parse(method, request)?;
             to_value(crate::source::references(&request.parts, request.citations.as_deref(),
