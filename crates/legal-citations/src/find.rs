@@ -314,6 +314,23 @@ impl Anchor {
     }
 }
 
+/// A telephone or fax number with its label ("Tel: 613.288.0149", "T: (613) 241-6789",
+/// "Facsimile 403-555-0100"): the contact line of a letterhead or a counsel block.
+fn contact_line(text: &str) -> bool {
+    const LABELS: [&str; 6] = ["Tel", "Telephone", "Phone", "Fax", "Facsimile", "Ph"];
+    text.match_indices(|character: char| character.is_ascii_uppercase()).any(|(at, _)| {
+        let word = text[at..].split(|character: char| !character.is_ascii_alphabetic()).next().unwrap_or("");
+        let rest = &text[at + word.len()..];
+        // A single letter is a label only with its colon ("T: (613) 241-6789").
+        let number = if word.len() == 1 { rest.strip_prefix(": ") } else {
+            Some(rest.trim_start_matches(['.', ':', ' '])).filter(|number| number.len() < rest.len())
+        };
+        (LABELS.contains(&word) || word == "T" || word == "F")
+            && !text[..at].chars().next_back().is_some_and(char::is_alphanumeric)
+            && number.is_some_and(|number| number.starts_with(|character: char| character.is_ascii_digit() || character == '('))
+    })
+}
+
 fn resolve(mut found: Vec<Anchor>) -> Vec<Anchor> {
     found.sort_by(|left, right| {
         left.span.start
@@ -366,7 +383,11 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
     }
     for (kind, reason, pattern, guides) in SECONDARY_SOURCES.iter() {
         if guides.is_empty() || styles.is_none_or(|styles| styles.iter().any(|style| guides.contains(style))) {
+            // A file number in parentheses identifies the proceeding a sentence speaks of
+            // ("the class proceeding (Court File No. T-402-19) was filed"); it cites no decision.
             found.extend(pattern.find_iter(value).flatten()
+            .filter(|matched| *reason != "court_file_grammar" || !(value[..matched.start()].ends_with('(')
+                && value[matched.end()..].starts_with(')')))
             .map(|matched| Anchor::new(matched.start()..matched.end(), (*kind, *reason))));
         }
     }
@@ -476,12 +497,14 @@ fn occurrence_family(core: &str) -> (&'static str, &'static str) {
 
 fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationStyle]>, scopes: &[usize], enrich: bool) -> Vec<Anchor> {
     let (mut found, reporters) = primary_ranges(value);
-    let captured = if enrich {
+    let mut captured = if enrich {
         crate::us::find(value, extended_us, Some(&mut found))
     } else {
         found.extend(crate::us::citation_spans(value, extended_us));
         Vec::new()
     };
+    found.retain(|hit| !numbered_on(&value[hit.end..]));
+    captured.retain(|matched| !numbered_on(&value[matched.span.end..]));
     // A (year) volume publication page block the citation grammar read only
     // part of is one citation: "(2023) 57:3 RJT 487" is not the issue "3 RJT
     // 487", and "(2021), 25 Can. Crim L Rev 255" is not "(2021), 25 Can.".
@@ -630,6 +653,19 @@ fn primary_ranges(value: &str) -> (Vec<Hit>, Vec<Hit>) {
         }
     }
     (found, reporters)
+}
+
+/// What follows a page that makes it a number in a series of its own: a transcript index's
+/// page and line ("15:11 Jordan's 6:6,14" reads "Jordan's" at page 6, line 6) and a legal land
+/// description's section, township and range ("39143 NW 35-51-27 W4M"). A report's page is
+/// never followed by either.
+fn numbered_on(after: &str) -> bool {
+    let digits = |text: &str| text.len() - text.trim_start_matches(|character: char| character.is_ascii_digit()).len();
+    if let Some(rest) = after.strip_prefix(':') { return digits(rest) > 0; }
+    after.strip_prefix('-').is_some_and(|rest| {
+        let first = digits(rest);
+        first > 0 && rest[first..].strip_prefix('-').is_some_and(|rest| digits(rest) > 0)
+    })
 }
 
 /// A date the in-text grammar read as volume, reporter and page ("12 Feb 2030",
@@ -805,7 +841,7 @@ fn matched_style(
 
 /// The Act title a statute citation is styled with ("Criminal Code, RSC 1985").
 fn statute_style_start(text: &str, core_start: usize, floor: usize) -> usize {
-    matched_style(&STATUTE_TITLE, "title", text, core_start, floor)
+    matched_style(&STATUTE_TITLE, "title", text, core_start, paragraph_floor(text, floor, core_start))
 }
 
 /// A treaty's title, read past its signature date ("Convention ..., 4 November
@@ -849,20 +885,27 @@ fn work_style_start(text: &str, core_start: usize, floor: usize) -> usize {
 /// v Jones"): neither is part of its style of cause.
 fn past_lead_in(text: &str, start: usize, core_start: usize) -> usize {
     let lead = CASE_LEAD_IN.find(&text[start..core_start]).map_or(0, |matched| matched.end());
-    if lead > 0 && text[start + lead..].starts_with(|character: char| character.is_uppercase()) {
+    if lead > 0 && text[start + lead..].starts_with(|character: char| character.is_uppercase() || character.is_ascii_digit()) {
         start + lead
     } else {
         start
     }
 }
 
-fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
-    // A style of cause starts after a quotation and within its own paragraph.
-    let floor = CASE_FLOOR.find_iter(&text[floor..core_start]).last().map_or(floor, |found| {
+/// Where a style of cause or an Act's title can start: after a quotation, within its own
+/// paragraph, and under a list of authorities' group heading. A heading word that ends the line
+/// before the citation itself ("Food and Drug Regulations ⏎ CRC, c 870") is the title, not a heading.
+fn paragraph_floor(text: &str, floor: usize, core_start: usize) -> usize {
+    CASE_FLOOR.find_iter(&text[floor..core_start]).filter_map(|found| {
         let matched = found.as_str();
-        if matched.starts_with('\n') { floor + found.start() + matched.len() - matched.trim_start().len() }
-        else { floor + found.end() }
-    });
+        let at = if matched.starts_with('\n') { floor + found.start() + matched.len() - matched.trim_start().len() }
+            else { floor + found.end() };
+        (!text[at..core_start].trim().is_empty()).then_some(at)
+    }).last().unwrap_or(floor)
+}
+
+fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
+    let floor = paragraph_floor(text, floor, core_start);
     let prefix = text[floor..core_start]
         .trim_end_matches(|character: char| javascript_whitespace(character) || character == ',');
     let Some(versus) = CASE_VERSUS.find_iter(prefix).last() else {
@@ -1151,11 +1194,13 @@ fn full_citation(
     };
     // A name runs over at most three lines of a page and a few hundred characters: one longer
     // took in a letterhead, an index or a record's prose ("Canada (AG) v. Northrop Grumman
-    // Overseas ⏎ ss. 50, 18.2 Rule 398 ⏎ 13, 14, 214, …"), and the citation has no name.
+    // Overseas ⏎ ss. 50, 18.2 Rule 398 ⏎ 13, 14, 214, …"), and the citation has no name. So
+    // does one that holds a telephone or fax number, which is a letterhead's.
     // A bill's citation holds its own title ("Bill C-9, An Act to …"): what comes before it is
     // no name of it.
     let styled_start = if charter.is_none() && (text[styled_start..core.start].matches("\n\n").count() > 2
         || text[styled_start..core.start].chars().count() > 250
+        || contact_line(&text[styled_start..core.start])
         || core_text.starts_with("Bill ") && core_text.contains(',')) { core.start } else { styled_start };
     let short_pin = anchor.reading.as_ref().and_then(|reading| reading.short_at).map(|at| source_core.start + at);
     let short_form = short_pin.is_some();

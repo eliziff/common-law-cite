@@ -1141,6 +1141,185 @@
           }
         ]
       }
+    },
+    {
+      "name": "noise/transcript-index-page-and-line",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "42:24 Jessica 1:18 35:7 job 15:11 Fen's 6:6,14,19 judgment 4:2 maximum 15:15 McAsh 1:15 2:4 team 25:9 57:22 A.S.A.P 1:23 abeyance 3:23",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "noise/legal-land-description",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "The lands are located at 39143 NW 35-51-27 W4M in the County of Ash.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "noise/file-number-in-parentheses",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "The claim for this class proceeding (Court File No. T-402-36) was filed on March 4, 2036.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "style/no-name-from-a-letterhead",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen Ash LLP 400 - 411 Elm Avenue, Ottawa ON K2A 3X9 Tel: 613.288.0149 Fax: 613.688.0271 www.fenash.example",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "www.fenash.example"
+            },
+            "style": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/list-paragraph-column-is-no-name",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Mugesera v. Canada, [2035] 2 SCR 91 12 Safilo Fen Inc. v. Contour Ash Inc., (2035), 48 CPR (4th) 339\n\n27\n\nJanssen Fen Inc. v. Ash Corporation, 2034 FCA 112 14, 20 RJR-Fen Inc. v. Canada (AG), [2034] 1 SCR 311\n\n57-58, 59, 342, 337-338, 342- 347 Coastal Rights Commission v. Canada (Attorney General), 2030 FC 1135\n\n4.13 McAsh v Canada (Attorney General), 2039 FC 1077",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "[2035] 2 SCR 91"
+            },
+            "style": {
+              "text": "Mugesera v. Canada"
+            }
+          },
+          {
+            "span": {
+              "text": "(2035), 48 CPR (4th) 339"
+            },
+            "style": {
+              "text": "Safilo Fen Inc. v. Contour Ash Inc."
+            }
+          },
+          {
+            "span": {
+              "text": "2034 FCA 112"
+            }
+          },
+          {
+            "span": {
+              "text": "[2034] 1 SCR 311"
+            },
+            "style": {
+              "text": "RJR-Fen Inc. v. Canada (AG)"
+            }
+          },
+          {
+            "span": {
+              "text": "2030 FC 1135"
+            },
+            "style": {
+              "text": "Coastal Rights Commission v. Canada (Attorney General)"
+            }
+          },
+          {
+            "span": {
+              "text": "2039 FC 1077"
+            },
+            "style": {
+              "text": "McAsh v Canada (Attorney General)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/numbered-company-keeps-its-number",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "TAB 3 1705221 Fen Ltd v Three Ash Mortgages Inc, 2031 ABCA 144. See also 2747-3174 Québec Inc. v. Quebec (Régie des permis d’alcool), [2036] 3 SCR 919.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2031 ABCA 144"
+            },
+            "style": {
+              "text": "1705221 Fen Ltd v Three Ash Mortgages Inc"
+            }
+          },
+          {
+            "span": {
+              "text": "[2036] 3 SCR 919"
+            },
+            "style": {
+              "text": "2747-3174 Québec Inc. v. Quebec (Régie des permis d’alcool)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/list-group-heading-is-no-name",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "PART V – LIST OF THE AUTHORITIES\n\n1. Appendix A – Statute or Regulation\n\nCoastal Courts Act, R.S.C., 2035, c. F-7\n\n2. Appendix B – Authorities\n\nMugesera v. Canada, [2035] 2 SCR 91\n\nJurisprudence\n\nAlberta v. Elder Fen Society 2031 SCC 24",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "R.S.C., 2035, c. F-7"
+            },
+            "style": {
+              "text": "Coastal Courts Act"
+            }
+          },
+          {
+            "span": {
+              "text": "[2035] 2 SCR 91"
+            },
+            "style": {
+              "text": "Mugesera v. Canada"
+            }
+          },
+          {
+            "span": {
+              "text": "2031 SCC 24"
+            },
+            "style": {
+              "text": "Alberta v. Elder Fen Society"
+            }
+          }
+        ]
+      }
     }
   ]
 }
