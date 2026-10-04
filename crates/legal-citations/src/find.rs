@@ -488,8 +488,11 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     let mut claimed = Vec::with_capacity(primary.len());
     let mut floor = 0;
     for hit in &primary {
+        // A style of cause never swallows a statute the secondary grammars found before it.
+        let statute_end = secondary.iter().filter(|anchor| anchor.family.is_some_and(|(kind, _)| kind == "statute")
+            && anchor.span.end <= hit.span.start).map(|anchor| anchor.span.end).max().unwrap_or(0);
         let start = if hit.family.is_some_and(|(kind, _)| kind == "case") {
-            case_style_start(value, hit.span.start, floor.max(scope_floor(scopes, hit.span.start)))
+            case_style_start(value, hit.span.start, floor.max(statute_end).max(scope_floor(scopes, hit.span.start)))
         } else {
             hit.span.start
         };
@@ -802,10 +805,6 @@ fn past_lead_in(text: &str, start: usize, core_start: usize) -> usize {
 }
 
 fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
-    // A style of cause never runs across a blank line, as a table's rows or headings do.
-    let window = &text[floor..core_start];
-    let floor = window.match_indices('\n').map(|(at, _)| at).filter(|&at| window[..at].trim_end_matches([' ', '\t', '\r'])
-        .ends_with('\n')).last().map_or(floor, |at| floor + at + 1);
     let prefix = text[floor..core_start]
         .trim_end_matches(|character: char| javascript_whitespace(character) || character == ',');
     let Some(versus) = CASE_VERSUS.find_iter(prefix).last() else {
