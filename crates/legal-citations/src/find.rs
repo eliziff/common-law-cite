@@ -388,6 +388,10 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             found.extend(pattern.find_iter(value).flatten()
             .filter(|matched| *reason != "court_file_grammar" || !(value[..matched.start()].ends_with('(')
                 && value[matched.end()..].starts_with(')')))
+            // An edition and year in parentheses cite a book only after its author and title
+            // ("Hill, Remedies § 3.1 (2d ed. 1977)").
+            .filter(|matched| *reason != "book_edition_grammar"
+                || value[work_style_start(value, matched.start(), 0)..matched.start()].chars().any(char::is_alphabetic))
             .map(|matched| Anchor::new(matched.start()..matched.end(), (*kind, *reason))));
         }
     }
@@ -410,6 +414,12 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             found.push(Anchor::new(link, ("other", "online_grammar")));
         }
     }
+    // A secondary form that begins inside a report or neutral citation misreads that citation
+    // and its date ("2030 BCCA 431 (2032)" is no news item); an article that holds one starts
+    // before it ("(2023) 57:3 RJT 487").
+    found.retain(|anchor| anchor.family.is_some_and(|(_, reason)| reason == "article_grammar" || reason == "treaty_grammar")
+        || !primary.iter().any(|core| core.start <= anchor.span.start && anchor.span.start < core.end
+            && occurrence_family(&value[core.clone()]).0 == "case"));
     resolve(found)
 }
 
