@@ -62,6 +62,10 @@ pub enum SupraMode {
     #[default]
     Safe,
     Aggressive,
+    /// Safe linking, except that a supra whose written short name names exactly one earlier
+    /// citation by its short form (its bracketed short form, or every word of the name it was
+    /// cited by) links to it even when its note number names another note.
+    Named,
 }
 
 /// A citation guide whose forms the finder recognizes beyond the forms every guide shares.

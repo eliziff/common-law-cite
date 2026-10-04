@@ -306,16 +306,23 @@ fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSou
             if let Some(target) = unique_target(matching.iter().copied()) {
                 return (target.to_owned(), "note_number");
             }
-            if !matching.is_empty() {
-                return match bracket_definition(normalized, matching.into_iter()) {
-                    Some(target) => (target, "bracket_definition"),
-                    None => (String::new(), "abstain_ambiguous_note_number"),
-                };
+            // A supra names the work its note cites, not a reference in that note to another work.
+            if let Some(target) = unique_target(matching.iter().copied().filter(|entry|
+                !REFERENCE.is_match(entry.verbatim.as_deref().unwrap_or("")))) {
+                return (target.to_owned(), "note_number");
             }
             let suffix = note_sources.iter().copied().filter(|entry| {
                 let short = ref_tokens(entry.short_form.as_deref().unwrap_or(""));
                 short.len() >= 2 && tokens.ends_with(&short)
             }).collect::<Vec<_>>();
+            if !matching.is_empty() {
+                // "R v Mann & Mann, supra" names the source whose short form it ends with.
+                return match bracket_definition(normalized, matching.into_iter())
+                    .or_else(|| unique_target(suffix.iter().copied()).map(str::to_owned)) {
+                    Some(target) => (target, "bracket_definition"),
+                    None => (String::new(), "abstain_ambiguous_note_number"),
+                };
+            }
             if let Some(target) = unique_target(suffix.iter().copied()) {
                 return (target.to_owned(), "note_number_short_form_suffix");
             }

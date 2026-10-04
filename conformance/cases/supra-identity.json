@@ -785,6 +785,312 @@
           }
         ]
       }
+    },
+    {
+      "name": "identity/supra-sharing-a-part-with-a-full-citation",
+      "status": "pass",
+      "input": "2031 ONCA 518 [Pell].\n\nR v Dunn, 2032 ONSC 54 at para 15 [Dunn], citing Pell, supra note 1.",
+      "options": {
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 21
+          },
+          {
+            "number": 2,
+            "start": 23,
+            "end": 91
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2031 ONCA 518"
+            },
+            "fullSpan": {
+              "text": "2031 ONCA 518 [Pell]"
+            },
+            "style": null
+          },
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2032 ONSC 54"
+            },
+            "fullSpan": {
+              "text": "R v Dunn, 2032 ONSC 54 at para 15 [Dunn]"
+            },
+            "style": {
+              "text": "R v Dunn"
+            },
+            "pinpoints": [
+              {
+                "kind": "paragraph",
+                "first": "15"
+              }
+            ]
+          },
+          {
+            "form": "supra",
+            "authority": "unknown",
+            "span": {
+              "text": "supra note 1"
+            },
+            "fullSpan": {
+              "text": "Pell, supra note 1"
+            },
+            "style": {
+              "text": "Pell"
+            },
+            "antecedent": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "identity/named-short-form-over-a-stale-note-number",
+      "status": "pass",
+      "input": "2031 ONCA 518 [Pell].\n\nR v Dunn, 2032 ONSC 54 [Dunn].\n\nPell, supra note 2 at para 4.",
+      "options": {
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 21
+          },
+          {
+            "number": 2,
+            "start": 23,
+            "end": 53
+          },
+          {
+            "number": 3,
+            "start": 55,
+            "end": 84
+          }
+        ],
+        "supraLinkingMode": "named"
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2031 ONCA 518"
+            },
+            "fullSpan": {
+              "text": "2031 ONCA 518 [Pell]"
+            },
+            "style": null
+          },
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2032 ONSC 54"
+            },
+            "fullSpan": {
+              "text": "R v Dunn, 2032 ONSC 54 [Dunn]"
+            },
+            "style": {
+              "text": "R v Dunn"
+            }
+          },
+          {
+            "form": "supra",
+            "authority": "unknown",
+            "span": {
+              "text": "supra note 2"
+            },
+            "fullSpan": {
+              "text": "Pell, supra note 2 at para 4"
+            },
+            "style": {
+              "text": "Pell"
+            },
+            "antecedent": 0,
+            "pinpoints": [
+              {
+                "kind": "paragraph",
+                "first": "4"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "identity/safe-linking-abstains-on-a-stale-note-number",
+      "status": "pass",
+      "input": "2031 ONCA 518 [Pell].\n\nR v Dunn, 2032 ONSC 54 [Dunn].\n\nPell, supra note 2 at para 4.",
+      "options": {
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 21
+          },
+          {
+            "number": 2,
+            "start": 23,
+            "end": 53
+          },
+          {
+            "number": 3,
+            "start": 55,
+            "end": 84
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2031 ONCA 518"
+            },
+            "fullSpan": {
+              "text": "2031 ONCA 518 [Pell]"
+            },
+            "style": null
+          },
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "2032 ONSC 54"
+            },
+            "fullSpan": {
+              "text": "R v Dunn, 2032 ONSC 54 [Dunn]"
+            },
+            "style": {
+              "text": "R v Dunn"
+            }
+          },
+          {
+            "form": "supra",
+            "authority": "unknown",
+            "span": {
+              "text": "supra note 2"
+            },
+            "fullSpan": {
+              "text": "Pell, supra note 2 at para 4"
+            },
+            "style": {
+              "text": "Pell"
+            },
+            "antecedent": null,
+            "pinpoints": [
+              {
+                "kind": "paragraph",
+                "first": "4"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "identity/supra-names-the-cited-work-not-a-reference",
+      "status": "pass",
+      "input": "Jo Marsh, Fen Law (Reed Press, 2030).\n\nMarsh, supra note 1 at 4; Jo Marsh et al, “Reed Beds” (2031) 4:2 Fen LJ 10.\n\nMarsh et al, supra note 2 at 12.",
+      "options": {
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 37
+          },
+          {
+            "number": 2,
+            "start": 39,
+            "end": 114
+          },
+          {
+            "number": 3,
+            "start": 116,
+            "end": 148
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "book",
+            "span": {
+              "text": "(Reed Press, 2030)"
+            },
+            "fullSpan": {
+              "text": "Jo Marsh, Fen Law (Reed Press, 2030)"
+            },
+            "style": {
+              "text": "Jo Marsh, Fen Law"
+            }
+          },
+          {
+            "form": "supra",
+            "authority": "unknown",
+            "span": {
+              "text": "supra note 1"
+            },
+            "fullSpan": {
+              "text": "Marsh, supra note 1 at 4"
+            },
+            "style": {
+              "text": "Marsh"
+            },
+            "antecedent": 0,
+            "pinpoints": [
+              {
+                "kind": "page",
+                "first": "4"
+              }
+            ]
+          },
+          {
+            "form": "full",
+            "authority": "journal",
+            "span": {
+              "text": "(2031) 4:2 Fen LJ 10"
+            },
+            "fullSpan": {
+              "text": "Jo Marsh et al, “Reed Beds” (2031) 4:2 Fen LJ 10"
+            },
+            "style": {
+              "text": "Jo Marsh et al, “Reed Beds”"
+            }
+          },
+          {
+            "form": "supra",
+            "authority": "unknown",
+            "span": {
+              "text": "supra note 2"
+            },
+            "fullSpan": {
+              "text": "Marsh et al, supra note 2 at 12"
+            },
+            "style": {
+              "text": "Marsh et al"
+            },
+            "antecedent": 2,
+            "pinpoints": [
+              {
+                "kind": "page",
+                "first": "12"
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

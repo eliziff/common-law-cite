@@ -64,7 +64,8 @@ pub struct Resolution {
     ///   `ibid_no_previous`, `ibid_invalid_pinpoint`;
     /// * supra and references: `note_and_name`, `note_only`, `name_only`,
     ///   `ambiguous_note`, `ambiguous_name`, `note_out_of_range`,
-    ///   `note_without_authority`, `note_name_conflict`, `no_match`, `no_hint`;
+    ///   `note_without_authority`, `note_name_conflict`, `no_match`, `no_hint`,
+    ///   `named_short_form` (linking mode [`SupraMode::Named`]);
     /// * short forms: `short_reporter`, `short_name`, `short_ambiguous`,
     ///   `short_no_match`;
     /// * `unknown_form` for [`Form::Unknown`].
@@ -468,6 +469,12 @@ impl<'a> Resolver<'a> {
                 *url = crate::url::source_first_pinpoint(url, &fields.pinpoint_fragments);
             }
         }
+        // A part inside a citation that runs past it ("Part I of the Constitution Act, 1982, being" |
+        // "Schedule B to the Canada Act 1982 (UK), 1982, c 11 [Charter]") is that citation's, which
+        // records itself: it is no source of its own.
+        let straddled = positions.is_empty() && self.citations.iter().enumerate().any(|(position, citation)|
+            self.note_of[position] == Some(note) && citation.span.start < part.end && part.start < citation.span.end);
+        if straddled { return; }
         let own_target = if reference.kind.is_empty() {
             if full.is_empty() {
                 // An opaque source can be associated without inventing a
@@ -488,8 +495,16 @@ impl<'a> Resolver<'a> {
                 self.source_urls.entry(target.clone()).or_insert(url);
             }
         };
+        // A part that holds several citations ("R v A, 2022 ONSC 1 [A], citing B, supra note 9")
+        // is no one reference, and the words around a supra that writes its short name are not
+        // that name ("citing B, supra note 9"): each such supra is resolved by its own words, and
+        // each full citation in such a part is a record a later reference can name.
+        let several = positions.len() > 1 || positions.iter().any(|&(_, position)|
+            self.citations[position].form == Form::Supra && self.citations[position].style.is_some());
+        let several_full = several && positions.iter().any(|&(_, position)| self.citations[position].form == Form::Full);
         // ALR _resolve_footnote_reference_links resolves each whole part once.
         let part_result = match reference.kind {
+            "supra" if several => None,
             "supra" => Some(self.resolve_supra_text(&part.text,
                 &history.records[..prior_records], &history.inferred[..prior_inferred],
                 Some(range.sequence))),
@@ -509,10 +524,15 @@ impl<'a> Resolver<'a> {
             _ => None,
         };
         for &(_, position) in &positions {
-            let override_result = matches!(self.citations[position].form, Form::Supra | Form::Ibid)
-                .then(|| part_result.clone()).flatten()
+            let citation = &self.citations[position];
+            let own = (several && citation.form == Form::Supra).then(|| self.resolve_supra_text(
+                &citation.full_span.text, &history.records[..prior_records],
+                &history.inferred[..prior_inferred], Some(range.sequence)));
+            let override_result = own.or_else(|| matches!(citation.form, Form::Supra | Form::Ibid)
+                .then(|| part_result.clone()).flatten())
                 .map(|(target, reason)| (target, reason, Some(part_index)));
-            self.process_citation(position, history, previous, output, override_result, false);
+            let record = several_full && citation.form == Form::Full;
+            self.process_citation(position, history, previous, output, override_result, record);
             seen[position] = true;
         }
         let part_target = part_result.map_or_else(|| own_target.or_else(||
@@ -522,10 +542,16 @@ impl<'a> Resolver<'a> {
         // in its note. Discovered cores remain separate Citation identities, but
         // must not multiply the source-part registry or make a numbered supra
         // look ambiguous by counting one part more than once.
-        let short_form = (!fields.short_form.is_empty()).then_some(fields.short_form);
+        // A part citing one authority is known by that citation's short form when the part names none.
+        let short_form = (!fields.short_form.is_empty()).then_some(fields.short_form).or_else(||
+            full.first().filter(|_| full.len() == 1).and_then(|citation|
+                citation.explicit_short_name.clone().or_else(|| citation.short_name.clone())));
         let kind = full.first().map_or(fields.kind, |citation| inference_kind(citation));
-        history.push(self.source_record(Some(&range), part.text.clone(), part_target.clone(), short_form),
-            kind, self.supra_linking_mode);
+        // Such a part is recorded by its full citations, not as one more source.
+        if !several_full {
+            history.push(self.source_record(Some(&range), part.text.clone(), part_target.clone(), short_form),
+                kind, self.supra_linking_mode);
+        }
         *sibling = Some(part_target.clone());
         history.last_part_target = Some(part_target);
     }
@@ -537,9 +563,17 @@ impl<'a> Resolver<'a> {
         // matching numbering sequence, including aggressive fallbacks.
         let reference = short_forms::reference_info(text);
         let numbered = !reference.notes.is_empty();
+        // A short name written exactly as one earlier citation's short form names it, whatever
+        // note number is written with it.
+        let named = || (self.supra_linking_mode == SupraMode::Named).then(|| {
+            let (resource, method) = short_forms::resolve_registry_hint("",
+                &short_forms::supra_hint(text, true), registry);
+            matches!(method, "exact_sf" | "token_sf" | "bracket_definition").then(|| Target::from_registry(&resource)).flatten()
+        }).flatten();
         if let (Some(number), Some(notes)) = (reference.notes.first().and_then(|number| decimal(number)), self.notes) {
             let number = number.to_string();
             let count = notes.iter().filter(|note| note.number.to_string() == number && sequence.is_none_or(|sequence| note.sequence == sequence)).count();
+            if count == 0 { if let Some(target) = named() { return (Some(target), "named_short_form"); } }
             if count != 1 { return (None, if count == 0 { "note_out_of_range" } else { "ambiguous_note" }); }
         }
         let scoped_registry = registry.iter().filter(|entry|
@@ -551,6 +585,9 @@ impl<'a> Resolver<'a> {
         let (strict, reason) = short_forms::resolve_registry_scoped(text, &scoped_registry,
             self.supra_hint_mode == SupraMode::Aggressive, sequence);
         if let Some(target) = Target::from_registry(&strict) { return (Some(target), reason); }
+        if matches!(reason, "note_name_conflict" | "note_without_authority") {
+            if let Some(target) = named() { return (Some(target), "named_short_form"); }
+        }
         if self.supra_linking_mode == SupraMode::Aggressive {
             let (fallback, method) = short_forms::resolve_after_strict_abstention(text,
                 &scoped_registry, &scoped_inferred);
