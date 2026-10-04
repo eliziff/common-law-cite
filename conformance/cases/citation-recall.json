@@ -1400,6 +1400,26 @@
           }
         ]
       }
+    },
+    {
+      "name": "style/charter-named-by-its-enacting-instrument",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11 [Charter].",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "authority": "constitution",
+            "style": null,
+            "fields": {
+              "instrumentTitle": "Canadian Charter of Rights and Freedoms"
+            }
+          }
+        ]
+      }
     }
   ]
 }

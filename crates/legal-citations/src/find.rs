@@ -1400,6 +1400,12 @@ fn full_citation(
     } else if citation.authority == Authority::Case {
         citation.style.as_ref().and_then(|style| metadata::parties(&style.text))
     } else { None };
+    // Part I of the Constitution Act, 1982 is the Charter, by the name McGill gives it, whether or
+    // not the citation writes that name before it.
+    if kind_reason == "charter_grammar" && citation.style.is_none() {
+        citation.fields.instrument_title = Some(if core_text.starts_with("partie") {
+            "Charte canadienne des droits et libertés" } else { "Canadian Charter of Rights and Freedoms" }.to_owned());
+    }
     citation
 }
 

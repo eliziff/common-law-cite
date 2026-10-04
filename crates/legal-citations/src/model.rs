@@ -345,6 +345,11 @@ pub struct Fields {
     /// Overdose Act.¹" for "¹ SC 2017, c 4.").
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub anchor_title: Option<Span>,
+    /// The instrument's own name where the citation writes only where it is enacted: the
+    /// Charter for "Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982
+    /// (UK), 1982, c 11".
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub instrument_title: Option<String>,
 }
 
 /// Original inline-reference token, before the broader source-resolution extent.
