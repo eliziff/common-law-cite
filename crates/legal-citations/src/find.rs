@@ -316,9 +316,20 @@ impl Anchor {
     }
 }
 
-/// A telephone or fax number with its label ("Tel: 613.288.0149", "T: (613) 241-6789",
-/// "Facsimile 403-555-0100"): the contact line of a letterhead or a counsel block.
+/// What a name before a citation is not: a letterhead's or counsel block's contact line (a
+/// telephone or fax number with its label, "Tel: 613.288.0149", "T: (613) 241-6789"; an address
+/// with a suite or a postal code, "Suite 1200 Toronto, Ontario M5G 1Z8") or a lone label ("French:").
 fn contact_line(text: &str) -> bool {
+    // A label alone ("French:", "URL:") names the link after it, not a work.
+    let trimmed = text.trim();
+    if trimmed.ends_with(':') && !trimmed[..trimmed.len() - 1].contains(char::is_whitespace) { return true; }
+    // An address: a suite and a Canadian postal code ("Suite 1200 Toronto, Ontario M5G 1Z8").
+    let characters = trimmed.chars().collect::<Vec<_>>();
+    let postal = characters.windows(7).any(|code| code[0].is_ascii_uppercase() && code[1].is_ascii_digit()
+        && code[2].is_ascii_uppercase() && code[3] == ' ' && code[4].is_ascii_digit()
+        && code[5].is_ascii_uppercase() && code[6].is_ascii_digit());
+    if postal || trimmed.split_whitespace().collect::<Vec<_>>().windows(2)
+        .any(|pair| pair[0] == "Suite" && pair[1].starts_with(|c: char| c.is_ascii_digit())) { return true; }
     const LABELS: [&str; 6] = ["Tel", "Telephone", "Phone", "Fax", "Facsimile", "Ph"];
     text.match_indices(|character: char| character.is_ascii_uppercase()).any(|(at, _)| {
         let word = text[at..].split(|character: char| !character.is_ascii_alphabetic()).next().unwrap_or("");
@@ -390,6 +401,14 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             found.extend(pattern.find_iter(value).flatten()
             .filter(|matched| *reason != "court_file_grammar" || !(value[..matched.start()].ends_with('(')
                 && value[matched.end()..].starts_with(')')))
+            // So does one a sentence names after a word of its prose ("a Notice of Discontinuance
+            // with the Court of Appeal for Court File No. A-290-21").
+            .filter(|matched| *reason != "court_file_grammar" || !matched.as_str().starts_with("Court")
+                || !value[..matched.start()].strip_suffix(' ').is_some_and(|before| {
+                    let word = &before[before.rfind(|c: char| !c.is_alphabetic()).map_or(0, |at| at + 1)..];
+                    !word.is_empty() && word.chars().all(|c| c.is_lowercase())
+                        && before.len() > word.len() && before[..before.len() - word.len()].ends_with(' ')
+                }))
             // An edition and year in parentheses cite a book only after its author and title
             // ("Hill, Remedies § 3.1 (2d ed. 1977)").
             .filter(|matched| *reason != "book_edition_grammar"
@@ -422,6 +441,12 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
     found.retain(|anchor| anchor.family.is_some_and(|(_, reason)| reason == "article_grammar" || reason == "treaty_grammar")
         || !primary.iter().any(|core| core.start <= anchor.span.start && anchor.span.start < core.end
             && occurrence_family(&value[core.clone()]).0 == "case"));
+    // An enactment the reproduced text of another names in its own history ("3 [Repealed, SOR/2009-223,
+    // s. 4]", "(e) repealed AR 143/2011 s2 (4)") is that text's note, not a citation.
+    found.retain(|anchor| !anchor.family.is_some_and(|(kind, _)| kind == "statute") || !{
+        let before = value[..anchor.span.start].trim_end_matches([' ', ',']).to_lowercase();
+        before.ends_with("repealed") && !before.ends_with(" not repealed")
+    });
     resolve(found)
 }
 
@@ -515,8 +540,8 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
         found.extend(crate::us::citation_spans(value, extended_us));
         Vec::new()
     };
-    found.retain(|hit| !numbered_on(&value[hit.end..]));
-    captured.retain(|matched| !numbered_on(&value[matched.span.end..]));
+    found.retain(|hit| !numbered_on(&value[hit.end..]) && !no_report(value, hit.clone()));
+    captured.retain(|matched| !numbered_on(&value[matched.span.end..]) && !no_report(value, matched.span.clone()));
     // A (year) volume publication page block the citation grammar read only
     // part of is one citation: "(2023) 57:3 RJT 487" is not the issue "3 RJT
     // 487", and "(2021), 25 Can. Crim L Rev 255" is not "(2021), 25 Can.".
@@ -602,6 +627,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     // not establish a citation; the registry or direct alias evidence does.
     let mut additional = Vec::new();
     for span in reporters {
+        if no_report(value, span.clone()) || numbered_on(&value[span.end..]) { continue; }
         let next = anchors.partition_point(|anchor| anchor.span.end <= span.start);
         let overlap = anchors.get_mut(next).filter(|anchor| anchor.span.start < span.end);
         if overlap.as_ref().is_some_and(|anchor| span.start >= anchor.span.start || anchor.span.end > span.end
@@ -678,6 +704,23 @@ fn numbered_on(after: &str) -> bool {
         let first = digits(rest);
         first > 0 && rest[first..].strip_prefix('-').is_some_and(|rest| digits(rest) > 0)
     })
+}
+
+/// Volume, reporter and page read where there is no report: a date's month and day followed by its
+/// year ("2799 Mar 12, 2024 to …"), the halves of numbers written with thousands separators
+/// ("Kinship 12,500 Foster 36,700"), and a contents line's page after its dot leader ("……… 8 A.
+/// 263 ALBERTA IS ENTITLED").
+fn no_report(value: &str, hit: Hit) -> bool {
+    let before = value[..hit.start].trim_end_matches([' ', '\t']);
+    let after = &value[hit.end..];
+    let digits = |text: &str| text.len() - text.trim_start_matches(|c: char| c.is_ascii_digit()).len();
+    let dated = REPORTER_MONTH.captures(&value[hit.clone()]).is_some_and(|captures| captures.name("month").is_some())
+        && after.strip_prefix(", ").is_some_and(|rest| digits(rest) == 4
+            && (rest.starts_with("19") || rest.starts_with("20")));
+    let thousands = value[..hit.start].strip_suffix(',').is_some_and(|rest| rest.ends_with(|c: char| c.is_ascii_digit()))
+        || after.strip_prefix(',').is_some_and(|rest| digits(rest) == 3);
+    let leader = before.ends_with("...") || before.ends_with('\u{2026}');
+    dated || thousands || leader
 }
 
 /// A date the in-text grammar read as volume, reporter and page ("12 Feb 2030",
@@ -1153,6 +1196,13 @@ fn full_citation(
     let (kind, kind_reason) = anchor.family.unwrap_or(("other", "citation_grammar"));
     // A treaty series the in-text grammar found first is still styled by the treaty's title.
     let kind = if anchor.reading.as_ref().is_some_and(|reading| reading.family().0 == "treaty") { "treaty" } else { kind };
+    // A year, volume, series and page written after a style of cause with two parties is a report,
+    // however its series reads ("Gowan v. Christie (1873) LR 273").
+    // An article's quoted title naming a case ("“R v Fir and the Rest” (2032) …") is no style of cause.
+    let reported = (kind == "journal").then(|| case_style_start(text, core.start, previous_end))
+        .filter(|start| *start < core.start && CASE_VERSUS.is_match(&text[*start..core.start])
+            && !text[*start..core.start].contains(['\u{201c}', '\u{201d}', '"']));
+    let kind = if reported.is_some() { "case" } else { kind };
     let has_section = anchor.reading.as_ref().is_some_and(|reading| reading.has_section());
     // Parentheses inside a section identifier (1.401(a)-1) are not a
     // subdivision. Retain the section suffix in fields without widening the
@@ -1219,7 +1269,8 @@ fn full_citation(
     // A name runs over at most three lines of a page and a few hundred characters: one longer
     // took in a letterhead, an index or a record's prose ("Canada (AG) v. Northrop Grumman
     // Overseas ⏎ ss. 50, 18.2 Rule 398 ⏎ 13, 14, 214, …"), and the citation has no name. So
-    // does one that holds a telephone or fax number, which is a letterhead's.
+    // does one that holds a telephone or fax number or an address, which is a letterhead's, and
+    // a lone label before a link ("French: https://…").
     // A bill's citation holds its own title ("Bill C-9, An Act to …"): what comes before it is
     // no name of it.
     let styled_start = if charter.is_none() && (text[styled_start..core.start].matches("\n\n").count() > 2
@@ -1383,6 +1434,7 @@ fn full_citation(
         citation.authority = match citation.authority {
             Authority::Book | Authority::Journal if GOVERNMENT_AUTHOR.is_match(style).unwrap_or(false) =>
                 Authority::GovernmentDocument,
+            Authority::Journal if reported.is_some() => Authority::Case,
             Authority::Webpage if LEGISLATIVE_TITLE.is_match(style).unwrap_or(false) =>
                 if ["Treaty", "Agreement", "Convention", "Accord", "Covenant", "Protocol"].iter().any(|word| style.contains(word)) {
                     Authority::Treaty
@@ -1883,6 +1935,34 @@ fn commented_work(text: &str, citation: &mut Citation, previous: &[Citation], fl
         end = subject.full_span.start;
     }
     None
+}
+
+/// A statute cited by its title and its revision's year without a chapter ("Companies' Creditors
+/// Arrangement Act, R.S.C. 1985;") is the chapter the same document cites under that title, series
+/// and year, when exactly one chapter is cited so: it takes that citation's chapter and key, and
+/// says so in its reasons ("titled_chapter").
+pub(crate) fn titled_chapters(citations: &mut [Citation]) {
+    let words = |value: &str| value.chars().filter(|c| c.is_alphanumeric()).collect::<String>().to_lowercase();
+    let series = |citation: &Citation| citation.fields.series.as_deref().map(words);
+    let title = |citation: &Citation| citation.style.as_ref().map(|style| words(&style.text)).filter(|title| !title.is_empty());
+    let legislation = |citation: &Citation| citation.form == Form::Full && citation.authority.is_legislation();
+    for at in 0..citations.len() {
+        let citation = &citations[at];
+        if !legislation(citation) || citation.fields.chapter.is_some() || citation.fields.year.is_none() { continue; }
+        let Some(own_title) = title(citation) else { continue };
+        let (own_series, own_year) = (series(citation), citation.fields.year.clone());
+        let mut matches = citations.iter().filter(|other| legislation(other) && other.fields.chapter.is_some() && other.key.is_some()
+            && title(other).as_deref() == Some(own_title.as_str()) && series(other) == own_series && other.fields.year == own_year)
+            .map(|other| (other.fields.chapter.clone(), other.key.clone())).collect::<Vec<_>>();
+        matches.dedup();
+        if let [(chapter, key)] = matches.as_slice() {
+            let (chapter, key) = (chapter.clone(), key.clone());
+            let citation = &mut citations[at];
+            citation.fields.chapter = chapter;
+            citation.key = key;
+            citation.reasons.push("titled_chapter".to_owned());
+        }
+    }
 }
 
 /// A statute's chapter read with a recognizer's confusion ("R.S.C. 1985, c. G-36" for "c C-36":

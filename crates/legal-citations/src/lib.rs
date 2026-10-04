@@ -183,6 +183,7 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
             .or_else(|| key::key_in(citation, registry::registry()));
     }
     find::ocr_twins(&mut citations);
+    find::titled_chapters(&mut citations);
     let notes = options.notes.as_deref().unwrap_or(&[]);
     let mut parts = source::split_notes(text, notes);
     let candidates = source::linked_ibid_candidates(text, notes, &parts);

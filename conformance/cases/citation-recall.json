@@ -1670,6 +1670,377 @@
           }
         ]
       }
+    },
+    {
+      "name": "noise/month-and-day-in-a-dated-cell-is-no-reporter",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Statement of Account 2799 Mar 12, 2036 Fee 450.00",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "noise/month-reporter-with-a-volume-and-page-is-kept",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen v Ash (2036), 12 Mar 12.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "(2036), 12 Mar 12"
+            },
+            "style": {
+              "text": "Fen v Ash"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "noise/amounts-with-thousands-separators-are-no-reporter",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Total recovered 37,500 Foster 36,000 Foster 76.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "noise/company-short-name-in-two-capitals-is-no-reporter",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "The purchaser, 420 OpCo. 35, closed.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "noise/dot-leader-before-a-tab-number-is-no-citation",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen v Ash .......... 8 A. 263",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "noise/law-firm-address-is-no-webpage-title",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen Ash LLP, 180 Dundas Street West, Suite 1200 Toronto, Ontario M5G 1Z8 www.fenash.example",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "www.fenash.example"
+            },
+            "style": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "noise/language-label-is-no-webpage-title",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "French: https://www.fen.example/fra/1386520802043/1386520921574",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "https://www.fen.example/fra/1386520802043/1386520921574"
+            },
+            "style": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "noise/url-label-is-no-webpage-title",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "URL: https://www.fenash.example/wp-",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "https://www.fenash.example/wp-"
+            },
+            "style": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "noise/repealing-instrument-in-a-repeal-note-is-no-citation",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "[Repealed, SOR/2036-223, s. 4]",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "noise/instrument-named-after-repealed-is-no-citation",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "(e) repealed AR 143/2036;",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "statute/regulation-outside-a-repeal-note-is-kept",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen Ash Regulations, SOR/2036-223, s. 4.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "SOR/2036-223"
+            },
+            "style": {
+              "text": "Fen Ash Regulations"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "noise/court-file-named-in-a-sentence-is-no-order",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "The appeal for Court File No. A-290-36 was heard with it.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "case/court-file-after-a-style-is-kept",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen v Ash, Court File No. T-141-36.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "format": "docket",
+            "style": {
+              "text": "Fen v Ash"
+            },
+            "fields": {
+              "docket": "T-141-36"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "statute/dated-title-opening-with-a-comma-list",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Alberta: Child, Youth and Family Enhancement Act, 2036.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "Child, Youth and Family Enhancement Act, 2036"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "statute/bare-revised-statute-takes-the-chapter-of-its-only-titled-twin",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Companies' Creditors Arrangement Act, R.S.C. 1985, c. C-36 applies, and under the Companies' Creditors Arrangement Act, R.S.C. 1985, the court may act.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "R.S.C. 1985, c. C-36"
+            },
+            "fields": {
+              "chapter": "C-36"
+            }
+          },
+          {
+            "span": {
+              "text": "R.S.C. 1985"
+            },
+            "fields": {
+              "chapter": "C-36"
+            },
+            "key": "3:statute:ca:rsc:1985:c-36"
+          }
+        ]
+      }
+    },
+    {
+      "name": "statute/bare-revised-statute-with-two-titled-twins-stays-unchaptered",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen Ash Act, R.S.C. 1985, c. F-1 and Fen Ash Act, R.S.C. 1985, c. F-2 differ from the Fen Ash Act, R.S.C. 1985.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "fields": {
+              "chapter": "F-1"
+            }
+          },
+          {
+            "fields": {
+              "chapter": "F-2"
+            }
+          },
+          {
+            "span": {
+              "text": "R.S.C. 1985"
+            },
+            "fields": {
+              "chapter": null
+            },
+            "key": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/charter-as-a-recognizer-reads-it",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Canadian Charter af Rights and Freedoms, Part 1 of the Constitution Act, 1982, bemg Schedule B to the Canada Act 1982 (UK), 1982, c 11.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "authority": "constitution",
+            "style": {
+              "text": "Canadian Charter af Rights and Freedoms"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/table-column-headers-are-no-part-of-the-style",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Case / Paragraph References Bank of Fen v Ash Petroleum (2036), 145 DLR (4th) 499.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "(2036), 145 DLR (4th) 499"
+            },
+            "style": {
+              "text": "Bank of Fen v Ash Petroleum"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "case/style-of-cause-before-a-year-and-law-report-is-a-case",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen v. Ash (1873) LR 273 and Sierra v Fen, 2032 SCC 41.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "authority": "case",
+            "span": {
+              "text": "(1873) LR 273"
+            },
+            "style": {
+              "text": "Fen v. Ash"
+            }
+          },
+          {
+            "span": {
+              "text": "2032 SCC 41"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/quoted-article-title-naming-a-case-stays-a-journal",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen, \"Ash v. Sierra\" (2036) 12 Fen L Rev 273.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "authority": "journal",
+            "span": {
+              "text": "(2036) 12 Fen L Rev 273"
+            }
+          }
+        ]
+      }
     }
   ]
 }

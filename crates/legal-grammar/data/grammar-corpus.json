@@ -71,11 +71,19 @@
         },
         {
           "id": "cite.reporter.word",
-          "pattern": "^(?<volume>\\d+)\\s+(?<word>[A-Z](?:[a-z]+|[A-Z]+)\\.?)\\s+(?<page>\\d+)",
+          "pattern": "^(?<volume>\\d+)\\s+(?<word>[A-Z](?:(?:[a-z]+|[A-Z]+)\\.?|[a-z]+[A-Z][a-z]+\\.))\\s+(?<page>\\d+)",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored for the legal-citations extraction stages. A cite.in-text hit whose reporter is one plain word: find.rs drops it unless the word is a registered reporter, since a paragraph, heading or telephone number around an ordinary word ('34 Conclusion 35', '59 ARTICLE 9', '2921 Facsimile 403') is no report. An all-capital word after a year is left to the neutral-citation reading ('2015 ABCA 31'). The page is captured too: a page that is itself a year ('2021 CBC 2021') reads as a date, not a report.",
+          "provenance": "Beaver-authored for the legal-citations extraction stages. A cite.in-text hit whose reporter is one plain word: find.rs drops it unless the word is a registered reporter, since a paragraph, heading or telephone number around an ordinary word ('34 Conclusion 35', '59 ARTICLE 9', '2921 Facsimile 403') is no report. An all-capital word after a year is left to the neutral-citation reading ('2015 ABCA 31'). The page is captured too: a page that is itself a year ('2021 CBC 2021') reads as a date, not a report. Beaver-authored: a company's short name written in two capitals ('420 OpCo. 35', a company and a note number) is a plain word too when it ends with its period; 'CanLii' is no such word.",
           "vectors": [
+            {
+              "input": "420 OpCo. 35",
+              "groups": {
+                "volume": "420",
+                "word": "OpCo.",
+                "page": "35"
+              }
+            },
             {
               "input": "2021 CBC 2021",
               "groups": {
@@ -1898,11 +1906,18 @@
         },
         {
           "id": "cite.statute.titled",
-          "pattern": "\\b(?<title>(?:[A-Z][A-Za-z'’&.-]*\\s+){1,9}(?:Acts?|Codes?|Regulations?|Rules|Convention|Treaty|Charter|Protocol))(?:,\\s*(?<title_year>(?:1[6-9]|20)\\d{2}))?\\s*\\[(?<short>[A-Z][A-Za-z0-9 '’-]{0,30})\\]|\\b(?<dated_title>(?:[A-Z][A-Za-z'’&.-]*\\s+){1,9}(?:Acts?|Codes?|Regulations?|Rules|Convention|Treaty|Charter|Protocol)),\\s*(?<year>(?:1[6-9]|20)\\d{2})\\b",
+          "pattern": "\\b(?<title>(?:[A-Z][A-Za-z'’&.-]*(?:,\\s+[A-Z][A-Za-z'’&.-]*)*\\s+(?:and|&)\\s+)?(?:[A-Z][A-Za-z'’&.-]*\\s+){1,9}(?:Acts?|Codes?|Regulations?|Rules|Convention|Treaty|Charter|Protocol))(?:,\\s*(?<title_year>(?:1[6-9]|20)\\d{2}))?\\s*\\[(?<short>[A-Z][A-Za-z0-9 '’-]{0,30})\\]|\\b(?<dated_title>(?:[A-Z][A-Za-z'’&.-]*(?:,\\s+[A-Z][A-Za-z'’&.-]*)*\\s+(?:and|&)\\s+)?(?:[A-Z][A-Za-z'’&.-]*\\s+){1,9}(?:Acts?|Codes?|Regulations?|Rules|Convention|Treaty|Charter|Protocol)),\\s*(?<year>(?:1[6-9]|20)\\d{2})\\b",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored: a statute cited by title alone still anchors when the title carries its own regnal year (Employment Standards Act, 2000) or is immediately given a bracketed short form (Dog Owners' Liability Act ... [DOLA]). Sibling of title.legal.toa, which recognizes the same title shape but is recall-first and therefore fires on every prose mention of a named Act; this entry demands the year or the short form so it can be used to discover authorities, not only to classify spans another grammar already found.",
+          "provenance": "Beaver-authored: a statute cited by title alone still anchors when the title carries its own regnal year (Employment Standards Act, 2000) or is immediately given a bracketed short form (Dog Owners' Liability Act ... [DOLA]). Sibling of title.legal.toa, which recognizes the same title shape but is recall-first and therefore fires on every prose mention of a named Act; this entry demands the year or the short form so it can be used to discover authorities, not only to classify spans another grammar already found. Beaver-authored: a title may open with words joined by 'and', after a list of them set off by commas, ('Child and Youth Advocate Act, 2009', 'Child, Youth and Family Services Act, 2017'); the title is read whole, not from its last capitalised word.",
           "vectors": [
+            {
+              "input": "Child, Youth and Family Services Act, 2037",
+              "groups": {
+                "dated_title": "Child, Youth and Family Services Act",
+                "year": "2037"
+              }
+            },
             {
               "input": "the Employment Standards Act, 2000 [ESA], applies",
               "groups": {
@@ -2627,11 +2642,18 @@
         },
         {
           "id": "cite.ca.charter",
-          "pattern": "(?:(?<title>Canadian\\s+Charter\\s+of\\s+Rights\\s+and\\s+Freedoms|Charte\\s+canadienne\\s+des\\s+droits\\s+et\\s+libertés)(?<pin>,\\s*(?:ss?|arts?)\\.?\\s*\\d[\\dA-Za-z().]*(?:\\s*(?:[-–]|,|and|et|à|to)\\s*\\d[\\dA-Za-z().]*)*)?\\s*,\\s*)?(?<source>(?:Part\\s+I\\s+of\\s+the\\s+Constitution\\s+Act,\\s*1982|partie\\s+I\\s+de\\s+la\\s+Loi\\s+constitutionnelle\\s+de\\s+1982)\\s*,\\s*(?:being\\s+Schedule\\s+B\\s+to\\s+the\\s+Canada\\s+Act\\s+1982|constituant\\s+l['’]annexe\\s+B\\s+de\\s+la\\s+Loi\\s+de\\s+1982\\s+sur\\s+le\\s+Canada)\\s*\\((?:UK|U\\.K\\.|R-U|R\\.-U\\.)\\)\\s*,\\s*1982\\s*,\\s*c\\.?\\s*11)",
+          "pattern": "(?:(?<title>Canadian\\s+Charter\\s+[oa]f\\s+Rights\\s+and\\s+Freedoms|Charte\\s+canadienne\\s+des\\s+droits\\s+et\\s+libertés)(?<pin>,\\s*(?:ss?|arts?)\\.?\\s*\\d[\\dA-Za-z().]*(?:\\s*(?:[-–]|,|and|et|à|to)\\s*\\d[\\dA-Za-z().]*)*)?\\s*,\\s*)?(?<source>(?:Part\\s+[I1l]\\s+of\\s+the\\s+Constitution\\s+Act,\\s*1982|partie\\s+I\\s+de\\s+la\\s+Loi\\s+constitutionnelle\\s+de\\s+1982)\\s*,\\s*(?:be(?:i|1|l|m|í)?n?g\\s+Schedule\\s+B\\s+to\\s+the\\s+Canada\\s+Act\\s+1982|constituant\\s+l['’]annexe\\s+B\\s+de\\s+la\\s+Loi\\s+de\\s+1982\\s+sur\\s+le\\s+Canada)\\s*\\((?:UK|U\\.K\\.|R-U|R\\.-U\\.)\\)\\s*,\\s*1982\\s*,\\s*c\\.?\\s*11)",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored for the legal-citations extraction stages. The McGill full citation of the Charter, in which the pinpoint sits between the title and the enacting instrument ('Canadian Charter of Rights and Freedoms, s 7, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11'), English and French. The named groups keep the title, the pinpoint and the source apart so the pinpoint is never swallowed into the core; the Constitution Act inside the source is not a second authority. Beaver-authored: a brief that names the Charter in its text cites only the enacting instrument in its note ('Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11 [Charter]'), so the title and pinpoint are optional; the source alone is the citation's core and the title before it styles it.",
+          "provenance": "Beaver-authored for the legal-citations extraction stages. The McGill full citation of the Charter, in which the pinpoint sits between the title and the enacting instrument ('Canadian Charter of Rights and Freedoms, s 7, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11'), English and French. The named groups keep the title, the pinpoint and the source apart so the pinpoint is never swallowed into the core; the Constitution Act inside the source is not a second authority. Beaver-authored: a brief that names the Charter in its text cites only the enacting instrument in its note ('Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11 [Charter]'), so the title and pinpoint are optional; the source alone is the citation's core and the title before it styles it. Beaver-authored: the Charter's fixed words as a recognizer reads them in a filed record ('Canadian Charter af Rights and Freedoms, Part 1 of the Constitution Act, 1982, bemg Schedule B to the Canada Act 1982 (UK), 1982, c 11').",
           "vectors": [
+            {
+              "input": "Canadian Charter af Rights and Freedoms, Part 1 of the Constitution Act, 1982, bemg Schedule B to the Canada Act 1982 (UK), 1982, c 11",
+              "groups": {
+                "title": "Canadian Charter af Rights and Freedoms",
+                "source": "Part 1 of the Constitution Act, 1982, bemg Schedule B to the Canada Act 1982 (UK), 1982, c 11"
+              }
+            },
             {
               "input": "Canadian Charter of Rights and Freedoms, s 7, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11.",
               "groups": {
@@ -6685,11 +6707,15 @@
         },
         {
           "id": "style.case-lead-in",
-          "pattern": "^(?:(?:\\d{1,4}\\.|\\[\\d{1,4}\\]|\\((?:\\d{1,4}|[{{lc}}]{1,4})\\)|(?:TAB|Tab)\\s+\\d{1,4}[A-Za-z]?|\\d{1,4}(?:\\.\\d{1,3})?(?:[-–]\\d{1,3}|\\s*[-–]\\s+\\d{1,4}|\\s+[-–]\\s*\\d{1,4})?(?:,\\s*\\d{1,4}(?:\\.\\d{1,3})?(?:\\s*[-–]\\s*\\d{1,4})?)*)\\s+)?(?:(?:and|In|As\\s+(?:for|in|with)|Like|Unlike|Following)\\s+)?",
+          "pattern": "^(?:(?:\\d{1,4}\\.|\\[\\d{1,4}\\]|\\((?:\\d{1,4}|[{{lc}}]{1,4})\\)|(?:TAB|Tab)\\s+\\d{1,4}[A-Za-z]?|(?:Case\\s*/\\s*)?(?:Paragraph|Para|Pinpoint|Page)\\s+References?|\\d{1,4}(?:\\.\\d{1,3})?(?:[-–]\\d{1,3}|\\s*[-–]\\s+\\d{1,4}|\\s+[-–]\\s*\\d{1,4})?(?:,\\s*\\d{1,4}(?:\\.\\d{1,3})?(?:\\s*[-–]\\s*\\d{1,4})?)*)\\s+)?(?:(?:and|In|As\\s+(?:for|in|with)|Like|Unlike|Following)\\s+)?",
           "flags": "",
           "canonical": {},
-          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_LEAD_IN, a numbered paragraph's own label ('12.', '[12]', '(a)') and a leading 'In' in front of the first party. Beaver-authored: the sentence openers As for, As in, As with, Like, Unlike and Following are lead-ins too (As for Fell & Moss, supra note 3). A brief's own list of its authorities opens each line with its book tab ('TAB 8 Ash v Fen, 2036 ABKB 4'), which is no part of the style of cause. Beaver-authored: a list of authorities that gives the paragraphs each authority is cited at puts that column in front of the next line's style of cause ('…, [2005] 2 SCR 91 12 Safilo Canada Inc. v. Contour Optik Inc.', '57-58, 59, 342- 347 Canadian Human Rights Commission v. Canada'), as does a decimal paragraph number ('4.13 McLean v Canada'); a numbered company keeps its number, which is longer than four digits or written as two four-digit groups ('1705221 Alberta Ltd', '2747-3174 Québec Inc.'). A citation joined to the one before it opens with 'and' ('at TAB 18 and Skyepharma PLC v Hyal').",
+          "provenance": "Moved from legal-citations find.rs (legal-structure-parser citator.rs lineage) with \\p{L}/\\p{Lu}/\\p{Ll}/\\p{M}/\\p{N} respelled as the table's Latin letter, mark and digit classes (Latin-1 and Latin Extended-A, which cover English and French legal text): CASE_LEAD_IN, a numbered paragraph's own label ('12.', '[12]', '(a)') and a leading 'In' in front of the first party. Beaver-authored: the sentence openers As for, As in, As with, Like, Unlike and Following are lead-ins too (As for Fell & Moss, supra note 3). A brief's own list of its authorities opens each line with its book tab ('TAB 8 Ash v Fen, 2036 ABKB 4'), which is no part of the style of cause. Beaver-authored: a list of authorities that gives the paragraphs each authority is cited at puts that column in front of the next line's style of cause ('…, [2005] 2 SCR 91 12 Safilo Canada Inc. v. Contour Optik Inc.', '57-58, 59, 342- 347 Canadian Human Rights Commission v. Canada'), as does a decimal paragraph number ('4.13 McLean v Canada'); a numbered company keeps its number, which is longer than four digits or written as two four-digit groups ('1705221 Alberta Ltd', '2747-3174 Québec Inc.'). A citation joined to the one before it opens with 'and' ('at TAB 18 and Skyepharma PLC v Hyal'). Beaver-authored: a table's column headers read into its first row ('Case / Paragraph References Bank of Montreal v Dynex Petroleum') are no part of the style of cause.",
           "vectors": [
+            {
+              "input": "Paragraph References Fen v Ash",
+              "groups": {}
+            },
             {
               "input": "12 Safilo Canada Inc. v. Contour Optik Inc.",
               "groups": {}
