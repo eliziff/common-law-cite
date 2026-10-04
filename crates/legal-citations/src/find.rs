@@ -15,7 +15,7 @@ use crate::{CitationStyle, Options};
 use legal_grammar::{CompiledEcmascriptGrammar, CompiledGrammar};
 use regex::Regex;
 use std::ops::Range;
-use std::sync::LazyLock;
+use std::sync::{LazyLock, OnceLock};
 
 #[derive(serde::Serialize)]
 pub struct ProviderCitationMatch<'a> {
@@ -177,7 +177,10 @@ const EUROPE: Guides = &[CitationStyle::Mcgill, CitationStyle::Oscola];
 const UNITED_STATES: Guides = &[CitationStyle::Mcgill, CitationStyle::Bluebook];
 const BLUEBOOK: Guides = &[CitationStyle::Bluebook];
 const AGLC: Guides = &[CitationStyle::Aglc];
-static SECONDARY_SOURCES: LazyLock<Vec<(&'static str, &'static str, CompiledGrammar, Guides)>> = LazyLock::new(|| [
+// Each compiled the first time a text in a style it serves is read: a reader of Canadian briefs
+// never compiles the Bluebook's or AGLC's.
+type SecondarySource = (&'static str, &'static str, &'static str, OnceLock<CompiledGrammar>, Guides);
+static SECONDARY_SOURCES: LazyLock<Vec<SecondarySource>> = LazyLock::new(|| [
     ("journal", "manuscript_grammar", "cite.secondary.manuscript", EVERY),
     ("book", "thesis_grammar", "cite.secondary.thesis", EVERY),
     ("journal", "paper_grammar", "cite.secondary.paper", EVERY),
@@ -232,7 +235,7 @@ static SECONDARY_SOURCES: LazyLock<Vec<(&'static str, &'static str, CompiledGram
     ("document", "correspondence_grammar", "cite.secondary.correspondence", EVERY),
     ("document", "archival_grammar", "cite.secondary.archival", EVERY),
     ("book", "religious_text_grammar", "cite.secondary.religious", EVERY),
-].into_iter().map(|(kind, reason, id, guides)| (kind, reason, backtracking(id), guides)).collect());
+].into_iter().map(|(kind, reason, id, guides)| (kind, reason, id, OnceLock::new(), guides)).collect());
 static CHARTER: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("cite.ca.charter"));
 static CASE_FLOOR: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("style.case-floor"));
 // A document's own list or table of authorities: its heading, and the heading that ends it.
@@ -395,8 +398,9 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             found.push(Anchor::new(start..matched.end(), (*kind, *reason)));
         }
     }
-    for (kind, reason, pattern, guides) in SECONDARY_SOURCES.iter() {
+    for (kind, reason, id, compiled, guides) in SECONDARY_SOURCES.iter() {
         if guides.is_empty() || styles.is_none_or(|styles| styles.iter().any(|style| guides.contains(style))) {
+            let pattern = compiled.get_or_init(|| backtracking(id));
             // A file number in parentheses identifies the proceeding a sentence speaks of
             // ("the class proceeding (Court File No. T-402-19) was filed"); it cites no decision.
             found.extend(pattern.find_iter(value).flatten()

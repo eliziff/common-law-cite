@@ -487,15 +487,19 @@ fn fallback_ranges(text: &str) -> BTreeSet<(usize, usize)> {
 
 static COMMON: LazyLock<legal_grammar::AsciiBoundedGrammar> = LazyLock::new(||
         legal_grammar::compile_ascii_bounded_table_entry("cite.us.law.common").unwrap());
-static EXTENDED: LazyLock<[(&str, legal_grammar::AsciiBoundedGrammar); 4]> = LazyLock::new(||
-        ["cite.us.reporter.custom.full", "cite.us.reporter.custom.short",
-            "cite.us.law.full", "cite.us.law.short"].map(|id|
+// The custom reporters are read only for extended US citations; a statute is read as one by the
+// laws whatever the reader asks for.
+static CUSTOM: LazyLock<[(&str, legal_grammar::AsciiBoundedGrammar); 2]> = LazyLock::new(||
+        ["cite.us.reporter.custom.full", "cite.us.reporter.custom.short"].map(|id|
+            (id, legal_grammar::compile_ascii_bounded_table_entry(id).unwrap())));
+static LAWS: LazyLock<[(&str, legal_grammar::AsciiBoundedGrammar); 2]> = LazyLock::new(||
+        ["cite.us.law.full", "cite.us.law.short"].map(|id|
             (id, legal_grammar::compile_ascii_bounded_table_entry(id).unwrap())));
 
 pub(crate) fn is_law(core: &str) -> bool {
     let whole = |span: &Range<usize>| span.start == 0 && span.end == core.len();
-    COMMON.find_spans(core).iter().any(whole) || EXTENDED.iter().any(|(id, grammar)|
-        id.contains(".law.") && grammar.find_spans(core).iter().any(whole))
+    COMMON.find_spans(core).iter().any(whole) || LAWS.iter().any(|(_, grammar)|
+        grammar.find_spans(core).iter().any(whole))
 }
 
 pub(crate) fn common_law_spans(text: &str) -> Vec<Range<usize>> {
@@ -515,7 +519,7 @@ fn extend_native_spans(text: &str, extended: bool, spans: &mut Vec<Range<usize>>
     if extended {
         for (start, end) in fallback_ranges(text) {
             let candidate = &text[start..end];
-            for (id, grammar) in EXTENDED.iter() {
+            for (id, grammar) in CUSTOM.iter().chain(LAWS.iter()) {
                 if id.ends_with(".short") && !candidate.contains(" at") { continue; }
                 spans.extend(grammar.find_spans(candidate).into_iter()
                     .map(|hit| start + hit.start..start + hit.end));
