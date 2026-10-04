@@ -6652,11 +6652,15 @@
         },
         {
           "id": "style.case-floor",
-          "pattern": "\\n[ \\t]*\\n[ \\t]*(?:\\d{1,4}\\.|[A-Z]\\.|\\([a-z0-9]{1,4}\\))[ \\t]|[”\"][.,;:]?[ \\t\\n]|\\b(?:Authorities|Cases|Case Law|Jurisprudence|Legislation|Statutes|Regulations?|Doctrine|Secondary Sources)[ \\t]*:?[ \\t]*\\n",
+          "pattern": "\\n[ \\t]*\\n[ \\t]*(?:\\d{1,4}\\.|[A-Z]\\.|\\([a-z0-9]{1,4}\\))[ \\t]|[”\"][.,;:]?[ \\t\\n]|\\d[.;][ \\t]*\\n[ \\t]*\\n|\\b(?:Authorities|Cases|Case Law|Jurisprudence|Legislation|Statutes|Regulations?|Doctrine|Secondary Sources)[ \\t]*:?[ \\t]*\\n",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored from filed Canadian briefs: where a style of cause cannot start before, though no sentence ends there: a new numbered paragraph or lettered heading after a blank line ('…to\n\n52. Claims bar dates…', 'C. Litigation'), and the end of a quotation ('…to help it decide”. Re SemCanada Crude Company'). A quotation is never part of a style of cause. Beaver-authored: a list of authorities' group heading on the line before ('2. Appendix B – Authorities', 'Statute or Regulation', 'Jurisprudence') is no part of the style or title of the authority under it.",
+          "provenance": "Beaver-authored from filed Canadian briefs: where a style of cause cannot start before, though no sentence ends there: a new numbered paragraph or lettered heading after a blank line ('…to\n\n52. Claims bar dates…', 'C. Litigation'), and the end of a quotation ('…to help it decide”. Re SemCanada Crude Company'). A quotation is never part of a style of cause. Beaver-authored: a list of authorities' group heading on the line before ('2. Appendix B – Authorities', 'Statute or Regulation', 'Jurisprudence') is no part of the style or title of the authority under it. Beaver-authored: a line that ends a sentence with a number ('... Court File No. 1601-06131.') before a blank line closes its entry; the next entry's style of cause starts after it.",
           "vectors": [
+            {
+              "input": "Court File No. 1601-06131.\n\nSierra Fen v Canada",
+              "groups": {}
+            },
             {
               "input": "1. Appendix A – Statute or Regulation\n\nFederal Courts Act",
               "groups": {}

@@ -1640,6 +1640,36 @@
           }
         ]
       }
+    },
+    {
+      "name": "case/order-across-a-line-break-stays-one-and-apart-from-the-next-entry",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Re Fen Oil & Gas Limited, Order of Madam Justice Ash dated May 17, 2037,\n\nCourt File No. 1601-06131.\n\nSierra Fen of Canada v Canada (Minister of Finance), 2032 SCC 41.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "format": "docket",
+            "style": {
+              "text": "Re Fen Oil & Gas Limited"
+            },
+            "fields": {
+              "docket": "1601-06131"
+            }
+          },
+          {
+            "span": {
+              "text": "2032 SCC 41"
+            },
+            "style": {
+              "text": "Sierra Fen of Canada v Canada (Minister of Finance)"
+            }
+          }
+        ]
+      }
     }
   ]
 }
