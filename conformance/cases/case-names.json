@@ -1,0 +1,42 @@
+{
+  "format": "legal-citations-conformance:v1",
+  "source": "Independently invented styles of cause; no private document or report data.",
+  "description": "Whether the names a document writes for a case can name the case a source holds at its citation.",
+  "cases": [
+    {
+      "name": "case-names/different-accused",
+      "method": "caseNamesAgree",
+      "request": { "written": ["R v Ashfen", "Ashfen"], "other": "R. v. Mossley" },
+      "status": "pass",
+      "expect": { "agrees": false, "written": ["ashfen"], "other": ["mossley"] }
+    },
+    {
+      "name": "case-names/same-accused-written-differently",
+      "method": "caseNamesAgree",
+      "request": { "written": ["R v Ashfen"], "other": "Her Majesty the Queen v. Ashfen" },
+      "status": "pass",
+      "expect": { "agrees": true }
+    },
+    {
+      "name": "case-names/one-party-shared",
+      "method": "caseNamesAgree",
+      "request": { "written": ["R v Fell and Fell", "Fell BCCA"], "other": "R. v. Fell" },
+      "status": "pass",
+      "expect": { "agrees": true }
+    },
+    {
+      "name": "case-names/governments-and-offices-tell-nothing",
+      "method": "caseNamesAgree",
+      "request": { "written": ["Canada (Attorney General) v Ontario"], "other": "Ontario (Minister of Finance) v. Canada" },
+      "status": "pass",
+      "expect": { "agrees": true, "written": [], "other": [] }
+    },
+    {
+      "name": "case-names/company-form-words-tell-nothing",
+      "method": "caseNamesAgree",
+      "request": { "written": ["Ashfen Holdings Ltd v Mossley Inc"], "other": "Fenwick Ltd. v. Corbel Inc." },
+      "status": "pass",
+      "expect": { "agrees": false, "written": ["ashfen", "holdings", "mossley"], "other": ["fenwick", "corbel"] }
+    }
+  ]
+}

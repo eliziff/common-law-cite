@@ -2034,6 +2034,7 @@ pub(crate) fn anchor_titles(text: &str, citations: &mut [Citation], notes: &[cra
         if citation.form == Form::Full && citation.authority == Authority::Case
             && citation.style.as_ref().is_none_or(|style| style.text.trim().is_empty()) {
             citation.fields.anchor_title = anchor_case_name(text, anchor, citation.fields.explicit_short_span.as_ref());
+            if citation.fields.anchor_title.is_none() { citation.fields.anchor_mention = anchor_case_mention(text, anchor); }
             continue;
         }
         if citation.form != Form::Full || !citation.authority.is_legislation() || citation.style.is_some() {
@@ -2094,6 +2095,31 @@ fn anchor_case_name(text: &str, anchor: usize, short: Option<&Span>) -> Option<S
         None => CASE_VERSUS.find_iter(&text[styled_floor(text, floor, end)..end]).count() == 1,
     };
     agrees.then(|| span(text, start..end))
+}
+
+/// The one style of cause the sentence a note hangs from gives, read up to the end of its second
+/// party's name ("In R v Le, the Supreme Court held …¹" gives "R v Le"); none where the sentence
+/// gives none or several.
+fn anchor_case_mention(text: &str, anchor: usize) -> Option<Span> {
+    let mut floor = anchor.saturating_sub(400);
+    while !text.is_char_boundary(floor) { floor += 1; }
+    let floor = styled_floor(text, floor, anchor);
+    let mut versus = CASE_VERSUS.find_iter(&text[floor..anchor]);
+    let (Some(only), None) = (versus.next(), versus.next()) else { return None };
+    // The second party runs over capitalized words and the particles a name takes, to the first
+    // word that is neither or the punctuation that closes the name.
+    let mut end = floor + only.end();
+    for word in text[end..anchor].split_inclusive(char::is_whitespace) {
+        let bare = word.trim_end();
+        let name = bare.trim_end_matches([',', '.', ';', ':', ')', '\u{201d}']);
+        if name.is_empty() || !(name.starts_with(|character: char| character.is_uppercase() || character.is_ascii_digit())
+            || matches!(name, "and" | "of" | "the" | "de" | "du" | "des" | "la" | "le" | "et" | "for")) { break; }
+        if name.len() < bare.len() { end += name.len(); break; }
+        end += word.len();
+    }
+    let end = text[..end].trim_end().len();
+    let start = case_style_start(text, end, floor);
+    (start < end).then(|| span(text, start..end))
 }
 
 /// The citations a document's own list or table of authorities holds: after its heading, each

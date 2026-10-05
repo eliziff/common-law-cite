@@ -1623,6 +1623,136 @@
       }
     },
     {
+      "name": "style/note-decision-mentioned-in-its-sentence",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "In R v Ashfen, the Court held that notice may be taken of social facts.\n\n2037 SCC 42 at para 71.",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 73,
+            "end": 96,
+            "anchor": 71
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 SCC 42"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": null,
+              "anchorMention": {
+                "text": "R v Ashfen"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/note-decision-mentioned-past-a-short-pinpoint",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ashfen is cited in 54 decisions, R v Moss in 52,\n\n2037 BCSC 501 [Moss].",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 50,
+            "end": 71,
+            "anchor": 48
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 BCSC 501"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": null,
+              "anchorMention": {
+                "text": "R v Moss"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/note-decision-not-mentioned-when-sentence-names-two",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "In R v Ashfen, the Court followed Fell v Moss.\n\n2037 SCC 42.",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 48,
+            "end": 60,
+            "anchor": 46
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 SCC 42"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": null,
+              "anchorMention": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/note-decision-named-is-not-also-mentioned",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "In R v Ashfen,\n\n2037 SCC 47 [Ashfen].",
+      "options": {
+        "resolve": false,
+        "notes": [
+          {
+            "number": 1,
+            "start": 16,
+            "end": 37,
+            "anchor": 14
+          }
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 SCC 47"
+            },
+            "style": null,
+            "fields": {
+              "anchorTitle": {
+                "text": "R v Ashfen"
+              },
+              "anchorMention": null
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "style/adjective-led-instrument-title",
       "convention": "mcgill",
       "status": "pass",

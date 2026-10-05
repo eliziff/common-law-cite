@@ -191,6 +191,7 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             to_value(crate::source::strip_administrative_tail(&request.text))
         }
         "correctCitation" => to_value(crate::format::correct_citation(&parse(method, request)?)),
+        "caseNamesAgree" => to_value(crate::format::case_names_agree(&parse(method, request)?)),
         "normalizeShortForm" => {
             let request: HasCitationRequest = parse(method, request)?;
             to_value(crate::short_forms::normalize(&request.text))
@@ -671,6 +672,9 @@ pub fn convert_citations(document: &ScalarText<'_>, citations: &mut [Citation], 
         }
         if let Some(title) = citation.fields.anchor_title.as_mut() {
             convert_span(title);
+        }
+        if let Some(mention) = citation.fields.anchor_mention.as_mut() {
+            convert_span(mention);
         }
         if let Some(name) = citation.fields.source_case_name.as_mut() {
             name.full_span_start = convert(name.full_span_start);

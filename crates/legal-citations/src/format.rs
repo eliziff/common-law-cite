@@ -623,6 +623,73 @@ fn case_name_language(style: &str, language: Option<Language>) -> String {
     output
 }
 
+/// The words of a style of cause that tell its case from another: each party's capitalized words,
+/// without the Crown ("R", "Her Majesty the Queen"), a party that is a jurisdiction ("Canada",
+/// "Ontario") or a description in parentheses ("(Attorney General)"), and without the words a party's
+/// office or form takes ("Attorney General", "Minister", "Ltd", "Inc"). Folded to compare.
+fn distinctive_party_words(style: &str) -> Vec<String> {
+    const GENERIC: &[&str] = &["attorney", "general", "minister", "ministry", "queen", "king", "majesty", "her", "his",
+        "regina", "rex", "crown", "the", "re", "in", "matter", "reference", "procureur", "procureure", "generale", "reine",
+        "roi", "sa", "ltd", "ltee", "limited", "inc", "corp", "corporation", "co", "company", "cie", "et", "al", "and", "of",
+        "province", "government", "gouvernement", "estate"];
+    let fold = |value: &str| value.nfkd().filter(|character| character.is_alphanumeric()).collect::<String>().to_lowercase();
+    let jurisdictions = crate::registry::registry().jurisdictions.iter()
+        .flat_map(|jurisdiction| [Some(jurisdiction.name.en.as_str()), jurisdiction.name.fr.as_deref()])
+        .flatten().map(fold).collect::<std::collections::HashSet<_>>();
+    let name = case_name_language(style, None);
+    let mut words = Vec::new();
+    for party in VERSUS.split(&name) {
+        let party = party.trim().trim_start_matches("Re ");
+        if is_crown_party(party) { continue; }
+        let mut depth = 0i32;
+        let plain = party.chars().map(|character| {
+            depth += match character { '(' => 1, ')' => -1, _ => 0 };
+            if depth > 0 || character == ')' { ' ' } else { character }
+        }).collect::<String>();
+        if jurisdictions.contains(&fold(&plain)) { continue; }
+        for word in plain.split(|character: char| !character.is_alphanumeric() && character != '\'' && character != '\u{2019}') {
+            let word = word.strip_suffix("'s").or_else(|| word.strip_suffix("\u{2019}s")).unwrap_or(word)
+                .trim_end_matches(['\'', '\u{2019}']);
+            let folded = fold(word);
+            if folded.is_empty() || !word.starts_with(|character: char| character.is_uppercase() || character.is_ascii_digit())
+                || GENERIC.contains(&folded.as_str()) || jurisdictions.contains(&folded) || words.contains(&folded) { continue; }
+            words.push(folded);
+        }
+    }
+    words
+}
+
+/// Whether a style of cause can name the case another names: they share a distinctive word of a
+/// party's name ("Parranto" and "R v Murtaza" do not; "R v Toth" and "R. v. Toth" do). Where either
+/// gives no such word ("R v R", "Canada (AG) v Ontario"), they are taken to agree: nothing tells them
+/// apart. `written` holds the names a document gives the case: its style of cause, its short form.
+pub fn case_names_agree(request: &CaseNamesRequest) -> CaseNamesAgreement {
+    let mut written = Vec::new();
+    for name in &request.written {
+        for word in distinctive_party_words(name) {
+            if !written.contains(&word) { written.push(word); }
+        }
+    }
+    let other = distinctive_party_words(&request.other);
+    let agrees = written.is_empty() || other.is_empty() || written.iter().any(|word| other.contains(word));
+    CaseNamesAgreement { agrees, written, other }
+}
+
+#[derive(Clone, Debug, serde::Deserialize)]
+pub struct CaseNamesRequest {
+    pub written: Vec<String>,
+    pub other: String,
+}
+
+#[derive(Clone, Debug, serde::Serialize)]
+pub struct CaseNamesAgreement {
+    pub agrees: bool,
+    /// The distinctive words of the names written, folded.
+    pub written: Vec<String>,
+    /// The distinctive words of the other name, folded.
+    pub other: Vec<String>,
+}
+
 fn is_crown_party(value: &str) -> bool {
     CROWN.is_match(value.trim())
 }
