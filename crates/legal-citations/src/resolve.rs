@@ -224,13 +224,15 @@ pub(crate) fn resolve_with_links(citations: &[Citation], notes: Option<&[NoteRan
 pub(crate) fn resolve_with_sources(
     citations: &[Citation], notes: Option<&[NoteRange]>, links: &[(usize, usize)],
     order: Option<Vec<usize>>, parts: &[SourcePart], hint_mode: SupraMode,
-    linking_mode: SupraMode,
+    linking_mode: SupraMode, split_tier: Option<SupraMode>,
 ) -> Vec<Resolution> {
     let mut resolver = Resolver::new(citations, notes, links);
+    let linking_mode = split_tier.unwrap_or(linking_mode);
     resolver.reading_order = order;
     resolver.source_parts = parts;
     resolver.supra_hint_mode = hint_mode;
     resolver.supra_linking_mode = linking_mode;
+    resolver.split = split_tier.is_some();
     if linking_mode == SupraMode::Named { resolver.renumbered = resolver.renumbering(); }
     resolver.run()
 }
@@ -253,6 +255,8 @@ struct Resolver<'a> {
     /// Whether a document's supra note numbers drift from the notes their names cite (its notes
     /// were renumbered and its supras were not).
     renumbered: bool,
+    /// References resolve as a note splitter's rows read them ([`crate::Options::split_tier`]).
+    split: bool,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Hash)]
@@ -287,6 +291,13 @@ struct History {
     last_part_target: Option<Option<Target>>,
     /// Numbering sequence of the note that set `last_part_target`; ibid stays within its own.
     last_part_sequence: u32,
+    /// Split rows: the subsequent history an ibid passed over ("…, rev'g 2022 ONSC 5886"), with the
+    /// courts it names, which an ibid naming that court ("Ibid at para 192 (ONSC)") cites instead.
+    passed_history: Option<(Option<Target>, Vec<String>)>,
+    /// The records the note before the current one registered, which a named ibid reads.
+    previous_note_records: (usize, usize),
+    /// Split rows: what each part of the current note an ibid could continue from names.
+    note_sources: Vec<Option<Target>>,
 }
 
 impl History {
@@ -340,6 +351,7 @@ impl<'a> Resolver<'a> {
             source_urls: HashMap::new(),
             source_origins: HashMap::new(),
             renumbered: false,
+            split: false,
         }
     }
 
@@ -458,6 +470,7 @@ impl<'a> Resolver<'a> {
         let prior_records = history.records.len();
         let prior_inferred = history.inferred.len();
         let mut sibling: Option<Option<Target>> = None;
+        history.note_sources.clear();
         for (_, event, index) in parts {
             if event == 0 {
                 self.process_part(note, index, prior_records, prior_inferred, history,
@@ -465,14 +478,32 @@ impl<'a> Resolver<'a> {
             } else if !seen[index] {
                 self.process_citation(index, history, previous, output, None, true);
                 seen[index] = true;
+                // A citation the splitter cut across parts ("Bill S-208, An Act to Amend the Criminal Code (" |
+                // "Independence of the Judiciary), …") is a source the note names, as a part would be.
+                if self.split && self.citations[index].form == Form::Full {
+                    let target = self.resolved[index].clone();
+                    history.note_sources.push(target.clone());
+                    sibling = Some(target.clone());
+                    history.last_part_target = Some(target);
+                }
             }
         }
-        let note_targets = history.records[prior_records..].iter()
-            .map(|record| record.target.as_deref()).collect::<std::collections::HashSet<_>>();
-        history.last_part_target = Some(if note_targets.len() == 1 {
-            note_targets.into_iter().next().flatten().and_then(Target::from_registry)
-        } else { None });
+        // An ibid after a note follows it only when the whole note names one authority. In split rows
+        // the note's prose, inner parentheticals and subsequent history do not count, and at the
+        // aggressive tier an ibid continues from the note's last source part, as the Python app's does.
+        if self.split && self.supra_linking_mode != SupraMode::Aggressive && !history.note_sources.is_empty() {
+            let distinct = history.note_sources.iter().collect::<std::collections::HashSet<_>>();
+            history.last_part_target = Some(if distinct.len() == 1 { history.note_sources[0].clone() } else { None });
+        }
+        if !self.split {
+            let note_targets = history.records[prior_records..].iter()
+                .map(|record| record.target.as_deref()).collect::<std::collections::HashSet<_>>();
+            history.last_part_target = Some(if note_targets.len() == 1 {
+                note_targets.into_iter().next().flatten().and_then(Target::from_registry)
+            } else { None });
+        }
         history.last_part_sequence = range.sequence;
+        history.previous_note_records = (prior_records, history.records.len());
     }
 
     fn process_part(&mut self, note: usize, part_index: usize, prior_records: usize,
@@ -542,6 +573,15 @@ impl<'a> Resolver<'a> {
             "supra" => Some(self.resolve_supra_text(&part.text,
                 &history.records[..prior_records], &history.inferred[..prior_inferred],
                 Some(range.sequence))),
+            // A named ibid continues the source its name names in the note before, and no other.
+            "ibid" if self.split && !short_forms::ibid_hint(&part.text).is_empty() => {
+                let target = self.named_ibid(&part.text, history);
+                let reason = if target.is_some() { "ibid_named" } else { "ibid_named_unmatched" };
+                Some((target, reason))
+            }
+            "ibid" if self.split && history.passed_history.as_ref().is_some_and(|(_, courts)|
+                courts.iter().any(|court| part.text.contains(&format!("({court})")))) =>
+                Some((history.passed_history.clone().and_then(|(target, _)| target), "ibid_history")),
             "ibid" => {
                 let prior = sibling.clone().or_else(|| history.last_part_target.clone()
                     .filter(|_| history.last_part_sequence == range.sequence));
@@ -577,7 +617,7 @@ impl<'a> Resolver<'a> {
         // must not multiply the source-part registry or make a numbered supra
         // look ambiguous by counting one part more than once.
         // A part citing one authority is known by that citation's short form when the part names none.
-        let short_form = (!fields.short_form.is_empty()).then_some(fields.short_form).or_else(||
+        let short_form = (!fields.short_form.is_empty()).then(|| fields.short_form.clone()).or_else(||
             full.first().filter(|_| full.len() == 1).and_then(|citation|
                 citation.explicit_short_name.clone().or_else(|| citation.short_name.clone())));
         let kind = full.first().map_or(fields.kind, |citation| inference_kind(citation));
@@ -586,8 +626,62 @@ impl<'a> Resolver<'a> {
             history.push(self.source_record(Some(&range), part.text.clone(), part_target.clone(), short_form),
                 kind, self.supra_linking_mode);
         }
+        // Split rows: prose, a part inside another part's parentheses ("Criminal Code, …, s 241.2(2) (" |
+        // "As amended by …") and a decision's subsequent history ("rev'g 2022 ONSC 5886") are no source an
+        // ibid continues from; the history stays at hand for an ibid that names its court.
+        let history_part = self.split && reference.kind.is_empty() && !full.is_empty()
+            && full.iter().all(|citation| self.is_history(note, part.start, citation.index));
+        if history_part {
+            let courts = full.iter().flat_map(|citation| citation.court.iter()
+                .flat_map(|court| [court.id.to_uppercase(), court.text.clone()])).collect();
+            history.passed_history = Some((part_target, courts));
+            return;
+        }
+        if self.split && reference.kind.is_empty()
+            && (!self.is_source(part, &positions, &fields) || self.inside_parentheses(note, part.start)) {
+            return;
+        }
+        if reference.kind.is_empty() { history.passed_history = None; }
+        history.note_sources.push(part_target.clone());
         *sibling = Some(part_target.clone());
         history.last_part_target = Some(part_target);
+    }
+
+    /// Whether the citation is the subsequent history of a citation earlier in its note.
+    fn is_history(&self, note: usize, before: usize, index: usize) -> bool {
+        self.citations.iter().enumerate().any(|(position, other)| self.note_of[position] == Some(note)
+            && other.span.start < before && other.history.iter().any(|item| item.target == Some(index)))
+    }
+
+    /// Whether a part names a source: a citation, a recognized kind of work, a grammar anchor, a pinpoint
+    /// ("…, Definitive Proxy Statement (Schedule 14A), at 67"), a web address, a short form of its own or the
+    /// year of a work ("Ronald Dworkin, Taking Rights Seriously
+    /// (London, Duckworth, 1977)"). A part of plain prose ("This is especially true in the northern
+    /// regions.") does none of these.
+    fn is_source(&self, part: &SourcePart, positions: &[(usize, usize)], fields: &crate::source::SourceFields) -> bool {
+        positions.iter().any(|&(_, position)| self.citations[position].form != Form::Unknown)
+            || fields.kind != "other" || !fields.short_form.is_empty() || !part.anchors.is_empty()
+            || !fields.page_pinpoints.is_empty() || !fields.pinpoint_fragments.is_empty()
+            || (!fields.link_candidate.is_empty() && fields.link_candidate != "other")
+            || short_forms::names_year(&part.text)
+    }
+
+    /// Whether a part starts inside parentheses an earlier part of its note opened.
+    fn inside_parentheses(&self, note: usize, start: usize) -> bool {
+        let range = &self.notes.expect("owned note")[note];
+        let depth = self.source_parts.iter().filter(|part| range.start <= part.start && part.end <= start)
+            .flat_map(|part| part.text.chars()).fold(0i32, |depth, c| match c {
+                '(' => depth + 1, ')' => (depth - 1).max(0), _ => depth });
+        depth > 0
+    }
+
+    /// The source a named ibid ("Blue, ibid at para 51") names among the note before's records.
+    fn named_ibid(&self, text: &str, history: &History) -> Option<Target> {
+        let hint = short_forms::ibid_hint(text);
+        if hint.is_empty() { return None; }
+        let (start, end) = history.previous_note_records;
+        short_forms::resolve_named(&hint, &history.records[start..end])
+            .and_then(|resource| Target::from_registry(&resource))
     }
 
     fn resolve_supra_text(&self, text: &str, registry: &[ReferenceSource],
@@ -617,7 +711,7 @@ impl<'a> Resolver<'a> {
             !numbered || sequence.is_none_or(|sequence| entry.sequence.is_none_or(|owner| owner == sequence)))
             .cloned().collect::<Vec<_>>();
         let (strict, reason) = short_forms::resolve_registry_scoped(text, &scoped_registry,
-            self.supra_hint_mode == SupraMode::Aggressive, sequence);
+            self.supra_hint_mode == SupraMode::Aggressive, sequence, self.split);
         if let Some(target) = Target::from_registry(&strict) { return (Some(target), reason); }
         // A note that holds no authority leaves the name to say which one is meant. A note that
         // cites another work than the name is a conflict, and stays unresolved, unless the document

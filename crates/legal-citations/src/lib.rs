@@ -110,6 +110,12 @@ pub struct Options {
     /// ("Oakes at 138" … "R v Oakes, [1986] 1 SCR 103") as a reference to it, which has no
     /// earlier citation. Eyecite reads references only after the full citation.
     pub early_references: bool,
+    /// Resolve references as a note splitter's rows read them, at this tier (safe, named or
+    /// aggressive) in place of `supra_linking_mode`: an ibid continues from the last part that is a
+    /// source, past prose, a part inside another part's parentheses and a decision's subsequent
+    /// history, or from the part its own name names in the note before; a supra whose numbered note
+    /// cites another work, or none, is read by its name. Absent, references resolve as before.
+    pub split_tier: Option<SupraMode>,
 }
 
 impl Default for Options {
@@ -127,6 +133,7 @@ impl Default for Options {
             styles: None,
             skip_authority_lists: false,
             early_references: false,
+            split_tier: None,
         }
     }
 }
@@ -189,7 +196,7 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     let candidates = source::linked_ibid_candidates(text, notes, &parts);
     if !candidates.is_empty() {
         let preview = resolve::resolve_with_sources(&citations, options.notes.as_deref(), &[], None,
-            &parts, options.supra_hint_mode, options.supra_linking_mode);
+            &parts, options.supra_hint_mode, options.supra_linking_mode, options.split_tier);
         let linked = candidates.into_iter().filter(|&index| {
             let previous = &notes[index - 1];
             citations.iter().filter(|citation| previous.start <= citation.span.start
@@ -202,7 +209,7 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     }
     let resolutions = if options.resolve {
         let resolutions = resolve::resolve_with_sources(&citations, options.notes.as_deref(), &[], None,
-            &parts, options.supra_hint_mode, options.supra_linking_mode);
+            &parts, options.supra_hint_mode, options.supra_linking_mode, options.split_tier);
         for resolution in &resolutions {
             if let Some(citation) = citations.iter_mut().find(|citation| citation.index == resolution.index) {
                 citation.antecedent = resolution.antecedent;

@@ -16,6 +16,10 @@ export type ResolveRequest = { citations: Array<Citation>,
  */
 sourceParts: Array<SourcePart>, supraHintMode: SupraMode | null, supraLinkingMode: SupraMode | null, 
 /**
+ * See [`crate::Options::split_tier`].
+ */
+splitTier: SupraMode | null, 
+/**
  * Citation indices in document reading order, when footnote anchors are known.
  */
 readingOrder: Array<number> | null, notes: Array<NoteRange> | null, aliasGroups: Array<SourceAliasGroup>, };

@@ -67,6 +67,13 @@ note?: number | null,
  */
 anchorTitle?: Span | null, 
 /**
+ * A decision cited in a note without a style of cause, and not named by the text right before
+ * the note's marker: the one style of cause the sentence the note hangs from gives ("In R v Le,
+ * the Court held …¹"). The text may be speaking of another case; it is evidence of the case the
+ * author means, not the decision's name.
+ */
+anchorMention?: Span | null, 
+/**
  * The instrument's own name where the citation writes only where it is enacted: the
  * Charter for "Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982
  * (UK), 1982, c 11".

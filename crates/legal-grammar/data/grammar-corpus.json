@@ -6132,27 +6132,66 @@
         },
         {
           "id": "ref.registry.note",
-          "pattern": "\\bsupra\\s+note\\s+(\\d+)\\b",
+          "pattern": "\\b(?:supra|above),?\\s+note\\s+(\\d+)\\b",
           "flags": "i",
           "canonical": {},
-          "provenance": "ALR-Quote-Verifier/alr_quote_verifier.py: _resolve_supra_from_registry and its source hint helpers; source pattern unchanged.",
-          "vectors": []
+          "provenance": "ALR-Quote-Verifier/alr_quote_verifier.py: _resolve_supra_from_registry and its source hint helpers; source pattern extended as below. Beaver-authored: 'above note N' and 'above n N' (AGLC's form, which some Canadian writers use: 'Stratas 2017, above note 6 at 7') name a note as 'supra note N' does.",
+          "vectors": [
+            {
+              "input": "Jordan, supra note 4 at para 12",
+              "groups": {}
+            },
+            {
+              "input": "Stratas 2017, above note 6 at 7",
+              "groups": {}
+            },
+            {
+              "input": "above note 26",
+              "groups": {}
+            },
+            {
+              "input": "as the court said above, note that 6 judges agreed",
+              "groups": null
+            }
+          ]
         },
         {
           "id": "ref.registry.n",
-          "pattern": "\\bsupra\\s+n\\.?\\s+(\\d+)\\b",
+          "pattern": "\\b(?:supra|above),?\\s+n\\.?\\s+(\\d+)\\b",
           "flags": "i",
           "canonical": {},
-          "provenance": "ALR-Quote-Verifier/alr_quote_verifier.py: _resolve_supra_from_registry and its source hint helpers; source pattern unchanged.",
-          "vectors": []
+          "provenance": "ALR-Quote-Verifier/alr_quote_verifier.py: _resolve_supra_from_registry and its source hint helpers; source pattern extended as below. Beaver-authored: 'above note N' and 'above n N' (AGLC's form, which some Canadian writers use: 'Stratas 2017, above note 6 at 7') name a note as 'supra note N' does.",
+          "vectors": [
+            {
+              "input": "Laskin, above n 6 at 30",
+              "groups": {}
+            },
+            {
+              "input": "supra n. 12",
+              "groups": {}
+            },
+            {
+              "input": "the figures above n 12",
+              "groups": {}
+            }
+          ]
         },
         {
           "id": "ref.registry.nn",
-          "pattern": "\\bsupra\\s+nn\\.?\\s+(\\d+)\\b",
+          "pattern": "\\b(?:supra|above),?\\s+nn\\.?\\s+(\\d+)\\b",
           "flags": "i",
           "canonical": {},
-          "provenance": "ALR-Quote-Verifier/alr_quote_verifier.py: _resolve_supra_from_registry and its source hint helpers; source pattern unchanged.",
-          "vectors": []
+          "provenance": "ALR-Quote-Verifier/alr_quote_verifier.py: _resolve_supra_from_registry and its source hint helpers; source pattern extended as below. Beaver-authored: 'above note N' and 'above n N' (AGLC's form, which some Canadian writers use: 'Stratas 2017, above note 6 at 7') name a note as 'supra note N' does.",
+          "vectors": [
+            {
+              "input": "above nn 6-7",
+              "groups": {}
+            },
+            {
+              "input": "supra nn. 3",
+              "groups": {}
+            }
+          ]
         },
         {
           "id": "ref.registry.signal",
@@ -6164,11 +6203,28 @@
         },
         {
           "id": "ref.registry.supra",
-          "pattern": "\\bsupra\\b",
+          "pattern": "\\bsupra\\b|\\babove,?\\s+(?:note|nn?\\.?)\\s+\\d",
           "flags": "i",
           "canonical": {},
-          "provenance": "ALR-Quote-Verifier/alr_quote_verifier.py: _resolve_supra_from_registry and its source hint helpers; source pattern unchanged.",
-          "vectors": []
+          "provenance": "ALR-Quote-Verifier/alr_quote_verifier.py: _resolve_supra_from_registry and its source hint helpers; source pattern extended as below. Beaver-authored: 'above note N' and 'above n N' (AGLC's form, which some Canadian writers use: 'Stratas 2017, above note 6 at 7') name a note as 'supra note N' does. Above alone, as prose uses it, is no reference.",
+          "vectors": [
+            {
+              "input": "Wydick, above note 6 at 37-39",
+              "groups": {}
+            },
+            {
+              "input": "Hunt, supra",
+              "groups": {}
+            },
+            {
+              "input": "as noted above, the court held",
+              "groups": null
+            },
+            {
+              "input": "the cases discussed above",
+              "groups": null
+            }
+          ]
         },
         {
           "id": "ref.registry.bracket-skip",
@@ -6188,19 +6244,111 @@
         },
         {
           "id": "ref.registry.hint-start",
-          "pattern": "^\\s*([^,;]+?)\\s*,\\s*supra\\s+(?:note|n\\.|nn\\.)\\s+\\d+\\b",
+          "pattern": "^\\s*([^,;]+?)\\s*,\\s*(?:supra|above)\\s+(?:note|nn?\\.?)\\s+\\d+\\b",
           "flags": "i",
           "canonical": {},
-          "provenance": "ALR-Quote-Verifier/alr_quote_verifier.py: _resolve_supra_from_registry and its source hint helpers; source pattern unchanged.",
-          "vectors": []
+          "provenance": "ALR-Quote-Verifier/alr_quote_verifier.py: _resolve_supra_from_registry and its source hint helpers; source pattern extended as below. Beaver-authored: 'above note N' and 'above n N' (AGLC's form, which some Canadian writers use: 'Stratas 2017, above note 6 at 7') name a note as 'supra note N' does. A note abbreviated n or nn without a period ('supra n 26') names it too.",
+          "vectors": [
+            {
+              "input": "Stratas 2017, above note 6 at 7",
+              "groups": {}
+            },
+            {
+              "input": "Legal aspects of Aboriginal business development, supra n 26",
+              "groups": {}
+            },
+            {
+              "input": "Jordan, supra note 4",
+              "groups": {}
+            },
+            {
+              "input": "Jordan, supra",
+              "groups": null
+            }
+          ]
         },
         {
           "id": "ref.registry.hint-any",
-          "pattern": "([^,;]+?)\\s*,\\s*supra\\s+(?:note|n\\.|nn\\.)\\s+\\d+\\b",
+          "pattern": "([^,;]+?)\\s*,\\s*(?:supra|above)\\s+(?:note|nn?\\.?)\\s+\\d+\\b",
           "flags": "i",
           "canonical": {},
-          "provenance": "ALR-Quote-Verifier/alr_quote_verifier.py: _resolve_supra_from_registry and its source hint helpers; source pattern unchanged.",
-          "vectors": []
+          "provenance": "ALR-Quote-Verifier/alr_quote_verifier.py: _resolve_supra_from_registry and its source hint helpers; source pattern extended as below. Beaver-authored: 'above note N' and 'above n N' (AGLC's form, which some Canadian writers use: 'Stratas 2017, above note 6 at 7') name a note as 'supra note N' does. A note abbreviated n or nn without a period ('supra n 26') names it too.",
+          "vectors": [
+            {
+              "input": "See also Wiliams & Bizup, above note 6 at 42",
+              "groups": {}
+            },
+            {
+              "input": "and Hunt, supra n 90",
+              "groups": {}
+            }
+          ]
+        },
+        {
+          "id": "ref.registry.ibid-hint",
+          "pattern": "^\\s*([^,;]+?)\\s*,\\s*ibid\\b",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored: a named ibid writes the name of the source it continues before it ('Blue, ibid at para 51', 'Cowichan Tribes, ibid'), as a supra writes its short form; the name is read after the reference signals ref.registry.hint-signal strips. A bare ibid names none.",
+          "vectors": [
+            {
+              "input": "Blue, ibid at para 51",
+              "groups": {}
+            },
+            {
+              "input": "Cowichan Tribes, ibid",
+              "groups": {}
+            },
+            {
+              "input": "PSPPC, ibid",
+              "groups": {}
+            },
+            {
+              "input": "Ibid at para 5",
+              "groups": null
+            },
+            {
+              "input": "Ibid.",
+              "groups": null
+            },
+            {
+              "input": "See ibid at 12",
+              "groups": null
+            }
+          ]
+        },
+        {
+          "id": "ref.source.year",
+          "pattern": "(?:^|[^\\d])(?:1[6-9]\\d\\d|20\\d\\d)(?:[^\\d]|$)",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored: a note part that cites a work without a citation the finder reads (a book, a report, an executive order, a bill) still names the year of the work ('Ronald Dworkin, Taking Rights Seriously (London, Duckworth, 1977)'); a part of plain prose ('This is especially true in the northern regions.') seldom does. A year is four digits from 1600 to 2099 standing alone.",
+          "vectors": [
+            {
+              "input": "Ronald Dworkin, Taking Rights Seriously (London, Duckworth, 1977), 17-22.",
+              "groups": {}
+            },
+            {
+              "input": "US, Executive Order 14168, Defending Women, 2025, s 1.",
+              "groups": {}
+            },
+            {
+              "input": "Business Organizations (2nd ed.) (2018 Emond",
+              "groups": {}
+            },
+            {
+              "input": "This is especially true in the northern regions.",
+              "groups": null
+            },
+            {
+              "input": "The key rights discussed in this chapter are freedom of expression.",
+              "groups": null
+            },
+            {
+              "input": "Ibid at para 12345.",
+              "groups": null
+            }
+          ]
         },
         {
           "id": "ref.registry.hereinafter",

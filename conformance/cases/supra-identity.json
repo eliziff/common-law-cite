@@ -1275,6 +1275,238 @@
         }
       },
       "note": "extract returns how each reference resolved; a supra naming a book no citation names resolves to the note part that holds it."
+    },
+    {
+      "name": "extract/above-note-number",
+      "input": "R v Jordan, 2016 SCC 27 [Jordan].\n\nJordan, above note 1 at para 105.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 33
+          },
+          {
+            "number": 2,
+            "start": 35,
+            "end": 68
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": {
+        "resolutions": {
+          "$contains": [
+            {
+              "antecedent": 0,
+              "reason": "note_number"
+            }
+          ]
+        }
+      },
+      "note": "'above note N' (AGLC, used by some Canadian writers) numbers and names a supra as 'supra note N' does."
+    },
+    {
+      "name": "extract/split-ibid-past-prose",
+      "input": "R v Jordan, 2016 SCC 27 [Jordan]; this is especially true in the northern regions.\n\nIbid at para 5.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 82
+          },
+          {
+            "number": 2,
+            "start": 84,
+            "end": 99
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "resolutions": {
+          "$contains": [
+            {
+              "antecedent": 0,
+              "reason": "ibid_previous_note"
+            }
+          ]
+        }
+      },
+      "note": "In a note splitter's rows an ibid continues from the last part that is a source, past prose."
+    },
+    {
+      "name": "extract/split-ibid-named",
+      "input": "Blue v Canada (AG), 2021 FCA 211 [Blue]; Canada (AG) v Burke, 2022 FCA 44 [Burke].\n\nBlue, ibid at para 51.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 82
+          },
+          {
+            "number": 2,
+            "start": 84,
+            "end": 106
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "resolutions": {
+          "$contains": [
+            {
+              "antecedent": 0,
+              "reason": "ibid_named"
+            }
+          ]
+        }
+      },
+      "note": "A named ibid continues the source its name names in the note before."
+    },
+    {
+      "name": "extract/split-ibid-past-history",
+      "input": "Marcellin v London (Police), 2024 ONCA 468, rev'g 2022 ONSC 5886 [Marcellin].\n\nIbid at para 25.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 77
+          },
+          {
+            "number": 2,
+            "start": 79,
+            "end": 95
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "resolutions": {
+          "$contains": [
+            {
+              "antecedent": 0,
+              "reason": "ibid_previous_note"
+            }
+          ]
+        }
+      },
+      "note": "An ibid after a decision and its subsequent history cites the decision."
+    },
+    {
+      "name": "extract/split-ibid-names-history-court",
+      "input": "Marcellin v London (Police), 2024 ONCA 468, rev'g 2022 ONSC 5886 [Marcellin].\n\nIbid at para 192 (ONSC).",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 77
+          },
+          {
+            "number": 2,
+            "start": 79,
+            "end": 103
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "resolutions": {
+          "$contains": [
+            {
+              "reason": "ibid_history"
+            }
+          ]
+        }
+      },
+      "note": "An ibid that names the court of the history it follows cites that decision."
+    },
+    {
+      "name": "extract/split-supra-name-over-wrong-number",
+      "input": "R v Jordan, 2016 SCC 27 [Jordan].\n\nR v Cody, 2017 SCC 31 [Cody].\n\nJordan, supra note 2 at para 5.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 33
+          },
+          {
+            "number": 2,
+            "start": 35,
+            "end": 64
+          },
+          {
+            "number": 3,
+            "start": 66,
+            "end": 97
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "resolutions": {
+          "$contains": [
+            {
+              "antecedent": 0
+            }
+          ]
+        }
+      },
+      "note": "A supra whose numbered note cites another work is read by its name."
+    },
+    {
+      "name": "extract/split-tier-absent-keeps-unanimity",
+      "input": "R v Jordan, 2016 SCC 27 [Jordan]; R v Cody, 2017 SCC 31 [Cody].\n\nIbid.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 63
+          },
+          {
+            "number": 2,
+            "start": 65,
+            "end": 70
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": {
+        "resolutions": {
+          "$contains": [
+            {
+              "antecedent": null,
+              "reason": "ibid_after_unresolved"
+            }
+          ]
+        }
+      },
+      "note": "Without the splitting tier an ibid after a note naming two authorities stays unresolved, as before."
     }
   ]
 }

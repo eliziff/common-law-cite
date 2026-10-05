@@ -61,4 +61,12 @@ skipAuthorityLists: boolean,
  * ("Oakes at 138" … "R v Oakes, [1986] 1 SCR 103") as a reference to it, which has no
  * earlier citation. Eyecite reads references only after the full citation.
  */
-earlyReferences: boolean, };
+earlyReferences: boolean, 
+/**
+ * Resolve references as a note splitter's rows read them, at this tier (safe, named or
+ * aggressive) in place of `supra_linking_mode`: an ibid continues from the last part that is a
+ * source, past prose, a part inside another part's parentheses and a decision's subsequent
+ * history, or from the part its own name names in the note before; a supra whose numbered note
+ * cites another work, or none, is read by its name. Absent, references resolve as before.
+ */
+splitTier: SupraMode | null, };

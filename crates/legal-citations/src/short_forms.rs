@@ -42,6 +42,8 @@ pattern!(SUPRA, "ref.registry.supra");
 pattern!(SUPRA_HINT_SIGNAL, "ref.registry.hint-signal");
 pattern!(SUPRA_HINT_START, "ref.registry.hint-start");
 pattern!(SUPRA_HINT_ANY, "ref.registry.hint-any");
+pattern!(IBID_HINT, "ref.registry.ibid-hint");
+pattern!(SOURCE_YEAR, "ref.source.year");
 pattern!(HEREINAFTER, "ref.registry.hereinafter");
 pattern!(ANCHOR_PARAGRAPH, "ref.anchor.paragraph");
 pattern!(ANCHOR_PROVISION, "ref.anchor.provision");
@@ -232,6 +234,32 @@ pub fn supra_hint(text: &str, aggressive: bool) -> String {
     String::new()
 }
 
+/// The name a named ibid writes before it ("Blue, ibid at para 51" names Blue); a bare ibid names none.
+pub(crate) fn ibid_hint(text: &str) -> String {
+    let cleaned = SUPRA_HINT_SIGNAL.replace(text, "");
+    IBID_HINT.captures(&cleaned).map(|found| found[1].split_whitespace().collect::<Vec<_>>().join(" "))
+        .unwrap_or_default()
+}
+
+/// Whether a part names a year, as a cited work does and plain prose seldom does.
+pub(crate) fn names_year(text: &str) -> bool {
+    SOURCE_YEAR.is_match(text)
+}
+
+/// The source a name names by its short form, a bracketed definition or a party's name; never by words
+/// that merely occur in a source's text ("Poirier" in "… which Johanne Poirier described as …").
+pub(crate) fn resolve_named(hint: &str, registry: &[ReferenceSource]) -> Option<String> {
+    let (resource, method) = resolve_registry_hint_scoped("", hint, registry, None, false);
+    if !resource.is_empty() && matches!(method, "exact_sf" | "token_sf" | "bracket_definition") {
+        return Some(resource);
+    }
+    let name = ref_normalize(hint);
+    let name = name.trim_matches(['[', ']', '(', ')', ' ', '.']);
+    if name.is_empty() { return None; }
+    unique_target(registry.iter().filter(|entry| entry.names.iter()
+        .any(|party| ref_normalize(party).trim_matches(['[', ']', '(', ')', ' ', '.']) == name))).map(str::to_owned)
+}
+
 pub fn fallback_hint(text: &str) -> String {
     let Some(found) = SUPRA.find(text) else { return String::new(); };
     let mut prefix = text[..found.start()].trim();
@@ -259,23 +287,25 @@ fn unique_target<'a>(entries: impl IntoIterator<Item = &'a ReferenceSource>) -> 
 /// Match note numbers, short forms, names and bracket definitions to source
 /// identities. An unresolved source remains in the ambiguity pool.
 pub fn resolve_registry(text: &str, registry: &[ReferenceSource], aggressive: bool) -> (String, &'static str) {
-    resolve_registry_scoped(text, registry, aggressive, None)
+    resolve_registry_scoped(text, registry, aggressive, None, false)
 }
 
+/// `by_name`: a supra whose numbered note cites another work, or none, is read by its name, as the
+/// Python app's safe linking reads it whatever note number the author wrote.
 pub(crate) fn resolve_registry_scoped(text: &str, registry: &[ReferenceSource], aggressive: bool,
-    sequence: Option<u32>) -> (String, &'static str) {
+    sequence: Option<u32>, by_name: bool) -> (String, &'static str) {
     let hint = supra_hint(text, aggressive);
     let hint = if hint.is_empty() { fallback_hint(text) } else { hint };
-    resolve_registry_hint_scoped(text, &hint, registry, sequence)
+    resolve_registry_hint_scoped(text, &hint, registry, sequence, by_name)
 }
 
 /// The same registry tiers for a name already captured by citation discovery.
 pub(crate) fn resolve_registry_hint(text: &str, hint: &str, registry: &[ReferenceSource]) -> (String, &'static str) {
-    resolve_registry_hint_scoped(text, hint, registry, None)
+    resolve_registry_hint_scoped(text, hint, registry, None, false)
 }
 
 fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSource],
-    sequence: Option<u32>) -> (String, &'static str) {
+    sequence: Option<u32>, by_name: bool) -> (String, &'static str) {
     let normalized = ref_normalize(hint);
     let normalized = normalized.trim_matches(['[', ']', '(', ')', ' ']);
     let tokens = ref_tokens(&hint);
@@ -283,7 +313,7 @@ fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSou
     let number = [&*REGISTRY_NOTE, &*REGISTRY_N, &*REGISTRY_NN].into_iter()
         .find_map(|pattern| pattern.captures(text))
         .and_then(|found| crate::text::decimal(&found[1])).map(|number| number.to_string());
-    if let Some(number) = number {
+    let numbered = number.map(|number| (|| -> (String, &'static str) {
             let local = sequence.filter(|&sequence| registry.iter().any(|entry|
                 entry.note() == number && entry.sequence == Some(sequence)));
             if local.is_none() && sequence.is_some() && registry.iter().filter(|entry|
@@ -327,18 +357,25 @@ fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSou
                 return (target.to_owned(), "note_number_short_form_suffix");
             }
             if !suffix.is_empty() { return (String::new(), "abstain_ambiguous_note_number_suffix"); }
-            return match bracket_definition(normalized, note_sources.into_iter()) {
+            match bracket_definition(normalized, note_sources.into_iter()) {
                 Some(target) => (target, "bracket_definition"),
                 None => (String::new(), "note_name_conflict"),
-            };
-    }
-    if normalized.is_empty() && tokens.is_empty() { return (String::new(), "abstain_no_hint"); }
+            }
+    })());
+    let numbered = match numbered {
+        Some((target, reason)) if !(by_name && target.is_empty()
+            && matches!(reason, "note_name_conflict" | "note_without_authority")) => return (target, reason),
+        numbered => numbered.map(|(_, reason)| reason),
+    };
+    if normalized.is_empty() && tokens.is_empty() { return (String::new(), numbered.unwrap_or("abstain_no_hint")); }
     let mut abstain = "abstain_no_match";
     for (method, ambiguous) in [
         ("exact_sf", "abstain_ambiguous_exact_sf"),
         ("token_sf", "abstain_ambiguous_token_sf"),
         ("token_verb", "abstain_ambiguous_token_verb"),
     ] {
+        // A name read past its numbered note is matched to a short form, not to words in a source's text.
+        if numbered.is_some() && method == "token_verb" { continue; }
         let pool = registry.iter().filter(|entry| match method {
             "exact_sf" => !normalized.is_empty() && ref_normalize(entry.short_form.as_deref().unwrap_or(""))
                 .trim_matches(['[', ']', '(', ')', ' ']) == normalized,
@@ -354,7 +391,7 @@ fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSou
     if let Some(target) = bracket_definition(normalized, registry.iter()) {
         return (target, "bracket_definition");
     }
-    (String::new(), abstain)
+    (String::new(), numbered.unwrap_or(abstain))
 }
 
 fn bracket_definition<'a>(normalized: &str, entries: impl Iterator<Item = &'a ReferenceSource>) -> Option<String> {
