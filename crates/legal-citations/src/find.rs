@@ -987,8 +987,9 @@ fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
     let floor = paragraph_floor(text, floor, core_start);
     // A style of cause opens after a sentence that ends before its signal ("… on the Crown. See
     // R v Oakes"); an abbreviation's period ("Mar. Overseas Corp.") is no sentence's end.
+    // No style of cause runs back over a semicolon, which parts one citation from the next.
     let floor = STYLED_FLOOR.find_iter(&text[floor..core_start])
-        .filter(|matched| matched.as_str().trim_end().ends_with('.')
+        .filter(|matched| matched.as_str().starts_with(';') || matched.as_str().trim_end().ends_with('.')
             && SIGNAL_PREFIX.find(&text[floor + matched.end()..core_start]).is_some())
         .last().map_or(floor, |matched| floor + matched.end());
     let prefix = text[floor..core_start]
@@ -996,7 +997,18 @@ fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
     let Some(versus) = CASE_VERSUS.find_iter(prefix).last() else {
         // A style of cause with one party ("Reference re Secession of Quebec")
         // has no versus token to anchor on.
-        let start = matched_style(&CASE_RE_STYLE, "name", text, core_start, floor);
+        let mut start = matched_style(&CASE_RE_STYLE, "name", text, core_start, floor);
+        // A list's number set against the name it opens ("3.Re Pacific Exploration") is no part of it.
+        let digits = text[start..core_start].len() - text[start..core_start].trim_start_matches(|c: char| c.is_ascii_digit()).len();
+        if (1..=4).contains(&digits) && text[start + digits..].starts_with('.')
+            && text[start + digits + 1..core_start].starts_with(char::is_uppercase) { start += digits + 1; }
+        // A name set in apposition ("WestJet, an Alberta Partnership, Re") starts before the words read.
+        let before = text[..start].trim_end();
+        if [", an", ", a"].iter().any(|tail| before.ends_with(tail)) { return core_start; }
+        // A company form alone before ", Re" ("Partnership, Re") is a name's last word, its line broken off before it.
+        let style = text[start..core_start].trim_end_matches(|character: char| character == ',' || character.is_whitespace());
+        if style.strip_suffix(", Re").is_some_and(|name| ["Partnership", "Limited", "Ltd", "Ltd.", "Inc", "Inc.", "Corp",
+            "Corp.", "Corporation", "LLP", "LLC", "ULC"].contains(&name)) { return core_start; }
         return if start < core_start { past_lead_in(text, start, core_start) } else { start };
     };
     if !prefix[versus.end()..]
