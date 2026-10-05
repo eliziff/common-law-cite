@@ -1753,6 +1753,195 @@
       }
     },
     {
+      "name": "style/party-joined-by-a-standing-dash",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "See Fenwick Credit Corporation – Canada v Ash Logistics Inc., 2037 SCC 35.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 SCC 35"
+            },
+            "style": {
+              "text": "Fenwick Credit Corporation – Canada v Ash Logistics Inc."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/party-with-a-comma-before-its-company-form",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Moss Divide Enterprises, Inc. v Fell, 2037 ABQB 586.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 ABQB 586"
+            },
+            "style": {
+              "text": "Moss Divide Enterprises, Inc. v Fell"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/re-name-with-a-standing-ampersand",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "See Fell & Moss Developments Ltd. (Re) (2037), 12 OR (3d) 500.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "(2037), 12 OR (3d) 500"
+            },
+            "style": {
+              "text": "Fell & Moss Developments Ltd. (Re)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/re-name-with-a-comma-before-its-company-form",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ashwood Group, Inc (Re), 2037 ONSC 3338.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 ONSC 3338"
+            },
+            "style": {
+              "text": "Ashwood Group, Inc (Re)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/re-name-past-its-lead-in",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "33. In Fenmoor Management Group (Re), 2037 ABQB 262.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 ABQB 262"
+            },
+            "style": {
+              "text": "Fenmoor Management Group (Re)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/style-after-a-sentence-that-ends-its-paragraph",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "These principles were adopted by the Court of Appeal of Alberta.\n\nAshcroft Inc. v 1905393 Fen Ltd., 2037 ABCA 433.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 ABCA 433"
+            },
+            "style": {
+              "text": "Ashcroft Inc. v 1905393 Fen Ltd."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/style-across-a-page-that-goes-on-in-lower-case",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ashcroft Inc.\n\nv 1905393 Fen Ltd., 2037 ABCA 433.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "2037 ABCA 433"
+            },
+            "style": {
+              "text": "Ashcroft Inc.\n\nv 1905393 Fen Ltd."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/title-after-a-capitals-heading",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "LIST OF AUTHORITIES\n\nFen Drainage Act, RSA 2037, c F-3.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "RSA 2037, c F-3"
+            },
+            "style": {
+              "text": "Fen Drainage Act"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "style/title-past-the-part-a-sentence-names",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "declaring that Division I of Part III of the Fen Drainage Act, RSA 2037, c F-3, applies.",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "span": {
+              "text": "RSA 2037, c F-3"
+            },
+            "style": {
+              "text": "Fen Drainage Act"
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "style/adjective-led-instrument-title",
       "convention": "mcgill",
       "status": "pass",
