@@ -1514,7 +1514,7 @@
       "options": {
         "resolve": true,
         "offsetUnit": "char",
-        "splitTier": "named",
+        "splitTier": "moderate",
         "notes": [
           {
             "number": 1,
@@ -1549,7 +1549,7 @@
       "options": {
         "resolve": true,
         "offsetUnit": "char",
-        "splitTier": "named",
+        "splitTier": "moderate",
         "notes": [
           {
             "number": 1,

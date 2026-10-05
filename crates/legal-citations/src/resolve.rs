@@ -34,7 +34,7 @@
 use crate::key;
 use crate::model::{Citation, Form};
 use crate::registry::fold;
-use crate::{NoteRange, SupraMode};
+use crate::{NoteRange, SplitTier, SupraMode};
 use crate::source::SourcePart;
 use crate::short_forms::{self, ReferenceSource};
 use serde::{Deserialize, Serialize};
@@ -229,10 +229,10 @@ pub(crate) fn resolve_with_links(citations: &[Citation], notes: Option<&[NoteRan
 pub(crate) fn resolve_with_sources(
     citations: &[Citation], notes: Option<&[NoteRange]>, links: &[(usize, usize)],
     order: Option<Vec<usize>>, parts: &[SourcePart], hint_mode: SupraMode,
-    linking_mode: SupraMode, split_tier: Option<SupraMode>,
+    linking_mode: SupraMode, split_tier: Option<SplitTier>,
 ) -> Vec<Resolution> {
     let mut resolver = Resolver::new(citations, notes, links);
-    let linking_mode = split_tier.unwrap_or(linking_mode);
+    let linking_mode = split_tier.map_or(linking_mode, SplitTier::supra_mode);
     resolver.reading_order = order;
     resolver.source_parts = parts;
     resolver.supra_hint_mode = hint_mode;

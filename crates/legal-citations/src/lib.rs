@@ -69,6 +69,30 @@ pub enum SupraMode {
     Named,
 }
 
+/// How far a note splitter's references are linked where the evidence is incomplete
+/// ([`Options::split_tier`]): `safe` links what a reference's own note and words support, `moderate`
+/// also reads a supra by its name where the note it numbers cites another work, and `aggressive` also
+/// continues an ibid from the last source of a note that names several.
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub enum SplitTier {
+    Safe,
+    Moderate,
+    Aggressive,
+}
+
+impl SplitTier {
+    /// The supra linking each tier resolves with.
+    pub(crate) fn supra_mode(self) -> SupraMode {
+        match self {
+            Self::Safe => SupraMode::Safe,
+            Self::Moderate => SupraMode::Named,
+            Self::Aggressive => SupraMode::Aggressive,
+        }
+    }
+}
+
 /// A citation guide whose forms the finder recognizes beyond the forms every guide shares.
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -111,12 +135,12 @@ pub struct Options {
     /// ("Oakes at 138" … "R v Oakes, [1986] 1 SCR 103") as a reference to it, which has no
     /// earlier citation. Eyecite reads references only after the full citation.
     pub early_references: bool,
-    /// Resolve references as a note splitter's rows read them, at this tier (safe, named or
-    /// aggressive) in place of `supra_linking_mode`: an ibid continues from the last part that is a
+    /// Resolve references as a note splitter's rows read them, at this tier ([`SplitTier`]) in place of
+    /// `supra_linking_mode`: an ibid continues from the last part that is a
     /// source, past prose, a part inside another part's parentheses and a decision's subsequent
     /// history, or from the part its own name names in the note before; a supra whose numbered note
     /// cites another work, or none, is read by its name. Absent, references resolve as before.
-    pub split_tier: Option<SupraMode>,
+    pub split_tier: Option<SplitTier>,
 }
 
 impl Default for Options {

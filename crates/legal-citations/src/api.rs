@@ -729,7 +729,7 @@ pub struct ResolveRequest {
     pub supra_linking_mode: Option<crate::SupraMode>,
     /// See [`crate::Options::split_tier`].
     #[serde(default)]
-    pub split_tier: Option<crate::SupraMode>,
+    pub split_tier: Option<crate::SplitTier>,
     /// Citation indices in document reading order, when footnote anchors are known.
     #[serde(default)]
     pub reading_order: Option<Vec<usize>>,

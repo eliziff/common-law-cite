@@ -3,6 +3,7 @@ import type { Citation } from "./Citation";
 import type { NoteRange } from "./NoteRange";
 import type { SourceAliasGroup } from "./SourceAliasGroup";
 import type { SourcePart } from "./SourcePart";
+import type { SplitTier } from "./SplitTier";
 import type { SupraMode } from "./SupraMode";
 
 /**
@@ -18,7 +19,7 @@ sourceParts: Array<SourcePart>, supraHintMode: SupraMode | null, supraLinkingMod
 /**
  * See [`crate::Options::split_tier`].
  */
-splitTier: SupraMode | null, 
+splitTier: SplitTier | null, 
 /**
  * Citation indices in document reading order, when footnote anchors are known.
  */
