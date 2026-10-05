@@ -977,6 +977,13 @@ fn paragraph_floor(text: &str, floor: usize, core_start: usize) -> usize {
         let matched = found.as_str();
         let at = if matched.starts_with('\n') { floor + found.start() + matched.len() - matched.trim_start().len() }
             else { floor + found.end() };
+        // A word a name quotes ("Re Toys “R” Us (Canada) Ltd.") closes no quotation the name follows.
+        if matched.starts_with(['\u{201d}', '"']) {
+            let before = &text[floor..floor + found.start()];
+            let quoted = before.rfind(['\u{201c}', '"']).map(|open| (&before[..open], &before[open..]));
+            if quoted.is_some_and(|(lead, word)| word.chars().count() <= 13 && !word.contains(char::is_whitespace)
+                && lead.strip_suffix(' ').is_some_and(|lead| lead.ends_with(char::is_alphabetic))) { return None; }
+        }
         // A paragraph that goes on in lower case ("… Inc." then "v 1905393 …") is one name broken across
         // a page, not a new start.
         (!text[at..core_start].trim().is_empty() && !text[at..].starts_with(char::is_lowercase)).then_some(at)
