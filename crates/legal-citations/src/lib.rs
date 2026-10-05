@@ -17,6 +17,7 @@
 //! its output, and [`registry`] exposes the court, reporter and series data.
 
 pub mod annotate;
+pub mod authorities;
 pub mod aliases;
 pub mod api;
 pub mod classify;

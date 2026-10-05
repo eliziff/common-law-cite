@@ -68,6 +68,10 @@ pub const METHODS: &[&str] = &[
     "legislationLookup",
     "stripCitationTail",
     "correctCitation",
+    "caseNamesAgree",
+    "authorities",
+    "captionStyleOfCause",
+    "pinpointsAt",
     "key",
     "keyForText",
     "format",
@@ -191,6 +195,9 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             to_value(crate::source::strip_administrative_tail(&request.text))
         }
         "correctCitation" => to_value(crate::format::correct_citation(&parse(method, request)?)),
+        "authorities" => to_value(crate::authorities::authorities(&parse(method, request)?)),
+        "captionStyleOfCause" => to_value(crate::authorities::caption_style_of_cause(&parse(method, request)?)),
+        "pinpointsAt" => to_value(crate::authorities::pinpoints_at(&parse(method, request)?)),
         "caseNamesAgree" => to_value(crate::format::case_names_agree(&parse(method, request)?)),
         "normalizeShortForm" => {
             let request: HasCitationRequest = parse(method, request)?;
