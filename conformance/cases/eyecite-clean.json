@@ -1,6 +1,6 @@
 {
  "format": "legal-citations-conformance:v1",
- "source": "eyecite 2.7.8 (git 047af17), reporters-db 3.2.66, courts-db 0.10.27",
+ "source": "eyecite 2.7.8 (git 0513e7f), reporters-db 3.2.66, courts-db 0.10.27",
  "description": "eyecite clean_text() calls from tests/test_UtilsTest.py and test_AnnotateTest.py.",
  "generatedBy": "conformance/tools/port-eyecite.py",
  "cases": [
@@ -64,7 +64,7 @@
      "html"
     ]
    },
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "text": " word "
    },
@@ -192,7 +192,7 @@
      "html"
     ]
    },
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "text": "Bell Atlantic Corp. v.  Twombly,  550 U. S. 544 (2007), which discussed... apellate court’s core competency  Twombly,  550 U. S., at 557. Evaluating... In  Twombly , supra, at 553-554, the "
    },

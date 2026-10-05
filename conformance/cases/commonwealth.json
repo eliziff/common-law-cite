@@ -1244,7 +1244,7 @@
      }
     ]
    },
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1335,7 +1335,7 @@
      }
     ]
    },
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {

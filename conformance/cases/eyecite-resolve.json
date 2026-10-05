@@ -1,13 +1,13 @@
 {
  "format": "legal-citations-conformance:v1",
- "source": "eyecite 2.7.8 (git 047af17), reporters-db 3.2.66, courts-db 0.10.27",
+ "source": "eyecite 2.7.8 (git 0513e7f), reporters-db 3.2.66, courts-db 0.10.27",
  "description": "eyecite tests/test_ResolveTest.py: each checkResolution() row list joined into one text; antecedents from real eyecite resolve_citations().",
  "generatedBy": "conformance/tools/port-eyecite.py",
  "cases": [
   {
    "name": "ResolveTest.test_ambigous_short_cite#1",
    "input": "Foo v. Bar, 1 U.S. 1. See Foo, 1 U.S. 2. Foo, 1 U.S., at 2.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -103,7 +103,7 @@
   {
    "name": "ResolveTest.test_complex_resolution#1",
    "input": "Blah blah Foo v. Bar 1 U.S. 1, 77 blah blah. Asdf asdf Qwerty v. Uiop 2 F.3d 500, 555. Also check out Foo, 1 U.S. at 99. Then let's cite Qwerty, supra, at 567. See also Foo, supra, at 101 as well. Another full citation is Lorem v. Ipsum 1 U. S. 50. Quoting Qwerty, “something something”, 2 F.3d 500, at 559. This case is similar to Fake, supra, and Qwerty supra, as well. This should resolve to the foregoing. Ibid. This should also convert appropriately, see Id. at 567. But this fails because the pin cite is too low, see Id. at 400. This should fail to resolve because the reporter and citation is ambiguous, 1 U. S., at 51. However, this should succeed, Lorem, 1 U.S., at 52.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -717,7 +717,7 @@
   {
    "name": "ResolveTest.test_full_resolution#5",
    "input": "Foo v. Bar, 1 U.S. 1. Foo v. Bar, 1 U.S. 1. Foo, 1 U.S., at 2. Foo, supra at 2.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -845,7 +845,7 @@
   {
    "name": "ResolveTest.test_id_resolution#1",
    "input": "Foo v. Bar, 1 U.S. 1. 2 F.2d, at 2. Id. at 2.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1047,7 +1047,7 @@
   {
    "name": "ResolveTest.test_id_resolution#4",
    "input": "Foo v. Bar, 1 U.S. 100. Id. at 500. Foo v. Bar, 1 U.S. 100. Id. at 50. Foo v. Bar, 1 U.S. 100. Id. at ¶ 100. Ala. Code § 92 Id. at 2000",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1243,7 +1243,7 @@
   {
    "name": "ResolveTest.test_id_resolution#5",
    "input": "Foo v. Bar, 1 U.S. ___ Id. at 100.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1346,7 +1346,7 @@
   {
    "name": "ResolveTest.test_non_case_resolution#1",
    "input": "Foo v. Bar, 1 U.S. 1. Id. at 2. Mass. Gen. Laws ch. 1, § 2 Id. Foo, supra, at 2. 1 Minn. L. Rev. 1. Id. at 2. Foo, 1 U.S., at 2.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1904,7 +1904,7 @@
   {
    "name": "ResolveTest.test_short_resolution#1",
    "input": "Foo v. Bar, 1 U.S. 1. 1 U.S., at 2.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -1975,7 +1975,7 @@
   {
    "name": "ResolveTest.test_short_resolution#2",
    "input": "Foo v. Bar, 1 U.S. 1. Foo, 1 U.S., at 2.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2046,7 +2046,7 @@
   {
    "name": "ResolveTest.test_short_resolution#3",
    "input": "Foo v. Bar, 1 U.S. 1. Wrong v. Wrong, 1 U.S. 2. Foo, 1 U.S., at 2.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2145,7 +2145,7 @@
   {
    "name": "ResolveTest.test_short_resolution#4",
    "input": "Foo v. Bar, 1 U.S. 1. Boo v. Far, 1 U.S. 2. 1 U.S., at 2.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2244,7 +2244,7 @@
   {
    "name": "ResolveTest.test_short_resolution#5",
    "input": "Foo v. Bar, 1 U.S. 1. Foo v. Bar, 1 U.S. 2. Foo, 1 U.S., at 2.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -2342,7 +2342,7 @@
   {
    "name": "ResolveTest.test_short_resolution#6",
    "input": "Foo v. Bar, 1 U.S. 1. 2 F.2d, at 2.",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {

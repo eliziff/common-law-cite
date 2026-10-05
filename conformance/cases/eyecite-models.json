@@ -1,13 +1,13 @@
 {
  "format": "legal-citations-conformance:v1",
- "source": "eyecite 2.7.8 (git 047af17), reporters-db 3.2.66, courts-db 0.10.27",
+ "source": "eyecite 2.7.8 (git 0513e7f), reporters-db 3.2.66, courts-db 0.10.27",
  "description": "eyecite tests/test_ModelsTest.py and test_UtilsTest.py extraction inputs (missing pages, corrected reporters, full spans).",
  "generatedBy": "conformance/tools/port-eyecite.py",
  "cases": [
   {
    "name": "ModelsTest.test_citation_comparison_with_nominative_reporter#1",
    "input": "5 U.S. 137",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -62,7 +62,7 @@
   {
    "name": "ModelsTest.test_citation_comparison_with_nominative_reporter#2",
    "input": "5 U.S. (1 Cranch) 137",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -171,7 +171,7 @@
   {
    "name": "ModelsTest.test_corrected_full_citation_includes_closing_parenthesis#2",
    "input": "Meritor Sav. Bank v. Vinson, 477 U.S. 57, 60 (1986)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -244,7 +244,7 @@
   {
    "name": "ModelsTest.test_missing_page_cite_conversion#1",
    "input": "2 U.S. __",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -299,7 +299,7 @@
   {
    "name": "ModelsTest.test_page_correction#1",
    "input": "2024 N.Y. Slip Op. 51192(U)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -349,7 +349,7 @@
   {
    "name": "ModelsTest.test_page_correction#2",
    "input": "2024 NYSlipOp 51192[U]",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -399,7 +399,7 @@
   {
    "name": "ModelsTest.test_page_correction#3",
    "input": "11 Misc 3d 134[A]",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -449,7 +449,7 @@
   {
    "name": "ModelsTest.test_page_correction#4",
    "input": "83 Misc.3d 126(A)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -598,7 +598,7 @@
   {
    "name": "ModelsTest.test_tax_court_citation_comparison#1",
    "input": "T.C.M. (RIA) ¶ 95,342",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -647,7 +647,7 @@
   {
    "name": "UtilsTest.test_dump_citations#1",
    "input": "blah. Foo v. Bar, 1 U.S. 2, 3-4 (1999). blah",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
