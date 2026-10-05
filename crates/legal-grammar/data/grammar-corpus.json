@@ -6817,10 +6817,10 @@
         },
         {
           "id": "style.case-left",
-          "pattern": "(?<left>[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()]{0,80}\\)|of|the|and|for|de|la|du|&)){0,12})\\s*$",
+          "pattern": "(?<left>[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()]{0,80}\\)|of|the|and|for|de|la|du|y|&|[\\u{2013}\\u{2014}])|,\\s+(?:Inc|Ltd|Limited|LLC|LLP|L\\.?P|Corp|Corporation|Co)\\b\\.?){0,12})\\s*$",
           "flags": "",
           "canonical": {},
-          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_LEFT with native Rust regex semantics, changed in two places: the party must end where the text in front of the versus ends (the frozen (?m) let $ match at any earlier line end, so the leftmost match could start lines or pages before the case and run the style over them), and a parenthesized party may wrap across lines, as a style of cause extracted from a PDF does. Beaver-authored: a party's name holds an ampersand standing alone ('International Longshore & Warehouse Union Local 502 v. Ford').",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_LEFT with native Rust regex semantics, changed in two places: the party must end where the text in front of the versus ends (the frozen (?m) let $ match at any earlier line end, so the leftmost match could start lines or pages before the case and run the style over them), and a parenthesized party may wrap across lines, as a style of cause extracted from a PDF does. Beaver-authored: a party's name holds an ampersand standing alone ('International Longshore & Warehouse Union Local 502 v. Ford'). Beaver-authored: a dash standing alone joins a party's name ('GMAC Commercial Credit Corporation – Canada', 'RJR – MacDonald Inc.'), as does a comma before a company's form ('Cascade Divide Enterprises, Inc.') and the Spanish 'y' ('PanAmericana de Bienes y Servicios').",
           "vectors": [
             {
               "input": "See Quebec (Attorney General) ",
@@ -6849,16 +6849,34 @@
               "groups": {
                 "left": "International Longshore & Warehouse Union Local 502"
               }
+            },
+            {
+              "input": "GMAC Commercial Credit Corporation – Canada ",
+              "groups": {
+                "left": "GMAC Commercial Credit Corporation – Canada"
+              }
+            },
+            {
+              "input": "Cascade Divide Enterprises, Inc. ",
+              "groups": {
+                "left": "Cascade Divide Enterprises, Inc."
+              }
+            },
+            {
+              "input": "In Jordan, Smith ",
+              "groups": {
+                "left": "Smith"
+              }
             }
           ],
           "rust": true
         },
         {
           "id": "style.case-floor",
-          "pattern": "\\n[ \\t]*\\n[ \\t]*(?:\\d{1,4}\\.|[A-Z]\\.|\\([a-z0-9]{1,4}\\))[ \\t]|[”\"][.,;:]?[ \\t\\n]|\\d[.;][ \\t]*\\n[ \\t]*\\n|\\b(?:Authorities|Cases|Case Law|Jurisprudence|Legislation|Statutes|Regulations?|Doctrine|Secondary Sources)[ \\t]*:?[ \\t]*\\n",
+          "pattern": "\\n[ \\t]*\\n[ \\t]*(?:\\d{1,4}\\.|[A-Z]\\.|\\([a-z0-9]{1,4}\\))[ \\t]|[”\"][.,;:]?[ \\t\\n]|\\d[.;][ \\t]*\\n[ \\t]*\\n|\\b(?:Authorities|Cases|Case Law|Jurisprudence|Legislation|Statutes|Regulations?|Doctrine|Secondary Sources)[ \\t]*:?[ \\t]*\\n|[A-Za-zÀ-ÿ]{3}[.!?][”’\"')\\]]*[ \\t]*\\n[ \\t]*\\n[ \\t]*|\\b(?:[A-Z]+[ \\t]+){0,3}[A-Z]{3,}[ \\t]*\\n[ \\t]*\\n[ \\t]*",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored from filed Canadian briefs: where a style of cause cannot start before, though no sentence ends there: a new numbered paragraph or lettered heading after a blank line ('…to\n\n52. Claims bar dates…', 'C. Litigation'), and the end of a quotation ('…to help it decide”. Re SemCanada Crude Company'). A quotation is never part of a style of cause. Beaver-authored: a list of authorities' group heading on the line before ('2. Appendix B – Authorities', 'Statute or Regulation', 'Jurisprudence') is no part of the style or title of the authority under it. Beaver-authored: a line that ends a sentence with a number ('... Court File No. 1601-06131.') before a blank line closes its entry; the next entry's style of cause starts after it.",
+          "provenance": "Beaver-authored from filed Canadian briefs: where a style of cause cannot start before, though no sentence ends there: a new numbered paragraph or lettered heading after a blank line ('…to\n\n52. Claims bar dates…', 'C. Litigation'), and the end of a quotation ('…to help it decide”. Re SemCanada Crude Company'). A quotation is never part of a style of cause. Beaver-authored: a list of authorities' group heading on the line before ('2. Appendix B – Authorities', 'Statute or Regulation', 'Jurisprudence') is no part of the style or title of the authority under it. Beaver-authored: a line that ends a sentence with a number ('... Court File No. 1601-06131.') before a blank line closes its entry; the next entry's style of cause starts after it. Beaver-authored: a sentence that ends a paragraph ('… adopted and applied by the Court of Appeal of Alberta.' then a blank line) and a heading set in capitals on its own line ('LIST OF AUTHORITIES', a table's 'TAB') close what comes before the next paragraph's style of cause; a paragraph that ends mid-phrase ('Citizenship and') does not.",
           "vectors": [
             {
               "input": "Court File No. 1601-06131.\n\nSierra Fen v Canada",
@@ -6882,6 +6900,18 @@
             },
             {
               "input": "Canada (Minister of Citizenship and\n\nImmigration) v Vavilov",
+              "groups": null
+            },
+            {
+              "input": "applied by the Court of Appeal of Alberta.\n\nPricewaterhousecoopers Inc. v",
+              "groups": {}
+            },
+            {
+              "input": "LIST OF AUTHORITIES\n\nBankruptcy and Insolvency Act",
+              "groups": {}
+            },
+            {
+              "input": "Canada (Minister of Citizenship and\n\nImmigration)",
               "groups": null
             }
           ]
@@ -6993,10 +7023,10 @@
         },
         {
           "id": "style.case-single-party",
-          "pattern": "(?m)(?<name>Renvoi\\s+(?:relatif\\s+)?[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+(?:\\s+[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+){0,15}|(?:Reference\\s+re|Renvoi\\s+relatif|In\\s+re|In\\s+the\\s+[Mm]atter\\s+of|Re)\\s+[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()\\n]{0,80}\\)|of|the|and|&|&\\p{Lu}[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|for|de|la|du|des|aux|en|et\\s+a[li1]\\.?)){0,12}|[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|of|the|and|for|de|la|du|des)){0,12}\\s+\\((?:Re|Renvoi)\\))(?:,\\s*(?:1[6-9]|20)\\d{2})?\\s*,?\\s*$",
+          "pattern": "(?m)(?<name>Renvoi\\s+(?:relatif\\s+)?[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+(?:\\s+[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]+){0,15}|(?:Reference\\s+re|Renvoi\\s+relatif|In\\s+re|In\\s+the\\s+[Mm]atter\\s+of|Re)\\s+[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|\\([\\p{Lu}][^()\\n]{0,80}\\)|of|the|and|&|&\\p{Lu}[\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|for|de|la|du|des|aux|en|et\\s+a[li1]\\.?)){0,12}|[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*(?:\\s+(?:[\\p{Lu}\\p{N}][\\p{L}\\p{M}\\p{N}.'\\u{2019}&()-]*|of|the|and|for|de|la|du|des|&|[\\u{2013}\\u{2014}])|,\\s+(?:Inc|Ltd|Limited|LLC|LLP|L\\.?P|Corp|Corporation|Co)\\b\\.?){0,12}\\s+\\((?:Re|Renvoi)\\))(?:,\\s*(?:1[6-9]|20)\\d{2})?\\s*,?\\s*$",
           "flags": "",
           "canonical": {},
-          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_RE_STYLE; native Rust regex preserved verbatim. Beaver-authored addition: the style whose marker follows the name, 'Moore (Re)', 'Harrow Fen Estate (Re) (2028) ABQB 3104'. French Renvoi headings also accept sentence-case subject words. Beaver-authored: a matter of several companies ends 'et al' ('Re Nortel Networks Corporation et al'). Beaver-authored: an ampersand standing alone joins a company's name as 'and' does ('Re Connacher Oil & Gas Limited'). Beaver-authored: an ampersand a recognizer runs into the next word ('Re Connacher Oil &Gas Limited') joins the name as one standing alone does. Beaver-authored: 'et al.' as a recognizer reads its l ('et ai.', 'et a1.').",
+          "provenance": "Frozen Legal Structure Parser 29c3f8d1b66f43a288fb921c6f72048ea327cbf1 src/citator.rs::CASE_RE_STYLE; native Rust regex preserved verbatim. Beaver-authored addition: the style whose marker follows the name, 'Moore (Re)', 'Harrow Fen Estate (Re) (2028) ABQB 3104'. French Renvoi headings also accept sentence-case subject words. Beaver-authored: a matter of several companies ends 'et al' ('Re Nortel Networks Corporation et al'). Beaver-authored: an ampersand standing alone joins a company's name as 'and' does ('Re Connacher Oil & Gas Limited'). Beaver-authored: an ampersand a recognizer runs into the next word ('Re Connacher Oil &Gas Limited') joins the name as one standing alone does. Beaver-authored: 'et al.' as a recognizer reads its l ('et ai.', 'et a1.'). Beaver-authored: a name before its '(Re)' takes an ampersand standing alone ('Olympia & York Developments Ltd. (Re)'), a dash standing alone, and a comma before a company's form ('MJardin Group, Inc (Re)').",
           "vectors": [
             {
               "input": "Re Fen Exploration Corporation et ai.",
@@ -7061,6 +7091,18 @@
               "groups": {
                 "name": "Renvoi relatif aux chenaux de Lune"
               }
+            },
+            {
+              "input": "Olympia & York Developments Ltd. (Re), ",
+              "groups": {
+                "name": "Olympia & York Developments Ltd. (Re)"
+              }
+            },
+            {
+              "input": "MJardin Group, Inc (Re), ",
+              "groups": {
+                "name": "MJardin Group, Inc (Re)"
+              }
             }
           ],
           "rust": true
@@ -7104,6 +7146,28 @@
             },
             {
               "input": "the parties agreed, ",
+              "groups": null
+            }
+          ],
+          "rust": true
+        },
+        {
+          "id": "style.statute-part",
+          "pattern": "^(?:(?:Division|Part|Schedule)\\s+(?:[IVXLC]+|\\d+(?:\\.\\d+)?)\\s+of\\s+(?:the\\s+)?)+",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Beaver-authored from filed Alberta briefs: the Part or Division of an Act a sentence names before the Act's title ('Division I of Part III of the Bankruptcy and Insolvency Act', 'Part III of the Bankruptcy and Insolvency Act') is no part of the title.",
+          "vectors": [
+            {
+              "input": "Division I of Part III of the Bankruptcy and Insolvency Act",
+              "groups": {}
+            },
+            {
+              "input": "Part III of the Bankruptcy and Insolvency Act",
+              "groups": {}
+            },
+            {
+              "input": "Bankruptcy and Insolvency Act",
               "groups": null
             }
           ],

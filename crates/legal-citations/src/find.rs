@@ -269,6 +269,8 @@ static CASE_RE_STYLE: LazyLock<Regex> = LazyLock::new(|| linear("style.case-sing
 // The title a statute or treaty citation is styled with, ending in the
 // instrument word and optionally carrying its own regnal year and jurisdiction.
 static STATUTE_TITLE: LazyLock<Regex> = LazyLock::new(|| linear("style.statute-title"));
+// The Part or Division of an Act a title names before the Act's own: "Division I of Part III of the".
+static STATUTE_PART: LazyLock<Regex> = LazyLock::new(|| linear("style.statute-part"));
 static TRAILING_DATE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("style.trailing-date"));
 // "Author, \u{201c}Article Title\u{201d}" (and any "in Editor, ed," lead-in):
@@ -904,8 +906,12 @@ fn matched_style(
 }
 
 /// The Act title a statute citation is styled with ("Criminal Code, RSC 1985").
+/// The Act's title, past the Part or Division of it the text names ("Division I of Part III of the
+/// Bankruptcy and Insolvency Act" is the Bankruptcy and Insolvency Act).
 fn statute_style_start(text: &str, core_start: usize, floor: usize) -> usize {
-    matched_style(&STATUTE_TITLE, "title", text, core_start, paragraph_floor(text, floor, core_start))
+    let start = matched_style(&STATUTE_TITLE, "title", text, core_start, paragraph_floor(text, floor, core_start));
+    let part = STATUTE_PART.find(&text[start..core_start]).filter(|found| found.start() == 0).map_or(0, |found| found.end());
+    if part > 0 && text[start + part..core_start].starts_with(char::is_uppercase) { start + part } else { start }
 }
 
 /// A treaty's title, read past its signature date ("Convention ..., 4 November
@@ -971,7 +977,9 @@ fn paragraph_floor(text: &str, floor: usize, core_start: usize) -> usize {
         let matched = found.as_str();
         let at = if matched.starts_with('\n') { floor + found.start() + matched.len() - matched.trim_start().len() }
             else { floor + found.end() };
-        (!text[at..core_start].trim().is_empty()).then_some(at)
+        // A paragraph that goes on in lower case ("… Inc." then "v 1905393 …") is one name broken across
+        // a page, not a new start.
+        (!text[at..core_start].trim().is_empty() && !text[at..].starts_with(char::is_lowercase)).then_some(at)
     }).last().unwrap_or(floor)
 }
 
@@ -988,7 +996,8 @@ fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
     let Some(versus) = CASE_VERSUS.find_iter(prefix).last() else {
         // A style of cause with one party ("Reference re Secession of Quebec")
         // has no versus token to anchor on.
-        return matched_style(&CASE_RE_STYLE, "name", text, core_start, floor);
+        let start = matched_style(&CASE_RE_STYLE, "name", text, core_start, floor);
+        return if start < core_start { past_lead_in(text, start, core_start) } else { start };
     };
     if !prefix[versus.end()..]
         .trim_start_matches(javascript_whitespace)
