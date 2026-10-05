@@ -1507,6 +1507,86 @@
         }
       },
       "note": "Without the splitting tier an ibid after a note naming two authorities stays unresolved, as before."
+    },
+    {
+      "name": "extract/split-supra-body-name",
+      "input": "Parliament responded to the decision in Quebec (Attorney General) v Senneville.\n\n2025 SCC 33.\n\nSenneville, supra note 1 at para 41.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "splitTier": "named",
+        "notes": [
+          {
+            "number": 1,
+            "start": 81,
+            "end": 93,
+            "anchor": 78
+          },
+          {
+            "number": 2,
+            "start": 95,
+            "end": 131,
+            "anchor": 79
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": {
+        "resolutions": {
+          "$contains": [
+            {
+              "antecedent": 0,
+              "reason": "note_number"
+            }
+          ]
+        }
+      },
+      "note": "In split rows a decision a note cites without its style of cause is known by the style of cause the text gives before the note's marker."
+    },
+    {
+      "name": "extract/split-target-part",
+      "input": "R v Jordan, 2016 SCC 27 [Jordan].\n\nIbid at para 5.\n\nR v Cody, 2017 SCC 31 [Cody].\n\nJordan, supra note 1 at para 6.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "splitTier": "named",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 33
+          },
+          {
+            "number": 2,
+            "start": 35,
+            "end": 50
+          },
+          {
+            "number": 3,
+            "start": 52,
+            "end": 81
+          },
+          {
+            "number": 4,
+            "start": 83,
+            "end": 114
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": {
+        "resolutions": [
+          {
+            "reason": "ibid_previous_note",
+            "targetPart": 0
+          },
+          {
+            "reason": "note_number",
+            "targetPart": 0
+          }
+        ]
+      },
+      "note": "In split rows each reference names the part it points to directly: the part an ibid continues from, the part of the note a supra numbers."
     }
   ]
 }

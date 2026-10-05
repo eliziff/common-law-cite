@@ -58,6 +58,11 @@ pub struct Resolution {
     /// Matched source's origin, indexed into ExtractResponse.sourceParts.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_part: Option<usize>,
+    /// Split rows: the part the reference names directly, indexed into ExtractResponse.sourceParts: the
+    /// part of the note a supra numbers that holds its source, else the latest part that does; the part
+    /// an ibid continues from.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_part: Option<usize>,
     /// Machine-readable reason:
     ///
     /// * ibid: `ibid_previous`, `ibid_previous_note`, `ibid_after_multiple`, `ibid_after_unresolved`,
@@ -623,7 +628,7 @@ impl<'a> Resolver<'a> {
         let kind = full.first().map_or(fields.kind, |citation| inference_kind(citation));
         // Such a part is recorded by its full citations, not as one more source.
         if !several_full {
-            history.push(self.source_record(Some(&range), part.text.clone(), part_target.clone(), short_form),
+            history.push(self.source_record(Some(&range), part.text.clone(), part_target.clone(), short_form, Some(part_index)),
                 kind, self.supra_linking_mode);
         }
         // Split rows: prose, a part inside another part's parentheses ("Criminal Code, …, s 241.2(2) (" |
@@ -748,7 +753,7 @@ impl<'a> Resolver<'a> {
                 history.push(self.source_record(range, citation.full_span.text.clone(),
                     self.resolved[position].clone(),
                     citation.explicit_short_name.clone().or_else(|| citation.short_name.clone())
-                        .or_else(|| citation.style.as_ref().map(|style| style.text.clone()))),
+                        .or_else(|| citation.style.as_ref().map(|style| style.text.clone())), None),
                     inference_kind(citation), self.supra_linking_mode);
                 if self.source_parts.is_empty() {
                     history.last_part_target = Some(self.resolved[position].clone());
@@ -811,11 +816,21 @@ impl<'a> Resolver<'a> {
             Some(Target::Authority(index)) => Some(index),
             _ => None,
         };
-        output.push(Resolution { index: citation.index, antecedent, url, source_part, reason });
+        let target_part = target.as_ref().filter(|_| self.split).and_then(|target| {
+            let id = target.registry_id();
+            let numbered = (citation.form == Form::Supra).then(|| short_forms::reference_info(
+                if citation.full_span.text.is_empty() { &citation.span.text } else { &citation.full_span.text })
+                .notes.into_iter().next()).flatten();
+            let naming = || history.records.iter().rev().filter(|record| record.target.as_deref() == Some(id.as_str())
+                && record.part.is_some());
+            naming().find(|record| numbered.as_ref().is_some_and(|number| record.note.to_string().trim_matches('"') == number))
+                .or_else(|| naming().next()).and_then(|record| record.part)
+        });
+        output.push(Resolution { index: citation.index, antecedent, url, source_part, target_part, reason });
         if record_full {
             let range = self.note_of[position].and_then(|index| self.notes.map(|notes| &notes[index]));
             history.push(self.source_record(range, citation.full_span.text.clone(), self.resolved[position].clone(),
-                citation.short_name.clone()), inference_kind(citation), self.supra_linking_mode);
+                citation.short_name.clone(), None), inference_kind(citation), self.supra_linking_mode);
         }
         if record_full && self.source_parts.is_empty() {
             history.last_part_target = Some(self.resolved[position].clone());
@@ -1036,17 +1051,21 @@ impl<'a> Resolver<'a> {
     }
 
     fn source_record(&self, note: Option<&NoteRange>, verbatim: String, target: Option<Target>,
-        short_form: Option<String>) -> ReferenceSource {
+        short_form: Option<String>, part: Option<usize>) -> ReferenceSource {
         let names = match &target {
+            // In split rows a decision a note cites without its style of cause is also known by the one the
+            // text gives before the note's marker ("… decision in Quebec (Attorney General) v Senneville¹").
             Some(Target::Authority(index)) => self.citations.iter().find(|citation| citation.index == *index)
-                .map(candidate_names).unwrap_or_default(),
+                .map(|citation| candidate_names(citation).into_iter().chain(self.split.then(||
+                    citation.fields.anchor_title.as_ref().map(|title| title.text.clone())).flatten()).collect())
+                .unwrap_or_default(),
             Some(Target::Source(index)) => vec![self.source_parts[*index].text.clone()],
             None => Vec::new(),
         };
         ReferenceSource {
             note: note.map(|note| note.number.to_string()).unwrap_or_default().into(),
             sequence: note.map(|note| note.sequence), verbatim: Some(verbatim), names,
-            target: target.map(|target| target.registry_id()), short_form,
+            target: target.map(|target| target.registry_id()), short_form, part,
             ..ReferenceSource::default()
         }
     }

@@ -167,6 +167,9 @@ pub struct ReferenceSource {
     pub short_form: Option<String>,
     pub short_form_norm: Option<String>,
     pub rule: Option<String>,
+    /// The source part the entry was registered from, in a note splitter's rows.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub part: Option<usize>,
 }
 
 impl ReferenceSource {

@@ -23,6 +23,12 @@ url?: string | null,
  */
 sourcePart?: number | null, 
 /**
+ * Split rows: the part the reference names directly, indexed into ExtractResponse.sourceParts: the
+ * part of the note a supra numbers that holds its source, else the latest part that does; the part
+ * an ibid continues from.
+ */
+targetPart?: number | null, 
+/**
  * Machine-readable reason:
  *
  * * ibid: `ibid_previous`, `ibid_previous_note`, `ibid_after_multiple`, `ibid_after_unresolved`,

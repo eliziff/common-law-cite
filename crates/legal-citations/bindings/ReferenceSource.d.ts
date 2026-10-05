@@ -9,4 +9,8 @@ export type ReferenceSource = { note: JsonValue, sequence: number | null, verbat
 /**
  * Names of the identified source, also inherited by references to it.
  */
-names: Array<string>, short_form: string | null, short_form_norm: string | null, rule: string | null, };
+names: Array<string>, short_form: string | null, short_form_norm: string | null, rule: string | null, 
+/**
+ * The source part the entry was registered from, in a note splitter's rows.
+ */
+part: number | null, };
