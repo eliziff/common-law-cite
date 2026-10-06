@@ -213,8 +213,12 @@ pub struct SourcePart {
 }
 
 /// Split supplied note text in its original document coordinates. The
-/// splitter's part boundaries are independent of citation extents.
-pub fn split_notes(text: &str, notes: &[crate::NoteRange]) -> Vec<SourcePart> {
+/// splitter's part boundaries are independent of citation extents. With a
+/// `tier` ([`crate::SplitTier`]) the splitter also keeps whole what ALR's
+/// rows keep whole: a semicolon inside brackets or quotes, a sentence that
+/// cites nothing with what follows it, and a supra with its name; and a row
+/// begins with the words that lead into its source ("and …", "as added by …").
+pub fn split_notes(text: &str, notes: &[crate::NoteRange], tier: Option<crate::SplitTier>) -> Vec<SourcePart> {
     let mut parts = Vec::new();
     let mut preceding_ibid_without_source = false;
     for note in notes {
@@ -242,7 +246,7 @@ pub fn split_notes(text: &str, notes: &[crate::NoteRange]) -> Vec<SourcePart> {
                     anchors: vec!["reference".into()], resolved_url: None,
                     extended_us: false, anchor_spans: Vec::new() })
             }).collect()
-        } else { split(value, true, false).parts };
+        } else { split_recall(value, false, tier.is_some()).parts };
         for mut part in selected {
             part.start += note.start;
             part.end += note.start;
@@ -288,6 +292,26 @@ pub(crate) fn merge_linked_ibids(text: &str, notes: &[crate::NoteRange], parts: 
             extended_us: false, anchor_spans: Vec::new() });
     }
     parts.sort_by_key(|part| (part.start, part.end));
+}
+
+/// A note splitter's tiers keep a citation whole: two parts of one note are one
+/// where a citation the finder found runs across the cut between them.
+pub(crate) fn merge_split_citations(text: &str, notes: &[crate::NoteRange], parts: &mut Vec<SourcePart>,
+    citations: &[crate::Citation]) {
+    let mut index = 1;
+    while index < parts.len() {
+        let (left, right) = (&parts[index - 1], &parts[index]);
+        let same_note = notes.iter().any(|note| note.start <= left.start && right.end <= note.end);
+        if same_note && citations.iter().any(|citation| citation.span.start < left.end && right.start < citation.span.end) {
+            let right = parts.remove(index);
+            let left = &mut parts[index - 1];
+            left.end = right.end;
+            left.text = text[left.start..left.end].into();
+            for anchor in right.anchors { if !left.anchors.contains(&anchor) { left.anchors.push(anchor); } }
+            left.anchor_spans.extend(right.anchor_spans);
+            left.extended_us |= right.extended_us;
+        } else { index += 1; }
+    }
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -421,8 +445,70 @@ fn segment_end(boundaries: &[Boundary], position: usize, length: usize) -> usize
     boundaries.iter().filter(|(left, _, _)| *left > position).map(|(left, _, _)| *left).min().unwrap_or(length)
 }
 
-fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor]) -> Vec<Boundary> {
-    let mut boundaries = text.match_indices(';').map(|(index, _)| (index, index + 1, "semicolon")).collect::<Vec<_>>();
+/// Text that may cite: a source anchor or other evidence, a case name, an ibid/supra, a pinpoint, a leading
+/// signal, or any number (a year, volume, page or provision that a source the grammar does not know writes).
+fn cites(text: &str, extended_us: bool) -> bool {
+    text.contains(|character: char| character.is_ascii_digit())
+        || evidence(text, extended_us) || [&*CASE_START, &*REFERENCE, &*PARAGRAPH, &*SECTION, &*PAGE, &*SIGNAL]
+        .into_iter().any(|pattern| matches(pattern, text))
+}
+
+/// Text that names a source, not only a cross-reference or a title: a source anchor, a case name or an ibid/supra.
+fn cites_source(text: &str, extended_us: bool) -> bool {
+    !anchors(text, extended_us).is_empty() || matches(&CASE_START, text) || matches(&REFERENCE, text)
+}
+
+/// Where the lowercase words standing before a position begin, when other text precedes them ("…109-116
+/// and |" → "…109-116 |and"); the position itself when none do.
+fn connective_start(text: &str, position: usize) -> usize {
+    let mut start = position;
+    loop {
+        let before = text[..start].trim_end_matches([' ', '\u{a0}']);
+        let word = before.rfind(|c: char| !(c.is_lowercase() || c == '’' || c == '\'')).map_or(0, |index|
+            index + before[index..].chars().next().map_or(0, char::len_utf8));
+        if word == before.len() || !before[..word].ends_with([' ', '\u{a0}']) || before[..word].trim().is_empty() { return start; }
+        start = word;
+    }
+}
+
+/// The innermost bracket or quotation around a position that closes after it: the
+/// offsets just inside its opening mark and at its closing mark.
+fn enclosure(text: &str, position: usize) -> Option<(usize, usize)> {
+    let (before, after) = text.split_at(position);
+    let pair = |opening: char, closing: char| {
+        let mut depth = 0;
+        let open = before.char_indices().rev().find(|&(_, character)| {
+            if character == closing { depth += 1; } else if character == opening { if depth == 0 { return true; } depth -= 1; }
+            false
+        })?.0 + opening.len_utf8();
+        depth = 0;
+        let close = position + after.char_indices().find(|&(_, character)| {
+            if character == opening { depth += 1; } else if character == closing { if depth == 0 { return true; } depth -= 1; }
+            false
+        })?.0;
+        Some((open, close))
+    };
+    let straight = || (before.matches('"').count() % 2 == 1).then(|| Some((before.rfind('"')? + 1, position + after.find('"')?)))?;
+    [pair('(', ')'), pair('[', ']'), pair('“', '”'), straight()].into_iter().flatten().max_by_key(|&(open, _)| open)
+}
+
+/// A semicolon divides a note splitter's tier rows where it stands outside brackets and quotes, or
+/// inside them between two sources ("(Lafrance c Nicol, 2017 QCCQ 11602; Prudhomme c Prudhomme, 2019 QCCS 64)").
+fn tier_semicolon(text: &str, position: usize, extended_us: bool) -> bool {
+    enclosure(text, position).is_none_or(|(open, close)| {
+        let left = text[open..position].rsplit(';').next().unwrap_or("");
+        let right = text[position + 1..close].split(';').next().unwrap_or("");
+        cites_source(left, extended_us) && cites_source(right, extended_us)
+    })
+}
+
+/// `tiered`: a note splitter's tier ([`split_notes`]): only a semicolon outside
+/// brackets and quotes divides, a sentence that cites nothing stays with the
+/// source that follows it, and a note reference starts a frame only at a
+/// capitalized name ("Jordan, supra note 2", not "supra note 2").
+fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], tiered: bool) -> Vec<Boundary> {
+    let mut boundaries = text.match_indices(';').filter(|(index, _)| !tiered || tier_semicolon(text, *index, extended_us))
+        .map(|(index, _)| (index, index + 1, "semicolon")).collect::<Vec<_>>();
     let sentences = SENTENCE.find_iter(text).map(|found| found.expect("sentence boundary"))
         .filter(|found| !inside_quotes(text, found.start()))
         .filter(|found| {
@@ -433,7 +519,9 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor]) ->
         }).map(|found| found.end()).collect::<Vec<_>>();
     for (&start, end) in sentences.iter().zip(sentences.iter().copied().skip(1).chain([text.len()])) {
         if extended_us && whole_anchors.iter().any(|&(left, right, _)| left < start && start < right) { continue; }
-        if !text[..start].trim().is_empty() && evidence(&text[start..end], extended_us) {
+        let previous = boundaries.iter().map(|&(_, right, _)| right).filter(|&right| right <= start).max().unwrap_or(0);
+        if !text[..start].trim().is_empty() && evidence(&text[start..end], extended_us)
+            && !(tiered && !cites(&text[previous..start], extended_us) && cites_source(&text[start..end], extended_us)) {
             boundaries.push((start, start, "new_citation_sentence"));
         }
     }
@@ -451,7 +539,16 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor]) ->
     for (pattern, reason) in [(&*CASE_START, "new_case_frame"), (&*AUTHOR, "new_author_title_frame"),
         (&*NOTE_START, "new_note_reference")] {
         for found in pattern.find_iter(text).skip(1) {
-            let position = found.expect("source frame").start();
+            let mut position = found.expect("source frame").start();
+            // A tier's note reference starts at the name a supra follows ("…at para 145, | Tsilhqot’in, supra
+            // note 2"), never between the name and its supra.
+            if tiered && reason == "new_note_reference" && text[position..].starts_with(|c: char| c.is_lowercase()) {
+                let Some(name) = text[..position].trim_end().strip_suffix(',') else { continue };
+                let start = name.rfind(',').map_or(0, |comma| comma + 1);
+                let start = start + name[start..].len() - name[start..].trim_start().len();
+                if start <= segment_start(&boundaries, position) || !name[start..].starts_with(|c: char| c.is_uppercase()) { continue; }
+                position = start;
+            }
             if reason == "new_case_frame" {
                 let prefix = &text[..position];
                 let tail = prefix.char_indices().rev().nth(11).map_or(prefix, |(start, _)| &prefix[start..]);
@@ -501,9 +598,16 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor]) ->
 }
 
 pub fn split(text: &str, recall_first: bool, extended_us: bool) -> SourceSplit {
+    if recall_first { split_recall(text, extended_us, false) } else { split_with(text, false, extended_us, false) }
+}
+
+/// The recall-first split, with a note splitter's tier rules when `tiered` ([`recall_boundaries`]).
+fn split_recall(text: &str, extended_us: bool, tiered: bool) -> SourceSplit { split_with(text, true, extended_us, tiered) }
+
+fn split_with(text: &str, recall_first: bool, extended_us: bool, tiered: bool) -> SourceSplit {
     let abstain = |reason| SourceSplit { status: "abstain", parts: Vec::new(), delimiters: Vec::new(), reasons: vec![reason] };
     if text.trim().is_empty() { return abstain("empty"); }
-    let boundaries = if recall_first { recall_boundaries(text, extended_us, &anchors(text, extended_us)) } else {
+    let boundaries = if recall_first { recall_boundaries(text, extended_us, &anchors(text, extended_us), tiered) } else {
         let top = crate::find::top_level(text);
         let mut boundaries = text.match_indices(';').filter(|(position, _)| top[*position])
             .map(|(position, _)| (position, position + 1, "top_level_semicolon")).collect::<Vec<_>>();
@@ -526,6 +630,14 @@ pub fn split(text: &str, recall_first: bool, extended_us: bool) -> SourceSplit {
         }
         boundaries
     };
+    // A tier's row begins with the words that lead into its source ("and Riley Olstead, …", "as added by
+    // Justice Statute Amendments Act, …"), not after them.
+    let boundaries = if tiered {
+        boundaries.into_iter().map(|(left, right, reason)| if left == right {
+            let position = connective_start(text, left);
+            (position, position, reason)
+        } else { (left, right, reason) }).collect()
+    } else { boundaries };
     let starts = std::iter::once(0).chain(boundaries.iter().map(|(_, right, _)| *right));
     let ends = boundaries.iter().map(|(left, _, _)| *left).chain([text.len()]);
     let mut parts = Vec::new();

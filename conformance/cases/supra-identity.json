@@ -1587,6 +1587,329 @@
         ]
       },
       "note": "In split rows each reference names the part it points to directly: the part an ibid continues from, the part of the note a supra numbers."
+    },
+    {
+      "name": "extract/split-rows-semicolon-in-brackets",
+      "input": "R v Jordan, 2016 SCC 27 at para 5 [omitted; emphasis added].",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 60
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "sourceParts": [
+          {
+            "text": "R v Jordan, 2016 SCC 27 at para 5 [omitted; emphasis added]."
+          }
+        ]
+      },
+      "note": "A splitter tier's semicolon inside brackets divides nothing."
+    },
+    {
+      "name": "extract/split-rows-semicolon-without-tier",
+      "input": "R v Jordan, 2016 SCC 27 at para 5 [omitted; emphasis added].",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 60
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": {
+        "sourceParts": [
+          {
+            "text": "R v Jordan, 2016 SCC 27 at para 5 [omitted"
+          },
+          {
+            "text": "emphasis added]."
+          }
+        ]
+      },
+      "note": "Without a tier the splitter divides at every semicolon, as ALR's splitter does."
+    },
+    {
+      "name": "extract/split-rows-semicolon-between-bracketed-sources",
+      "input": "Few decisions resist this (Lafrance c Nicol, 2017 QCCQ 11602, para 36; Prudhomme c Prudhomme, 2019 QCCS 64, para 71).",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 117
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "sourceParts": [
+          {
+            "text": "Few decisions resist this (Lafrance c Nicol, 2017 QCCQ 11602, para 36"
+          },
+          {
+            "text": "Prudhomme c Prudhomme, 2019 QCCS 64, para 71)."
+          }
+        ]
+      },
+      "note": "A semicolon between two sources inside brackets still divides."
+    },
+    {
+      "name": "extract/split-rows-leading-prose",
+      "input": "This is especially true in the northern regions. R v Jordan, 2016 SCC 27 at para 5.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 83
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "sourceParts": [
+          {
+            "text": "This is especially true in the northern regions. R v Jordan, 2016 SCC 27 at para 5."
+          }
+        ]
+      },
+      "note": "A sentence that cites nothing stays with the source that follows it."
+    },
+    {
+      "name": "extract/split-rows-author-stop",
+      "input": "Richard D Ryder. “Speciesism Again: The Original Leaflet” (2010) 2:1 Critical Society 1.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 88
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "sourceParts": [
+          {
+            "text": "Richard D Ryder. “Speciesism Again: The Original Leaflet” (2010) 2:1 Critical Society 1."
+          }
+        ]
+      },
+      "note": "An author's full stop before a quoted title does not divide the citation."
+    },
+    {
+      "name": "extract/split-rows-prose-then-ibid",
+      "input": "The court held that the deadline was firm. Ibid at para 5.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 58
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "sourceParts": [
+          {
+            "text": "The court held that the deadline was firm. Ibid at para 5."
+          }
+        ]
+      },
+      "note": "The prose an ibid sources stays with it."
+    },
+    {
+      "name": "extract/split-rows-cited-sentence-divides",
+      "input": "R v Jordan, 2016 SCC 27 at para 5. The Court set ceilings. R v Cody, 2017 SCC 31.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 81
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "sourceParts": [
+          {
+            "text": "R v Jordan, 2016 SCC 27 at para 5. The Court set ceilings."
+          },
+          {
+            "text": "R v Cody, 2017 SCC 31."
+          }
+        ]
+      },
+      "note": "A sentence after a citation divides from the next source as before."
+    },
+    {
+      "name": "extract/split-rows-supra-with-name",
+      "input": "See Jordan, supra note 1 at para 5, and Cody, supra note 2 at para 3.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 69
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "sourceParts": [
+          {
+            "text": "See Jordan, supra note 1 at para 5,"
+          },
+          {
+            "text": "and Cody, supra note 2 at para 3."
+          }
+        ]
+      },
+      "note": "A supra keeps the name it follows."
+    },
+    {
+      "name": "extract/split-rows-supras-after-comma",
+      "input": "Calder, supra note 3 at 322; Delgamuukw, supra note 9 at para 145, Tsilhqot’in, supra note 2 at para 75.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 104
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "sourceParts": [
+          {
+            "text": "Calder, supra note 3 at 322"
+          },
+          {
+            "text": "Delgamuukw, supra note 9 at para 145,"
+          },
+          {
+            "text": "Tsilhqot’in, supra note 2 at para 75."
+          }
+        ]
+      },
+      "note": "A supra after a comma starts its row at the name it follows."
+    },
+    {
+      "name": "extract/split-rows-citation-kept-whole",
+      "input": "Canadian Charter of Rights and Freedoms, s 7, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 141
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "sourceParts": [
+          {
+            "text": "Canadian Charter of Rights and Freedoms, s 7, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11."
+          }
+        ]
+      },
+      "note": "A cut inside a citation the finder recognizes is closed."
+    },
+    {
+      "name": "extract/split-rows-row-starts-at-connective",
+      "input": "See Adrian Peace, “Shark Attack!: A Cultural Approach” (2015) 31 Anthropology Today 3 and Christine McCagh, “Killing Sharks” (2015) 62 Marine Policy 271.",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 153
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "sourceParts": [
+          {
+            "text": "See Adrian Peace, “Shark Attack!: A Cultural Approach” (2015) 31 Anthropology Today 3"
+          },
+          {
+            "text": "and Christine McCagh, “Killing Sharks” (2015) 62 Marine Policy 271."
+          }
+        ]
+      },
+      "note": "A row begins with the words that lead into its source."
+    },
+    {
+      "name": "extract/split-rows-row-starts-at-as-added-by",
+      "input": "Legal Profession Act, supra note 28, s 53(1.2), as added by Justice Statute Amendments Act, supra note 1, s 6(9).",
+      "options": {
+        "resolve": true,
+        "offsetUnit": "char",
+        "notes": [
+          {
+            "number": 1,
+            "start": 0,
+            "end": 113
+          }
+        ],
+        "splitTier": "safe"
+      },
+      "status": "pass",
+      "expect": {
+        "sourceParts": [
+          {
+            "text": "Legal Profession Act, supra note 28, s 53(1.2),"
+          },
+          {
+            "text": "as added by Justice Statute Amendments Act, supra note 1, s 6(9)."
+          }
+        ]
+      },
+      "note": "A row begins with the words that lead into its source."
     }
   ]
 }

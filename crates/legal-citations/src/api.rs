@@ -521,7 +521,7 @@ pub fn split_notes(request: &SplitNotesRequest) -> Result<Vec<crate::source::Sou
     let document = ScalarText::new(&request.text);
     let options = byte_options(&document, &Options { notes: Some(request.notes.clone()), ..Options::default() },
         request.offset_unit)?;
-    let mut parts = crate::source::split_notes(&request.text, options.notes.as_deref().unwrap_or(&[]));
+    let mut parts = crate::source::split_notes(&request.text, options.notes.as_deref().unwrap_or(&[]), None);
     convert_parts(&document, &mut parts, request.offset_unit);
     Ok(parts)
 }

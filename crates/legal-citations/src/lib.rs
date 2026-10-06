@@ -72,7 +72,9 @@ pub enum SupraMode {
 /// How far a note splitter's references are linked where the evidence is incomplete
 /// ([`Options::split_tier`]): `safe` links what a reference's own note and words support, `moderate`
 /// also reads a supra by its name where the note it numbers cites another work, and `aggressive` also
-/// continues an ibid from the last source of a note that names several.
+/// continues an ibid from the last source of a note that names several. Every tier also splits notes
+/// into rows as ALR's rows keep them ([`source::split_notes`]): a semicolon inside brackets or quotes,
+/// a sentence that cites nothing with the source after it, a supra with its name, a citation whole.
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
@@ -217,7 +219,8 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     find::ocr_twins(&mut citations);
     find::titled_chapters(&mut citations);
     let notes = options.notes.as_deref().unwrap_or(&[]);
-    let mut parts = source::split_notes(text, notes);
+    let mut parts = source::split_notes(text, notes, options.split_tier);
+    if options.split_tier.is_some() { source::merge_split_citations(text, notes, &mut parts, &citations); }
     let candidates = source::linked_ibid_candidates(text, notes, &parts);
     if !candidates.is_empty() {
         let preview = resolve::resolve_with_sources(&citations, options.notes.as_deref(), &[], None,
