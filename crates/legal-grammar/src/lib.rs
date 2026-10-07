@@ -658,6 +658,20 @@ pub fn ascii_bounded_table_entry_literals(entry_id: &str) -> Result<Option<Vec<S
     Ok(literals::linear(&source, flags.contains('i'), flags.contains('m'), flags.contains('s')))
 }
 
+/// Literal strings one of which every match of [`compile_python_pattern`]'s grammar contains, when
+/// they can be read from it.
+pub fn python_pattern_literals(source: &str, flags: &str) -> Result<Option<Vec<String>>> {
+    Ok(literals::backtracking(&python_source(source)?, flags.contains('i')))
+}
+
+/// Literal strings one of which every match of [`compile_ecmascript_backtracking_pattern`]'s grammar
+/// contains, when they can be read from it.
+pub fn ecmascript_backtracking_pattern_literals(pattern: &str, flags: &str) -> Result<Option<Vec<String>>> {
+    let entry = GrammarEntry { id: String::new(), pattern: pattern.to_owned(), flags: flags.to_owned(), rust: false,
+        conventions: Vec::new() };
+    Ok(literals::backtracking(&backtracking_source(&entry, &HashMap::new(), true)?, false))
+}
+
 /// Literal strings one of which every match of `source`, compiled as a [`regex::Regex`] with its
 /// default options, contains, when they can be read from it.
 pub fn linear_pattern_literals(source: &str) -> Option<Vec<String>> {

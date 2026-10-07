@@ -342,6 +342,9 @@ struct Extractor {
     ecmascript: bool,
     #[serde(skip)]
     compiled: OnceLock<CompiledGrammar>,
+    /// The literals one of which every match of the pattern contains.
+    #[serde(skip)]
+    literals: OnceLock<Option<AhoCorasick>>,
 }
 
 #[derive(Deserialize)]
@@ -547,13 +550,27 @@ fn extend_native_spans(text: &str, extended: bool, spans: &mut Vec<Range<usize>>
 pub(crate) fn find(text: &str, extended: bool, native: Option<&mut Vec<Range<usize>>>) -> Vec<Match> {
     let (automaton, indices, unfiltered) = &*FILTER;
     let mut selected: BTreeSet<usize> = unfiltered.iter().copied().collect();
+    // Each reporter name selects its extractors once, however often the text writes it.
+    let mut named = vec![false; indices.len()];
     for matched in automaton.find_overlapping_iter(&compact(text)) {
-        selected.extend(indices[matched.pattern().as_usize()].iter().copied());
+        named[matched.pattern().as_usize()] = true;
+    }
+    for (name, _) in named.iter().enumerate().filter(|(_, named)| **named) {
+        selected.extend(indices[name].iter().copied());
     }
     let mut found = Vec::new();
     for index in selected {
         let extractor = &DATA.extractors[index];
         if !extended && !extractor.standard { continue; }
+        // The reporter's name read without spaces selects an extractor; one whose pattern's literals
+        // the text does not hold cannot match it.
+        let literals = extractor.literals.get_or_init(|| if extractor.ecmascript {
+            legal_grammar::ecmascript_backtracking_pattern_literals(&extractor.pattern, "")
+        } else {
+            legal_grammar::python_pattern_literals(&extractor.pattern, "")
+        }.unwrap_or_else(|error| panic!("reporter extractor {index}: {error}"))
+            .map(|literals| AhoCorasick::new(literals).expect("reporter extractor literals")));
+        if literals.as_ref().is_some_and(|literals| !literals.is_match(text)) { continue; }
         let pattern = extractor.compiled.get_or_init(|| {
             let compiled = if extractor.ecmascript {
                 legal_grammar::compile_ecmascript_backtracking_pattern("source extractor", &extractor.pattern, "")
