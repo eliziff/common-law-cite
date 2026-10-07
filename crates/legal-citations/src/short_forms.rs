@@ -6,7 +6,7 @@
 
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::{collections::HashSet, sync::LazyLock};
+use std::{borrow::Borrow, collections::HashSet, sync::LazyLock};
 use unicode_casefold::UnicodeCaseFold;
 
 macro_rules! pattern {
@@ -174,11 +174,12 @@ pub struct ReferenceSource {
 
 impl ReferenceSource {
     fn target(&self) -> &str { self.target.as_deref().unwrap_or("") }
-    fn note(&self) -> String {
+    /// Whether the entry's note, as a decimal string (empty when it has none), is `number`.
+    fn note_is(&self, number: &str) -> bool {
         match &self.note {
-            serde_json::Value::String(note) => note.clone(),
-            serde_json::Value::Number(note) if note.as_f64() != Some(0.0) => note.to_string(),
-            _ => String::new(),
+            serde_json::Value::String(note) => note == number,
+            serde_json::Value::Number(note) if note.as_f64() != Some(0.0) => note.to_string() == number,
+            _ => number.is_empty(),
         }
     }
 }
@@ -251,7 +252,7 @@ pub(crate) fn names_year(text: &str) -> bool {
 
 /// The source a name names by its short form, a bracketed definition or a party's name; never by words
 /// that merely occur in a source's text ("Poirier" in "… which Johanne Poirier described as …").
-pub(crate) fn resolve_named(hint: &str, registry: &[ReferenceSource]) -> Option<String> {
+pub(crate) fn resolve_named<R: Borrow<ReferenceSource>>(hint: &str, registry: &[R]) -> Option<String> {
     let (resource, method) = resolve_registry_hint_scoped("", hint, registry, None, false);
     if !resource.is_empty() && matches!(method, "exact_sf" | "token_sf" | "bracket_definition") {
         return Some(resource);
@@ -259,7 +260,7 @@ pub(crate) fn resolve_named(hint: &str, registry: &[ReferenceSource]) -> Option<
     let name = ref_normalize(hint);
     let name = name.trim_matches(['[', ']', '(', ')', ' ', '.']);
     if name.is_empty() { return None; }
-    unique_target(registry.iter().filter(|entry| entry.names.iter()
+    unique_target(entries(registry).filter(|entry| entry.names.iter()
         .any(|party| ref_normalize(party).trim_matches(['[', ']', '(', ')', ' ', '.']) == name))).map(str::to_owned)
 }
 
@@ -282,6 +283,11 @@ fn match_text(entry: &ReferenceSource) -> String {
         entry.verbatim.as_deref().unwrap_or("").chars().take(200).collect::<String>()))
 }
 
+/// A registry's entries, whether the caller holds them or refers to them.
+fn entries<R: Borrow<ReferenceSource>>(registry: &[R]) -> impl Iterator<Item = &ReferenceSource> + Clone {
+    registry.iter().map(Borrow::borrow)
+}
+
 fn unique_target<'a>(entries: impl IntoIterator<Item = &'a ReferenceSource>) -> Option<&'a str> {
     let targets = entries.into_iter().map(ReferenceSource::target).collect::<HashSet<_>>();
     (targets.len() == 1).then(|| *targets.iter().next().unwrap()).filter(|target| !target.is_empty())
@@ -289,13 +295,13 @@ fn unique_target<'a>(entries: impl IntoIterator<Item = &'a ReferenceSource>) -> 
 
 /// Match note numbers, short forms, names and bracket definitions to source
 /// identities. An unresolved source remains in the ambiguity pool.
-pub fn resolve_registry(text: &str, registry: &[ReferenceSource], aggressive: bool) -> (String, &'static str) {
+pub fn resolve_registry<R: Borrow<ReferenceSource>>(text: &str, registry: &[R], aggressive: bool) -> (String, &'static str) {
     resolve_registry_scoped(text, registry, aggressive, None, false)
 }
 
 /// `by_name`: a supra whose numbered note cites another work, or none, is read by its name, as the
 /// Python app's safe linking reads it whatever note number the author wrote.
-pub(crate) fn resolve_registry_scoped(text: &str, registry: &[ReferenceSource], aggressive: bool,
+pub(crate) fn resolve_registry_scoped<R: Borrow<ReferenceSource>>(text: &str, registry: &[R], aggressive: bool,
     sequence: Option<u32>, by_name: bool) -> (String, &'static str) {
     let hint = supra_hint(text, aggressive);
     let hint = if hint.is_empty() { fallback_hint(text) } else { hint };
@@ -303,11 +309,11 @@ pub(crate) fn resolve_registry_scoped(text: &str, registry: &[ReferenceSource], 
 }
 
 /// The same registry tiers for a name already captured by citation discovery.
-pub(crate) fn resolve_registry_hint(text: &str, hint: &str, registry: &[ReferenceSource]) -> (String, &'static str) {
+pub(crate) fn resolve_registry_hint<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[R]) -> (String, &'static str) {
     resolve_registry_hint_scoped(text, hint, registry, None, false)
 }
 
-fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSource],
+fn resolve_registry_hint_scoped<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[R],
     sequence: Option<u32>, by_name: bool) -> (String, &'static str) {
     let normalized = ref_normalize(hint);
     let normalized = normalized.trim_matches(['[', ']', '(', ')', ' ']);
@@ -317,16 +323,16 @@ fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSou
         .find_map(|pattern| pattern.captures(text))
         .and_then(|found| crate::text::decimal(&found[1])).map(|number| number.to_string());
     let numbered = number.map(|number| (|| -> (String, &'static str) {
-            let local = sequence.filter(|&sequence| registry.iter().any(|entry|
-                entry.note() == number && entry.sequence == Some(sequence)));
-            if local.is_none() && sequence.is_some() && registry.iter().filter(|entry|
-                entry.note() == number)
+            let local = sequence.filter(|&sequence| entries(registry).any(|entry|
+                entry.note_is(&number) && entry.sequence == Some(sequence)));
+            if local.is_none() && sequence.is_some() && entries(registry).filter(|entry|
+                entry.note_is(&number))
                 .filter_map(|entry| entry.sequence).collect::<HashSet<_>>().len() > 1 {
                 return (String::new(), "abstain_ambiguous_note_number_scope");
             }
-            let in_note = |entry: &&ReferenceSource| entry.note() == number
+            let in_note = |entry: &&ReferenceSource| entry.note_is(&number)
                 && local.is_none_or(|sequence| entry.sequence == Some(sequence));
-            let note_sources = registry.iter().filter(in_note).collect::<Vec<_>>();
+            let note_sources = entries(registry).filter(in_note).collect::<Vec<_>>();
             if note_sources.is_empty() { return (String::new(), "note_without_authority"); }
             if normalized.is_empty() && tokens.is_empty() {
                 return match unique_target(note_sources) {
@@ -379,7 +385,7 @@ fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSou
     ] {
         // A name read past its numbered note is matched to a short form, not to words in a source's text.
         if numbered.is_some() && method == "token_verb" { continue; }
-        let pool = registry.iter().filter(|entry| match method {
+        let pool = entries(registry).filter(|entry| match method {
             "exact_sf" => !normalized.is_empty() && ref_normalize(entry.short_form.as_deref().unwrap_or(""))
                 .trim_matches(['[', ']', '(', ')', ' ']) == normalized,
             "token_sf" => !tokens.is_empty() && entry.short_form.as_ref().is_some_and(|short|
@@ -391,7 +397,7 @@ fn resolve_registry_hint_scoped(text: &str, hint: &str, registry: &[ReferenceSou
         abstain = ambiguous;
         break;
     }
-    if let Some(target) = bracket_definition(normalized, registry.iter()) {
+    if let Some(target) = bracket_definition(normalized, entries(registry)) {
         return (target, "bracket_definition");
     }
     (String::new(), numbered.unwrap_or(abstain))
@@ -417,16 +423,16 @@ fn bracket_definition<'a>(normalized: &str, entries: impl Iterator<Item = &'a Re
 }
 
 /// ALR's resolve_after_strict_abstention, retaining its two existing tiers.
-pub fn resolve_after_strict_abstention(
-    text: &str, registry: &[ReferenceSource], inferred_forms: &[ReferenceSource],
+pub fn resolve_after_strict_abstention<R: Borrow<ReferenceSource>>(
+    text: &str, registry: &[R], inferred_forms: &[R],
 ) -> (String, String) {
     let candidates = reference_candidates(text);
     let note_numbers = reference_info(text).notes;
-    let in_note = |item: &&ReferenceSource| note_numbers.is_empty() || note_numbers.contains(&item.note());
-    let registry = registry.iter().filter(in_note).cloned().collect::<Vec<_>>();
-    let inferred_forms = inferred_forms.iter().filter(in_note).cloned().collect::<Vec<_>>();
+    let in_note = |item: &&ReferenceSource| note_numbers.is_empty() || note_numbers.iter().any(|number| item.note_is(number));
+    let registry = entries(registry).filter(in_note).collect::<Vec<_>>();
+    let inferred_forms = entries(inferred_forms).filter(in_note).collect::<Vec<_>>();
     if let Some(note) = NOTE.captures(text).filter(|_| candidates.is_empty()) {
-        let pool = registry.iter().filter(|item| item.note() == note[1]
+        let pool = registry.iter().copied().filter(|item| item.note_is(&note[1])
             && !REFERENCE.is_match(item.verbatim.as_deref().unwrap_or(""))).collect::<Vec<_>>();
         if let Some(target) = unique_target(pool) {
             return (target.to_owned(), "bare_note_unique_citation".into());
@@ -435,14 +441,14 @@ pub fn resolve_after_strict_abstention(
     resolve_inferred_candidates(&candidates, &registry, &inferred_forms)
 }
 
-pub(crate) fn resolve_inferred_candidates(
-    candidates: &[String], registry: &[ReferenceSource], inferred_forms: &[ReferenceSource],
+pub(crate) fn resolve_inferred_candidates<R: Borrow<ReferenceSource>>(
+    candidates: &[String], registry: &[R], inferred_forms: &[R],
 ) -> (String, String) {
     let keys = candidates.iter().map(|value| normalize(value)).collect::<HashSet<_>>();
-    let inferred = inferred_forms.iter().filter(|item|
+    let inferred = entries(inferred_forms).filter(|item|
         item.short_form_norm.as_ref().is_some_and(|key| keys.contains(key))).collect::<Vec<_>>();
     let Some(chosen) = inferred.last() else { return (String::new(), String::new()); };
-    let authoritative = registry.iter().filter(|item|
+    let authoritative = entries(registry).filter(|item|
         keys.contains(&normalize(item.short_form.as_deref().unwrap_or(""))));
     let Some(target) = unique_target(inferred.iter().copied().chain(authoritative))
         else { return (String::new(), String::new()); };

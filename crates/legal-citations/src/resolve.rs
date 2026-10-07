@@ -38,7 +38,7 @@ use crate::{NoteRange, SplitTier, SupraMode};
 use crate::source::SourcePart;
 use crate::short_forms::{self, ReferenceSource};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::{cell::OnceCell, collections::HashMap};
 use unicode_normalization::UnicodeNormalization;
 
 /// How one non-full citation was (or was not) resolved.
@@ -262,6 +262,9 @@ struct Resolver<'a> {
     renumbered: bool,
     /// References resolve as a note splitter's rows read them ([`crate::Options::split_tier`]).
     split: bool,
+    /// Each citation's [`candidate_names`], and the [`words`] of each, read once.
+    names: Vec<OnceCell<Vec<String>>>,
+    name_words: Vec<OnceCell<Vec<Vec<String>>>>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Hash)]
@@ -357,35 +360,52 @@ impl<'a> Resolver<'a> {
             source_origins: HashMap::new(),
             renumbered: false,
             split: false,
+            names: citations.iter().map(|_| OnceCell::new()).collect(),
+            name_words: citations.iter().map(|_| OnceCell::new()).collect(),
         }
+    }
+
+    fn names(&self, position: usize) -> &[String] {
+        self.names[position].get_or_init(|| candidate_names(&self.citations[position]))
+    }
+
+    fn name_words(&self, position: usize) -> &[Vec<String>] {
+        self.name_words[position].get_or_init(|| self.names(position).iter().map(|name| words(name)).collect())
     }
 
     /// The note a supra's name cites, and the note its number names, where the name is exactly
     /// one earlier full citation's short form or name and the numbered note cites something else.
-    fn name_note_drift(&self, position: usize) -> Option<std::cmp::Ordering> {
+    /// `names` holds each full citation's normalized short forms where it stands in a note, and
+    /// `numbered` the numbers of the notes that hold a full citation.
+    fn name_note_drift(&self, position: usize, names: &[Vec<String>], numbered: &std::collections::HashSet<u64>)
+        -> Option<std::cmp::Ordering> {
         let citation = &self.citations[position];
         let text = if citation.full_span.text.is_empty() { &citation.span.text } else { &citation.full_span.text };
         let written = short_forms::reference_info(text).notes.first().and_then(|number| number.parse::<u64>().ok())?;
         let hint = short_forms::normalize(&short_forms::supra_hint(text, true));
         if hint.is_empty() { return None; }
         let notes = self.notes?;
-        let mut named = self.citations.iter().enumerate().filter(|(at, other)| other.form == Form::Full
-            && other.span.start < citation.span.start && self.note_of[*at].is_some()
-            && [other.explicit_short_name.as_deref(), other.short_name.as_deref()].into_iter().flatten()
-                .any(|name| short_forms::normalize(name) == hint))
+        let mut named = self.citations.iter().enumerate().filter(|(at, other)|
+            other.span.start < citation.span.start && names[*at].contains(&hint))
             .filter_map(|(at, _)| self.note_of[at]).map(|note| u64::from(notes[note].number)).collect::<Vec<_>>();
         named.dedup();
         let [cited] = named.as_slice() else { return None };
-        let numbered_cites = self.citations.iter().enumerate().any(|(at, other)| other.form == Form::Full
-            && self.note_of[at].is_some_and(|note| u64::from(notes[note].number) == written));
-        (numbered_cites && *cited != written).then(|| cited.cmp(&written))
+        (numbered.contains(&written) && *cited != written).then(|| cited.cmp(&written))
     }
 
     /// A document renumbered its notes when at least three supras each name exactly one earlier
     /// citation in another note than the one they number.
     fn renumbering(&self) -> bool {
+        let noted_full = |at: usize| self.citations[at].form == Form::Full && self.note_of[at].is_some();
+        let names = (0..self.citations.len()).map(|at| if noted_full(at) {
+            let other = &self.citations[at];
+            [other.explicit_short_name.as_deref(), other.short_name.as_deref()].into_iter().flatten()
+                .map(short_forms::normalize).collect()
+        } else { Vec::new() }).collect::<Vec<_>>();
+        let numbered = self.notes.map(|notes| (0..self.citations.len()).filter(|&at| noted_full(at))
+            .filter_map(|at| self.note_of[at]).map(|note| u64::from(notes[note].number)).collect()).unwrap_or_default();
         let drifts = (0..self.citations.len()).filter(|&at| self.citations[at].form == Form::Supra)
-            .filter_map(|at| self.name_note_drift(at)).collect::<Vec<_>>();
+            .filter_map(|at| self.name_note_drift(at, &names, &numbered)).collect::<Vec<_>>();
         drifts.len() >= 3
     }
 
@@ -711,10 +731,10 @@ impl<'a> Resolver<'a> {
         }
         let scoped_registry = registry.iter().filter(|entry|
             !numbered || sequence.is_none_or(|sequence| entry.sequence.is_none_or(|owner| owner == sequence)))
-            .cloned().collect::<Vec<_>>();
+            .collect::<Vec<_>>();
         let scoped_inferred = inferred.iter().filter(|entry|
             !numbered || sequence.is_none_or(|sequence| entry.sequence.is_none_or(|owner| owner == sequence)))
-            .cloned().collect::<Vec<_>>();
+            .collect::<Vec<_>>();
         let (strict, reason) = short_forms::resolve_registry_scoped(text, &scoped_registry,
             self.supra_hint_mode == SupraMode::Aggressive, sequence, self.split);
         if let Some(target) = Target::from_registry(&strict) { return (Some(target), reason); }
@@ -989,14 +1009,14 @@ impl<'a> Resolver<'a> {
         let allowed = candidates.iter().map(|(authority, _)| *authority).collect::<std::collections::HashSet<_>>();
         let pool = registry.iter().filter(|entry| entry.target.as_deref()
             .and_then(|target| self.authority_for_target(target)).is_none_or(|authority| allowed.contains(&authority)))
-            .cloned().collect::<Vec<_>>();
+            .collect::<Vec<_>>();
         // A reference written word for word as one earlier citation's own name or bracketed short
         // form ("U.S. Steel S.C." for "… 2015 ONSC 5103 [U.S. Steel S.C.]") names it, though
         // another citation shares some of its words ("U.S. Steel Canada Inc. (Re)").
         if lsp_reference {
             let hint_words = words(hint);
-            let mut exact = candidates.iter().filter(|(_, other)| candidate_names(&self.citations[*other]).iter()
-                .any(|name| words(name) == hint_words)).map(|(authority, _)| *authority).collect::<Vec<_>>();
+            let mut exact = candidates.iter().filter(|(_, other)| self.name_words(*other).iter()
+                .any(|name| *name == hint_words)).map(|(authority, _)| *authority).collect::<Vec<_>>();
             exact.dedup();
             if !hint_words.is_empty() && !is_crown(&hint_words) {
                 if let [authority] = exact.as_slice() { return (Some(*authority), "name_only"); }
@@ -1012,11 +1032,11 @@ impl<'a> Resolver<'a> {
             let mut exact = Vec::new();
             let mut loose = Vec::new();
             for &(authority, other) in candidates {
-                let names = candidate_names(&self.citations[other]);
-                if names.iter().any(|name| words(name) == hint_words) && !exact.contains(&authority) {
+                let names = self.name_words(other);
+                if names.iter().any(|name| *name == hint_words) && !exact.contains(&authority) {
                     exact.push(authority);
                 }
-                if names.iter().any(|name| contains_words(&words(name), &hint_words))
+                if names.iter().any(|name| contains_words(name, &hint_words))
                     && !loose.contains(&authority) {
                     loose.push(authority);
                 }
@@ -1055,9 +1075,9 @@ impl<'a> Resolver<'a> {
         let names = match &target {
             // In split rows a decision a note cites without its style of cause is also known by the one the
             // text gives before the note's marker ("… decision in Quebec (Attorney General) v Senneville¹").
-            Some(Target::Authority(index)) => self.citations.iter().find(|citation| citation.index == *index)
-                .map(|citation| candidate_names(citation).into_iter().chain(self.split.then(||
-                    citation.fields.anchor_title.as_ref().map(|title| title.text.clone())).flatten()).collect())
+            Some(Target::Authority(index)) => self.citations.iter().position(|citation| citation.index == *index)
+                .map(|position| self.names(position).iter().cloned().chain(self.split.then(||
+                    self.citations[position].fields.anchor_title.as_ref().map(|title| title.text.clone())).flatten()).collect())
                 .unwrap_or_default(),
             Some(Target::Source(index)) => vec![self.source_parts[*index].text.clone()],
             None => Vec::new(),

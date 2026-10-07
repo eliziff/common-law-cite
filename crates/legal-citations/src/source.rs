@@ -388,6 +388,12 @@ fn anchors(text: &str, extended_us: bool) -> Vec<Anchor> {
     deduped
 }
 
+/// Whether `text` holds a source anchor: whether [`anchors`] finds any.
+fn has_anchor(text: &str, extended_us: bool) -> bool {
+    [&*NEUTRAL, &*REPORTER, &*STATUTE, &*JOURNAL, &*BOOK, &*URL].into_iter().any(|pattern| matches(pattern, text))
+        || extended_us && !us_matches(text).is_empty()
+}
+
 /// Exact source-grammar anchors for connecting a discovered full citation to
 /// a split part. This does not alter the ALR splitter's boundary decisions.
 fn anchor_spans(text: &str, found: &[Anchor]) -> Vec<(usize, usize)> {
@@ -432,7 +438,7 @@ fn inside_quotes(text: &str, position: usize) -> bool {
 }
 
 fn evidence(text: &str, extended_us: bool) -> bool {
-    !anchors(text, extended_us).is_empty() || [&*CROSS_REFERENCE, &*QUOTED, &*SECONDARY, &*LEGAL_TITLE,
+    has_anchor(text, extended_us) || [&*CROSS_REFERENCE, &*QUOTED, &*SECONDARY, &*LEGAL_TITLE,
         &*NAMED_CODE, &*PROVISION_START].into_iter().any(|pattern| matches(pattern, text))
 }
 
@@ -455,7 +461,7 @@ fn cites(text: &str, extended_us: bool) -> bool {
 
 /// Text that names a source, not only a cross-reference or a title: a source anchor, a case name or an ibid/supra.
 fn cites_source(text: &str, extended_us: bool) -> bool {
-    !anchors(text, extended_us).is_empty() || matches(&CASE_START, text) || matches(&REFERENCE, text)
+    has_anchor(text, extended_us) || matches(&CASE_START, text) || matches(&REFERENCE, text)
 }
 
 /// Where the lowercase words standing before a position begin, when other text precedes them ("…109-116

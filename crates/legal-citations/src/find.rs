@@ -1655,9 +1655,71 @@ static MARKUP_REFERENCE_NAME: LazyLock<String> = LazyLock::new(|| {
 static SOURCE_REFERENCE: LazyLock<String> = LazyLock::new(|| {
     legal_grammar::load_tables().expect("grammar corpus")["ref.us.name-pincite"].entry.pattern.clone()
 });
+/// `ref.us.name-pincite` read as the boundary before its name and the pinpoint after it, each compiled
+/// once: the name itself is a literal the caller escapes.
+static SOURCE_REFERENCE_PARTS: LazyLock<(CompiledGrammar, CompiledGrammar)> = LazyLock::new(|| {
+    let (head, rest) = SOURCE_REFERENCE.split_once("{{name}}").expect("reference names a name");
+    let (boundary, rest) = head.strip_suffix("(?:(?<name>").zip(rest.strip_prefix("))"))
+        .expect("reference opens with its name");
+    (legal_grammar::compile_python_pattern(boundary, "").expect("reference boundary"),
+        legal_grammar::compile_python_pattern(&format!("^(?:{rest})"), "").expect("reference pinpoint"))
+});
+
+/// Where `ref.us.name-pincite` matches with `name` in `text[after..]`, each with its pinpoint, as
+/// iterating its compiled pattern would find them: a match starts only where the name is written, at
+/// the boundary before it, with the pinpoint right after it, and the search resumes where it ends.
+fn source_reference_pins(text: &str, after: usize, name: &str) -> Vec<(usize, Span)> {
+    let (boundary, rest) = &*SOURCE_REFERENCE_PARTS;
+    let haystack = &text[after..];
+    let mut pins = Vec::new();
+    let mut from = 0;
+    while let Some(found) = haystack[from..].find(name) {
+        let at = from + found;
+        let end = at + name.len();
+        let bounded = boundary.find_from_pos(haystack, at).expect("reference boundary match")
+            .is_some_and(|matched| matched.start() == at);
+        match bounded.then(|| rest.captures(&haystack[end..]).expect("source reference match")).flatten() {
+            Some(captures) => {
+                let pin = captures.name("pin_cite").expect("source reference pinpoint");
+                pins.push((after + at, span(text, after + end + pin.start()..after + end + pin.end())));
+                from = end + captures.get(0).unwrap().end();
+            }
+            None => from = at + name.chars().next().map_or(1, char::len_utf8),
+        }
+    }
+    pins
+}
 static SOURCE_NAME_EXCLUDED: LazyLock<CompiledGrammar> = LazyLock::new(|| {
     legal_grammar::compile_python_table_entry("ref.us.excluded-name").expect("pinned reference names")
 });
+
+/// Where each of a set of names is written in a text, found in one pass.
+struct Occurrences {
+    names: std::collections::HashMap<String, Vec<usize>>,
+}
+
+impl Occurrences {
+    fn new<'a>(text: &str, names: impl Iterator<Item = &'a str>) -> Self {
+        let mut found = std::collections::HashMap::<String, Vec<usize>>::new();
+        for name in names { found.entry(name.to_owned()).or_default(); }
+        let patterns = found.keys().cloned().collect::<Vec<_>>();
+        let automaton = aho_corasick::AhoCorasick::new(&patterns).expect("name automaton");
+        for matched in automaton.find_overlapping_iter(text) {
+            found.get_mut(&patterns[matched.pattern().as_usize()]).expect("found name").push(matched.start());
+        }
+        for starts in found.values_mut() { starts.sort_unstable(); }
+        Self { names: found }
+    }
+
+    /// The name's occurrences in `text[from..to]`, as `str::match_indices` reads them there: left to right,
+    /// each search resuming where the last occurrence ends.
+    fn within(&self, name: &str, from: usize, to: usize) -> Vec<Range<usize>> {
+        let mut resume = from;
+        self.names[name].iter().filter(|&&start| start >= from && start + name.len() <= to).filter_map(|&start| {
+            (start >= resume).then(|| { resume = start + name.len(); start..resume })
+        }).collect()
+    }
+}
 
 /// Bare case-name references (`Jordan at para 12`, `Roe at 240`) to a full
 /// citation earlier in the text, and a name conjoined to the citation in
@@ -1684,16 +1746,10 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
                 ..citation.full_span.end
         })
         .collect::<Vec<_>>();
+    let occurrences = Occurrences::new(text, names.iter().map(|(name, ..)| name.as_str()));
     let mut found: Vec<Citation> = Vec::new();
     for (name, after, before, authority, source_field) in names {
-        let source_pattern = source_field.map(|_| legal_grammar::compile_python_pattern(
-            &SOURCE_REFERENCE.replace("{{name}}", &regex::escape(&name)), "").expect("escaped reference name"));
-        let source_pins = source_pattern.as_ref().map(|pattern| pattern.captures_iter(&text[after..])
-            .map(|captures| {
-                let captures = captures.expect("source reference match");
-                let pin = captures.name("pin_cite").expect("source reference pinpoint");
-                (after + captures.get(0).unwrap().start(), span(text, after + pin.start()..after + pin.end()))
-            }).collect::<Vec<_>>()).unwrap_or_default();
+        let source_pins = source_field.map(|_| source_reference_pins(text, after, &name)).unwrap_or_default();
         // Eyecite permits variable whitespace within an emphasized name and
         // only punctuation/whitespace between that name and the closing tag.
         let name_pattern = source_markup.map(|_| legal_grammar::compile_python_pattern(&MARKUP_REFERENCE_NAME.replace("{{name}}",
@@ -1715,11 +1771,8 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
         }).unwrap_or_default();
         // A brief may refer to a case by its name and a pinpoint before it first cites it in full
         // ("Oakes at 138" … "R v Oakes, [1986] 1 SCR 103"): such a reference has no earlier citation.
-        let early = if early_references {
-            text[..before].match_indices(name.as_str()).map(|(at, _)| at..at + name.len()).collect::<Vec<_>>()
-        } else { Vec::new() };
-        let mut matches: Vec<_> = text[after..].match_indices(name.as_str())
-            .map(|(at, _)| after + at..after + at + name.len())
+        let early = if early_references { occurrences.within(&name, 0, before) } else { Vec::new() };
+        let mut matches: Vec<_> = occurrences.within(&name, after, text.len()).into_iter()
             .chain(styled.iter().map(|(range, _)| range.clone())).chain(early.iter().cloned()).collect();
         matches.sort_by_key(|range| (range.start, range.end));
         matches.dedup();
@@ -1745,10 +1798,10 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
                 .map(|range| range.start)
                 .min()
                 .unwrap_or(text.len());
-            let tail = metadata::tail(text, end, limit, TailRules::default());
             let source_pin = source_pins.binary_search_by_key(&start, |(at, _)| *at).ok()
                 .map(|index| &source_pins[index].1).filter(|pin| pin.end <= limit).cloned();
             if markup.is_none() && source_pin.is_none() && !word_boundary(text, start, end) { continue; }
+            let tail = metadata::tail(text, end, limit, TailRules::default());
             let conjoined = previous_end > 0 && {
                 let gap = text[previous_end..start].trim_matches(javascript_whitespace);
                 let gap = gap.strip_prefix(',').unwrap_or(gap).trim_start();
