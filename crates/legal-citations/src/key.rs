@@ -718,3 +718,10 @@ pub(crate) fn selected_series<'r>(citation: &Citation, registry: &'r Registry, s
             .any(|value| fold(value) == folded)
     })
 }
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    crate::warm_statics!(
+        CODE_SECTION
+    );
+}

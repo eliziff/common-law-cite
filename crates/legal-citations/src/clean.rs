@@ -48,9 +48,9 @@ fn diff(before: &str, after: &str) -> Vec<diff_match_patch_rs::dmp::Diff<char>> 
     dmp.diff_main::<Compat>(before, after).expect("Unicode diff")
 }
 
+static TAG: LazyLock<regex::Regex> = LazyLock::new(|| regex::Regex::new(r"<([/a-z])[^>]+>").unwrap());
 /// Eyecite utils.placeholder_markup, preserving character counts exactly.
 pub fn placeholder_markup(source: &str) -> String {
-    static TAG: LazyLock<regex::Regex> = LazyLock::new(|| regex::Regex::new(r"<([/a-z])[^>]+>").unwrap());
     TAG.replace_all(source, |captures: &regex::Captures<'_>| {
         let tag = captures.get(0).unwrap().as_str();
         if tag.starts_with("</") { format!("</{}>", "X".repeat(tag.chars().count() - 3)) }
@@ -305,10 +305,10 @@ pub(crate) struct Markup<'a> {
     emphasis: Vec<(Range<usize>, Range<usize>)>,
 }
 
+static EMPHASIS: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
+    legal_grammar::compile_python_table_entry("markup.emphasis").expect("pinned emphasis tags"));
 impl<'a> Markup<'a> {
     pub fn new(text: &'a str, source: &'a str) -> Self {
-        static EMPHASIS: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
-            legal_grammar::compile_python_table_entry("markup.emphasis").expect("pinned emphasis tags"));
         let to_source = SpanUpdater::new(text, source, &placeholder_markup(source), None).expect("plain-to-markup alignment");
         let to_text = SpanUpdater::new(source, text, text, None).expect("markup-to-plain alignment");
         let emphasis = EMPHASIS.find_iter(source).map(|matched| {
@@ -867,4 +867,9 @@ fn named_entity(name: &str) -> Option<char> {
         "oelig" => '\u{153}',
         _ => return None,
     })
+}
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    crate::warm_statics!(TAG, EMPHASIS);
 }

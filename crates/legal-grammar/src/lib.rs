@@ -521,12 +521,21 @@ pub fn compile_ecmascript_entry(
     entry: &GrammarEntry,
     defs: &HashMap<String, String>,
 ) -> Result<CompiledEcmascriptGrammar> {
+    compile_ecmascript_entry_with(entry, defs, None)
+}
+
+fn compile_ecmascript_entry_with(
+    entry: &GrammarEntry,
+    defs: &HashMap<String, String>,
+    dfa_size_limit: Option<usize>,
+) -> Result<CompiledEcmascriptGrammar> {
     let portable = ecmascript_source(entry, defs)?;
     let mut builder = LinearRegexBuilder::new(&portable);
     builder
         .case_insensitive(entry.flags.contains('i'))
         .multi_line(entry.flags.contains('m'))
         .dot_matches_new_line(entry.flags.contains('s'));
+    if let Some(limit) = dfa_size_limit { builder.dfa_size_limit(limit); }
     builder
         .build()
         .map_err(|error| Error::Message(format!("{}: does not compile in Rust: {error}", entry.id)))
@@ -662,6 +671,14 @@ pub fn ecmascript_table_entry_literals(entry_id: &str) -> Result<Option<Vec<Stri
     let flags = &value.entry.flags;
     Ok(literals::linear(&ecmascript_source(&value.entry, &value.defs)?,
         flags.contains('i'), flags.contains('m'), flags.contains('s')))
+}
+
+/// [`compile_ecmascript_table_entry`] with room for `bytes` of lazily built automaton states in
+/// each search's cache, for a grammar whose states are costly to rebuild once the default room
+/// runs out. What the grammar matches is the same.
+pub fn compile_ecmascript_table_entry_with_dfa_size(entry_id: &str, bytes: usize) -> Result<CompiledEcmascriptGrammar> {
+    let value = table_entry(entry_id)?;
+    compile_ecmascript_entry_with(&value.entry, &value.defs, Some(bytes))
 }
 
 pub fn compile_ecmascript_table_entry(entry_id: &str) -> Result<CompiledEcmascriptGrammar> {

@@ -188,18 +188,18 @@ pub fn canlii_citation_url(text: &str, language: &str) -> Option<String> {
     Some(page_url(jurisdiction, database, year, &slug, if french { Language::Fr } else { Language::En }))
 }
 
+static SCR: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
+    legal_grammar::compile_python_table_entry("cite.reporter.scr.source-link").unwrap());
 /// ALR `_resolve_footnote_part_link_unlocked`'s SCR override.
 pub(crate) fn source_prefers_fallback(kind: &str, text: &str) -> bool {
-    static SCR: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
-        legal_grammar::compile_python_table_entry("cite.reporter.scr.source-link").unwrap());
     matches!(kind, "case" | "unreported") && SCR.is_match(text).expect("source SCR citation")
 }
 
+static URL: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
+    legal_grammar::compile_python_table_entry("url.source-candidate").unwrap());
 /// ALR _append_first_pinpoint_fragment, including its sanitizer's PDF sibling.
 /// Source candidates are HTTP(S) URLs or the splitter's bare www/perma/DOI forms.
 pub(crate) fn source_first_pinpoint(link: &str, fragments: &[String]) -> String {
-    static URL: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
-        legal_grammar::compile_python_table_entry("url.source-candidate").unwrap());
     const PUNCT: &str = ".,;:!?)]}>\"'“”’‘";
     let raw = link.trim_matches(crate::text::python_whitespace);
     let candidate = URL.find(raw).expect("source URL").map(|hit| hit.as_str())
@@ -242,6 +242,12 @@ pub(crate) fn source_first_pinpoint(link: &str, fragments: &[String]) -> String 
     }
 }
 
+static PARAGRAPH: LazyLock<Regex> = LazyLock::new(|| {
+    let entry = &legal_grammar::load_tables().unwrap()["pinpoint.source-first-paragraph"].entry;
+    regex::RegexBuilder::new(&entry.pattern).case_insensitive(true).build().unwrap()
+});
+static CANLII: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
+    legal_grammar::compile_python_table_entry("cite.canlii.source-link").unwrap());
 /// ALR `_generate_fallback_url`'s offline selection order, using the fields
 /// already discovered in the source part and its original court-route table.
 pub(crate) fn source_fallback(citations: &[&Citation], source: &crate::source::SourceFields,
@@ -253,10 +259,6 @@ pub(crate) fn source_fallback(citations: &[&Citation], source: &crate::source::S
         let jurisdiction = route.split('/').next().unwrap();
         let language = if matches!(jurisdiction, "qc" | "nb") { Language::Fr } else { Language::En };
         let mut url = source_canlii_case(citation, language)?;
-        static PARAGRAPH: LazyLock<Regex> = LazyLock::new(|| {
-            let entry = &legal_grammar::load_tables().unwrap()["pinpoint.source-first-paragraph"].entry;
-            regex::RegexBuilder::new(&entry.pattern).case_insensitive(true).build().unwrap()
-        });
         if let Some(pin) = source.pinpoint_fragments.first().filter(|pin| pin.starts_with("par")) {
             url.push_str(&format!("#{pin}"));
         } else if let Some(pin) = PARAGRAPH.captures(&source.citation_with_style) {
@@ -264,8 +266,6 @@ pub(crate) fn source_fallback(citations: &[&Citation], source: &crate::source::S
         }
         return Some((citation.index, url));
     }
-    static CANLII: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
-        legal_grammar::compile_python_table_entry("cite.canlii.source-link").unwrap());
     // ALR searches the complete source, including its parenthesized court.
     // Keep its first match and select the core at that original-text offset.
     if let Some(matched) = CANLII.find(&source.citation_with_style).expect("source CanLII citation") {
@@ -970,4 +970,9 @@ pub fn url_in(citation: &Citation, language: Language, registry: &Registry) -> O
             .filter(|url| url.starts_with("https://") || url.starts_with("http://")),
         _ => None,
     }
+}
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    crate::warm_statics!(SOURCE_ROUTES, SCR, URL, PARAGRAPH, CANLII);
 }

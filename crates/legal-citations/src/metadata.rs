@@ -539,11 +539,11 @@ fn process_parenthetical(value: &str) -> Option<String> {
         .then(|| value.to_owned())
 }
 
+static POST_SHORT: LazyLock<CompiledGrammar> = LazyLock::new(||
+    legal_grammar::compile_python_table_entry("parenthetical.us.post-short").unwrap());
 /// Eyecite extract_pin_cite: prepend the token's page and stop at the caller's
 /// first non-string token. Prefix offsets are subtracted from the matched extent.
 pub(crate) fn short_reference(text: &str, token: Range<usize>, limit: usize, prefix: &str) -> crate::SourceCaseName {
-    static POST_SHORT: LazyLock<CompiledGrammar> = LazyLock::new(||
-        legal_grammar::compile_python_table_entry("parenthetical.us.post-short").unwrap());
     let window: String = prefix.chars().chain(text[token.end..limit].chars()).take(300).collect();
     let mut result = crate::SourceCaseName {
         full_span_start: token.start, full_span_end: Some(token.end),
@@ -736,4 +736,13 @@ pub fn attach(text: &str, citations: &mut [Citation]) {
             citations[index].history.push(entry);
         }
     }
+}
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    crate::warm_statics!(
+        LOCATOR, ITEM, TOKEN, PINPOINT_PHRASES, PINPOINT_BRIDGE, SHORT_FORM_SUFFIX, DEFINED_TERM,
+        SOURCE, REMARK, RECORD, COURT, LAW_PUBLICATION, POST_CITATION, SOURCE_YEAR, HISTORY,
+        VERSUS, BRACKETED_PARAGRAPH, EDITORIAL
+    );
 }

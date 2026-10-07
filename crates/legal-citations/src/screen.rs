@@ -6,6 +6,7 @@ use aho_corasick::AhoCorasick;
 use legal_grammar::{CompiledEcmascriptGrammar, CompiledGrammar};
 use std::collections::HashMap;
 use std::ops::Deref;
+use std::sync::OnceLock;
 
 #[derive(Clone, Copy)]
 pub(crate) enum Dialect {
@@ -24,67 +25,90 @@ impl Dialect {
     }
 }
 
-/// A grammar with the literals one of which its every match contains.
+/// A grammar with the literals one of which its every match contains, compiled the first time a
+/// text that holds one of them is searched.
 pub(crate) struct Screened<G> {
-    grammar: G,
+    grammar: OnceLock<G>,
+    compile: Box<dyn Fn() -> G + Send + Sync>,
     literals: Option<AhoCorasick>,
     /// The named group every match opens with.
     leading: Option<String>,
 }
 
 impl<G> Screened<G> {
-    pub(crate) fn new(grammar: G, literals: Option<Vec<String>>) -> Self {
-        Self { grammar, literals: literals.map(|literals| AhoCorasick::new(literals).expect("grammar literals")), leading: None }
+    pub(crate) fn new(compile: impl Fn() -> G + Send + Sync + 'static, literals: Option<Vec<String>>) -> Self {
+        Self { grammar: OnceLock::new(), compile: Box::new(compile),
+            literals: literals.map(|literals| AhoCorasick::new(literals).expect("grammar literals")), leading: None }
     }
 
     /// Whether the grammar can match `text`: false when `text` holds none of its literals.
     pub(crate) fn may_match(&self, text: &str) -> bool {
         self.literals.as_ref().is_none_or(|literals| literals.is_match(text))
     }
+
+    fn grammar(&self) -> &G {
+        self.grammar.get_or_init(|| (self.compile)())
+    }
+
+    /// Compile the grammar now ([`crate::warm`]).
+    pub(crate) fn warm(&self) {
+        self.grammar();
+    }
 }
 
 impl<G> Deref for Screened<G> {
     type Target = G;
-    fn deref(&self) -> &G { &self.grammar }
+    fn deref(&self) -> &G { self.grammar() }
+}
+
+fn or_panic<T>(result: legal_grammar::Result<T>) -> T {
+    result.unwrap_or_else(|error| panic!("{error}"))
 }
 
 impl Screened<CompiledGrammar> {
     /// [`legal_grammar::compile_table_entry`] with its literals.
-    pub(crate) fn backtracking(id: &str) -> Self {
-        Self::new(legal_grammar::compile_table_entry(id).unwrap_or_else(|error| panic!("{error}")),
-            Dialect::Backtracking.literals(id))
+    pub(crate) fn backtracking(id: &'static str) -> Self {
+        Self::new(move || or_panic(legal_grammar::compile_table_entry(id)), Dialect::Backtracking.literals(id))
     }
 
     /// [`legal_grammar::compile_python_table_entry`] with its literals.
-    pub(crate) fn python(id: &str) -> Self {
-        Self::new(legal_grammar::compile_python_table_entry(id).unwrap_or_else(|error| panic!("{error}")),
-            legal_grammar::python_table_entry_literals(id).unwrap_or_else(|error| panic!("{error}")))
+    pub(crate) fn python(id: &'static str) -> Self {
+        Self::new(move || or_panic(legal_grammar::compile_python_table_entry(id)),
+            or_panic(legal_grammar::python_table_entry_literals(id)))
     }
 
     /// Every match in `text`, as [`fancy_regex::Regex::find_iter`] finds them.
     pub(crate) fn find_all<'t>(&'t self, text: &'t str) -> impl Iterator<Item = fancy_regex::Result<fancy_regex::Match<'t>>> + 't {
-        self.may_match(text).then(|| self.grammar.find_iter(text)).into_iter().flatten()
+        self.may_match(text).then(|| self.grammar().find_iter(text)).into_iter().flatten()
     }
 
     pub(crate) fn captures_all<'t>(&'t self, text: &'t str) -> impl Iterator<Item = fancy_regex::Result<legal_grammar::GrammarCaptures<'t>>> + 't {
-        self.may_match(text).then(|| self.grammar.captures_iter(text)).into_iter().flatten()
+        self.may_match(text).then(|| self.grammar().captures_iter(text)).into_iter().flatten()
     }
 
     pub(crate) fn find_screened<'t>(&self, text: &'t str) -> fancy_regex::Result<Option<fancy_regex::Match<'t>>> {
-        if self.may_match(text) { self.grammar.find(text) } else { Ok(None) }
+        if self.may_match(text) { self.grammar().find(text) } else { Ok(None) }
     }
 
     pub(crate) fn is_match_screened(&self, text: &str) -> fancy_regex::Result<bool> {
-        if self.may_match(text) { self.grammar.is_match(text) } else { Ok(false) }
+        if self.may_match(text) { self.grammar().is_match(text) } else { Ok(false) }
     }
 }
 
 impl Screened<CompiledEcmascriptGrammar> {
     /// [`legal_grammar::compile_ecmascript_table_entry`] with its literals.
-    pub(crate) fn linear(id: &str) -> Self {
-        let mut screened = Self::new(legal_grammar::compile_ecmascript_table_entry(id).unwrap_or_else(|error| panic!("{error}")),
+    pub(crate) fn linear(id: &'static str) -> Self {
+        let mut screened = Self::new(move || or_panic(legal_grammar::compile_ecmascript_table_entry(id)),
             Dialect::Linear.literals(id));
-        screened.leading = legal_grammar::ecmascript_table_entry_leading_group(id).unwrap_or_else(|error| panic!("{error}"));
+        screened.leading = or_panic(legal_grammar::ecmascript_table_entry_leading_group(id));
+        screened
+    }
+
+    /// [`Self::linear`] with `bytes` of room for its lazily built automaton
+    /// ([`legal_grammar::compile_ecmascript_table_entry_with_dfa_size`]).
+    pub(crate) fn linear_with_dfa_size(id: &'static str, bytes: usize) -> Self {
+        let mut screened = Self::linear(id);
+        screened.compile = Box::new(move || or_panic(legal_grammar::compile_ecmascript_table_entry_with_dfa_size(id, bytes)));
         screened
     }
 
@@ -99,23 +123,23 @@ impl Screened<CompiledEcmascriptGrammar> {
     }
 
     pub(crate) fn find_all<'t>(&'t self, text: &'t str) -> impl Iterator<Item = regex::Match<'t>> + 't {
-        self.may_match(text).then(|| self.grammar.find_iter(text)).into_iter().flatten()
+        self.may_match(text).then(|| self.grammar().find_iter(text)).into_iter().flatten()
     }
 
     pub(crate) fn captures_all<'t>(&'t self, text: &'t str) -> impl Iterator<Item = regex::Captures<'t>> + 't {
-        self.may_match(text).then(|| self.grammar.captures_iter(text)).into_iter().flatten()
+        self.may_match(text).then(|| self.grammar().captures_iter(text)).into_iter().flatten()
     }
 
     pub(crate) fn captures_screened<'t>(&self, text: &'t str) -> Option<regex::Captures<'t>> {
-        if self.may_match(text) { self.grammar.captures(text) } else { None }
+        if self.may_match(text) { self.grammar().captures(text) } else { None }
     }
 
     pub(crate) fn find_screened<'t>(&self, text: &'t str) -> Option<regex::Match<'t>> {
-        if self.may_match(text) { self.grammar.find(text) } else { None }
+        if self.may_match(text) { self.grammar().find(text) } else { None }
     }
 
     pub(crate) fn is_match_screened(&self, text: &str) -> bool {
-        self.may_match(text) && self.grammar.is_match(text)
+        self.may_match(text) && self.grammar().is_match(text)
     }
 }
 

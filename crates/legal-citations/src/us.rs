@@ -45,9 +45,9 @@ mod names {
     enum Kind<'a> { Text, Citation(Option<&'a str>), Stop(bool), Supra, Id, Placeholder, Section, Other }
     struct Word<'a> { text: &'a str, start: usize, end: usize, kind: Kind<'a> }
 
+    // Python str.isalpha uses Unicode Letter, not Other_Alphabetic.
+    static LETTER: LazyLock<regex::Regex> = LazyLock::new(|| regex::Regex::new(r"\p{L}").unwrap());
     fn alphabetic(character: char) -> bool {
-        // Python str.isalpha uses Unicode Letter, not Other_Alphabetic.
-        static LETTER: LazyLock<regex::Regex> = LazyLock::new(|| regex::Regex::new(r"\p{L}").unwrap());
         LETTER.is_match(character.encode_utf8(&mut [0; 4]))
     }
 
@@ -315,6 +315,15 @@ mod names {
             _ => None,
         }).collect()
     }
+
+    /// Build this module's lazily built statics now ([`crate::warm`]).
+    pub(super) fn warm() {
+        crate::warm_statics!(
+            ID, SUPRA, SUPRA_ANTECEDENT, PARAGRAPH, STOP, PLACEHOLDER, SECTION, YEAR, VERSUS,
+            HTML_VERSUS, LOWER, IN, ARTICLE, INITIAL_ARTICLE, CAPITAL, NUMBER, PRE, STOP_CASE,
+            LETTER
+        );
+    }
 }
 
 pub(crate) fn case_names(text: &str, citations: &[(Range<usize>, Option<&str>, Option<usize>)], markup: Option<&crate::clean::Markup<'_>>) -> BTreeMap<usize, crate::SourceCaseName> {
@@ -398,22 +407,22 @@ impl Match {
     }
 }
 
+static SURFACES: LazyLock<[regex::Regex; 2]> = LazyLock::new(|| {
+    let tables = legal_grammar::load_tables().unwrap();
+    let defs = &tables["cite.us.reporter.standard.full"].defs;
+    ["us_reporters", "us_journals"].map(|name| regex::Regex::new(
+        &format!("^(?:{})$", defs[name]).replace(r"\s*", "").replace(' ', "")).unwrap())
+});
 // One catalogue lookup for discovery and classification. The original LSP
 // gives a shared reporter/journal spelling to reporters first.
 fn standard_source(surface: &str) -> Option<&'static str> {
-    static SURFACES: LazyLock<[regex::Regex; 2]> = LazyLock::new(|| {
-        let tables = legal_grammar::load_tables().unwrap();
-        let defs = &tables["cite.us.reporter.standard.full"].defs;
-        ["us_reporters", "us_journals"].map(|name| regex::Regex::new(
-            &format!("^(?:{})$", defs[name]).replace(r"\s*", "").replace(' ', "")).unwrap())
-    });
     ["reporters", "journals"].into_iter().zip(SURFACES.iter())
         .find_map(|(source, pattern)| pattern.is_match(surface).then_some(source))
 }
 
+static CANDIDATE: LazyLock<regex::Regex> = LazyLock::new(||
+    legal_grammar::compile_ecmascript_table_entry("cite.us.reporter.candidate").unwrap());
 pub(crate) fn is_journal(core: &str) -> bool {
-    static CANDIDATE: LazyLock<regex::Regex> = LazyLock::new(||
-        legal_grammar::compile_ecmascript_table_entry("cite.us.reporter.candidate").unwrap());
     CANDIDATE.captures(core).is_some_and(|captures| {
         let citation = captures.name("citation").unwrap();
         citation.start() == 0 && citation.end() == core.len()
@@ -422,32 +431,34 @@ pub(crate) fn is_journal(core: &str) -> bool {
     })
 }
 
+fn screened(source: &str) -> Screened<regex::Regex> {
+    let literals = legal_grammar::linear_pattern_literals(source);
+    let source = source.to_owned();
+    Screened::new(move || regex::Regex::new(&source).unwrap(), literals)
+}
+static PATTERN: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| screened(
+    &legal_grammar::load_tables().unwrap()["cite.us.standard-candidate"].entry.pattern));
+static EXTENDED: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| {
+    let tables = legal_grammar::load_tables().unwrap();
+    screened(&tables["cite.us.standard-candidate"].entry.pattern
+        .replace("[0-9]+|_+", &tables["cite.us.reporter.full"].defs["us_page"]))
+});
+static EDITIONS: LazyLock<BTreeMap<String, (BTreeSet<usize>, BTreeSet<usize>)>> = LazyLock::new(|| {
+    let mut map = BTreeMap::<String, (BTreeSet<usize>, BTreeSet<usize>)>::new();
+    for extractor in &DATA.extractors {
+        for surface in &extractor.strings {
+            let entry = map.entry(compact(surface)).or_default();
+            entry.0.extend(extractor.exact.iter().copied().filter(|&index|
+                matches!(DATA.editions[index].reporter.source.as_str(), "reporters" | "journals")));
+            entry.1.extend(extractor.variations.iter().copied().filter(|&index|
+                matches!(DATA.editions[index].reporter.source.as_str(), "reporters" | "journals")));
+        }
+    }
+    map
+});
 // Frozen LSP citator.rs::standard_us_matches. Its catalogue lookup ignores
 // whitespace anywhere in the reporter surface, including dotless variants.
 fn standard_matches(text: &str, extended: bool) -> Vec<Match> {
-    fn screened(source: &str) -> Screened<regex::Regex> {
-        Screened::new(regex::Regex::new(source).unwrap(), legal_grammar::linear_pattern_literals(source))
-    }
-    static PATTERN: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| screened(
-        &legal_grammar::load_tables().unwrap()["cite.us.standard-candidate"].entry.pattern));
-    static EXTENDED: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| {
-        let tables = legal_grammar::load_tables().unwrap();
-        screened(&tables["cite.us.standard-candidate"].entry.pattern
-            .replace("[0-9]+|_+", &tables["cite.us.reporter.full"].defs["us_page"]))
-    });
-    static EDITIONS: LazyLock<BTreeMap<String, (BTreeSet<usize>, BTreeSet<usize>)>> = LazyLock::new(|| {
-        let mut map = BTreeMap::<String, (BTreeSet<usize>, BTreeSet<usize>)>::new();
-        for extractor in &DATA.extractors {
-            for surface in &extractor.strings {
-                let entry = map.entry(compact(surface)).or_default();
-                entry.0.extend(extractor.exact.iter().copied().filter(|&index|
-                    matches!(DATA.editions[index].reporter.source.as_str(), "reporters" | "journals")));
-                entry.1.extend(extractor.variations.iter().copied().filter(|&index|
-                    matches!(DATA.editions[index].reporter.source.as_str(), "reporters" | "journals")));
-            }
-        }
-        map
-    });
     // Frozen LSP us_fallback_ranges: extended pages are scanned only on cue lines.
     let mut ranges = vec![(0, text.len(), &*PATTERN)];
     if extended {
@@ -481,8 +492,8 @@ fn standard_matches(text: &str, extended: bool) -> Vec<Match> {
     found
 }
 
+static CUE: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| Screened::linear("cite.us.fallback-cue"));
 fn fallback_ranges(text: &str) -> BTreeSet<(usize, usize)> {
-    static CUE: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| Screened::linear("cite.us.fallback-cue"));
     CUE.find_all(text).map(|cue| (
         text[..cue.start()].rfind('\n').map_or(0, |at| at + 1),
         text[cue.end()..].find('\n').map_or(text.len(), |at| cue.end() + at),
@@ -490,7 +501,7 @@ fn fallback_ranges(text: &str) -> BTreeSet<(usize, usize)> {
 }
 
 static COMMON: LazyLock<Screened<legal_grammar::AsciiBoundedGrammar>> = LazyLock::new(|| Screened::new(
-        legal_grammar::compile_ascii_bounded_table_entry("cite.us.law.common").unwrap(),
+        || legal_grammar::compile_ascii_bounded_table_entry("cite.us.law.common").unwrap(),
         legal_grammar::ascii_bounded_table_entry_literals("cite.us.law.common").unwrap()));
 // The custom reporters are read only for extended US citations; a statute is read as one by the
 // laws whatever the reader asks for.
@@ -659,4 +670,10 @@ pub(crate) fn finish(citation: &mut crate::Citation) {
         }));
         citation.reasons.push("ambiguous_source_edition".into());
     }
+}
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    names::warm();
+    crate::warm_statics!(DATA, FILTER, CUSTOM, LAWS, SURFACES, CANDIDATE, EDITIONS; screened COMMON, PATTERN, EXTENDED, CUE);
 }

@@ -134,14 +134,14 @@ fn unique_resource<T: PartialEq>(resources: impl IntoIterator<Item = Option<T>>)
     resources.all(|resource| resource == first).then_some(first).flatten()
 }
 
+static RULES: std::sync::LazyLock<Vec<(regex::Regex, String)>> = std::sync::LazyLock::new(|| {
+    let tables = legal_grammar::load_tables().unwrap();
+    (0..12).map(|index| {
+        let entry = &tables[&format!("ref.antecedent-punctuation.{index}")].entry;
+        (regex::Regex::new(&entry.pattern).unwrap(), if matches!(index, 5 | 11) { "${1}" } else { "" }.to_owned())
+    }).collect()
+});
 fn strip_antecedent_punctuation(text: &str) -> String {
-    static RULES: std::sync::LazyLock<Vec<(regex::Regex, String)>> = std::sync::LazyLock::new(|| {
-        let tables = legal_grammar::load_tables().unwrap();
-        (0..12).map(|index| {
-            let entry = &tables[&format!("ref.antecedent-punctuation.{index}")].entry;
-            (regex::Regex::new(&entry.pattern).unwrap(), if matches!(index, 5 | 11) { "${1}" } else { "" }.to_owned())
-        }).collect()
-    });
     let mut text = text.to_owned();
     for (pattern, replacement) in RULES.iter() {
         text = pattern.replace_all(&text, replacement.as_str()).into_owned();
@@ -155,13 +155,13 @@ fn antecedent_matches(guess: &str, plaintiff: Option<&str>, defendant: Option<&s
 
 use crate::text::decimal;
 
+static PIN: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+    regex::Regex::new(&legal_grammar::load_tables().unwrap()["ref.id-page"].entry.pattern).unwrap()
+});
 fn invalid_id_pin(full_case: bool, page: Option<&str>, pin: Option<&str>) -> bool {
     if full_case && page.is_none() { return true; }
     let Some(pin) = pin.filter(|pin| !pin.is_empty()) else { return false };
     let Some(page) = page.and_then(decimal) else { return false };
-    static PIN: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
-        regex::Regex::new(&legal_grammar::load_tables().unwrap()["ref.id-page"].entry.pattern).unwrap()
-    });
     let Some(pin) = PIN.captures(pin).and_then(|matched| decimal(&matched[1])) else { return true };
     pin < page || pin > page + num_bigint::BigUint::from(150u8)
 }
@@ -1396,4 +1396,9 @@ pub fn representative(citations: &[Citation], cluster: &[usize]) -> Option<usize
             .iter()
             .any(|citation| citation.index == *index && citation.form == Form::Full)
     })
+}
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    crate::warm_statics!(RULES, PIN);
 }

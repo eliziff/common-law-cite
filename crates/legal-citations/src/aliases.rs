@@ -206,3 +206,10 @@ mod tests {
         }
     }
 }
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    crate::warm_statics!(
+        TABLE
+    );
+}

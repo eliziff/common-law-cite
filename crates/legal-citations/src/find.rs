@@ -156,8 +156,8 @@ const SECONDARY_LINEAR: [(&str, &str, &str); 10] = [
     ("case", "database_grammar", "cite.database"),
     ("case", "unreported_grammar", "cite.case.unreported"),
 ];
-static SECONDARY_ECMASCRIPT: LazyLock<[(&'static str, &'static str, CompiledEcmascriptGrammar); 10]> =
-    LazyLock::new(|| SECONDARY_LINEAR.map(|(kind, reason, id)| (kind, reason, linear(id))));
+// Each compiled the first time a text it can match is read.
+static SECONDARY_ECMASCRIPT: [OnceLock<CompiledEcmascriptGrammar>; 10] = [const { OnceLock::new() }; 10];
 // Article without a first page ("… (2020) The Journal of Value Inquiry at 1")
 // needs a lookahead so the pinpoint stays outside the core, which is the
 // backtracking dialect rather than the linear one.
@@ -259,7 +259,9 @@ static LEGISLATIVE_TITLE: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(||
 static CASE_VERSUS: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.case-versus"));
 // A balanced, uppercase-first parenthetical ("Quebec (Attorney General)")
 // counts as one party token; "(1998)", "(2d)" and "(see below)" do not.
-static CASE_LEFT: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.case-left"));
+// Its automaton's states outgrow the default room, and rebuilding them on every name costs about
+// eight times what keeping them does.
+static CASE_LEFT: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear_with_dfa_size("style.case-left", 8 << 20));
 // What can open a numbered paragraph ahead of its first case: the paragraph's
 // own label ("12.", "[12]", "(a)") and a leading "In". Neither is part of a
 // party name, although the party grammar accepts numbers and capitals.
@@ -379,9 +381,10 @@ fn resolve(mut found: Vec<Anchor>) -> Vec<Anchor> {
 fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>) -> Vec<Anchor> {
     let mut found = Vec::new();
     let present = SECONDARY_SCREEN.present(value);
-    let linear = SECONDARY_ECMASCRIPT.len();
+    let first_source = SECONDARY_LINEAR.len();
     let sources = SECONDARY_SOURCES.len();
-    for (_, (kind, reason, pattern)) in SECONDARY_ECMASCRIPT.iter().enumerate().filter(|(slot, _)| present[*slot]) {
+    for (slot, (kind, reason, id)) in SECONDARY_LINEAR.iter().enumerate().filter(|(slot, _)| present[*slot]) {
+        let pattern = SECONDARY_ECMASCRIPT[slot].get_or_init(|| linear(id));
         for matched in pattern.find_iter(value) {
             let start = matched.start();
             if *reason == "unreported_grammar" && case_style_start(value, start, 0) == start {
@@ -410,7 +413,7 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             found.push(Anchor::new(start..matched.end(), (*kind, *reason)));
         }
     }
-    for (_, (kind, reason, id, compiled, guides)) in SECONDARY_SOURCES.iter().enumerate().filter(|(slot, _)| present[linear + slot]) {
+    for (_, (kind, reason, id, compiled, guides)) in SECONDARY_SOURCES.iter().enumerate().filter(|(slot, _)| present[first_source + slot]) {
         if guides.is_empty() || styles.is_none_or(|styles| styles.iter().any(|style| guides.contains(style))) {
             let pattern = compiled.get_or_init(|| backtracking(id));
             // A file number in parentheses identifies the proceeding a sentence speaks of
@@ -438,17 +441,17 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
         }
     }
     // The Charter's enacting instrument is its core; the title before it styles it.
-    if present[linear + sources] && styles.is_none_or(|styles| styles.iter().any(|style| CANADA.contains(style))) {
+    if present[first_source + sources] && styles.is_none_or(|styles| styles.iter().any(|style| CANADA.contains(style))) {
         found.extend(CHARTER.captures_all(value).flatten().filter_map(|captures| captures.name("source"))
             .map(|source| Anchor::new(source.start()..source.end(), ("statute", "charter_grammar"))));
     }
-    if present[linear + sources + 1] {
+    if present[first_source + sources + 1] {
         found.extend(JOURNAL_ARTICLE.find_all(value).flatten().map(|matched| {
             Anchor::new(matched.start()..matched.end(), ("journal", "article_grammar"))
         }));
     }
     let mut link_end = None;
-    for matched in present[linear + sources + 2].then(|| ONLINE_SOURCE.find_all(value)).into_iter().flatten() {
+    for matched in present[first_source + sources + 2].then(|| ONLINE_SOURCE.find_all(value)).into_iter().flatten() {
         let link = link_core(value, matched.start()..matched.end());
         // An alternate or archived link written right after another one is
         // that source's, not a source of its own.
@@ -2389,4 +2392,25 @@ pub(crate) fn has_core_citation(text: &str) -> bool {
 /// Whether `text` holds a citation core or a two-party case name.
 pub fn has_citation(text: &str) -> bool {
     has_core_citation(text) || CASE_NAME.is_match_screened(text)
+}
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    crate::warm_statics!(
+        REPORTER_PARTS, JOURNAL_CUE, TREATY, PARLIAMENTARY_COMMONWEALTH, DATABASE,
+        SECONDARY_SOURCES, SECONDARY_SCREEN, MARKUP_REFERENCE_FOLLOWING, MARKUP_REFERENCE_NAME,
+        SOURCE_REFERENCE, SOURCE_REFERENCE_PARTS, SOURCE_NAME_EXCLUDED;
+        screened
+        CITATION_PATTERN, REPORTER_MONTH, REPORTER_WORD, CASE_NAME, SIGNAL_PREFIX,
+        INTRODUCTORY_SIGNAL, BACK_REFERENCE, INLINE_REFERENCE, INLINE_NOTE,
+        NOTE_CROSS_REFERENCE, ANTECEDENT_NAME, SECTION_SYMBOL, REPORTER_PATTERN,
+        JOURNAL_PATTERN, LAW_SUBDIVISION, JOURNAL_ARTICLE, ONLINE_SOURCE, CHARTER, CASE_FLOOR,
+        AUTHORITY_LIST, AUTHORITY_LIST_END, MATTER_STYLE, ORDER_OF, ACCESS_DATE, SUPRA_AFTER,
+        GOVERNMENT_AUTHOR, LEGISLATIVE_TITLE, CASE_VERSUS, CASE_LEFT, CASE_LEAD_IN,
+        STYLED_FLOOR, CASE_RE_STYLE, STATUTE_TITLE, STATUTE_PART, TRAILING_DATE, QUOTED_WORK,
+        QUOTED_TITLE, AUTHORED_WORK, PLAIN_WORK, COMMENTED_SUBJECT, REPRINT, REPRINT_LOCATION,
+        LINK_LEAD
+    );
+    for (slot, (_, _, id)) in SECONDARY_LINEAR.iter().enumerate() { SECONDARY_ECMASCRIPT[slot].get_or_init(|| linear(id)); }
+    for (_, _, id, compiled, _) in SECONDARY_SOURCES.iter() { compiled.get_or_init(|| backtracking(id)); }
 }

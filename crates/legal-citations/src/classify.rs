@@ -1128,3 +1128,12 @@ pub(crate) fn apply(citation: &mut Citation, mut reading: Reading, options: &cra
         citation.reasons.push(reading.reason.to_owned());
     }
 }
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    crate::warm_statics!(
+        NEUTRAL, TRIBUNAL, BRACKETED, PARENTHESIZED, CANLII, STATUTE, STATUTE_TITLED, ROUTING,
+        JOURNAL_ARTICLE, BOOK, UNREPORTED, COURT_FILE, PARLIAMENTARY, FRENCH_REPORTER,
+        INSTRUMENT_KIND, BOOK_CHAPTER, FRENCH_SERIES
+    );
+}

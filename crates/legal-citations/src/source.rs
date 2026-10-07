@@ -906,3 +906,19 @@ pub fn extract_text_fields(text: &str, extended_us: bool) -> SourceFields {
         anchors: anchors(value, extended_us).into_iter().map(|(_, _, kind)| kind.to_owned()).collect(),
         anchor_spans: Vec::new(), extended_us, resolved_url: None }, extended_us)
 }
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    crate::warm_statics!(
+        ALR_PURE_REFERENCE, PURE_CLAUSE, PURE_TOKEN, PURE_PIN_NUMBER, PURE_PIN_PARAGRAPH,
+        PURE_PIN_PROVISION, PURE_PIN_PAGE, DOUBLE_QUOTED_TITLE, SINGLE_QUOTED_TITLE;
+        screened
+        URL, NEUTRAL, REPORTER, STATUTE, JOURNAL, BOOK, REFERENCE, PURE_REFERENCE, LINK, SIGNAL,
+        SOURCE_SIGNAL, AUTHOR, SHORT_FORM, PARAGRAPH, SECTION, PAGE, EDITORIAL, SENTENCE,
+        AGGRESSIVE_SIGNAL, CASE_START, CROSS_REFERENCE, QUOTED, SECONDARY, LEGAL_TITLE,
+        NAMED_CODE, CONJUNCTION, NOTE_START, EMBEDDED, ABBREVIATION, COMPANY, VERSUS,
+        SHORT_SIGNAL, CONJOINED_SHORT, CONJUNCTION_END, PROVISION_START, PIN_SEPARATOR,
+        PIN_NUMBER, PROVISION_VALUE, ESSAY, IBID, AUTHORS, BARE_ADMIN, BARE_REFERENCE,
+        BARE_CASE, BARE_STATUTE, BARE_SIGNAL, BARE_SHORT, BARE_COMMENTARY, BARE_SENTENCE
+    );
+}

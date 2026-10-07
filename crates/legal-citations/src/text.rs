@@ -264,10 +264,10 @@ pub fn normalize_javascript_whitespace(value: &str) -> String {
     normalized
 }
 
+static DIGIT: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| regex::Regex::new(r"^\p{Nd}$").unwrap());
 /// Unicode decimal digits are stored in contiguous runs of ten in Unicode.
 /// Convert their numeric representation without limiting Python's integer size.
 pub(crate) fn decimal(value: &str) -> Option<num_bigint::BigUint> {
-    static DIGIT: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| regex::Regex::new(r"^\p{Nd}$").unwrap());
     let digit = |character: char| DIGIT.is_match(character.encode_utf8(&mut [0; 4]));
     let ascii = value.chars().map(|character| {
         if character.is_ascii_digit() { return Some(character); }
@@ -381,4 +381,9 @@ mod tests {
         assert_eq!(normalize_javascript_whitespace("\n"), "");
         assert_eq!(normalize_javascript_whitespace("\r\n"), "");
     }
+}
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    crate::warm_statics!(DIGIT);
 }

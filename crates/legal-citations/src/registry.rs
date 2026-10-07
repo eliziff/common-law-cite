@@ -287,13 +287,13 @@ pub fn fold(surface: &str) -> String {
         .collect()
 }
 
+static NONWORD: LazyLock<regex::Regex> = LazyLock::new(|| {
+    let tables = legal_grammar::load_tables().expect("grammar corpus");
+    regex::Regex::new(&tables["court.parenthetical.nonword"].entry.pattern)
+        .expect("court parenthetical normalization")
+});
 /// Eyecite helpers.get_court_by_paren uses Unicode regex word characters.
 fn parenthetical_fold(surface: &str) -> String {
-    static NONWORD: LazyLock<regex::Regex> = LazyLock::new(|| {
-        let tables = legal_grammar::load_tables().expect("grammar corpus");
-        regex::Regex::new(&tables["court.parenthetical.nonword"].entry.pattern)
-            .expect("court parenthetical normalization")
-    });
     NONWORD.replace_all(surface, "").to_lowercase()
 }
 
@@ -481,4 +481,10 @@ fn load() -> Registry {
 pub fn registry() -> &'static Registry {
     static REGISTRY: LazyLock<Registry> = LazyLock::new(load);
     &REGISTRY
+}
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    registry();
+    crate::warm_statics!(NONWORD);
 }

@@ -40,6 +40,66 @@ pub mod url;
 mod us;
 
 pub use legal_grammar as grammar;
+
+/// Build the named lazily built statics now ([`warm`]): `warm_statics!(A, B; screened C, D)` also compiles
+/// each screened grammar.
+macro_rules! warm_statics {
+    ($($name:path),* $(,)? $(; screened $($screened:path),+ $(,)?)?) => {
+        $(std::sync::LazyLock::force(&$name);)*
+        $($($screened.warm();)+)?
+    };
+}
+pub(crate) use warm_statics;
+
+/// A short document with notes that cite the common kinds of authority, read by [`warm`]: its
+/// first line is the text the notes annotate, each later line one note.
+const WARM_SAMPLE: &str = "As the Court held in Oakes and the Act provides, the limit is justified.
+R v Oakes, [1986] 1 SCR 103 at para 69, 26 DLR (4th) 200.
+Ibid at 138.
+Canadian Charter of Rights and Freedoms, s 7, Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11.
+Criminal Code, RSC 1985, c C-46, s 718.2(e); see also Smith v Jones, 2011 ONCA 123 at paras 4-6, aff'd 2012 SCC 9.
+Kent Roach, “The Charter and Criminal Justice” (2010) 48:2 Osgoode Hall LJ 233 at 240.
+Peter W Hogg, Constitutional Law of Canada, 5th ed (Toronto: Carswell, 2007) at 36-12.
+Oakes, supra note 1 at 140; Haig v Canada (Chief Electoral Officer), [1993] 2 SCR 995.
+House of Commons Debates, 41-1, No 12 (15 June 2011) at 1520 (Hon Rob Nicholson).
+Brown v Board of Education, 347 US 483 at 495 (1954), online: <https://www.canlii.org/en/ca/scc/doc/1986/1986canlii46/1986canlii46.html>.
+Roach, supra note 5 at 241; Hogg, ibid at 36-14; Re Residential Tenancies Act, 1979, [1981] 1 SCR 714.";
+
+/// Build every grammar, automaton and table that extraction, note splitting, resolution, source
+/// fields, note references, authorities and quoted titles build the first time they need one, and
+/// read a short document through them so that their search caches exist: the first document read
+/// afterwards costs about what any other does. The US reporter extractors are the exception: only
+/// those whose reporter a text names are compiled, as before.
+pub fn warm() {
+    find::warm();
+    classify::warm();
+    metadata::warm();
+    aliases::warm();
+    key::warm();
+    registry::warm();
+    resolve::warm();
+    short_forms::warm();
+    source::warm();
+    us::warm();
+    text::warm();
+    clean::warm();
+    url::warm();
+    let mut notes = Vec::new();
+    let mut start = WARM_SAMPLE.find('\n').map_or(WARM_SAMPLE.len(), |end| end + 1);
+    for (number, line) in WARM_SAMPLE[start..].split('\n').enumerate() {
+        notes.push(serde_json::json!({"number": number + 1, "start": start, "end": start + line.len()}));
+        start += line.len() + 1;
+    }
+    let call = |method: &str, request: serde_json::Value| api::call_value(method, request).expect("warm-up call");
+    let extracted = call("extract", serde_json::json!({"text": WARM_SAMPLE,
+        "options": {"notes": notes, "splitTier": "safe"}}));
+    for part in extracted["sourceParts"].as_array().into_iter().flatten() {
+        call("sourceFields", serde_json::json!({"part": part}));
+    }
+    call("noteReferences", serde_json::json!({"parts": extracted["sourceParts"], "citations": extracted["citations"]}));
+    call("authorities", serde_json::json!({"citations": extracted["citations"], "authorities": extracted["authorities"]}));
+    call("quotedTitles", serde_json::json!({"text": WARM_SAMPLE}));
+}
 pub use model::*;
 
 use serde::{Deserialize, Serialize};

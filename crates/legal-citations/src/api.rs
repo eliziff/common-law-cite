@@ -26,6 +26,7 @@
 //! | `classifyExcerpt` | `{excerpt}`                                                    | `{kind, citeTokens, citeRuns, ...}`                    |
 //! | `hasCitation`     | `{text}`                                                       | `{hasCitation}`                                        |
 //! | `version`         | `{}`                                                           | `{version, schemaVersion, keyVersion, grammar, registry}` |
+//! | `warm`            | `{}`                                                           | `{}`, once every grammar the first document needs is built |
 //!
 //! Offsets in requests and responses are in the request's `offsetUnit`
 //! (`byte`, `char` = Unicode scalar values, `utf16` = JavaScript code units),
@@ -98,6 +99,7 @@ pub const METHODS: &[&str] = &[
     "protectedCitationSpans",
     "matchesReporterHeader",
     "version",
+    "warm",
 ];
 
 /// Why a call failed. Serialized as `{"code": ..., "message": ...}`.
@@ -331,6 +333,11 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         "version" => {
             parse::<Empty>(method, request)?;
             to_value(version())
+        }
+        "warm" => {
+            parse::<Empty>(method, request)?;
+            crate::warm();
+            Ok(Value::Object(Map::new()))
         }
         other => Err(ApiError::new(
             ErrorCode::UnknownMethod,

@@ -57,10 +57,10 @@ pub struct InferredShortForm {
     pub rule: &'static str,
 }
 
+// Python's Unicode \w is letters, numbers and underscore; unlike Rust
+// regex \w it does not include combining marks or join controls.
+static WORD: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[\p{L}\p{N}_]").unwrap());
 pub fn normalize(value: &str) -> String {
-    // Python's Unicode \w is letters, numbers and underscore; unlike Rust
-    // regex \w it does not include combining marks or join controls.
-    static WORD: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[\p{L}\p{N}_]").unwrap());
     WORD.find_iter(value).map(|matched| matched.as_str()).collect::<String>()
         .as_str().case_fold().collect()
 }
@@ -477,4 +477,15 @@ pub fn reanchor_reference(origin_link: &str, text: &str) -> String {
         }
     }
     if !IBID.is_match(text) && SUPRA.is_match(text) { base.to_owned() } else { link }
+}
+
+/// Build this module's lazily built statics now ([`crate::warm`]).
+pub(crate) fn warm() {
+    crate::warm_statics!(
+        SIGNAL, EXPLICIT_SKIP, EXPLICIT, CASE_CITE, ACT, PARTIES, CROWN, REFERENCE, AUTHORS,
+        AUTHOR_TOKEN, HINT, HINT_SIGNAL, NOTE, REGISTRY_NOTE, REGISTRY_N, REGISTRY_NN,
+        REGISTRY_SIGNAL, BRACKET_SKIP, SUPRA, SUPRA_HINT_SIGNAL, SUPRA_HINT_START, SUPRA_HINT_ANY,
+        IBID_HINT, SOURCE_YEAR, HEREINAFTER, ANCHOR_PARAGRAPH, ANCHOR_PROVISION, ANCHOR_SCOPE,
+        IBID, WORD
+    );
 }
