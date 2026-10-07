@@ -3,7 +3,7 @@
 //! grammar compiles from; anything the reading cannot follow (a back reference, a large class, an
 //! optional part) only weakens the set or leaves the grammar without one, never wrongs it.
 
-use fancy_regex::Expr;
+use fancy_regex::{Expr, LookAround};
 use regex_syntax::hir::{Class, Hir, HirKind};
 
 /// The most strings one part's exact reading may hold before it is read as "contains" instead.
@@ -19,11 +19,14 @@ enum Reading {
     Exact(Vec<String>),
     /// Every match of the part contains one of these strings.
     Contains(Vec<String>),
+    /// The part matches nothing but holds only where the text it looks at contains one of these
+    /// strings: a positive look-ahead or look-behind.
+    Beside(Vec<String>),
     /// Nothing is known.
     Unknown,
 }
 
-use Reading::{Contains, Exact, Unknown};
+use Reading::{Beside, Contains, Exact, Unknown};
 
 fn usable(strings: &[String]) -> bool {
     !strings.is_empty() && strings.iter().all(|string| !string.is_empty())
@@ -67,6 +70,8 @@ fn concat(parts: impl IntoIterator<Item = Reading>) -> Reading {
                 if let Some(current) = run.take() { consider(current, &mut best); }
                 consider(strings, &mut best);
             }
+            // It matches nothing, so the strings on either side of it stay one run.
+            Beside(strings) => consider(strings, &mut best),
             Unknown => {
                 whole = false;
                 if let Some(current) = run.take() { consider(current, &mut best); }
@@ -84,7 +89,7 @@ fn alternation(parts: impl IntoIterator<Item = Reading>) -> Reading {
     for part in parts {
         match part {
             Exact(part) => strings.extend(part),
-            Contains(part) => { exact = false; strings.extend(part); }
+            Contains(part) | Beside(part) => { exact = false; strings.extend(part); }
             Unknown => return Unknown,
         }
     }
@@ -99,7 +104,7 @@ fn repetition(child: Reading, min: usize, max: Option<usize>) -> Reading {
         (1, Some(1), child) => child,
         (0, Some(1), Exact(mut strings)) => { strings.push(String::new()); Exact(dedup(strings)) }
         (0, _, _) => Unknown,
-        (_, _, Exact(strings) | Contains(strings)) if usable(&strings) => Contains(strings),
+        (_, _, Exact(strings) | Contains(strings) | Beside(strings)) if usable(&strings) => Contains(strings),
         _ => Unknown,
     }
 }
@@ -127,6 +132,11 @@ fn hir(hir: &Hir) -> Reading {
 
 fn expr(expr: &Expr) -> Reading {
     match expr {
+        // What a positive look-around reads must be in the text, though not in the match.
+        Expr::LookAround(child, LookAround::LookAhead | LookAround::LookBehind) => match self::expr(child) {
+            Exact(strings) | Contains(strings) | Beside(strings) if usable(&strings) => Beside(strings),
+            _ => Exact(vec![String::new()]),
+        },
         Expr::Empty | Expr::Assertion(_) | Expr::LookAround(..) | Expr::KeepOut
         | Expr::ContinueFromPreviousMatchEnd => Exact(vec![String::new()]),
         Expr::Literal { val, casei: false } => Exact(vec![val.clone()]),
@@ -144,7 +154,7 @@ fn expr(expr: &Expr) -> Reading {
 
 fn finish(reading: Reading) -> Option<Vec<String>> {
     match reading {
-        Exact(strings) | Contains(strings) if usable(&strings) && strings.len() <= SET_LIMIT => Some(strings),
+        Exact(strings) | Contains(strings) | Beside(strings) if usable(&strings) && strings.len() <= SET_LIMIT => Some(strings),
         _ => None,
     }
 }
