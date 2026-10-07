@@ -6,6 +6,7 @@ use legal_grammar::CompiledGrammar;
 use serde::Deserialize;
 use std::collections::{BTreeMap, BTreeSet};
 use std::ops::Range;
+use crate::screen::Screened;
 use std::sync::{LazyLock, OnceLock};
 
 mod names {
@@ -424,12 +425,15 @@ pub(crate) fn is_journal(core: &str) -> bool {
 // Frozen LSP citator.rs::standard_us_matches. Its catalogue lookup ignores
 // whitespace anywhere in the reporter surface, including dotless variants.
 fn standard_matches(text: &str, extended: bool) -> Vec<Match> {
-    static PATTERN: LazyLock<regex::Regex> = LazyLock::new(|| regex::Regex::new(
-        &legal_grammar::load_tables().unwrap()["cite.us.standard-candidate"].entry.pattern).unwrap());
-    static EXTENDED: LazyLock<regex::Regex> = LazyLock::new(|| {
+    fn screened(source: &str) -> Screened<regex::Regex> {
+        Screened::new(regex::Regex::new(source).unwrap(), legal_grammar::linear_pattern_literals(source))
+    }
+    static PATTERN: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| screened(
+        &legal_grammar::load_tables().unwrap()["cite.us.standard-candidate"].entry.pattern));
+    static EXTENDED: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| {
         let tables = legal_grammar::load_tables().unwrap();
-        regex::Regex::new(&tables["cite.us.standard-candidate"].entry.pattern
-            .replace("[0-9]+|_+", &tables["cite.us.reporter.full"].defs["us_page"])).unwrap()
+        screened(&tables["cite.us.standard-candidate"].entry.pattern
+            .replace("[0-9]+|_+", &tables["cite.us.reporter.full"].defs["us_page"]))
     });
     static EDITIONS: LazyLock<BTreeMap<String, (BTreeSet<usize>, BTreeSet<usize>)>> = LazyLock::new(|| {
         let mut map = BTreeMap::<String, (BTreeSet<usize>, BTreeSet<usize>)>::new();
@@ -452,6 +456,7 @@ fn standard_matches(text: &str, extended: bool) -> Vec<Match> {
     let mut found = Vec::new();
     for (start, end, pattern) in ranges {
         let value = &text[start..end];
+        if !pattern.may_match(value) { continue; }
         let mut cursor = 0;
         while let Some(captures) = pattern.captures_at(value, cursor) {
             let core = captures.name("citation").unwrap();
@@ -477,16 +482,16 @@ fn standard_matches(text: &str, extended: bool) -> Vec<Match> {
 }
 
 fn fallback_ranges(text: &str) -> BTreeSet<(usize, usize)> {
-    static CUE: LazyLock<regex::Regex> = LazyLock::new(||
-        legal_grammar::compile_ecmascript_table_entry("cite.us.fallback-cue").unwrap());
-    CUE.find_iter(text).map(|cue| (
+    static CUE: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| Screened::linear("cite.us.fallback-cue"));
+    CUE.find_all(text).map(|cue| (
         text[..cue.start()].rfind('\n').map_or(0, |at| at + 1),
         text[cue.end()..].find('\n').map_or(text.len(), |at| cue.end() + at),
     )).collect()
 }
 
-static COMMON: LazyLock<legal_grammar::AsciiBoundedGrammar> = LazyLock::new(||
-        legal_grammar::compile_ascii_bounded_table_entry("cite.us.law.common").unwrap());
+static COMMON: LazyLock<Screened<legal_grammar::AsciiBoundedGrammar>> = LazyLock::new(|| Screened::new(
+        legal_grammar::compile_ascii_bounded_table_entry("cite.us.law.common").unwrap(),
+        legal_grammar::ascii_bounded_table_entry_literals("cite.us.law.common").unwrap()));
 // The custom reporters are read only for extended US citations; a statute is read as one by the
 // laws whatever the reader asks for.
 static CUSTOM: LazyLock<[(&str, legal_grammar::AsciiBoundedGrammar); 2]> = LazyLock::new(||
@@ -503,7 +508,7 @@ pub(crate) fn is_law(core: &str) -> bool {
 }
 
 pub(crate) fn common_law_spans(text: &str) -> Vec<Range<usize>> {
-    COMMON.find_spans(text)
+    if COMMON.may_match(text) { COMMON.find_spans(text) } else { Vec::new() }
 }
 
 /// LSP's citation-hit evidence for excerpt scoring, before identity or metadata.

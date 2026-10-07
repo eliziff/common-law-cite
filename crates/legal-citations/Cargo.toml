@@ -13,6 +13,7 @@ serde_json.workspace = true
 
 [dependencies]
 legal-grammar.workspace = true
+fancy-regex.workspace = true
 regex.workspace = true
 aho-corasick = "1"
 chrono = "0.4"

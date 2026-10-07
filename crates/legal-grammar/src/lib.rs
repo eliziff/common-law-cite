@@ -7,6 +7,7 @@ use std::ops::Range;
 use std::sync::{Arc, OnceLock};
 
 mod grammar_word;
+mod literals;
 
 use grammar_word::SOURCE_WORD;
 
@@ -484,16 +485,20 @@ pub fn compile_entry(entry: &GrammarEntry, defs: &HashMap<String, String>) -> Re
     compile_backtracking_entry(entry, defs, false)
 }
 
-fn compile_backtracking_entry(entry: &GrammarEntry, defs: &HashMap<String, String>, ecmascript: bool) -> Result<FancyRegex> {
+fn backtracking_source(entry: &GrammarEntry, defs: &HashMap<String, String>, ecmascript: bool) -> Result<String> {
     let expanded = expanded_entry(entry, defs)?;
     let source = if entry.flags.contains('i') && !entry.rust {
         expand_ascii_case_insensitive(&expanded)
     } else {
         expanded
     };
-    let portable = if entry.rust { source } else if ecmascript {
-        expand_portable_with(&source, ECMASCRIPT_WHITESPACE, ECMASCRIPT_WORD, "0-9")?
-    } else { expand_portable(&source)? };
+    if entry.rust { Ok(source) } else if ecmascript {
+        expand_portable_with(&source, ECMASCRIPT_WHITESPACE, ECMASCRIPT_WORD, "0-9")
+    } else { expand_portable(&source) }
+}
+
+fn compile_backtracking_entry(entry: &GrammarEntry, defs: &HashMap<String, String>, ecmascript: bool) -> Result<FancyRegex> {
+    let portable = backtracking_source(entry, defs, ecmascript)?;
     let mut builder = RegexBuilder::new(&portable);
     builder
         .unicode_mode(true)
@@ -507,12 +512,16 @@ fn compile_backtracking_entry(entry: &GrammarEntry, defs: &HashMap<String, Strin
         .map_err(|error| Error::Message(format!("{}: does not compile in Rust: {error}", entry.id)))
 }
 
+fn ecmascript_source(entry: &GrammarEntry, defs: &HashMap<String, String>) -> Result<String> {
+    let source = expanded_entry(entry, defs)?;
+    if entry.rust { Ok(source) } else { expand_ecmascript_portable(&source) }
+}
+
 pub fn compile_ecmascript_entry(
     entry: &GrammarEntry,
     defs: &HashMap<String, String>,
 ) -> Result<CompiledEcmascriptGrammar> {
-    let source = expanded_entry(entry, defs)?;
-    let portable = if entry.rust { source } else { expand_ecmascript_portable(&source)? };
+    let portable = ecmascript_source(entry, defs)?;
     let mut builder = LinearRegexBuilder::new(&portable);
     builder
         .case_insensitive(entry.flags.contains('i'))
@@ -578,8 +587,12 @@ pub fn compile_python_table_entry(entry_id: &str) -> Result<FancyRegex> {
 }
 
 /// Compile source-owned Python grammar, including generated reporter extractors.
+fn python_source(source: &str) -> Result<String> {
+    expand_portable_with(source, SOURCE_WHITESPACE, r"\p{L}\p{N}_", r"\p{Nd}")
+}
+
 pub fn compile_python_pattern(source: &str, flags: &str) -> Result<FancyRegex> {
-    let source = expand_portable_with(source, SOURCE_WHITESPACE, r"\p{L}\p{N}_", r"\p{Nd}")?;
+    let source = python_source(source)?;
     RegexBuilder::new(&source)
         .unicode_mode(true)
         .case_insensitive(flags.contains('i'))
@@ -596,6 +609,59 @@ pub fn compile_ecmascript_backtracking_table_entry(entry_id: &str) -> Result<Fan
     let value = tables.get(entry_id)
         .ok_or_else(|| Error::Message(format!("unknown grammar entry: {entry_id}")))?;
     compile_backtracking_entry(&value.entry, &value.defs, true)
+}
+
+fn table_entry(entry_id: &str) -> Result<&'static TableEntry> {
+    load_tables()?.get(entry_id).ok_or_else(|| Error::Message(format!("unknown grammar entry: {entry_id}")))
+}
+
+/// Literal strings one of which every match of [`compile_table_entry`]'s grammar contains, when
+/// they can be read from it: a text that holds none of them holds no match.
+pub fn table_entry_literals(entry_id: &str) -> Result<Option<Vec<String>>> {
+    let value = table_entry(entry_id)?;
+    // Only a frozen Rust regex folds case in the compiler; the others spell both cases out.
+    Ok(literals::backtracking(&backtracking_source(&value.entry, &value.defs, false)?,
+        value.entry.rust && value.entry.flags.contains('i')))
+}
+
+/// The named group every match of [`compile_ecmascript_table_entry`]'s grammar opens with, when
+/// there is one: that group starts where the match does.
+pub fn ecmascript_table_entry_leading_group(entry_id: &str) -> Result<Option<String>> {
+    let value = table_entry(entry_id)?;
+    let flags = &value.entry.flags;
+    Ok(literals::leading_group(&ecmascript_source(&value.entry, &value.defs)?,
+        flags.contains('i'), flags.contains('m'), flags.contains('s')))
+}
+
+/// Literal strings one of which every match of [`compile_python_table_entry`]'s grammar contains,
+/// when they can be read from it.
+pub fn python_table_entry_literals(entry_id: &str) -> Result<Option<Vec<String>>> {
+    let value = table_entry(entry_id)?;
+    if value.entry.rust { return table_entry_literals(entry_id); }
+    let source = python_source(&expanded_entry(&value.entry, &value.defs)?)?;
+    Ok(literals::backtracking(&source, value.entry.flags.contains('i')))
+}
+
+/// Literal strings one of which every match of [`compile_ascii_bounded_table_entry`]'s grammar
+/// contains, when they can be read from it.
+pub fn ascii_bounded_table_entry_literals(entry_id: &str) -> Result<Option<Vec<String>>> {
+    let (source, flags) = ascii_bounded_source(entry_id)?;
+    Ok(literals::linear(&source, flags.contains('i'), flags.contains('m'), flags.contains('s')))
+}
+
+/// Literal strings one of which every match of `source`, compiled as a [`regex::Regex`] with its
+/// default options, contains, when they can be read from it.
+pub fn linear_pattern_literals(source: &str) -> Option<Vec<String>> {
+    literals::linear(source, false, false, false)
+}
+
+/// Literal strings one of which every match of [`compile_ecmascript_table_entry`]'s grammar
+/// contains, when they can be read from it.
+pub fn ecmascript_table_entry_literals(entry_id: &str) -> Result<Option<Vec<String>>> {
+    let value = table_entry(entry_id)?;
+    let flags = &value.entry.flags;
+    Ok(literals::linear(&ecmascript_source(&value.entry, &value.defs)?,
+        flags.contains('i'), flags.contains('m'), flags.contains('s')))
 }
 
 pub fn compile_ecmascript_table_entry(entry_id: &str) -> Result<CompiledEcmascriptGrammar> {

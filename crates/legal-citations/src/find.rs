@@ -10,6 +10,7 @@ use crate::metadata::{self, TailRules};
 use crate::model::{
     Authority, Citation, Fields, Form, NoteDirection, NoteReference, Pinpoint, PinpointKind, Span,
 };
+use crate::screen::{Dialect, Screen, Screened};
 use crate::text::javascript_whitespace;
 use crate::{CitationStyle, Options};
 use legal_grammar::{CompiledEcmascriptGrammar, CompiledGrammar};
@@ -93,34 +94,34 @@ fn backtracking(id: &str) -> CompiledGrammar {
     legal_grammar::compile_table_entry(id).unwrap_or_else(|error| panic!("{error}"))
 }
 
-static CITATION_PATTERN: LazyLock<CompiledEcmascriptGrammar> =
-    LazyLock::new(|| linear("cite.in-text"));
-static REPORTER_MONTH: LazyLock<CompiledEcmascriptGrammar> =
-    LazyLock::new(|| linear("cite.reporter.month"));
-static REPORTER_WORD: LazyLock<CompiledEcmascriptGrammar> =
-    LazyLock::new(|| linear("cite.reporter.word"));
+static CITATION_PATTERN: LazyLock<Screened<CompiledEcmascriptGrammar>> =
+    LazyLock::new(|| Screened::linear("cite.in-text"));
+static REPORTER_MONTH: LazyLock<Screened<CompiledEcmascriptGrammar>> =
+    LazyLock::new(|| Screened::linear("cite.reporter.month"));
+static REPORTER_WORD: LazyLock<Screened<CompiledEcmascriptGrammar>> =
+    LazyLock::new(|| Screened::linear("cite.reporter.word"));
 // These source-owned styles retain LSP's native Unicode regex semantics.
-static CASE_NAME: LazyLock<Regex> = LazyLock::new(|| linear("style.case-name"));
-static SIGNAL_PREFIX: LazyLock<CompiledEcmascriptGrammar> =
-    LazyLock::new(|| linear("signal.prefix.toa"));
-static INTRODUCTORY_SIGNAL: LazyLock<CompiledEcmascriptGrammar> =
-    LazyLock::new(|| linear("signal.introductory"));
+static CASE_NAME: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.case-name"));
+static SIGNAL_PREFIX: LazyLock<Screened<CompiledEcmascriptGrammar>> =
+    LazyLock::new(|| Screened::linear("signal.prefix.toa"));
+static INTRODUCTORY_SIGNAL: LazyLock<Screened<CompiledEcmascriptGrammar>> =
+    LazyLock::new(|| Screened::linear("signal.introductory"));
 // Précité ends in a non-ASCII letter, so its word boundary needs the Unicode
 // (backtracking) dialect.
-static BACK_REFERENCE: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("ref.back"));
-static INLINE_REFERENCE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("ref.inline.toa"));
-static INLINE_NOTE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("ref.supra-note.linking"));
-static NOTE_CROSS_REFERENCE: LazyLock<CompiledGrammar> =
-    LazyLock::new(|| backtracking("ref.note-cross"));
-static ANTECEDENT_NAME: LazyLock<CompiledEcmascriptGrammar> =
-    LazyLock::new(|| linear("ref.antecedent-name"));
-static SECTION_SYMBOL: LazyLock<CompiledEcmascriptGrammar> =
-    LazyLock::new(|| linear("cite.section-symbol"));
+static BACK_REFERENCE: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("ref.back"));
+static INLINE_REFERENCE: LazyLock<Screened<CompiledEcmascriptGrammar>> = LazyLock::new(|| Screened::linear("ref.inline.toa"));
+static INLINE_NOTE: LazyLock<Screened<CompiledEcmascriptGrammar>> = LazyLock::new(|| Screened::linear("ref.supra-note.linking"));
+static NOTE_CROSS_REFERENCE: LazyLock<Screened<CompiledGrammar>> =
+    LazyLock::new(|| Screened::backtracking("ref.note-cross"));
+static ANTECEDENT_NAME: LazyLock<Screened<CompiledEcmascriptGrammar>> =
+    LazyLock::new(|| Screened::linear("ref.antecedent-name"));
+static SECTION_SYMBOL: LazyLock<Screened<CompiledEcmascriptGrammar>> =
+    LazyLock::new(|| Screened::linear("cite.section-symbol"));
 // Complete existing cores. The permissive splitter does not discover anchors.
-static REPORTER_PATTERN: LazyLock<CompiledGrammar> =
-    LazyLock::new(|| backtracking("cite.reporter.splitter"));
-static JOURNAL_PATTERN: LazyLock<CompiledEcmascriptGrammar> =
-    LazyLock::new(|| linear("cite.journal.toa"));
+static REPORTER_PATTERN: LazyLock<Screened<CompiledGrammar>> =
+    LazyLock::new(|| Screened::backtracking("cite.reporter.splitter"));
+static JOURNAL_PATTERN: LazyLock<Screened<CompiledEcmascriptGrammar>> =
+    LazyLock::new(|| Screened::linear("cite.journal.toa"));
 pub(crate) static REPORTER_PARTS: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("cite.reporter.parts"));
 pub(crate) fn reporter_parts(core: &str) -> Option<legal_grammar::GrammarCaptures<'_>> {
@@ -134,37 +135,35 @@ pub(crate) static PARLIAMENTARY_COMMONWEALTH: LazyLock<CompiledEcmascriptGrammar
     LazyLock::new(|| linear("cite.parliamentary.commonwealth"));
 pub(crate) static DATABASE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.database"));
-static LAW_SUBDIVISION: LazyLock<CompiledEcmascriptGrammar> =
-    LazyLock::new(|| linear("cite.us.law.subdivision"));
+static LAW_SUBDIVISION: LazyLock<Screened<CompiledEcmascriptGrammar>> =
+    LazyLock::new(|| Screened::linear("cite.us.law.subdivision"));
 // Secondary-source first references. Case law reaches the citation grammar
 // through a reporter, a neutral citation or a docket; every other authority
 // announces itself with a publication block instead, one family per entry.
 // These only ever add anchors: a secondary hit that touches a case-law hit is
 // dropped, so the case lane is byte-identical with and without them.
+const SECONDARY_LINEAR: [(&str, &str, &str); 10] = [
+    // Multi-word tribunal identifiers (2020 Comp Trib 6, 2000 CIRB LD
+    // 213) are out of cite.in-text's reach.
+    ("case", "neutral_grammar", "cite.neutral.tribunal"),
+    ("case", "neutral_grammar", "cite.neutral.bracketed"),
+    ("statute", "ca_statute_grammar", "cite.ca.statute.first"),
+    ("statute", "titled_statute_grammar", "cite.statute.titled"),
+    ("book", "book_grammar", "cite.book.imprint"),
+    ("parliamentary", "parliamentary_grammar", "cite.parliamentary.paper"),
+    ("parliamentary", "westminster_grammar", "cite.parliamentary.commonwealth"),
+    ("treaty", "treaty_grammar", "cite.treaty"),
+    ("case", "database_grammar", "cite.database"),
+    ("case", "unreported_grammar", "cite.case.unreported"),
+];
 static SECONDARY_ECMASCRIPT: LazyLock<[(&'static str, &'static str, CompiledEcmascriptGrammar); 10]> =
-    LazyLock::new(|| {
-        [
-            // Multi-word tribunal identifiers (2020 Comp Trib 6, 2000 CIRB LD
-            // 213) are out of cite.in-text's reach.
-            ("case", "neutral_grammar", "cite.neutral.tribunal"),
-            ("case", "neutral_grammar", "cite.neutral.bracketed"),
-            ("statute", "ca_statute_grammar", "cite.ca.statute.first"),
-            ("statute", "titled_statute_grammar", "cite.statute.titled"),
-            ("book", "book_grammar", "cite.book.imprint"),
-            ("parliamentary", "parliamentary_grammar", "cite.parliamentary.paper"),
-            ("parliamentary", "westminster_grammar", "cite.parliamentary.commonwealth"),
-            ("treaty", "treaty_grammar", "cite.treaty"),
-            ("case", "database_grammar", "cite.database"),
-            ("case", "unreported_grammar", "cite.case.unreported"),
-        ]
-        .map(|(kind, reason, id)| (kind, reason, linear(id)))
-    });
+    LazyLock::new(|| SECONDARY_LINEAR.map(|(kind, reason, id)| (kind, reason, linear(id))));
 // Article without a first page ("… (2020) The Journal of Value Inquiry at 1")
 // needs a lookahead so the pinpoint stays outside the core, which is the
 // backtracking dialect rather than the linear one.
-static JOURNAL_ARTICLE: LazyLock<CompiledGrammar> =
-    LazyLock::new(|| backtracking("cite.journal.article"));
-static ONLINE_SOURCE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.url"));
+static JOURNAL_ARTICLE: LazyLock<Screened<CompiledGrammar>> =
+    LazyLock::new(|| Screened::backtracking("cite.journal.article"));
+static ONLINE_SOURCE: LazyLock<Screened<CompiledEcmascriptGrammar>> = LazyLock::new(|| Screened::linear("cite.url"));
 // Forms that carry no reporter, journal or imprint the grammars above read, with the guides that
 // prescribe them: a guide's own forms run only when the caller asks for that guide or for none.
 type Guides = &'static [CitationStyle];
@@ -236,63 +235,71 @@ static SECONDARY_SOURCES: LazyLock<Vec<SecondarySource>> = LazyLock::new(|| [
     ("document", "archival_grammar", "cite.secondary.archival", EVERY),
     ("book", "religious_text_grammar", "cite.secondary.religious", EVERY),
 ].into_iter().map(|(kind, reason, id, guides)| (kind, reason, id, OnceLock::new(), guides)).collect());
-static CHARTER: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("cite.ca.charter"));
-static CASE_FLOOR: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("style.case-floor"));
+// Which of the grammars above can match a text: the linear ones, the others in their order, then
+// the Charter, the journal article and the link.
+static SECONDARY_SCREEN: LazyLock<Screen> = LazyLock::new(|| Screen::new(&SECONDARY_LINEAR.iter()
+    .map(|(_, _, id)| (*id, Dialect::Linear))
+    .chain(SECONDARY_SOURCES.iter().map(|(_, _, id, _, _)| (*id, Dialect::Backtracking)))
+    .chain([("cite.ca.charter", Dialect::Backtracking), ("cite.journal.article", Dialect::Backtracking),
+        ("cite.url", Dialect::Linear)])
+    .collect::<Vec<_>>()));
+static CHARTER: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("cite.ca.charter"));
+static CASE_FLOOR: LazyLock<Screened<CompiledEcmascriptGrammar>> = LazyLock::new(|| Screened::linear("style.case-floor"));
 // A document's own list or table of authorities: its heading, and the heading that ends it.
-static AUTHORITY_LIST: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("section.authority-list"));
-static AUTHORITY_LIST_END: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("section.authority-list.end"));
+static AUTHORITY_LIST: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("section.authority-list"));
+static AUTHORITY_LIST_END: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("section.authority-list.end"));
 // "In the Matter of ...": a proceeding a court file names when no style of cause does.
-static MATTER_STYLE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("style.matter"));
+static MATTER_STYLE: LazyLock<Screened<CompiledEcmascriptGrammar>> = LazyLock::new(|| Screened::linear("style.matter"));
 // ", Order of Madam Justice Ash": which order of which judge the matter before it names.
-static ORDER_OF: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("style.order-lead"));
-static ACCESS_DATE: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("attach.access-date"));
-static SUPRA_AFTER: LazyLock<Regex> = LazyLock::new(|| linear("ref.supra-follows"));
-static GOVERNMENT_AUTHOR: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("style.government-author"));
-static LEGISLATIVE_TITLE: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("style.legislative-title"));
-static CASE_VERSUS: LazyLock<Regex> = LazyLock::new(|| linear("style.case-versus"));
+static ORDER_OF: LazyLock<Screened<CompiledEcmascriptGrammar>> = LazyLock::new(|| Screened::linear("style.order-lead"));
+static ACCESS_DATE: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("attach.access-date"));
+static SUPRA_AFTER: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("ref.supra-follows"));
+static GOVERNMENT_AUTHOR: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("style.government-author"));
+static LEGISLATIVE_TITLE: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("style.legislative-title"));
+static CASE_VERSUS: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.case-versus"));
 // A balanced, uppercase-first parenthetical ("Quebec (Attorney General)")
 // counts as one party token; "(1998)", "(2d)" and "(see below)" do not.
-static CASE_LEFT: LazyLock<Regex> = LazyLock::new(|| linear("style.case-left"));
+static CASE_LEFT: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.case-left"));
 // What can open a numbered paragraph ahead of its first case: the paragraph's
 // own label ("12.", "[12]", "(a)") and a leading "In". Neither is part of a
 // party name, although the party grammar accepts numbers and capitals.
-static CASE_LEAD_IN: LazyLock<Regex> = LazyLock::new(|| linear("style.case-lead-in"));
+static CASE_LEAD_IN: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.case-lead-in"));
 // The hard delimiters between two authorities in one footnote: a semicolon,
 // or a sentence period that is not an abbreviation or an initial. No styled
 // span reaches back across one, so widening a span can never swallow the
 // boundary the next authority is split on.
-static STYLED_FLOOR: LazyLock<Regex> = LazyLock::new(|| linear("style.floor"));
+static STYLED_FLOOR: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.floor"));
 // "Reference re Secession of Quebec" / "Re Residential Tenancies Act" /
 // "Renvoi relatif à la sécession du Québec" / "Moore (Re)": a style of cause
 // with one party instead of two.
-static CASE_RE_STYLE: LazyLock<Regex> = LazyLock::new(|| linear("style.case-single-party"));
+static CASE_RE_STYLE: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.case-single-party"));
 // The title a statute or treaty citation is styled with, ending in the
 // instrument word and optionally carrying its own regnal year and jurisdiction.
-static STATUTE_TITLE: LazyLock<Regex> = LazyLock::new(|| linear("style.statute-title"));
+static STATUTE_TITLE: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.statute-title"));
 // The Part or Division of an Act a title names before the Act's own: "Division I of Part III of the".
-static STATUTE_PART: LazyLock<Regex> = LazyLock::new(|| linear("style.statute-part"));
-static TRAILING_DATE: LazyLock<CompiledEcmascriptGrammar> =
-    LazyLock::new(|| linear("style.trailing-date"));
+static STATUTE_PART: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.statute-part"));
+static TRAILING_DATE: LazyLock<Screened<CompiledEcmascriptGrammar>> =
+    LazyLock::new(|| Screened::linear("style.trailing-date"));
 // "Author, \u{201c}Article Title\u{201d}" (and any "in Editor, ed," lead-in):
 // the styled part of a secondary source sitting in front of its publication
 // block.
-static QUOTED_WORK: LazyLock<Regex> = LazyLock::new(|| linear("style.quoted-work"));
+static QUOTED_WORK: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.quoted-work"));
 // An unsigned work that opens with its quoted title.
-static QUOTED_TITLE: LazyLock<Regex> = LazyLock::new(|| linear("style.quoted-title"));
+static QUOTED_TITLE: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.quoted-title"));
 // "Author, Title" when the title is written in sentence case or holds a
 // parenthesis or an identifier.
-static AUTHORED_WORK: LazyLock<Regex> = LazyLock::new(|| linear("style.authored-work"));
+static AUTHORED_WORK: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.authored-work"));
 // The same styled part when the work carries no quoted title: a monograph, a
 // debate record, a dictionary.
-static PLAIN_WORK: LazyLock<Regex> = LazyLock::new(|| linear("style.plain-work"));
+static PLAIN_WORK: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.plain-work"));
 // "…", Case Comment on <decision>: the words that make a citation the subject
 // of the commentary cited after it.
-static COMMENTED_SUBJECT: LazyLock<CompiledEcmascriptGrammar> =
-    LazyLock::new(|| linear("attach.commented-subject"));
-static REPRINT: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("ref.reprint"));
-static REPRINT_LOCATION: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("ref.reprint.location"));
+static COMMENTED_SUBJECT: LazyLock<Screened<CompiledEcmascriptGrammar>> =
+    LazyLock::new(|| Screened::linear("attach.commented-subject"));
+static REPRINT: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("ref.reprint"));
+static REPRINT_LOCATION: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("ref.reprint.location"));
 // The words that introduce a work's link: "(June 2006), online: <".
-static LINK_LEAD: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("attach.link"));
+static LINK_LEAD: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("attach.link"));
 /// Names that open a style of cause but never identify a case on their own.
 const GENERIC_PARTIES: [&str; 18] = [
     "r", "r.", "rex", "regina", "the queen", "her majesty the queen", "his majesty the king",
@@ -371,7 +378,10 @@ fn resolve(mut found: Vec<Anchor>) -> Vec<Anchor> {
 /// parliamentary papers, treaties, database identifiers and online-only sources.
 fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>) -> Vec<Anchor> {
     let mut found = Vec::new();
-    for (kind, reason, pattern) in SECONDARY_ECMASCRIPT.iter() {
+    let present = SECONDARY_SCREEN.present(value);
+    let linear = SECONDARY_ECMASCRIPT.len();
+    let sources = SECONDARY_SOURCES.len();
+    for (_, (kind, reason, pattern)) in SECONDARY_ECMASCRIPT.iter().enumerate().filter(|(slot, _)| present[*slot]) {
         for matched in pattern.find_iter(value) {
             let start = matched.start();
             if *reason == "unreported_grammar" && case_style_start(value, start, 0) == start {
@@ -400,14 +410,14 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             found.push(Anchor::new(start..matched.end(), (*kind, *reason)));
         }
     }
-    for (kind, reason, id, compiled, guides) in SECONDARY_SOURCES.iter() {
+    for (_, (kind, reason, id, compiled, guides)) in SECONDARY_SOURCES.iter().enumerate().filter(|(slot, _)| present[linear + slot]) {
         if guides.is_empty() || styles.is_none_or(|styles| styles.iter().any(|style| guides.contains(style))) {
             let pattern = compiled.get_or_init(|| backtracking(id));
             // A file number in parentheses identifies the proceeding a sentence speaks of
             // ("the class proceeding (Court File No. T-402-19) was filed"); it cites no decision.
             found.extend(pattern.find_iter(value).flatten()
             // The Charter's name before its enacting instrument styles that citation; it is no other.
-            .filter(|matched| *reason != "constitution_name_grammar" || !CHARTER.captures_iter(&value[matched.start()..])
+            .filter(|matched| *reason != "constitution_name_grammar" || !CHARTER.captures_all(&value[matched.start()..])
                 .flatten().next().is_some_and(|captures| captures.name("title").is_some_and(|title| title.start() == 0)
                     && captures.name("source").is_some()))
             .filter(|matched| *reason != "court_file_grammar" || !(value[..matched.start()].ends_with('(')
@@ -428,15 +438,17 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
         }
     }
     // The Charter's enacting instrument is its core; the title before it styles it.
-    if styles.is_none_or(|styles| styles.iter().any(|style| CANADA.contains(style))) {
-        found.extend(CHARTER.captures_iter(value).flatten().filter_map(|captures| captures.name("source"))
+    if present[linear + sources] && styles.is_none_or(|styles| styles.iter().any(|style| CANADA.contains(style))) {
+        found.extend(CHARTER.captures_all(value).flatten().filter_map(|captures| captures.name("source"))
             .map(|source| Anchor::new(source.start()..source.end(), ("statute", "charter_grammar"))));
     }
-    found.extend(JOURNAL_ARTICLE.find_iter(value).flatten().map(|matched| {
-        Anchor::new(matched.start()..matched.end(), ("journal", "article_grammar"))
-    }));
+    if present[linear + sources + 1] {
+        found.extend(JOURNAL_ARTICLE.find_all(value).flatten().map(|matched| {
+            Anchor::new(matched.start()..matched.end(), ("journal", "article_grammar"))
+        }));
+    }
     let mut link_end = None;
-    for matched in ONLINE_SOURCE.find_iter(value) {
+    for matched in present[linear + sources + 2].then(|| ONLINE_SOURCE.find_all(value)).into_iter().flatten() {
         let link = link_core(value, matched.start()..matched.end());
         // An alternate or archived link written right after another one is
         // that source's, not a source of its own.
@@ -504,7 +516,7 @@ fn alternate_link(text: &str, end: usize, start: usize) -> bool {
 fn link_lead_start(text: &str, link_start: usize, floor: usize) -> usize {
     let end = link_start - text[..link_start].strip_suffix(['<', '[']).map_or(0, |_| 1);
     let from = floor.max(end.saturating_sub(200)).min(end);
-    (from..end).filter(|at| text.is_char_boundary(*at)).find(|&at| LINK_LEAD.find(&text[at..end]).ok()
+    (from..end).filter(|at| text.is_char_boundary(*at)).find(|&at| LINK_LEAD.find_screened(&text[at..end]).ok()
         .flatten().is_some_and(|found| found.start() == 0 && found.end() == end - at)).unwrap_or(link_start)
 }
 
@@ -512,21 +524,21 @@ fn link_lead_start(text: &str, link_start: usize, floor: usize) -> usize {
 /// archived links written right after it, each with its bracket.
 fn online_extent(text: &str, link: &Hit, limit: usize) -> usize {
     let mut end = link_end_with_closer(text, link);
-    while let Some(next) = ONLINE_SOURCE.find_iter(&text[end..limit.max(end)]).next() {
+    while let Some(next) = ONLINE_SOURCE.find_all(&text[end..limit.max(end)]).next() {
         let next = link_core(text, end + next.start()..end + next.end());
         if !alternate_link(text, end, next.start) { break; }
         end = link_end_with_closer(text, &next);
     }
     // The date it was visited closes the link: "<...> (last visited 1 July 2024)", and an
     // explanation in parentheses after it belongs to the citation.
-    let end = end + ACCESS_DATE.find(&text[end..limit.max(end)]).ok().flatten().map_or(0, |found| found.end());
+    let end = end + ACCESS_DATE.find_screened(&text[end..limit.max(end)]).ok().flatten().map_or(0, |found| found.end());
     metadata::citation_parenthetical(text, end, limit.max(end)).map_or(end, |range| range.end)
 }
 
 /// Frozen LSP citation_kind: occurrence family, not registry identity.
 fn occurrence_family(core: &str) -> (&'static str, &'static str) {
     let whole = |span: Hit| span.start == 0 && span.end == core.len();
-    if JOURNAL_PATTERN.find(core).is_some_and(|hit| whole(hit.range())) {
+    if JOURNAL_PATTERN.find_screened(core).is_some_and(|hit| whole(hit.range())) {
         return ("journal", "journal_grammar");
     }
     if crate::us::is_law(core) { return ("statute", "statute_grammar"); }
@@ -537,7 +549,7 @@ fn occurrence_family(core: &str) -> (&'static str, &'static str) {
             } else { ("case", "provider_routing") };
         }
     }
-    if REPORTER_PATTERN.find(core).ok().flatten().is_some_and(|hit| whole(hit.start()..hit.end())) {
+    if REPORTER_PATTERN.find_screened(core).ok().flatten().is_some_and(|hit| whole(hit.start()..hit.end())) {
         return ("case", "reporter_grammar");
     }
     (if core.contains("CanLII") { "case" } else { "other" }, "citation_grammar")
@@ -573,7 +585,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
             },
             // A report written right before ", supra" is the short title a supra names ("Nortel
             // 2014, supra note 15"), never a citation of its own.
-            None if SUPRA_AFTER.is_match(&value[anchor.span.end..]) => {}
+            None if SUPRA_AFTER.is_match_screened(&value[anchor.span.end..]) => {}
             None => primary.push(Anchor::new(anchor.span.clone(), occurrence_family(&value[anchor.span]))),
         }
     }
@@ -673,7 +685,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
             _ => continue,
         };
         let core = &value[anchor.span.clone()];
-        if JOURNAL_ARTICLE.find(core).ok().flatten().is_some_and(|block| block.start() == 0 && block.end() == core.len()) {
+        if JOURNAL_ARTICLE.find_screened(core).ok().flatten().is_some_and(|block| block.start() == 0 && block.end() == core.len()) {
             anchor.family = family;
         }
     }
@@ -688,13 +700,12 @@ pub(crate) fn citation_hits(value: &str, extended_us: bool) -> Vec<Hit> {
 }
 
 fn primary_ranges(value: &str) -> (Vec<Hit>, Vec<Hit>) {
-    let mut found = CITATION_PATTERN
-        .find_iter(value)
+    let mut found = CITATION_PATTERN.find_all(value)
         .filter(|matched| !month_reporter(matched.as_str()) && !word_reporter(matched.as_str()))
         .map(|matched| matched.start()..matched.end())
         .collect::<Vec<_>>();
     // LSP citation_hits completes reports only at an already recognized start.
-    let reporters = REPORTER_PATTERN.find_iter(value).flatten()
+    let reporters = REPORTER_PATTERN.find_all(value).flatten()
         .map(|matched| matched.start()..matched.end()).collect::<Vec<_>>();
     for matched in &reporters {
         if let Some(hit) = found.iter_mut().find(|hit| hit.start == matched.start) {
@@ -725,7 +736,7 @@ fn no_report(value: &str, hit: Hit) -> bool {
     let before = value[..hit.start].trim_end_matches([' ', '\t']);
     let after = &value[hit.end..];
     let digits = |text: &str| text.len() - text.trim_start_matches(|c: char| c.is_ascii_digit()).len();
-    let dated = REPORTER_MONTH.captures(&value[hit.clone()]).is_some_and(|captures| captures.name("month").is_some())
+    let dated = REPORTER_MONTH.captures_screened(&value[hit.clone()]).is_some_and(|captures| captures.name("month").is_some())
         && after.strip_prefix(", ").is_some_and(|rest| digits(rest) == 4
             && (rest.starts_with("19") || rest.starts_with("20")));
     let thousands = value[..hit.start].strip_suffix(',').is_some_and(|rest| rest.ends_with(|c: char| c.is_ascii_digit()))
@@ -738,7 +749,7 @@ fn no_report(value: &str, hit: Hit) -> bool {
 /// "[2030] May 5"): a month name is never an unregistered reporter, though one
 /// written exactly as a registered reporter is ("12 APR 345").
 fn month_reporter(hit: &str) -> bool {
-    REPORTER_MONTH.captures(hit).and_then(|captures| captures.name("month")).is_some_and(|month| {
+    REPORTER_MONTH.captures_screened(hit).and_then(|captures| captures.name("month")).is_some_and(|month| {
         let month = month.as_str();
         !crate::registry::registry().reporters_by_surface(month).iter().any(|(reporter, _)|
             reporter.editions.iter().any(|edition| edition.abbreviation == month)
@@ -752,7 +763,7 @@ fn month_reporter(hit: &str) -> bool {
 /// reporter, and an all-capital word after a year is a neutral citation's court unless it names
 /// none and reads as a stamp or a date.
 fn word_reporter(hit: &str) -> bool {
-    REPORTER_WORD.captures(hit).is_some_and(|captures| {
+    REPORTER_WORD.captures_screened(hit).is_some_and(|captures| {
         let word = captures.name("word").unwrap().as_str();
         let year = captures.name("volume").is_some_and(|volume| volume.as_str().len() == 4
             && (volume.as_str().starts_with("19") || volume.as_str().starts_with("20")));
@@ -784,7 +795,7 @@ fn style_span_start(text: &str, mut start: usize, core_start: usize) -> Option<u
         }
     }
     for _ in 0..4 {
-        let Some(signal) = SIGNAL_PREFIX.find(&text[start..core_start]) else {
+        let Some(signal) = SIGNAL_PREFIX.find_screened(&text[start..core_start]) else {
             break;
         };
         start += signal.end();
@@ -808,8 +819,7 @@ fn style_span_start(text: &str, mut start: usize, core_start: usize) -> Option<u
 /// For every byte of `window`, whether it sits outside quotes, parentheses
 /// and brackets (and outside a URL, whose `;` is not a delimiter).
 pub(crate) fn top_level(window: &str) -> Vec<bool> {
-    let masked = ONLINE_SOURCE
-        .find_iter(window)
+    let masked = ONLINE_SOURCE.find_all(window)
         .map(|matched| matched.start()..matched.end())
         .collect::<Vec<_>>();
     let mut positions = vec![false; window.len() + 1];
@@ -847,8 +857,7 @@ pub(crate) fn top_level(window: &str) -> Vec<bool> {
 fn styled_floor(text: &str, floor: usize, core_start: usize) -> usize {
     let window = &text[floor..core_start];
     let quoted = quotations(window);
-    STYLED_FLOOR
-        .find_iter(window)
+    STYLED_FLOOR.find_all(window)
         .filter(|matched| !quoted.iter().any(|quote| quote.start < matched.start() && matched.end() <= quote.end))
         // An abbreviation's period before a parenthesis or a lowercase word ends no sentence:
         // "Tacora Resources Inc. (Re)", "Fen Mills Ltd. v Ash".
@@ -891,7 +900,7 @@ fn scope_floor(scopes: &[usize], at: usize) -> usize {
 }
 
 fn matched_style(
-    pattern: &Regex,
+    pattern: &Screened<Regex>,
     group: &str,
     text: &str,
     core_start: usize,
@@ -899,9 +908,8 @@ fn matched_style(
 ) -> usize {
     let floor = styled_floor(text, floor, core_start);
     pattern
-        .captures(&text[floor..core_start])
-        .and_then(|captures| captures.name(group))
-        .and_then(|matched| style_span_start(text, floor + matched.start(), core_start))
+        .group_start(group, &text[floor..core_start])
+        .and_then(|start| style_span_start(text, floor + start, core_start))
         .unwrap_or(core_start)
 }
 
@@ -910,15 +918,14 @@ fn matched_style(
 /// Bankruptcy and Insolvency Act" is the Bankruptcy and Insolvency Act).
 fn statute_style_start(text: &str, core_start: usize, floor: usize) -> usize {
     let start = matched_style(&STATUTE_TITLE, "title", text, core_start, paragraph_floor(text, floor, core_start));
-    let part = STATUTE_PART.find(&text[start..core_start]).filter(|found| found.start() == 0).map_or(0, |found| found.end());
+    let part = STATUTE_PART.find_screened(&text[start..core_start]).filter(|found| found.start() == 0).map_or(0, |found| found.end());
     if part > 0 && text[start + part..core_start].starts_with(char::is_uppercase) { start + part } else { start }
 }
 
 /// A treaty's title, read past its signature date ("Convention ..., 4 November
 /// 1950, 213 UNTS 221").
 fn treaty_style_start(text: &str, core_start: usize, floor: usize) -> usize {
-    let title_end = TRAILING_DATE
-        .find(&text[floor..core_start])
+    let title_end = TRAILING_DATE.find_screened(&text[floor..core_start])
         .map_or(core_start, |date| floor + date.start());
     let start = statute_style_start(text, title_end, floor);
     if start < title_end {
@@ -939,7 +946,7 @@ fn work_style_start(text: &str, core_start: usize, floor: usize) -> usize {
     let floor = styled_floor(text, floor, core_start);
     let blank = text[floor..core_start].len() - text[floor..core_start].trim_start_matches(javascript_whitespace).len();
     if let Some(opening) = style_span_start(text, floor + blank, core_start) {
-        if let Some(work) = QUOTED_TITLE.captures(&text[opening..core_start]).and_then(|captures| captures.name("work")) {
+        if let Some(work) = QUOTED_TITLE.captures_screened(&text[opening..core_start]).and_then(|captures| captures.name("work")) {
             return opening + work.start();
         }
     }
@@ -954,7 +961,7 @@ fn work_style_start(text: &str, core_start: usize, floor: usize) -> usize {
 /// sentence a case is cited in ("In R v Oak-Elm, 2030 BCPC 512", "12. Smith
 /// v Jones"): neither is part of its style of cause.
 fn past_lead_in(text: &str, start: usize, core_start: usize) -> usize {
-    let lead = CASE_LEAD_IN.find(&text[start..core_start]).map_or(0, |matched| matched.end());
+    let lead = CASE_LEAD_IN.find_screened(&text[start..core_start]).map_or(0, |matched| matched.end());
     // A number alone is a list's paragraph column where a line begins or the row's citation before
     // it ends ("…, [2035] 2 SCR 91 12 Safilo Canada Inc. v. …"); after a word ("See 40 Days for Life
     // v. Dietrich") it is the name's own.
@@ -973,7 +980,7 @@ fn past_lead_in(text: &str, start: usize, core_start: usize) -> usize {
 /// paragraph, and under a list of authorities' group heading. A heading word that ends the line
 /// before the citation itself ("Food and Drug Regulations ⏎ CRC, c 870") is the title, not a heading.
 fn paragraph_floor(text: &str, floor: usize, core_start: usize) -> usize {
-    CASE_FLOOR.find_iter(&text[floor..core_start]).filter_map(|found| {
+    CASE_FLOOR.find_all(&text[floor..core_start]).filter_map(|found| {
         let matched = found.as_str();
         let at = if matched.starts_with('\n') { floor + found.start() + matched.len() - matched.trim_start().len() }
             else { floor + found.end() };
@@ -995,13 +1002,13 @@ fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
     // A style of cause opens after a sentence that ends before its signal ("… on the Crown. See
     // R v Oakes"); an abbreviation's period ("Mar. Overseas Corp.") is no sentence's end.
     // No style of cause runs back over a semicolon, which parts one citation from the next.
-    let floor = STYLED_FLOOR.find_iter(&text[floor..core_start])
+    let floor = STYLED_FLOOR.find_all(&text[floor..core_start])
         .filter(|matched| matched.as_str().starts_with(';') || matched.as_str().trim_end().ends_with('.')
-            && SIGNAL_PREFIX.find(&text[floor + matched.end()..core_start]).is_some())
+            && SIGNAL_PREFIX.find_screened(&text[floor + matched.end()..core_start]).is_some())
         .last().map_or(floor, |matched| floor + matched.end());
     let prefix = text[floor..core_start]
         .trim_end_matches(|character: char| javascript_whitespace(character) || character == ',');
-    let Some(versus) = CASE_VERSUS.find_iter(prefix).last() else {
+    let Some(versus) = CASE_VERSUS.find_all(prefix).last() else {
         // A style of cause with one party ("Reference re Secession of Quebec")
         // has no versus token to anchor on.
         let mut start = matched_style(&CASE_RE_STYLE, "name", text, core_start, floor);
@@ -1026,13 +1033,10 @@ fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
     {
         return core_start;
     }
-    let Some(left) = CASE_LEFT
-        .captures(&prefix[..versus.start()])
-        .and_then(|captures| captures.name("left"))
-    else {
+    let Some(left) = CASE_LEFT.group_start("left", &prefix[..versus.start()]) else {
         return core_start;
     };
-    style_span_start(text, floor + left.start(), core_start)
+    style_span_start(text, floor + left, core_start)
         .map_or(core_start, |start| past_lead_in(text, start, core_start))
 }
 
@@ -1040,7 +1044,7 @@ fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
 /// short form ("Jordan, supra note 4", "Roe, 410 U.S. at 153").
 fn antecedent_name(text: &str, core_start: usize, floor: usize) -> Option<Hit> {
     let floor = styled_floor(text, floor, core_start);
-    let captures = ANTECEDENT_NAME.captures(&text[floor..core_start])?;
+    let captures = ANTECEDENT_NAME.captures_screened(&text[floor..core_start])?;
     let name = captures.name("name")?;
     let start = past_lead_in(text, style_span_start(text, floor + name.start(), core_start)?, core_start);
     let end = floor + name.end();
@@ -1085,7 +1089,7 @@ fn authority(kind: &str) -> Authority {
 
 /// The introductory signal immediately in front of `start`, normalized.
 fn signal(text: &str, floor: usize, start: usize) -> Option<Span> {
-    let captures = INTRODUCTORY_SIGNAL.captures(text.get(floor..start)?)?;
+    let captures = INTRODUCTORY_SIGNAL.captures_screened(text.get(floor..start)?)?;
     let matched = captures.name("signal")?;
     let normalized = matched
         .as_str()
@@ -1159,7 +1163,7 @@ fn overlaps(range: &Hit, others: &[Hit]) -> bool {
 /// tokens outside every full citation core.
 fn back_reference_cores(text: &str, taken: &[Hit]) -> Vec<Core> {
     let mut cores = Vec::new();
-    for captures in BACK_REFERENCE.captures_iter(text).flatten() {
+    for captures in BACK_REFERENCE.captures_all(text).flatten() {
         let whole = captures.get(0).unwrap();
         let range = whole.start()..whole.end();
         if overlaps(&range, taken) {
@@ -1197,8 +1201,7 @@ fn unknown_cores(text: &str, cores: &[Core]) -> Vec<Core> {
             _ => None,
         })
     }).collect::<Vec<_>>();
-    SECTION_SYMBOL
-        .captures_iter(text)
+    SECTION_SYMBOL.captures_all(text)
         .filter_map(|captures| {
             let whole = captures.get(0).unwrap();
             let range = whole.start()..whole.end();
@@ -1244,7 +1247,7 @@ fn full_citation(
     // however its series reads ("Gowan v. Christie (1873) LR 273").
     // An article's quoted title naming a case ("“R v Fir and the Rest” (2032) …") is no style of cause.
     let reported = (kind == "journal").then(|| case_style_start(text, core.start, previous_end))
-        .filter(|start| *start < core.start && CASE_VERSUS.is_match(&text[*start..core.start])
+        .filter(|start| *start < core.start && CASE_VERSUS.is_match_screened(&text[*start..core.start])
             && !text[*start..core.start].contains(['\u{201c}', '\u{201d}', '"']));
     let kind = if reported.is_some() { "case" } else { kind };
     let has_section = anchor.reading.as_ref().is_some_and(|reading| reading.has_section());
@@ -1252,19 +1255,19 @@ fn full_citation(
     // subdivision. Retain the section suffix in fields without widening the
     // original native occurrence.
     let section_suffix = if has_section {
-        LAW_SUBDIVISION.captures(&text[source_core.end..limit])
+        LAW_SUBDIVISION.captures_screened(&text[source_core.end..limit])
             .and_then(|captures| captures.name("section_suffix"))
             .map(|suffix| source_core.end..source_core.end + suffix.end())
     } else { None };
     // Read actual subdivisions here so `(a)` is never a parenthetical.
     let subdivision_start = section_suffix.as_ref().map_or(source_core.end, |suffix| suffix.end);
     let subdivision = has_section
-        .then(|| LAW_SUBDIVISION.find(&text[subdivision_start..limit]))
+        .then(|| LAW_SUBDIVISION.find_screened(&text[subdivision_start..limit]))
         .flatten()
         .map(|matched| subdivision_start..subdivision_start + matched.end());
     let core_text = &text[core.clone()];
     // The Charter's title and the pinpoint written between it and its enacting instrument.
-    let charter = (kind_reason == "charter_grammar").then(|| CHARTER.captures_iter(&text[previous_end..core.end]).flatten()
+    let charter = (kind_reason == "charter_grammar").then(|| CHARTER.captures_all(&text[previous_end..core.end]).flatten()
         .filter(|captures| captures.name("source").is_some_and(|source| previous_end + source.end() == core.end))
         .last().and_then(|captures| captures.name("title").map(|title| (previous_end + title.start(), previous_end + title.end(),
             captures.name("pin").map(|pin| previous_end + pin.start()..previous_end + pin.end()))))).flatten();
@@ -1278,7 +1281,7 @@ fn full_citation(
         let at = previous_end + window.match_indices(" (").map(|(at, _)| at)
             .filter(|at| window[at + 2..].starts_with(|character: char| character.is_ascii_digit()))
             // An order's words may open the citation itself ("…, Order of Madam Justice Ash dated …, No. S-1").
-            .chain(ORDER_OF.find_iter(&text[previous_end..core.end]).map(|found| found.start())
+            .chain(ORDER_OF.find_all(&text[previous_end..core.end]).map(|found| found.start())
                 .filter(|at| previous_end + at < core.start)).max()?;
         let floor = text[previous_end..at].rfind("\n\n").map_or(previous_end, |blank| previous_end + blank + 2);
         Some((case_style_start(text, at, floor), at)).filter(|(start, _)| *start < at)
@@ -1293,7 +1296,7 @@ fn full_citation(
                 let floor = styled_floor(text, previous_end, core.start);
                 let blank = text[floor..core.start].len() - text[floor..core.start].trim_start_matches(javascript_whitespace).len();
                 style_span_start(text, floor + blank, core.start)
-                    .filter(|start| MATTER_STYLE.is_match(&text[*start..core.start]))
+                    .filter(|start| MATTER_STYLE.is_match_screened(&text[*start..core.start]))
             }).unwrap_or(core.start),
         "case" => case_style_start(text, core.start, previous_end),
         "statute" => statute_style_start(text, core.start, previous_end),
@@ -1386,8 +1389,7 @@ fn full_citation(
         javascript_whitespace(character) || ",;:.".contains(character)
     });
     let observed_name = if kind == "treaty" {
-        TRAILING_DATE
-            .find(observed_name)
+        TRAILING_DATE.find_screened(observed_name)
             .map_or(observed_name, |date| observed_name[..date.start()].trim())
     } else {
         observed_name
@@ -1414,7 +1416,7 @@ fn full_citation(
         let mut style_end = style_end;
         // A treaty's signature date sits between its title and its series.
         if kind == "treaty" {
-            if let Some(date) = TRAILING_DATE.find(&text[styled_start..core.start]) {
+            if let Some(date) = TRAILING_DATE.find_screened(&text[styled_start..core.start]) {
                 style_end = trim_style_end(text, styled_start, styled_start + date.start());
             }
         }
@@ -1476,10 +1478,10 @@ fn full_citation(
         // names an enactment or a treaty cites that enactment or treaty.
         let style = citation.style.as_ref().map_or("", |style| style.text.as_str());
         citation.authority = match citation.authority {
-            Authority::Book | Authority::Journal if GOVERNMENT_AUTHOR.is_match(style).unwrap_or(false) =>
+            Authority::Book | Authority::Journal if GOVERNMENT_AUTHOR.is_match_screened(style).unwrap_or(false) =>
                 Authority::GovernmentDocument,
             Authority::Journal if reported.is_some() => Authority::Case,
-            Authority::Webpage if LEGISLATIVE_TITLE.is_match(style).unwrap_or(false) =>
+            Authority::Webpage if LEGISLATIVE_TITLE.is_match_screened(style).unwrap_or(false) =>
                 if ["Treaty", "Agreement", "Convention", "Accord", "Covenant", "Protocol"].iter().any(|word| style.contains(word)) {
                     Authority::Treaty
                 } else { Authority::Statute },
@@ -1527,9 +1529,9 @@ fn back_citation(
     previous_end: usize,
     limit: usize,
 ) -> Citation {
-    let inline_reference = INLINE_REFERENCE.find(&text[core.clone()]).map(|matched| crate::InlineReference {
+    let inline_reference = INLINE_REFERENCE.find_screened(&text[core.clone()]).map(|matched| crate::InlineReference {
         span: span(text, core.start + matched.start()..core.start + matched.end()),
-        note: INLINE_NOTE.captures(matched.as_str()).and_then(|captures|
+        note: INLINE_NOTE.captures_screened(matched.as_str()).and_then(|captures|
             captures.name("note").and_then(|note| note.as_str().parse().ok())),
     });
     let tail = metadata::tail(
@@ -2015,7 +2017,7 @@ fn commented_work(text: &str, citation: &mut Citation, previous: &[Citation], fl
             return None;
         }
         let floor = floors[at].min(subject.full_span.start);
-        if let Some(lead) = COMMENTED_SUBJECT.find(&text[floor..subject.full_span.start]) {
+        if let Some(lead) = COMMENTED_SUBJECT.find_screened(&text[floor..subject.full_span.start]) {
             let lead = floor + lead.start();
             let start = work_style_start(text, lead, floor);
             if start >= lead {
@@ -2163,7 +2165,7 @@ fn anchor_case_name(text: &str, anchor: usize, short: Option<&Span>) -> Option<S
     if start >= end { return None; }
     // The text runs on past a party's name to the marker ("R v Toth in 52,³", "R v Le, the Supreme
     // Court held …⁴"): a word in lower case that no party name takes ends it, and no name is read.
-    let parties = CASE_VERSUS.find_iter(&text[start..end]).last().map_or(start, |versus| start + versus.end());
+    let parties = CASE_VERSUS.find_all(&text[start..end]).last().map_or(start, |versus| start + versus.end());
     if text[parties..end].split(|character: char| character.is_whitespace() || character == ',').any(|word|
         word.starts_with(char::is_lowercase) && !matches!(word, "and" | "of" | "the" | "de" | "du" | "des" | "la" | "le"
             | "les" | "et" | "for" | "à" | "van" | "von" | "ex" | "rel" | "en")) { return None; }
@@ -2173,7 +2175,7 @@ fn anchor_case_name(text: &str, anchor: usize, short: Option<&Span>) -> Option<S
     let name = words(&text[start..end]);
     let agrees = match short {
         Some(short) => words(&short.text).iter().any(|word| name.contains(word)),
-        None => CASE_VERSUS.find_iter(&text[styled_floor(text, floor, end)..end]).count() == 1,
+        None => CASE_VERSUS.find_all(&text[styled_floor(text, floor, end)..end]).count() == 1,
     };
     agrees.then(|| span(text, start..end))
 }
@@ -2185,7 +2187,7 @@ fn anchor_case_mention(text: &str, anchor: usize) -> Option<Span> {
     let mut floor = anchor.saturating_sub(400);
     while !text.is_char_boundary(floor) { floor += 1; }
     let floor = styled_floor(text, floor, anchor);
-    let mut versus = CASE_VERSUS.find_iter(&text[floor..anchor]);
+    let mut versus = CASE_VERSUS.find_all(&text[floor..anchor]);
     let (Some(only), None) = (versus.next(), versus.next()) else { return None };
     // The second party runs over capitalized words and the particles a name takes, to the first
     // word that is neither or the punctuation that closes the name.
@@ -2212,10 +2214,10 @@ fn anchor_case_mention(text: &str, anchor: usize) -> Option<Span> {
 pub(crate) fn authority_list_citations(text: &str, citations: &[Citation], notes: &[crate::NoteRange]) -> Vec<usize> {
     const ENTRY_GAP: usize = 320;
     let mut listed = Vec::new();
-    for heading in AUTHORITY_LIST.find_iter(text).flatten() {
+    for heading in AUTHORITY_LIST.find_all(text).flatten() {
         if notes.iter().any(|note| note.start <= heading.start() && heading.start() < note.end) { continue; }
         let note_start = notes.iter().map(|note| note.start).filter(|&start| start >= heading.end()).min();
-        let limit = AUTHORITY_LIST_END.find_iter(&text[heading.end()..]).flatten().next()
+        let limit = AUTHORITY_LIST_END.find_all(&text[heading.end()..]).flatten().next()
             .map_or(text.len(), |found| heading.end() + found.start()).min(note_start.unwrap_or(text.len()));
         let mut inside = citations.iter().filter(|citation| heading.end() <= citation.full_span.start
             && citation.full_span.start < limit).collect::<Vec<_>>();
@@ -2243,7 +2245,7 @@ fn join_links(text: &str, citations: Vec<Citation>) -> Vec<Citation> {
         let Some(previous) = joined.last_mut().filter(|previous| link && previous.form == Form::Full
             && previous.full_span.end <= citation.full_span.start
             && (bare(&text[previous.full_span.end..citation.full_span.start])
-                || LINK_LEAD.find(&text[previous.full_span.end..citation.full_span.start]).ok().flatten()
+                || LINK_LEAD.find_screened(&text[previous.full_span.end..citation.full_span.start]).ok().flatten()
                 .is_some_and(|lead| lead.start() == 0 && previous.full_span.end + lead.end() == citation.full_span.start))) else {
             joined.push(citation);
             continue;
@@ -2269,8 +2271,8 @@ fn join_legislation(text: &str, citations: Vec<Citation>) -> Vec<Citation> {
             continue;
         };
         let gap = &text[previous.full_span.end..citation.full_span.start];
-        if REPRINT.find(gap).ok().flatten().is_some() {
-            let end = citation.full_span.end + REPRINT_LOCATION.find(&text[citation.full_span.end..])
+        if REPRINT.find_screened(gap).ok().flatten().is_some() {
+            let end = citation.full_span.end + REPRINT_LOCATION.find_screened(&text[citation.full_span.end..])
                 .ok().flatten().map_or(0, |found| found.end());
             previous.full_span = span(text, previous.full_span.start..end);
             continue;
@@ -2347,8 +2349,7 @@ pub(crate) fn filter_citations(citations: Vec<Citation>) -> Vec<Citation> {
 /// Note cross-references (`supra note 4`, `infra note 12`, `see footnote 7`,
 /// `above n 4`, `(n 4)`, `note 4 ci-dessus`) with the direction they point.
 pub fn note_references(text: &str) -> Vec<NoteReference> {
-    NOTE_CROSS_REFERENCE
-        .captures_iter(text)
+    NOTE_CROSS_REFERENCE.captures_all(text)
         .flatten()
         .filter_map(|captures| {
             let whole = captures.get(0)?;
@@ -2387,5 +2388,5 @@ pub(crate) fn has_core_citation(text: &str) -> bool {
 
 /// Whether `text` holds a citation core or a two-party case name.
 pub fn has_citation(text: &str) -> bool {
-    has_core_citation(text) || CASE_NAME.is_match(text)
+    has_core_citation(text) || CASE_NAME.is_match_screened(text)
 }

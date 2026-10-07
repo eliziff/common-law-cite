@@ -32,6 +32,7 @@ pub mod model;
 pub mod parallel;
 pub mod registry;
 pub mod resolve;
+mod screen;
 pub mod short_forms;
 pub mod source;
 pub mod text;

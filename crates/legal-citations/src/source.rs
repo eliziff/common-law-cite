@@ -1,18 +1,19 @@
 //! ALR's deterministic source splitter. Source boundaries are independent of
 //! citation extents: delimiters and prose remain part of the input document.
 
+use crate::screen::Screened;
 use legal_grammar::CompiledGrammar;
 use num_bigint::BigUint;
 use serde::{Deserialize, Serialize};
 use std::{collections::{BTreeMap, BTreeSet}, sync::LazyLock};
 
+// Each with the literals its matches contain, so a text that holds none of them is passed over.
 macro_rules! pattern {
     ($compiler:path; $($name:ident => $id:literal),+ $(,)?) => {$(
-        static $name: LazyLock<CompiledGrammar> = LazyLock::new(||
-            $compiler($id).expect($id));
+        static $name: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| $compiler($id));
     )+};
     ($($name:ident => $id:literal),+ $(,)?) => {
-        pattern!(legal_grammar::compile_table_entry; $($name => $id),+);
+        pattern!(Screened::backtracking; $($name => $id),+);
     };
 }
 pattern! {
@@ -37,7 +38,7 @@ pattern! {
     ESSAY => "title.essay-collection", IBID => "ref.ibid.splitter",
     AUTHORS => "ref.author-separator.comma",
 }
-pattern! { legal_grammar::compile_python_table_entry;
+pattern! { Screened::python;
     BARE_ADMIN => "format.bare.administrative-tail", BARE_REFERENCE => "format.bare.reference",
     BARE_CASE => "format.bare.case", BARE_STATUTE => "format.bare.statute",
     BARE_SIGNAL => "format.bare.signal", BARE_SHORT => "format.bare.short-form",
@@ -342,12 +343,12 @@ pub struct SourceFields {
 type Anchor = (usize, usize, &'static str);
 type Boundary = (usize, usize, &'static str);
 
-fn matches(pattern: &CompiledGrammar, text: &str) -> bool {
-    pattern.is_match(text).expect("source grammar match")
+fn matches(pattern: &Screened<CompiledGrammar>, text: &str) -> bool {
+    pattern.may_match(text) && pattern.is_match(text).expect("source grammar match")
 }
 
-fn full_match(pattern: &CompiledGrammar, text: &str) -> bool {
-    pattern.find(text).expect("source grammar match")
+fn full_match(pattern: &Screened<CompiledGrammar>, text: &str) -> bool {
+    pattern.may_match(text) && pattern.find(text).expect("source grammar match")
         .is_some_and(|found| found.start() == 0 && found.end() == text.len())
 }
 
@@ -368,7 +369,7 @@ fn anchors(text: &str, extended_us: bool) -> Vec<Anchor> {
     for (kind, pattern) in [("neutral", &*NEUTRAL), ("reporter", &*REPORTER),
         ("statute", &*STATUTE),
         ("journal", &*JOURNAL), ("book", &*BOOK), ("url", &*URL)] {
-        found.extend(pattern.find_iter(text).map(|found| {
+        found.extend(pattern.find_all(text).map(|found| {
             let found = found.expect("source anchor match");
             (found.start(), found.end(), kind)
         }));
@@ -399,7 +400,7 @@ fn has_anchor(text: &str, extended_us: bool) -> bool {
 fn anchor_spans(text: &str, found: &[Anchor]) -> Vec<(usize, usize)> {
     let mut spans = found.iter().map(|&(start, end, _)| (start, end)).collect::<Vec<_>>();
     for pattern in [&*SECONDARY, &*QUOTED] {
-        spans.extend(pattern.find_iter(text).map(|found| {
+        spans.extend(pattern.find_all(text).map(|found| {
             let found = found.expect("source citation anchor");
             (found.start(), found.end())
         }));
@@ -515,7 +516,7 @@ fn tier_semicolon(text: &str, position: usize, extended_us: bool) -> bool {
 fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], tiered: bool) -> Vec<Boundary> {
     let mut boundaries = text.match_indices(';').filter(|(index, _)| !tiered || tier_semicolon(text, *index, extended_us))
         .map(|(index, _)| (index, index + 1, "semicolon")).collect::<Vec<_>>();
-    let sentences = SENTENCE.find_iter(text).map(|found| found.expect("sentence boundary"))
+    let sentences = SENTENCE.find_all(text).map(|found| found.expect("sentence boundary"))
         .filter(|found| !inside_quotes(text, found.start()))
         .filter(|found| {
             let prefix = &text[..found.start() + 1];
@@ -533,7 +534,7 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
     }
     let hard = boundaries.iter().flat_map(|&(left, right, _)| [left, right])
         .chain([0, text.len()]).collect::<BTreeSet<_>>();
-    for found in AGGRESSIVE_SIGNAL.find_iter(text) {
+    for found in AGGRESSIVE_SIGNAL.find_all(text) {
         let found = found.expect("source signal");
         if inside_quotes(text, found.start()) { continue; }
         let left = *hard.range(..=found.start()).next_back().unwrap();
@@ -544,7 +545,7 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
     }
     for (pattern, reason) in [(&*CASE_START, "new_case_frame"), (&*AUTHOR, "new_author_title_frame"),
         (&*NOTE_START, "new_note_reference")] {
-        for found in pattern.find_iter(text).skip(1) {
+        for found in pattern.find_all(text).skip(1) {
             let mut position = found.expect("source frame").start();
             // A tier's note reference starts at the name a supra follows ("…at para 145, | Tsilhqot’in, supra
             // note 2"), never between the name and its supra.
@@ -572,7 +573,7 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
             boundaries.push((found.start(), found.start(), "conjoined_short_form"));
         }
     }
-    for found in CONJUNCTION.find_iter(text) {
+    for found in CONJUNCTION.find_all(text) {
         let position = found.expect("conjoined citation").start();
         if inside_quotes(text, position) { continue; }
         let start = segment_start(&boundaries, position);
@@ -581,7 +582,7 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
             boundaries.push((position, position, "conjoined_citation"));
         }
     }
-    let legal = LEGAL_TITLE.find_iter(text).map(|found| found.expect("legal title").start())
+    let legal = LEGAL_TITLE.find_all(text).map(|found| found.expect("legal title").start())
         .filter(|&position| !inside_quotes(text, position) && text[..position].rfind('[') <= text[..position].rfind(']'))
         .collect::<Vec<_>>();
     for &position in &legal {
@@ -617,7 +618,7 @@ fn split_with(text: &str, recall_first: bool, extended_us: bool, tiered: bool) -
         let top = crate::find::top_level(text);
         let mut boundaries = text.match_indices(';').filter(|(position, _)| top[*position])
             .map(|(position, _)| (position, position + 1, "top_level_semicolon")).collect::<Vec<_>>();
-        for found in SOURCE_SIGNAL.captures_iter(text) {
+        for found in SOURCE_SIGNAL.captures_all(text) {
             let found = found.expect("source signal");
             let position = found.name("sentence").or_else(|| found.name("inline")).unwrap().start();
             if !top[position] { continue; }
@@ -706,7 +707,7 @@ fn pin_values(value: &str, expand_ranges: bool) -> Vec<String> {
     let mut values = Vec::new();
     for item in PIN_SEPARATOR.split(value) {
         let item = item.expect("pinpoint list separator");
-        let numbers = PIN_NUMBER.find_iter(item).map(|found| found.expect("pinpoint number").as_str()).collect::<Vec<_>>();
+        let numbers = PIN_NUMBER.find_all(item).map(|found| found.expect("pinpoint number").as_str()).collect::<Vec<_>>();
         let Some(first) = numbers.first() else { continue; };
         values.push((*first).to_owned());
         if expand_ranges && numbers.len() > 1 && !first.contains('.') && !numbers[1].contains('.') {
@@ -736,11 +737,11 @@ fn pinpoints(text: &str, kind: &str, extended_us: bool) -> (Vec<String>, Vec<Str
         }
     }
     if law || unresolved {
-        let mut reporters = REPORTER.find_iter(text).map(|found| {
+        let mut reporters = REPORTER.find_all(text).map(|found| {
             let found = found.expect("reporter span"); found.start()..found.end()
         }).collect::<Vec<_>>();
         if extended_us { reporters.extend(us_matches(text).into_iter().filter(|(_, _, kind)| *kind == "reporter").map(|(start, end, _)| start..end)); }
-        let provision = SECTION.captures_iter(text).map(|found| found.expect("provision pinpoint"))
+        let provision = SECTION.captures_all(text).map(|found| found.expect("provision pinpoint"))
             .find(|found| !reporters.iter().any(|span| span.contains(&found.get(0).unwrap().start())));
         if let Some(provision) = provision {
             let mut values = Vec::new();
@@ -777,7 +778,7 @@ fn bare_citation(text: &str, kind: &str, extended_us: bool) -> String {
     let value = stripped.trim().trim_end_matches('.').trim();
     if matches(&REFERENCE, value) { return value.into(); }
     let mut start = match kind {
-        "case" => [&*NEUTRAL, &*REPORTER].into_iter().flat_map(|pattern| pattern.find_iter(value))
+        "case" => [&*NEUTRAL, &*REPORTER].into_iter().flat_map(|pattern| pattern.find_all(value))
             .map(|found| found.expect("case core").start()).min(),
         "statute" => STATUTE.find(value).expect("statute core").map(|found| found.start()),
         "journal" => JOURNAL.find(value).expect("journal core").map(|found| found.start()),
@@ -792,7 +793,7 @@ fn bare_citation(text: &str, kind: &str, extended_us: bool) -> String {
 }
 
 fn embedded_source(text: &str, extended_us: bool) -> bool {
-    for signal in EMBEDDED.find_iter(text) {
+    for signal in EMBEDDED.find_all(text) {
         let signal = signal.expect("embedded source signal");
         if text[..signal.start()].chars().count() < 3 { continue; }
         let tail = text[signal.end()..].chars().take(320).collect::<String>();

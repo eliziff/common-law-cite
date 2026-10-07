@@ -10,6 +10,7 @@ include = ["src/**", "data/**", "Cargo.toml", "LICENSE", "NOTICE"]
 
 [dependencies]
 fancy-regex.workspace = true
+regex-syntax = "0.8"
 regex.workspace = true
 serde.workspace = true
 serde_json.workspace = true
