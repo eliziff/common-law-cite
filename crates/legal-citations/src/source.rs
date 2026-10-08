@@ -808,13 +808,29 @@ fn bare_link(found: &str) -> &str {
     found.trim_matches(['<', '>', '[', ']', '.', ',', ';', ' '])
 }
 
+/// A typeset space in a citation ("Int\u{2009}J", a no-break space) read as the space the source
+/// grammars match.
+pub(crate) fn spaced(text: &str) -> String {
+    text.replace(typeset_space, " ")
+}
+
+fn typeset_space(character: char) -> bool {
+    character != ' ' && character.is_whitespace() && !character.is_control()
+}
+
+/// The offset in `text` of the byte at `offset` in its [`spaced`] reading.
+pub(crate) fn unspaced_offset(text: &str, offset: usize) -> usize {
+    let mut at = 0;
+    for (index, character) in text.char_indices() {
+        if at >= offset { return index; }
+        at += if typeset_space(character) { 1 } else { character.len_utf8() };
+    }
+    text.len()
+}
+
 pub fn extract_fields(part: &SourcePart, extended_us: bool) -> SourceFields {
-    // A typeset space in a citation ("Int\u{2009}J", a no-break space) is a space to the source
-    // grammars; the fields are text, with no offsets to keep.
-    let spaced = part.text.trim().replace(
-        |character: char| character != ' ' && character.is_whitespace() && !character.is_control(),
-        " ",
-    );
+    // The fields are text, with no offsets to keep.
+    let spaced = spaced(part.text.trim());
     let text = spaced.as_str();
     let kind = kind(text, &part.anchors, extended_us);
     let styled = strip_signals(text);

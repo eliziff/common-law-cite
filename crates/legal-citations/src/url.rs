@@ -269,7 +269,10 @@ pub(crate) fn source_fallback(citations: &[&Citation], source: &crate::source::S
     // ALR searches the complete source, including its parenthesized court.
     // Keep its first match and select the core at that original-text offset.
     if let Some(matched) = CANLII.find(&source.citation_with_style).expect("source CanLII citation") {
-        let start = part.start + part.text.find(&source.citation_with_style)? + matched.start();
+        // The fields read typeset spaces as spaces; the part's text keeps them.
+        let spaced = crate::source::spaced(&part.text);
+        let at = spaced.find(&source.citation_with_style)? + matched.start();
+        let start = part.start + crate::source::unspaced_offset(&part.text, at);
         if let Some(citation) = citations.iter().find(|citation| citation.format == Some(Format::CanLii)
             && citation.span.start <= start && start < citation.span.end) {
             if let Some(url) = source_canlii_case(citation, Language::En) { return Some((citation.index, url)); }
