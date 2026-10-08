@@ -809,7 +809,13 @@ fn bare_link(found: &str) -> &str {
 }
 
 pub fn extract_fields(part: &SourcePart, extended_us: bool) -> SourceFields {
-    let text = part.text.trim();
+    // A typeset space in a citation ("Int\u{2009}J", a no-break space) is a space to the source
+    // grammars; the fields are text, with no offsets to keep.
+    let spaced = part.text.trim().replace(
+        |character: char| character != ' ' && character.is_whitespace() && !character.is_control(),
+        " ",
+    );
+    let text = spaced.as_str();
     let kind = kind(text, &part.anchors, extended_us);
     let styled = strip_signals(text);
     let (fragments, pages) = pinpoints(&styled, kind, extended_us);
