@@ -5021,7 +5021,7 @@
         },
         {
           "id": "signal.aggressive",
-          "pattern": "\\b(?:citing|(?:as\\s+)?cited\\s+(?:in|by)|quoting|quoted\\s+in|discussing|(?:as\\s+)?discussed(?:\\s+e\\.?g\\.?)?\\s+in|applying|applied\\s+in|relying\\s+on|relied\\s+on|following|followed\\s+in|adopting|adopted\\s+in|(?:as\\s+)?amended\\s+by|amending|adding|rev[’']?[dg]|reversed\\s+by|aff[’']?[dg]|affirmed\\s+by|penalty\\s+at|republished\\b[^.;]{0,100}\\bin|accord|but\\s+see|contra|compare|cf\\.?|see(?:\\s+also|\\s+generally|\\s*,?\\s*e\\.?g\\.?)?)\\b",
+          "pattern": "\\b(?:citing|(?:as\\s+)?cited\\s+(?:in|by)|quoting|quoted\\s+in|referring\\s+to|discussing|(?:as\\s+)?discussed(?:\\s+e\\.?g\\.?)?\\s+in|applying|applied\\s+in|relying\\s+on|relied\\s+on|following|followed\\s+in|adopting|adopted\\s+in|(?:as\\s+)?amended\\s+by|amending|adding|rev[’']?[dg]|reversed\\s+by|aff[’']?[dg]|affirmed\\s+by|penalty\\s+at|republished\\b[^.;]{0,100}\\bin|accord|but\\s+see|contra|compare|cf\\.?|see(?:\\s+also|\\s+generally|\\s*,?\\s*e\\.?g\\.?)?)\\b",
           "flags": "i",
           "canonical": {},
           "provenance": "splitter.py:105-114 == deterministic_citations.py:105-114 (_AGGRESSIVE_SIGNAL_RE). The recall-first superset: adds as-cited/adopting/amended/amending/adding/reversed by/affirmed by/penalty at/republished...in/accord over signal.citation.toa, and matches 'see' anywhere (no sentence-edge requirement). Has no varying/varied/leave-to-appeal — the ref.history.toa pair.",

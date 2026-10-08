@@ -577,6 +577,13 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
         let position = found.expect("conjoined citation").start();
         if inside_quotes(text, position) { continue; }
         let start = segment_start(&boundaries, position);
+        // An "and" inside a style of cause ("Singh v Minister of Employment and Immigration, [1985] 1 SCR 177") is
+        // the name's: no citation reaches between the case's "v" and it. A statute's chapter ("7 Vict c 12") is no
+        // style of cause: the party after its "v" or "c" starts with a capital.
+        let case = CASE_START.find_all(&text[start..position]).map(|found| found.expect("source frame"))
+            .filter(|found| text[start + found.end()..].starts_with(char::is_uppercase)).last()
+            .map(|found| start + found.end());
+        if case.is_some_and(|after| !whole_anchors.iter().any(|&(left, right, _)| left < position && after < right)) { continue; }
         let end = segment_end(&boundaries, position, text.len());
         if evidence(&text[start..position], extended_us) && evidence(&text[position..end], extended_us) {
             boundaries.push((position, position, "conjoined_citation"));
