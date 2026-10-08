@@ -335,8 +335,17 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             to_value(version())
         }
         "warm" => {
-            parse::<Empty>(method, request)?;
-            crate::warm();
+            // `part: "layout"` builds only the cues a document's layout reads (a PDF parser's first
+            // derivation); none builds everything.
+            #[derive(Deserialize)]
+            #[serde(deny_unknown_fields)]
+            struct Warm { #[serde(default)] part: Option<String> }
+            match parse::<Warm>(method, request)?.part.as_deref() {
+                None => crate::warm(),
+                Some("layout") => crate::cues::warm_layout(),
+                Some(other) => return Err(ApiError::new(ErrorCode::InvalidRequest,
+                    format!("unknown warm part {other:?}; expected \"layout\""))),
+            }
             Ok(Value::Object(Map::new()))
         }
         other => Err(ApiError::new(

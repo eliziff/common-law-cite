@@ -473,6 +473,22 @@ fn has_reporter_citation(text: &str, expanded: bool) -> bool {
     })
 }
 
+/// Builds the layout cues' grammars before a document needs them: each cue once, and the reporter
+/// citation expression for every first letter, which a document's text otherwise builds letter by
+/// letter as it first reaches them.
+pub fn warm_layout() {
+    let sample = "See Smith v Jones (1998), 40 OR (3d) 1 at para 4; RSC 1985, c B-3, s 2.";
+    let _ = layout_has_citation_cue(sample);
+    let _ = layout_is_citation_continuation(sample);
+    let _ = layout_protected_spans(sample);
+    let _ = layout_has_citation_signal(sample);
+    let _ = layout_heading_text_plausible(sample);
+    let _ = is_citation_shaped_tail(sample);
+    for first in b'A'..=b'Z' {
+        let _ = reporter_citation_re(first, false);
+    }
+}
+
 /// Whether text (after NFKC normalization) holds a citation signal: a
 /// neutral, report or statute citation, a two-party case name, a section,
 /// paragraph or page pinpoint, `supra note`/`ibid`, or a periodical block.
