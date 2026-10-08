@@ -17,7 +17,7 @@ macro_rules! pattern {
     };
 }
 pattern! {
-    URL => "cite.url", NEUTRAL => "cite.neutral", REPORTER => "cite.reporter.splitter",
+    URL => "cite.url", ONLINE_ADDRESS => "cite.url.online-unbracketed", NEUTRAL => "cite.neutral", REPORTER => "cite.reporter.splitter",
     STATUTE => "cite.statute.splitter",
     JOURNAL => "cite.journal.splitter", BOOK => "frame.book",
     REFERENCE => "ref.token", PURE_REFERENCE => "ref.pure.splitter", LINK => "attach.link",
@@ -836,6 +836,25 @@ fn bare_link(found: &str) -> &str {
     found.trim_matches(['<', '>', '[', ']', '.', ',', ';', ' '])
 }
 
+/// The path an address runs on with after a stray space that broke it mid-word ("…/rights-for-nature-ho
+/// w-granting-a-river-personhood-could-help-protect-it-157117/"): one space, then a lowercase word holding a "/".
+fn broken_address_tail<'a>(text: &'a str, end: usize, raw: &str) -> Option<&'a str> {
+    if !raw.ends_with(|c: char| c.is_ascii_alphanumeric()) { return None; }
+    let rest = text[end..].strip_prefix(' ')?;
+    if !rest.starts_with(|c: char| c.is_ascii_lowercase() || c.is_ascii_digit()) { return None; }
+    let word = rest.split(char::is_whitespace).next().unwrap_or("");
+    let word = word.trim_end_matches(['.', ',', ';', ':', ')', ']', '>']);
+    word.contains('/').then_some(word)
+}
+
+/// Whether the broken pieces join unmistakably: both sides of the space lie inside hyphenated slug words and the
+/// rest holds only the characters of a lowercase path.
+fn rejoins(link: &str, tail: &str) -> bool {
+    link.rsplit('/').next().is_some_and(|segment| segment.contains('-'))
+        && tail.split('/').next().is_some_and(|segment| segment.contains('-'))
+        && tail.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || "-/_%.#?=&~".contains(c))
+}
+
 /// A typeset space in a citation ("Int\u{2009}J", a no-break space) read as the space the source
 /// grammars match.
 pub(crate) fn spaced(text: &str) -> String {
@@ -863,7 +882,19 @@ pub fn extract_fields(part: &SourcePart, extended_us: bool) -> SourceFields {
     let kind = kind(text, &part.anchors, extended_us);
     let styled = strip_signals(text);
     let (fragments, pages) = pinpoints(&styled, kind, extended_us);
-    let link = URL.find(text).expect("source URL").map_or("other", |found| bare_link(found.as_str()));
+    // An address written after "online:" without its scheme or brackets is read when no other is written.
+    let found = URL.find(text).expect("source URL").map(|found| (found.as_str(), found.end(), false))
+        .or_else(|| ONLINE_ADDRESS.captures(text).expect("unbracketed online address")
+            .map(|found| { let address = found.name("address").unwrap(); (address.as_str(), address.end(), true) }));
+    let link = found.map_or_else(|| "other".to_owned(), |(raw, end, unbracketed)| {
+        let link = bare_link(raw);
+        match broken_address_tail(text, end, raw) {
+            Some(tail) if rejoins(link, tail) => format!("{link}{tail}"),
+            // An unbracketed address a space visibly breaks, past mending, is no address to link.
+            Some(_) if unbracketed => "other".to_owned(),
+            _ => link.to_owned(),
+        }
+    });
     let mut reasons = Vec::new();
     if embedded_source(&styled, extended_us) { reasons.push("embedded_second_source"); }
     if styled.is_empty() { reasons.push("missing_citation_surface"); }
@@ -963,7 +994,7 @@ pub(crate) fn warm() {
         ALR_PURE_REFERENCE, PURE_CLAUSE, PURE_TOKEN, PURE_PIN_NUMBER, PURE_PIN_PARAGRAPH,
         PURE_PIN_PROVISION, PURE_PIN_PAGE, DOUBLE_QUOTED_TITLE, SINGLE_QUOTED_TITLE;
         screened
-        URL, NEUTRAL, REPORTER, STATUTE, JOURNAL, BOOK, REFERENCE, PURE_REFERENCE, LINK, SIGNAL,
+        URL, ONLINE_ADDRESS, NEUTRAL, REPORTER, STATUTE, JOURNAL, BOOK, REFERENCE, PURE_REFERENCE, LINK, SIGNAL,
         SOURCE_SIGNAL, AUTHOR, SHORT_FORM, PARAGRAPH, SECTION, PAGE, EDITORIAL, SENTENCE,
         AGGRESSIVE_SIGNAL, CASE_START, CROSS_REFERENCE, QUOTED, SECONDARY, LEGAL_TITLE,
         NAMED_CODE, CONJUNCTION, NOTE_START, EMBEDDED, ABBREVIATION, COMPANY, VERSUS,

@@ -1377,6 +1377,14 @@
           ]
         },
         {
+          "id": "cite.url.online-unbracketed",
+          "pattern": "\\bonline(?:\\s*\\([^()]{1,12}\\))?:\\s*(?<address>(?:[a-z0-9][a-z0-9-]*\\.)+[a-z]{2,24}\\b(?:/[^\\s<>]*)?)",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored from the McGill Guide (10th ed): the address after \"online:\" (or \"online (pdf):\") written without its scheme or the angle brackets that cite.url reads (\"online: theconversation.com/rights-for-nature\"). Read only when cite.url finds no address.",
+          "vectors": []
+        },
+        {
           "id": "cite.url.prefix",
           "pattern": "(?:https?://|www\\.)",
           "flags": "i",
