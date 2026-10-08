@@ -526,6 +526,9 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
         }).map(|found| found.end()).collect::<Vec<_>>();
     for (&start, end) in sentences.iter().zip(sentences.iter().copied().skip(1).chain([text.len()])) {
         if extended_us && whole_anchors.iter().any(|&(left, right, _)| left < start && start < right) { continue; }
+        // A book's publication facts belong to the title before them, whatever it ends with ("eds, Is Two-Tier
+        // Health Care the Future? (Ottawa: University of Ottawa Press, 2020)").
+        if whole_anchors.iter().any(|&(left, _, kind)| left == start && kind == "book") { continue; }
         let previous = boundaries.iter().map(|&(_, right, _)| right).filter(|&right| right <= start).max().unwrap_or(0);
         if !text[..start].trim().is_empty() && evidence(&text[start..end], extended_us)
             && !(tiered && !cites(&text[previous..start], extended_us) && cites_source(&text[start..end], extended_us)) {
@@ -546,7 +549,10 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
     for (pattern, reason) in [(&*CASE_START, "new_case_frame"), (&*AUTHOR, "new_author_title_frame"),
         (&*NOTE_START, "new_note_reference")] {
         for found in pattern.find_all(text).skip(1) {
-            let mut position = found.expect("source frame").start();
+            let found = found.expect("source frame");
+            let mut position = found.start();
+            // An author comes before a title's opening quote, not its closing one ("…the Regulation of Private Care" in …).
+            if reason == "new_author_title_frame" && text[found.end()..].starts_with('"') && inside_quotes(text, found.end()) { continue; }
             // A tier's note reference starts at the name a supra follows ("…at para 145, | Tsilhqot’in, supra
             // note 2"), never between the name and its supra.
             if tiered && reason == "new_note_reference" && text[position..].starts_with(|c: char| c.is_lowercase()) {
@@ -577,6 +583,13 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
         let position = found.expect("conjoined citation").start();
         if inside_quotes(text, position) { continue; }
         let start = segment_start(&boundaries, position);
+        // An "&" joins names (authors, editors, a journal's or a firm's) unless a citation ends just before it, at
+        // most its court after it ("2018 BCCA 408 & Cassandro v Glass", "1995 CanLII 9050 (ABKB) & Heritage …").
+        if text[position..].starts_with('&') && !whole_anchors.iter().any(|&(left, right, _)| start <= left && right <= position && {
+            let tail = text[right..position].trim_matches([' ', ',', '\u{a0}']);
+            tail.is_empty() || tail.len() > 1 && tail.starts_with('(') && tail.ends_with(')')
+                && !tail[1..tail.len() - 1].contains(['(', ')'].as_slice())
+        }) { continue; }
         // An "and" inside a style of cause ("Singh v Minister of Employment and Immigration, [1985] 1 SCR 177") is
         // the name's: no citation reaches between the case's "v" and it. A statute's chapter ("7 Vict c 12") is no
         // style of cause: the party after its "v" or "c" starts with a capital.
@@ -585,6 +598,14 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
             .map(|found| start + found.end());
         if case.is_some_and(|after| !whole_anchors.iter().any(|&(left, right, _)| left < position && after < right)) { continue; }
         let end = segment_end(&boundaries, position, text.len());
+        // Before a book's publication facts, a conjunction is its title's ("eds, Dialogues About Human Rights and Legal
+        // Pluralism (Dordrecht: Springer, 2013)") unless a citation is complete before it: an anchor or a supra with no
+        // new title after.
+        let first = whole_anchors.iter().filter(|&&(left, _, _)| position <= left && left < end).min();
+        if first.is_some_and(|&(_, _, kind)| kind == "book") && whole_anchors.iter()
+            .filter(|&&(left, right, _)| start <= left && right <= position).map(|&(_, right, _)| right)
+            .chain(REFERENCE.find_all(&text[start..position]).map(|found| start + found.expect("source reference").end())).max()
+            .is_none_or(|right| text[right..position].contains(['"', '“'].as_slice())) { continue; }
         if evidence(&text[start..position], extended_us) && evidence(&text[position..end], extended_us) {
             boundaries.push((position, position, "conjoined_citation"));
         }
