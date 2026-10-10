@@ -627,7 +627,7 @@ fn case_name_language(style: &str, language: Option<Language>) -> String {
 /// without the Crown ("R", "Her Majesty the Queen"), a party that is a jurisdiction ("Canada",
 /// "Ontario") or a description in parentheses ("(Attorney General)"), and without the words a party's
 /// office or form takes ("Attorney General", "Minister", "Ltd", "Inc"). Folded to compare.
-fn distinctive_party_words(style: &str) -> Vec<String> {
+pub(crate) fn distinctive_party_words(style: &str) -> Vec<String> {
     const GENERIC: &[&str] = &["attorney", "general", "minister", "ministry", "queen", "king", "majesty", "her", "his",
         "regina", "rex", "crown", "the", "re", "in", "matter", "reference", "procureur", "procureure", "generale", "reine",
         "roi", "sa", "ltd", "ltee", "limited", "inc", "corp", "corporation", "co", "company", "cie", "et", "al", "and", "of",

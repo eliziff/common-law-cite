@@ -204,6 +204,110 @@ pub struct Options {
     /// history, or from the part its own name names in the note before; a supra whose numbered note
     /// cites another work, or none, is read by its name. Absent, references resolve as before.
     pub split_tier: Option<SplitTier>,
+    /// The linking rules a split tier's references resolve with, each its own mechanism ([`Linking`]);
+    /// absent, the tier's own.
+    pub linking: Option<Linking>,
+    /// What the host knows of works' extents ([`Extent`]), which [`Linking::locators`] reads, whichever
+    /// mechanisms resolve; a host without them links as before, refusing less.
+    pub extents: Vec<Extent>,
+}
+
+/// The mechanisms a split tier links references with, each on its own so that tiers compose them:
+/// readers and matchers that find what a reference's words name, generators that link where those
+/// words alone leave a reference open, and vetoes that refuse a link its locators rule out.
+#[derive(Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
+#[serde(default, rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct Linking {
+    /// A reference's name read without the signals, lead-in words and quotation marks around it
+    /// ("see generally Gross", "Voir CCE, «Mesures volontaires»", "In Lewis v. Bankole"), and none
+    /// read from the sentence before a supra that opens its own ("… flawed.” Supra note 58").
+    pub name_reading: bool,
+    /// A work's short form read without its McGill wording ("[hereinafter “Caron, SCC”]",
+    /// "[Lavoie avec renvois aux N.S.R.]", "[Shelf Holdings ABQB cited to CanLII]"), and a short form
+    /// written after a decision's subsequent history or a parenthetical held by the citation it ends
+    /// ("Rooney v Galloway, 2023 BCCA 1, aff'g … 2021 BCSC 2344 [Rooney]"), unless it names that history's court.
+    pub short_forms: bool,
+    /// A name matched by whole words, a work's own short form before words that merely occur in
+    /// another's text, never by its publication facts ("Allen & Unwin"), and a part of prose no work
+    /// a name can name.
+    pub name_matching: bool,
+    /// Where a name's words fit several works of the note it numbers, the one work that holds the
+    /// most of them ("Renvoi manitobain (C.A.)", "Braidwood Commission Report, Part 2").
+    pub distinguishing_words: bool,
+    /// A link refused where the reference's pinpoint cannot be in the work: a section of a decision,
+    /// a paragraph of an article, a page of a statute, a page before a report's first or after its
+    /// last ([`Options::extents`]), a paragraph past a decision's last; and, among a note's works, the
+    /// one the pinpoint fits.
+    pub locators: bool,
+    /// A supra numbering a note whose number several notes carry names the nearest one before it.
+    pub nearest_note: bool,
+    /// A name one letter off the only work of its note that writes it so ("Campell" for Campbell).
+    pub near_names: bool,
+    /// A supra whose words name no work anywhere in the document ("The English statute") names the
+    /// one work of the note it numbers.
+    pub descriptive_names: bool,
+    /// A supra whose name is exactly one earlier work's short form names it even where its number
+    /// names another note ([`SupraMode::Named`]'s rule, for any tier).
+    pub named_override: bool,
+    /// A bare supra numbering a note of several works names the note's first.
+    pub first_of_note: bool,
+    /// A supra its notes leave open names the one earlier decision a party of which is its name
+    /// (eyecite's antecedent rule).
+    pub party_names: bool,
+    /// An ibid after a note of several works continues the one its pinpoint fits.
+    pub ibid_locators: bool,
+    /// The aggressive tier's ibid does not continue from the last source of a note of several.
+    pub no_ibid_last_part: bool,
+    /// A work's short form written with a pinpoint after the work ("IBP, at 21") refers to it.
+    pub short_form_references: bool,
+    /// A work's short form written alone after the work ("the Charter") refers to it.
+    pub bare_mentions: bool,
+    /// A bare supra whose note holds several works names the one whose short form or party the text says
+    /// before the supra's own note marker ("… as the Court held in Vriend.⁹" with "⁹ Supra note 5.").
+    pub body_names: bool,
+    /// A note part citing a work without its name is also known by the name the text gives before the note's
+    /// marker ([`Fields::anchor_title`], or the one style of cause its sentence gives).
+    pub body_citation_names: bool,
+    /// A supra whose name is found only past the note it writes links there only where the document's supras drift
+    /// by that distance (a safe tier's veto on a misnumbered supra).
+    pub confirmed_drift: bool,
+}
+
+impl Linking {
+    /// The mechanisms a split tier links with where the host names none: each tier's composition as its
+    /// measured precision and coverage set it.
+    /// Measured 2026-10-10 on the DOCX and journal supra gold (right / wrong links against the tier before them):
+    /// safe 9,301 / 241 from 8,512 / 231; moderate 9,353 / 271 from 8,948 / 244; aggressive 9,410 / 275 from
+    /// 8,658 / 363. The locator veto pays in safe only; first-of-note and bare mentions cost too many wrong links.
+    pub fn for_tier(tier: SplitTier) -> Self {
+        let safe = Self {
+            name_reading: true, distinguishing_words: true, short_form_references: true, ibid_locators: true,
+            named_override: true, near_names: true, body_names: true,
+            ..Self::default()
+        };
+        let moderate = Self {
+            name_matching: true, short_forms: true, descriptive_names: true, body_citation_names: true,
+            ..safe.clone()
+        };
+        match tier {
+            SplitTier::Safe => Self { locators: true, ..safe },
+            SplitTier::Moderate => moderate,
+            SplitTier::Aggressive => Self { party_names: true, no_ibid_last_part: true, ..moderate },
+        }
+    }
+}
+
+/// A work's extent as the host knows it, by the work's citation key ([`crate::key`]): a report's or article's last
+/// page (an article's own; a report's the page before the next report its volume prints), a decision's last
+/// paragraph.
+#[derive(Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
+#[serde(default, rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct Extent {
+    pub key: String,
+    pub last_page: Option<u64>,
+    pub paragraphs: Option<u64>,
 }
 
 impl Default for Options {
@@ -222,6 +326,8 @@ impl Default for Options {
             skip_authority_lists: false,
             early_references: false,
             split_tier: None,
+            linking: None,
+            extents: Vec::new(),
         }
     }
 }
@@ -282,10 +388,26 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     let notes = options.notes.as_deref().unwrap_or(&[]);
     let mut parts = source::split_notes(text, notes, options.split_tier);
     if options.split_tier.is_some() { source::merge_split_citations(text, notes, &mut parts, &citations); }
+    // A work's own short form written after it refers to it ([`Linking::short_form_references`],
+    // [`Linking::bare_mentions`]).
+    // The mechanisms the host names, else its split tier's.
+    let linking = options.linking.clone().or_else(|| options.split_tier.map(Linking::for_tier));
+    if let Some(linking) = linking.as_ref().filter(|linking| linking.short_form_references || linking.bare_mentions) {
+        let defined = parts.iter().filter(|part| part.text.contains('[')).filter_map(|part| {
+            let short = source::extract_fields(part, part.extended_us).short_form;
+            let short = short_forms::clean_short_form(&short);
+            (!short.is_empty() && part.text.contains(short.as_str())).then_some((short, part.end))
+        }).collect::<Vec<_>>();
+        for mut reference in find::short_form_references(text, &citations, &defined, linking.bare_mentions) {
+            reference.index = citations.len();
+            citations.push(reference);
+        }
+    }
     let candidates = source::linked_ibid_candidates(text, notes, &parts);
     if !candidates.is_empty() {
         let preview = resolve::resolve_with_sources(&citations, options.notes.as_deref(), &[], None,
-            &parts, options.supra_hint_mode, options.supra_linking_mode, options.split_tier);
+            &parts, options.supra_hint_mode, options.supra_linking_mode, options.split_tier,
+            options.linking.as_ref(), &options.extents, Some(text));
         let linked = candidates.into_iter().filter(|&index| {
             let previous = &notes[index - 1];
             citations.iter().filter(|citation| previous.start <= citation.span.start
@@ -298,7 +420,8 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     }
     let resolutions = if options.resolve {
         let resolutions = resolve::resolve_with_sources(&citations, options.notes.as_deref(), &[], None,
-            &parts, options.supra_hint_mode, options.supra_linking_mode, options.split_tier);
+            &parts, options.supra_hint_mode, options.supra_linking_mode, options.split_tier,
+            options.linking.as_ref(), &options.extents, Some(text));
         for resolution in &resolutions {
             if let Some(citation) = citations.iter_mut().find(|citation| citation.index == resolution.index) {
                 citation.antecedent = resolution.antecedent;

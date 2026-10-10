@@ -8,6 +8,7 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::{borrow::Borrow, collections::HashSet, sync::LazyLock};
 use unicode_casefold::UnicodeCaseFold;
+use unicode_normalization::UnicodeNormalization;
 
 macro_rules! pattern {
     ($name:ident, $id:literal) => {
@@ -49,6 +50,9 @@ pattern!(ANCHOR_PARAGRAPH, "ref.anchor.paragraph");
 pattern!(ANCHOR_PROVISION, "ref.anchor.provision");
 pattern!(ANCHOR_SCOPE, "ref.anchor.scope");
 pattern!(IBID, "ref.anchor.ibid");
+pattern!(READING_SIGNAL, "ref.registry.reading-signal");
+pattern!(PUBLICATION_FACTS, "ref.registry.publication-facts");
+pattern!(SHORT_FORM_WORDING, "ref.registry.short-form-wording");
 
 #[derive(Clone, Debug, Serialize)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
@@ -170,12 +174,16 @@ pub struct ReferenceSource {
     /// The source part the entry was registered from, in a note splitter's rows.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub part: Option<usize>,
+    /// The note (its position among the resolver's notes) the entry was registered from, which tells
+    /// apart notes that carry the same number.
+    #[serde(skip)]
+    pub note_index: Option<usize>,
 }
 
 impl ReferenceSource {
-    fn target(&self) -> &str { self.target.as_deref().unwrap_or("") }
+    pub(crate) fn target(&self) -> &str { self.target.as_deref().unwrap_or("") }
     /// Whether the entry's note, as a decimal string (empty when it has none), is `number`.
-    fn note_is(&self, number: &str) -> bool {
+    pub(crate) fn note_is(&self, number: &str) -> bool {
         match &self.note {
             serde_json::Value::String(note) => note == number,
             serde_json::Value::Number(note) if note.as_f64() != Some(0.0) => note.to_string() == number,
@@ -315,10 +323,28 @@ pub(crate) fn resolve_registry_hint<R: Borrow<ReferenceSource>>(text: &str, hint
 
 fn resolve_registry_hint_scoped<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[R],
     sequence: Option<u32>, by_name: bool) -> (String, &'static str) {
+    resolve_hint(text, hint, registry, sequence, by_name, &Matching::default())
+}
+
+fn resolve_hint<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[R],
+    sequence: Option<u32>, by_name: bool, rules: &Matching) -> (String, &'static str) {
     let normalized = ref_normalize(hint);
     let normalized = normalized.trim_matches(['[', ']', '(', ')', ' ']);
-    let tokens = ref_tokens(&hint);
+    // Name matching reads whole words, in any script; ALR's tokens are ASCII runs of three letters or more.
+    let tokens = if rules.matching { word_tokens(hint, 3) } else { ref_tokens(&hint) };
     let matches_tokens = |value: &str| tokens.iter().all(|token| value.contains(token.as_str()));
+    let matches_entry = |entry: &ReferenceSource| if rules.matching {
+        let words = work_words(entry);
+        tokens.iter().all(|token| words.contains(token))
+    } else { matches_tokens(&match_text(entry)) };
+    // Where the rules read names, a name and a short form compare without their quotation marks.
+    let keyed = rules.short_forms || rules.matching;
+    let wanted = if keyed { name_key(hint) } else { normalized.to_owned() };
+    let short_of = |entry: &ReferenceSource| {
+        let short = entry.short_form.as_deref().unwrap_or("");
+        let short = if rules.short_forms { clean_short_form(short) } else { short.to_owned() };
+        if keyed { name_key(&short) } else { ref_normalize(&short).trim_matches(['[', ']', '(', ')', ' ']).to_owned() }
+    };
     let number = [&*REGISTRY_NOTE, &*REGISTRY_N, &*REGISTRY_NN].into_iter()
         .find_map(|pattern| pattern.captures(text))
         .and_then(|found| crate::text::decimal(&found[1])).map(|number| number.to_string());
@@ -332,22 +358,70 @@ fn resolve_registry_hint_scoped<R: Borrow<ReferenceSource>>(text: &str, hint: &s
             }
             let in_note = |entry: &&ReferenceSource| entry.note_is(&number)
                 && local.is_none_or(|sequence| entry.sequence == Some(sequence));
-            let note_sources = entries(registry).filter(in_note).collect::<Vec<_>>();
+            let mut note_sources = entries(registry).filter(in_note).collect::<Vec<_>>();
             if note_sources.is_empty() { return (String::new(), "note_without_authority"); }
+            // A work the reference's pinpoint cannot be in is no work it names.
+            if let Some(fits) = rules.fits {
+                let fitting = note_sources.iter().copied().filter(|entry| entry.target().is_empty() || fits(entry))
+                    .collect::<Vec<_>>();
+                if fitting.iter().all(|entry| entry.target().is_empty()) && !note_sources.iter().all(|entry| entry.target().is_empty()) {
+                    return (String::new(), "locator_conflict");
+                }
+                note_sources = fitting;
+            }
             if normalized.is_empty() && tokens.is_empty() {
-                return match unique_target(note_sources) {
+                // Of a note's several works, the one the pinpoint is likely in.
+                let preferred = || rules.prefers.and_then(|prefers|
+                    unique_identified(note_sources.iter().copied().filter(|entry| prefers(entry))));
+                let spoken = || rules.body.and_then(|body| body_named(body, &note_sources));
+                return match pick(rules.matching, note_sources.clone()) {
                     Some(target) => (target.to_owned(), "note_only"),
+                    None if spoken().is_some() => spoken().map(|(target, reason)| (target.to_owned(), reason)).unwrap(),
+                    None if preferred().is_some() => (preferred().unwrap().to_owned(), "locator_preferred"),
+                    None if rules.first_of_note => note_sources.iter().map(|entry| entry.target())
+                        .find(|target| !target.is_empty())
+                        .map_or((String::new(), "ambiguous_note"), |target| (target.to_owned(), "note_first")),
                     None => (String::new(), "ambiguous_note"),
                 };
             }
+            // A work's own short form names it before words that occur in another's text ("Chesler" over a
+            // sentence that mentions her; "Renvoi manitobain (C.A.)" over "Renvoi manitobain").
+            if rules.matching {
+                let exact = note_sources.iter().copied().filter(|entry| {
+                    let short = short_of(entry);
+                    !short.is_empty() && short == wanted
+                }).collect::<Vec<_>>();
+                if let Some(target) = unique_identified(exact) { return (target.to_owned(), "note_short_form"); }
+            }
             let matching = note_sources.iter().copied()
-                .filter(|entry| matches_tokens(&match_text(entry))).collect::<Vec<_>>();
-            if let Some(target) = unique_target(matching.iter().copied()) {
+                .filter(|entry| matches_entry(entry)).collect::<Vec<_>>();
+            if let Some(target) = pick(rules.matching, matching.clone()) {
                 return (target.to_owned(), "note_number");
             }
+            // Where the name's words fit several works, the one that holds the most of them, its
+            // short words and court included ("(C.A.)", "Part 2").
+            if rules.distinguishing && matching.len() > 1 {
+                let words = word_tokens(hint, 1);
+                let scored = matching.iter().map(|entry| {
+                    let held = work_words(entry);
+                    (words.iter().filter(|word| held.contains(*word)).count(), entry.target())
+                }).filter(|(_, target)| !target.is_empty()).collect::<Vec<_>>();
+                let best = scored.iter().map(|(score, _)| *score).max().unwrap_or(0);
+                let leaders = scored.iter().filter(|(score, _)| *score == best)
+                    .map(|(_, target)| *target).collect::<HashSet<_>>();
+                if best > 0 && leaders.len() == 1 {
+                    return ((*leaders.iter().next().unwrap()).to_owned(), "distinguishing_words");
+                }
+            }
+            // Of several works the name fits, the one the pinpoint is likely in.
+            if let Some(prefers) = rules.prefers.filter(|_| matching.len() > 1) {
+                if let Some(target) = unique_identified(matching.iter().copied().filter(|entry| prefers(entry))) {
+                    return (target.to_owned(), "locator_preferred");
+                }
+            }
             // A supra names the work its note cites, not a reference in that note to another work.
-            if let Some(target) = unique_target(matching.iter().copied().filter(|entry|
-                !REFERENCE.is_match(entry.verbatim.as_deref().unwrap_or("")))) {
+            if let Some(target) = pick(rules.matching, matching.iter().copied().filter(|entry|
+                !REFERENCE.is_match(entry.verbatim.as_deref().unwrap_or(""))).collect()) {
                 return (target.to_owned(), "note_number");
             }
             let suffix = note_sources.iter().copied().filter(|entry| {
@@ -356,7 +430,7 @@ fn resolve_registry_hint_scoped<R: Borrow<ReferenceSource>>(text: &str, hint: &s
             }).collect::<Vec<_>>();
             if !matching.is_empty() {
                 // "R v Mann & Mann, supra" names the source whose short form it ends with.
-                return match bracket_definition(normalized, matching.into_iter())
+                return match bracket_definition(normalized, matching.into_iter(), rules.short_forms)
                     .or_else(|| unique_target(suffix.iter().copied()).map(str::to_owned)) {
                     Some(target) => (target, "bracket_definition"),
                     None => (String::new(), "abstain_ambiguous_note_number"),
@@ -366,10 +440,29 @@ fn resolve_registry_hint_scoped<R: Borrow<ReferenceSource>>(text: &str, hint: &s
                 return (target.to_owned(), "note_number_short_form_suffix");
             }
             if !suffix.is_empty() { return (String::new(), "abstain_ambiguous_note_number_suffix"); }
-            match bracket_definition(normalized, note_sources.into_iter()) {
-                Some(target) => (target, "bracket_definition"),
-                None => (String::new(), "note_name_conflict"),
+            if let Some(target) = bracket_definition(normalized, note_sources.iter().copied(), rules.short_forms) {
+                return (target, "bracket_definition");
             }
+            // A name one letter off the only work of the note that writes it so ("Campell" for Campbell).
+            if rules.near {
+                let words = word_tokens(hint, 5);
+                if let [word] = words.as_slice() {
+                    let near = note_sources.iter().copied().filter(|entry|
+                        work_words(entry).iter().any(|held| one_letter_apart(word, held))).collect::<Vec<_>>();
+                    if let Some(target) = unique_identified(near) { return (target.to_owned(), "near_name"); }
+                }
+            }
+            // A name that names no work anywhere ("The English statute") leaves the note to say which: its
+            // one work.
+            if rules.descriptive && !tokens.is_empty() && !entries(registry).any(|entry| {
+                let held = work_words(entry);
+                tokens.iter().all(|token| held.contains(token))
+            }) {
+                if let Some(target) = unique_identified(note_sources.iter().copied()) {
+                    return (target.to_owned(), "note_single_work");
+                }
+            }
+            (String::new(), "note_name_conflict")
     })());
     let numbered = match numbered {
         Some((target, reason)) if !(by_name && target.is_empty()
@@ -385,25 +478,29 @@ fn resolve_registry_hint_scoped<R: Borrow<ReferenceSource>>(text: &str, hint: &s
     ] {
         // A name read past its numbered note is matched to a short form, not to words in a source's text.
         if numbered.is_some() && method == "token_verb" { continue; }
-        let pool = entries(registry).filter(|entry| match method {
-            "exact_sf" => !normalized.is_empty() && ref_normalize(entry.short_form.as_deref().unwrap_or(""))
-                .trim_matches(['[', ']', '(', ')', ' ']) == normalized,
-            "token_sf" => !tokens.is_empty() && entry.short_form.as_ref().is_some_and(|short|
-                !short.is_empty() && matches_tokens(&ref_normalize(short))),
-            _ => !tokens.is_empty() && matches_tokens(&match_text(entry)),
+        let pool = entries(registry).filter(|entry| rules.fits.is_none_or(|fits| entry.target().is_empty() || fits(entry)))
+            .filter(|entry| match method {
+            "exact_sf" => !wanted.is_empty() && short_of(entry) == wanted,
+            "token_sf" => !tokens.is_empty() && entry.short_form.as_ref().is_some_and(|short| !short.is_empty() && if rules.matching {
+                let held = word_tokens(short, 1);
+                tokens.iter().all(|token| held.contains(token))
+            } else { matches_tokens(&ref_normalize(short)) }),
+            _ => !tokens.is_empty() && matches_entry(entry),
         }).collect::<Vec<_>>();
         if pool.is_empty() { continue; }
-        if let Some(target) = unique_target(pool) { return (target.to_owned(), method); }
+        if let Some(target) = pick(rules.matching, pool) { return (target.to_owned(), method); }
         abstain = ambiguous;
         break;
     }
-    if let Some(target) = bracket_definition(normalized, entries(registry)) {
+    if let Some(target) = bracket_definition(normalized, entries(registry), rules.short_forms) {
         return (target, "bracket_definition");
     }
     (String::new(), numbered.unwrap_or(abstain))
 }
 
-fn bracket_definition<'a>(normalized: &str, entries: impl Iterator<Item = &'a ReferenceSource>) -> Option<String> {
+/// The work whose bracketed definition is the name; with `clean`, a definition read without its McGill
+/// wording ([`clean_short_form`]).
+fn bracket_definition<'a>(normalized: &str, entries: impl Iterator<Item = &'a ReferenceSource>, clean: bool) -> Option<String> {
     if normalized.is_empty() { return None; }
     let mut bases = HashSet::new();
     let mut best = "";
@@ -411,7 +508,7 @@ fn bracket_definition<'a>(normalized: &str, entries: impl Iterator<Item = &'a Re
         for bracket in EXPLICIT.captures_iter(entry.verbatim.as_deref().unwrap_or("")) {
             if BRACKET_SKIP.is_match(bracket[1].trim()) { continue; }
             for piece in bracket[1].split(';') {
-                let piece = HEREINAFTER.replace(piece, "");
+                let piece = if clean { clean_short_form(piece).into() } else { HEREINAFTER.replace(piece, "") };
                 if ref_normalize(&piece).trim_matches(['[', ']', '(', ')', ' ']) == normalized {
                     bases.insert(entry.target());
                     best = entry.target();
@@ -479,6 +576,214 @@ pub fn reanchor_reference(origin_link: &str, text: &str) -> String {
     if !IBID.is_match(text) && SUPRA.is_match(text) { base.to_owned() } else { link }
 }
 
+/// What a split resolver's linking rules ask of the registry's name tiers ([`crate::Linking`]).
+#[derive(Default)]
+pub(crate) struct Matching<'a> {
+    /// [`crate::Linking::name_reading`]: a reference's names as [`reading_hints`] reads them.
+    pub reading: bool,
+    /// [`crate::Linking::name_matching`].
+    pub matching: bool,
+    /// [`crate::Linking::distinguishing_words`].
+    pub distinguishing: bool,
+    /// [`crate::Linking::near_names`].
+    pub near: bool,
+    /// [`crate::Linking::descriptive_names`].
+    pub descriptive: bool,
+    /// [`crate::Linking::first_of_note`].
+    pub first_of_note: bool,
+    /// [`crate::Linking::short_forms`]: short forms read without their McGill wording.
+    pub short_forms: bool,
+    /// [`crate::Linking::locators`]: whether a registered work can hold the reference's pinpoint, to refuse it.
+    pub fits: Option<&'a dyn Fn(&ReferenceSource) -> bool>,
+    /// [`crate::Linking::locators`]: whether the pinpoint is likely in a registered work, to choose among several.
+    pub prefers: Option<&'a dyn Fn(&ReferenceSource) -> bool>,
+    /// [`crate::Linking::body_names`]: the text's clause before the reference's own note marker.
+    pub body: Option<&'a str>,
+}
+
+/// A short form without the McGill wording its brackets hold around it ("hereinafter “Caron, SCC”",
+/// "Lavoie avec renvois aux N.S.R.") and the quotation marks it is written in.
+pub(crate) fn clean_short_form(value: &str) -> String {
+    let value = SHORT_FORM_WORDING.replace_all(value, "");
+    value.trim_matches(|c: char| c.is_whitespace() || "\"'“”«»‹›‘’".contains(c)).to_owned()
+}
+
+/// A name's words, case-folded, at least `min` letters or digits long, without the words that write a
+/// reference rather than name a work.
+fn word_tokens(value: &str, min: usize) -> Vec<String> {
+    value.split(|c: char| !c.is_alphanumeric()).filter(|word| word.chars().count() >= min)
+        .map(|word| word.case_fold().collect::<String>())
+        .filter(|word| !matches!(word.as_str(), "see" | "also" | "but" | "and" | "the" | "note" | "supra" | "ibid"
+            | "generally" | "contra" | "compare" | "with" | "above" | "voir" | "aussi" | "et" | "of" | "de"))
+        .collect()
+}
+
+/// The words a registered work is named by: its short form, names and text, without its publication facts but
+/// with their year, which tells editions apart ("Nadeau & Nadeau, 1971").
+fn work_words(entry: &ReferenceSource) -> HashSet<String> {
+    let verbatim = entry.verbatim.as_deref().unwrap_or("");
+    let mut years = String::new();
+    let verbatim = PUBLICATION_FACTS.replace_all(verbatim, |facts: &regex::Captures| {
+        for word in facts[0].split(|c: char| !c.is_ascii_digit()).filter(|word| word.len() == 4) { years.push(' '); years.push_str(word); }
+        " ".to_owned()
+    });
+    word_tokens(&format!("{} {} {}{}", entry.short_form.as_deref().unwrap_or(""), entry.names.join(" "),
+        verbatim.chars().take(240).collect::<String>(), years), 1).into_iter().collect()
+}
+
+/// A name as names are compared: lower case, spaced once, without its quotation marks and outer brackets.
+fn name_key(value: &str) -> String {
+    ref_normalize(value).chars().filter(|c| !"\"'“”«»‹›‘’".contains(*c)).collect::<String>()
+        .trim_matches(|c: char| c.is_whitespace() || "[](),.;:".contains(c)).split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
+/// Of a note's several works, the one the text names before the reference's note marker: the one whose short
+/// form it writes, else the one a distinctive word of whose name (a party's, a statute's) it writes and no other
+/// work's name holds. A bare supra's sentence speaks of its work by a party or the short form the note set.
+fn body_named<'a>(body: &str, pool: &[&'a ReferenceSource]) -> Option<(&'a str, &'static str)> {
+    let fold = |value: &str| value.split(|c: char| !c.is_alphanumeric()).filter(|word| !word.is_empty())
+        .map(|word| word.nfkd().filter(|c| c.is_alphanumeric()).collect::<String>().to_lowercase()).collect::<Vec<_>>();
+    let said = fold(body);
+    let spoken = format!(" {} ", said.join(" "));
+    let identified = pool.iter().copied().filter(|entry| !entry.target().is_empty()).collect::<Vec<_>>();
+    let short = identified.iter().copied().filter(|entry| {
+        let short = fold(&clean_short_form(entry.short_form.as_deref().unwrap_or("")));
+        !short.is_empty() && spoken.contains(&format!(" {} ", short.join(" ")))
+    });
+    if let Some(target) = unique_identified(short) { return Some((target, "body_short_form")); }
+    let words = identified.iter().map(|entry| {
+        let name = entry.names.first().cloned().or_else(|| entry.verbatim.clone()).unwrap_or_default();
+        crate::format::distinctive_party_words(&name).into_iter()
+            .filter(|word| word.chars().count() >= 4 && word.chars().all(char::is_alphabetic)).collect::<HashSet<_>>()
+    }).collect::<Vec<_>>();
+    let named = identified.iter().enumerate().filter(|&(at, _)| words[at].iter().any(|word| said.contains(word)
+        && !words.iter().enumerate().any(|(other, theirs)| other != at && theirs.contains(word)))).map(|(_, entry)| *entry);
+    unique_identified(named).map(|target| (target, "body_name"))
+}
+
+/// The one identity a pool names: with `identified`, entries with none aside ([`unique_identified`]).
+fn pick<'a>(identified: bool, pool: Vec<&'a ReferenceSource>) -> Option<&'a str> {
+    if identified { unique_identified(pool) } else { unique_target(pool) }
+}
+
+/// The one identity entries name, entries with none aside.
+fn unique_identified<'a>(entries: impl IntoIterator<Item = &'a ReferenceSource>) -> Option<&'a str> {
+    let targets = entries.into_iter().map(ReferenceSource::target).filter(|target| !target.is_empty())
+        .collect::<HashSet<_>>();
+    (targets.len() == 1).then(|| *targets.iter().next().unwrap())
+}
+
+/// Whether two words are one letter apart (one added, dropped or changed).
+fn one_letter_apart(left: &str, right: &str) -> bool {
+    let (left, right) = (left.chars().collect::<Vec<_>>(), right.chars().collect::<Vec<_>>());
+    if left == right || left.len().abs_diff(right.len()) > 1 { return false; }
+    let (mut i, mut j, mut edits) = (0, 0, 0);
+    while i < left.len() && j < right.len() {
+        if left[i] == right[j] { i += 1; j += 1; continue; }
+        edits += 1;
+        if edits > 1 { return false; }
+        match left.len().cmp(&right.len()) {
+            std::cmp::Ordering::Greater => i += 1,
+            std::cmp::Ordering::Less => j += 1,
+            std::cmp::Ordering::Equal => { i += 1; j += 1; }
+        }
+    }
+    edits + (left.len() - i) + (right.len() - j) <= 1
+}
+
+/// The words a lead-in writes before a name, which are no part of it ("In Lewis v. Bankole",
+/// "Both Professor Iacobucci", "C'est … dans Lavoie").
+fn lead_in(word: &str) -> bool {
+    matches!(word.trim_matches(|c: char| !c.is_alphanumeric()).to_lowercase().as_str(),
+        "in" | "dans" | "both" | "professor" | "prof" | "justice" | "j" | "dr" | "mr" | "ms" | "mrs" | "mme"
+        | "m" | "me" | "chief" | "lord" | "lady" | "sir" | "madam" | "honourable" | "the" | "la" | "le" | "les"
+        | "see" | "voir" | "also" | "aussi" | "and" | "et" | "of" | "de" | "du" | "des")
+}
+
+/// The words a name joins its capitalized words with ("R v Oakes", "Re Ulrike Roth", "Procureur général du Québec").
+fn connector(word: &str) -> bool {
+    matches!(word.to_lowercase().as_str(), "v" | "v." | "vs" | "vs." | "c" | "c." | "et" | "&" | "and" | "de"
+        | "du" | "des" | "la" | "le" | "les" | "l'" | "d'" | "of" | "the" | "for" | "re" | "ex" | "parte"
+        | "van" | "von" | "der" | "den" | "da" | "di" | "y" | "en" | "à" | "au" | "aux" | "sur" | "on")
+}
+
+/// The name that ends a lead-in ("This assertion stemmed from Sheehy's research, see Froc & Sheehy" ends with
+/// "Froc & Sheehy"): the capitalized words and their joiners last in it. None where the words are a title
+/// (written in quotation marks or after a colon), or where they are all the hint.
+fn tail_name(hint: &str) -> Option<String> {
+    if hint.contains(['“', '”', '«', '»', '"', ':']) { return None; }
+    let words = hint.split_whitespace().collect::<Vec<_>>();
+    let mut start = words.len();
+    while start > 0 {
+        let word = words[start - 1];
+        let first = word.trim_start_matches(|c: char| "([\"'“«".contains(c)).chars().next();
+        if first.is_some_and(|c| c.is_uppercase() || c.is_numeric()) || connector(word) { start -= 1; } else { break; }
+    }
+    if start == 0 || start == words.len() { return None; }
+    let mut tail = &words[start..];
+    while tail.first().is_some_and(|word| lead_in(word) || connector(word)) { tail = &tail[1..]; }
+    (!tail.is_empty()).then(|| tail.join(" ").trim_matches([',', ';', ':', '.', ' ']).to_owned())
+        .filter(|tail| !tail.is_empty() && tail.as_str() != hint)
+}
+
+/// A supra's names as a reader reads them ([`crate::Linking::name_reading`]): the words of its own clause
+/// before it, without the signals that open it and the quotation marks around it, and the name that ends
+/// them where they lead in to one. None where the supra opens its own sentence ("… flawed.” Supra note 58").
+pub(crate) fn reading_hints(text: &str) -> Vec<String> {
+    let Some(found) = SUPRA.find(text) else { return Vec::new(); };
+    let prior = text[..found.start()].trim_end();
+    let opens = text[found.start()..].starts_with(|c: char| c.is_uppercase());
+    if prior.is_empty() || (opens && prior.ends_with(['.', '!', '?', '”', '"', ')', ']', '’', '»'])) {
+        return Vec::new();
+    }
+    // The reference's own clause: after the last semicolon, or within a parenthesis still open before it
+    // ("R v Hoy, 2010 ABQB 575 (citing M(A), supra …"); "Brown (SCC), supra" keeps its closed one.
+    let (mut start, mut open) = (0, Vec::new());
+    for (at, c) in prior.char_indices() {
+        match c {
+            '(' => open.push(at),
+            ')' => { open.pop(); }
+            ';' if open.is_empty() => start = at + 1,
+            _ => {}
+        }
+    }
+    if let Some(&at) = open.last() { start = start.max(at + 1); }
+    let mut rest = prior[start..].trim_start_matches(|c: char| c.is_whitespace() || "[{".contains(c));
+    while let Some(signal) = READING_SIGNAL.find(rest).filter(|signal| signal.start() == 0 && signal.end() > 0) {
+        rest = &rest[signal.end()..];
+    }
+    let hint = rest.trim_matches(|c: char| c.is_whitespace() || ",;:.[{]}\"'“”«»‹›".contains(c))
+        .split_whitespace().collect::<Vec<_>>().join(" ");
+    // Then the name as ALR's reader reads it, and the name a lead-in ends with.
+    let alr = supra_hint(text, true);
+    let alr = if alr.is_empty() { fallback_hint(text) } else { alr };
+    let mut hints = Vec::new();
+    for candidate in [Some(hint.clone()), Some(alr), tail_name(&hint)].into_iter().flatten() {
+        if !candidate.is_empty() && !hints.contains(&candidate) { hints.push(candidate); }
+    }
+    hints
+}
+
+/// The registry's name tiers for a supra its linking rules read ([`Matching`]): each of its names in turn, the
+/// first that names a work winning; a bare supra read by its note alone.
+pub(crate) fn resolve_registry_with<R: Borrow<ReferenceSource>>(text: &str, registry: &[R], aggressive: bool,
+    sequence: Option<u32>, by_name: bool, matching: &Matching) -> (String, &'static str) {
+    if !matching.reading {
+        let hint = supra_hint(text, aggressive);
+        let hint = if hint.is_empty() { fallback_hint(text) } else { hint };
+        return resolve_hint(text, &hint, registry, sequence, by_name, matching);
+    }
+    let hints = reading_hints(text);
+    if hints.is_empty() { return resolve_hint(text, "", registry, sequence, by_name, matching); }
+    let mut first = None;
+    for hint in &hints {
+        let result = resolve_hint(text, hint, registry, sequence, by_name, matching);
+        if !result.0.is_empty() { return result; }
+        first.get_or_insert(result);
+    }
+    first.unwrap()
+}
+
 /// Build this module's lazily built statics now ([`crate::warm`]).
 pub(crate) fn warm() {
     crate::warm_statics!(
@@ -486,6 +791,6 @@ pub(crate) fn warm() {
         AUTHOR_TOKEN, HINT, HINT_SIGNAL, NOTE, REGISTRY_NOTE, REGISTRY_N, REGISTRY_NN,
         REGISTRY_SIGNAL, BRACKET_SKIP, SUPRA, SUPRA_HINT_SIGNAL, SUPRA_HINT_START, SUPRA_HINT_ANY,
         IBID_HINT, SOURCE_YEAR, HEREINAFTER, ANCHOR_PARAGRAPH, ANCHOR_PROVISION, ANCHOR_SCOPE,
-        IBID, WORD
+        IBID, WORD, READING_SIGNAL, PUBLICATION_FACTS, SHORT_FORM_WORDING
     );
 }

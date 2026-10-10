@@ -746,6 +746,12 @@ pub struct ResolveRequest {
     /// See [`crate::Options::split_tier`].
     #[serde(default)]
     pub split_tier: Option<crate::SplitTier>,
+    /// See [`crate::Options::linking`].
+    #[serde(default)]
+    pub linking: Option<crate::Linking>,
+    /// See [`crate::Options::extents`].
+    #[serde(default)]
+    pub extents: Vec<crate::Extent>,
     /// Citation indices in document reading order, when footnote anchors are known.
     #[serde(default)]
     pub reading_order: Option<Vec<usize>>,
@@ -825,7 +831,8 @@ pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
     }).transpose()?;
     let resolutions = crate::resolve::resolve_with_sources(&citations, request.notes.as_deref(), &links,
         order, &request.source_parts, request.supra_hint_mode.unwrap_or(crate::SupraMode::Aggressive),
-        request.supra_linking_mode.unwrap_or(crate::SupraMode::Safe), request.split_tier);
+        request.supra_linking_mode.unwrap_or(crate::SupraMode::Safe), request.split_tier,
+        request.linking.as_ref(), &request.extents, None);
     for resolution in &resolutions {
         if let Some(citation) = citations.iter_mut().find(|citation| citation.index == resolution.index) {
             citation.antecedent = resolution.antecedent;

@@ -857,7 +857,7 @@ pub(crate) fn top_level(window: &str) -> Vec<bool> {
 /// separates it from the authority in front of it. A title's own punctuation
 /// is no such delimiter: one inside a quotation the window holds whole ("Why
 /// Ferns? Notes on …", "Reeds; or, …") is passed over.
-fn styled_floor(text: &str, floor: usize, core_start: usize) -> usize {
+pub(crate) fn styled_floor(text: &str, floor: usize, core_start: usize) -> usize {
     let window = &text[floor..core_start];
     let quoted = quotations(window);
     STYLED_FLOOR.find_all(window)
@@ -1865,6 +1865,40 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
                 continue;
             }
             taken.push(citation.signal.as_ref().map_or(start, |signal| signal.start)..citation.full_span.end);
+            found.push(citation);
+        }
+    }
+    found
+}
+
+/// References to a work by the short form a note part defines for it ("… Report (2019) [IBP]" … "IBP, at 21"):
+/// the short form written after the part, word for word and outside every citation, with a pinpoint, or, with
+/// `bare`, alone ("the Charter"). `defined` holds each short form and where its definition ends.
+pub(crate) fn short_form_references(text: &str, citations: &[Citation], defined: &[(String, usize)], bare: bool) -> Vec<Citation> {
+    let mut taken = citations.iter().map(|citation| citation.full_span.start..citation.full_span.end).collect::<Vec<_>>();
+    let mut found = Vec::new();
+    let mut names = defined.iter().filter(|(name, _)| name.chars().count() >= 2 && name.chars().any(char::is_alphabetic))
+        .cloned().collect::<Vec<_>>();
+    names.sort_by_key(|(name, _)| std::cmp::Reverse(name.len()));
+    for (name, after) in names {
+        let mut from = after;
+        while let Some(offset) = text.get(from..).and_then(|rest| rest.find(name.as_str())) {
+            let start = from + offset;
+            let end = start + name.len();
+            from = end;
+            if !word_boundary(text, start, end) || overlaps(&(start..end), &taken) { continue; }
+            let limit = taken.iter().filter(|range| range.start >= end).map(|range| range.start).min().unwrap_or(text.len());
+            let tail = metadata::tail(text, end, limit, TailRules::default());
+            if tail.pinpoints.is_empty() && !bare { continue; }
+            let mut citation = blank_citation(text, Form::Reference, Authority::Unknown, start..end,
+                if tail.pinpoints.is_empty() { "short_form_mention" } else { "short_form_reference" });
+            citation.style = Some(span(text, start..end));
+            citation.short_name = Some(name.clone());
+            citation.full_span = span(text, start..tail.end.max(end));
+            citation.pinpoints = tail.pinpoints;
+            citation.parentheticals = tail.parentheticals;
+            citation.fields.pin_cite = tail.pin_cite;
+            taken.push(citation.full_span.start..citation.full_span.end);
             found.push(citation);
         }
     }

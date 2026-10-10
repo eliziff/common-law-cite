@@ -234,6 +234,8 @@ fn pinpoint_group(
 
 /// A balanced parenthetical opening after optional spaces and a comma.
 fn parenthetical_at(text: &str, start: usize, limit: usize) -> Option<Range<usize>> {
+    // No parenthetical opens in an empty stretch, as a citation ending past the next one's start leaves.
+    if start >= limit { return None; }
     let rest = &text[start..limit];
     let open = start + rest.len()
         - rest

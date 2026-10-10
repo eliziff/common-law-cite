@@ -229,21 +229,40 @@ pub(crate) fn resolve_with_links(citations: &[Citation], notes: Option<&[NoteRan
 pub(crate) fn resolve_with_sources(
     citations: &[Citation], notes: Option<&[NoteRange]>, links: &[(usize, usize)],
     order: Option<Vec<usize>>, parts: &[SourcePart], hint_mode: SupraMode,
-    linking_mode: SupraMode, split_tier: Option<SplitTier>,
+    linking_mode: SupraMode, split_tier: Option<SplitTier>, linking: Option<&crate::Linking>, extents: &[crate::Extent],
+    text: Option<&str>,
 ) -> Vec<Resolution> {
     let mut resolver = Resolver::new(citations, notes, links);
+    resolver.text = text;
+    resolver.extents = extents;
+    resolver.linking = linking.cloned().or_else(|| split_tier.map(crate::Linking::for_tier)).unwrap_or_default();
     let linking_mode = split_tier.map_or(linking_mode, SplitTier::supra_mode);
     resolver.reading_order = order;
     resolver.source_parts = parts;
     resolver.supra_hint_mode = hint_mode;
     resolver.supra_linking_mode = linking_mode;
     resolver.split = split_tier.is_some();
-    if linking_mode == SupraMode::Named { resolver.renumbered = resolver.renumbering(); }
+    let drifts = resolver.renumbering();
+    // A document renumbered its notes when at least three supras each name exactly one earlier citation in another
+    // note than the one they number; its drift is the distance most of them share.
+    if linking_mode == SupraMode::Named { resolver.renumbered = drifts.len() >= 3; }
+    let mut counts = HashMap::new();
+    for drift in &drifts { *counts.entry(*drift).or_insert(0usize) += 1; }
+    resolver.drift = counts.into_iter().max_by_key(|&(drift, count)| (count, -drift.abs()))
+        .filter(|&(_, count)| count >= 2 && count * 2 >= drifts.len()).map(|(drift, _)| drift);
     resolver.run()
 }
 
+/// The most pages a reported decision is taken to run past its first page where its extent is unknown: a rule of
+/// thumb standing in for lengths profiled by reporter, court and year.
+const LONGEST_REPORT: u64 = 350;
+
 struct Resolver<'a> {
     citations: &'a [Citation],
+    /// The document the citations and notes are spans of, where the caller gives it.
+    text: Option<&'a str>,
+    /// What the host knows of works' extents ([`crate::Options::extents`]).
+    extents: &'a [crate::Extent],
     notes: Option<&'a [NoteRange]>,
     /// Note position (into `notes`) holding each citation.
     note_of: Vec<Option<usize>>,
@@ -260,11 +279,16 @@ struct Resolver<'a> {
     /// Whether a document's supra note numbers drift from the notes their names cite (its notes
     /// were renumbered and its supras were not).
     renumbered: bool,
+    /// The distance most of a document's drifting supras share between the note they write and the one that cites
+    /// the work they name ([`Self::renumbering`]).
+    drift: Option<i64>,
     /// References resolve as a note splitter's rows read them ([`crate::Options::split_tier`]).
     split: bool,
     /// Each citation's [`candidate_names`], and the [`words`] of each, read once.
     names: Vec<OnceCell<Vec<String>>>,
     name_words: Vec<OnceCell<Vec<Vec<String>>>>,
+    /// The mechanisms references link with ([`crate::Linking`]).
+    linking: crate::Linking,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Hash)]
@@ -304,6 +328,11 @@ struct History {
     passed_history: Option<(Option<Target>, Vec<String>)>,
     /// The records the note before the current one registered, which a named ibid reads.
     previous_note_records: (usize, usize),
+    /// Split rows: the works each part of the note before named, which an ibid's pinpoint can choose among.
+    previous_note_sources: Vec<Option<Target>>,
+    /// The record of the current note's principal citation, which a short form written after its subsequent
+    /// history or a parenthetical names ([`crate::Linking::short_forms`]).
+    principal: Option<usize>,
     /// Split rows: what each part of the current note an ibid could continue from names.
     note_sources: Vec<Option<Target>>,
 }
@@ -347,6 +376,8 @@ impl<'a> Resolver<'a> {
             clustered.get(&citation.index).copied().unwrap_or_else(|| authority_of_full(citation))).collect();
         Self {
             citations,
+            text: None,
+            extents: &[],
             notes,
             note_of,
             resolved: vec![None; citations.len()],
@@ -359,9 +390,11 @@ impl<'a> Resolver<'a> {
             source_urls: HashMap::new(),
             source_origins: HashMap::new(),
             renumbered: false,
+            drift: None,
             split: false,
             names: citations.iter().map(|_| OnceCell::new()).collect(),
             name_words: citations.iter().map(|_| OnceCell::new()).collect(),
+            linking: crate::Linking::default(),
         }
     }
 
@@ -378,7 +411,7 @@ impl<'a> Resolver<'a> {
     /// `names` holds each full citation's normalized short forms where it stands in a note, and
     /// `numbered` the numbers of the notes that hold a full citation.
     fn name_note_drift(&self, position: usize, names: &[Vec<String>], numbered: &std::collections::HashSet<u64>)
-        -> Option<std::cmp::Ordering> {
+        -> Option<i64> {
         let citation = &self.citations[position];
         let text = if citation.full_span.text.is_empty() { &citation.span.text } else { &citation.full_span.text };
         let written = short_forms::reference_info(text).notes.first().and_then(|number| number.parse::<u64>().ok())?;
@@ -390,12 +423,12 @@ impl<'a> Resolver<'a> {
             .filter_map(|(at, _)| self.note_of[at]).map(|note| u64::from(notes[note].number)).collect::<Vec<_>>();
         named.dedup();
         let [cited] = named.as_slice() else { return None };
-        (numbered.contains(&written) && *cited != written).then(|| cited.cmp(&written))
+        (numbered.contains(&written) && *cited != written).then(|| *cited as i64 - written as i64)
     }
 
-    /// A document renumbered its notes when at least three supras each name exactly one earlier
-    /// citation in another note than the one they number.
-    fn renumbering(&self) -> bool {
+    /// How far each supra whose name is exactly one earlier citation's numbers another note than that
+    /// citation's: the citation's note less the one written.
+    fn renumbering(&self) -> Vec<i64> {
         let noted_full = |at: usize| self.citations[at].form == Form::Full && self.note_of[at].is_some();
         let names = (0..self.citations.len()).map(|at| if noted_full(at) {
             let other = &self.citations[at];
@@ -406,7 +439,7 @@ impl<'a> Resolver<'a> {
             .filter_map(|at| self.note_of[at]).map(|note| u64::from(notes[note].number)).collect()).unwrap_or_default();
         let drifts = (0..self.citations.len()).filter(|&at| self.citations[at].form == Form::Supra)
             .filter_map(|at| self.name_note_drift(at, &names, &numbered)).collect::<Vec<_>>();
-        drifts.len() >= 3
+        drifts
     }
 
     /// Citations in reading order: notes in their supplied order, and a
@@ -496,6 +529,7 @@ impl<'a> Resolver<'a> {
         let prior_inferred = history.inferred.len();
         let mut sibling: Option<Option<Target>> = None;
         history.note_sources.clear();
+        history.principal = None;
         for (_, event, index) in parts {
             if event == 0 {
                 self.process_part(note, index, prior_records, prior_inferred, history,
@@ -516,7 +550,9 @@ impl<'a> Resolver<'a> {
         // An ibid after a note follows it only when the whole note names one authority. In split rows
         // the note's prose, inner parentheticals and subsequent history do not count, and at the
         // aggressive tier an ibid continues from the note's last source part, as the Python app's does.
-        if self.split && self.supra_linking_mode != SupraMode::Aggressive && !history.note_sources.is_empty() {
+        history.previous_note_sources = history.note_sources.clone();
+        if self.split && (self.supra_linking_mode != SupraMode::Aggressive || self.linking.no_ibid_last_part)
+            && !history.note_sources.is_empty() {
             let distinct = history.note_sources.iter().collect::<std::collections::HashSet<_>>();
             history.last_part_target = Some(if distinct.len() == 1 { history.note_sources[0].clone() } else { None });
         }
@@ -597,7 +633,8 @@ impl<'a> Resolver<'a> {
             "supra" if several => None,
             "supra" => Some(self.resolve_supra_text(&part.text,
                 &history.records[..prior_records], &history.inferred[..prior_inferred],
-                Some(range.sequence))),
+                Some(range.sequence), positions.iter().map(|&(_, position)| position)
+                    .find(|&position| self.citations[position].form == Form::Supra))),
             // A named ibid continues the source its name names in the note before, and no other.
             "ibid" if self.split && !short_forms::ibid_hint(&part.text).is_empty() => {
                 let target = self.named_ibid(&part.text, history);
@@ -610,7 +647,7 @@ impl<'a> Resolver<'a> {
             "ibid" => {
                 let prior = sibling.clone().or_else(|| history.last_part_target.clone()
                     .filter(|_| history.last_part_sequence == range.sequence));
-                Some(if let Some(target) = prior {
+                let mut result = if let Some(target) = prior {
                     let reason = if target.is_none() { "ibid_after_unresolved" }
                         else if sibling.is_some() { "ibid_previous" } else { "ibid_previous_note" };
                     (target, reason)
@@ -618,7 +655,24 @@ impl<'a> Resolver<'a> {
                     && previous.is_some_and(|position| self.note_of[position].is_none()) {
                     positions.first().map_or((None, "ibid_no_previous"), |&(_, position)|
                         self.previous_citation(position, *previous))
-                } else { (None, "ibid_no_previous") })
+                } else { (None, "ibid_no_previous") };
+                let pins = positions.iter().map(|&(_, position)| position)
+                    .find(|&position| self.citations[position].form == Form::Ibid)
+                    .map(|position| self.citations[position].pinpoints.clone()).unwrap_or_default();
+                // An ibid after a note of several works continues the one its pinpoint fits.
+                if self.linking.ibid_locators && result.0.is_none() && sibling.is_none() && !pins.is_empty()
+                    && history.last_part_sequence == range.sequence {
+                    let works = history.previous_note_sources.iter().flatten().collect::<std::collections::HashSet<_>>();
+                    let fitting = works.iter().copied().filter(|work| self.locator_fits(&pins, work, false)).collect::<Vec<_>>();
+                    if works.len() > 1 && fitting.len() == 1 { result = (Some(fitting[0].clone()), "ibid_locator"); }
+                }
+                // A pinpoint the work it would continue cannot hold refuses the link.
+                if self.linking.locators && !pins.is_empty()
+                    && result.0.as_ref().is_some_and(|target| self.source_origins.get(target).is_none_or(|&part| self.citation_part(part))
+                        && !self.locator_fits(&pins, target, true)) {
+                    result = (None, "ibid_locator_conflict");
+                }
+                Some(result)
             }
             _ => None,
         };
@@ -626,7 +680,7 @@ impl<'a> Resolver<'a> {
             let citation = &self.citations[position];
             let own = (several && citation.form == Form::Supra).then(|| self.resolve_supra_text(
                 &citation.full_span.text, &history.records[..prior_records],
-                &history.inferred[..prior_inferred], Some(range.sequence)));
+                &history.inferred[..prior_inferred], Some(range.sequence), Some(position)));
             let override_result = own.or_else(|| matches!(citation.form, Form::Supra | Form::Ibid)
                 .then(|| part_result.clone()).flatten())
                 .map(|(target, reason)| (target, reason, Some(part_index)));
@@ -642,30 +696,54 @@ impl<'a> Resolver<'a> {
         // must not multiply the source-part registry or make a numbered supra
         // look ambiguous by counting one part more than once.
         // A part citing one authority is known by that citation's short form when the part names none.
-        let short_form = (!fields.short_form.is_empty()).then(|| fields.short_form.clone()).or_else(||
+        let mut short_form = (!fields.short_form.is_empty()).then(|| fields.short_form.clone()).or_else(||
             full.first().filter(|_| full.len() == 1).and_then(|citation|
                 citation.explicit_short_name.clone().or_else(|| citation.short_name.clone())));
-        let kind = full.first().map_or(fields.kind, |citation| inference_kind(citation));
-        // Such a part is recorded by its full citations, not as one more source.
-        if !several_full {
-            history.push(self.source_record(Some(&range), part.text.clone(), part_target.clone(), short_form, Some(part_index)),
-                kind, self.supra_linking_mode);
+        if self.linking.short_forms {
+            short_form = short_form.map(|short| short_forms::clean_short_form(&short)).filter(|short| !short.is_empty());
         }
+        let kind = full.first().map_or(fields.kind, |citation| inference_kind(citation));
         // Split rows: prose, a part inside another part's parentheses ("Criminal Code, …, s 241.2(2) (" |
         // "As amended by …") and a decision's subsequent history ("rev'g 2022 ONSC 5886") are no source an
         // ibid continues from; the history stays at hand for an ibid that names its court.
         let history_part = self.split && reference.kind.is_empty() && !full.is_empty()
             && full.iter().all(|citation| self.is_history(note, part.start, citation.index));
+        let prose = self.split && reference.kind.is_empty() && !self.is_source(part, &positions, &fields);
+        let enclosed = self.split && reference.kind.is_empty() && self.inside_parentheses(note, part.start);
+        // A short form bracketed after a decision's subsequent history or a parenthetical names the citation
+        // they follow ("…, aff'g … 2021 BCSC 2344 [Rooney]"), unless it names the history's court ("[Hak QCCA]").
+        if self.linking.short_forms && (history_part || enclosed) && !several_full && part.text.contains('[') {
+            if let (Some(short), Some(principal)) = (short_form.clone(), history.principal) {
+                let key = |text: &str| text.chars().filter(|c| c.is_alphanumeric()).collect::<String>().to_lowercase();
+                let mut said = short.split(|c: char| !c.is_alphanumeric()).filter(|word| !word.is_empty())
+                    .map(str::to_lowercase).collect::<Vec<_>>();
+                said.extend(short.split('(').skip(1).map(|inside| key(inside.split(')').next().unwrap_or(""))));
+                let named_court = full.iter().flat_map(|citation| citation.court.iter())
+                    .flat_map(|court| [key(&court.id), key(&court.text)]).filter(|court| court.len() >= 2)
+                    .any(|court| said.contains(&court));
+                if !named_court {
+                    history.records[principal].short_form = Some(short);
+                    short_form = None;
+                }
+            }
+        }
+        // A part of prose names no work a reference could name.
+        let record_target = if self.linking.name_matching && prose { None } else { part_target.clone() };
+        // Such a part is recorded by its full citations, not as one more source.
+        if !several_full {
+            history.push(self.source_record(Some(&range), part.text.clone(), record_target, short_form, Some(part_index)),
+                kind, self.supra_linking_mode);
+            if reference.kind.is_empty() && !history_part && !prose && !enclosed {
+                history.principal = Some(history.records.len() - 1);
+            }
+        }
         if history_part {
             let courts = full.iter().flat_map(|citation| citation.court.iter()
                 .flat_map(|court| [court.id.to_uppercase(), court.text.clone()])).collect();
             history.passed_history = Some((part_target, courts));
             return;
         }
-        if self.split && reference.kind.is_empty()
-            && (!self.is_source(part, &positions, &fields) || self.inside_parentheses(note, part.start)) {
-            return;
-        }
+        if prose || enclosed { return; }
         if reference.kind.is_empty() { history.passed_history = None; }
         history.note_sources.push(part_target.clone());
         *sibling = Some(part_target.clone());
@@ -709,43 +787,99 @@ impl<'a> Resolver<'a> {
             .and_then(|resource| Target::from_registry(&resource))
     }
 
+    /// `at`: the reference's position among the citations, whose pinpoints the locators read and whose place
+    /// tells which of several notes carrying one number came before it.
     fn resolve_supra_text(&self, text: &str, registry: &[ReferenceSource],
-        inferred: &[ReferenceSource], sequence: Option<u32>) -> (Option<Target>, &'static str) {
+        inferred: &[ReferenceSource], sequence: Option<u32>, at: Option<usize>) -> (Option<Target>, &'static str) {
         // ALR's original note identifiers are globally unique. A host may have
         // restarted numbering, so a numbered reference can only consult the
         // matching numbering sequence, including aggressive fallbacks.
         let reference = short_forms::reference_info(text);
         let numbered = !reference.notes.is_empty();
+        let linking = &self.linking;
         // A short name written exactly as one earlier citation's short form names it, whatever
         // note number is written with it.
-        let named = || (self.supra_linking_mode == SupraMode::Named).then(|| {
-            let (resource, method) = short_forms::resolve_registry_hint("",
-                &short_forms::supra_hint(text, true), registry);
+        let named = || (self.supra_linking_mode == SupraMode::Named || linking.named_override).then(|| {
+            let hint = if linking.name_reading { short_forms::reading_hints(text).into_iter().next().unwrap_or_default() }
+                else { short_forms::supra_hint(text, true) };
+            let (resource, method) = short_forms::resolve_registry_hint("", &hint, registry);
             matches!(method, "exact_sf" | "token_sf" | "bracket_definition").then(|| Target::from_registry(&resource)).flatten()
         }).flatten();
+        let pins = at.map(|position| self.citations[position].pinpoints.clone()).unwrap_or_default();
+        // A work is refused only where its part is its citation; where several fit, the likelier is chosen.
+        let fits = |entry: &ReferenceSource| Target::from_registry(entry.target()).is_none_or(|target|
+            entry.part.is_some_and(|part| !self.citation_part(part)) || self.locator_fits(&pins, &target, true));
+        let prefers = |entry: &ReferenceSource| Target::from_registry(entry.target())
+            .is_none_or(|target| self.locator_fits(&pins, &target, false));
+        let fits: Option<&dyn Fn(&ReferenceSource) -> bool> = (linking.locators && !pins.is_empty()).then_some(&fits);
+        let prefers: Option<&dyn Fn(&ReferenceSource) -> bool> = (linking.locators && !pins.is_empty()).then_some(&prefers);
+        // Several notes carrying the number: the nearest one before the reference, where the rule asks for it.
+        let mut chosen_note = None;
+        let mut number_written = None;
         if let (Some(number), Some(notes)) = (reference.notes.first().and_then(|number| decimal(number)), self.notes) {
             let number = number.to_string();
-            let count = notes.iter().filter(|note| note.number.to_string() == number && sequence.is_none_or(|sequence| note.sequence == sequence)).count();
-            if count == 0 { if let Some(target) = named() { return (Some(target), "named_short_form"); } }
-            if count != 1 { return (None, if count == 0 { "note_out_of_range" } else { "ambiguous_note" }); }
+            let carrying = notes.iter().enumerate().filter(|(_, note)| note.number.to_string() == number
+                && sequence.is_none_or(|sequence| note.sequence == sequence)).map(|(index, _)| index).collect::<Vec<_>>();
+            if carrying.is_empty() { if let Some(target) = named() { return (Some(target), "named_short_form"); } }
+            if carrying.len() > 1 && linking.nearest_note {
+                let start = at.map(|position| self.citations[position].span.start);
+                chosen_note = start.and_then(|start| carrying.iter().copied().filter(|&index| notes[index].start < start)
+                    .max_by_key(|&index| notes[index].start));
+            }
+            if carrying.len() != 1 && chosen_note.is_none() {
+                return (None, if carrying.is_empty() { "note_out_of_range" } else { "ambiguous_note" });
+            }
+            number_written = Some(number);
         }
         let scoped_registry = registry.iter().filter(|entry|
             !numbered || sequence.is_none_or(|sequence| entry.sequence.is_none_or(|owner| owner == sequence)))
+            .filter(|entry| chosen_note.is_none_or(|note| number_written.as_ref().is_none_or(|number|
+                !entry.note_is(number) || entry.note_index == Some(note))))
             .collect::<Vec<_>>();
         let scoped_inferred = inferred.iter().filter(|entry|
             !numbered || sequence.is_none_or(|sequence| entry.sequence.is_none_or(|owner| owner == sequence)))
             .collect::<Vec<_>>();
-        let (strict, reason) = short_forms::resolve_registry_scoped(text, &scoped_registry,
-            self.supra_hint_mode == SupraMode::Aggressive, sequence, self.split);
-        if let Some(target) = Target::from_registry(&strict) { return (Some(target), reason); }
+        let matching = short_forms::Matching { reading: linking.name_reading, matching: linking.name_matching,
+            distinguishing: linking.distinguishing_words, near: linking.near_names, descriptive: linking.descriptive_names,
+            first_of_note: linking.first_of_note, short_forms: linking.short_forms, fits, prefers,
+            body: at.filter(|_| linking.body_names).and_then(|position| self.body_clause(position)) };
+        // A name found past the note the supra writes is taken only from the note its document's drift points to
+        // ("Legal Profession Act, supra note 5" for the Act in note 6, where its supras run one short): `None` where
+        // the target is the written note's or the rule is off, else whether the drift confirms it.
+        let written = reference.notes.first().cloned();
+        let drift_check = |target: &Target| -> Option<bool> {
+            let (written, id) = (written.as_ref().filter(|_| linking.confirmed_drift)?, target.registry_id());
+            if scoped_registry.iter().any(|entry| entry.note_is(written) && entry.target() == id) { return None; }
+            let drifted = self.drift.zip(written.parse::<i64>().ok()).map(|(drift, written)| (written + drift).to_string());
+            Some(drifted.is_some_and(|note| scoped_registry.iter().any(|entry| entry.note_is(&note) && entry.target() == id)))
+        };
+        let (strict, reason) = short_forms::resolve_registry_with(text, &scoped_registry,
+            self.supra_hint_mode == SupraMode::Aggressive, sequence, self.split, &matching);
+        if let Some(target) = Target::from_registry(&strict) {
+            // A name found past the note the supra writes is taken only from the note its document's drift points
+            // to ("Legal Profession Act, supra note 5" for the Act in note 6, where its supras run one short).
+            match drift_check(&target) {
+                Some(true) => return (Some(target), "note_drift"),
+                Some(false) => return (None, "unconfirmed_note_drift"),
+                None => {}
+            }
+            let reason = if chosen_note.is_some() && reason != "locator_conflict" { "nearest_note" } else { reason };
+            return (Some(target), reason);
+        }
+        // eyecite's antecedent rule: the one earlier decision a party of which is the supra's name.
+        if linking.party_names && reason != "locator_conflict" {
+            if let Some(authority) = self.party_named(text, at) { return (Some(Target::Authority(authority)), "party_name"); }
+        }
         // A note that holds no authority leaves the name to say which one is meant. A note that
         // cites another work than the name is a conflict, and stays unresolved, unless the document
         // renumbered its notes: several supras name works their numbered notes do not cite.
-        if reason == "note_without_authority" {
-            if let Some(target) = named() { return (Some(target), "named_short_form"); }
-        }
-        if reason == "note_name_conflict" && self.renumbered {
-            if let Some(target) = named() { return (Some(target), "named_short_form"); }
+        if reason == "note_without_authority" || reason == "note_name_conflict" && self.renumbered {
+            if let Some(target) = named() {
+                return match drift_check(&target) {
+                    Some(false) => (None, "unconfirmed_note_drift"),
+                    _ => (Some(target), "named_short_form"),
+                };
+            }
         }
         if self.supra_linking_mode == SupraMode::Aggressive {
             let (fallback, method) = short_forms::resolve_after_strict_abstention(text,
@@ -757,6 +891,127 @@ impl<'a> Resolver<'a> {
             }
         }
         (None, reason)
+    }
+
+    /// Whether a reference with these pinpoints can be in the work ([`crate::Linking::locators`]): any citation
+    /// of a decision's parallel group may hold its pinpoint. `strict` reads only what cannot be otherwise (a
+    /// section of a decision, a page outside a report's or article's pages, a paragraph past a decision's last),
+    /// for refusing a link; otherwise it also reads what writers' habits make likely (a paragraph is no article's,
+    /// a page no statute's nor a decision's cited only by its neutral citation), for choosing among candidates.
+    fn locator_fits(&self, pins: &[crate::Pinpoint], target: &Target, strict: bool) -> bool {
+        let Some(pin) = pins.first() else { return true; };
+        match target {
+            Target::Authority(authority) => {
+                let group = (0..self.citations.len()).filter(|&position| self.citations[position].form == Form::Full
+                    && self.full_authority[position] == *authority).collect::<Vec<_>>();
+                group.is_empty() || group.iter().any(|&position| self.citation_fits(pin, &self.citations[position], strict))
+            }
+            Target::Source(part) => {
+                if strict { return true; }
+                let part = &self.source_parts[*part];
+                let kind = crate::source::extract_fields(part, part.extended_us).kind;
+                use crate::PinpointKind as K;
+                match pin.kind {
+                    K::Section | K::Subsection | K::Article | K::Schedule | K::Clause | K::Rule => !matches!(kind, "case" | "journal"),
+                    K::Paragraph => kind != "journal",
+                    _ => true,
+                }
+            }
+        }
+    }
+
+    /// Whether one citation of a work can hold the pinpoint ([`Resolver::locator_fits`]).
+    fn citation_fits(&self, pin: &crate::Pinpoint, citation: &Citation, strict: bool) -> bool {
+        use crate::{Authority as A, Format as F, PinpointKind as K};
+        let number = pin.first.parse::<u64>().ok();
+        let case = citation.authority == A::Case;
+        let article = citation.authority == A::Journal;
+        match pin.kind {
+            K::Section | K::Subsection | K::Article | K::Schedule | K::Clause | K::Rule => !case && (strict || !article),
+            K::Paragraph => {
+                if article && !strict { return false; }
+                match (number, self.extent(citation).and_then(|extent| extent.paragraphs)) {
+                    (Some(paragraph), Some(last)) => paragraph <= last,
+                    _ => true,
+                }
+            }
+            K::Page => {
+                if !strict && citation.authority.is_legislation() { return false; }
+                if !strict && case && matches!(citation.format, Some(F::Neutral | F::CanLii)) { return false; }
+                let first = citation.fields.page.as_deref().and_then(|page| page.parse::<u64>().ok());
+                match (number, first) {
+                    (Some(page), Some(first)) if citation.format == Some(F::Reporter) || article => {
+                        let extent = self.extent(citation);
+                        if page < first {
+                            // A citation pinpointing below its own "first page" ("Working Papers, Paper 234 at 1")
+                            // gives no first page. Below a report's first page a number is the decision's paragraph
+                            // where it has that many ("CCH, supra note 143 at 28"); where its paragraphs are
+                            // unknown only the likelier work is preferred.
+                            let unpaged = citation.pinpoints.iter().any(|own| own.kind == K::Page
+                                && own.first.parse::<u64>().is_ok_and(|own| own < first));
+                            let paragraphs = extent.and_then(|extent| extent.paragraphs);
+                            return unpaged || case && paragraphs.map_or(strict, |last| page <= last);
+                        }
+                        // A report whose extent is unknown is taken to run no more than LONGEST_REPORT pages.
+                        extent.and_then(|extent| extent.last_page)
+                            .map_or(!case || page <= first + LONGEST_REPORT, |last| page <= last)
+                    }
+                    _ => true,
+                }
+            }
+            K::Footnote => true,
+        }
+    }
+
+    /// Whether a note part is its citations and little else: the only part whose citation can be taken for its
+    /// work when refusing a link ("McCarthy Tétrault, … SBC 2003, c 53" names more than the statute).
+    fn citation_part(&self, part: usize) -> bool {
+        let part = &self.source_parts[part];
+        let letters = |text: &str| text.chars().filter(|c| c.is_alphanumeric()).count();
+        let mut cited = 0;
+        for citation in self.citations.iter().filter(|citation| citation.form == Form::Full
+            && part.start <= citation.full_span.start && citation.full_span.end <= part.end) {
+            cited += letters(&citation.full_span.text);
+        }
+        let total = letters(&part.text);
+        cited > 0 && total.saturating_sub(cited) <= 20.max(total / 4)
+    }
+
+    /// What the host knows of a citation's work ([`crate::Options::extents`]), by its key.
+    fn extent(&self, citation: &Citation) -> Option<&crate::Extent> {
+        let key = citation.key.as_deref()?;
+        self.extents.iter().find(|extent| extent.key == key)
+    }
+
+    /// The clause of the text a reference's note hangs from: its words before the note's marker, back to the
+    /// sentence's start and never past the marker before it.
+    fn body_clause(&self, at: usize) -> Option<&'a str> {
+        let (text, notes) = (self.text?, self.notes?);
+        let anchor = notes[self.note_of[at]?].anchor?;
+        if anchor > text.len() || !text.is_char_boundary(anchor) { return None; }
+        let mut floor = anchor.saturating_sub(400);
+        while !text.is_char_boundary(floor) { floor += 1; }
+        let floor = notes.iter().filter_map(|note| note.anchor).filter(|&other| other < anchor).max().map_or(floor, |other| other.max(floor));
+        Some(&text[crate::find::styled_floor(text, floor, anchor)..anchor])
+    }
+
+    /// eyecite's antecedent rule for a supra its notes leave open: the one earlier decision a party of which is
+    /// its name, word for word.
+    fn party_named(&self, text: &str, at: Option<usize>) -> Option<usize> {
+        let hint = short_forms::reading_hints(text).into_iter().next().unwrap_or_else(|| short_forms::supra_hint(text, true));
+        let wanted = words(&hint);
+        if wanted.is_empty() || is_crown(&wanted) { return None; }
+        let before = at.map_or(usize::MAX, |position| self.citations[position].span.start);
+        let mut found = Vec::new();
+        for (position, citation) in self.citations.iter().enumerate() {
+            if citation.form != Form::Full || citation.authority != crate::Authority::Case || citation.span.start >= before
+                || !self.done[position] { continue; }
+            let parties = citation.parties.as_ref();
+            let named = [parties.and_then(|parties| parties.plaintiff.as_deref()), parties.and_then(|parties| parties.defendant.as_deref())]
+                .into_iter().flatten().any(|party| contains_words(&words(party), &wanted));
+            if named && !found.contains(&self.full_authority[position]) { found.push(self.full_authority[position]); }
+        }
+        match found.as_slice() { [authority] => Some(*authority), _ => None }
     }
 
     fn process_citation(&mut self, position: usize, history: &mut History,
@@ -802,8 +1057,17 @@ impl<'a> Resolver<'a> {
                         if citation.full_span.text.is_empty() { &citation.span.text }
                         else { &citation.full_span.text },
                         &history.records, &history.inferred,
-                        self.note_of[position].map(|note| self.notes.unwrap()[note].sequence));
+                        self.note_of[position].map(|note| self.notes.unwrap()[note].sequence), Some(position));
                     (authority, reason, None)
+                }
+                // A work's own short form written after it: the work that defines it, whatever kind of work.
+                Form::Reference if citation.reasons.iter().any(|reason| reason.starts_with("short_form_")) => {
+                    let target = citation.short_name.as_deref()
+                        .and_then(|name| short_forms::resolve_named(name, &history.records))
+                        .and_then(|resource| Target::from_registry(&resource))
+                        .filter(|target| !self.linking.locators || self.locator_fits(&citation.pinpoints, target, true));
+                    let reason = if target.is_some() { "short_form" } else { "short_form_unmatched" };
+                    (target, reason, None)
                 }
                 Form::Reference => {
                     let (authority, reason) = self.by_name(position, reference_name(citation),
@@ -918,7 +1182,7 @@ impl<'a> Resolver<'a> {
             let (target, reason) = self.resolve_supra_text(if citation.full_span.text.is_empty() {
                 &citation.span.text
             } else { &citation.full_span.text }, &history.records, &history.inferred,
-                self.note_of[position].map(|note| self.notes.unwrap()[note].sequence));
+                self.note_of[position].map(|note| self.notes.unwrap()[note].sequence), Some(position));
             return (target.and_then(|target| match target {
                 Target::Authority(index) => Some(index), Target::Source(_) => None,
             }), reason);
@@ -1079,13 +1343,21 @@ impl<'a> Resolver<'a> {
                 .map(|position| self.names(position).iter().cloned().chain(self.split.then(||
                     self.citations[position].fields.anchor_title.as_ref().map(|title| title.text.clone())).flatten()).collect())
                 .unwrap_or_default(),
-            Some(Target::Source(index)) => vec![self.source_parts[*index].text.clone()],
+            Some(Target::Source(index)) => {
+                let part = &self.source_parts[*index];
+                std::iter::once(part.text.clone()).chain(self.citations.iter()
+                    .filter(|citation| self.linking.body_citation_names && part.start <= citation.span.start
+                        && citation.span.end <= part.end)
+                    .flat_map(|citation| [&citation.fields.anchor_title, &citation.fields.anchor_mention])
+                    .flatten().map(|name| name.text.clone())).collect()
+            }
             None => Vec::new(),
         };
         ReferenceSource {
             note: note.map(|note| note.number.to_string()).unwrap_or_default().into(),
             sequence: note.map(|note| note.sequence), verbatim: Some(verbatim), names,
             target: target.map(|target| target.registry_id()), short_form, part,
+            note_index: note.and_then(|note| self.notes.and_then(|notes| notes.iter().position(|other| std::ptr::eq(other, note)))),
             ..ReferenceSource::default()
         }
     }
