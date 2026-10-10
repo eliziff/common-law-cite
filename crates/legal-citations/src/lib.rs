@@ -280,9 +280,9 @@ pub struct Linking {
 impl Linking {
     /// The mechanisms a split tier links with where the host names none: each tier's composition as its
     /// measured precision and coverage set it.
-    /// Measured 2026-10-10 on the DOCX and journal supra gold (right / wrong links against the tier before them):
-    /// safe 9,301 / 241 from 8,512 / 231; moderate 9,353 / 271 from 8,948 / 244; aggressive 9,410 / 275 from
-    /// 8,658 / 363. The locator veto pays in safe only; first-of-note and bare mentions cost too many wrong links.
+    /// Measured 2026-10-10 on the DOCX supra gold (right / wrong links, against the build before them): safe
+    /// 9,341 / 195 from 8,512 / 231; moderate 9,399 / 225 from 8,948 / 244; aggressive 9,456 / 229 from 8,658 / 363.
+    /// The locator veto pays in safe only; first-of-note and bare mentions cost too many wrong links.
     pub fn for_tier(tier: SplitTier) -> Self {
         let safe = Self {
             name_reading: true, distinguishing_words: true, short_form_references: true, ibid_locators: true,
