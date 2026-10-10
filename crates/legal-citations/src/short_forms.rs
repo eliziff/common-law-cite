@@ -178,6 +178,9 @@ pub struct ReferenceSource {
     /// apart notes that carry the same number.
     #[serde(skip)]
     pub note_index: Option<usize>,
+    /// Whether the work is cited without a name of its own ("2022 SCC 36", its style of cause in the text).
+    #[serde(skip)]
+    pub nameless: bool,
 }
 
 impl ReferenceSource {
@@ -462,6 +465,15 @@ fn resolve_hint<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[
                     return (target.to_owned(), "note_single_work");
                 }
             }
+            // A note citing one work, and that without a name of its own, is what the name stands for: its
+            // style of cause was the text's ("Annapolis, supra note 1" with "¹ 2022 SCC 36").
+            if rules.nameless {
+                if let Some(target) = unique_identified(note_sources.iter().copied()) {
+                    if note_sources.iter().filter(|entry| entry.target() == target).all(|entry| entry.nameless) {
+                        return (target.to_owned(), "note_nameless");
+                    }
+                }
+            }
             (String::new(), "note_name_conflict")
     })());
     let numbered = match numbered {
@@ -599,6 +611,8 @@ pub(crate) struct Matching<'a> {
     pub prefers: Option<&'a dyn Fn(&ReferenceSource) -> bool>,
     /// [`crate::Linking::body_names`]: the text's clause before the reference's own note marker.
     pub body: Option<&'a str>,
+    /// [`crate::Linking::nameless_notes`].
+    pub nameless: bool,
 }
 
 /// A short form without the McGill wording its brackets hold around it ("hereinafter “Caron, SCC”",

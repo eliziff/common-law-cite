@@ -2148,13 +2148,16 @@ pub(crate) fn anchor_titles(text: &str, citations: &mut [Citation], notes: &[cra
     for note in notes {
         let Some(anchor) = note.anchor.filter(|&anchor| anchor <= text.len() && text.is_char_boundary(anchor)
             && (anchor <= note.start || note.end <= anchor)) else { continue };
+        // The text the note hangs from: its paragraph's, back to the marker of the note before it at the furthest.
+        let bound = notes.iter().filter_map(|other| other.anchor).filter(|&other| other < anchor).max()
+            .unwrap_or(0).max(paragraph_start(text, anchor));
         let Some(citation) = citations.iter_mut()
             .filter(|citation| note.start <= citation.full_span.start && citation.full_span.start < note.end)
             .min_by_key(|citation| citation.full_span.start) else { continue };
         if citation.form == Form::Full && citation.authority == Authority::Case
             && citation.style.as_ref().is_none_or(|style| style.text.trim().is_empty()) {
-            citation.fields.anchor_title = anchor_case_name(text, anchor, citation.fields.explicit_short_span.as_ref());
-            if citation.fields.anchor_title.is_none() { citation.fields.anchor_mention = anchor_case_mention(text, anchor); }
+            citation.fields.anchor_title = anchor_case_name(text, anchor, bound, citation.fields.explicit_short_span.as_ref());
+            if citation.fields.anchor_title.is_none() { citation.fields.anchor_mention = anchor_case_mention(text, anchor, bound); }
             continue;
         }
         if citation.form != Form::Full || !citation.authority.is_legislation() || citation.style.is_some() {
@@ -2164,6 +2167,7 @@ pub(crate) fn anchor_titles(text: &str, citations: &mut [Citation], notes: &[cra
             || ".,;:)\u{201d}\u{2019}\"'".contains(character)).len();
         let mut floor = end.saturating_sub(600);
         while !text.is_char_boundary(floor) { floor += 1; }
+        let floor = floor.max(bound).min(end);
         let start = statute_style_start(text, end, floor);
         let sentence = &text[styled_floor(text, floor, end)..end];
         let instruments = sentence.split(|character: char| !character.is_alphanumeric())
@@ -2175,13 +2179,20 @@ pub(crate) fn anchor_titles(text: &str, citations: &mut [Citation], notes: &[cra
     }
 }
 
+/// Where the paragraph holding `at` opens: past the last blank line before it. The text a note's marker hangs from
+/// is its own paragraph's, never the one before ("V. Conclusion 49" in a table of contents is no style of cause), and
+/// never past the marker of the note before it.
+fn paragraph_start(text: &str, at: usize) -> usize {
+    text[..at].rfind("\n\n").map_or(0, |found| found + 2)
+}
+
 /// A note that cites a decision without its style of cause, because the text names the decision
 /// right before the note's marker (McGill: a style of cause given in the text is not repeated in the
 /// note), takes that style of cause: "In R v Mabior,¹" with "¹ 2012 SCC 47 [Mabior]." It is read as
 /// a style of cause is read before a citation, past the closing punctuation and an aside in
 /// parentheses ("R v Mann and Mann (which affirmed …)²"), and kept only when the note's short form
 /// names one of its parties or, the note giving none, it is the only style of cause in its sentence.
-fn anchor_case_name(text: &str, anchor: usize, short: Option<&Span>) -> Option<Span> {
+fn anchor_case_name(text: &str, anchor: usize, bound: usize, short: Option<&Span>) -> Option<Span> {
     let closing = |value: &str| value.trim_end_matches(|character: char| character.is_whitespace()
         || ".,;:\u{201d}\u{2019}\"'".contains(character)).len();
     let mut end = closing(&text[..anchor]);
@@ -2197,7 +2208,7 @@ fn anchor_case_name(text: &str, anchor: usize, short: Option<&Span>) -> Option<S
     }
     let mut floor = end.saturating_sub(300);
     while !text.is_char_boundary(floor) { floor += 1; }
-    let floor = styled_floor(text, floor, end);
+    let floor = styled_floor(text, floor.max(bound).min(end), end);
     let start = case_style_start(text, end, floor);
     if start >= end { return None; }
     // The text runs on past a party's name to the marker ("R v Toth in 52,³", "R v Le, the Supreme
@@ -2220,10 +2231,10 @@ fn anchor_case_name(text: &str, anchor: usize, short: Option<&Span>) -> Option<S
 /// The one style of cause the sentence a note hangs from gives, read up to the end of its second
 /// party's name ("In R v Le, the Supreme Court held …¹" gives "R v Le"); none where the sentence
 /// gives none or several.
-fn anchor_case_mention(text: &str, anchor: usize) -> Option<Span> {
+fn anchor_case_mention(text: &str, anchor: usize, bound: usize) -> Option<Span> {
     let mut floor = anchor.saturating_sub(400);
     while !text.is_char_boundary(floor) { floor += 1; }
-    let floor = styled_floor(text, floor, anchor);
+    let floor = styled_floor(text, floor.max(bound).min(anchor), anchor);
     let mut versus = CASE_VERSUS.find_all(&text[floor..anchor]);
     let (Some(only), None) = (versus.next(), versus.next()) else { return None };
     // The second party runs over capitalized words and the particles a name takes, to the first

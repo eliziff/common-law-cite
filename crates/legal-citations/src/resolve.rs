@@ -842,7 +842,8 @@ impl<'a> Resolver<'a> {
         let matching = short_forms::Matching { reading: linking.name_reading, matching: linking.name_matching,
             distinguishing: linking.distinguishing_words, near: linking.near_names, descriptive: linking.descriptive_names,
             first_of_note: linking.first_of_note, short_forms: linking.short_forms, fits, prefers,
-            body: at.filter(|_| linking.body_names).and_then(|position| self.body_clause(position)) };
+            body: at.filter(|_| linking.body_names).and_then(|position| self.body_clause(position)),
+            nameless: linking.nameless_notes };
         // A name found past the note the supra writes is taken only from the note its document's drift points to
         // ("Legal Profession Act, supra note 5" for the Act in note 6, where its supras run one short): `None` where
         // the target is the written note's or the rule is off, else whether the drift confirms it.
@@ -1353,9 +1354,23 @@ impl<'a> Resolver<'a> {
             }
             None => Vec::new(),
         };
+        // A work cited without a name of its own: its citations give no style of cause or short form ("2022 SCC 36").
+        let unnamed = |citation: &Citation| citation.form == Form::Full
+            && citation.style.as_ref().is_none_or(|style| style.text.trim().is_empty())
+            && citation.explicit_short_name.is_none();
+        let nameless = short_form.as_deref().is_none_or(|short| short.trim().is_empty()) && match &target {
+            Some(Target::Authority(index)) => self.citations.iter().find(|citation| citation.index == *index).is_some_and(unnamed),
+            Some(Target::Source(index)) => {
+                let part = &self.source_parts[*index];
+                let mut full = self.citations.iter().filter(|citation| citation.form == Form::Full
+                    && part.start <= citation.span.start && citation.span.end <= part.end).peekable();
+                full.peek().is_some() && full.all(unnamed)
+            }
+            None => false,
+        };
         ReferenceSource {
             note: note.map(|note| note.number.to_string()).unwrap_or_default().into(),
-            sequence: note.map(|note| note.sequence), verbatim: Some(verbatim), names,
+            sequence: note.map(|note| note.sequence), verbatim: Some(verbatim), names, nameless,
             target: target.map(|target| target.registry_id()), short_form, part,
             note_index: note.and_then(|note| self.notes.and_then(|notes| notes.iter().position(|other| std::ptr::eq(other, note)))),
             ..ReferenceSource::default()

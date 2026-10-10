@@ -272,6 +272,9 @@ pub struct Linking {
     /// A supra whose name is found only past the note it writes links there only where the document's supras drift
     /// by that distance (a safe tier's veto on a misnumbered supra).
     pub confirmed_drift: bool,
+    /// A named supra whose note cites one work, and that without a name of its own (its style of cause given in the
+    /// text before the marker), names that work.
+    pub nameless_notes: bool,
 }
 
 impl Linking {
