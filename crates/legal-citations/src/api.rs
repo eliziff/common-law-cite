@@ -154,10 +154,10 @@ impl std::error::Error for ApiError {}
 
 /// Dispatch one JSON request. `request_json` may be empty for methods that take
 /// no arguments.
-/// What the host knows of works' extents, for every later extraction.
+/// What the host knows of works' extents, for every later extraction: a works pack (see extents_from_pack).
 #[derive(Deserialize)]
 struct RegisterExtentsRequest {
-    extents: Vec<crate::Extent>,
+    pack: String,
 }
 
 pub fn call(method: &str, request_json: &str) -> Result<String, ApiError> {
@@ -180,7 +180,7 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         "extract" => to_value(extract(&parse(method, request)?)?),
         "registerExtents" => {
             let request: RegisterExtentsRequest = parse(method, request)?;
-            crate::register_extents(request.extents);
+            crate::register_extents(crate::extents_from_pack(&request.pack));
             Ok(Value::Null)
         }
         "resolve" => to_value(resolve(&parse(method, request)?)?),

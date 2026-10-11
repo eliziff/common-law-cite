@@ -324,6 +324,42 @@ pub fn register_extents(extents: Vec<Extent>) {
     *REGISTERED_EXTENTS.write().expect("extents lock") = Some(std::sync::Arc::new(table));
 }
 
+/// The extents a works pack gives (Beaver's harvest-works pack: lines of tab-separated fields). "N" lines give a
+/// court year's decisions' last paragraphs, by neutral citation: court, year, then each number's gap from the last and
+/// paragraph count. "V" lines give a reporter volume's works by first page: each page's gap from the last, how many
+/// pages more the work runs, and its paragraph count. A later line's extent for a key replaces an earlier one's.
+pub fn extents_from_pack(pack: &str) -> Vec<Extent> {
+    let number = |value: Option<&str>| value.and_then(|value| value.parse::<u64>().ok());
+    let mut extents = Vec::new();
+    for line in pack.split('\n') {
+        let fields = line.split('\t').collect::<Vec<_>>();
+        match fields.as_slice() {
+            ["N", court, year, list, ..] => {
+                let mut at = 0u64;
+                for entry in list.split(',') {
+                    let mut parts = entry.split(':');
+                    at += number(parts.next()).unwrap_or(0);
+                    // As JavaScript's Number reads it: an empty count is 0.
+                    let paragraphs = parts.next().map(|count| if count.is_empty() { Some(0) } else { number(Some(count)) }).flatten();
+                    extents.push(Extent { key: format!("3:neutral:{year}:{court}:{at}"), last_page: None, paragraphs });
+                }
+            }
+            ["V", volume, list, ..] => {
+                let mut page = 0u64;
+                for entry in list.split(',') {
+                    let mut parts = entry.split(':');
+                    page += number(parts.next()).unwrap_or(0);
+                    let (span, paragraphs) = (parts.next().filter(|span| !span.is_empty()), parts.next().filter(|count| !count.is_empty()));
+                    extents.push(Extent { key: format!("3:{volume}:{page}"),
+                        last_page: span.map(|span| page + number(Some(span)).unwrap_or(0)), paragraphs: number(paragraphs) });
+                }
+            }
+            _ => {}
+        }
+    }
+    extents
+}
+
 pub(crate) fn registered_extent(key: &str) -> Option<Extent> {
     REGISTERED_EXTENTS.read().expect("extents lock").as_ref()?.get(key).cloned()
 }
