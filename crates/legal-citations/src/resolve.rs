@@ -239,6 +239,7 @@ pub(crate) fn resolve_with_sources(
     let linking_mode = split_tier.map_or(linking_mode, SplitTier::supra_mode);
     resolver.reading_order = order;
     resolver.source_parts = parts;
+    resolver.source_kinds = parts.iter().map(|_| OnceCell::new()).collect();
     resolver.supra_hint_mode = hint_mode;
     resolver.supra_linking_mode = linking_mode;
     resolver.split = split_tier.is_some();
@@ -270,8 +271,10 @@ struct Resolver<'a> {
     resolved: Vec<Option<Target>>,
     done: Vec<bool>,
     full_authority: Vec<usize>,
+    authority_members: HashMap<usize, Vec<usize>>,
     reading_order: Option<Vec<usize>>,
     source_parts: &'a [SourcePart],
+    source_kinds: Vec<OnceCell<&'static str>>,
     supra_hint_mode: SupraMode,
     supra_linking_mode: SupraMode,
     source_urls: HashMap<Target, String>,
@@ -372,8 +375,12 @@ impl<'a> Resolver<'a> {
             let first = cluster[0];
             cluster.into_iter().map(move |index| (index, first))
         }).collect::<HashMap<_, _>>();
-        let full_authority = citations.iter().map(|citation|
+        let full_authority: Vec<_> = citations.iter().map(|citation|
             clustered.get(&citation.index).copied().unwrap_or_else(|| authority_of_full(citation))).collect();
+        let mut authority_members = HashMap::<usize, Vec<usize>>::new();
+        for (position, _) in citations.iter().enumerate().filter(|(_, citation)| citation.form == Form::Full) {
+            authority_members.entry(full_authority[position]).or_default().push(position);
+        }
         Self {
             citations,
             text: None,
@@ -383,8 +390,10 @@ impl<'a> Resolver<'a> {
             resolved: vec![None; citations.len()],
             done: vec![false; citations.len()],
             full_authority,
+            authority_members,
             reading_order: None,
             source_parts: &[],
+            source_kinds: Vec::new(),
             supra_hint_mode: SupraMode::Aggressive,
             supra_linking_mode: SupraMode::Safe,
             source_urls: HashMap::new(),
@@ -573,6 +582,7 @@ impl<'a> Resolver<'a> {
         let part = &self.source_parts[part_index];
         let range = &self.notes.expect("owned note")[note];
         let fields = crate::source::extract_fields(part, part.extended_us);
+        let _ = self.source_kinds[part_index].set(fields.kind);
         let mut positions = self.citations.iter().enumerate().filter(|(position, citation)|
             !seen[*position] && self.note_of[*position] == Some(note)
                 && part.start <= citation.span.start && citation.span.end <= part.end)
@@ -903,14 +913,13 @@ impl<'a> Resolver<'a> {
         let Some(pin) = pins.first() else { return true; };
         match target {
             Target::Authority(authority) => {
-                let group = (0..self.citations.len()).filter(|&position| self.citations[position].form == Form::Full
-                    && self.full_authority[position] == *authority).collect::<Vec<_>>();
-                group.is_empty() || group.iter().any(|&position| self.citation_fits(pin, &self.citations[position], strict))
+                self.authority_members.get(authority).is_none_or(|group|
+                    group.iter().any(|&position| self.citation_fits(pin, &self.citations[position], strict)))
             }
-            Target::Source(part) => {
+            Target::Source(index) => {
                 if strict { return true; }
-                let part = &self.source_parts[*part];
-                let kind = crate::source::extract_fields(part, part.extended_us).kind;
+                let part = &self.source_parts[*index];
+                let kind = *self.source_kinds[*index].get_or_init(|| crate::source::extract_fields(part, part.extended_us).kind);
                 use crate::PinpointKind as K;
                 match pin.kind {
                     K::Section | K::Subsection | K::Article | K::Schedule | K::Clause | K::Rule => !matches!(kind, "case" | "journal"),

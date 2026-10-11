@@ -356,7 +356,7 @@ struct Data {
 }
 
 static DATA: LazyLock<Data> = LazyLock::new(|| {
-    serde_json::from_str(legal_grammar::US_EXTRACTORS_JSON).expect("pinned US extractors")
+    serde_json::from_str(legal_grammar::us_extractors_json()).expect("pinned US extractors")
 });
 
 fn compact(text: &str) -> String {
