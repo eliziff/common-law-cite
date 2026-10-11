@@ -1162,6 +1162,45 @@ fn overlaps(range: &Hit, others: &[Hit]) -> bool {
         .any(|other| range.start < other.end && other.start < range.end)
 }
 
+/// A reference may inspect the same citation boundaries many times.
+pub(crate) struct CitationRanges {
+    starts: Vec<usize>,
+    ends: Vec<usize>,
+}
+
+impl CitationRanges {
+    pub(crate) fn new(ranges: impl Iterator<Item = Hit>) -> Self {
+        let (mut starts, mut ends): (Vec<_>, Vec<_>) = ranges.map(|range| (range.start, range.end)).unzip();
+        starts.sort_unstable();
+        ends.sort_unstable();
+        Self { starts, ends }
+    }
+
+    fn overlaps(&self, range: &Hit) -> bool {
+        self.starts.partition_point(|start| *start < range.end)
+            > self.ends.partition_point(|end| *end <= range.start)
+    }
+
+    pub(crate) fn contains(&self, position: usize) -> bool {
+        self.starts.partition_point(|start| *start <= position)
+            > self.ends.partition_point(|end| *end <= position)
+    }
+
+    fn previous_end(&self, start: usize) -> usize {
+        self.ends.partition_point(|end| *end <= start).checked_sub(1)
+            .map_or(0, |index| self.ends[index])
+    }
+
+    fn next_start(&self, end: usize, text_end: usize) -> usize {
+        self.starts.get(self.starts.partition_point(|start| *start < end)).copied().unwrap_or(text_end)
+    }
+
+    fn push(&mut self, range: Hit) {
+        self.starts.insert(self.starts.partition_point(|start| *start < range.start), range.start);
+        self.ends.insert(self.ends.partition_point(|end| *end < range.end), range.end);
+    }
+}
+
 /// `Ibid`, `Id.`, `supra`, `above n`, `(n 4)`, `précité` and `op. cit.`
 /// tokens outside every full citation core.
 fn back_reference_cores(text: &str, taken: &[Hit]) -> Vec<Core> {
@@ -1745,13 +1784,13 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
     }
     names.sort_by_key(|(name, ..)| std::cmp::Reverse(name.len()));
     names.dedup_by(|left, right| left.0 == right.0);
-    let mut taken = citations
+    let mut taken = CitationRanges::new(citations
         .iter()
         .map(|citation| {
             citation.signal.as_ref().map_or(citation.full_span.start, |signal| signal.start)
                 ..citation.full_span.end
         })
-        .collect::<Vec<_>>();
+        );
     let occurrences = Occurrences::new(text, names.iter().map(|(name, ..)| name.as_str()));
     let mut found: Vec<Citation> = Vec::new();
     for (name, after, before, authority, source_field) in names {
@@ -1789,21 +1828,11 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
             let existing = source_field.and_then(|_| found.iter().position(|citation|
                 citation.span.start <= start && end <= citation.span.end
                     && citation.fields.source_case_name.is_none()));
-            if existing.is_none() && overlaps(&(start..end), &taken) {
+            if existing.is_none() && taken.overlaps(&(start..end)) {
                 continue;
             }
-            let previous_end = taken
-                .iter()
-                .filter(|range| range.end <= start)
-                .map(|range| range.end)
-                .max()
-                .unwrap_or(0);
-            let limit = taken
-                .iter()
-                .filter(|range| range.start >= end)
-                .map(|range| range.start)
-                .min()
-                .unwrap_or(text.len());
+            let previous_end = taken.previous_end(start);
+            let limit = taken.next_start(end, text.len());
             let source_pin = source_pins.binary_search_by_key(&start, |(at, _)| *at).ok()
                 .map(|index| &source_pins[index].1).filter(|pin| pin.end <= limit).cloned();
             if markup.is_none() && source_pin.is_none() && !word_boundary(text, start, end) { continue; }
@@ -1876,7 +1905,7 @@ fn case_name_references(text: &str, citations: &[Citation], source_markup: Optio
 /// the short form written after the part, word for word and outside every citation, with a pinpoint, or, with
 /// `bare`, alone ("the Charter"). `defined` holds each short form and where its definition ends.
 pub(crate) fn short_form_references(text: &str, citations: &[Citation], defined: &[(String, usize)], bare: bool) -> Vec<Citation> {
-    let mut taken = citations.iter().map(|citation| citation.full_span.start..citation.full_span.end).collect::<Vec<_>>();
+    let mut taken = CitationRanges::new(citations.iter().map(|citation| citation.full_span.start..citation.full_span.end));
     let mut found = Vec::new();
     let mut names = defined.iter().filter(|(name, _)| name.chars().count() >= 2 && name.chars().any(char::is_alphabetic))
         .cloned().collect::<Vec<_>>();
@@ -1887,8 +1916,8 @@ pub(crate) fn short_form_references(text: &str, citations: &[Citation], defined:
             let start = from + offset;
             let end = start + name.len();
             from = end;
-            if !word_boundary(text, start, end) || overlaps(&(start..end), &taken) { continue; }
-            let limit = taken.iter().filter(|range| range.start >= end).map(|range| range.start).min().unwrap_or(text.len());
+            if !word_boundary(text, start, end) || taken.overlaps(&(start..end)) { continue; }
+            let limit = taken.next_start(end, text.len());
             let tail = metadata::tail(text, end, limit, TailRules::default());
             if tail.pinpoints.is_empty() && !bare { continue; }
             let mut citation = blank_citation(text, Form::Reference, Authority::Unknown, start..end,

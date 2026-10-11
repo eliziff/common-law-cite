@@ -10,8 +10,10 @@ include = ["src/**", "registry/**", "vendor/**", "build.rs", "Cargo.toml", "LICE
 
 [build-dependencies]
 serde_json.workspace = true
+flate2 = "1"
 
 [dependencies]
+flate2 = "1"
 legal-grammar.workspace = true
 fancy-regex.workspace = true
 regex.workspace = true
