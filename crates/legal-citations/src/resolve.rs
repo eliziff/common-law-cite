@@ -950,7 +950,7 @@ impl<'a> Resolver<'a> {
                             // unknown only the likelier work is preferred.
                             let unpaged = citation.pinpoints.iter().any(|own| own.kind == K::Page
                                 && own.first.parse::<u64>().is_ok_and(|own| own < first));
-                            let paragraphs = extent.and_then(|extent| extent.paragraphs);
+                            let paragraphs = extent.as_ref().and_then(|extent| extent.paragraphs);
                             return unpaged || case && paragraphs.map_or(strict, |last| page <= last);
                         }
                         // A report whose extent is unknown is taken to run no more than LONGEST_REPORT pages.
@@ -978,10 +978,11 @@ impl<'a> Resolver<'a> {
         cited > 0 && total.saturating_sub(cited) <= 20.max(total / 4)
     }
 
-    /// What the host knows of a citation's work ([`crate::Options::extents`]), by its key.
-    fn extent(&self, citation: &Citation) -> Option<&crate::Extent> {
+    /// What the host knows of a citation's work, by its key: the request's ([`crate::Options::extents`]), else what
+    /// the host registered ([`crate::register_extents`]).
+    fn extent(&self, citation: &Citation) -> Option<crate::Extent> {
         let key = citation.key.as_deref()?;
-        self.extents.iter().find(|extent| extent.key == key)
+        self.extents.iter().find(|extent| extent.key == key).cloned().or_else(|| crate::registered_extent(key))
     }
 
     /// The clause of the text a reference's note hangs from: its words before the note's marker, back to the

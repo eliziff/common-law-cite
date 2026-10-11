@@ -62,6 +62,8 @@ pub const METHODS: &[&str] = &[
     "supraHint",
     "reanchorReference",
     "splitSources",
+    "quoteCitationUnits",
+    "registerExtents",
     "pureReferenceClauses",
     "quotedTitles",
     "sourceFields",
@@ -152,6 +154,12 @@ impl std::error::Error for ApiError {}
 
 /// Dispatch one JSON request. `request_json` may be empty for methods that take
 /// no arguments.
+/// What the host knows of works' extents, for every later extraction.
+#[derive(Deserialize)]
+struct RegisterExtentsRequest {
+    extents: Vec<crate::Extent>,
+}
+
 pub fn call(method: &str, request_json: &str) -> Result<String, ApiError> {
     let request = if request_json.trim().is_empty() {
         Value::Object(Map::new())
@@ -170,6 +178,11 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
     }
     match method {
         "extract" => to_value(extract(&parse(method, request)?)?),
+        "registerExtents" => {
+            let request: RegisterExtentsRequest = parse(method, request)?;
+            crate::register_extents(request.extents);
+            Ok(Value::Null)
+        }
         "resolve" => to_value(resolve(&parse(method, request)?)?),
         "resolveReference" => to_value(crate::resolve::resolve_reference(&parse(method, request)?)),
         "inferShortForms" => {
@@ -229,6 +242,10 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         "splitSources" => {
             let request: SplitSourcesRequest = parse(method, request)?;
             to_value(split_sources(&request))
+        }
+        "quoteCitationUnits" => {
+            let request: QuoteCitationUnitsRequest = parse(method, request)?;
+            to_value(request.texts.iter().map(|text| quote_citation_unit(text)).collect::<Vec<_>>())
         }
         "splitNotes" => to_value(split_notes(&parse(method, request)?)?),
         "quotedTitles" => {
@@ -478,6 +495,48 @@ pub struct SourceFieldsRequest {
     pub part: Option<crate::source::SourcePart>,
     #[serde(default)]
     pub extended_us: Option<bool>,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct QuoteCitationUnitsRequest {
+    texts: Vec<String>,
+}
+
+/// A note's parts as the note splitter gives them (UTF-16 offsets), each with the first authority it refers to and
+/// its citation fields: what a quotation's check reads of the note that cites its sources.
+#[derive(Serialize)]
+struct QuoteCitationUnit {
+    status: &'static str,
+    reasons: Vec<&'static str>,
+    parts: Vec<QuoteCitationPart>,
+    delimiters: Vec<(usize, usize, String)>,
+}
+
+#[derive(Serialize)]
+struct QuoteCitationPart {
+    start: usize,
+    end: usize,
+    text: String,
+    anchors: Vec<String>,
+    reference: String,
+    fields: crate::source::SourceFields,
+}
+
+fn quote_citation_unit(text: &str) -> QuoteCitationUnit {
+    let split = split_sources(&SplitSourcesRequest { text: text.to_owned(), recall_first: true, extended_us: false,
+        offset_unit: OffsetUnit::Utf16 });
+    let cited = crate::source::references(&split.parts, None, None, None, |prefix| prefix.encode_utf16().count());
+    let parts = split.parts.iter().map(|part| QuoteCitationPart {
+        start: part.start,
+        end: part.end,
+        text: part.text.clone(),
+        anchors: part.anchors.clone(),
+        reference: cited.iter().find(|item| part.start <= item.part.start && item.part.end <= part.end)
+            .and_then(|item| item.references.first()).map(|reference| reference.text.clone()).unwrap_or_default(),
+        fields: crate::source::extract_fields(part, part.extended_us),
+    }).collect();
+    QuoteCitationUnit { status: split.status, reasons: split.reasons, parts, delimiters: split.delimiters }
 }
 
 pub fn split_sources(request: &SplitSourcesRequest) -> crate::source::SourceSplit {

@@ -313,6 +313,21 @@ pub struct Extent {
     pub paragraphs: Option<u64>,
 }
 
+/// Works' extents a host registers once ([`register_extents`]), read for a key a request's own
+/// [`Options::extents`] do not give.
+static REGISTERED_EXTENTS: std::sync::RwLock<Option<std::sync::Arc<std::collections::HashMap<String, Extent>>>> =
+    std::sync::RwLock::new(None);
+
+/// Registers what the host knows of works' extents for every later extraction, replacing what it registered before.
+pub fn register_extents(extents: Vec<Extent>) {
+    let table = extents.into_iter().map(|extent| (extent.key.clone(), extent)).collect();
+    *REGISTERED_EXTENTS.write().expect("extents lock") = Some(std::sync::Arc::new(table));
+}
+
+pub(crate) fn registered_extent(key: &str) -> Option<Extent> {
+    REGISTERED_EXTENTS.read().expect("extents lock").as_ref()?.get(key).cloned()
+}
+
 impl Default for Options {
     fn default() -> Self {
         Self {
