@@ -3,6 +3,7 @@ use regex::{Regex, RegexBuilder as LinearRegexBuilder};
 use serde::Deserialize;
 use serde_json::Value;
 use std::collections::{BTreeMap, HashMap};
+use std::io::Read;
 use std::ops::Range;
 use std::sync::{Arc, OnceLock};
 
@@ -59,6 +60,24 @@ pub const GRAMMAR_CORPUS_FORMAT: &str = "legal-grammar-corpus:v1";
 pub const GRAMMAR_CORPUS_JSON: &str = include_str!("../data/grammar-corpus.json");
 /// Pinned reporters-db extractors, retaining Eyecite's captures and editions.
 pub const US_EXTRACTORS_JSON: &str = include_str!("../data/us-extractors.json");
+
+fn inflate_json(bytes: &[u8]) -> String {
+    let mut text = String::new();
+    flate2::read::GzDecoder::new(bytes).read_to_string(&mut text).expect("embedded grammar JSON");
+    text
+}
+
+/// The original corpus bytes, restored once from the compact runtime representation.
+pub fn grammar_corpus_json() -> &'static str {
+    static TEXT: OnceLock<String> = OnceLock::new();
+    TEXT.get_or_init(|| inflate_json(include_bytes!(concat!(env!("OUT_DIR"), "/grammar-corpus.json.gz"))))
+}
+
+/// The pinned extractor bytes, restored once from the compact runtime representation.
+pub fn us_extractors_json() -> &'static str {
+    static TEXT: OnceLock<String> = OnceLock::new();
+    TEXT.get_or_init(|| inflate_json(include_bytes!(concat!(env!("OUT_DIR"), "/us-extractors.json.gz"))))
+}
 pub const SOURCE_WHITESPACE: &str = concat!(
     r" \t\n\r\f\v\x1c-\x1f\x85\u00a0\u1680",
     r"\u2000-\u200a\u2028\u2029\u202f\u205f\u3000"
@@ -134,7 +153,7 @@ pub struct TableEntry {
 
 fn load_static_tables() -> std::result::Result<BTreeMap<String, TableEntry>, String> {
     let mut result = BTreeMap::new();
-    let corpus: GrammarCorpus = serde_json::from_str(GRAMMAR_CORPUS_JSON)
+    let corpus: GrammarCorpus = serde_json::from_str(grammar_corpus_json())
         .map_err(|error| format!("grammar-corpus.json: {error}"))?;
     if corpus.format != GRAMMAR_CORPUS_FORMAT {
         return Err(format!(
@@ -165,7 +184,7 @@ fn load_static_tables() -> std::result::Result<BTreeMap<String, TableEntry>, Str
 
 fn load_static_evidence() -> std::result::Result<BTreeMap<String, GrammarEvidenceEntry>, String> {
     let mut result = BTreeMap::new();
-    let corpus: GrammarEvidenceCorpus = serde_json::from_str(GRAMMAR_CORPUS_JSON)
+    let corpus: GrammarEvidenceCorpus = serde_json::from_str(grammar_corpus_json())
         .map_err(|error| format!("grammar-corpus.json: {error}"))?;
     if corpus.format != GRAMMAR_CORPUS_FORMAT {
         return Err(format!(

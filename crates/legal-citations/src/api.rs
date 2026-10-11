@@ -1765,7 +1765,7 @@ pub fn version() -> VersionResponse {
             entries: legal_grammar::load_tables().map_or(0, |tables| tables.len()),
             sha256: {
                 use sha2::{Digest, Sha256};
-                Sha256::digest(legal_grammar::GRAMMAR_CORPUS_JSON.as_bytes())
+                Sha256::digest(legal_grammar::grammar_corpus_json().as_bytes())
                     .iter()
                     .map(|byte| format!("{byte:02x}"))
                     .collect()

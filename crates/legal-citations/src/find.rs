@@ -2112,20 +2112,24 @@ pub(crate) fn titled_chapters(citations: &mut [Citation]) {
     let series = |citation: &Citation| citation.fields.series.as_deref().map(words);
     let title = |citation: &Citation| citation.style.as_ref().map(|style| words(&style.text)).filter(|title| !title.is_empty());
     let legislation = |citation: &Citation| citation.form == Form::Full && citation.authority.is_legislation();
-    for at in 0..citations.len() {
-        let citation = &citations[at];
+    if !citations.iter().any(|citation| legislation(citation) && citation.fields.chapter.is_none()
+        && citation.fields.year.is_some() && citation.style.is_some()) { return; }
+    let mut chapters = std::collections::HashMap::new();
+    for citation in citations.iter().filter(|citation| legislation(citation) && citation.fields.year.is_some()) {
+        let (Some(chapter), Some(key), Some(title)) = (&citation.fields.chapter, &citation.key, title(citation)) else { continue };
+        let identity = (title, series(citation), citation.fields.year.clone());
+        let value = (chapter.clone(), key.clone());
+        chapters.entry(identity).and_modify(|known: &mut Option<(String, String)>| {
+            if known.as_ref().is_some_and(|known| *known != value) { *known = None; }
+        }).or_insert(Some(value));
+    }
+    for citation in citations.iter_mut() {
         if !legislation(citation) || citation.fields.chapter.is_some() || citation.fields.year.is_none() { continue; }
         let Some(own_title) = title(citation) else { continue };
-        let (own_series, own_year) = (series(citation), citation.fields.year.clone());
-        let mut matches = citations.iter().filter(|other| legislation(other) && other.fields.chapter.is_some() && other.key.is_some()
-            && title(other).as_deref() == Some(own_title.as_str()) && series(other) == own_series && other.fields.year == own_year)
-            .map(|other| (other.fields.chapter.clone(), other.key.clone())).collect::<Vec<_>>();
-        matches.dedup();
-        if let [(chapter, key)] = matches.as_slice() {
-            let (chapter, key) = (chapter.clone(), key.clone());
-            let citation = &mut citations[at];
-            citation.fields.chapter = chapter;
-            citation.key = key;
+        let identity = (own_title, series(citation), citation.fields.year.clone());
+        if let Some(Some((chapter, key))) = chapters.get(&identity) {
+            citation.fields.chapter = Some(chapter.clone());
+            citation.key = Some(key.clone());
             citation.reasons.push("titled_chapter".to_owned());
         }
     }
