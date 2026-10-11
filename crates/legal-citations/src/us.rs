@@ -280,13 +280,15 @@ mod names {
         }
         let omitted: Vec<_> = citations.iter().filter_map(|(span, _, end)|
             end.map(|end| end..span.start)).collect();
-        tokens.retain(|word| !omitted.iter().any(|range| range.contains(&word.start)));
+        let covered = crate::find::CitationRanges::new(omitted.iter().filter(|range| range.start < range.end).cloned());
+        let mut before_by_end = BTreeMap::new();
+        for range in &omitted { before_by_end.entry(range.end).or_insert(range.start); }
+        tokens.retain(|word| !covered.contains(word.start));
         tokens.sort_by_key(|word| (word.start, std::cmp::Reverse(word.end)));
         let (mut words, mut end) = (Vec::new(), 0);
         for token in tokens {
             if token.start < end { continue; }
-            let before = omitted.iter().find(|range| range.end == token.start)
-                .map_or(token.start, |range| range.start);
+            let before = before_by_end.get(&token.start).copied().unwrap_or(token.start);
             if end < before { append(&mut words, text, end, before); }
             end = token.end; words.push(token);
         }

@@ -5,6 +5,7 @@
 use crate::{key, registry, Citation, Form, Format};
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
+use std::io::Read;
 use std::sync::LazyLock;
 
 /// One citation's complete alias closure from an installed source index.
@@ -95,7 +96,10 @@ struct Observed {
 }
 
 static TABLE: LazyLock<Table> = LazyLock::new(|| {
-    let mut table: Table = serde_json::from_str(include_str!(concat!(env!("OUT_DIR"), "/aliases.json")))
+    let mut data = Vec::new();
+    flate2::read::GzDecoder::new(&include_bytes!(concat!(env!("OUT_DIR"), "/aliases.json.gz"))[..])
+        .read_to_end(&mut data).expect("embedded reporter aliases");
+    let mut table: Table = serde_json::from_slice(&data)
         .expect("validated reporter aliases");
     assert_eq!(table.key_version, key::KEY_VERSION, "alias keys must match this engine");
     let record_courts: HashMap<_, _> = table.observed.values().flat_map(|evidence|
