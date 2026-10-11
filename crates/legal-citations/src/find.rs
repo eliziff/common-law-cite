@@ -1593,9 +1593,10 @@ fn cores(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<C
         .chain([0, text.len()]).collect::<Vec<_>>();
     boundaries.sort_unstable();
     boundaries.dedup();
-    boundaries.windows(2).flat_map(|range| {
-        let start = range[0];
-        cores_in(&text[start..range[1]], options, &[], enrich).into_iter().map(move |mut core| {
+    // Each input is read on its own, so they are read at once.
+    let ranges = boundaries.windows(2).map(|range| (range[0], range[1])).collect::<Vec<_>>();
+    crate::read_each(&ranges, |&(start, end)| {
+        cores_in(&text[start..end], options, &[], enrich).into_iter().map(move |mut core| {
             core.span = core.span.start + start..core.span.end + start;
             if let CoreKind::Full(anchor) = &mut core.kind {
                 anchor.span = core.span.clone();
@@ -1603,8 +1604,8 @@ fn cores(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<C
                 anchor.source_span = anchor.source_span.take().map(|span| span.start + start..span.end + start);
             }
             core
-        })
-    }).collect()
+        }).collect::<Vec<_>>()
+    }).into_iter().flatten().collect()
 }
 
 fn cores_in(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<Core> {
