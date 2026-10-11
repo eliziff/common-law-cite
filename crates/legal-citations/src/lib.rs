@@ -364,6 +364,33 @@ pub(crate) fn registered_extent(key: &str) -> Option<Extent> {
     REGISTERED_EXTENTS.read().expect("extents lock").as_ref()?.get(key).cloned()
 }
 
+/// `read` of each item, in the items' order, read on as many of the machine's cores as there are items to share:
+/// each thread takes the next unread item. A target without threads (WebAssembly) reads them in turn.
+pub(crate) fn read_each<T: Sync, R: Send>(items: &[T], read: impl Fn(&T) -> R + Sync) -> Vec<R> {
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        let threads = std::thread::available_parallelism().map_or(1, |count| count.get()).min(items.len());
+        if threads > 1 {
+            let next = std::sync::atomic::AtomicUsize::new(0);
+            let mut read_by: Vec<(usize, R)> = std::thread::scope(|scope| {
+                let workers: Vec<_> = (0..threads).map(|_| scope.spawn(|| {
+                    let mut done = Vec::new();
+                    loop {
+                        let index = next.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                        let Some(item) = items.get(index) else { break done };
+                        done.push((index, read(item)));
+                    }
+                })).collect();
+                workers.into_iter().flat_map(|worker| worker.join().unwrap_or_else(|panic| std::panic::resume_unwind(panic)))
+                    .collect()
+            });
+            read_by.sort_unstable_by_key(|(index, _)| *index);
+            return read_by.into_iter().map(|(_, value)| value).collect();
+        }
+    }
+    items.iter().map(read).collect()
+}
+
 impl Default for Options {
     fn default() -> Self {
         Self {
