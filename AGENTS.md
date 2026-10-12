@@ -60,8 +60,10 @@ citations are grouped (`parallelGroup`) and `parallel::preferred` names the
 member a one-citation display keeps, but dropping parallels is the
 application's decision; `resolve` links `ibid`/`supra` to antecedents, but
 whether a screen or document shows `Ibid` is the application's choice.
-Options are named for what they do, never for a consumer, and default to the
-neutral behaviour.
+Options are named for what they do, never for a consumer. The engine is
+Canadian-first: defaults read text as a Canadian legal writer means it
+(`jurisdictionPriority: ["ca"]`), and an app reading US-, UK- or other-first
+text says so with an option.
 
 **Bindings stay thin over `api.rs`.** A capability exists once, as a Rust
 function plus a method in `api.rs` (`call`/`call_value` dispatch, camelCase

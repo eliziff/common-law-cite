@@ -176,7 +176,6 @@ pub fn key_for_text(text: &str) -> Result<String, KeyError> {
         parallel: false,
         extended_us: true,
         notes: None,
-        jurisdiction_priority: Vec::new(),
         ..Default::default()
     };
     let citations = crate::extract(text, &options);

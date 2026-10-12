@@ -1,0 +1,171 @@
+{
+  "format": "legal-citations-conformance:v1",
+  "source": "Independently invented notes. The note splitter (quoteCitationUnits) takes a part's kind from the citations the finder reads and never cuts inside one.",
+  "cases": [
+    {
+      "name": "charter-is-one-statute-part",
+      "method": "quoteCitationUnits",
+      "status": "pass",
+      "request": {
+        "texts": [
+          "Part I of the Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11 [Charter]."
+        ]
+      },
+      "expect": [
+        {
+          "parts": [
+            {
+              "fields": {
+                "kind": "statute"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "us-report-is-a-case-part",
+      "method": "quoteCitationUnits",
+      "status": "pass",
+      "request": {
+        "texts": [
+          "The court reached the same view in Roe v Ash, 88 F 4th 525 (2031)."
+        ]
+      },
+      "expect": [
+        {
+          "parts": [
+            {
+              "fields": {
+                "kind": "case"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pinpoints-after-a-semicolon-stay-with-their-citation",
+      "method": "quoteCitationUnits",
+      "status": "pass",
+      "request": {
+        "texts": [
+          "2031 ONSC 42 at paras 9–11; 15 [Alder]."
+        ]
+      },
+      "expect": [
+        {
+          "parts": [
+            {
+              "text": "2031 ONSC 42 at paras 9–11; 15 [Alder].",
+              "fields": {
+                "kind": "case"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "article-number-journal-is-a-journal-part",
+      "method": "quoteCitationUnits",
+      "status": "pass",
+      "request": {
+        "texts": [
+          "See also Ivy Lake, “Fen Drift” (2032) 100 Int J Fen Policy 103520."
+        ]
+      },
+      "expect": [
+        {
+          "parts": [
+            {
+              "fields": {
+                "kind": "journal"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dated-report-is-not-a-journal-part",
+      "method": "quoteCitationUnits",
+      "status": "pass",
+      "request": {
+        "texts": [
+          "Ada Moss, “Marsh Access in Canada” (6 January 2031) at 8, online: <marsh.example/report>."
+        ]
+      },
+      "expect": [
+        {
+          "parts": [
+            {
+              "fields": {
+                "kind": "other"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "numberless-neutral-citations-are-case-parts",
+      "method": "quoteCitationUnits",
+      "status": "pass",
+      "request": {
+        "texts": [
+          "Other examples include Alder v Birch, 2031 ONCJ at para 16; and Tern v Fen, 2034 ABKB (unreported)."
+        ]
+      },
+      "expect": [
+        {
+          "parts": [
+            {
+              "fields": {
+                "kind": "case"
+              }
+            },
+            {
+              "fields": {
+                "kind": "case"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "listed-statutes-are-each-a-part",
+      "method": "quoteCitationUnits",
+      "status": "pass",
+      "request": {
+        "texts": [
+          "These include the Fen Drainage Act, RSA 2031, c F-3, the Marsh and Bog Protection Act, RSA 2031, c M-9, the Tern Habitat Act, RSA 2031, c T-2."
+        ]
+      },
+      "expect": [
+        {
+          "parts": [
+            {
+              "fields": {
+                "kind": "statute"
+              }
+            },
+            {
+              "text": "the Marsh and Bog Protection Act, RSA 2031, c M-9,",
+              "fields": {
+                "kind": "statute"
+              }
+            },
+            {
+              "text": "the Tern Habitat Act, RSA 2031, c T-2.",
+              "fields": {
+                "kind": "statute"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

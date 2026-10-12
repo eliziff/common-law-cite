@@ -112,7 +112,7 @@ so all of them accept the same requests and return the same JSON:
 | `version` | `{}` | crate, schema, key and grammar versions, registry counts |
 
 `options` are `resolve`, `parallel`, `extendedUs` (all default `true`),
-`removeAmbiguous` (default `false`), `jurisdictionPriority` (default empty), and
+`removeAmbiguous` (default `false`), `jurisdictionPriority` (default `["ca"]`), and
 `notes` (footnote ranges, so `supra note 4` resolves). Unknown keys are
 errors. Errors are `{code, message}` with `code` one of `unknown_method`,
 `invalid_request`, `invalid_offset`, `unimplemented`.
@@ -225,9 +225,10 @@ references. Conflicting closures or contradictory citation identities remain
 separate with a `source_alias_conflict` reason. Retrieval stays with the caller;
 the engine performs no database or network access.
 
-For shared abbreviations such as `CLR`, callers can pass
-`jurisdictionPriority: ["ca", "au"]` (Python: `jurisdiction_priority`).
-Explicit court evidence takes precedence over this order. `interpretations`
+The engine is Canadian-first: a shared abbreviation such as `CLR` or `OR`
+takes its Canadian meaning unless the caller passes another order, e.g.
+`jurisdictionPriority: ["us"]` or `["au", "ca"]` (Python: `jurisdiction_priority`);
+`[]` is neutral. Explicit court evidence takes precedence over this order. `interpretations`
 retains competing meanings and explains the selected reading; equal-ranked
 meanings remain unresolved. A priority never repairs a conflicting source alias.
 

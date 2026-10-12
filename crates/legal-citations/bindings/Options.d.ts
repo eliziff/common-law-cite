@@ -36,8 +36,8 @@ extendedUs: boolean,
  */
 notes: Array<NoteRange> | null, 
 /**
- * Ordered jurisdiction preferences for ambiguous abbreviations, e.g.
- * `["ca", "uk"]`. An explicit court takes precedence. Empty is neutral.
+ * Ordered jurisdiction preferences for ambiguous abbreviations: `["ca"]` by default, `["us"]` or
+ * `["uk", "ca"]` for another order. An explicit court takes precedence. Empty is neutral.
  */
 jurisdictionPriority: Array<string>, 
 /**

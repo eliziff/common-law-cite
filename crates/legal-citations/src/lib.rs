@@ -182,8 +182,8 @@ pub struct Options {
     /// Treat each `\n\n`-separated block, or each entry of [`Options::notes`],
     /// as a footnote whose number `supra note N` can refer to.
     pub notes: Option<Vec<NoteRange>>,
-    /// Ordered jurisdiction preferences for ambiguous abbreviations, e.g.
-    /// `["ca", "uk"]`. An explicit court takes precedence. Empty is neutral.
+    /// Ordered jurisdiction preferences for ambiguous abbreviations: `["ca"]` by default, `["us"]` or
+    /// `["uk", "ca"]` for another order. An explicit court takes precedence. Empty is neutral.
     pub jurisdiction_priority: Vec<String>,
     /// ALR hint capture uses aggressive mode by default.
     pub supra_hint_mode: SupraMode,
@@ -400,7 +400,7 @@ impl Default for Options {
             parallel: true,
             extended_us: true,
             notes: None,
-            jurisdiction_priority: Vec::new(),
+            jurisdiction_priority: vec!["ca".to_owned()],
             supra_hint_mode: SupraMode::Aggressive,
             supra_linking_mode: SupraMode::Safe,
             styles: None,
@@ -467,7 +467,7 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     find::ocr_twins(&mut citations);
     find::titled_chapters(&mut citations);
     let notes = options.notes.as_deref().unwrap_or(&[]);
-    let mut parts = source::split_notes(text, notes, options.split_tier);
+    let mut parts = source::split_notes(text, notes, options.split_tier, &citations);
     if options.split_tier.is_some() { source::merge_split_citations(text, notes, &mut parts, &citations); }
     // A work's own short form written after it refers to it ([`Linking::short_form_references`],
     // [`Linking::bare_mentions`]).
