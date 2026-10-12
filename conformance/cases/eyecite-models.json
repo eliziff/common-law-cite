@@ -1,6 +1,6 @@
 {
  "format": "legal-citations-conformance:v1",
- "source": "eyecite 2.7.8 (git 047af17), reporters-db 3.2.66, courts-db 0.10.27",
+ "source": "eyecite 2.7.8 (git b70a146), reporters-db 3.2.66, courts-db 0.10.27",
  "description": "eyecite tests/test_ModelsTest.py and test_UtilsTest.py extraction inputs (missing pages, corrected reporters, full spans).",
  "generatedBy": "conformance/tools/port-eyecite.py",
  "cases": [
