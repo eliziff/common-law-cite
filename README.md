@@ -96,10 +96,10 @@ so all of them accept the same requests and return the same JSON:
 | `extract` | `{text, options?, offsetUnit?}` | `{schemaVersion, offsetUnit, citations}` |
 | `key` | `{citation}` | `{keyVersion, key}` |
 | `resolve` | `{citations, notes?, aliasGroups?}` | `{citations, resolutions, authorities}` |
-| `referenceInfo` | `{text}` | `{kind, notes, normalized}` using ALR's reference-marker and normalization rules; note digits are strings in note/n/nn pattern precedence |
-| `bareCitation` | `{text, kind}` | ALR's bare authority text for lookup, retaining its signal, commentary and short-form removal rules |
-| `stripCitationTail` | `{text}` | citation text without ALR's administrative book-of-authorities tab suffix |
-| `legislationLookup` | `{text}` | `{candidates, jurisdiction}` using Pinpointer's CanLII index-ID spelling rules; candidates require an index match before becoming a URL |
+| `referenceInfo` | `{text}` | `{kind, notes, normalized}`: a reference's kind (ibid, supra, short form) and the notes it names; note digits are strings in note/n/nn pattern precedence |
+| `bareCitation` | `{text, kind}` | the authority's bare text for lookup, without signals, commentary or a short-form definition |
+| `stripCitationTail` | `{text}` | citation text without a book of authorities' tab suffix |
+| `legislationLookup` | `{text}` | `{candidates, jurisdiction}` using CanLII legislation-index spelling rules; candidates require an index match before becoming a URL |
 | `correctCitation` | `{text, kind, style?, jurisdiction?, sourceLayout?, reporter?, correctedReporter?, page?, metadata?}` | `{citation, full, page}` using Eyecite's corrected-citation routines; supplied source layout is retained outside an established U.S. jurisdiction |
 | `keyForText` | `{text, options?}` | `{keyVersion, key, reason?, keys}` |
 | `format` | `{citation}` \| `{text}` \| `{pinpoint}`, `language?`, `rangeDash?` | `{citations: [{index, formatted}]}` \| `{pinpoint}` |
@@ -168,12 +168,6 @@ The JSON Schema is [`conformance/schema/citation.schema.json`](conformance/schem
 | `clean_text(text, steps)` | `clean` with the same step names |
 | hash of a `Resource` | `key` (versioned, stable across spellings and languages) |
 
-For code already written against eyecite, `legal_citations.eyecite` provides
-`get_citations`, `resolve_citations`, `annotate_citations`, `clean_text` and
-the eyecite class names with the attributes eyecite users rely on (`groups`,
-`metadata.*`, `span()`, `full_span()`, `corrected_citation()`); the full record
-is on `.data`. See the module docstring for the known differences.
-
 ## Offsets
 
 The Rust API reports UTF-8 byte offsets. The JSON API converts every offset
@@ -215,12 +209,12 @@ does not select one; unresolved editions do not acquire keys or authority merges
 Known reporter parallels share their canonical authority's key. `alias` reports
 the canonical citation and evidence-record ids from
 [`registry/aliases.json`](crates/legal-citations/registry/aliases.json), which
-preserves every original ALR/A2AJ record and the source-backed corrections.
+preserves every original A2AJ alias record and the source-backed corrections.
 Unresolved records remain available for inspection and do not create links.
 
 Applications with installed source indexes can pass their complete alias
-closures to `resolve` as `aliasGroups: [{index, keys}]`. The engine applies
-Beaver's reciprocal-closure checks before grouping cases and resolving their
+closures to `resolve` as `aliasGroups: [{index, keys}]`. The engine checks that
+each closure is reciprocal before grouping cases and resolving their
 references. Conflicting closures or contradictory citation identities remain
 separate with a `source_alias_conflict` reason. Retrieval stays with the caller;
 the engine performs no database or network access.
@@ -256,6 +250,14 @@ courts-db pins and regenerates the registry (`tools/sync-upstream.py`),
 re-ports eyecite's latest tests into conformance cases, runs
 `tools/eyecite-diff.py` against the latest eyecite, and opens a pull request
 with the results. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Known gaps
+
+- Some CanLII database codes (e.g. `ONLTB`, `ABAER`) are recorded as
+  neutral-citation court identifiers, so a neutral citation such as
+  `2021 ONLTB 5`, which that body does not issue, is accepted and keyed.
+- The French CanLII legislation URL shape (`/fr/.../laws/...`) has not been
+  confirmed against CanLII.
 
 ## License
 

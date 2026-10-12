@@ -134,7 +134,7 @@ pub enum SupraMode {
 /// ([`Options::split_tier`]): `safe` links what a reference's own note and words support, `moderate`
 /// also reads a supra by its name where the note it numbers cites another work, and `aggressive` also
 /// continues an ibid from the last source of a note that names several. Every tier also splits notes
-/// into rows as ALR's rows keep them ([`source::split_notes`]): a semicolon inside brackets or quotes,
+/// into source rows ([`source::split_notes`]): a semicolon inside brackets or quotes,
 /// a sentence that cites nothing with the source after it, a supra with its name, a citation whole.
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -185,7 +185,7 @@ pub struct Options {
     /// Ordered jurisdiction preferences for ambiguous abbreviations: `["ca"]` by default, `["us"]` or
     /// `["uk", "ca"]` for another order. An explicit court takes precedence. Empty is neutral.
     pub jurisdiction_priority: Vec<String>,
-    /// ALR hint capture uses aggressive mode by default.
+    /// Supra hint capture uses aggressive mode by default.
     pub supra_hint_mode: SupraMode,
     /// Inferred and bare-note linking runs only in aggressive mode.
     pub supra_linking_mode: SupraMode,
@@ -324,7 +324,7 @@ pub fn register_extents(extents: Vec<Extent>) {
     *REGISTERED_EXTENTS.write().expect("extents lock") = Some(std::sync::Arc::new(table));
 }
 
-/// The extents a works pack gives (Beaver's harvest-works pack: lines of tab-separated fields). "N" lines give a
+/// The extents a works pack gives (lines of tab-separated fields). "N" lines give a
 /// court year's decisions' last paragraphs, by neutral citation: court, year, then each number's gap from the last and
 /// paragraph count. "V" lines give a reporter volume's works by first page: each page's gap from the last, how many
 /// pages more the work runs, and its paragraph count. A later line's extent for a key replaces an earlier one's.

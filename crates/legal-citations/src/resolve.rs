@@ -10,10 +10,10 @@
 //!   citation in reading order when it supplies one unambiguous authority.
 //!   An unresolved or mixed source part cannot supply an antecedent.
 //! * [`Form::Supra`] with a note number (`Jordan, supra note 4`, `(n 4)`)
-//!   uses ALR's ordered source-part registry and its short-form matching tiers.
+//!   uses the ordered source-part registry and its short-form matching tiers.
 //!   The reference's numbering sequence constrains note matches. Safe linking
 //!   abstains on conflicting or missing evidence; aggressive linking may use
-//!   ALR's separate inferred-name and bare-note fallback.
+//!   the separate inferred-name and bare-note fallback.
 //! * [`Form::Reference`] (`Jordan at para 12`) matches its name against
 //!   earlier authorities; only a unique match resolves.
 //! * [`Form::Short`] (`123 F.3d at 456`) matches an earlier full citation
@@ -24,7 +24,7 @@
 //! names its case, so it keys and clusters with it, but a reference to it
 //! locates that document: it never resolves to the decision.
 //!
-//! Name matching reuses ALR's exact-short-form, token-short-form, verbatim
+//! Name matching uses the exact-short-form, token-short-form, verbatim
 //! and bracket-definition tiers, followed by its inferred-short-form lookup.
 //! U.S. reporter short forms use Eyecite's party-name matching primitive.
 //!
@@ -558,7 +558,7 @@ impl<'a> Resolver<'a> {
         }
         // An ibid after a note follows it only when the whole note names one authority. In split rows
         // the note's prose, inner parentheticals and subsequent history do not count, and at the
-        // aggressive tier an ibid continues from the note's last source part, as the Python app's does.
+        // aggressive tier an ibid continues from the note's last source part.
         history.previous_note_sources = history.note_sources.clone();
         if self.split && (self.supra_linking_mode != SupraMode::Aggressive || self.linking.no_ibid_last_part)
             && !history.note_sources.is_empty() {
@@ -593,8 +593,8 @@ impl<'a> Resolver<'a> {
             .filter(|citation| citation.form == Form::Full && !cites_record(citation)).collect::<Vec<_>>();
         let fallback = crate::url::source_fallback(&full, &fields, part)
             .filter(|(index, _)| full.iter().any(|citation| citation.index == *index && !citation.is_ambiguous()));
-        // ALR _deterministic_footnote_parts clears explicit URLs on reference
-        // parts before calling _resolve_footnote_part_link_unlocked.
+        // Explicit URLs on reference parts are cleared before the part's
+        // link is resolved.
         let explicit = reference.kind.is_empty() && !fields.link_candidate.is_empty()
             && fields.link_candidate.to_lowercase() != "other"
             && !(fallback.is_some() && crate::url::source_prefers_fallback(fields.kind, &part.text));
@@ -638,7 +638,7 @@ impl<'a> Resolver<'a> {
         let several = positions.len() > 1 || positions.iter().any(|&(_, position)|
             self.citations[position].form == Form::Supra && self.citations[position].style.is_some());
         let several_full = several && positions.iter().any(|&(_, position)| self.citations[position].form == Form::Full);
-        // ALR _resolve_footnote_reference_links resolves each whole part once.
+        // Each whole part is resolved once.
         let part_result = match reference.kind {
             "supra" if several => None,
             "supra" => Some(self.resolve_supra_text(&part.text,
@@ -701,7 +701,7 @@ impl<'a> Resolver<'a> {
         let part_target = part_result.map_or_else(|| own_target.or_else(||
             unique_resource(positions.iter().map(|&(_, position)| self.resolved[position].clone()))),
             |(target, _)| target);
-        // ALR registers one emitted source part, after resolving every reference
+        // One emitted source part is registered, after resolving every reference
         // in its note. Discovered cores remain separate Citation identities, but
         // must not multiply the source-part registry or make a numbered supra
         // look ambiguous by counting one part more than once.
@@ -801,7 +801,7 @@ impl<'a> Resolver<'a> {
     /// tells which of several notes carrying one number came before it.
     fn resolve_supra_text(&self, text: &str, registry: &[ReferenceSource],
         inferred: &[ReferenceSource], sequence: Option<u32>, at: Option<usize>) -> (Option<Target>, &'static str) {
-        // ALR's original note identifiers are globally unique. A host may have
+        // Note identifiers need not be globally unique: a host may have
         // restarted numbering, so a numbered reference can only consult the
         // matching numbering sequence, including aggressive fallbacks.
         let reference = short_forms::reference_info(text);
@@ -1277,10 +1277,10 @@ impl<'a> Resolver<'a> {
             .map(|other| (self.full_authority[other], other))
     }
 
-    /// ALR's registry owns name tiers; LSP's established word comparison only
-    /// handles actual case-name references after a genuine ALR no-match.
+    /// The registry owns name tiers; the case-name word comparison only
+    /// handles actual case-name references after a genuine registry no-match.
     fn name_in_registry(&self, hint: &str, registry: &[ReferenceSource],
-        candidates: &[(usize, usize)], lsp_reference: bool) -> (Option<usize>, &'static str) {
+        candidates: &[(usize, usize)], case_name_reference: bool) -> (Option<usize>, &'static str) {
         let allowed = candidates.iter().map(|(authority, _)| *authority).collect::<std::collections::HashSet<_>>();
         let pool = registry.iter().filter(|entry| entry.target.as_deref()
             .and_then(|target| self.authority_for_target(target)).is_none_or(|authority| allowed.contains(&authority)))
@@ -1288,7 +1288,7 @@ impl<'a> Resolver<'a> {
         // A reference written word for word as one earlier citation's own name or bracketed short
         // form ("U.S. Steel S.C." for "… 2015 ONSC 5103 [U.S. Steel S.C.]") names it, though
         // another citation shares some of its words ("U.S. Steel Canada Inc. (Re)").
-        if lsp_reference {
+        if case_name_reference {
             let hint_words = words(hint);
             let mut exact = candidates.iter().filter(|(_, other)| self.name_words(*other).iter()
                 .any(|name| *name == hint_words)).map(|(authority, _)| *authority).collect::<Vec<_>>();
@@ -1299,7 +1299,7 @@ impl<'a> Resolver<'a> {
         }
         let (resource, reason) = short_forms::resolve_registry_hint("", hint, &pool);
         if let Some(authority) = self.authority_for_target(&resource) { return (Some(authority), "name_only"); }
-        if reason != "abstain_no_match" || !lsp_reference {
+        if reason != "abstain_no_match" || !case_name_reference {
             return (None, if reason.starts_with("abstain_ambiguous") { "ambiguous_name" } else { "no_match" });
         }
         let hint_words = words(hint);

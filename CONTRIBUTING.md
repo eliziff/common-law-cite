@@ -8,7 +8,7 @@
 | `crates/legal-citations` | The engine: find, classify, metadata, parallel, resolve, key, format, url, annotate, clean; `api.rs` is the JSON surface every binding uses |
 | `crates/legal-citations/registry` | Courts, reporters, series, journals, jurisdictions as JSON (`upstream/` is generated) |
 | `crates/legal-citations-cli` | The `legal-citations` binary; hosts the Rust conformance and schema tests |
-| `crates/legal-citations-py` | PyO3/maturin package `legal_citations` (and the `legal_citations.eyecite` facade) |
+| `crates/legal-citations-py` | PyO3/maturin package `legal_citations` |
 | `crates/legal-citations-wasm` | wasm-bindgen build and the npm package in `js/` |
 | `conformance/` | Language-neutral cases, the JSON Schema, the Python/JS runners and the eyecite port tool |
 | `tools/` | `sync-upstream.py` (registry from reporters-db/courts-db), `eyecite-diff.py` (differential harness) |

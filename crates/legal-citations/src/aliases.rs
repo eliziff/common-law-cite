@@ -1,4 +1,4 @@
-//! Reporter parallels supported by the direct ALR/A2AJ evidence table.
+//! Reporter parallels supported by the direct A2AJ evidence table.
 //! Direct observed spellings may identify a decision even without a structural
 //! key. Contradictory identities and invalid spellings cannot authorize a link.
 
@@ -18,8 +18,7 @@ pub struct SourceAliasGroup {
     pub keys: Vec<String>,
 }
 
-/// Beaver's reciprocal-closure check, formerly `parallelCaseKeys` in
-/// authoritiesImport.ts. An observed key must agree with every other member's
+/// Reciprocal-closure check: an observed key must agree with every other member's
 /// closure; asymmetric or conflicting source inventories cannot merge cases.
 pub(crate) fn source_links(citations: &mut [Citation], evidence: &[SourceAliasGroup]) -> Vec<(usize, usize)> {
     if evidence.is_empty() { return Vec::new(); }
@@ -71,7 +70,7 @@ pub const DATA: &str = include_str!("../registry/aliases.json");
 pub struct AliasTarget {
     pub key: String,
     pub citation: String,
-    /// Original ALR evidence-record identifiers in registry/aliases.json.
+    /// Original evidence-record identifiers in registry/aliases.json.
     /// These are provenance references, never runtime lookup keys.
     pub records: Vec<String>,
 }
@@ -113,7 +112,7 @@ static TABLE: LazyLock<Table> = LazyLock::new(|| {
     table
 });
 
-/// ALR A2AJClient._reporter_alias: an observed spelling is source evidence,
+/// An observed spelling is source evidence,
 /// including misspellings that have no structural reporter interpretation.
 pub(crate) fn observed_form(text: &str) -> bool {
     TABLE.observed.contains_key(&registry::fold(text))

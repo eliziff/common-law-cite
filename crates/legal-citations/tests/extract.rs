@@ -58,7 +58,7 @@ fn assert_lossless(text: &str, citations: &[Citation]) {
 }
 
 // ---------------------------------------------------------------------------
-// Ported from legal-structure-parser citator tests.
+// Citation presence and occurrences.
 
 #[test]
 fn citation_presence_accepts_plain_text_and_unicode_case_names() {
@@ -315,7 +315,7 @@ fn year_as_volume_reports_are_cases_with_canonical_reporters() {
 
 #[test]
 fn report_start_pages_for_scr_headers() {
-    // legal-structure-parser reads the page a reported judgment starts on.
+    // The page a reported judgment starts on is read from its header.
     for header in ["[2016] 1 S.C.R. 631", "[2016] 1 R.C.S. 631", "[2016] 1 SCR 631"] {
         let citation = one(header);
         assert_eq!(citation.authority, Authority::Case, "{header}");
@@ -991,7 +991,7 @@ fn note_references_are_a_superset_of_the_legacy_crossref_grammar() {
 }
 
 // ---------------------------------------------------------------------------
-// Excerpt classification (Beaver's citator treatment filter).
+// Excerpt classification (citator treatment filter).
 
 #[test]
 fn excerpt_classification_is_unchanged() {

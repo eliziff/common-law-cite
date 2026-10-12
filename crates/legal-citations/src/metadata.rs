@@ -38,7 +38,7 @@ static PINPOINT_PHRASES: LazyLock<[(PinpointKind, CompiledEcmascriptGrammar); 3]
 ]);
 static PINPOINT_BRIDGE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("pinpoint.bridge"));
 
-/// LSP pinpoint_hits: first eligible group, with its original tie ordering.
+/// The first eligible pinpoint group, with its original tie ordering.
 fn pinpoint_phrase(text: &str, start: usize, limit: usize) -> Option<(PinpointKind, crate::Span)> {
     let tail = &text[start..limit];
     let mut selected = None;
@@ -395,7 +395,7 @@ pub(crate) fn parallel_gap(text: &str, start: usize, end: usize) -> bool {
     text[cursor..end].chars().all(|character| character == ',' || javascript_whitespace(character))
 }
 
-/// Original LSP pinpoint and explicit-short-form extent, shared by both views.
+/// The native pinpoint and explicit-short-form extent, shared by both views.
 pub(crate) fn native_tail(text: &str, start: usize, limit: usize) -> Tail {
     let mut result = Tail {
         end: start,

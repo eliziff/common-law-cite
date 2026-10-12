@@ -40,7 +40,7 @@ pub struct ProviderCitationMatch<'a> {
     pub page: Option<&'a str>,
 }
 
-/// Original LSP provider routing; byte offsets are converted by the host adapter.
+/// Provider routing for each citation; byte offsets are converted by the host adapter.
 pub fn provider_citations(text: &str) -> Vec<ProviderCitationMatch<'_>> {
     crate::classify::ROUTING
         .captures_iter(text)
@@ -100,7 +100,7 @@ static REPORTER_MONTH: LazyLock<Screened<CompiledEcmascriptGrammar>> =
     LazyLock::new(|| Screened::linear("cite.reporter.month"));
 static REPORTER_WORD: LazyLock<Screened<CompiledEcmascriptGrammar>> =
     LazyLock::new(|| Screened::linear("cite.reporter.word"));
-// These source-owned styles retain LSP's native Unicode regex semantics.
+// These styles use native Unicode regex semantics.
 static CASE_NAME: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.case-name"));
 static SIGNAL_PREFIX: LazyLock<Screened<CompiledEcmascriptGrammar>> =
     LazyLock::new(|| Screened::linear("signal.prefix.toa"));
@@ -544,7 +544,7 @@ fn online_extent(text: &str, link: &Hit, limit: usize) -> usize {
     metadata::citation_parenthetical(text, end, limit.max(end)).map_or(end, |range| range.end)
 }
 
-/// Frozen LSP citation_kind: occurrence family, not registry identity.
+/// A core's occurrence family, not its registry identity.
 fn occurrence_family(core: &str) -> (&'static str, &'static str) {
     let whole = |span: Hit| span.start == 0 && span.end == core.len();
     if JOURNAL_PATTERN.find_screened(core).is_some_and(|hit| whole(hit.range())) {
@@ -615,7 +615,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
         claimed.push(start..hit.span.end);
         floor = hit.span.end;
     }
-    // LSP citation_anchors keeps the primary hit when a secondary span overlaps.
+    // The primary hit wins when a secondary span overlaps it.
     let mut anchors = secondary
         .into_iter()
         .filter(|anchor| {
@@ -626,10 +626,10 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
         .collect::<Vec<_>>();
     anchors.extend(primary);
     anchors.sort_by_key(|anchor| anchor.span.start);
-    // This is LSP citation_anchors' complete result. Added source discoveries
-    // must not truncate its occurrence pinpoints or suppress its references.
+    // These are the complete native anchors. Added source discoveries
+    // must not truncate their occurrence pinpoints or suppress their references.
     if !enrich { return anchors; }
-    // LSP selects primary and secondary occurrences before Eyecite attaches
+    // Primary and secondary occurrences are selected before Eyecite attaches
     // source tokens. Source-only discoveries cannot displace native extents.
     let mut additional = Vec::new();
     for matched in captured {
@@ -654,7 +654,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     // Eyecite's captured fields already supply their reading. Parse only the
     // remaining native families, instead of parsing then replacing those fields.
     for anchor in anchors.iter_mut().filter(|anchor| anchor.reading.is_none()) { anchor.read(value); }
-    // Carry ALR's recognized reporter fields without replacing native extents
+    // Carry the splitter grammar's recognized reporter fields without replacing native extents
     // or pinned Eyecite readings. Its permissive boundary pattern alone does
     // not establish a citation; the registry or direct alias evidence does.
     let mut additional = Vec::new();
@@ -713,7 +713,7 @@ fn primary_ranges(value: &str) -> (Vec<Hit>, Vec<Hit>) {
         .filter(|matched| !month_reporter(matched.as_str()) && !word_reporter(matched.as_str()))
         .map(|matched| matched.start()..matched.end())
         .collect::<Vec<_>>();
-    // LSP citation_hits completes reports only at an already recognized start.
+    // Reports are completed only at an already recognized start.
     let reporters = REPORTER_PATTERN.find_all(value).flatten()
         .map(|matched| matched.start()..matched.end()).collect::<Vec<_>>();
     for matched in &reporters {
@@ -1242,7 +1242,7 @@ fn back_reference_cores(text: &str, taken: &[Hit]) -> Vec<Core> {
 /// citation nor the pinpoint of the reference right in front of it.
 fn unknown_cores(text: &str, cores: &[Core]) -> Vec<Core> {
     // Eyecite's tokenizer suppresses a section token inside a citation token,
-    // even when LSP's occurrence extent ends earlier than that source token.
+    // even when the native occurrence extent ends earlier than that source token.
     let taken = cores.iter().flat_map(|core| {
         std::iter::once(core.span.clone()).chain(match &core.kind {
             CoreKind::Full(anchor) => anchor.source_span.clone(),
@@ -1544,7 +1544,7 @@ fn full_citation(
     citation.fields.pin_cite = tail.pin_cite;
     citation.fields.pin_cite_kind = tail.pin_cite_kind;
     citation.fields.explicit_short_span = tail.short_span;
-    // LSP citation_occurrences_in_text stops at the native occurrence fields.
+    // Occurrence-only reading stops at the native occurrence fields.
     // Registry identity and source metadata belong to the full citation API.
     if options.is_none() { return citation; }
     citation.fields.extra = tail.extra;
@@ -1632,7 +1632,7 @@ fn back_citation(
 /// section symbols, never overlapping.
 fn cores(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<Core> {
     let Some(notes) = &options.notes else { return cores_in(text, options, scopes, enrich); };
-    // ALR receives each note separately; a joined document must preserve those
+    // Notes are supplied separately; a joined document must preserve those
     // input boundaries before competing discovery matches suppress each other.
     let mut boundaries = notes.iter().flat_map(|note| [note.start, note.end])
         .chain([0, text.len()]).collect::<Vec<_>>();
@@ -2036,7 +2036,7 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
             }
             citation.signal = signal(text, floor, citation.full_span.start);
         }
-        // LSP's style floor follows the native pinpoint/short-form suffix;
+        // The style floor follows the native pinpoint/short-form suffix;
         // source parentheticals retain their independent full extent. Every
         // citation is a floor, so a style never reaches back into a preceding
         // supra/ibid pinpoint ("supra note 3 at para 43. R v Lukacs").
@@ -2045,7 +2045,7 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
         citations.push(citation);
         floors.push(floor);
     }
-    // Eyecite's IdToken/SupraToken discovery is independent of LSP's longer
+    // Eyecite's IdToken/SupraToken discovery is independent of the longer native
     // note-reference core: a source token can survive an overlapping native
     // reporter extent (for example, a note number read as reporter volume).
     for (&start, source) in &source_names {

@@ -1,4 +1,4 @@
-"""Source splitting with ALR's existing Python result shapes.
+"""Source splitting with Python result shapes.
 
 Parsing and boundary decisions belong to the shared Rust engine. This module
 only converts records, integer representations and Python string offsets.

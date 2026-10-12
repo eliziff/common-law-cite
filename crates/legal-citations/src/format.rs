@@ -7,7 +7,7 @@
 //!   `at paras 20, 23, 25`, `at 353`, `at 553, 559`, `s 7(2)`, `ss 7(2)-(4)`,
 //!   `r 3`, `art 1457`, `n 4`. Pages are `at 353`, never `at p 353`.
 //!   Consecutive locators collapse into ranges and a range or list states a
-//!   shared section number once (legal-pinpointer `formatPinpoint`). French:
+//!   shared section number once. French:
 //!   `au para 12`, `aux paras 12-14`, `à la p 353`, `aux pp 353, 359`,
 //!   `art 7(2)` for a section.
 //! * Back references: [`ibid`] (`Ibid`, `Ibid at para 5`, `Ibid, s 7`) and
@@ -171,7 +171,7 @@ impl Language {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Style {
     pub language: Language,
-    /// Joins range endpoints: `-` by default; Beaver renders `\u{2013}`.
+    /// Joins range endpoints: `-` by default, or `\u{2013}` for an en dash.
     pub range_dash: &'static str,
 }
 
@@ -382,7 +382,7 @@ pub fn collapse(items: &[(&str, Option<&str>)], dash: &str) -> String {
     display_groups(&locator_groups(&items), dash)
 }
 
-/// Pinpointer's formatter layout: links belong to the caller, while range
+/// Pinpoint formatter layout: links belong to the caller, while range
 /// endpoints, shared roots and wording belong to the citation engine.
 #[derive(Clone, Debug, serde::Serialize)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
@@ -550,7 +550,7 @@ static MATTER_SUFFIX: LazyLock<Regex> =
 static COURT_SUFFIX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?i)\s+\((?:S\.?C\.?C\.?|C\.?S\.?C\.?)\)\s*$").unwrap());
 
-/// One party in McGill form (legal-pinpointer `mcgillParty`).
+/// One party in McGill form.
 pub fn party(value: &str, language: Language) -> String {
     let party = normalize_space(value);
     if CROWN.is_match(&party) {
@@ -588,7 +588,7 @@ pub fn party(value: &str, language: Language) -> String {
     normalize_space(&party)
 }
 
-/// A style of cause in McGill form (legal-pinpointer `cleanCaseName`):
+/// A style of cause in McGill form:
 /// `R. v. Jordan` → `R v Jordan`; `Her Majesty the Queen v. Smith` →
 /// `R v Smith`; `Attorney General of Canada v. Bedford` → `Canada (AG) v
 /// Bedford`; `Eurig Estate, Re` → `Re Eurig Estate`. French output uses `c`
@@ -740,7 +740,7 @@ pub struct CaseHeading {
     pub citation: String,
 }
 
-/// Pinpointer's heading splitter; the provider removes its platform suffix first.
+/// Splits a case page heading; the provider removes its platform suffix first.
 pub fn case_heading(heading: &str) -> CaseHeading {
     static START: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(|| {
         // The source accepts only a match at offset zero. Anchor that same
@@ -779,7 +779,7 @@ pub struct FormattedDocument {
     pub plain: String,
 }
 
-/// Pinpointer's makeCitation. HTML escaping and italics stay in the presentation adapter.
+/// Formats a document's citation. HTML escaping and italics stay in the presentation adapter.
 pub fn document(input: &DocumentCitation) -> FormattedDocument {
     static LEGISLATION: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(|| format_pattern("format.heading-legislation-start"));
     static LOCATOR: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(|| format_pattern("format.legislation-locator-tail"));
@@ -810,7 +810,7 @@ pub fn document(input: &DocumentCitation) -> FormattedDocument {
 // Citations
 
 /// McGill abbreviations carry no periods: `[1964] S.C.R. 642` → `[1964] SCR
-/// 642`, `(CanLII)` is dropped (legal-pinpointer `normalizeCitation`).
+/// 642`, `(CanLII)` is dropped.
 pub fn normalize_citation(value: &str) -> String {
     static LABEL: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(|| format_pattern("format.citation-canlii-label"));
     static PERIOD: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(|| format_pattern("format.citation-period"));
@@ -820,7 +820,7 @@ pub fn normalize_citation(value: &str) -> String {
 }
 
 /// A database citation names its service: `2019 CarswellOnt 123 (WL Can)`,
-/// `[2019] OJ No 45 (QL)` (legal-pinpointer `databaseCitation`).
+/// `[2019] OJ No 45 (QL)`.
 pub fn database_citation(value: &str) -> String {
     static CARSWELL: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)\bCarswell[A-Za-z]+\s+\d+$").unwrap());
     static QUICKLAW: LazyLock<Regex> =
@@ -873,7 +873,7 @@ pub struct CaseCitationRequest {
     pub provider: Option<String>,
 }
 
-/// Pinpointer `chooseCaseCitation`: apply its original display grammars and
+/// Chooses a case's display citation: apply the display grammars and
 /// first-match order without extracting identities or resolving references.
 pub fn choose_case_citation(request: &CaseCitationRequest) -> String {
     static PATTERNS: LazyLock<[legal_grammar::CompiledGrammar; 10]> = LazyLock::new(||
@@ -881,7 +881,7 @@ pub fn choose_case_citation(request: &CaseCitationRequest) -> String {
             "reporter-numbered", "case-canlii", "case-in-house", "reporter-preference.official",
             "reporter-preference.fr", "reporter-preference.en"].map(|name| format_pattern(&format!("format.{name}"))));
     static TRANSLATIONS: LazyLock<std::collections::HashMap<String, std::collections::HashMap<String, String>>> = LazyLock::new(||
-        serde_json::from_str(include_str!("../registry/neutral-translations.json")).expect("Pinpointer neutral translation preferences"));
+        serde_json::from_str(include_str!("../registry/neutral-translations.json")).expect("neutral translation preferences"));
     static CANLII_NAME: LazyLock<Regex> = LazyLock::new(|| Regex::new("(?i)canlii").unwrap());
     let french = request.language.as_deref().unwrap_or("en").to_lowercase().starts_with("fr");
     let texts = request.texts.iter().chain(std::iter::once(&request.fallback)).collect::<Vec<_>>();
@@ -959,7 +959,7 @@ pub struct Article {
 
 /// McGill 6.1: `Author, "Title" (Year) Volume:Issue Journal FirstPage`; more
 /// than three authors become `First et al`; two or three are joined
-/// `A, B & C` (legal-pinpointer `articleCitation`).
+/// `A, B & C`.
 pub fn article(article: &Article) -> String {
     let authors = article
         .authors

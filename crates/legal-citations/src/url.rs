@@ -5,7 +5,7 @@
 //! id deterministically. Nothing here guesses a route from a court prefix.
 //!
 //! * CanLII decisions ([`canlii_case`]) from neutral and CanLII citations via
-//!   the registry court's CanLII route, porting Beaver `canliiUrls.ts`: the
+//!   the registry court's CanLII route: the
 //!   slug is `{year}{code}{number}` with the neutral code as written
 //!   lowercased (`2019 FC 123` → `ca/fct/…/2019fc123`), a database id keeps
 //!   its registry casing (`nb/NBQB`), and `2004 CanLII 12345 (ON CA)` →
@@ -15,14 +15,12 @@
 //!   a French page (`2019 NBBR 5` → `fr/nb/NBQB/…/2019nbbr5`); a French page
 //!   of an English code of the five bilingual federal courts uses the French
 //!   code and database (`SCC`→`csc`, `FCA`→`caf`, `FC`→`cf`, `TCC`→`cci`,
-//!   `CMAC`→`cacm`), as legal-pinpointer does; any other French page keeps
-//!   the English route and slug, as Beaver does.
-//! * CanLII search and noteup ([`canlii_search`], legal-pinpointer
-//!   `sonar-launcher.js`), anchors ([`canlii_anchor`], pinpointer
-//!   `canliiAnchorForLocator`), [`is_canlii_url`] and [`canlii_pdf_url`]
-//!   (Beaver `isCanliiUrl`, `buildCanliiPdfUrl`).
+//!   `CMAC`→`cacm`); any other French page keeps
+//!   the English route and slug.
+//! * CanLII search and noteup ([`canlii_search`]), anchors ([`canlii_anchor`]),
+//!   [`is_canlii_url`] and [`canlii_pdf_url`].
 //! * CanLII legislation ([`canlii_legislation`]) for series the registry
-//!   routes to CanLII, with pinpointer's id scheme (`rsc-1985-c-c-46`,
+//!   routes to CanLII, with CanLII's id scheme (`rsc-1985-c-c-46`,
 //!   `sor-2002-227`, `o-reg-191-11`, `crc-c-870`).
 //! * Justice Laws ([`justice_laws`]) for RSC 1985 acts and SOR/SI/CRC
 //!   regulations, whose ids are their citations.
@@ -31,7 +29,7 @@
 //!   `/ewhc/ch/2019/123`) and legislation.gov.uk ([`legislation_gov_uk`]) for
 //!   UK public general Acts by calendar year (from 1963) or regnal year.
 //! * CourtListener ([`courtlistener`]) citation lookup for US reporters.
-//! The independent ALR/Beaver court-route inventory supplies a CanLII URL
+//! An independent court-route inventory supplies a CanLII URL
 //! when a written neutral code lacks a route in the curated court registry.
 
 use crate::format::Language;
@@ -43,7 +41,7 @@ use std::collections::HashMap;
 use std::sync::LazyLock;
 use unicode_normalization::UnicodeNormalization;
 
-/// Pinpointer's candidate spellings for its external CanLII TSV index. These
+/// Candidate spellings for an external CanLII TSV index. These
 /// are lookup hints, never authority keys or unverified source URLs.
 #[derive(Clone, Debug, serde::Serialize)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
@@ -65,7 +63,7 @@ pub fn legislation_lookup(value: &str) -> LegislationLookup {
     static PATTERNS: LazyLock<[legal_grammar::CompiledEcmascriptGrammar; 7]> = LazyLock::new(|| {
         ["statute", "regulation", "instrument", "crc", "jurisdiction-statute", "jurisdiction-instrument", "jurisdiction-crc"]
             .map(|name| legal_grammar::compile_ecmascript_table_entry(&format!("lookup.canlii-legislation.{name}"))
-                .expect("Pinpointer index lookup grammar"))
+                .expect("legislation index lookup grammar"))
     });
     let series_key = |value: &str| value.chars().filter(char::is_ascii_alphabetic).collect::<String>().to_ascii_lowercase();
     let citation: String = value.nfkc().map(|c| if ('\u{2010}'..='\u{2015}').contains(&c) { '-' } else { c }).collect();
@@ -128,7 +126,7 @@ pub fn encode_component(value: &str) -> String {
 // CanLII decisions
 
 /// English neutral codes CanLII also publishes under a French code and
-/// database (legal-pinpointer `canliiCourtRoute`); the French database comes
+/// database; the French database comes
 /// from the registry's `canlii_fr` route, else from this table.
 const FRENCH_CODES: [(&str, &str, &str); 5] = [
     ("scc", "csc", "csc"),
@@ -162,7 +160,7 @@ pub(crate) fn source_canlii_french_routes() -> &'static HashMap<String, String> 
     &SOURCE_ROUTES.french_routes
 }
 
-/// Pinpointer `canliiUrlForCitation` and `canliiCourtRoute`: the first written
+/// The CanLII URL for a citation: the first written
 /// CanLII form precedes the first neutral form, including original abstentions.
 pub fn canlii_citation_url(text: &str, language: &str) -> Option<String> {
     static PATTERNS: LazyLock<[legal_grammar::CompiledGrammar; 2]> = LazyLock::new(||
@@ -190,14 +188,14 @@ pub fn canlii_citation_url(text: &str, language: &str) -> Option<String> {
 
 static SCR: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
     legal_grammar::compile_python_table_entry("cite.reporter.scr.source-link").unwrap());
-/// ALR `_resolve_footnote_part_link_unlocked`'s SCR override.
+/// A case or unreported part citing the SCR prefers the fallback URL.
 pub(crate) fn source_prefers_fallback(kind: &str, text: &str) -> bool {
     matches!(kind, "case" | "unreported") && SCR.is_match(text).expect("source SCR citation")
 }
 
 static URL: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
     legal_grammar::compile_python_table_entry("url.source-candidate").unwrap());
-/// ALR _append_first_pinpoint_fragment, including its sanitizer's PDF sibling.
+/// Appends the first pinpoint fragment, including the sanitizer's PDF sibling.
 /// Source candidates are HTTP(S) URLs or the splitter's bare www/perma/DOI forms.
 pub(crate) fn source_first_pinpoint(link: &str, fragments: &[String]) -> String {
     const PUNCT: &str = ".,;:!?)]}>\"'“”’‘";
@@ -222,7 +220,7 @@ pub(crate) fn source_first_pinpoint(link: &str, fragments: &[String]) -> String 
     let mut path = base[path_start..].split('?').next().unwrap().to_lowercase();
     if base.find('?') == Some(base.len() - 1) { base.pop(); }
     if path.ends_with(".pdf") {
-        // ALR substitutes at the end of the base, not before a nonempty query.
+        // Substitute at the end of the base, not before a nonempty query.
         if !base.to_lowercase().ends_with(".pdf") { return link.to_owned(); }
         base.truncate(base.len() - 4);
         base.push_str(".html");
@@ -248,7 +246,7 @@ static PARAGRAPH: LazyLock<Regex> = LazyLock::new(|| {
 });
 static CANLII: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
     legal_grammar::compile_python_table_entry("cite.canlii.source-link").unwrap());
-/// ALR `_generate_fallback_url`'s offline selection order, using the fields
+/// The offline fallback URL selection order, using the fields
 /// already discovered in the source part and its original court-route table.
 pub(crate) fn source_fallback(citations: &[&Citation], source: &crate::source::SourceFields,
     part: &crate::source::SourcePart) -> Option<(usize, String)> {
@@ -266,7 +264,7 @@ pub(crate) fn source_fallback(citations: &[&Citation], source: &crate::source::S
         }
         return Some((citation.index, url));
     }
-    // ALR searches the complete source, including its parenthesized court.
+    // Search the complete source, including its parenthesized court.
     // Keep its first match and select the core at that original-text offset.
     if let Some(matched) = CANLII.find(&source.citation_with_style).expect("source CanLII citation") {
         // The fields read typeset spaces as spaces; the part's text keeps them.
@@ -399,7 +397,7 @@ pub fn canlii_case_in(citation: &Citation, language: Language, registry: &Regist
     }
 }
 
-/// Pinpointer's alias-index target: a citation or jurisdiction/database/caseId.
+/// A CanLII alias-index target: a citation or jurisdiction/database/caseId.
 /// The path is evidence supplied by the owning CanLII index, not inferred from
 /// a case name. Keep the original slug while selecting the published language.
 #[derive(Clone, Debug, serde::Serialize)]
@@ -518,8 +516,7 @@ pub fn paragraph_anchor(paragraph: &str) -> String {
     format!("#par{}", encode_component(paragraph.trim()))
 }
 
-/// The fragment that opens a pinpoint on a CanLII page (legal-pinpointer
-/// `canliiAnchorForLocator`): `#par12` for paragraphs, a text fragment for
+/// The fragment that opens a pinpoint on a CanLII page: `#par12` for paragraphs, a text fragment for
 /// `[page 5]` markers, `#sec7`, `#sec7subsec2`, `#art1457`, `#rule3` for
 /// provisions, and LégisQuébec's `#se:18_1` on Quebec statutes. Deeper
 /// provisions (`7(2)(a)`) have no stable id.
@@ -585,7 +582,7 @@ pub fn canlii_pdf_url(page_url: &str) -> Option<String> {
     static PATH: LazyLock<Regex> = LazyLock::new(|| {
         Regex::new(r"^/(?:en|fr)/(?:[A-Za-z0-9-]+/){1,2}doc/(\d{4})/([a-z0-9-]+)/([a-z0-9-]+)\.html$").unwrap()
     });
-    // Beaver buildCanliiPdfUrl uses the browser URL parser before these checks.
+    // Parse as a WHATWG URL before these checks.
     let mut parsed = url::Url::parse(page_url).ok()?;
     if parsed.scheme() != "https" || parsed.host_str() != Some("www.canlii.org")
         || parsed.port().is_some() || !parsed.username().is_empty()

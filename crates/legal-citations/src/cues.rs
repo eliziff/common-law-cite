@@ -27,7 +27,7 @@ pub fn canadian_report_start(text: &str) -> Option<u32> {
         .name("page")?.as_str().parse().ok()
 }
 
-/// AuthoritiesHelper's SCR/RCS running-head evidence. The caller selects the
+/// SCR/RCS running-head evidence. The caller selects the
 /// opening PDF lines; citation identity and reporter spelling stay here.
 pub fn matches_reporter_header(text: &str, citations: &[crate::Citation]) -> bool {
     static REPORTER: LazyLock<CompiledGrammar> = LazyLock::new(||
@@ -609,7 +609,7 @@ mod tests {
     use super::*;
     use regex::Regex;
 
-    // The legacy legal-pdf-parser tables and regexes, kept as an oracle: the
+    // Earlier hard-coded tables and regexes, kept as an oracle: the
     // corpus-and-registry predicates must accept everything these accepted.
     const COURT_CODE_PATTERN: &str = "SCC|FCA|FC|TCC|CMAC|BCCA|BCSC|BCPC|ABCA|ABQB|ABKB|ABPC|SKCA|SKQB|SKKB|SKPC|MBCA|MBQB|ONCA|ONSC|ONCJ|QCCA|QCCS|QCCQ|NBCA|NBQB|NSSC|NSCA|PECA|PESC|NLCA|NLSC|YKCA|YKSC|NWTCA|NWTSC|NUCA|NUCJ";
     const REPORTER_TOKEN_PATTERN: &str = r"S\.?\s*C\.?\s*R\.?|D\.?\s*L\.?\s*R\.?|C\.?\s*C\.?\s*C\.?|O\.?\s*R\.?|W\.?\s*W\.?\s*R\.?|C\.?\s*R\.?|All\s+E\.?\s*R\.?|A\.?\s*C\.?|K\.?\s*B\.?|Q\.?\s*B\.?|Q\.?\s*B\.?\s*D\.?|Ch(?:\s+D)?\.?|App\s+Cas|W\.?\s*L\.?\s*R\.?|E\.?\s*R\.?|T\.?\s*L\.?\s*R\.?|Cox\s+C\.?\s*C\.?|Cr\s+App\s+R\.?|Ex\.?|Eq\.?|H\.?\s*L\.?\s*Cas\.?";

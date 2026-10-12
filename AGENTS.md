@@ -2,10 +2,9 @@
 
 legal-citations is the only place where legal citation logic lives: grammar,
 court/reporter/series data, identity keys, short-form resolution, parallel
-grouping, formatting and public-source URLs. Beaver, AuthoritiesHelper,
-legal-pinpointer, legal-pdf-parser and legal-structure-parser call it
-([docs/boundary.md](docs/boundary.md)). A change that an application needs is
-made and tested here. Local applications use this checkout directly; tagging,
+grouping, formatting and public-source URLs. Applications call it rather than
+carrying their own ([docs/boundary.md](docs/boundary.md)). A change that an
+application needs is made and tested here. Local applications use this checkout directly; tagging,
 publishing bindings and updating consumer pins are only required when requested.
 
 ## Layout

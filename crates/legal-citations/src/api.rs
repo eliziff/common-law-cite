@@ -498,8 +498,8 @@ pub struct RegistryLinkPart {
     pub ends_note: bool,
 }
 
-/// Each reference's link from the article's earlier parts, as the ALR Python app gives it before it follows a
-/// reference's chain (alr_quote_verifier.py _resolve_footnote_reference_links): an ibid the part before it's, a supra
+/// Each reference's link from the article's earlier parts, before the reference's chain is followed: an ibid the
+/// part before it's, a supra
 /// that of the earlier part its name or note names, over the notes before its own. "" for a full citation, or a part
 /// with its own link.
 fn registry_links(request: RegistryLinksRequest) -> Vec<String> {
