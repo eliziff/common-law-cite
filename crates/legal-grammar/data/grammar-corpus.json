@@ -429,6 +429,36 @@
           ]
         },
         {
+          "id": "cite.neutral.numberless",
+          "pattern": "\\b(?<year>(?:19|20)\\d{2})\\s+(?<court>[A-Z]{2,6}[A-Z0-9]{0,3})\\b",
+          "flags": "",
+          "canonical": {},
+          "conventions": [
+            "mcgill"
+          ],
+          "provenance": "Beaver-authored. A neutral citation written without its decision number ('R v Alder, 2031 ONCJ at para 16', usually an unreported decision cited from another). Discovery requires a case style before it and classification a registered court, and a complete neutral citation at the same place wins; this grammar only finds the year and court. Independently invented vectors.",
+          "vectors": [
+            {
+              "input": "Alder v Birch, 2031 ONCJ at para 16",
+              "groups": {
+                "year": "2031",
+                "court": "ONCJ"
+              }
+            },
+            {
+              "input": "R v Tern, 2034 ABKB (unreported, cited in Fen v Reed, supra note 4)",
+              "groups": {
+                "year": "2034",
+                "court": "ABKB"
+              }
+            },
+            {
+              "input": "in 2031 the court sat",
+              "groups": null
+            }
+          ]
+        },
+        {
           "id": "cite.neutral.parenthesized",
           "pattern": "\\((?<year>(?:17|18|19|20)\\d{2})\\)\\s+(?<court>CanLII|[A-Z][A-Z0-9-]{1,15})\\s+(?<num>\\d+)\\b",
           "flags": "",
@@ -1963,10 +1993,10 @@
         },
         {
           "id": "cite.journal.article",
-          "pattern": "\\((?<year>(?:1[6-9]|20)\\d{2}(?:\\s*[-–]\\s*(?:1[6-9]|20)?\\d{2})?)\\)\\s*[,.]?\\s*(?:(?<volume>\\d{1,4})(?:\\s*[:(]\\s*[0-9A-Za-z]{1,8}(?:[/.–\\-][0-9A-Za-z]{1,8})*\\)?)?(?:\\s*\\([0-9A-Za-z–\\-]{1,8}\\))?\\s+)?(?<journal>[A-Z][A-Za-z&.'’]*:?(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*:?|&|of|the|and|in|for|on|de|du|des|la|le|et|del|della|di|der|für|und|y|e|zur)){0,30}(?:\\s*\\((?:\\d[a-z]{0,2}|[A-Za-z]{1,20})\\))?)\\s*,?\\s+(?:pp?\\.?\\s*)?(?<page>[a-z]?\\d{1,7})\\b|\\((?<unpaged_year>(?:1[6-9]|20)\\d{2})\\)\\s*[,.]?\\s*(?:(?<unpaged_volume>\\d{1,4})(?:\\s*[:(]\\s*[0-9A-Za-z]{1,8}\\)?)?\\s+)?(?<unpaged_journal>[A-Z][A-Za-z&.'’]*:?(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*:?|&|of|the|and|in|for|on)){0,30})(?=\\s*(?:at\\s+\\d|\\[[Ff]orthcoming|\\(no\\s+page))|\\((?<open_year>(?:1[6-9]|20)\\d{2})\\)\\s*[,.]?\\s*(?<open_volume>\\d{1,4})(?:\\s*[:(]\\s*[0-9A-Za-z]{1,8}\\)?)?\\s+(?<open_journal>[A-Z][A-Za-z&.'’]*:?(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*:?|&|of|the|and|in|for|on)){0,30})(?<!\\.)(?=\\s*(?:[.;)]|,\\s*(?:online|available)\\b|\\(|$))",
+          "pattern": "\\((?<year>(?:1[6-9]|20)\\d{2}(?:\\s*[-–]\\s*(?:1[6-9]|20)?\\d{2})?)\\)\\s*[,.]?\\s*(?:(?<volume>\\d{1,4})(?:\\s*[:(]\\s*[0-9A-Za-z]{1,8}(?:[/.–\\-][0-9A-Za-z]{1,8})*\\)?)?(?:\\s*\\([0-9A-Za-z–\\-]{1,8}\\))?\\s+)?(?<journal>[A-Z][A-Za-z&.'’]*:?(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*:?|&|of|the|and|in|for|on|de|du|des|la|le|et|del|della|di|der|für|und|y|e|zur)){0,30}(?:\\s*\\((?:\\d[a-z]{0,2}|[A-Za-z]{1,20})\\))?)\\s*,?\\s+(?:pp?\\.?\\s*)?(?<page>[a-z]?\\d{1,7})\\b|\\((?<unpaged_year>(?:1[6-9]|20)\\d{2})\\)\\s*[,.]?\\s*(?:(?<unpaged_volume>\\d{1,4})(?:\\s*[:(]\\s*[0-9A-Za-z]{1,8}\\)?)?\\s+)?(?<unpaged_journal>[A-Z][A-Za-z&.'’]*:?(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*:?|&|of|the|and|in|for|on)){0,30})(?=\\s*(?:at\\s+\\d|\\[[Ff]orthcoming|\\(no\\s+page))|\\((?<open_year>(?:1[6-9]|20)\\d{2})\\)\\s*[,.]?\\s*(?<open_volume>\\d{1,4})(?:\\s*[:(]\\s*[0-9A-Za-z]{1,8}\\)?)?\\s+(?<open_journal>[A-Z][A-Za-z&.'’]*:?(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*:?|&|of|the|and|in|for|on)){0,30})(?<!\\.)(?=\\s*(?:[.;)]|,\\s*(?:online|available)\\b|\\(|$))|(?<=[”\"]\\s)(?<bare_volume>\\d{1,4}):\\s*(?<bare_issue>[0-9A-Za-z]{1,8})\\s+(?<bare_journal>[A-Z][A-Za-z&.'’]*:?(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*:?|&|of|the|and|in|for|on)){0,30})\\s+(?<bare_page>[a-z]?\\d{1,7})\\b|(?<=[”\"]\\s)(?<late_volume>\\d{1,4}):\\s*[0-9A-Za-z]{1,8}\\s+(?<late_journal>[A-Z][A-Za-z&.'’]*:?(?:,?\\s+(?:[A-Z][A-Za-z&.'’]*:?|&|of|the|and|in|for|on)){0,30})\\s+\\((?<late_year>(?:1[6-9]|20)\\d{2})\\)\\s+(?<late_page>[a-z]?\\d{1,7})\\b",
           "flags": "",
           "canonical": {},
-          "provenance": "Beaver-authored first-reference grammar for the periodical family: the (year) volume(:issue) journal first-page block that follows an author and a quoted article title in McGill footnote style. Sibling of cite.journal.toa, which is the classifier dialect (recall-first, used only to label a span the citation grammar already anchored); this entry adds the separators the corpus actually shows - '(2015). 52:1', '(1986-1987) 29', '(2020) 67(5)', '(1997) 23:1/2', ampersands and commas inside the journal name, lettered first pages (e482) - and a second branch for the unpaginated article, where the lookahead leaves 'at 1' to the pinpoint grammar instead of eating it. A first page may be a six- or seven-digit article number (108772). A third branch reads a block with a volume and no first page that the citation itself ends: a sentence period, a semicolon, an explanatory parenthetical, a closing bracket, the link it is read online at, or the end of the text ('(2031) 88 Q J Fen Pol’y (surveying ...)'), so a journal the registry lacks is read whole instead of being cut to its first word. Foreign titles keep their lowercase connecting words ('Sociologia del diritto'). Beaver-authored: a journal's title may hold a colon ('SCLR: Osgoode's Annual Constitutional Cases Conference').",
+          "provenance": "Beaver-authored first-reference grammar for the periodical family: the (year) volume(:issue) journal first-page block that follows an author and a quoted article title in McGill footnote style. Sibling of cite.journal.toa, which is the classifier dialect (recall-first, used only to label a span the citation grammar already anchored); this entry adds the separators the corpus actually shows - '(2015). 52:1', '(1986-1987) 29', '(2020) 67(5)', '(1997) 23:1/2', ampersands and commas inside the journal name, lettered first pages (e482) - and a second branch for the unpaginated article, where the lookahead leaves 'at 1' to the pinpoint grammar instead of eating it. A first page may be a six- or seven-digit article number (108772). A third branch reads a block with a volume and no first page that the citation itself ends: a sentence period, a semicolon, an explanatory parenthetical, a closing bracket, the link it is read online at, or the end of the text ('(2031) 88 Q J Fen Pol’y (surveying ...)'), so a journal the registry lacks is read whole instead of being cut to its first word. Foreign titles keep their lowercase connecting words ('Sociologia del diritto'). Beaver-authored: a journal's title may hold a colon ('SCLR: Osgoode's Annual Constitutional Cases Conference'). Beaver-authored: two branches read a block written straight after the article's quoted title without its year before the volume - volume:issue, journal and first page ('… Dusk” 48:1 Can J Marsh Nursing 64'), or with the year after the journal ('… Signals” 6:3 Can J Fen Studies (2031) 13'). The closing quotation mark and the issue number are required, so a ratio or a time after a quoted word is not read as a volume.",
           "vectors": [
             {
               "input": "Alice Woolley, \"Lawyer Regulation in Canada\" (2017) 95:4 Can Bar Rev 893",
@@ -2085,6 +2115,28 @@
             },
             {
               "input": "the fen survey (2030) 12 tables were drawn",
+              "groups": null
+            },
+            {
+              "input": "Rae Holm, “Fen Light at Dusk” 48:1 Can J Marsh Nursing 64.",
+              "groups": {
+                "bare_volume": "48",
+                "bare_issue": "1",
+                "bare_journal": "Can J Marsh Nursing",
+                "bare_page": "64"
+              }
+            },
+            {
+              "input": "Ida Wren et al, “Reed Signals” 6:3 Can J Fen Studies (2031) 13; see also Fen v Reed, supra note 4.",
+              "groups": {
+                "late_volume": "6",
+                "late_journal": "Can J Fen Studies",
+                "late_year": "2031",
+                "late_page": "13"
+              }
+            },
+            {
+              "input": "the “Fen Light” 48:1 ratio was measured",
               "groups": null
             }
           ],
@@ -3647,13 +3699,13 @@
         },
         {
           "id": "cite.case.unreported",
-          "pattern": "\\((?<day>\\d{1,2})\\s+(?<month>Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?<year>(?:1[6-9]|20)\\d{2})\\),?\\s*(?:(?<place>[A-Z][A-Za-z .\\'-]{1,50}),?\\s+)?(?:(?<court_code>[A-Z]{2,6})\\s+)?(?<docket>[0-9][A-Za-z0-9/.-]{2,30})\\s+\\((?<court>[A-Z][A-Za-z .]{1,30}(?:\\s*\\([A-Za-z .]{1,10}\\))?|[a-z][a-z ]{3,40})\\)(?:\\s*\\[(?:unreported|unpublished)\\])?",
+          "pattern": "\\((?<day>\\d{1,2})\\s+(?<month>Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?\\s+(?<year>(?:1[6-9]|20)\\d{2})\\),?\\s*(?:(?<place>[A-Z][A-Za-z .\\'-]{1,50}),?\\s+)?(?:(?<court_code>[A-Z]{2,6})\\s+)?(?<docket>[A-Z]{0,4}[0-9][A-Za-z0-9/.–-]{2,30})(?:\\s+\\((?<court>[A-Z][A-Za-z .]{1,30}(?:\\s*\\([A-Za-z .]{1,10}\\))?|[a-z][a-z ]{3,40})\\)|\\s+(?<court_after>[A-Z]{2,6})\\b)(?:\\s*\\[(?:unreported|unpublished)\\])?",
           "flags": "",
           "canonical": {},
           "conventions": [
             "mcgill"
           ],
-          "provenance": "Authored McGill Canadian unreported-decision date, file-number and court form. Independently invented vectors. A full case style is required by discovery, so a dated administrative file or meeting does not become a case citation. Retrieval availability is application policy; this grammar only identifies the citation. A file number may hold slashes and dots, may follow the place's comma and a court code, and the court may carry its division ('(ONCJ (GD))').",
+          "provenance": "Authored McGill Canadian unreported-decision date, file-number and court form. Independently invented vectors. A full case style is required by discovery, so a dated administrative file or meeting does not become a case citation. Retrieval availability is application policy; this grammar only identifies the citation. A file number may hold slashes and dots, may follow the place's comma and a court code, and the court may carry its division ('(ONCJ (GD))'). Beaver-authored: a file number may open with letters and hold an en dash ('CR36–02-11845'), and the court's code may follow it unbracketed ('… CR36–02-11845 MBKB at page 4').",
           "vectors": [
             {
               "input": "Polder Council v Mere Holdings (21 March 2036), Calgary 2601-08164 (Alta KB) [unreported]",
@@ -3682,6 +3734,20 @@
             },
             {
               "input": "a meeting on 21 March 2036",
+              "groups": null
+            },
+            {
+              "input": "R v Fenwick and Oaks, (3 June 2036) CR36–02-11845 MBKB at page 4",
+              "groups": {
+                "day": "3",
+                "month": "June",
+                "year": "2036",
+                "docket": "CR36–02-11845",
+                "court_after": "MBKB"
+              }
+            },
+            {
+              "input": "On (3 June 2036) the report was filed.",
               "groups": null
             }
           ]
@@ -6472,6 +6538,35 @@
           "canonical": {},
           "provenance": "ALR-Quote-Verifier/verifier_core/deterministic_splitter.py: source pattern unchanged.",
           "vectors": []
+        },
+        {
+          "id": "pinpoint.continuation.splitter",
+          "pattern": "^\\s*(?:(?:at\\s+)?(?:paras?\\.?|pp?\\.?|pages?|¶¶?)\\s*)?\\d{1,5}(?:\\s*[-–]\\s*\\d{1,5})?(?:(?:\\s*,\\s*(?:and\\s+)?|\\s+and\\s+|\\s*&\\s*)\\d{1,5}(?:\\s*[-–]\\s*\\d{1,5})?)*\\s*(?:\\[[^\\[\\]\\n]{2,60}\\])?\\s*[.;]?\\s*$",
+          "flags": "i",
+          "canonical": {},
+          "provenance": "Beaver-authored. A clause holding only further pinpoints, and perhaps the short form, of the citation before it, written after a semicolon ('2031 ONSC 42 at paras 9–11; 15 [Alder]'): the splitter keeps it with that citation. Independently invented vectors.",
+          "vectors": [
+            {
+              "input": "135 [Alder].",
+              "groups": {}
+            },
+            {
+              "input": " 98–101, 135",
+              "groups": {}
+            },
+            {
+              "input": "at paras 12, 14",
+              "groups": {}
+            },
+            {
+              "input": "2031 ONSC 42",
+              "groups": null
+            },
+            {
+              "input": "Ibid at 5",
+              "groups": null
+            }
+          ]
         },
         {
           "id": "pinpoint.provision-value",

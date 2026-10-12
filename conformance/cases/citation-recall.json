@@ -2766,6 +2766,114 @@
           }
         ]
       }
+    },
+    {
+      "name": "mcgill/neutral-citation-without-its-number",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "See e.g. Alder v Birch, 2031 ONCJ at para 16 and Tern v Fen, 2034 ABKB (unreported, cited in Reed v Moss, 2035 ABCA 12).",
+      "expect": {
+        "citations": {
+          "$contains": [
+            {
+              "authority": "case",
+              "style": {
+                "text": "Alder v Birch"
+              },
+              "span": {
+                "text": "2031 ONCJ"
+              },
+              "pinpoints": [
+                {
+                  "kind": "paragraph",
+                  "first": "16"
+                }
+              ]
+            },
+            {
+              "authority": "case",
+              "style": {
+                "text": "Tern v Fen"
+              },
+              "span": {
+                "text": "2034 ABKB"
+              }
+            },
+            {
+              "authority": "case",
+              "span": {
+                "text": "2035 ABCA 12"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "mcgill/year-and-capitals-without-a-style-cite-nothing",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "In 2031 ONCJ judges sat more often than before.",
+      "expect": {
+        "citations": []
+      }
+    },
+    {
+      "name": "mcgill/unreported-decision-court-after-file-number",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "R v Fenwick and Oaks, (3 June 2036) CR36–02-11845 MBKB at page 4.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "case",
+            "style": {
+              "text": "R v Fenwick and Oaks"
+            },
+            "fields": {
+              "docket": "CR36–02-11845"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/journal-article-without-its-year",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Rae Holm, “Fen Light at Dusk” 48:1 Can J Marsh Nursing 64.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "journal",
+            "span": {
+              "text": "48:1 Can J Marsh Nursing 64"
+            },
+            "fields": {
+              "volume": "48",
+              "page": "64"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcgill/journal-article-year-after-journal",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ida Wren et al, “Reed Signals” 6:3 Can J Fen Studies (2031) 13.",
+      "expect": {
+        "citations": [
+          {
+            "authority": "journal",
+            "fields": {
+              "volume": "6",
+              "year": "2031",
+              "page": "13"
+            }
+          }
+        ]
+      }
     }
   ]
 }

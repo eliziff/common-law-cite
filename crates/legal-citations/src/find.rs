@@ -142,7 +142,7 @@ static LAW_SUBDIVISION: LazyLock<Screened<CompiledEcmascriptGrammar>> =
 // announces itself with a publication block instead, one family per entry.
 // These only ever add anchors: a secondary hit that touches a case-law hit is
 // dropped, so the case lane is byte-identical with and without them.
-const SECONDARY_LINEAR: [(&str, &str, &str); 10] = [
+const SECONDARY_LINEAR: [(&str, &str, &str); 11] = [
     // Multi-word tribunal identifiers (2020 Comp Trib 6, 2000 CIRB LD
     // 213) are out of cite.in-text's reach.
     ("case", "neutral_grammar", "cite.neutral.tribunal"),
@@ -155,9 +155,11 @@ const SECONDARY_LINEAR: [(&str, &str, &str); 10] = [
     ("treaty", "treaty_grammar", "cite.treaty"),
     ("case", "database_grammar", "cite.database"),
     ("case", "unreported_grammar", "cite.case.unreported"),
+    // A decision cited by its year and court alone ("R v Alder, 2031 ONCJ at para 16").
+    ("case", "unreported_grammar", "cite.neutral.numberless"),
 ];
 // Each compiled the first time a text it can match is read.
-static SECONDARY_ECMASCRIPT: [OnceLock<CompiledEcmascriptGrammar>; 10] = [const { OnceLock::new() }; 10];
+static SECONDARY_ECMASCRIPT: [OnceLock<CompiledEcmascriptGrammar>; 11] = [const { OnceLock::new() }; 11];
 // Article without a first page ("… (2020) The Journal of Value Inquiry at 1")
 // needs a lookahead so the pinpoint stays outside the core, which is the
 // backtracking dialect rather than the linear one.
@@ -388,6 +390,10 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
         for matched in pattern.find_iter(value) {
             let start = matched.start();
             if *reason == "unreported_grammar" && case_style_start(value, start, 0) == start {
+                continue;
+            }
+            // A year and capitals cite a decision only where they are a registered court's.
+            if *id == "cite.neutral.numberless" && crate::classify::read(matched.as_str(), reason, "").is_none() {
                 continue;
             }
             // A revised volume and year without a chapter ("RSA 2000") cites nothing unless an Act's

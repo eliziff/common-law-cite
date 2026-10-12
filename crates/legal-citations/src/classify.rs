@@ -40,6 +40,7 @@ static JOURNAL_ARTICLE: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("cite.journal.article"));
 static BOOK: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.book.imprint"));
 static UNREPORTED: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.case.unreported"));
+static NUMBERLESS: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.neutral.numberless"));
 static COURT_FILE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.ca.court-file"));
 static PARLIAMENTARY: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.parliamentary.paper"));
@@ -472,7 +473,23 @@ fn unreported(core: &str) -> Option<Reading> {
     reading.fields.day = group(&captures, "day");
     reading.fields.place = group(&captures, "place");
     reading.fields.docket = group(&captures, "docket");
-    reading.court = group(&captures, "court");
+    reading.court = group(&captures, "court").or_else(|| group(&captures, "court_after"));
+    Some(reading)
+}
+
+/// A neutral citation written without its decision number: a registered court's year, an unreported decision.
+fn numberless(core: &str) -> Option<Reading> {
+    let captures = whole(&NUMBERLESS, core)?;
+    let surface = group(&captures, "court")?;
+    let registry = registry();
+    if registry.courts_by_surface(&surface).is_empty()
+        || registry.reporters_by_surface(&surface).iter().any(|(reporter, _)| reporter.verified)
+        || registry.journals_by_surface(&surface).iter().any(|journal| journal.verified) {
+        return None;
+    }
+    let mut reading = Reading::new(Authority::Case, Some(Format::Docket), "unreported_grammar");
+    reading.fields.year = group(&captures, "year");
+    reading.court = Some(surface);
     Some(reading)
 }
 
@@ -626,18 +643,21 @@ pub(crate) fn extracted(core: &str, mut fields: Fields, short_at: Option<usize>)
 }
 
 fn journal_article(core: &str) -> Option<Reading> {
-    let captures = JOURNAL_ARTICLE.captures(core).ok()??;
-    let matched = captures.get(0)?;
-    if matched.start() != 0 || matched.end() != core.len() {
-        return None;
+    // A block written straight after the article's quoted title is read where it was found, after that title's
+    // closing quotation mark.
+    fn ending<'t>(text: &'t str, core: &str) -> Option<legal_grammar::GrammarCaptures<'t>> {
+        JOURNAL_ARTICLE.captures(text).ok().flatten().filter(|captures| captures.get(0)
+            .is_some_and(|whole| whole.end() == text.len() && whole.start() == text.len() - core.len()))
     }
+    let quoted = format!("\u{201d} {core}");
+    let captures = ending(core, core).or_else(|| ending(&quoted, core))?;
     let mut reading = Reading::new(Authority::Journal, Some(Format::Publication), "article_grammar");
     let fields = &mut reading.fields;
-    let first = |names: [&str; 3]| names.into_iter().find_map(|name| fancy_group(&captures, name));
-    fields.year = first(["year", "unpaged_year", "open_year"]);
-    fields.volume = first(["volume", "unpaged_volume", "open_volume"]);
-    fields.reporter = first(["journal", "unpaged_journal", "open_journal"]);
-    fields.page = fancy_group(&captures, "page");
+    let first = |names: &[&str]| names.iter().find_map(|name| fancy_group(&captures, name));
+    fields.year = first(&["year", "unpaged_year", "open_year", "late_year"]);
+    fields.volume = first(&["volume", "unpaged_volume", "open_volume", "bare_volume", "late_volume"]);
+    fields.reporter = first(&["journal", "unpaged_journal", "open_journal", "bare_journal", "late_journal"]);
+    fields.page = first(&["page", "bare_page", "late_page"]);
     Some(reading)
 }
 
@@ -802,6 +822,7 @@ pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
             reading.fields.url = Some(core.to_owned());
             return Some(reading);
         }
+        "unreported_grammar" => return unreported(core).or_else(|| numberless(core)),
         "court_file_grammar" => {
             // An unreported order, endorsement or decision, known by the file it was made under.
             let captures = whole(&COURT_FILE, core)?;

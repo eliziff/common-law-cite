@@ -36,7 +36,33 @@ pattern! {
     PROVISION_START => "provision.source-leading", PIN_SEPARATOR => "pinpoint.list-separator",
     PIN_NUMBER => "pinpoint.number.splitter", PROVISION_VALUE => "pinpoint.provision-value",
     ESSAY => "title.essay-collection", IBID => "ref.ibid.splitter",
-    AUTHORS => "ref.author-separator.comma",
+    AUTHORS => "ref.author-separator.comma", CONTINUATION => "pinpoint.continuation.splitter",
+}
+
+/// A citation the finder read: from its style to the end of its core, its core, and the anchor its authority makes.
+pub(crate) type Cited = (usize, usize, usize, &'static str);
+
+/// The finder's citations as the splitter takes them: a part holding one is of its kind, and no cut falls inside one.
+pub(crate) fn cited_extents(citations: &[crate::Citation]) -> Vec<Cited> {
+    use crate::model::{Authority, Form};
+    // A supra, ibid or short form names a source cited before; it is none of its own.
+    citations.iter().filter(|citation| citation.form == Form::Full).filter_map(|citation| {
+        let kind = match citation.authority {
+            Authority::Case => "reporter",
+            Authority::Statute | Authority::Regulation | Authority::Constitution => "statute",
+            // A periodical's volume; a dated report or news item is no journal article.
+            Authority::Journal if citation.fields.volume.is_some() => "journal",
+            Authority::Book | Authority::BookChapter => "book",
+            _ => return None,
+        };
+        let from = citation.style.as_ref().map_or(citation.span.start, |style| style.start.min(citation.span.start));
+        Some((from, citation.span.start, citation.span.end, kind))
+    }).collect::<Vec<_>>().into_iter().scan(0, |previous_end, (from, start, end, kind)| {
+        // A title never reaches back over the citation before it.
+        let from = from.max((*previous_end).min(start));
+        *previous_end = end;
+        Some((from, start, end, kind))
+    }).collect()
 }
 pattern! { Screened::python;
     BARE_ADMIN => "format.bare.administrative-tail", BARE_REFERENCE => "format.bare.reference",
@@ -219,7 +245,9 @@ pub struct SourcePart {
 /// rows keep whole: a semicolon inside brackets or quotes, a sentence that
 /// cites nothing with what follows it, and a supra with its name; and a row
 /// begins with the words that lead into its source ("and …", "as added by …").
-pub fn split_notes(text: &str, notes: &[crate::NoteRange], tier: Option<crate::SplitTier>) -> Vec<SourcePart> {
+pub fn split_notes(text: &str, notes: &[crate::NoteRange], tier: Option<crate::SplitTier>,
+    citations: &[crate::Citation]) -> Vec<SourcePart> {
+    let cited = cited_extents(citations);
     let mut parts = Vec::new();
     let mut preceding_ibid_without_source = false;
     for note in notes {
@@ -247,7 +275,11 @@ pub fn split_notes(text: &str, notes: &[crate::NoteRange], tier: Option<crate::S
                     anchors: vec!["reference".into()], resolved_url: None,
                     extended_us: false, anchor_spans: Vec::new() })
             }).collect()
-        } else { split_recall(value, false, tier.is_some()).parts };
+        } else {
+            let within = cited.iter().filter(|&&(from, _, end, _)| note.start <= from && end <= note.end)
+                .map(|&(from, start, end, kind)| (from - note.start, start - note.start, end - note.start, kind)).collect::<Vec<_>>();
+            split_with(value, true, false, tier.is_some(), &within).parts
+        };
         for mut part in selected {
             part.start += note.start;
             part.end += note.start;
@@ -410,13 +442,25 @@ fn anchor_spans(text: &str, found: &[Anchor]) -> Vec<(usize, usize)> {
     spans
 }
 
-fn part(text: &str, start: usize, end: usize, strict: bool, extended_us: bool) -> Option<SourcePart> {
+fn part(text: &str, start: usize, end: usize, strict: bool, extended_us: bool, cited: &[Cited]) -> Option<SourcePart> {
     let raw = &text[start..end];
     let value = raw.trim();
     if value.is_empty() { return None; }
     let start = start + raw.len() - raw.trim_start().len();
     let pure_reference = full_match(&PURE_REFERENCE, value);
-    let found = if pure_reference { Vec::new() } else { anchors(value, extended_us) };
+    let mut found = if pure_reference { Vec::new() } else { anchors(value, extended_us) };
+    // A core the finder read where the splitter's own grammar reads none ("Roe v Ash, 88 F 4th 525 (2023)").
+    if !pure_reference {
+        for &(_, core_start, core_end, kind) in cited {
+            if start <= core_start && core_end <= start + value.len() {
+                let (left, right) = (core_start - start, core_end - start);
+                if !found.iter().any(|&(other_left, other_right, _)| left < other_right && other_left < right) {
+                    found.push((left, right, kind));
+                }
+            }
+        }
+        found.sort_unstable();
+    }
     let kinds = if pure_reference { vec!["reference".into()] } else {
         if strict && (found.is_empty() || found.windows(2).any(|pair| {
             let gap = &value[pair[0].1..pair[1].0];
@@ -632,17 +676,44 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
     deduped.into_iter().map(|((left, right), reason)| (left, right, reason)).collect()
 }
 
+/// The recall-first split also reads the text's citations with the finder ([`cited_extents`]).
 pub fn split(text: &str, recall_first: bool, extended_us: bool) -> SourceSplit {
-    if recall_first { split_recall(text, extended_us, false) } else { split_with(text, false, extended_us, false) }
+    if recall_first {
+        let cited = cited_extents(&crate::find::find(text, &crate::Options::default()));
+        split_with(text, true, extended_us, false, &cited)
+    } else { split_with(text, false, extended_us, false, &[]) }
 }
 
-/// The recall-first split, with a note splitter's tier rules when `tiered` ([`recall_boundaries`]).
-fn split_recall(text: &str, extended_us: bool, tiered: bool) -> SourceSplit { split_with(text, true, extended_us, tiered) }
-
-fn split_with(text: &str, recall_first: bool, extended_us: bool, tiered: bool) -> SourceSplit {
+/// With a note splitter's tier rules when `tiered` ([`recall_boundaries`]); `cited`, the finder's citations, only
+/// in a recall-first split.
+fn split_with(text: &str, recall_first: bool, extended_us: bool, tiered: bool, cited: &[Cited]) -> SourceSplit {
     let abstain = |reason| SourceSplit { status: "abstain", parts: Vec::new(), delimiters: Vec::new(), reasons: vec![reason] };
     if text.trim().is_empty() { return abstain("empty"); }
-    let boundaries = if recall_first { recall_boundaries(text, extended_us, &anchors(text, extended_us), tiered) } else {
+    let boundaries = if recall_first {
+        // A citation the finder read whole is one source: a cut between its style and its core's end moves to where
+        // it begins ("…section 112 of the | Mines and Minerals Act, RSA 2000, c M-17").
+        // Listed after a comma, the words leading into it go with it ("…, c O-6, | the Oil Sands Conservation Act").
+        let begins = |from: usize| {
+            let lead = connective_start(text, from);
+            if text[..lead].trim_end().ends_with(',') && text[lead..from].split_whitespace().count() <= 2 { lead } else { from }
+        };
+        let mut boundaries = recall_boundaries(text, extended_us, &anchors(text, extended_us), tiered).into_iter()
+            .map(|(left, right, reason)| match cited.iter().find(|&&(from, _, end, _)| from < left && left < end) {
+                Some(&(from, ..)) if left == right => (begins(from), begins(from), reason),
+                _ => (left, right, reason),
+            }).collect::<Vec<_>>();
+        // A statute with its own title after another, with nothing dividing them, is a source of its own.
+        for pair in cited.windows(2) {
+            let (&(_, _, previous_end, previous), &(from, start, _, kind)) = (&pair[0], &pair[1]);
+            if previous == "statute" && kind == "statute" && from < start
+                && !boundaries.iter().any(|&(left, _, _)| previous_end <= left && left <= from) {
+                boundaries.push((begins(from), begins(from), "new_cited_source"));
+            }
+        }
+        boundaries.sort_unstable();
+        boundaries.dedup_by_key(|&mut (left, right, _)| (left, right));
+        boundaries
+    } else {
         let top = crate::find::top_level(text);
         let mut boundaries = text.match_indices(';').filter(|(position, _)| top[*position])
             .map(|(position, _)| (position, position + 1, "top_level_semicolon")).collect::<Vec<_>>();
@@ -652,14 +723,14 @@ fn split_with(text: &str, recall_first: bool, extended_us: bool, tiered: bool) -
             if !top[position] { continue; }
             let start = boundaries.iter().filter(|(_, right, _)| *right <= position).map(|(_, right, _)| *right).max().unwrap_or(0);
             let end = boundaries.iter().filter(|(left, _, _)| *left >= position).map(|(left, _, _)| *left).min().unwrap_or(text.len());
-            if part(text, start, position, true, extended_us).is_some() && part(text, position, end, true, extended_us).is_some() {
+            if part(text, start, position, true, extended_us, &[]).is_some() && part(text, position, end, true, extended_us, &[]).is_some() {
                 boundaries.push((position, position, "explicit_source_signal"));
             }
         }
         boundaries.sort_unstable();
         if boundaries.is_empty() {
             return if full_match(&PURE_REFERENCE, text) {
-                SourceSplit { status: "deterministic_complete", parts: vec![part(text, 0, text.len(), true, extended_us).unwrap()],
+                SourceSplit { status: "deterministic_complete", parts: vec![part(text, 0, text.len(), true, extended_us, &[]).unwrap()],
                     delimiters: Vec::new(), reasons: vec!["pure_reference"] }
             } else { abstain("no_supported_boundary") };
         }
@@ -677,13 +748,28 @@ fn split_with(text: &str, recall_first: bool, extended_us: bool, tiered: bool) -
     let ends = boundaries.iter().map(|(left, _, _)| *left).chain([text.len()]);
     let mut parts = Vec::new();
     for (start, end) in starts.zip(ends) {
-        match part(text, start, end, !recall_first, extended_us) {
+        match part(text, start, end, !recall_first, extended_us, cited) {
             Some(part) => parts.push(part),
             None if !recall_first => return abstain("unconsumed_or_ambiguous_clause"),
             None => {},
         }
     }
     if parts.is_empty() { return abstain("empty_parts"); }
+    // Pinpoints written after a semicolon, with or without the short form, are the citation's before them
+    // ("2031 ONSC 42 at paras 9–11; 15 [Alder]").
+    if recall_first {
+        let mut index = 1;
+        while index < parts.len() {
+            let (left, right) = (&parts[index - 1], &parts[index]);
+            if text[left.end..right.start].trim() == ";" && matches(&CONTINUATION, &right.text)
+                && left.anchors.iter().any(|kind| matches!(kind.as_str(), "neutral" | "reporter" | "statute" | "journal" | "book")) {
+                let right = parts.remove(index);
+                let left = &mut parts[index - 1];
+                left.end = right.end;
+                left.text = text[left.start..left.end].into();
+            } else { index += 1; }
+        }
+    }
     let delimiters = parts.windows(2).map(|pair| (pair[0].end, pair[1].start,
         text[pair[0].end..pair[1].start].to_owned())).collect();
     let mut reasons = Vec::new();
