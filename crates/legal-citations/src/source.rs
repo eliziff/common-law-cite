@@ -1,4 +1,4 @@
-//! ALR's deterministic source splitter. Source boundaries are independent of
+//! Deterministic source splitter. Source boundaries are independent of
 //! citation extents: delimiters and prose remain part of the input document.
 
 use crate::screen::Screened;
@@ -71,7 +71,7 @@ pattern! { Screened::python;
     BARE_COMMENTARY => "format.bare.commentary", BARE_SENTENCE => "format.bare.sentence",
 }
 
-// ALR's pure-reference prefilter is narrower than the splitter grammar:
+// The pure-reference prefilter is narrower than the splitter grammar:
 // subsection parentheses, extra signal verbs, and mixed citing clauses must
 // continue through the ordinary recall splitter.
 static ALR_PURE_REFERENCE: LazyLock<regex::Regex> = LazyLock::new(|| {
@@ -82,10 +82,10 @@ static ALR_PURE_REFERENCE: LazyLock<regex::Regex> = LazyLock::new(|| {
     let rule_number = r"\d+(?:\.\d+){0,3}[a-z]?";
     let rule_numbers = format!(r"{rule_number}(?:\s*(?:,|and|&)\s*{rule_number})*");
     let pin = format!(r"(?:at\s+(?:(?:{rule})\s+{rule_numbers}|(?:(?:paras?\.?|pp?\.?|pages?|{provision})\s+)?{numbers})(?:ff)?|(?:paras?\.?|{provision})\s+{numbers}(?:ff)?|(?:{rule})\s+{rule_numbers}(?:ff)?)");
-    regex::Regex::new(&format!(r"(?i)^\s*(?:(?:see(?:,?\s+e\.?g\.?,?)?(?:\s+also)?|but\s+see|contra|compare|cf\.?|see\s+generally)\s+)?(?:ibid\.?|(?:[^,;.]{{1,60}}\s*,\s*)?supra(?:\s+(?:note|nn?\.?)\s+\d+)?)(?:\s*,)?(?:\s+{pin})?\s*[.;]?\s*$")).expect("ALR pure-reference prefilter")
+    regex::Regex::new(&format!(r"(?i)^\s*(?:(?:see(?:,?\s+e\.?g\.?,?)?(?:\s+also)?|but\s+see|contra|compare|cf\.?|see\s+generally)\s+)?(?:ibid\.?|(?:[^,;.]{{1,60}}\s*,\s*)?supra(?:\s+(?:note|nn?\.?)\s+\d+)?)(?:\s*,)?(?:\s+{pin})?\s*[.;]?\s*$")).expect("pure-reference prefilter")
 });
 
-/// One clause of a note made only of ibid/supra references (ALR's pure-reference prefilter).
+/// One clause of a note made only of ibid/supra references (the pure-reference prefilter).
 #[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
@@ -117,7 +117,7 @@ static PURE_PIN_PROVISION: LazyLock<regex::Regex> = LazyLock::new(|| regex::Rege
     r"^(?:at\s+)?(?:s\b|ss\b|s\.|ss\.|sections?\b|arts?\.?\b|articles?\b|rr?\.?\b|rules?\b)").expect("provision pin"));
 static PURE_PIN_PAGE: LazyLock<regex::Regex> = LazyLock::new(|| regex::Regex::new(r"^at\b").expect("page pin"));
 
-/// ALR's _prefilter_pure_ref_parts: one part per semicolon clause when every clause is a
+/// One part per semicolon clause when every clause is a
 /// mechanical ibid/supra reference, None when any clause needs the ordinary splitter.
 pub fn pure_reference_clauses(note: &str) -> Option<Vec<PureReferenceClause>> {
     let text = note.split_whitespace().collect::<Vec<_>>().join(" ");
@@ -161,8 +161,7 @@ static DOUBLE_QUOTED_TITLE: LazyLock<regex::Regex> = LazyLock::new(||
 static SINGLE_QUOTED_TITLE: LazyLock<regex::Regex> = LazyLock::new(||
     regex::Regex::new("['\u{2018}]([^'\u{2018}\u{2019}]+?)['\u{2019}]").expect("single-quoted title"));
 
-/// The quoted titles a secondary-source citation writes, double-quoted first, each once
-/// (ALR-Quote-Verifier journal_search._extract_titles).
+/// The quoted titles a secondary-source citation writes, double-quoted first, each once.
 pub fn quoted_titles(text: &str) -> Vec<String> {
     let key = |value: &str| value.to_lowercase().chars()
         .filter(|c| c.is_alphanumeric() || c.is_whitespace() || *c == '_')
@@ -174,12 +173,12 @@ pub fn quoted_titles(text: &str) -> Vec<String> {
         .collect()
 }
 
-/// ALR's administrative-tail removal, also used before retrieval normalization.
+/// Administrative-tail removal, also used before retrieval normalization.
 pub fn strip_administrative_tail(text: &str) -> String {
     BARE_ADMIN.replace_all(text, "").trim_matches(crate::text::python_whitespace).to_owned()
 }
 
-/// ALR's _derive_bare_citation. The splitter's fields retain their original
+/// The bare citation of a part. The splitter's fields retain their original
 /// source surfaces; this operation removes commentary for authority lookup.
 pub fn derive_bare_citation(text: &str, kind: &str) -> String {
     let trim = |text: &str| text.trim_matches(crate::text::python_whitespace).to_owned();
@@ -229,7 +228,7 @@ pub struct SourcePart {
     pub end: usize,
     pub text: String,
     pub anchors: Vec<String>,
-    /// ALR FootnotePart.link after host retrieval, before reference resolution.
+    /// The part's link after host retrieval, before reference resolution.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub resolved_url: Option<String>,
     #[serde(default)]
@@ -241,7 +240,7 @@ pub struct SourcePart {
 
 /// Split supplied note text in its original document coordinates. The
 /// splitter's part boundaries are independent of citation extents. With a
-/// `tier` ([`crate::SplitTier`]) the splitter also keeps whole what ALR's
+/// `tier` ([`crate::SplitTier`]) the splitter also keeps whole what split
 /// rows keep whole: a semicolon inside brackets or quotes, a sentence that
 /// cites nothing with what follows it, and a supra with its name; and a row
 /// begins with the words that lead into its source ("and …", "as added by …").
@@ -253,7 +252,7 @@ pub fn split_notes(text: &str, notes: &[crate::NoteRange], tier: Option<crate::S
     for note in notes {
         if note.start > note.end || !text.is_char_boundary(note.start)
             || !text.is_char_boundary(note.end) || note.end > text.len() { continue; }
-        // ALR's pure-reference prefilter keeps each semicolon clause intact;
+        // The pure-reference prefilter keeps each semicolon clause intact;
         // recall splitting applies to notes with other source material.
         let value = &text[note.start..note.end];
         let clauses = value.split(';').collect::<Vec<_>>();
@@ -289,7 +288,7 @@ pub fn split_notes(text: &str, notes: &[crate::NoteRange], tier: Option<crate::S
             }
             parts.push(part);
         }
-        // A preceding ibid has no independent source in Phase 1. ALR declines
+        // A preceding ibid has no independent source in Phase 1. The splitter declines
         // the pure-reference shortcut for the next leading ibid in that case.
         preceding_ibid_without_source = leading_ibid;
     }
@@ -386,7 +385,7 @@ fn full_match(pattern: &Screened<CompiledGrammar>, text: &str) -> bool {
 
 fn us_matches(text: &str) -> Vec<Anchor> {
     crate::us::find(text, true, None).into_iter().map(|found| {
-        // Preserve ALR's source-routing precedence independently of the
+        // Preserve the source-routing precedence independently of the
         // authority classification: laws, journals, then case reporters.
         let editions = found.fields.exact_editions.iter().chain(&found.fields.variation_editions);
         let kind = if editions.clone().any(|edition| edition.reporter.source == "laws") { "statute" }
@@ -428,7 +427,7 @@ fn has_anchor(text: &str, extended_us: bool) -> bool {
 }
 
 /// Exact source-grammar anchors for connecting a discovered full citation to
-/// a split part. This does not alter the ALR splitter's boundary decisions.
+/// a split part. This does not alter the splitter's boundary decisions.
 fn anchor_spans(text: &str, found: &[Anchor]) -> Vec<(usize, usize)> {
     let mut spans = found.iter().map(|&(start, end, _)| (start, end)).collect::<Vec<_>>();
     for pattern in [&*SECONDARY, &*QUOTED] {

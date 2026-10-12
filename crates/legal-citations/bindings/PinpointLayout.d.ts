@@ -2,7 +2,7 @@
 import type { LocatorGroup } from "./LocatorGroup";
 
 /**
- * Pinpointer's formatter layout: links belong to the caller, while range
+ * Pinpoint formatter layout: links belong to the caller, while range
  * endpoints, shared roots and wording belong to the citation engine.
  */
 export type PinpointLayout = { plain: string, prefix: string, locators: string, groups: Array<LocatorGroup>, };

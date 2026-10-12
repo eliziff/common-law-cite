@@ -2,7 +2,7 @@
 
 export type AliasTarget = { key: string, citation: string, 
 /**
- * Original ALR evidence-record identifiers in registry/aliases.json.
+ * Original evidence-record identifiers in registry/aliases.json.
  * These are provenance references, never runtime lookup keys.
  */
 records: Array<string>, };

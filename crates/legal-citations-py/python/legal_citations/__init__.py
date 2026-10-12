@@ -10,10 +10,6 @@ unless you ask for ``"byte"`` or ``"utf16"``.
 >>> import legal_citations
 >>> [c["span"]["text"] for c in legal_citations.extract("R v Jordan, 2016 SCC 27 at para 5")]
 ['2016 SCC 27']
-
-For code written against eyecite, ``legal_citations.eyecite`` offers
-``get_citations``, ``resolve_citations``, ``annotate_citations`` and
-``clean_text`` with eyecite's class and attribute names.
 """
 
 from __future__ import annotations

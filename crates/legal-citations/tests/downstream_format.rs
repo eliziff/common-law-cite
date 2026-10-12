@@ -80,7 +80,7 @@ fn french_labels() {
 }
 
 #[test]
-fn en_dash_style_for_beaver() {
+fn en_dash_style() {
     let style = Style {
         range_dash: "\u{2013}",
         ..Style::default()
@@ -239,7 +239,7 @@ fn articles() {
         ..Article::default()
     };
     assert_eq!(article(&unpublished), "Jane Doe, \u{201c}Draft\u{201d} (2021), SSRN 12345");
-    // Beaver's row without volume or page.
+    // A row without volume or page.
     let row = Article {
         authors: vec![],
         title: "T".into(),

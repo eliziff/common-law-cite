@@ -1,4 +1,4 @@
-"""Smoke tests for the Python binding and the eyecite facade.
+"""Smoke tests for the Python binding.
 
 Behavioral coverage lives in conformance/ (run with `python conformance/run.py`);
 these only check the binding's own plumbing.
@@ -9,7 +9,6 @@ import threading
 import pytest
 
 import legal_citations
-from legal_citations import eyecite as ec
 
 TEXT = "See R v Jordan, 2016 SCC 27 at para 5; Roe v. Wade, 410 U.S. 113, 115 (1973)."
 
@@ -55,19 +54,3 @@ def test_threads():
     for thread in threads:
         thread.join()
     assert len(set(results)) == 1
-
-
-def test_eyecite_facade():
-    citations = ec.get_citations(TEXT)
-    assert citations
-    roe = next(c for c in citations if c.matched_text() == "410 U.S. 113")
-    assert isinstance(roe, ec.FullCaseCitation)
-    assert set(roe.groups) == {"volume", "reporter", "page"}  # values: see conformance
-    start, end = roe.span()
-    assert TEXT[start:end] == "410 U.S. 113"
-    assert roe.full_span()[0] <= start
-    assert roe.metadata.pin_cite is None or "115" in roe.metadata.pin_cite
-    resolved = ec.resolve_citations(citations)
-    assert all(isinstance(resource, ec.Resource) for resource in resolved)
-    annotated = ec.annotate_citations(TEXT, [(roe.span(), "<a>", "</a>")])
-    assert "<a>410 U.S. 113</a>" in annotated

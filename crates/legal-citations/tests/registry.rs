@@ -77,10 +77,10 @@ fn references_between_tables_resolve() {
     }
 }
 
-/// Spot checks against Beaver's verified A2AJ_CANLII_COURT_ROUTES, including
+/// Spot checks against the verified CanLII court-route table, including
 /// the irregular database slugs. Two routes are deliberately corrected here:
-/// CanLII serves Yukon under `yk` (Beaver: `yt/...`), and the Privy Council
-/// database sits under `ca` (Beaver: bare `ukjcpc`).
+/// CanLII serves Yukon under `yk` (not `yt/...`), and the Privy Council
+/// database sits under `ca` (not bare `ukjcpc`).
 #[test]
 fn canlii_routes_match_the_verified_table() {
     let registry = registry();
@@ -169,7 +169,7 @@ fn parenthetical_and_mcgill_court_forms_resolve() {
         ("HCA", "hca"),
         ("NZSC", "nzsc"),
         ("9th Cir.", "ca9"),
-        // A2AJ dataset codes from Beaver's courtLevels.ts.
+        // A2AJ dataset codes.
         ("CT", "cact"),
         ("FPSLREB", "pslreb"),
         ("RAD", "rad"),

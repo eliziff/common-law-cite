@@ -418,8 +418,8 @@ static SURFACES: LazyLock<[regex::Regex; 2]> = LazyLock::new(|| {
     ["us_reporters", "us_journals"].map(|name| regex::Regex::new(
         &format!("^(?:{})$", defs[name]).replace(r"\s*", "").replace(' ', "")).unwrap())
 });
-// One catalogue lookup for discovery and classification. The original LSP
-// gives a shared reporter/journal spelling to reporters first.
+// One catalogue lookup for discovery and classification. A shared
+// reporter/journal spelling goes to reporters first.
 fn standard_source(surface: &str) -> Option<&'static str> {
     ["reporters", "journals"].into_iter().zip(SURFACES.iter())
         .find_map(|(source, pattern)| pattern.is_match(surface).then_some(source))
@@ -461,10 +461,10 @@ static EDITIONS: LazyLock<BTreeMap<String, (BTreeSet<usize>, BTreeSet<usize>)>> 
     }
     map
 });
-// Frozen LSP citator.rs::standard_us_matches. Its catalogue lookup ignores
+// Standard U.S. reporter matches. The catalogue lookup ignores
 // whitespace anywhere in the reporter surface, including dotless variants.
 fn standard_matches(text: &str, extended: bool) -> Vec<Match> {
-    // Frozen LSP us_fallback_ranges: extended pages are scanned only on cue lines.
+    // Extended pages are scanned only on cue lines.
     let mut ranges = vec![(0, text.len(), &*PATTERN)];
     if extended {
         ranges.extend(fallback_ranges(text).into_iter().map(|(start, end)| (start, end, &*EXTENDED)));
@@ -527,7 +527,7 @@ pub(crate) fn common_law_spans(text: &str) -> Vec<Range<usize>> {
     if COMMON.may_match(text) { COMMON.find_spans(text) } else { Vec::new() }
 }
 
-/// LSP's citation-hit evidence for excerpt scoring, before identity or metadata.
+/// Citation-hit evidence for excerpt scoring, before identity or metadata.
 /// Its four extended grammars only run on the original cue-selected lines.
 pub(crate) fn citation_spans(text: &str, extended: bool) -> Vec<Range<usize>> {
     let mut spans = standard_matches(text, extended).into_iter().map(|hit| hit.span).collect::<Vec<_>>();

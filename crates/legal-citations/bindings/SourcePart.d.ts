@@ -2,7 +2,7 @@
 
 export type SourcePart = { start: number, end: number, text: string, anchors: Array<string>, 
 /**
- * ALR FootnotePart.link after host retrieval, before reference resolution.
+ * The part's link after host retrieval, before reference resolution.
  */
 resolvedUrl?: string | null, extendedUs: boolean, 
 /**

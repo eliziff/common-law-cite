@@ -52,7 +52,7 @@ fn canlii_french_codes_and_pages() {
         canlii(canlii_case_in(&neutral("2016", "CSC", "27"), Language::En, registry())),
         "https://www.canlii.org/fr/ca/csc/doc/2016/2016csc27/2016csc27.html"
     );
-    // A French page of an English SCC citation uses the French code (pinpointer).
+    // A French page of an English SCC citation uses the French code.
     assert_eq!(
         canlii(canlii_case_in(&neutral("2016", "SCC", "27"), Language::Fr, registry())),
         "https://www.canlii.org/fr/ca/csc/doc/2016/2016csc27/2016csc27.html"
@@ -61,7 +61,7 @@ fn canlii_french_codes_and_pages() {
         canlii(canlii_case_in(&neutral("2019", "FC", "5"), Language::Fr, registry())),
         "https://www.canlii.org/fr/ca/cf/doc/2019/2019cf5/2019cf5.html"
     );
-    // Any other court keeps its English route under /fr/ (Beaver).
+    // Any other court keeps its English route under /fr/.
     assert_eq!(
         canlii(canlii_case_in(&neutral("2019", "ONCA", "1"), Language::Fr, registry())),
         "https://www.canlii.org/fr/on/onca/doc/2019/2019onca1/2019onca1.html"

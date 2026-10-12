@@ -1,4 +1,4 @@
-//! Port of ALR verifier_core/supra_fallbacks.py's short-form inference.
+//! Short-form inference.
 //! Patterns retain their source definitions in the grammar corpus.
 //! Canadian/McGill-oriented author and title inference is an aggressive
 //! fallback. Exact source identity, note scope and ambiguity are general
@@ -201,7 +201,7 @@ fn ref_normalize(value: &str) -> String {
         .replace(['–', '—'], "-").to_lowercase()
 }
 
-/// ALR's reference markers, preserving the note/n/nn pattern precedence.
+/// Reference markers, preserving the note/n/nn pattern precedence.
 /// Decimal strings let each binding retain Python's unbounded note integers.
 #[derive(Clone, Debug, Serialize)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
@@ -310,8 +310,8 @@ pub fn resolve_registry<R: Borrow<ReferenceSource>>(text: &str, registry: &[R], 
     resolve_registry_scoped(text, registry, aggressive, None, false)
 }
 
-/// `by_name`: a supra whose numbered note cites another work, or none, is read by its name, as the
-/// Python app's safe linking reads it whatever note number the author wrote.
+/// `by_name`: a supra whose numbered note cites another work, or none, is read by its name, as safe
+/// linking reads it, whatever note number the author wrote.
 pub(crate) fn resolve_registry_scoped<R: Borrow<ReferenceSource>>(text: &str, registry: &[R], aggressive: bool,
     sequence: Option<u32>, by_name: bool) -> (String, &'static str) {
     let hint = supra_hint(text, aggressive);
@@ -333,7 +333,7 @@ fn resolve_hint<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[
     sequence: Option<u32>, by_name: bool, rules: &Matching) -> (String, &'static str) {
     let normalized = ref_normalize(hint);
     let normalized = normalized.trim_matches(['[', ']', '(', ')', ' ']);
-    // Name matching reads whole words, in any script; ALR's tokens are ASCII runs of three letters or more.
+    // Name matching reads whole words, in any script; registry tokens are ASCII runs of three letters or more.
     let tokens = if rules.matching { word_tokens(hint, 3) } else { ref_tokens(&hint) };
     let matches_tokens = |value: &str| tokens.iter().all(|token| value.contains(token.as_str()));
     let matches_entry = |entry: &ReferenceSource| if rules.matching {
@@ -531,7 +531,7 @@ fn bracket_definition<'a>(normalized: &str, entries: impl Iterator<Item = &'a Re
     (bases.len() == 1 && !best.is_empty()).then(|| best.to_owned())
 }
 
-/// ALR's resolve_after_strict_abstention, retaining its two existing tiers.
+/// Resolution after strict abstention, retaining its two existing tiers.
 pub fn resolve_after_strict_abstention<R: Borrow<ReferenceSource>>(
     text: &str, registry: &[R], inferred_forms: &[R],
 ) -> (String, String) {
@@ -564,7 +564,7 @@ pub(crate) fn resolve_inferred_candidates<R: Borrow<ReferenceSource>>(
     (target.to_owned(), format!("inferred_short_form:{}", chosen.rule.as_deref().unwrap_or("")))
 }
 
-/// ALR's _reanchor_ref_link: own-scope pinpoints replace inherited fragments;
+/// Own-scope pinpoints replace inherited fragments;
 /// bare supra removes the fragment, while bare ibid retains it verbatim.
 pub fn reanchor_reference(origin_link: &str, text: &str) -> String {
     let link = origin_link.split(crate::text::python_whitespace)
@@ -768,11 +768,11 @@ pub(crate) fn reading_hints(text: &str) -> Vec<String> {
     }
     let hint = rest.trim_matches(|c: char| c.is_whitespace() || ",;:.[{]}\"'“”«»‹›".contains(c))
         .split_whitespace().collect::<Vec<_>>().join(" ");
-    // Then the name as ALR's reader reads it, and the name a lead-in ends with.
-    let alr = supra_hint(text, true);
-    let alr = if alr.is_empty() { fallback_hint(text) } else { alr };
+    // Then the name as the supra-hint reader reads it, and the name a lead-in ends with.
+    let reader_hint = supra_hint(text, true);
+    let reader_hint = if reader_hint.is_empty() { fallback_hint(text) } else { reader_hint };
     let mut hints = Vec::new();
-    for candidate in [Some(hint.clone()), Some(alr), tail_name(&hint)].into_iter().flatten() {
+    for candidate in [Some(hint.clone()), Some(reader_hint), tail_name(&hint)].into_iter().flatten() {
         if !candidate.is_empty() && !hints.contains(&candidate) { hints.push(candidate); }
     }
     hints

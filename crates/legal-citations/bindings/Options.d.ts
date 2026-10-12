@@ -41,7 +41,7 @@ notes: Array<NoteRange> | null,
  */
 jurisdictionPriority: Array<string>, 
 /**
- * ALR hint capture uses aggressive mode by default.
+ * Supra hint capture uses aggressive mode by default.
  */
 supraHintMode: SupraMode, 
 /**
