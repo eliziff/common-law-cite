@@ -5,19 +5,19 @@
 [courts-db]
 repository = "freelawproject/courts-db"
 version = "0.10.27"
-commit = "97b60845aa2558b71f3b8dcc7bd67f30188d0a03"
+commit = "c22604dff8b6819d022cc5ddfd6d9080101149e3"
 license = "BSD-2-Clause"
 [courts-db.sha256]
-"courts_db/data/courts.json" = "61a26db4e4c17d9b97613739da20f3cb27cf64a447df0449d9c12d49974a84bf"
+"courts_db/data/courts.json" = "9c3b2bcd49468ee6d824931fc7cabb0ec722a49449429f7da3faa13d62106350"
 "courts_db/data/states.json" = "22e050fca2c2f540a9fc6b95e643b9c8a6d53c0e8d80585a8c1ad9898cfd0db3"
 
 [reporters-db]
 repository = "freelawproject/reporters-db"
 version = "3.2.66"
-commit = "e095e6bf914ffd0a7b272f3764179cf3dbdf246c"
+commit = "7a5b9b06fcdc829546705fd874023990f493e751"
 license = "BSD-2-Clause"
 [reporters-db.sha256]
 "reporters_db/data/journals.json" = "acad477ad889f745afe09a738e0c0091fdb59ab05a40d0bf55deba9c0ae2d10f"
 "reporters_db/data/laws.json" = "cba1f8f2225a27600b4906c0ed6cb5ede00fbba0983538845e628f77fb0fce69"
-"reporters_db/data/reporters.json" = "2b20c0ff414a8003b1c164904e5f1db8ee2504a81ef49fba69c4413a83e3f10a"
 "reporters_db/data/regexes.json" = "c91ff836e1b73d75b3546448c324d77bee338d9014637c738efd16fcb75ea47a"
+"reporters_db/data/reporters.json" = "d1dee4057eaf051b3737c720fd0c58cd436f74b69286f521c3601d6aa4d332f1"
