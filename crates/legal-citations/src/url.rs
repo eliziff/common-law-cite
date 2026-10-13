@@ -146,15 +146,30 @@ pub fn source_canlii_routes() -> &'static HashMap<String, String> {
     &SOURCE_ROUTES.routes
 }
 
-#[derive(serde::Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[derive(Default)]
 struct SourceRoutes {
     routes: HashMap<String, String>,
     french_routes: HashMap<String, String>,
 }
 
-static SOURCE_ROUTES: LazyLock<SourceRoutes> = LazyLock::new(||
-    serde_json::from_str(include_str!("../registry/source-canlii-routes.json")).expect("source CanLII routes"));
+static SOURCE_ROUTES: LazyLock<SourceRoutes> = LazyLock::new(|| {
+    let mut result = SourceRoutes::default();
+    for court in &registry::registry().courts {
+        let Some(route) = &court.canlii else { continue };
+        let path = format!("{}/{}", route.jurisdiction, route.database);
+        result.routes.entry(route.database.to_ascii_uppercase()).or_insert_with(|| path.clone());
+        for (position, code) in court.neutral.iter().enumerate() {
+            if code.contains(char::is_whitespace) { continue; }
+            let translated = (position > 0).then_some(court.canlii_fr.as_ref()).flatten();
+            let path = translated.map_or_else(|| path.clone(), |route| format!("{}/{}", route.jurisdiction, route.database));
+            if translated.is_some() {
+                result.french_routes.entry(code.to_ascii_uppercase()).or_insert_with(|| path.clone());
+            }
+            result.routes.entry(code.to_ascii_uppercase()).or_insert(path);
+        }
+    }
+    result
+});
 
 pub(crate) fn source_canlii_french_routes() -> &'static HashMap<String, String> {
     &SOURCE_ROUTES.french_routes

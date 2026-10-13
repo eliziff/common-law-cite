@@ -40,7 +40,6 @@ cp -R "$root/crates/legal-citations/bindings" "$here/js/bindings"
 cp "$root/LICENSE" "$here/js/LICENSE"
 cp "$root/NOTICE" "$here/js/NOTICE"
 cp "$root/README.md" "$here/js/README.md"
-cp "$root/crates/legal-citations/registry/source-canlii-routes.json" "$here/js/source-canlii-routes.json"
 version="$(sed -n 's/^version = "\(.*\)"/\1/p' "$root/Cargo.toml" | head -1)"
 (cd "$here/js" && npm pkg set version="$version" >/dev/null)
 ls -l "$here/js/pkg"
