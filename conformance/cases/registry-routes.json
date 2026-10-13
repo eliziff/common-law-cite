@@ -1,0 +1,21 @@
+{
+  "format": "legal-citations-conformance:v1",
+  "source": "Public CanLII database paths; independently invented citation locators.",
+  "cases": [
+    {
+      "name": "routes/registry-databases-and-french-codes",
+      "method": "sourceCanliiRoutes",
+      "request": {},
+      "status": "pass",
+      "expect": {
+        "YKCA": "yk/ykca",
+        "YTRTO": "yk/ytrto",
+        "UKJCPC": "ca/ukjcpc",
+        "NBBR": "nb/NBQB",
+        "ONHRT": "on/onhrt",
+        "NTSC": "nt/ntsc",
+        "SCC-L": "ca/scc-l"
+      }
+    }
+  ]
+}
