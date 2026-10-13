@@ -1,7 +1,7 @@
 # Citation source contracts
 
-This private npm package contains public TypeScript wire declarations and the
-canonical CanLII route registry. It has no JavaScript or WASM citation runtime;
+This private npm package contains public TypeScript wire declarations. Registry
+lookups and CanLII routes are engine operations. It has no JavaScript or WASM citation runtime;
 Beaver executes citation operations through its native addon.
 
 The checked-in declarations are the existing public `ts-rs` contracts previously

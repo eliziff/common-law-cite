@@ -16,6 +16,52 @@
         "NTSC": "nt/ntsc",
         "SCC-L": "ca/scc-l"
       }
+    },
+    {
+      "name": "registry/original-court-fields-with-ranking-extension",
+      "method": "registry",
+      "request": {
+        "table": "courts",
+        "surface": "SCC"
+      },
+      "status": "pass",
+      "expect": [
+        {
+          "id": "scc",
+          "name": "Supreme Court of Canada",
+          "level": "colr",
+          "type": "appellate",
+          "hierarchy": "apex"
+        }
+      ]
+    },
+    {
+      "name": "split/us-preference-is-carried-with-source-parts",
+      "method": "splitSources",
+      "request": {
+        "text": "213 F.3d 456; 97 U.S. 812",
+        "jurisdictionPriority": [
+          "us"
+        ]
+      },
+      "status": "pass",
+      "expect": {
+        "status": "deterministic_complete",
+        "parts": [
+          {
+            "text": "213 F.3d 456",
+            "jurisdictionPriority": [
+              "us"
+            ]
+          },
+          {
+            "text": "97 U.S. 812",
+            "jurisdictionPriority": [
+              "us"
+            ]
+          }
+        ]
+      }
     }
   ]
 }

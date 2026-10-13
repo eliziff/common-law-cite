@@ -174,7 +174,6 @@ pub fn key_for_text(text: &str) -> Result<String, KeyError> {
     let options = crate::Options {
         resolve: false,
         parallel: false,
-        extended_us: true,
         notes: None,
         ..Default::default()
     };

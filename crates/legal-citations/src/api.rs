@@ -46,7 +46,7 @@ use std::fmt;
 /// Version of the JSON citation schema (`conformance/schema/citation.schema.json`).
 /// Bumped on any breaking change to the serialized [`Citation`] shape; additive
 /// optional fields do not bump it.
-pub const SCHEMA_VERSION: u32 = 3;
+pub const SCHEMA_VERSION: u32 = 4;
 
 /// Every method [`call`] accepts.
 pub const METHODS: &[&str] = &[
@@ -273,8 +273,8 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         "sourceFields" => {
             let request: SourceFieldsRequest = parse(method, request)?;
             match (&request.text, &request.part) {
-                (Some(text), None) => to_value(crate::source::extract_text_fields(text, request.extended_us.unwrap_or(false))),
-                (None, Some(part)) => to_value(crate::source::extract_fields(part, request.extended_us.unwrap_or(part.extended_us))),
+                (Some(text), None) => to_value(crate::source::extract_text_fields(text, request.jurisdiction_priority.as_deref().is_some_and(crate::source::us_jurisdiction))),
+                (None, Some(part)) => to_value(crate::source::extract_fields(part, request.jurisdiction_priority.as_deref().map_or_else(|| part.us_forms(), crate::source::us_jurisdiction))),
                 _ => Err(ApiError::invalid("sourceFields: pass exactly one of text or part")),
             }
         }
@@ -538,17 +538,24 @@ pub struct ReanchorRequest {
     pub text: String,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct SplitSourcesRequest {
     pub text: String,
     #[serde(default)]
     pub recall_first: bool,
-    #[serde(default)]
-    pub extended_us: bool,
+    #[serde(default = "crate::source::default_jurisdiction_priority")]
+    pub jurisdiction_priority: Vec<String>,
     #[serde(default)]
     pub offset_unit: OffsetUnit,
+}
+
+impl Default for SplitSourcesRequest {
+    fn default() -> Self {
+        Self { text: String::new(), recall_first: false, jurisdiction_priority: crate::source::default_jurisdiction_priority(),
+            offset_unit: OffsetUnit::default() }
+    }
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
@@ -558,7 +565,7 @@ pub struct SourceFieldsRequest {
     pub text: Option<String>,
     pub part: Option<crate::source::SourcePart>,
     #[serde(default)]
-    pub extended_us: Option<bool>,
+    pub jurisdiction_priority: Option<Vec<String>>,
 }
 
 #[derive(Deserialize)]
@@ -588,7 +595,7 @@ struct QuoteCitationPart {
 }
 
 fn quote_citation_unit(text: &str) -> QuoteCitationUnit {
-    let split = split_sources(&SplitSourcesRequest { text: text.to_owned(), recall_first: true, extended_us: false,
+    let split = split_sources(&SplitSourcesRequest { text: text.to_owned(), recall_first: true, jurisdiction_priority: crate::source::default_jurisdiction_priority(),
         offset_unit: OffsetUnit::Utf16 });
     let cited = crate::source::references(&split.parts, None, None, None, |prefix| prefix.encode_utf16().count());
     let parts = split.parts.iter().map(|part| QuoteCitationPart {
@@ -598,13 +605,13 @@ fn quote_citation_unit(text: &str) -> QuoteCitationUnit {
         anchors: part.anchors.clone(),
         reference: cited.iter().find(|item| part.start <= item.part.start && item.part.end <= part.end)
             .and_then(|item| item.references.first()).map(|reference| reference.text.clone()).unwrap_or_default(),
-        fields: crate::source::extract_fields(part, part.extended_us),
+        fields: crate::source::extract_fields(part, part.us_forms()),
     }).collect();
     QuoteCitationUnit { status: split.status, reasons: split.reasons, parts, delimiters: split.delimiters }
 }
 
 pub fn split_sources(request: &SplitSourcesRequest) -> crate::source::SourceSplit {
-    let mut result = crate::source::split(&request.text, request.recall_first, request.extended_us);
+    let mut result = crate::source::split(&request.text, request.recall_first, &request.jurisdiction_priority);
     let document = ScalarText::new(&request.text);
     let convert = |byte| match request.offset_unit {
         OffsetUnit::Byte => byte,
@@ -627,14 +634,23 @@ pub fn split_sources(request: &SplitSourcesRequest) -> crate::source::SourceSpli
 }
 
 /// Note splitting: every part of every note, prose included, as `extract` splits them.
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct SplitNotesRequest {
     pub text: String,
     pub notes: Vec<crate::NoteRange>,
+    #[serde(default = "crate::source::default_jurisdiction_priority")]
+    pub jurisdiction_priority: Vec<String>,
     #[serde(default)]
     pub offset_unit: OffsetUnit,
+}
+
+impl Default for SplitNotesRequest {
+    fn default() -> Self {
+        Self { text: String::new(), notes: Vec::new(), jurisdiction_priority: crate::source::default_jurisdiction_priority(),
+            offset_unit: OffsetUnit::default() }
+    }
 }
 
 /// Authority references: what the split parts cite (see [`crate::source::references`]).
@@ -658,10 +674,11 @@ pub struct NoteReferencesRequest {
 
 pub fn split_notes(request: &SplitNotesRequest) -> Result<Vec<crate::source::SourcePart>, ApiError> {
     let document = ScalarText::new(&request.text);
-    let options = byte_options(&document, &Options { notes: Some(request.notes.clone()), ..Options::default() },
+    let options = byte_options(&document, &Options { notes: Some(request.notes.clone()),
+        jurisdiction_priority: request.jurisdiction_priority.clone(), ..Options::default() },
         request.offset_unit)?;
-    let citations = crate::find::find(&request.text, &Options::default());
-    let mut parts = crate::source::split_notes(&request.text, options.notes.as_deref().unwrap_or(&[]), None, &citations);
+    let citations = crate::find::find(&request.text, &options);
+    let mut parts = crate::source::split_notes(&request.text, options.notes.as_deref().unwrap_or(&[]), None, &citations, &options.jurisdiction_priority);
     convert_parts(&document, &mut parts, request.offset_unit);
     Ok(parts)
 }
@@ -1603,54 +1620,37 @@ pub struct RegistryRequest {
 /// The table names [`registry`] accepts, read from the serialized registry so
 /// a new table is picked up without touching this file.
 pub fn registry_tables() -> Vec<String> {
-    match serde_json::to_value(registry_stage::Registry::default()) {
-        Ok(Value::Object(tables)) => tables.keys().cloned().collect(),
-        _ => Vec::new(),
-    }
+    registry_stage::source_registry().as_object().expect("registry tables").keys().cloned().collect()
 }
 
 fn unknown_table(table: &str) -> ApiError {
-    ApiError::invalid(format!(
-        "registry: unknown table {table:?}; expected one of {}",
-        registry_tables().join(", ")
-    ))
+    ApiError::invalid(format!("registry: unknown table {table:?}; expected one of {}", registry_tables().join(", ")))
 }
 
-fn to_json<T: Serialize>(value: T) -> Value {
-    serde_json::to_value(value).expect("registry serializes")
-}
-
-/// The embedded registry as JSON: whole, one table, or a surface lookup.
+/// Source records retain upstream field names and values; matching uses the compiled index.
 pub fn registry(request: &RegistryRequest) -> Result<Value, ApiError> {
-    let registry = registry_stage::registry();
+    let source = registry_stage::source_registry();
     let Some(table) = request.table.as_deref() else {
-        if request.surface.is_some() {
-            return Err(ApiError::invalid("registry: `surface` needs a `table`"));
-        }
-        return Ok(to_json(registry));
+        if request.surface.is_some() { return Err(ApiError::invalid("registry: `surface` needs a `table`")); }
+        return Ok(source.clone());
     };
-    let Some(surface) = request.surface.as_deref() else {
-        return to_json(registry)
-            .get(table)
-            .cloned()
-            .ok_or_else(|| unknown_table(table));
+    let data = source.get(table).ok_or_else(|| unknown_table(table))?;
+    let Some(surface) = request.surface.as_deref() else { return Ok(data.clone()); };
+    let index = registry_stage::registry();
+    let row = |id: &str| -> Value {
+        if table == "courts" || table == "jurisdictions" {
+            data.as_array().expect("source records").iter().find(|row| row["id"].as_str() == Some(id))
+                .expect("compiled index refers to source record").clone()
+        } else { registry_stage::source_record(table, id).clone() }
     };
     Ok(match table {
-        "courts" => to_json(registry.courts_by_surface(surface)),
-        "reporters" => Value::Array(
-            registry
-                .reporters_by_surface(surface)
-                .into_iter()
-                .map(|(reporter, canonical)| serde_json::json!({"reporter": reporter, "canonical": canonical}))
-                .collect(),
-        ),
-        "series" => to_json(registry.series_candidates(surface)),
-        "journals" => to_json(registry.journals_by_surface(surface)),
-        "jurisdictions" => to_json(registry.jurisdiction(surface).into_iter().collect::<Vec<_>>()),
-        other if registry_tables().iter().any(|name| name == other) => {
-            return Err(ApiError::invalid(format!("registry: table {other:?} has no surface lookup")))
-        }
-        other => return Err(unknown_table(other)),
+        "courts" => Value::Array(index.courts_by_surface(surface).iter().map(|court| row(&court.id)).collect()),
+        "reporters" => Value::Array(index.reporters_by_surface(surface).into_iter().map(|(reporter, canonical)|
+            serde_json::json!({"reporter": row(&reporter.id), "canonical": canonical})).collect()),
+        "laws" => Value::Array(index.series_candidates(surface).iter().map(|series| row(&series.id)).collect()),
+        "journals" => Value::Array(index.journals_by_surface(surface).iter().map(|journal| row(&journal.id)).collect()),
+        "jurisdictions" => Value::Array(index.jurisdiction(surface).into_iter().map(|jurisdiction| row(&jurisdiction.id)).collect()),
+        _ => return Err(ApiError::invalid(format!("registry: table {table:?} has no surface lookup"))),
     })
 }
 

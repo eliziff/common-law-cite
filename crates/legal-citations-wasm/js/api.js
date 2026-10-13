@@ -9,7 +9,7 @@ export class LegalCitationsError extends Error {
   }
 }
 
-const OPTION_NAMES = new Set(["resolve", "parallel", "extendedUs", "notes", "removeAmbiguous", "jurisdictionPriority", "supraHintMode", "supraLinkingMode"]);
+const OPTION_NAMES = new Set(["resolve", "parallel", "styles", "notes", "removeAmbiguous", "jurisdictionPriority", "supraHintMode", "supraLinkingMode"]);
 
 export function makeApi(getRawCall) {
   function call(method, request = {}) {

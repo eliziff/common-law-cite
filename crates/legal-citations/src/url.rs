@@ -29,8 +29,8 @@
 //!   `/ewhc/ch/2019/123`) and legislation.gov.uk ([`legislation_gov_uk`]) for
 //!   UK public general Acts by calendar year (from 1963) or regnal year.
 //! * CourtListener ([`courtlistener`]) citation lookup for US reporters.
-//! An independent court-route inventory supplies a CanLII URL
-//! when a written neutral code lacks a route in the curated court registry.
+//! Source-part routes are derived from the same court records and their
+//! neutral identifiers; there is no separate route inventory.
 
 use crate::format::Language;
 use crate::key;
@@ -160,7 +160,7 @@ static SOURCE_ROUTES: LazyLock<SourceRoutes> = LazyLock::new(|| {
         result.routes.entry(route.database.to_ascii_uppercase()).or_insert_with(|| path.clone());
         for (position, code) in court.neutral.iter().enumerate() {
             if code.contains(char::is_whitespace) { continue; }
-            let translated = (position > 0).then_some(court.canlii_fr.as_ref()).flatten();
+            let translated = (position % 2 == 1).then_some(court.canlii_fr.as_ref()).flatten();
             let path = translated.map_or_else(|| path.clone(), |route| format!("{}/{}", route.jurisdiction, route.database));
             if translated.is_some() {
                 result.french_routes.entry(code.to_ascii_uppercase()).or_insert_with(|| path.clone());
@@ -262,7 +262,7 @@ static PARAGRAPH: LazyLock<Regex> = LazyLock::new(|| {
 static CANLII: LazyLock<legal_grammar::CompiledGrammar> = LazyLock::new(||
     legal_grammar::compile_python_table_entry("cite.canlii.source-link").unwrap());
 /// The offline fallback URL selection order, using the fields
-/// already discovered in the source part and its original court-route table.
+/// already discovered in the source part and the registry's court routes.
 pub(crate) fn source_fallback(citations: &[&Citation], source: &crate::source::SourceFields,
     part: &crate::source::SourcePart) -> Option<(usize, String)> {
     if let Some(citation) = citations.iter().find(|citation| citation.format == Some(Format::Neutral)

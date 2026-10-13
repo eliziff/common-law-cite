@@ -308,8 +308,9 @@ fn upstream_courts_keep_courts_db_ids() {
 #[test]
 fn unverified_mcgill_entries_are_flagged_and_outranked() {
     let registry = registry();
-    // Only the McGill inventory has unverified rows, and only among journals.
-    assert!(registry.reporters.iter().all(|reporter| reporter.verified));
+    // An abbreviation inventory does not establish a reporter's identity either.
+    assert!(registry.reporters.iter().filter(|reporter| !reporter.verified)
+        .all(|reporter| reporter.source == "mcgill"));
     let unverified: Vec<_> = registry.journals.iter().filter(|journal| !journal.verified).collect();
     assert!(unverified.len() > 300, "{}", unverified.len());
     assert!(unverified.iter().all(|journal| journal.source == "mcgill"));

@@ -111,10 +111,13 @@ so all of them accept the same requests and return the same JSON:
 | `hasCitation` | `{text}` | `{hasCitation}` |
 | `version` | `{}` | crate, schema, key and grammar versions, registry counts |
 
-`options` are `resolve`, `parallel`, `extendedUs` (all default `true`),
+`options` include `resolve`, `parallel` (both default `true`),
 `removeAmbiguous` (default `false`), `jurisdictionPriority` (default `["ca"]`), and
 `notes` (footnote ranges, so `supra note 4` resolves). Unknown keys are
-errors. Errors are `{code, message}` with `code` one of `unknown_method`,
+errors. `styles` selects citation guides; absent means every guide. Specialized
+US forms are selected by the Bluebook guide or an explicit US jurisdiction
+preference. `splitSources` and `sourceFields` use `jurisdictionPriority` too.
+Errors are `{code, message}` with `code` one of `unknown_method`,
 `invalid_request`, `invalid_offset`, `unimplemented`.
 
 ## The model: form × authority
@@ -185,11 +188,14 @@ offset unit. `supraLinkingMode` selects `safe` (default) or `aggressive` linking
 
 Courts, reporters, statute and regulation series, journals and jurisdictions
 are JSON data in [`crates/legal-citations/registry/`](crates/legal-citations/registry/):
-Canadian, Commonwealth and McGill entries are authored; US entries are
-generated from reporters-db and courts-db at the commits pinned in
+Canadian, Commonwealth and McGill entries are authored; upstream files are
+copied without changing their fields or bytes from reporters-db and courts-db at the commits pinned in
 [`upstream.lock`](upstream.lock). Read it with `registry` (`{table, surface}`
 returns every entry a surface names, preferred first — `FCA` is the Federal
-Court of Appeal before the Federal Court of Australia).
+Court of Appeal before the Federal Court of Australia). Schema v4 exposes the
+upstream `laws` table and original field shapes. See the
+[registry contract](crates/legal-citations/registry/README.md) for source identity,
+optional extensions and compiled matching records. Authority keys remain v3.
 
 ## Identity keys (v3)
 

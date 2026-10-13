@@ -40,7 +40,7 @@ def test_unknown_option_is_rejected():
 def test_has_citation_and_registry():
     assert legal_citations.has_citation(TEXT)
     assert not legal_citations.has_citation("nothing to see")
-    assert set(legal_citations.registry()) >= {"courts", "reporters", "series", "jurisdictions"}
+    assert set(legal_citations.registry()) >= {"courts", "reporters", "laws", "jurisdictions"}
 
 
 def test_threads():
