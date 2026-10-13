@@ -152,9 +152,9 @@ struct ExtractOptions {
     /// Do not group parallel citations.
     #[arg(long)]
     no_parallel: bool,
-    /// Skip the extended US reporter/code pass.
-    #[arg(long)]
-    no_extended_us: bool,
+    /// Citation guides whose specialized forms are recognized (repeatable).
+    #[arg(long = "style")]
+    styles: Vec<String>,
     /// Prefer these jurisdictions in order for ambiguous abbreviations (repeatable).
     #[arg(long = "jurisdiction-priority")]
     jurisdiction_priority: Vec<String>,
@@ -164,13 +164,14 @@ impl ExtractOptions {
     fn to_json(&self) -> Value {
         let mut options = Map::new();
         for (name, disabled) in [("resolve", self.no_resolve),
-            ("parallel", self.no_parallel), ("extendedUs", self.no_extended_us)] {
+            ("parallel", self.no_parallel)] {
             if disabled { options.insert(name.into(), Value::Bool(false)); }
         }
         if self.remove_ambiguous { options.insert("removeAmbiguous".into(), Value::Bool(true)); }
         if !self.jurisdiction_priority.is_empty() {
             options.insert("jurisdictionPriority".into(), json!(self.jurisdiction_priority));
         }
+        if !self.styles.is_empty() { options.insert("styles".into(), json!(self.styles)); }
         Value::Object(options)
     }
 }

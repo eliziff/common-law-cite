@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/eliziff/legal-citations/blob/main/conformance/schema/citation.schema.json",
   "title": "legal-citations extract response",
-  "description": "Output of the `extract` API method (Rust api::extract, Python legal_citations.call('extract'), npm call('extract'), CLI `legal-citations extract`). Schema version 3: breaking changes bump `schemaVersion`; new optional properties are added here without a bump. Written from crates/legal-citations/src/model.rs; crates/legal-citations-cli/tests/schema.rs fails when the two drift.",
+  "description": "Output of the `extract` API method (Rust api::extract, Python legal_citations.call('extract'), npm call('extract'), CLI `legal-citations extract`). Schema version 4: breaking changes bump `schemaVersion`; new optional properties are added here without a bump. Written from crates/legal-citations/src/model.rs; crates/legal-citations-cli/tests/schema.rs fails when the two drift.",
   "type": "object",
   "required": [
     "schemaVersion",
@@ -14,7 +14,7 @@
     "schemaVersion": {
       "type": "integer",
       "enum": [
-        3
+        4
       ]
     },
     "offsetUnit": {
@@ -42,6 +42,12 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/sourcePart"
+      }
+    },
+    "resolutions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/resolution"
       }
     }
   },
@@ -398,6 +404,15 @@
         },
         "sourceCaseName": {
           "$ref": "#/$defs/sourceCaseName"
+        },
+        "instrumentTitle": {
+          "type": "string"
+        },
+        "anchorTitle": {
+          "$ref": "#/$defs/span"
+        },
+        "anchorMention": {
+          "$ref": "#/$defs/span"
         }
       }
     },
@@ -714,7 +729,7 @@
         "end",
         "text",
         "anchors",
-        "extendedUs",
+        "jurisdictionPriority",
         "anchorSpans"
       ],
       "additionalProperties": false,
@@ -739,9 +754,6 @@
         "resolvedUrl": {
           "type": "string"
         },
-        "extendedUs": {
-          "type": "boolean"
-        },
         "anchorSpans": {
           "type": "array",
           "items": {
@@ -751,6 +763,52 @@
               "minimum": 0
             }
           }
+        },
+        "jurisdictionPriority": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "resolution": {
+      "type": "object",
+      "required": [
+        "index",
+        "antecedent",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "antecedent": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "url": {
+          "type": "string"
+        },
+        "sourcePart": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "targetPart": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reason": {
+          "type": "string"
         }
       }
     }

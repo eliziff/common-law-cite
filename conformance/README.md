@@ -73,7 +73,28 @@ docstring lists the class-by-class mapping onto this model.
 ## Schema
 
 [`schema/citation.schema.json`](schema/citation.schema.json) (JSON Schema
-2020-12) describes the `extract` response. `schemaVersion` is 1; a breaking
+2020-12) describes the `extract` response. `schemaVersion` is 4; a breaking
 change to the citation shape bumps it, a new optional property does not.
 `crates/legal-citations-cli/tests/schema.rs` validates every conformance
 input's output against it and fails on any property the schema lacks.
+
+## Upstream parity review
+
+The October 2026 registry refactor reviewed the 65 pending eyecite cases
+against their unchanged pinned expectations. Four already matched and were
+promoted; 61 remain pending (57 find, three model, one annotate). One additional
+Commonwealth case already matched and was promoted, leaving six pending there.
+
+Of the 60 remaining extraction cases, the first mismatch concerns a native
+span in 54, the number of citations in five, and a plaintiff field in one.
+These counts describe first mismatches, not 54 proven harmless differences:
+later fields can also differ. Original US token/source extents already exist
+in source metadata, but projecting them onto native citation fields broke six
+previously passing cases in a diagnostic trial. No such projection is applied.
+The annotation case fails because cleaning its HTML does not reproduce the
+supplied plain text, before annotation insertion. This remains a cleaning or
+source-alignment gap, not a tag-balancing fix.
+
+The refactor preserves these expectations and the accepted resolution tiers.
+It does not claim complete eyecite parity. Reproduce the pending review with
+`python conformance/run.py --cli <candidate-cli> --verbose`.

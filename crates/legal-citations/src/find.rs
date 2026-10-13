@@ -1654,7 +1654,7 @@ fn cores(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<C
 }
 
 fn cores_in(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<Core> {
-    let mut cores = citation_anchors(text, options.extended_us, options.styles.as_deref(), scopes, enrich)
+    let mut cores = citation_anchors(text, options.us_forms(), options.styles.as_deref(), scopes, enrich)
         .into_iter()
         .map(|anchor| Core {
             span: anchor.span.clone(),

@@ -49,7 +49,7 @@ __all__ = [
 _OPTION_NAMES = {
     "resolve": "resolve",
     "parallel": "parallel",
-    "extended_us": "extendedUs",
+    "styles": "styles",
     "notes": "notes",
     "remove_ambiguous": "removeAmbiguous",
     "jurisdiction_priority": "jurisdictionPriority",
@@ -112,8 +112,8 @@ def resolve(citations: Iterable[Mapping[str, Any]], *, notes=None, alias_groups=
 def extract(text: str, *, markup_text: Optional[str] = None, offset_unit: str = "char", **options: Any) -> list[dict]:
     """Find, classify, group and resolve every citation in ``text``.
 
-    Options: ``resolve`` (default True), ``parallel`` (True), ``extended_us``
-    (True), ``notes`` (a list of ``{"number", "start", "end"}`` footnote ranges,
+    Options: ``resolve`` (default True), ``parallel`` (True), ``styles``
+    (all guides), ``jurisdiction_priority`` (["ca"]), ``notes`` (a list of ``{"number", "start", "end"}`` footnote ranges,
     or ``(number, start, end)`` tuples, in ``offset_unit``),
     ``supra_hint_mode`` ("aggressive") and ``supra_linking_mode`` ("safe").
     """

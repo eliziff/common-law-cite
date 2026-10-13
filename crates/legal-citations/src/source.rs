@@ -221,7 +221,7 @@ pub fn derive_bare_citation(text: &str, kind: &str) -> String {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct SourcePart {
     pub start: usize,
@@ -231,11 +231,25 @@ pub struct SourcePart {
     /// The part's link after host retrieval, before reference resolution.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub resolved_url: Option<String>,
-    #[serde(default)]
-    pub extended_us: bool,
+    #[serde(default = "default_jurisdiction_priority")]
+    pub jurisdiction_priority: Vec<String>,
     /// Exact source-grammar anchors in the same coordinate system as start/end.
     #[serde(default)]
     pub anchor_spans: Vec<(usize, usize)>,
+}
+
+pub(crate) fn default_jurisdiction_priority() -> Vec<String> { vec!["ca".into()] }
+
+pub(crate) fn us_jurisdiction(priority: &[String]) -> bool {
+    priority.iter().any(|place| place == "us" || place.starts_with("us-") || place.starts_with("us:"))
+}
+
+impl SourcePart {
+    pub(crate) fn us_forms(&self) -> bool { us_jurisdiction(&self.jurisdiction_priority) }
+}
+
+fn source_priority(us: bool) -> Vec<String> {
+    if us { vec!["us".into()] } else { default_jurisdiction_priority() }
 }
 
 /// Split supplied note text in its original document coordinates. The
@@ -245,7 +259,7 @@ pub struct SourcePart {
 /// cites nothing with what follows it, and a supra with its name; and a row
 /// begins with the words that lead into its source ("and …", "as added by …").
 pub fn split_notes(text: &str, notes: &[crate::NoteRange], tier: Option<crate::SplitTier>,
-    citations: &[crate::Citation]) -> Vec<SourcePart> {
+    citations: &[crate::Citation], jurisdiction_priority: &[String]) -> Vec<SourcePart> {
     let cited = cited_extents(citations);
     let mut parts = Vec::new();
     let mut preceding_ibid_without_source = false;
@@ -272,14 +286,15 @@ pub fn split_notes(text: &str, notes: &[crate::NoteRange], tier: Option<crate::S
                 let start = start + clause.len() - clause.trim_start().len();
                 Some(SourcePart { start, end: start + trimmed.len(), text: trimmed.into(),
                     anchors: vec!["reference".into()], resolved_url: None,
-                    extended_us: false, anchor_spans: Vec::new() })
+                    jurisdiction_priority: default_jurisdiction_priority(), anchor_spans: Vec::new() })
             }).collect()
         } else {
             let within = cited.iter().filter(|&&(from, _, end, _)| note.start <= from && end <= note.end)
                 .map(|&(from, start, end, kind)| (from - note.start, start - note.start, end - note.start, kind)).collect::<Vec<_>>();
-            split_with(value, true, false, tier.is_some(), &within).parts
+            split_with(value, true, us_jurisdiction(jurisdiction_priority), tier.is_some(), &within).parts
         };
         for mut part in selected {
+            part.jurisdiction_priority = jurisdiction_priority.to_vec();
             part.start += note.start;
             part.end += note.start;
             for (start, end) in &mut part.anchor_spans {
@@ -321,7 +336,7 @@ pub(crate) fn merge_linked_ibids(text: &str, notes: &[crate::NoteRange], parts: 
         let start = note.start + raw.len() - raw.trim_start().len();
         parts.push(SourcePart { start, end: start + value.len(), text: value.into(),
             anchors: vec!["reference".into()], resolved_url: None,
-            extended_us: false, anchor_spans: Vec::new() });
+            jurisdiction_priority: default_jurisdiction_priority(), anchor_spans: Vec::new() });
     }
     parts.sort_by_key(|part| (part.start, part.end));
 }
@@ -341,7 +356,9 @@ pub(crate) fn merge_split_citations(text: &str, notes: &[crate::NoteRange], part
             left.text = text[left.start..left.end].into();
             for anchor in right.anchors { if !left.anchors.contains(&anchor) { left.anchors.push(anchor); } }
             left.anchor_spans.extend(right.anchor_spans);
-            left.extended_us |= right.extended_us;
+            for place in right.jurisdiction_priority {
+                if !left.jurisdiction_priority.contains(&place) { left.jurisdiction_priority.push(place); }
+            }
         } else { index += 1; }
     }
 }
@@ -470,7 +487,7 @@ fn part(text: &str, start: usize, end: usize, strict: bool, extended_us: bool, c
     let anchor_spans = anchor_spans(value, &found).into_iter().map(|(left, right)|
         (start + left, start + right)).collect();
     Some(SourcePart { start, end: start + value.len(), text: value.into(), anchors: kinds,
-        extended_us, anchor_spans, resolved_url: None })
+        jurisdiction_priority: source_priority(extended_us), anchor_spans, resolved_url: None })
 }
 
 fn inside_quotes(text: &str, position: usize) -> bool {
@@ -676,11 +693,15 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
 }
 
 /// The recall-first split also reads the text's citations with the finder ([`cited_extents`]).
-pub fn split(text: &str, recall_first: bool, extended_us: bool) -> SourceSplit {
-    if recall_first {
-        let cited = cited_extents(&crate::find::find(text, &crate::Options::default()));
-        split_with(text, true, extended_us, false, &cited)
-    } else { split_with(text, false, extended_us, false, &[]) }
+pub fn split(text: &str, recall_first: bool, jurisdiction_priority: &[String]) -> SourceSplit {
+    let us = us_jurisdiction(jurisdiction_priority);
+    let mut result = if recall_first {
+        let options = crate::Options { jurisdiction_priority: jurisdiction_priority.to_vec(), ..Default::default() };
+        let cited = cited_extents(&crate::find::find(text, &options));
+        split_with(text, true, us, false, &cited)
+    } else { split_with(text, false, us, false, &[]) };
+    for part in &mut result.parts { part.jurisdiction_priority = jurisdiction_priority.to_vec(); }
+    result
 }
 
 /// With a note splitter's tier rules when `tiered` ([`recall_boundaries`]); `cited`, the finder's citations, only
@@ -1039,12 +1060,12 @@ pub fn references(parts: &[SourcePart], citations: Option<&[crate::Citation]>, k
         // A source the finder misses cites through its grammar anchors: its bare citation,
         // or its link when a link is all it has, else the anchors' own extent.
         if references.is_empty() && !part.anchors.is_empty() {
-            let fields = extract_fields(part, part.extended_us);
+            let fields = extract_fields(part, part.us_forms());
             let linked = part.anchors.iter().all(|anchor| anchor == "url");
             let core = if linked { fields.link_candidate.clone() } else { derive_bare_citation(&part.text, fields.kind) };
             let span = part.text.find(core.as_str()).filter(|_| !core.is_empty())
                 .map(|start| (start, start + core.len())).or_else(|| {
-                    let found = anchors(&part.text, part.extended_us);
+                    let found = anchors(&part.text, part.us_forms());
                     Some((found.first()?.0, found.iter().map(|anchor| anchor.1).max()?))
                 });
             let authority = match fields.kind {
@@ -1070,7 +1091,7 @@ pub fn extract_text_fields(text: &str, extended_us: bool) -> SourceFields {
     let start = text.len() - text.trim_start().len();
     extract_fields(&SourcePart { start, end: start + value.len(), text: value.into(),
         anchors: anchors(value, extended_us).into_iter().map(|(_, _, kind)| kind.to_owned()).collect(),
-        anchor_spans: Vec::new(), extended_us, resolved_url: None }, extended_us)
+        anchor_spans: Vec::new(), jurisdiction_priority: source_priority(extended_us), resolved_url: None }, extended_us)
 }
 
 /// Build this module's lazily built statics now ([`crate::warm`]).

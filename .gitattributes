@@ -1,0 +1,2 @@
+# Source checksums in upstream.lock describe these exact bytes on every platform.
+crates/legal-citations/registry/upstream/*-db/*.json -text

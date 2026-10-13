@@ -581,7 +581,7 @@ impl<'a> Resolver<'a> {
         seen: &mut [bool], output: &mut Vec<Resolution>, sibling: &mut Option<Option<Target>>) {
         let part = &self.source_parts[part_index];
         let range = &self.notes.expect("owned note")[note];
-        let fields = crate::source::extract_fields(part, part.extended_us);
+        let fields = crate::source::extract_fields(part, part.us_forms());
         let _ = self.source_kinds[part_index].set(fields.kind);
         let mut positions = self.citations.iter().enumerate().filter(|(position, citation)|
             !seen[*position] && self.note_of[*position] == Some(note)
@@ -919,7 +919,7 @@ impl<'a> Resolver<'a> {
             Target::Source(index) => {
                 if strict { return true; }
                 let part = &self.source_parts[*index];
-                let kind = *self.source_kinds[*index].get_or_init(|| crate::source::extract_fields(part, part.extended_us).kind);
+                let kind = *self.source_kinds[*index].get_or_init(|| crate::source::extract_fields(part, part.us_forms()).kind);
                 use crate::PinpointKind as K;
                 match pin.kind {
                     K::Section | K::Subsection | K::Article | K::Schedule | K::Clause | K::Rule => !matches!(kind, "case" | "journal"),

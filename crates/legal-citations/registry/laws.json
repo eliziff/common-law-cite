@@ -1,10 +1,6 @@
 [
  {
-  "id": "rsc",
-  "name": {
-   "en": "Revised Statutes of Canada",
-   "fr": "Lois révisées du Canada"
-  },
+  "name": "Revised Statutes of Canada",
   "kind": "revised_statutes",
   "jurisdiction": "ca",
   "abbreviation": "RSC",
@@ -14,14 +10,12 @@
   "canlii": {
    "jurisdiction": "ca",
    "database": "cas"
-  }
+  },
+  "name_fr": "Lois révisées du Canada",
+  "citation_id": "rsc"
  },
  {
-  "id": "sc",
-  "name": {
-   "en": "Statutes of Canada",
-   "fr": "Lois du Canada"
-  },
+  "name": "Statutes of Canada",
   "kind": "annual_statutes",
   "jurisdiction": "ca",
   "abbreviation": "SC",
@@ -31,14 +25,12 @@
   "canlii": {
    "jurisdiction": "ca",
    "database": "caa"
-  }
+  },
+  "name_fr": "Lois du Canada",
+  "citation_id": "sc"
  },
  {
-  "id": "sor",
-  "name": {
-   "en": "Statutory Orders and Regulations",
-   "fr": "Décrets, ordonnances et règlements statutaires"
-  },
+  "name": "Statutory Orders and Regulations",
   "kind": "regulations",
   "jurisdiction": "ca",
   "abbreviation": "SOR",
@@ -48,14 +40,12 @@
   "canlii": {
    "jurisdiction": "ca",
    "database": "car"
-  }
+  },
+  "name_fr": "Décrets, ordonnances et règlements statutaires",
+  "citation_id": "sor"
  },
  {
-  "id": "si",
-  "name": {
-   "en": "Statutory Instruments (Canada)",
-   "fr": "Textes réglementaires"
-  },
+  "name": "Statutory Instruments (Canada)",
   "kind": "regulations",
   "jurisdiction": "ca",
   "abbreviation": "SI",
@@ -65,28 +55,24 @@
   "canlii": {
    "jurisdiction": "ca",
    "database": "car"
-  }
+  },
+  "name_fr": "Textes réglementaires",
+  "citation_id": "si"
  },
  {
-  "id": "crc",
-  "name": {
-   "en": "Consolidated Regulations of Canada",
-   "fr": "Codification des règlements du Canada"
-  },
+  "name": "Consolidated Regulations of Canada",
   "kind": "regulations",
   "jurisdiction": "ca",
   "abbreviation": "CRC",
   "canlii": {
    "jurisdiction": "ca",
    "database": "car"
-  }
+  },
+  "name_fr": "Codification des règlements du Canada",
+  "citation_id": "crc"
  },
  {
-  "id": "rso",
-  "name": {
-   "en": "Revised Statutes of Ontario",
-   "fr": "Lois refondues de l'Ontario"
-  },
+  "name": "Revised Statutes of Ontario",
   "kind": "revised_statutes",
   "jurisdiction": "ca-on",
   "abbreviation": "RSO",
@@ -96,14 +82,12 @@
   "canlii": {
    "jurisdiction": "on",
    "database": "ons"
-  }
+  },
+  "name_fr": "Lois refondues de l'Ontario",
+  "citation_id": "rso"
  },
  {
-  "id": "so",
-  "name": {
-   "en": "Statutes of Ontario",
-   "fr": "Lois de l'Ontario"
-  },
+  "name": "Statutes of Ontario",
   "kind": "annual_statutes",
   "jurisdiction": "ca-on",
   "abbreviation": "SO",
@@ -113,14 +97,12 @@
   "canlii": {
    "jurisdiction": "on",
    "database": "ona"
-  }
+  },
+  "name_fr": "Lois de l'Ontario",
+  "citation_id": "so"
  },
  {
-  "id": "oreg",
-  "name": {
-   "en": "Ontario Regulations",
-   "fr": "Règlements de l'Ontario"
-  },
+  "name": "Ontario Regulations",
   "kind": "regulations",
   "jurisdiction": "ca-on",
   "abbreviation": "O Reg",
@@ -132,53 +114,46 @@
   "canlii": {
    "jurisdiction": "on",
    "database": "onr"
-  }
+  },
+  "name_fr": "Règlements de l'Ontario",
+  "citation_id": "oreg"
  },
  {
-  "id": "rro",
-  "name": {
-   "en": "Revised Regulations of Ontario",
-   "fr": "Règlements refondus de l'Ontario"
-  },
+  "name": "Revised Regulations of Ontario",
   "kind": "regulations",
   "jurisdiction": "ca-on",
   "abbreviation": "RRO",
   "canlii": {
    "jurisdiction": "on",
    "database": "onr"
-  }
+  },
+  "name_fr": "Règlements refondus de l'Ontario",
+  "citation_id": "rro"
  },
  {
-  "id": "rsbc",
-  "name": {
-   "en": "Revised Statutes of British Columbia"
-  },
+  "name": "Revised Statutes of British Columbia",
   "kind": "revised_statutes",
   "jurisdiction": "ca-bc",
   "abbreviation": "RSBC",
   "canlii": {
    "jurisdiction": "bc",
    "database": "bcs"
-  }
+  },
+  "citation_id": "rsbc"
  },
  {
-  "id": "sbc",
-  "name": {
-   "en": "Statutes of British Columbia"
-  },
+  "name": "Statutes of British Columbia",
   "kind": "annual_statutes",
   "jurisdiction": "ca-bc",
   "abbreviation": "SBC",
   "canlii": {
    "jurisdiction": "bc",
    "database": "bca"
-  }
+  },
+  "citation_id": "sbc"
  },
  {
-  "id": "bcreg",
-  "name": {
-   "en": "British Columbia Regulations"
-  },
+  "name": "British Columbia Regulations",
   "kind": "regulations",
   "jurisdiction": "ca-bc",
   "abbreviation": "BC Reg",
@@ -188,39 +163,33 @@
   },
   "variations": [
    "britishcolumbia Reg"
-  ]
+  ],
+  "citation_id": "bcreg"
  },
  {
-  "id": "rsa",
-  "name": {
-   "en": "Revised Statutes of Alberta"
-  },
+  "name": "Revised Statutes of Alberta",
   "kind": "revised_statutes",
   "jurisdiction": "ca-ab",
   "abbreviation": "RSA",
   "canlii": {
    "jurisdiction": "ab",
    "database": "abs"
-  }
+  },
+  "citation_id": "rsa"
  },
  {
-  "id": "sa",
-  "name": {
-   "en": "Statutes of Alberta"
-  },
+  "name": "Statutes of Alberta",
   "kind": "annual_statutes",
   "jurisdiction": "ca-ab",
   "abbreviation": "SA",
   "canlii": {
    "jurisdiction": "ab",
    "database": "aba"
-  }
+  },
+  "citation_id": "sa"
  },
  {
-  "id": "altareg",
-  "name": {
-   "en": "Alberta Regulations"
-  },
+  "name": "Alberta Regulations",
   "kind": "regulations",
   "jurisdiction": "ca-ab",
   "abbreviation": "Alta Reg",
@@ -231,52 +200,44 @@
   "canlii": {
    "jurisdiction": "ab",
    "database": "abr"
-  }
+  },
+  "citation_id": "altareg"
  },
  {
-  "id": "rss",
-  "name": {
-   "en": "Revised Statutes of Saskatchewan"
-  },
+  "name": "Revised Statutes of Saskatchewan",
   "kind": "revised_statutes",
   "jurisdiction": "ca-sk",
   "abbreviation": "RSS",
   "canlii": {
    "jurisdiction": "sk",
    "database": "sks"
-  }
+  },
+  "citation_id": "rss"
  },
  {
-  "id": "ss",
-  "name": {
-   "en": "Statutes of Saskatchewan"
-  },
+  "name": "Statutes of Saskatchewan",
   "kind": "annual_statutes",
   "jurisdiction": "ca-sk",
   "abbreviation": "SS",
   "canlii": {
    "jurisdiction": "sk",
    "database": "ska"
-  }
+  },
+  "citation_id": "ss"
  },
  {
-  "id": "rrs",
-  "name": {
-   "en": "Revised Regulations of Saskatchewan"
-  },
+  "name": "Revised Regulations of Saskatchewan",
   "kind": "regulations",
   "jurisdiction": "ca-sk",
   "abbreviation": "RRS",
   "canlii": {
    "jurisdiction": "sk",
    "database": "skr"
-  }
+  },
+  "citation_id": "rrs"
  },
  {
-  "id": "saskreg",
-  "name": {
-   "en": "Saskatchewan Regulations"
-  },
+  "name": "Saskatchewan Regulations",
   "kind": "regulations",
   "jurisdiction": "ca-sk",
   "abbreviation": "Sask Reg",
@@ -286,14 +247,11 @@
   },
   "variations": [
    "saskatchewan Reg"
-  ]
+  ],
+  "citation_id": "saskreg"
  },
  {
-  "id": "rsm",
-  "name": {
-   "en": "Revised Statutes of Manitoba",
-   "fr": "Lois révisées du Manitoba"
-  },
+  "name": "Revised Statutes of Manitoba",
   "kind": "revised_statutes",
   "jurisdiction": "ca-mb",
   "abbreviation": "RSM",
@@ -303,14 +261,12 @@
   "canlii": {
    "jurisdiction": "mb",
    "database": "mbs"
-  }
+  },
+  "name_fr": "Lois révisées du Manitoba",
+  "citation_id": "rsm"
  },
  {
-  "id": "ccsm",
-  "name": {
-   "en": "Continuing Consolidation of the Statutes of Manitoba",
-   "fr": "Codification permanente des lois du Manitoba"
-  },
+  "name": "Continuing Consolidation of the Statutes of Manitoba",
   "kind": "revised_statutes",
   "jurisdiction": "ca-mb",
   "abbreviation": "CCSM",
@@ -320,14 +276,12 @@
   "canlii": {
    "jurisdiction": "mb",
    "database": "mbs"
-  }
+  },
+  "name_fr": "Codification permanente des lois du Manitoba",
+  "citation_id": "ccsm"
  },
  {
-  "id": "sm",
-  "name": {
-   "en": "Statutes of Manitoba",
-   "fr": "Lois du Manitoba"
-  },
+  "name": "Statutes of Manitoba",
   "kind": "annual_statutes",
   "jurisdiction": "ca-mb",
   "abbreviation": "SM",
@@ -337,14 +291,12 @@
   "canlii": {
    "jurisdiction": "mb",
    "database": "mba"
-  }
+  },
+  "name_fr": "Lois du Manitoba",
+  "citation_id": "sm"
  },
  {
-  "id": "manreg",
-  "name": {
-   "en": "Manitoba Regulations",
-   "fr": "Règlements du Manitoba"
-  },
+  "name": "Manitoba Regulations",
   "kind": "regulations",
   "jurisdiction": "ca-mb",
   "abbreviation": "Man Reg",
@@ -355,14 +307,12 @@
   "canlii": {
    "jurisdiction": "mb",
    "database": "mbr"
-  }
+  },
+  "name_fr": "Règlements du Manitoba",
+  "citation_id": "manreg"
  },
  {
-  "id": "rsnb",
-  "name": {
-   "en": "Revised Statutes of New Brunswick",
-   "fr": "Lois révisées du Nouveau-Brunswick"
-  },
+  "name": "Revised Statutes of New Brunswick",
   "kind": "revised_statutes",
   "jurisdiction": "ca-nb",
   "abbreviation": "RSNB",
@@ -372,14 +322,12 @@
   "canlii": {
    "jurisdiction": "nb",
    "database": "nbs"
-  }
+  },
+  "name_fr": "Lois révisées du Nouveau-Brunswick",
+  "citation_id": "rsnb"
  },
  {
-  "id": "snb",
-  "name": {
-   "en": "Statutes of New Brunswick",
-   "fr": "Lois du Nouveau-Brunswick"
-  },
+  "name": "Statutes of New Brunswick",
   "kind": "annual_statutes",
   "jurisdiction": "ca-nb",
   "abbreviation": "SNB",
@@ -389,14 +337,12 @@
   "canlii": {
    "jurisdiction": "nb",
    "database": "nba"
-  }
+  },
+  "name_fr": "Lois du Nouveau-Brunswick",
+  "citation_id": "snb"
  },
  {
-  "id": "nbreg",
-  "name": {
-   "en": "New Brunswick Regulations",
-   "fr": "Règlements du Nouveau-Brunswick"
-  },
+  "name": "New Brunswick Regulations",
   "kind": "regulations",
   "jurisdiction": "ca-nb",
   "abbreviation": "NB Reg",
@@ -407,39 +353,34 @@
   "canlii": {
    "jurisdiction": "nb",
    "database": "nbr"
-  }
+  },
+  "name_fr": "Règlements du Nouveau-Brunswick",
+  "citation_id": "nbreg"
  },
  {
-  "id": "rsns",
-  "name": {
-   "en": "Revised Statutes of Nova Scotia"
-  },
+  "name": "Revised Statutes of Nova Scotia",
   "kind": "revised_statutes",
   "jurisdiction": "ca-ns",
   "abbreviation": "RSNS",
   "canlii": {
    "jurisdiction": "ns",
    "database": "nss"
-  }
+  },
+  "citation_id": "rsns"
  },
  {
-  "id": "sns",
-  "name": {
-   "en": "Statutes of Nova Scotia"
-  },
+  "name": "Statutes of Nova Scotia",
   "kind": "annual_statutes",
   "jurisdiction": "ca-ns",
   "abbreviation": "SNS",
   "canlii": {
    "jurisdiction": "ns",
    "database": "nsa"
-  }
+  },
+  "citation_id": "sns"
  },
  {
-  "id": "nsreg",
-  "name": {
-   "en": "Nova Scotia Regulations"
-  },
+  "name": "Nova Scotia Regulations",
   "kind": "regulations",
   "jurisdiction": "ca-ns",
   "abbreviation": "NS Reg",
@@ -449,39 +390,33 @@
   },
   "variations": [
    "novascotia Reg"
-  ]
+  ],
+  "citation_id": "nsreg"
  },
  {
-  "id": "rspei",
-  "name": {
-   "en": "Revised Statutes of Prince Edward Island"
-  },
+  "name": "Revised Statutes of Prince Edward Island",
   "kind": "revised_statutes",
   "jurisdiction": "ca-pe",
   "abbreviation": "RSPEI",
   "canlii": {
    "jurisdiction": "pe",
    "database": "pes"
-  }
+  },
+  "citation_id": "rspei"
  },
  {
-  "id": "spei",
-  "name": {
-   "en": "Statutes of Prince Edward Island"
-  },
+  "name": "Statutes of Prince Edward Island",
   "kind": "annual_statutes",
   "jurisdiction": "ca-pe",
   "abbreviation": "SPEI",
   "canlii": {
    "jurisdiction": "pe",
    "database": "pea"
-  }
+  },
+  "citation_id": "spei"
  },
  {
-  "id": "peireg",
-  "name": {
-   "en": "Prince Edward Island Regulations"
-  },
+  "name": "Prince Edward Island Regulations",
   "kind": "regulations",
   "jurisdiction": "ca-pe",
   "abbreviation": "PEI Reg",
@@ -491,13 +426,11 @@
   },
   "variations": [
    "princeedwardisland Reg"
-  ]
+  ],
+  "citation_id": "peireg"
  },
  {
-  "id": "rsnl",
-  "name": {
-   "en": "Revised Statutes of Newfoundland and Labrador"
-  },
+  "name": "Revised Statutes of Newfoundland and Labrador",
   "kind": "revised_statutes",
   "jurisdiction": "ca-nl",
   "abbreviation": "RSNL",
@@ -507,13 +440,11 @@
   "canlii": {
    "jurisdiction": "nl",
    "database": "nls"
-  }
+  },
+  "citation_id": "rsnl"
  },
  {
-  "id": "snl",
-  "name": {
-   "en": "Statutes of Newfoundland and Labrador"
-  },
+  "name": "Statutes of Newfoundland and Labrador",
   "kind": "annual_statutes",
   "jurisdiction": "ca-nl",
   "abbreviation": "SNL",
@@ -523,13 +454,11 @@
   "canlii": {
    "jurisdiction": "nl",
    "database": "nla"
-  }
+  },
+  "citation_id": "snl"
  },
  {
-  "id": "nlr",
-  "name": {
-   "en": "Newfoundland and Labrador Regulations"
-  },
+  "name": "Newfoundland and Labrador Regulations",
   "kind": "regulations",
   "jurisdiction": "ca-nl",
   "abbreviation": "NLR",
@@ -542,91 +471,77 @@
   "canlii": {
    "jurisdiction": "nl",
    "database": "nlr"
-  }
+  },
+  "citation_id": "nlr"
  },
  {
-  "id": "cnlr",
-  "name": {
-   "en": "Consolidated Newfoundland and Labrador Regulations"
-  },
+  "name": "Consolidated Newfoundland and Labrador Regulations",
   "kind": "regulations",
   "jurisdiction": "ca-nl",
   "abbreviation": "CNLR",
   "canlii": {
    "jurisdiction": "nl",
    "database": "nlr"
-  }
+  },
+  "citation_id": "cnlr"
  },
  {
-  "id": "rsy",
-  "name": {
-   "en": "Revised Statutes of Yukon"
-  },
+  "name": "Revised Statutes of Yukon",
   "kind": "revised_statutes",
   "jurisdiction": "ca-yt",
   "abbreviation": "RSY",
   "canlii": {
    "jurisdiction": "yk",
    "database": "yks"
-  }
+  },
+  "citation_id": "rsy"
  },
  {
-  "id": "sy",
-  "name": {
-   "en": "Statutes of Yukon"
-  },
+  "name": "Statutes of Yukon",
   "kind": "annual_statutes",
   "jurisdiction": "ca-yt",
   "abbreviation": "SY",
   "canlii": {
    "jurisdiction": "yk",
    "database": "yka"
-  }
+  },
+  "citation_id": "sy"
  },
  {
-  "id": "yoic",
-  "name": {
-   "en": "Yukon Orders-in-Council"
-  },
+  "name": "Yukon Orders-in-Council",
   "kind": "regulations",
   "jurisdiction": "ca-yt",
   "abbreviation": "YOIC",
   "canlii": {
    "jurisdiction": "yk",
    "database": "ykr"
-  }
+  },
+  "citation_id": "yoic"
  },
  {
-  "id": "rsnwt",
-  "name": {
-   "en": "Revised Statutes of the Northwest Territories"
-  },
+  "name": "Revised Statutes of the Northwest Territories",
   "kind": "revised_statutes",
   "jurisdiction": "ca-nt",
   "abbreviation": "RSNWT",
   "canlii": {
    "jurisdiction": "nt",
    "database": "nts"
-  }
+  },
+  "citation_id": "rsnwt"
  },
  {
-  "id": "snwt",
-  "name": {
-   "en": "Statutes of the Northwest Territories"
-  },
+  "name": "Statutes of the Northwest Territories",
   "kind": "annual_statutes",
   "jurisdiction": "ca-nt",
   "abbreviation": "SNWT",
   "canlii": {
    "jurisdiction": "nt",
    "database": "nta"
-  }
+  },
+  "citation_id": "snwt"
  },
  {
-  "id": "nwtreg",
-  "name": {
-   "en": "Northwest Territories Regulations"
-  },
+  "name": "Northwest Territories Regulations",
   "kind": "regulations",
   "jurisdiction": "ca-nt",
   "abbreviation": "NWT Reg",
@@ -636,52 +551,44 @@
   },
   "variations": [
    "northwestterritories Reg"
-  ]
+  ],
+  "citation_id": "nwtreg"
  },
  {
-  "id": "rrnwt",
-  "name": {
-   "en": "Revised Regulations of the Northwest Territories"
-  },
+  "name": "Revised Regulations of the Northwest Territories",
   "kind": "regulations",
   "jurisdiction": "ca-nt",
   "abbreviation": "RRNWT",
   "canlii": {
    "jurisdiction": "nt",
    "database": "ntr"
-  }
+  },
+  "citation_id": "rrnwt"
  },
  {
-  "id": "snu",
-  "name": {
-   "en": "Statutes of Nunavut"
-  },
+  "name": "Statutes of Nunavut",
   "kind": "annual_statutes",
   "jurisdiction": "ca-nu",
   "abbreviation": "SNu",
   "canlii": {
    "jurisdiction": "nu",
    "database": "nua"
-  }
+  },
+  "citation_id": "snu"
  },
  {
-  "id": "csnu",
-  "name": {
-   "en": "Consolidated Statutes of Nunavut"
-  },
+  "name": "Consolidated Statutes of Nunavut",
   "kind": "revised_statutes",
   "jurisdiction": "ca-nu",
   "abbreviation": "CSNu",
   "canlii": {
    "jurisdiction": "nu",
    "database": "nus"
-  }
+  },
+  "citation_id": "csnu"
  },
  {
-  "id": "nureg",
-  "name": {
-   "en": "Nunavut Regulations"
-  },
+  "name": "Nunavut Regulations",
   "kind": "regulations",
   "jurisdiction": "ca-nu",
   "abbreviation": "Nu Reg",
@@ -691,14 +598,11 @@
   },
   "variations": [
    "nunavut Reg"
-  ]
+  ],
+  "citation_id": "nureg"
  },
  {
-  "id": "cqlr",
-  "name": {
-   "en": "Compilation of Quebec Laws and Regulations",
-   "fr": "Recueil des lois et des règlements du Québec"
-  },
+  "name": "Compilation of Quebec Laws and Regulations",
   "kind": "revised_statutes",
   "jurisdiction": "ca-qc",
   "abbreviation": "CQLR",
@@ -708,14 +612,12 @@
   "canlii": {
    "jurisdiction": "qc",
    "database": "qcs"
-  }
+  },
+  "name_fr": "Recueil des lois et des règlements du Québec",
+  "citation_id": "cqlr"
  },
  {
-  "id": "rsq",
-  "name": {
-   "en": "Revised Statutes of Quebec",
-   "fr": "Lois refondues du Québec"
-  },
+  "name": "Revised Statutes of Quebec",
   "kind": "revised_statutes",
   "jurisdiction": "ca-qc",
   "abbreviation": "RSQ",
@@ -725,14 +627,12 @@
   "canlii": {
    "jurisdiction": "qc",
    "database": "qcs"
-  }
+  },
+  "name_fr": "Lois refondues du Québec",
+  "citation_id": "rsq"
  },
  {
-  "id": "sq",
-  "name": {
-   "en": "Statutes of Quebec",
-   "fr": "Lois du Québec"
-  },
+  "name": "Statutes of Quebec",
   "kind": "annual_statutes",
   "jurisdiction": "ca-qc",
   "abbreviation": "SQ",
@@ -742,54 +642,45 @@
   "canlii": {
    "jurisdiction": "qc",
    "database": "qca"
-  }
+  },
+  "name_fr": "Lois du Québec",
+  "citation_id": "sq"
  },
  {
-  "id": "rrq",
-  "name": {
-   "en": "Revised Regulations of Quebec",
-   "fr": "Règlements refondus du Québec"
-  },
+  "name": "Revised Regulations of Quebec",
   "kind": "regulations",
   "jurisdiction": "ca-qc",
   "abbreviation": "RRQ",
   "canlii": {
    "jurisdiction": "qc",
    "database": "qcr"
-  }
+  },
+  "name_fr": "Règlements refondus du Québec",
+  "citation_id": "rrq"
  },
  {
-  "id": "uksi",
-  "name": {
-   "en": "Statutory Instruments (United Kingdom)"
-  },
+  "name": "Statutory Instruments (United Kingdom)",
   "kind": "regulations",
   "jurisdiction": "uk",
-  "abbreviation": "SI"
+  "abbreviation": "SI",
+  "citation_id": "uksi"
  },
  {
-  "id": "ssi",
-  "name": {
-   "en": "Scottish Statutory Instruments"
-  },
+  "name": "Scottish Statutory Instruments",
   "kind": "regulations",
   "jurisdiction": "uk-sc",
-  "abbreviation": "SSI"
+  "abbreviation": "SSI",
+  "citation_id": "ssi"
  },
  {
-  "id": "nisr",
-  "name": {
-   "en": "Statutory Rules of Northern Ireland"
-  },
+  "name": "Statutory Rules of Northern Ireland",
   "kind": "regulations",
   "jurisdiction": "uk-ni",
-  "abbreviation": "SR"
+  "abbreviation": "SR",
+  "citation_id": "nisr"
  },
  {
-  "id": "dcmr",
-  "name": {
-   "en": "District of Columbia Municipal Regulations"
-  },
+  "name": "District of Columbia Municipal Regulations",
   "kind": "regulations",
   "jurisdiction": "us-dc",
   "abbreviation": "DCMR",
@@ -797,6 +688,7 @@
    "D.C. Mun. Regs.",
    "D.C. Code Mun. Regs."
   ],
-  "evidence": "https://dcregs.dc.gov/"
+  "evidence": "https://dcregs.dc.gov/",
+  "citation_id": "dcmr"
  }
 ]

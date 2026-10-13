@@ -8,13 +8,11 @@
   "exports": {
     ".": {
       "types": "./index.d.ts"
-    },
-    "./source-canlii-routes.json": "./registry/source-canlii-routes.json"
+    }
   },
   "files": [
     "index.d.ts",
     "bindings",
-    "registry/source-canlii-routes.json",
     "LICENSE",
     "NOTICE"
   ]

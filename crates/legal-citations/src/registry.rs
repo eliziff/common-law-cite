@@ -2,12 +2,11 @@
 //!
 //! The registry is data, not code: every table lives as JSON under
 //! `crates/legal-citations/registry/` so non-Rust consumers can read the same
-//! files. Canadian, Commonwealth and international entries are authored here;
-//! US entries (courts, reporters, code and session-law series, journals) are
-//! generated into `registry/upstream/` from Free Law Project's reporters-db and
-//! courts-db by `tools/sync-upstream.py` at the versions pinned in
-//! `upstream.lock`. `journals.json` holds the McGill Guide abbreviation
-//! inventory that is not a reporter.
+//! source records through the registry API. Canadian, Commonwealth and
+//! international entries are authored here; complete Free Law Project sources
+//! are copied unchanged into `registry/upstream/` at the versions pinned in
+//! `upstream.lock`. Build-time matching indexes preserve citation identity
+//! separately from the public source schema. See `registry/README.md`.
 //!
 //! # Verified and unverified entries
 //!
@@ -442,38 +441,30 @@ impl Registry {
 }
 
 fn load() -> Registry {
-    fn table<T: for<'de> Deserialize<'de>>(name: &str, json: &str) -> Vec<T> {
-        serde_json::from_str(json).unwrap_or_else(|error| panic!("registry/{name}: {error}"))
-    }
-    let mut reporters: Vec<Reporter> = table("reporters.json", include_str!("../registry/reporters.json"));
-    reporters.extend(table::<Reporter>(
-        "upstream/reporters.json",
-        include_str!("../registry/upstream/reporters.json"),
-    ));
-    let mut courts: Vec<Court> = table("courts.json", include_str!("../registry/courts.json"));
-    courts.extend(table::<Court>(
-        "upstream/courts.json",
-        include_str!("../registry/upstream/courts.json"),
-    ));
-    let mut series: Vec<Series> = table("series.json", include_str!("../registry/series.json"));
-    series.extend(table::<Series>(
-        "upstream/series.json",
-        include_str!("../registry/upstream/series.json"),
-    ));
-    let mut journals: Vec<Journal> = table("journals.json", include_str!("../registry/journals.json"));
-    journals.extend(table::<Journal>(
-        "upstream/journals.json",
-        include_str!("../registry/upstream/journals.json"),
-    ));
-    Registry {
-        jurisdictions: table("jurisdictions.json", include_str!("../registry/jurisdictions.json")),
-        courts,
-        reporters,
-        series,
-        journals,
-        index: Index::default(),
-    }
-    .indexed()
+    use std::io::Read;
+    let compressed = include_bytes!(concat!(env!("OUT_DIR"), "/registry-index.json.gz"));
+    let mut data = Vec::new();
+    flate2::read::GzDecoder::new(compressed.as_slice()).read_to_end(&mut data).expect("compiled citation index");
+    serde_json::from_slice::<Registry>(&data).expect("compiled citation index").indexed()
+}
+
+/// Original upstream records and authored extensions, loaded only for registry inspection.
+fn source_blob() -> &'static serde_json::Value {
+    static SOURCE: LazyLock<serde_json::Value> = LazyLock::new(|| {
+        let compressed = include_bytes!(concat!(env!("OUT_DIR"), "/registry-source.json.gz"));
+        serde_json::from_reader(flate2::read::GzDecoder::new(compressed.as_slice()))
+            .expect("compiled source registry")
+    });
+    &SOURCE
+}
+
+pub fn source_registry() -> &'static serde_json::Value { &source_blob()["tables"] }
+
+pub(crate) fn source_record(table: &str, id: &str) -> &'static serde_json::Value {
+    let blob = source_blob();
+    let position = &blob["positions"][table][id];
+    &blob["tables"][table][position[0].as_str().expect("source key")]
+        [position[1].as_u64().expect("source record") as usize]
 }
 
 /// The embedded registry. Its JSON is validated by this crate's tests, so the

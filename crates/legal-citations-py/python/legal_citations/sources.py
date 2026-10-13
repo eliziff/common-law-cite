@@ -5,7 +5,7 @@ only converts records, integer representations and Python string offsets.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 
 from . import call
 
@@ -16,6 +16,9 @@ class DeterministicPart:
     end: int
     text: str
     anchors: tuple[str, ...]
+    jurisdiction_priority: tuple[str, ...] | None = None
+    anchor_spans: tuple[tuple[int, int], ...] = ()
+    resolved_url: str | None = None
 
 
 @dataclass(frozen=True)
@@ -40,27 +43,28 @@ class DeterministicFields:
     reasons: tuple[str, ...] = ()
 
 
-def _split(text: str, recall_first: bool, extended_us: bool) -> DeterministicSplit:
+def _split(text: str, recall_first: bool, jurisdiction_priority: tuple[str, ...] | None) -> DeterministicSplit:
     result = call("splitSources", {
         "text": text if isinstance(text, str) else "",
         "recallFirst": recall_first, "offsetUnit": "char",
-        "extendedUs": extended_us,
+        **({"jurisdictionPriority": list(jurisdiction_priority)} if jurisdiction_priority is not None else {}),
     })
     return DeterministicSplit(
         result["status"],
-        tuple(DeterministicPart(**{**part, "anchors": tuple(part["anchors"])})
-              for part in result["parts"]),
+        tuple(DeterministicPart(part["start"], part["end"], part["text"], tuple(part["anchors"]),
+                                tuple(part["jurisdictionPriority"]), tuple(tuple(span) for span in part["anchorSpans"]),
+                                part.get("resolvedUrl")) for part in result["parts"]),
         tuple(tuple(delimiter) for delimiter in result["delimiters"]),
         tuple(result["reasons"]),
     )
 
 
-def split_footnote(text: str, *, extended_us: bool = False) -> DeterministicSplit:
-    return _split(text, False, extended_us)
+def split_footnote(text: str, *, jurisdiction_priority: tuple[str, ...] | None = None) -> DeterministicSplit:
+    return _split(text, False, jurisdiction_priority)
 
 
-def split_footnote_recall_first(text: str, *, extended_us: bool = False) -> DeterministicSplit:
-    return _split(text, True, extended_us)
+def split_footnote_recall_first(text: str, *, jurisdiction_priority: tuple[str, ...] | None = None) -> DeterministicSplit:
+    return _split(text, True, jurisdiction_priority)
 
 
 def _fields(request: dict) -> DeterministicFields:
@@ -71,9 +75,15 @@ def _fields(request: dict) -> DeterministicFields:
     return DeterministicFields(**result)
 
 
-def extract_fields(part: DeterministicPart, *, extended_us: bool = False) -> DeterministicFields:
-    return _fields({"part": asdict(part), "extendedUs": extended_us})
+def extract_fields(part: DeterministicPart, *, jurisdiction_priority: tuple[str, ...] | None = None) -> DeterministicFields:
+    wire = {"start": part.start, "end": part.end, "text": part.text, "anchors": list(part.anchors),
+            "anchorSpans": list(part.anchor_spans),
+            **({"jurisdictionPriority": list(part.jurisdiction_priority)} if part.jurisdiction_priority is not None else {}),
+            **({"resolvedUrl": part.resolved_url} if part.resolved_url is not None else {})}
+    return _fields({"part": wire,
+                    **({"jurisdictionPriority": list(jurisdiction_priority)} if jurisdiction_priority is not None else {})})
 
 
-def extract_text_fields(text: str, *, extended_us: bool = False) -> DeterministicFields:
-    return _fields({"text": str(text or ""), "extendedUs": extended_us})
+def extract_text_fields(text: str, *, jurisdiction_priority: tuple[str, ...] | None = None) -> DeterministicFields:
+    return _fields({"text": str(text or ""),
+                    **({"jurisdictionPriority": list(jurisdiction_priority)} if jurisdiction_priority is not None else {})})

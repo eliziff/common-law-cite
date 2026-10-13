@@ -176,9 +176,6 @@ pub struct Options {
     pub resolve: bool,
     /// Group parallel citations.
     pub parallel: bool,
-    /// Include the pinned source's specialized US citation forms in the shared
-    /// extractor. Literal citation cues prefilter their compiled patterns.
-    pub extended_us: bool,
     /// Treat each `\n\n`-separated block, or each entry of [`Options::notes`],
     /// as a footnote whose number `supra note N` can refer to.
     pub notes: Option<Vec<NoteRange>>,
@@ -398,9 +395,8 @@ impl Default for Options {
             remove_ambiguous: false,
             resolve: true,
             parallel: true,
-            extended_us: true,
             notes: None,
-            jurisdiction_priority: vec!["ca".to_owned()],
+            jurisdiction_priority: source::default_jurisdiction_priority(),
             supra_hint_mode: SupraMode::Aggressive,
             supra_linking_mode: SupraMode::Safe,
             styles: None,
@@ -410,6 +406,15 @@ impl Default for Options {
             linking: None,
             extents: Vec::new(),
         }
+    }
+}
+
+impl Options {
+    /// Specialized US forms belong to the Bluebook guide; jurisdiction choices
+    /// can select them explicitly without a separate US-only switch.
+    pub(crate) fn us_forms(&self) -> bool {
+        self.styles.as_ref().is_none_or(|styles| styles.contains(&CitationStyle::Bluebook))
+            || source::us_jurisdiction(&self.jurisdiction_priority)
     }
 }
 
@@ -467,7 +472,7 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     find::ocr_twins(&mut citations);
     find::titled_chapters(&mut citations);
     let notes = options.notes.as_deref().unwrap_or(&[]);
-    let mut parts = source::split_notes(text, notes, options.split_tier, &citations);
+    let mut parts = source::split_notes(text, notes, options.split_tier, &citations, &options.jurisdiction_priority);
     if options.split_tier.is_some() { source::merge_split_citations(text, notes, &mut parts, &citations); }
     // A work's own short form written after it refers to it ([`Linking::short_form_references`],
     // [`Linking::bare_mentions`]).
@@ -475,7 +480,7 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     let linking = options.linking.clone().or_else(|| options.split_tier.map(Linking::for_tier));
     if let Some(linking) = linking.as_ref().filter(|linking| linking.short_form_references || linking.bare_mentions) {
         let defined = parts.iter().filter(|part| part.text.contains('[')).filter_map(|part| {
-            let short = source::extract_fields(part, part.extended_us).short_form;
+            let short = source::extract_fields(part, part.us_forms()).short_form;
             let short = short_forms::clean_short_form(&short);
             (!short.is_empty() && part.text.contains(short.as_str())).then_some((short, part.end))
         }).collect::<Vec<_>>();

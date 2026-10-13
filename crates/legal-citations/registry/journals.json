@@ -1,5071 +1,5071 @@
 [
  {
-  "id": "mcgill-aall-spec",
   "abbreviation": "AALL Spec",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-aall-spec"
  },
  {
-  "id": "mcgill-aalr",
   "abbreviation": "AALR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-aalr"
  },
  {
-  "id": "mcgill-aar",
   "abbreviation": "AAR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-aar"
  },
  {
-  "id": "mcgill-aba-antitrust-lj",
   "abbreviation": "ABA Antitrust LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-aba-antitrust-lj"
  },
  {
-  "id": "mcgill-aba-criminal-j",
   "abbreviation": "ABA Criminal J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-aba-criminal-j"
  },
  {
-  "id": "mcgill-aba-ent-sports-law",
   "abbreviation": "ABA Ent & Sports Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-aba-ent-sports-law"
  },
  {
-  "id": "mcgill-aba-fam-advocate",
   "abbreviation": "ABA Fam Advocate",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-aba-fam-advocate"
  },
  {
-  "id": "mcgill-aba-fam-lq",
   "abbreviation": "ABA Fam LQ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-aba-fam-lq"
  },
  {
-  "id": "mcgill-abaipl",
   "abbreviation": "ABAIPL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-abaipl"
  },
  {
-  "id": "mcgill-abalpm",
   "abbreviation": "ABALPM",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-abalpm"
  },
  {
-  "id": "mcgill-aba-tort-ins-lj",
   "abbreviation": "ABA Tort & Ins LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-aba-tort-ins-lj"
  },
  {
-  "id": "mcgill-abc",
   "abbreviation": "ABC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-abc"
  },
  {
-  "id": "mcgill-abd",
   "abbreviation": "ABD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-abd"
  },
  {
-  "id": "mcgill-acdi",
   "abbreviation": "ACDI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-acdi"
  },
  {
-  "id": "mcgill-acdp",
   "abbreviation": "ACDP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-acdp"
  },
  {
-  "id": "mcgill-act",
   "abbreviation": "Act",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-act"
  },
  {
-  "id": "mcgill-acta-crim",
   "abbreviation": "Acta Crim",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-acta-crim"
  },
  {
-  "id": "mcgill-actualites-justice",
   "abbreviation": "Actualités-Justice",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-actualites-justice"
  },
  {
-  "id": "mcgill-adelphia-lj",
   "abbreviation": "Adelphia LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-adelphia-lj"
  },
  {
-  "id": "mcgill-adil",
   "abbreviation": "ADIL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-adil"
  },
  {
-  "id": "mcgill-admin-lj-am-u",
   "abbreviation": "Admin LJ Am U",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-admin-lj-am-u"
  },
  {
-  "id": "mcgill-admin-reg-l-news",
   "abbreviation": "Admin & Reg L News",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-admin-reg-l-news"
  },
  {
-  "id": "mcgill-advocate",
   "abbreviation": "Advocate",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-advocate"
  },
  {
-  "id": "mcgill-advocates-q",
   "abbreviation": "Advocates' Q",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-advocates-q"
  },
  {
-  "id": "mcgill-advocates-soc-j",
   "abbreviation": "Advocates' Soc J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-advocates-soc-j"
  },
  {
-  "id": "mcgill-aelj",
   "abbreviation": "AELJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-aelj"
  },
  {
-  "id": "mcgill-aeub",
   "abbreviation": "AEUB",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-aeub"
  },
  {
-  "id": "mcgill-afdi",
   "abbreviation": "AFDI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-afdi"
  },
  {
-  "id": "mcgill-afr-am-l-pol-y-rep",
   "abbreviation": "Afr-Am L & Pol'y Rep",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-afr-am-l-pol-y-rep"
  },
  {
-  "id": "mcgill-ai-l",
   "abbreviation": "AI & L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ai-l"
  },
  {
-  "id": "mcgill-ailr",
   "abbreviation": "AILR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ailr"
  },
  {
-  "id": "mcgill-a-imm-app",
   "abbreviation": "A imm app",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-a-imm-app"
  },
  {
-  "id": "mcgill-a-imm-app-ns",
   "abbreviation": "A imm app (ns)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-a-imm-app-ns"
  },
  {
-  "id": "mcgill-a-int-l-lc",
   "abbreviation": "A Int'l LC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-a-int-l-lc"
  },
  {
-  "id": "mcgill-air-space-l",
   "abbreviation": "Air & Space L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-air-space-l"
  },
  {
-  "id": "mcgill-air-space-law",
   "abbreviation": "Air & Space Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-air-space-law"
  },
  {
-  "id": "mcgill-ajdq",
   "abbreviation": "AJDQ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ajdq"
  },
  {
-  "id": "mcgill-ajil-am-j-int-l-l",
   "abbreviation": "AJIL / Am J Int'l L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ajil-am-j-int-l-l"
  },
  {
-  "id": "mcgill-ajq",
   "abbreviation": "AJQ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ajq"
  },
  {
-  "id": "mcgill-al",
   "abbreviation": "Al",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-al"
  },
  {
-  "id": "mcgill-alb-l-envtl-outlook",
   "abbreviation": "Alb L Envtl Outlook",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-alb-l-envtl-outlook"
  },
  {
-  "id": "mcgill-almd",
   "abbreviation": "ALMD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-almd"
  },
  {
-  "id": "mcgill-alta-lq",
   "abbreviation": "Alta LQ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-alta-lq"
  },
  {
-  "id": "mcgill-alta-lrbd",
   "abbreviation": "Alta LRBD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-alta-lrbd"
  },
  {
-  "id": "mcgill-alta-l-rev",
   "abbreviation": "Alta L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-alta-l-rev"
  },
  {
-  "id": "mcgill-alt-j",
   "abbreviation": "Alt J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-alt-j"
  },
  {
-  "id": "mcgill-am-bankr-inst-j",
   "abbreviation": "Am Bankr Inst J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-am-bankr-inst-j"
  },
  {
-  "id": "mcgill-am-j-pub-health",
   "abbreviation": "Am J Pub Health",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-am-j-pub-health"
  },
  {
-  "id": "mcgill-am-j-tax-pol-y",
   "abbreviation": "Am J Tax Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-am-j-tax-pol-y"
  },
  {
-  "id": "mcgill-am-l-econ-rev",
   "abbreviation": "Am L & Econ Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-am-l-econ-rev"
  },
  {
-  "id": "mcgill-am-u-j-gender-l",
   "abbreviation": "Am U J Gender & L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-am-u-j-gender-l"
  },
  {
-  "id": "mcgill-am-u-j-intl-l-pol-y",
   "abbreviation": "Am U J Intl L & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-am-u-j-intl-l-pol-y"
  },
  {
-  "id": "mcgill-anal-de-pol",
   "abbreviation": "Anal de pol",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-anal-de-pol"
  },
  {
-  "id": "mcgill-animal-l",
   "abbreviation": "Animal L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-animal-l"
  },
  {
-  "id": "mcgill-an-mex-der-intl",
   "abbreviation": "An Mex Der Intl",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-an-mex-der-intl"
  },
  {
-  "id": "mcgill-ann-air-sp-l",
   "abbreviation": "Ann Air & Sp L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-air-sp-l"
  },
  {
-  "id": "mcgill-annals-air-sp-l",
   "abbreviation": "Annals Air & Sp L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-annals-air-sp-l"
  },
  {
-  "id": "mcgill-ann-coll-loc",
   "abbreviation": "Ann coll loc",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-coll-loc"
  },
  {
-  "id": "mcgill-ann-conv-eur-dr-l-homme",
   "abbreviation": "Ann Conv eur dr l'Homme",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-conv-eur-dr-l-homme"
  },
  {
-  "id": "mcgill-ann-dr-aer-spat",
   "abbreviation": "Ann dr aér & spat",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-dr-aer-spat"
  },
  {
-  "id": "mcgill-ann-haye-dr-intl",
   "abbreviation": "Ann Haye dr Intl",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-haye-dr-intl"
  },
  {
-  "id": "mcgill-ann-inst-dr-intl",
   "abbreviation": "Ann inst dr Intl",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-inst-dr-intl"
  },
  {
-  "id": "mcgill-ann-leg-etrang",
   "abbreviation": "Ann lég étrang",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-leg-etrang"
  },
  {
-  "id": "mcgill-ann-nu",
   "abbreviation": "Ann NU",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-nu"
  },
  {
-  "id": "mcgill-ann-pr-ind-art-lit",
   "abbreviation": "Ann pr ind art & lit",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-pr-ind-art-lit"
  },
  {
-  "id": "mcgill-ann-sn",
   "abbreviation": "Ann SN",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-sn"
  },
  {
-  "id": "mcgill-ann-surv-austl-l",
   "abbreviation": "Ann Surv Austl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-surv-austl-l"
  },
  {
-  "id": "mcgill-ann-surv-commonwealth-l",
   "abbreviation": "Ann Surv Commonwealth L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-surv-commonwealth-l"
  },
  {
-  "id": "mcgill-ann-surv-engl-l",
   "abbreviation": "Ann Surv Engl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-surv-engl-l"
  },
  {
-  "id": "mcgill-ann-surv-s-afr-l",
   "abbreviation": "Ann Surv S Afr L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ann-surv-s-afr-l"
  },
  {
-  "id": "mcgill-antitrust",
   "abbreviation": "Antitrust",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-antitrust"
  },
  {
-  "id": "mcgill-antitrust-bull",
   "abbreviation": "Antitrust Bull",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-antitrust-bull"
  },
  {
-  "id": "mcgill-antitrust-l-econ-rev",
   "abbreviation": "Antitrust L & Econ Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-antitrust-l-econ-rev"
  },
  {
-  "id": "mcgill-antitrust-lj",
   "abbreviation": "Antitrust LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-antitrust-lj"
  },
  {
-  "id": "mcgill-anwtytr",
   "abbreviation": "ANWTYTR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-anwtytr"
  },
  {
-  "id": "mcgill-aor",
   "abbreviation": "AOR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-aor"
  },
  {
-  "id": "mcgill-appeal",
   "abbreviation": "Appeal",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-appeal"
  },
  {
-  "id": "mcgill-arab-lq",
   "abbreviation": "Arab LQ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-arab-lq"
  },
  {
-  "id": "mcgill-arb-intl",
   "abbreviation": "Arb Intl",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-arb-intl"
  },
  {
-  "id": "mcgill-arb-j",
   "abbreviation": "Arb J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-arb-j"
  },
  {
-  "id": "mcgill-arsp",
   "abbreviation": "ARSP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-arsp"
  },
  {
-  "id": "mcgill-art-ant-l",
   "abbreviation": "Art Ant & L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-art-ant-l"
  },
  {
-  "id": "mcgill-asian-lj",
   "abbreviation": "Asian LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-asian-lj"
  },
  {
-  "id": "mcgill-asia-pac-j-hr-l",
   "abbreviation": "Asia Pac J HR & L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-asia-pac-j-hr-l"
  },
  {
-  "id": "mcgill-asia-pac-l-rev",
   "abbreviation": "Asia Pac L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-asia-pac-l-rev"
  },
  {
-  "id": "mcgill-aus-j-pub-intl-l",
   "abbreviation": "Aus J Pub & Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-aus-j-pub-intl-l"
  },
  {
-  "id": "mcgill-aus-rev-intl-eur-l",
   "abbreviation": "Aus Rev Intl & Eur L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-aus-rev-intl-eur-l"
  },
  {
-  "id": "mcgill-austl-bar-rev",
   "abbreviation": "Austl Bar Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-bar-rev"
  },
  {
-  "id": "mcgill-austl-bus-l-rev",
   "abbreviation": "Austl Bus L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-bus-l-rev"
  },
  {
-  "id": "mcgill-austl-comp-cons-lj",
   "abbreviation": "Austl Comp & Cons LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-comp-cons-lj"
  },
  {
-  "id": "mcgill-austl-ins-lj",
   "abbreviation": "Austl Ins LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-ins-lj"
  },
  {
-  "id": "mcgill-austl-j-contract-l",
   "abbreviation": "Austl J Contract L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-j-contract-l"
  },
  {
-  "id": "mcgill-austl-j-corp-l",
   "abbreviation": "Austl J Corp L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-j-corp-l"
  },
  {
-  "id": "mcgill-austl-j-fam-l",
   "abbreviation": "Austl J Fam L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-j-fam-l"
  },
  {
-  "id": "mcgill-austl-j-hr",
   "abbreviation": "Austl J HR",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-j-hr"
  },
  {
-  "id": "mcgill-austl-j-lab-l",
   "abbreviation": "Austl J Lab L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-j-lab-l"
  },
  {
-  "id": "mcgill-austl-j-legal-hist",
   "abbreviation": "Austl J Legal Hist",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-j-legal-hist"
  },
  {
-  "id": "mcgill-austl-j-leg-philosophy",
   "abbreviation": "Austl J Leg Philosophy",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-j-leg-philosophy"
  },
  {
-  "id": "mcgill-austl-lj",
   "abbreviation": "Austl LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-lj"
  },
  {
-  "id": "mcgill-austl-nz-j-crim",
   "abbreviation": "Austl & NZ J Crim",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-nz-j-crim"
  },
  {
-  "id": "mcgill-austl-prop-lj",
   "abbreviation": "Austl Prop LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-prop-lj"
  },
  {
-  "id": "mcgill-austl-tax-rev",
   "abbreviation": "Austl Tax Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-austl-tax-rev"
  },
  {
-  "id": "mcgill-baltimore-l-rev",
   "abbreviation": "Baltimore L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-baltimore-l-rev"
  },
  {
-  "id": "mcgill-banking-lj",
   "abbreviation": "Banking LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-banking-lj"
  },
  {
-  "id": "mcgill-banking-pol-y-rep",
   "abbreviation": "Banking Pol'y Rep",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-banking-pol-y-rep"
  },
  {
-  "id": "mcgill-bar-bench-nd",
   "abbreviation": "Bar & Bench ND",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-bar-bench-nd"
  },
  {
-  "id": "mcgill-barrister",
   "abbreviation": "Barrister",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-barrister"
  },
  {
-  "id": "mcgill-bcln",
   "abbreviation": "BCLN",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-bcln"
  },
  {
-  "id": "mcgill-bcscw-summ",
   "abbreviation": "BCSCW Summ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-bcscw-summ"
  },
  {
-  "id": "mcgill-b-dr",
   "abbreviation": "B & dr",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-b-dr"
  },
  {
-  "id": "mcgill-bflr",
   "abbreviation": "BFLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-bflr"
  },
  {
-  "id": "mcgill-bilc",
   "abbreviation": "BILC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-bilc"
  },
  {
-  "id": "mcgill-biotech-l-rep",
   "abbreviation": "Biotech L Rep",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-biotech-l-rep"
  },
  {
-  "id": "mcgill-bisd",
   "abbreviation": "BISD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-bisd"
  },
  {
-  "id": "mcgill-bol-mex-der-comp",
   "abbreviation": "Bol Mex Der Comp",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-bol-mex-der-comp"
  },
  {
-  "id": "mcgill-boston-bar-j",
   "abbreviation": "Boston Bar J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-boston-bar-j"
  },
  {
-  "id": "mcgill-bridgeport-l-rev",
   "abbreviation": "Bridgeport L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-bridgeport-l-rev"
  },
  {
-  "id": "mcgill-bridg-j",
   "abbreviation": "Bridg J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-bridg-j"
  },
  {
-  "id": "mcgill-brit-inst-intl-comp-l",
   "abbreviation": "Brit Inst Intl & Comp L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-brit-inst-intl-comp-l"
  },
  {
-  "id": "mcgill-brit-j-crim",
   "abbreviation": "Brit J Crim",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-brit-j-crim"
  },
  {
-  "id": "mcgill-brit-med-j",
   "abbreviation": "Brit Med J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-brit-med-j"
  },
  {
-  "id": "mcgill-brit-tax-rev",
   "abbreviation": "Brit Tax Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-brit-tax-rev"
  },
  {
-  "id": "mcgill-brit-yb-intl-l",
   "abbreviation": "Brit YB Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-brit-yb-intl-l"
  },
  {
-  "id": "mcgill-buff-hrl-rev",
   "abbreviation": "Buff HRL Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-buff-hrl-rev"
  },
  {
-  "id": "mcgill-bu-j-tax-l",
   "abbreviation": "BU J Tax L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-bu-j-tax-l"
  },
  {
-  "id": "mcgill-bull-can-vih-sida-d",
   "abbreviation": "Bull can VIH-SIDA & d",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-bull-can-vih-sida-d"
  },
  {
-  "id": "mcgill-bull-info-act-jur",
   "abbreviation": "Bull info act jur",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-bull-info-act-jur"
  },
  {
-  "id": "mcgill-bull-ist-dir-rom",
   "abbreviation": "Bull ist dir rom",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-bull-ist-dir-rom"
  },
  {
-  "id": "mcgill-bull-leg-dev",
   "abbreviation": "Bull Leg Dev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-bull-leg-dev"
  },
  {
-  "id": "mcgill-bull-osc",
   "abbreviation": "Bull OSC",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-bull-osc"
  },
  {
-  "id": "mcgill-bus-l",
   "abbreviation": "Bus & L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-bus-l"
  },
  {
-  "id": "mcgill-bus-law",
   "abbreviation": "Bus Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-bus-law"
  },
  {
-  "id": "mcgill-bus-l-rev",
   "abbreviation": "Bus L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-bus-l-rev"
  },
  {
-  "id": "mcgill-bus-q",
   "abbreviation": "Bus Q",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-bus-q"
  },
  {
-  "id": "mcgill-ca",
   "abbreviation": "CA",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ca"
  },
  {
-  "id": "mcgill-cacm",
   "abbreviation": "CACM",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cacm"
  },
  {
-  "id": "mcgill-cambridge-q-healthcare-ethics",
   "abbreviation": "Cambridge Q Healthcare Ethics",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cambridge-q-healthcare-ethics"
  },
  {
-  "id": "mcgill-cambridge-yb-eur-legal-stud",
   "abbreviation": "Cambridge YB Eur Legal Stud",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cambridge-yb-eur-legal-stud"
  },
  {
-  "id": "mcgill-can-bar-j",
   "abbreviation": "Can Bar J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-bar-j"
  },
  {
-  "id": "mcgill-can-bar-rev",
   "abbreviation": "Can Bar Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-bar-rev"
  },
  {
-  "id": "mcgill-can-bus-lj",
   "abbreviation": "Can Bus LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-bus-lj"
  },
  {
-  "id": "mcgill-can-bus-rev",
   "abbreviation": "Can Bus Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-bus-rev"
  },
  {
-  "id": "mcgill-can-class-action-rev",
   "abbreviation": "Can Class Action Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-class-action-rev"
  },
  {
-  "id": "mcgill-can-comm-l-rev",
   "abbreviation": "Can Comm L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-comm-l-rev"
  },
  {
-  "id": "mcgill-can-community-lj",
   "abbreviation": "Can Community LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-community-lj"
  },
  {
-  "id": "mcgill-can-compet-pol-y-rec",
   "abbreviation": "Can Compet Pol'y Rec",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-compet-pol-y-rec"
  },
  {
-  "id": "mcgill-can-council-intl-l-proc",
   "abbreviation": "Can Council Intl L Proc",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-council-intl-l-proc"
  },
  {
-  "id": "mcgill-can-crim-l-rev",
   "abbreviation": "Can Crim L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-crim-l-rev"
  },
  {
-  "id": "mcgill-can-curr-tax",
   "abbreviation": "Can Curr Tax",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-can-curr-tax"
  },
  {
-  "id": "mcgill-can-envtl-ln",
   "abbreviation": "Can Envtl LN",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-can-envtl-ln"
  },
  {
-  "id": "mcgill-can-fam-lq",
   "abbreviation": "Can Fam LQ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-fam-lq"
  },
  {
-  "id": "mcgill-can-hiv-aids-pol-y-l-rev",
   "abbreviation": "Can HIV/AIDS Pol'y & L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-hiv-aids-pol-y-l-rev"
  },
  {
-  "id": "mcgill-can-hr-advoc",
   "abbreviation": "Can HR Advoc",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-can-hr-advoc"
  },
  {
-  "id": "mcgill-can-hum-rts-yb",
   "abbreviation": "Can Hum Rts YB",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-hum-rts-yb"
  },
  {
-  "id": "mcgill-can-intl-law",
   "abbreviation": "Can Intl Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-intl-law"
  },
  {
-  "id": "mcgill-can-j-admin-l-prac",
   "abbreviation": "Can J Admin L & Prac",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-j-admin-l-prac"
  },
  {
-  "id": "mcgill-can-j-corr",
   "abbreviation": "Can J Corr",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-j-corr"
  },
  {
-  "id": "mcgill-can-j-crim",
   "abbreviation": "Can J Crim",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-j-crim"
  },
  {
-  "id": "mcgill-can-j-crim-corr",
   "abbreviation": "Can J Crim & Corr",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-j-crim-corr"
  },
  {
-  "id": "mcgill-can-j-fam-l",
   "abbreviation": "Can J Fam L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-j-fam-l"
  },
  {
-  "id": "mcgill-can-j-ins-l",
   "abbreviation": "Can J Ins L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-j-ins-l"
  },
  {
-  "id": "mcgill-can-j-intl-bus-l-pol-y",
   "abbreviation": "Can J Intl Bus L & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-j-intl-bus-l-pol-y"
  },
  {
-  "id": "mcgill-can-jl-jur",
   "abbreviation": "Can JL & Jur",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-jl-jur"
  },
  {
-  "id": "mcgill-can-law",
   "abbreviation": "Can Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-law"
  },
  {
-  "id": "mcgill-can-legal-stud",
   "abbreviation": "Can Legal Stud",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-legal-stud"
  },
  {
-  "id": "mcgill-can-lj",
   "abbreviation": "Can LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-lj"
  },
  {
-  "id": "mcgill-can-l-libr-rev",
   "abbreviation": "Can L Libr Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-l-libr-rev"
  },
  {
-  "id": "mcgill-can-l-rev",
   "abbreviation": "Can L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-l-rev"
  },
  {
-  "id": "mcgill-can-lt",
   "abbreviation": "Can LT",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-can-lt"
  },
  {
-  "id": "mcgill-can-med-assoc-j",
   "abbreviation": "Can Med Assoc J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-med-assoc-j"
  },
  {
-  "id": "mcgill-can-mun-j",
   "abbreviation": "Can Mun J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-mun-j"
  },
  {
-  "id": "mcgill-can-nl-bull",
   "abbreviation": "Can NL Bull",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-nl-bull"
  },
  {
-  "id": "mcgill-can-pub-pol-y",
   "abbreviation": "Can Pub Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-pub-pol-y"
  },
  {
-  "id": "mcgill-can-tax-found",
   "abbreviation": "Can Tax Found",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-can-tax-found"
  },
  {
-  "id": "mcgill-can-tax-highlights",
   "abbreviation": "Can Tax Highlights",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-can-tax-highlights"
  },
  {
-  "id": "mcgill-can-tax-j",
   "abbreviation": "Can Tax J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-tax-j"
  },
  {
-  "id": "mcgill-can-tax-n",
   "abbreviation": "Can Tax N",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-can-tax-n"
  },
  {
-  "id": "mcgill-can-tax-n-j-tax-pol-y",
   "abbreviation": "Can Tax'n J Tax Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-tax-n-j-tax-pol-y"
  },
  {
-  "id": "mcgill-can-yb-intl-l",
   "abbreviation": "Can YB Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-can-yb-intl-l"
  },
  {
-  "id": "mcgill-capital-ul-rev",
   "abbreviation": "Capital UL Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-capital-ul-rev"
  },
  {
-  "id": "mcgill-caq",
   "abbreviation": "CAQ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-caq"
  },
  {
-  "id": "mcgill-car",
   "abbreviation": "CAR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-car"
  },
  {
-  "id": "mcgill-cardozo-el-bull",
   "abbreviation": "Cardozo EL Bull",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cardozo-el-bull"
  },
  {
-  "id": "mcgill-cardozo-j-intl-comp-l",
   "abbreviation": "Cardozo J Intl & Comp L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cardozo-j-intl-comp-l"
  },
  {
-  "id": "mcgill-cardozo-stud-l-lit",
   "abbreviation": "Cardozo Stud L & Lit",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cardozo-stud-l-lit"
  },
  {
-  "id": "mcgill-car-lj",
   "abbreviation": "Car LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-car-lj"
  },
  {
-  "id": "mcgill-cart-bna",
   "abbreviation": "Cart BNA",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cart-bna"
  },
  {
-  "id": "mcgill-cas",
   "abbreviation": "CAS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cas"
  },
  {
-  "id": "mcgill-cba-papers",
   "abbreviation": "CBA Papers",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cba-papers"
  },
  {
-  "id": "mcgill-cbayb",
   "abbreviation": "CBAYB",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cbayb"
  },
  {
-  "id": "mcgill-cbes",
   "abbreviation": "CBES",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cbes"
  },
  {
-  "id": "mcgill-ccl",
   "abbreviation": "CCL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ccl"
  },
  {
-  "id": "mcgill-ccl-legislation",
   "abbreviation": "CCL Legislation",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ccl-legislation"
  },
  {
-  "id": "mcgill-ccl-legislation-2",
   "abbreviation": "CCL Législation",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ccl-legislation-2"
  },
  {
-  "id": "mcgill-cclr",
   "abbreviation": "CCLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cclr"
  },
  {
-  "id": "mcgill-ccri",
   "abbreviation": "CCRI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ccri"
  },
  {
-  "id": "mcgill-cdb-c",
   "abbreviation": "CDB-C",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cdb-c"
  },
  {
-  "id": "mcgill-c-de-d",
   "abbreviation": "C de D",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-c-de-d"
  },
  {
-  "id": "mcgill-ceb",
   "abbreviation": "CEB",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ceb"
  },
  {
-  "id": "mcgill-cer",
   "abbreviation": "CER",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cer"
  },
  {
-  "id": "mcgill-cflc",
   "abbreviation": "CFLC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cflc"
  },
  {
-  "id": "mcgill-chapman-l-rev",
   "abbreviation": "Chapman L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-chapman-l-rev"
  },
  {
-  "id": "mcgill-ch-cr",
   "abbreviation": "Ch CR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ch-cr"
  },
  {
-  "id": "mcgill-chicago-j-intl-l",
   "abbreviation": "Chicago J Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-chicago-j-intl-l"
  },
  {
-  "id": "mcgill-chicago-kent-l-rev",
   "abbreviation": "Chicago-Kent L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-chicago-kent-l-rev"
  },
  {
-  "id": "mcgill-chicago-law",
   "abbreviation": "Chicago Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-chicago-law"
  },
  {
-  "id": "mcgill-chicago-legal-f",
   "abbreviation": "Chicago Legal F",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-chicago-legal-f"
  },
  {
-  "id": "mcgill-chicano-l-rev",
   "abbreviation": "Chicano L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-chicano-l-rev"
  },
  {
-  "id": "mcgill-china-l-rep",
   "abbreviation": "China L Rep",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-china-l-rep"
  },
  {
-  "id": "mcgill-chinese-yb-intl-l-aff",
   "abbreviation": "Chinese YB Intl L & Aff",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-chinese-yb-intl-l-aff"
  },
  {
-  "id": "mcgill-chitty-s-lj",
   "abbreviation": "Chitty's LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-chitty-s-lj"
  },
  {
-  "id": "mcgill-cipr",
   "abbreviation": "CIPR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cipr"
  },
  {
-  "id": "mcgill-cirb",
   "abbreviation": "CIRB",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cirb"
  },
  {
-  "id": "mcgill-circles",
   "abbreviation": "Circles",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-circles"
  },
  {
-  "id": "mcgill-civ-lib-rev",
   "abbreviation": "Civ Lib Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-civ-lib-rev"
  },
  {
-  "id": "mcgill-c-j",
   "abbreviation": "C & J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-c-j"
  },
  {
-  "id": "mcgill-cjls",
   "abbreviation": "CJLS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cjls"
  },
  {
-  "id": "mcgill-cjlt",
   "abbreviation": "CJLT",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cjlt"
  },
  {
-  "id": "mcgill-cjq",
   "abbreviation": "CJQ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cjq"
  },
  {
-  "id": "mcgill-cjs",
   "abbreviation": "CJS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cjs"
  },
  {
-  "id": "mcgill-cjwl",
   "abbreviation": "CJWL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cjwl"
  },
  {
-  "id": "mcgill-clas",
   "abbreviation": "CLAS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-clas"
  },
  {
-  "id": "mcgill-cld",
   "abbreviation": "CLD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cld"
  },
  {
-  "id": "mcgill-clelj",
   "abbreviation": "CLELJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-clelj"
  },
  {
-  "id": "mcgill-cl-f",
   "abbreviation": "Cl & F",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cl-f"
  },
  {
-  "id": "mcgill-cll",
   "abbreviation": "CLL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cll"
  },
  {
-  "id": "mcgill-cllr",
   "abbreviation": "CLLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cllr"
  },
  {
-  "id": "mcgill-clp",
   "abbreviation": "CLP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-clp"
  },
  {
-  "id": "mcgill-clrbd",
   "abbreviation": "CLRBD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-clrbd"
  },
  {
-  "id": "mcgill-cl-world-rev",
   "abbreviation": "CL World Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cl-world-rev"
  },
  {
-  "id": "mcgill-cml-rev",
   "abbreviation": "CML Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cml-rev"
  },
  {
-  "id": "mcgill-cnlc",
   "abbreviation": "CNLC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cnlc"
  },
  {
-  "id": "mcgill-coastal-mgmt",
   "abbreviation": "Coastal Mgmt",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-coastal-mgmt"
  },
  {
-  "id": "mcgill-colum-hrl-rev",
   "abbreviation": "Colum HRL Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-colum-hrl-rev"
  },
  {
-  "id": "mcgill-colum-j-eur-l",
   "abbreviation": "Colum J Eur L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-colum-j-eur-l"
  },
  {
-  "id": "mcgill-com-leasing-l-strategy",
   "abbreviation": "Com Leasing L & Strategy",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-com-leasing-l-strategy"
  },
  {
-  "id": "mcgill-com-lj",
   "abbreviation": "Com LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-com-lj"
  },
  {
-  "id": "mcgill-comm-law",
   "abbreviation": "Comm Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-comm-law"
  },
  {
-  "id": "mcgill-comm-l-pol-y",
   "abbreviation": "Comm L & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-comm-l-pol-y"
  },
  {
-  "id": "mcgill-commonwealth-l-bull",
   "abbreviation": "Commonwealth L Bull",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-commonwealth-l-bull"
  },
  {
-  "id": "mcgill-commonwealth-legal-educ",
   "abbreviation": "Commonwealth Legal Educ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-commonwealth-legal-educ"
  },
  {
-  "id": "mcgill-comp-intl-lj-s-afr",
   "abbreviation": "Comp & Intl LJ S Afr",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-comp-intl-lj-s-afr"
  },
  {
-  "id": "mcgill-comp-jurid-rev",
   "abbreviation": "Comp Jurid Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-comp-jurid-rev"
  },
  {
-  "id": "mcgill-computer-law",
   "abbreviation": "Computer Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-computer-law"
  },
  {
-  "id": "mcgill-computer-l-rev-tj",
   "abbreviation": "Computer L Rev & TJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-computer-l-rev-tj"
  },
  {
-  "id": "mcgill-computer-l-sec-r",
   "abbreviation": "Computer L & Sec R",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-computer-l-sec-r"
  },
  {
-  "id": "mcgill-conn-bj",
   "abbreviation": "Conn BJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-conn-bj"
  },
  {
-  "id": "mcgill-cons-fin-lq-rep",
   "abbreviation": "Cons Fin LQ Rep",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cons-fin-lq-rep"
  },
  {
-  "id": "mcgill-cons-sup-n-f",
   "abbreviation": "Cons sup N-F",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cons-sup-n-f"
  },
  {
-  "id": "mcgill-const-commentary",
   "abbreviation": "Const Commentary",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-const-commentary"
  },
  {
-  "id": "mcgill-const-forum-const",
   "abbreviation": "Const Forum Const",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-const-forum-const"
  },
  {
-  "id": "mcgill-const-rev",
   "abbreviation": "Const Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-const-rev"
  },
  {
-  "id": "mcgill-construction-law",
   "abbreviation": "Construction Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-construction-law"
  },
  {
-  "id": "mcgill-construction-lj",
   "abbreviation": "Construction LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-construction-lj"
  },
  {
-  "id": "mcgill-continuity-change",
   "abbreviation": "Continuity & Change",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-continuity-change"
  },
  {
-  "id": "mcgill-cooley-l-rev",
   "abbreviation": "Cooley L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cooley-l-rev"
  },
  {
-  "id": "mcgill-copyright-bull",
   "abbreviation": "Copyright Bull",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-copyright-bull"
  },
  {
-  "id": "mcgill-cornell-lj",
   "abbreviation": "Cornell LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cornell-lj"
  },
  {
-  "id": "mcgill-corp-mgmt-tax-conf",
   "abbreviation": "Corp Mgmt Tax Conf",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-corp-mgmt-tax-conf"
  },
  {
-  "id": "mcgill-counsellor",
   "abbreviation": "Counsellor",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-counsellor"
  },
  {
-  "id": "mcgill-cp",
   "abbreviation": "CP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cp"
  },
  {
-  "id": "mcgill-cpc-plaxton",
   "abbreviation": "CPC (Plaxton)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cpc-plaxton"
  },
  {
-  "id": "mcgill-cp-du-n",
   "abbreviation": "CP du N",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cp-du-n"
  },
  {
-  "id": "mcgill-cpi",
   "abbreviation": "CPI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cpi"
  },
  {
-  "id": "mcgill-crc",
   "abbreviation": "CRC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-crc"
  },
  {
-  "id": "mcgill-crd",
   "abbreviation": "CRD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-crd"
  },
  {
-  "id": "mcgill-crime-justice",
   "abbreviation": "Crime & Justice",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-crime-justice"
  },
  {
-  "id": "mcgill-criminol",
   "abbreviation": "Criminol",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-criminol"
  },
  {
-  "id": "mcgill-crim-lq",
   "abbreviation": "Crim LQ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-crim-lq"
  },
  {
-  "id": "mcgill-crit-criminol",
   "abbreviation": "Crit Criminol",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-crit-criminol"
  },
  {
-  "id": "mcgill-croatian-arb-yb",
   "abbreviation": "Croatian Arb YB",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-croatian-arb-yb"
  },
  {
-  "id": "mcgill-crown-coun-rev",
   "abbreviation": "Crown Coun Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-crown-coun-rev"
  },
  {
-  "id": "mcgill-crrbdi",
   "abbreviation": "CRRBDI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-crrbdi"
  },
  {
-  "id": "mcgill-crt",
   "abbreviation": "CRT",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-crt"
  },
  {
-  "id": "mcgill-crtc",
   "abbreviation": "CRTC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-crtc"
  },
  {
-  "id": "mcgill-c-s",
   "abbreviation": "C & S",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-c-s"
  },
  {
-  "id": "mcgill-cs",
   "abbreviation": "CS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-cs"
  },
  {
-  "id": "mcgill-csd",
   "abbreviation": "CSD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-csd"
  },
  {
-  "id": "mcgill-csp",
   "abbreviation": "CSP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-csp"
  },
  {
-  "id": "mcgill-ct",
   "abbreviation": "CT",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ct"
  },
  {
-  "id": "mcgill-ctab",
   "abbreviation": "CTAB",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ctab"
  },
  {
-  "id": "mcgill-ctab-ns",
   "abbreviation": "CTAB (NS)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ctab-ns"
  },
  {
-  "id": "mcgill-ctbr",
   "abbreviation": "CTBR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ctbr"
  },
  {
-  "id": "mcgill-ctcdo",
   "abbreviation": "CTCDO",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ctcdo"
  },
  {
-  "id": "mcgill-ctc-ns",
   "abbreviation": "CTC (NS)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ctc-ns"
  },
  {
-  "id": "mcgill-ctcr",
   "abbreviation": "CTCR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ctcr"
  },
  {
-  "id": "mcgill-ctcrtc",
   "abbreviation": "CTCRTC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ctcrtc"
  },
  {
-  "id": "mcgill-ctr",
   "abbreviation": "CTR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ctr"
  },
  {
-  "id": "mcgill-ctst",
   "abbreviation": "CTST",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ctst"
  },
  {
-  "id": "mcgill-currents",
   "abbreviation": "Currents",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-currents"
  },
  {
-  "id": "mcgill-curr-legal-probs",
   "abbreviation": "Curr Legal Probs",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-curr-legal-probs"
  },
  {
-  "id": "mcgill-curr-lyb",
   "abbreviation": "Curr LYB",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-curr-lyb"
  },
  {
-  "id": "mcgill-cyberspace-law",
   "abbreviation": "Cyberspace Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-cyberspace-law"
  },
  {
-  "id": "mcgill-da",
   "abbreviation": "DA",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-da"
  },
  {
-  "id": "mcgill-dal-j-leg-stud",
   "abbreviation": "Dal J Leg Stud",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-dal-j-leg-stud"
  },
  {
-  "id": "mcgill-dal-lj",
   "abbreviation": "Dal LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-dal-lj"
  },
  {
-  "id": "mcgill-dca",
   "abbreviation": "DCA",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-dca"
  },
  {
-  "id": "mcgill-dcrm",
   "abbreviation": "DCRM",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-dcrm"
  },
  {
-  "id": "mcgill-debates",
   "abbreviation": "Debates",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-debates"
  },
  {
-  "id": "mcgill-defr",
   "abbreviation": "DEFR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-defr"
  },
  {
-  "id": "mcgill-de-g-f-j",
   "abbreviation": "De G F & J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-de-g-f-j"
  },
  {
-  "id": "mcgill-de-g-j",
   "abbreviation": "De G & J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-de-g-j"
  },
  {
-  "id": "mcgill-de-g-j-s",
   "abbreviation": "De G J & S",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-de-g-j-s"
  },
  {
-  "id": "mcgill-del-law",
   "abbreviation": "Del Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-del-law"
  },
  {
-  "id": "mcgill-denv-lj",
   "abbreviation": "Denv LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-denv-lj"
  },
  {
-  "id": "mcgill-depaul-intl-lj",
   "abbreviation": "DePaul Intl LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-depaul-intl-lj"
  },
  {
-  "id": "mcgill-dick-j-envtl-l-pol-y",
   "abbreviation": "Dick J Envtl L & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-dick-j-envtl-l-pol-y"
  },
  {
-  "id": "mcgill-dick-j-intl-l",
   "abbreviation": "Dick J Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-dick-j-intl-l"
  },
  {
-  "id": "mcgill-disp-resol-j",
   "abbreviation": "Disp Resol J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-disp-resol-j"
  },
  {
-  "id": "mcgill-djc",
   "abbreviation": "DJC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-djc"
  },
  {
-  "id": "mcgill-djg",
   "abbreviation": "DJG",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-djg"
  },
  {
-  "id": "mcgill-documents",
   "abbreviation": "Documents",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-documents"
  },
  {
-  "id": "mcgill-dp",
   "abbreviation": "DP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-dp"
  },
  {
-  "id": "mcgill-dr-et-cult",
   "abbreviation": "Dr et Cult",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-dr-et-cult"
  },
  {
-  "id": "mcgill-dr-et-soc",
   "abbreviation": "Dr et Soc",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-dr-et-soc"
  },
  {
-  "id": "mcgill-dr-polon-contemp",
   "abbreviation": "Dr polon contemp",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-dr-polon-contemp"
  },
  {
-  "id": "mcgill-dr-social",
   "abbreviation": "Dr social",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-dr-social"
  },
  {
-  "id": "mcgill-dtjl",
   "abbreviation": "DTJL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-dtjl"
  },
  {
-  "id": "mcgill-duke-envtl-l-pol-y-f",
   "abbreviation": "Duke Envtl L & Pol'y F",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-duke-envtl-l-pol-y-f"
  },
  {
-  "id": "mcgill-duke-l-tech-rev",
   "abbreviation": "Duke L & Tech Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-duke-l-tech-rev"
  },
  {
-  "id": "mcgill-dec-b-c",
   "abbreviation": "Déc B-C",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-dec-b-c"
  },
  {
-  "id": "mcgill-dec-trib-mont",
   "abbreviation": "Déc trib Mont",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-dec-trib-mont"
  },
  {
-  "id": "mcgill-des-oal",
   "abbreviation": "Dés OAL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-des-oal"
  },
  {
-  "id": "mcgill-ed-l-rev",
   "abbreviation": "Ed L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ed-l-rev"
  },
  {
-  "id": "mcgill-educ-lj",
   "abbreviation": "Educ & LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-educ-lj"
  },
  {
-  "id": "mcgill-e-eur-bus-l",
   "abbreviation": "E Eur Bus L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-e-eur-bus-l"
  },
  {
-  "id": "mcgill-e-eur-const-rev",
   "abbreviation": "E Eur Const Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-e-eur-const-rev"
  },
  {
-  "id": "mcgill-ejcl",
   "abbreviation": "EJCL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ejcl"
  },
  {
-  "id": "mcgill-ejil",
   "abbreviation": "EJIL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ejil"
  },
  {
-  "id": "mcgill-election-lj",
   "abbreviation": "Election LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-election-lj"
  },
  {
-  "id": "mcgill-ellr",
   "abbreviation": "ELLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ellr"
  },
  {
-  "id": "mcgill-emory-j-intl-disp-resol",
   "abbreviation": "Emory J Intl Disp Resol",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-emory-j-intl-disp-resol"
  },
  {
-  "id": "mcgill-employee-rts-employment-pol-y-j",
   "abbreviation": "Employee Rts & Employment Pol'y J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-employee-rts-employment-pol-y-j"
  },
  {
-  "id": "mcgill-ent-l-fin",
   "abbreviation": "Ent L & Fin",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ent-l-fin"
  },
  {
-  "id": "mcgill-ent-sports-law",
   "abbreviation": "Ent & Sports Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ent-sports-law"
  },
  {
-  "id": "mcgill-environs-envtl-l-pol-y-j",
   "abbreviation": "Environs Envtl L & Pol'y J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-environs-envtl-l-pol-y-j"
  },
  {
-  "id": "mcgill-envtl-lj",
   "abbreviation": "Envtl LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-envtl-lj"
  },
  {
-  "id": "mcgill-envtl-l-mgmt",
   "abbreviation": "Envtl L & Mgmt",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-envtl-l-mgmt"
  },
  {
-  "id": "mcgill-envtl-l-pol-y-j",
   "abbreviation": "Envtl L & Pol'y J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-envtl-l-pol-y-j"
  },
  {
-  "id": "mcgill-envtl-l-reporter",
   "abbreviation": "Envtl L Reporter",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-envtl-l-reporter"
  },
  {
-  "id": "mcgill-envtl-pol-y-l",
   "abbreviation": "Envtl Pol'y & L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-envtl-pol-y-l"
  },
  {
-  "id": "mcgill-erpl",
   "abbreviation": "ERPL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-erpl"
  },
  {
-  "id": "mcgill-ethics",
   "abbreviation": "Ethics",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ethics"
  },
  {
-  "id": "mcgill-e-tj",
   "abbreviation": "E & TJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-e-tj"
  },
  {
-  "id": "mcgill-etpj",
   "abbreviation": "ETPJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-etpj"
  },
  {
-  "id": "mcgill-e-tq",
   "abbreviation": "E & TQ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-e-tq"
  },
  {
-  "id": "mcgill-eulr",
   "abbreviation": "EULR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-eulr"
  },
  {
-  "id": "mcgill-eur-bus-l-rev",
   "abbreviation": "Eur Bus L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-bus-l-rev"
  },
  {
-  "id": "mcgill-eur-comp-l-rev",
   "abbreviation": "Eur Comp L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-comp-l-rev"
  },
  {
-  "id": "mcgill-eur-envtl-l-rev",
   "abbreviation": "Eur Envtl L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-envtl-l-rev"
  },
  {
-  "id": "mcgill-eur-env-yb",
   "abbreviation": "Eur Env YB",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-env-yb"
  },
  {
-  "id": "mcgill-eur-hrl-rev",
   "abbreviation": "Eur HRL Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-hrl-rev"
  },
  {
-  "id": "mcgill-eur-ip-rev",
   "abbreviation": "Eur IP Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-ip-rev"
  },
  {
-  "id": "mcgill-eur-j-crime-crim-l-crim-j",
   "abbreviation": "Eur J Crime Crim L & Crim J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-j-crime-crim-l-crim-j"
  },
  {
-  "id": "mcgill-eur-j-educ-l-pol-y",
   "abbreviation": "Eur J Educ L & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-j-educ-l-pol-y"
  },
  {
-  "id": "mcgill-eur-j-health-l",
   "abbreviation": "Eur J Health L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-j-health-l"
  },
  {
-  "id": "mcgill-eur-jl-econ",
   "abbreviation": "Eur JL & Econ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-eur-jl-econ"
  },
  {
-  "id": "mcgill-eur-jl-ref",
   "abbreviation": "Eur JL Ref",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-eur-jl-ref"
  },
  {
-  "id": "mcgill-eur-j-migr-l",
   "abbreviation": "Eur J Migr & L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-j-migr-l"
  },
  {
-  "id": "mcgill-eur-j-soc-sec",
   "abbreviation": "Eur J Soc Sec",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-j-soc-sec"
  },
  {
-  "id": "mcgill-eur-lj",
   "abbreviation": "Eur LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-lj"
  },
  {
-  "id": "mcgill-eur-l-rev",
   "abbreviation": "Eur L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-eur-l-rev"
  },
  {
-  "id": "mcgill-examiner",
   "abbreviation": "Examiner",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-examiner"
  },
  {
-  "id": "mcgill-ezpr",
   "abbreviation": "EZPR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ezpr"
  },
  {
-  "id": "mcgill-faa-av-n",
   "abbreviation": "FAA Av N",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-faa-av-n"
  },
  {
-  "id": "mcgill-fam-l-rev",
   "abbreviation": "Fam L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-fam-l-rev"
  },
  {
-  "id": "mcgill-fcad",
   "abbreviation": "FCAD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-fcad"
  },
  {
-  "id": "mcgill-fccr",
   "abbreviation": "FCCR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-fccr"
  },
  {
-  "id": "mcgill-fed-b-news-j",
   "abbreviation": "Fed B News & J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-fed-b-news-j"
  },
  {
-  "id": "mcgill-fed-circuit-bj",
   "abbreviation": "Fed Circuit BJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-fed-circuit-bj"
  },
  {
-  "id": "mcgill-fed-cts-l-rev",
   "abbreviation": "Fed Cts L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-fed-cts-l-rev"
  },
  {
-  "id": "mcgill-fed-law",
   "abbreviation": "Fed Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-fed-law"
  },
  {
-  "id": "mcgill-fem-legal-stud",
   "abbreviation": "Fem Legal Stud",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-fem-legal-stud"
  },
  {
-  "id": "mcgill-f-f",
   "abbreviation": "F & F",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-f-f"
  },
  {
-  "id": "mcgill-fla-coastal-lj",
   "abbreviation": "Fla Coastal LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-fla-coastal-lj"
  },
  {
-  "id": "mcgill-fla-intl-lj",
   "abbreviation": "Fla Intl LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-fla-intl-lj"
  },
  {
-  "id": "mcgill-fla-st-u-j-land-use-envtl-l",
   "abbreviation": "Fla St U J Land Use & Envtl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-fla-st-u-j-land-use-envtl-l"
  },
  {
-  "id": "mcgill-fld",
   "abbreviation": "FLD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-fld"
  },
  {
-  "id": "mcgill-flrac",
   "abbreviation": "FLRAC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-flrac"
  },
  {
-  "id": "mcgill-flrr",
   "abbreviation": "FLRR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-flrr"
  },
  {
-  "id": "mcgill-foord",
   "abbreviation": "Foord",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-foord"
  },
  {
-  "id": "mcgill-fordham-envtl-lj",
   "abbreviation": "Fordham Envtl LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-fordham-envtl-lj"
  },
  {
-  "id": "mcgill-fordham-fin-sec-tax-lf",
   "abbreviation": "Fordham Fin Sec & Tax LF",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-fordham-fin-sec-tax-lf"
  },
  {
-  "id": "mcgill-fordham-ip-media-ent-lj",
   "abbreviation": "Fordham IP Media & Ent LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-fordham-ip-media-ent-lj"
  },
  {
-  "id": "mcgill-forum",
   "abbreviation": "FORUM",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-forum"
  },
  {
-  "id": "mcgill-fpr",
   "abbreviation": "FPR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-fpr"
  },
  {
-  "id": "mcgill-ftlr",
   "abbreviation": "FTLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ftlr"
  },
  {
-  "id": "mcgill-ftu",
   "abbreviation": "FTU",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ftu"
  },
  {
-  "id": "mcgill-gaz-pal",
   "abbreviation": "Gaz Pal",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-gaz-pal"
  },
  {
-  "id": "mcgill-geo-immig-lj",
   "abbreviation": "Geo Immig LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-geo-immig-lj"
  },
  {
-  "id": "mcgill-geo-j-fighting-pov",
   "abbreviation": "Geo J Fighting Pov",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-geo-j-fighting-pov"
  },
  {
-  "id": "mcgill-geo-mason-ind-l-rev",
   "abbreviation": "Geo Mason Ind L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-geo-mason-ind-l-rev"
  },
  {
-  "id": "mcgill-geo-mason-u-civ-rts-lj",
   "abbreviation": "Geo Mason U Civ Rts LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-geo-mason-u-civ-rts-lj"
  },
  {
-  "id": "mcgill-geo-mason-u-l-rev",
   "abbreviation": "Geo Mason U L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-geo-mason-u-l-rev"
  },
  {
-  "id": "mcgill-geo-pub-pol-y-rev",
   "abbreviation": "Geo Pub Pol'y Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-geo-pub-pol-y-rev"
  },
  {
-  "id": "mcgill-global-l-rev",
   "abbreviation": "Global L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-global-l-rev"
  },
  {
-  "id": "mcgill-griffith-l-rev",
   "abbreviation": "Griffith L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-griffith-l-rev"
  },
  {
-  "id": "mcgill-gstr",
   "abbreviation": "GSTR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-gstr"
  },
  {
-  "id": "mcgill-gtc",
   "abbreviation": "GTC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-gtc"
  },
  {
-  "id": "mcgill-hague-yb-intl-l",
   "abbreviation": "Hague YB Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-hague-yb-intl-l"
  },
  {
-  "id": "mcgill-harv-blackletter-lj",
   "abbreviation": "Harv BlackLetter LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-harv-blackletter-lj"
  },
  {
-  "id": "mcgill-harv-hum-rts-yb",
   "abbreviation": "Harv Hum Rts YB",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-harv-hum-rts-yb"
  },
  {
-  "id": "mcgill-haw-bj",
   "abbreviation": "Haw BJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-haw-bj"
  },
  {
-  "id": "mcgill-haw-l-rev",
   "abbreviation": "Haw L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-haw-l-rev"
  },
  {
-  "id": "mcgill-health-hum-rts",
   "abbreviation": "Health & Hum Rts",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-health-hum-rts"
  },
  {
-  "id": "mcgill-health-l-can",
   "abbreviation": "Health L Can",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-health-l-can"
  },
  {
-  "id": "mcgill-health-lj",
   "abbreviation": "Health LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-health-lj"
  },
  {
-  "id": "mcgill-hec-forum",
   "abbreviation": "HEC Forum",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-hec-forum"
  },
  {
-  "id": "mcgill-heidelberg-j-intl-l",
   "abbreviation": "Heidelberg J Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-heidelberg-j-intl-l"
  },
  {
-  "id": "mcgill-her-tr-nor",
   "abbreviation": "Her Tr Nor",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-her-tr-nor"
  },
  {
-  "id": "mcgill-hispanic-lj",
   "abbreviation": "Hispanic LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-hispanic-lj"
  },
  {
-  "id": "mcgill-hjlp",
   "abbreviation": "HJLP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-hjlp"
  },
  {
-  "id": "mcgill-hofstra-lab-empl-lj",
   "abbreviation": "Hofstra Lab & Empl LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-hofstra-lab-empl-lj"
  },
  {
-  "id": "mcgill-hofstra-prop-lj",
   "abbreviation": "Hofstra Prop LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-hofstra-prop-lj"
  },
  {
-  "id": "mcgill-how-j-crim-justice",
   "abbreviation": "How J Crim Justice",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-how-j-crim-justice"
  },
  {
-  "id": "mcgill-how-scroll",
   "abbreviation": "How Scroll",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-how-scroll"
  },
  {
-  "id": "mcgill-hrir",
   "abbreviation": "HRIR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-hrir"
  },
  {
-  "id": "mcgill-hrlj",
   "abbreviation": "HRLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-hrlj"
  },
  {
-  "id": "mcgill-humboldt-fr",
   "abbreviation": "Humboldt FR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-humboldt-fr"
  },
  {
-  "id": "mcgill-hum-rts-dev",
   "abbreviation": "Hum Rts Dev",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-hum-rts-dev"
  },
  {
-  "id": "mcgill-hum-rts-trib",
   "abbreviation": "Hum Rts Trib",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-hum-rts-trib"
  },
  {
-  "id": "mcgill-iar",
   "abbreviation": "IAR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-iar"
  },
  {
-  "id": "mcgill-iblj",
   "abbreviation": "IBLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-iblj"
  },
  {
-  "id": "mcgill-iclq",
   "abbreviation": "ICLQ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-iclq"
  },
  {
-  "id": "mcgill-iclr",
   "abbreviation": "ICLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-iclr"
  },
  {
-  "id": "mcgill-i-comm-t-l",
   "abbreviation": "I & Comm T L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-i-comm-t-l"
  },
  {
-  "id": "mcgill-icsid",
   "abbreviation": "ICSID",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-icsid"
  },
  {
-  "id": "mcgill-icsid-rev",
   "abbreviation": "ICSID Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-icsid-rev"
  },
  {
-  "id": "mcgill-ill-lq",
   "abbreviation": "Ill LQ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ill-lq"
  },
  {
-  "id": "mcgill-ilm",
   "abbreviation": "ILM",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ilm"
  },
  {
-  "id": "mcgill-imm-abd",
   "abbreviation": "Imm ABD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-imm-abd"
  },
  {
-  "id": "mcgill-immig-nat-lity-l-rev",
   "abbreviation": "Immig & Nat'lity L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-immig-nat-lity-l-rev"
  },
  {
-  "id": "mcgill-indigenous-lj",
   "abbreviation": "Indigenous LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-indigenous-lj"
  },
  {
-  "id": "mcgill-indus-lj",
   "abbreviation": "Indus LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-indus-lj"
  },
  {
-  "id": "mcgill-indus-rel-lj",
   "abbreviation": "Indus Rel LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-indus-rel-lj"
  },
  {
-  "id": "mcgill-infocrtc",
   "abbreviation": "InfoCRTC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-infocrtc"
  },
  {
-  "id": "mcgill-ins-bull",
   "abbreviation": "Ins Bull",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ins-bull"
  },
  {
-  "id": "mcgill-intl-bus-law",
   "abbreviation": "Intl Bus Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-bus-law"
  },
  {
-  "id": "mcgill-intl-com-lit",
   "abbreviation": "Intl Com Lit",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-intl-com-lit"
  },
  {
-  "id": "mcgill-intl-comm-jur-rev",
   "abbreviation": "Intl Comm Jur Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-comm-jur-rev"
  },
  {
-  "id": "mcgill-intl-comp-l-rev",
   "abbreviation": "Intl & Comp L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-comp-l-rev"
  },
  {
-  "id": "mcgill-intl-crim-l-rev",
   "abbreviation": "Intl Crim L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-crim-l-rev"
  },
  {
-  "id": "mcgill-intl-fin-l-rev",
   "abbreviation": "Intl Fin L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-fin-l-rev"
  },
  {
-  "id": "mcgill-intl-insights",
   "abbreviation": "Intl Insights",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-intl-insights"
  },
  {
-  "id": "mcgill-intl-j",
   "abbreviation": "Intl J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j"
  },
  {
-  "id": "mcgill-intl-j-child-rts",
   "abbreviation": "Intl J Child Rts",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-child-rts"
  },
  {
-  "id": "mcgill-intl-j-comm-l-pol-y",
   "abbreviation": "Intl J Comm L & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-comm-l-pol-y"
  },
  {
-  "id": "mcgill-intl-j-comp-lab-l-ind-rel",
   "abbreviation": "Intl J Comp Lab L & Ind Rel",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-comp-lab-l-ind-rel"
  },
  {
-  "id": "mcgill-intl-j-confl-mgmt",
   "abbreviation": "Intl J Confl Mgmt",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-confl-mgmt"
  },
  {
-  "id": "mcgill-intl-j-cult-prop",
   "abbreviation": "Intl J Cult Prop",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-cult-prop"
  },
  {
-  "id": "mcgill-intl-j-franch-distrib-l",
   "abbreviation": "Intl J Franch & Distrib L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-franch-distrib-l"
  },
  {
-  "id": "mcgill-intl-j-hr",
   "abbreviation": "Intl J HR",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-hr"
  },
  {
-  "id": "mcgill-intl-j-legal-info",
   "abbreviation": "Intl J Legal Info",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-legal-info"
  },
  {
-  "id": "mcgill-intl-jl-it",
   "abbreviation": "Intl JL & IT",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-intl-jl-it"
  },
  {
-  "id": "mcgill-intl-jl-pol-y-fam",
   "abbreviation": "Intl JL Pol'y & Fam",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-jl-pol-y-fam"
  },
  {
-  "id": "mcgill-intl-j-mar-coast-l",
   "abbreviation": "Intl J Mar & Coast L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-mar-coast-l"
  },
  {
-  "id": "mcgill-intl-j-off-ther-comp-crim",
   "abbreviation": "Intl J Off Ther & Comp Crim",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-off-ther-comp-crim"
  },
  {
-  "id": "mcgill-intl-j-refugee-l",
   "abbreviation": "Intl J Refugee L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-refugee-l"
  },
  {
-  "id": "mcgill-intl-j-sem-l",
   "abbreviation": "Intl J Sem L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-sem-l"
  },
  {
-  "id": "mcgill-intl-j-soc-l",
   "abbreviation": "Intl J Soc L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-j-soc-l"
  },
  {
-  "id": "mcgill-intl-legal-persp",
   "abbreviation": "Intl Legal Persp",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-intl-legal-persp"
  },
  {
-  "id": "mcgill-intl-leg-practitioner",
   "abbreviation": "Intl Leg Practitioner",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-intl-leg-practitioner"
  },
  {
-  "id": "mcgill-intl-l-theory",
   "abbreviation": "Intl L Theory",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-l-theory"
  },
  {
-  "id": "mcgill-intl-mar-com-l-yb",
   "abbreviation": "Intl Mar & Com L YB",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-mar-com-l-yb"
  },
  {
-  "id": "mcgill-intl-rev-crim-pol-y",
   "abbreviation": "Intl Rev Crim Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-rev-crim-pol-y"
  },
  {
-  "id": "mcgill-intl-rev-ind-prop-copyright-l",
   "abbreviation": "Intl Rev Ind Prop & Copyright L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-rev-ind-prop-copyright-l"
  },
  {
-  "id": "mcgill-intl-rev-l-comp-tech",
   "abbreviation": "Intl Rev L Comp & Tech",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-rev-l-comp-tech"
  },
  {
-  "id": "mcgill-intl-rev-red-cross",
   "abbreviation": "Intl Rev Red Cross",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-rev-red-cross"
  },
  {
-  "id": "mcgill-intl-tax-bus-law",
   "abbreviation": "Intl Tax & Bus Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-intl-tax-bus-law"
  },
  {
-  "id": "mcgill-ipj",
   "abbreviation": "IPJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ipj"
  },
  {
-  "id": "mcgill-ipl-bull",
   "abbreviation": "IPL Bull",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ipl-bull"
  },
  {
-  "id": "mcgill-ipl-newsl",
   "abbreviation": "IPL Newsl",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ipl-newsl"
  },
  {
-  "id": "mcgill-ip-tf",
   "abbreviation": "IP & TF",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ip-tf"
  },
  {
-  "id": "mcgill-ircl",
   "abbreviation": "IRCL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ircl"
  },
  {
-  "id": "mcgill-ir-jur",
   "abbreviation": "Ir Jur",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ir-jur"
  },
  {
-  "id": "mcgill-islamic-l-soc",
   "abbreviation": "Islamic L & Soc",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-islamic-l-soc"
  },
  {
-  "id": "mcgill-issues-l-med",
   "abbreviation": "Issues L & Med",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-issues-l-med"
  },
  {
-  "id": "mcgill-j-aff-housing-community-dev-l",
   "abbreviation": "J Aff Housing & Community Dev L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-aff-housing-community-dev-l"
  },
  {
-  "id": "mcgill-j-afr-l",
   "abbreviation": "J Afr L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-afr-l"
  },
  {
-  "id": "mcgill-j-air-l",
   "abbreviation": "J Air L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-air-l"
  },
  {
-  "id": "mcgill-j-animal-l",
   "abbreviation": "J Animal L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-animal-l"
  },
  {
-  "id": "mcgill-j-animal-l-ethics",
   "abbreviation": "J Animal L & Ethics",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-animal-l-ethics"
  },
  {
-  "id": "mcgill-j-app-pr-pro",
   "abbreviation": "J App Pr & Pro",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-app-pr-pro"
  },
  {
-  "id": "mcgill-j-art-ent-l",
   "abbreviation": "J Art & Ent L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-art-ent-l"
  },
  {
-  "id": "mcgill-j-barreau",
   "abbreviation": "J Barreau",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-barreau"
  },
  {
-  "id": "mcgill-j-cath-legal-stud",
   "abbreviation": "J Cath Legal Stud",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-cath-legal-stud"
  },
  {
-  "id": "mcgill-j-commonwealth-l-legal-educ",
   "abbreviation": "J Commonwealth L & Legal Educ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-commonwealth-l-legal-educ"
  },
  {
-  "id": "mcgill-j-comp-bus-cap-mkt-l",
   "abbreviation": "J Comp Bus Cap Mkt L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-comp-bus-cap-mkt-l"
  },
  {
-  "id": "mcgill-j-confl-resolution",
   "abbreviation": "J Confl Resolution",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-confl-resolution"
  },
  {
-  "id": "mcgill-j-confl-sec-l",
   "abbreviation": "J Confl & Sec L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-confl-sec-l"
  },
  {
-  "id": "mcgill-jcp",
   "abbreviation": "JCP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jcp"
  },
  {
-  "id": "mcgill-j-crim-j-educ",
   "abbreviation": "J Crim J Educ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-crim-j-educ"
  },
  {
-  "id": "mcgill-j-crim-l",
   "abbreviation": "J Crim L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-crim-l"
  },
  {
-  "id": "mcgill-jdi",
   "abbreviation": "JDI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jdi"
  },
  {
-  "id": "mcgill-j-empirical-legal-stud",
   "abbreviation": "J Empirical Legal Stud",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-empirical-legal-stud"
  },
  {
-  "id": "mcgill-j-energy-l-pol-y",
   "abbreviation": "J Energy L & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-energy-l-pol-y"
  },
  {
-  "id": "mcgill-j-energy-nat-l-res-envtl-l",
   "abbreviation": "J Energy, Nat'l Res & Envtl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-energy-nat-l-res-envtl-l"
  },
  {
-  "id": "mcgill-j-envtl-l",
   "abbreviation": "J Envtl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-envtl-l"
  },
  {
-  "id": "mcgill-j-envtl-l-prac",
   "abbreviation": "J Envtl L & Prac",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-envtl-l-prac"
  },
  {
-  "id": "mcgill-j-eur-int",
   "abbreviation": "J Eur Int",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-eur-int"
  },
  {
-  "id": "mcgill-jewish-lr",
   "abbreviation": "Jewish LR",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-jewish-lr"
  },
  {
-  "id": "mcgill-j-h",
   "abbreviation": "J & H",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-h"
  },
  {
-  "id": "mcgill-j-hist-intl-l",
   "abbreviation": "J Hist Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-hist-intl-l"
  },
  {
-  "id": "mcgill-jili",
   "abbreviation": "JILI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jili"
  },
  {
-  "id": "mcgill-jilt",
   "abbreviation": "JILT",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jilt"
  },
  {
-  "id": "mcgill-j-inst-stud-legal-ethics",
   "abbreviation": "J Inst Stud Legal Ethics",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-inst-stud-legal-ethics"
  },
  {
-  "id": "mcgill-j-intercultural-studies",
   "abbreviation": "J Intercultural Studies",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-intercultural-studies"
  },
  {
-  "id": "mcgill-j-intl-econ-l",
   "abbreviation": "J Intl Econ L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-intl-econ-l"
  },
  {
-  "id": "mcgill-j-intl-l-bus",
   "abbreviation": "J Intl L & Bus",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-intl-l-bus"
  },
  {
-  "id": "mcgill-j-intl-tax",
   "abbreviation": "J Intl Tax",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-intl-tax"
  },
  {
-  "id": "mcgill-jj-prov",
   "abbreviation": "JJ prov",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jj-prov"
  },
  {
-  "id": "mcgill-j-juvenile-l",
   "abbreviation": "J Juvenile L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-juvenile-l"
  },
  {
-  "id": "mcgill-j-legal-advoc-prac",
   "abbreviation": "J Legal Advoc & Prac",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-legal-advoc-prac"
  },
  {
-  "id": "mcgill-j-legal-econ",
   "abbreviation": "J Legal Econ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-legal-econ"
  },
  {
-  "id": "mcgill-j-legal-hist",
   "abbreviation": "J Legal Hist",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-legal-hist"
  },
  {
-  "id": "mcgill-j-legis-pub-pol-y",
   "abbreviation": "J Legis & Pub Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-legis-pub-pol-y"
  },
  {
-  "id": "mcgill-j-leg-pluralism-unofficial-l",
   "abbreviation": "J Leg Pluralism & Unofficial L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-leg-pluralism-unofficial-l"
  },
  {
-  "id": "mcgill-jl-equality",
   "abbreviation": "JL & Equality",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jl-equality"
  },
  {
-  "id": "mcgill-jl-info-sci",
   "abbreviation": "JL & Info Sci",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jl-info-sci"
  },
  {
-  "id": "mcgill-jl-in-soc-y",
   "abbreviation": "JL in Soc'y",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jl-in-soc-y"
  },
  {
-  "id": "mcgill-j-l-rev",
   "abbreviation": "J L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-l-rev"
  },
  {
-  "id": "mcgill-jl-soc-pol-y",
   "abbreviation": "JL & Soc Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-jl-soc-pol-y"
  },
  {
-  "id": "mcgill-jlss",
   "abbreviation": "JLSS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jlss"
  },
  {
-  "id": "mcgill-jl-tech",
   "abbreviation": "JL & Tech",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jl-tech"
  },
  {
-  "id": "mcgill-jm",
   "abbreviation": "JM",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jm"
  },
  {
-  "id": "mcgill-j-marshall-lq",
   "abbreviation": "J Marshall LQ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-marshall-lq"
  },
  {
-  "id": "mcgill-joc",
   "abbreviation": "JOC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-joc"
  },
  {
-  "id": "mcgill-jod",
   "abbreviation": "JOD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jod"
  },
  {
-  "id": "mcgill-jol",
   "abbreviation": "JOL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jol"
  },
  {
-  "id": "mcgill-j-pers-inj-lit",
   "abbreviation": "J Pers Inj Lit",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-pers-inj-lit"
  },
  {
-  "id": "mcgill-j-pharmacy-l",
   "abbreviation": "J Pharmacy & L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-pharmacy-l"
  },
  {
-  "id": "mcgill-j-p-intl-l",
   "abbreviation": "J P Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-p-intl-l"
  },
  {
-  "id": "mcgill-j-plan-envtl-l",
   "abbreviation": "J Plan & Envtl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-plan-envtl-l"
  },
  {
-  "id": "mcgill-jppl",
   "abbreviation": "JPPL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jppl"
  },
  {
-  "id": "mcgill-j-proprietary-rts",
   "abbreviation": "J Proprietary Rts",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-proprietary-rts"
  },
  {
-  "id": "mcgill-j-risk-research",
   "abbreviation": "J Risk Research",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-risk-research"
  },
  {
-  "id": "mcgill-jsdlp",
   "abbreviation": "JSDLP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-jsdlp"
  },
  {
-  "id": "mcgill-j-society-pub-teachers-l",
   "abbreviation": "J Society Pub Teachers L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-society-pub-teachers-l"
  },
  {
-  "id": "mcgill-j-soc-welfare-fam-l",
   "abbreviation": "J Soc Welfare & Fam L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-soc-welfare-fam-l"
  },
  {
-  "id": "mcgill-j-soc-welfare-l",
   "abbreviation": "J Soc Welfare L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-soc-welfare-l"
  },
  {
-  "id": "mcgill-j-s-pac-l",
   "abbreviation": "J S Pac L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-s-pac-l"
  },
  {
-  "id": "mcgill-j-tort-l",
   "abbreviation": "J Tort L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-tort-l"
  },
  {
-  "id": "mcgill-j-transnat-l-l-pol-y",
   "abbreviation": "J Transnat'l L & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-j-transnat-l-l-pol-y"
  },
  {
-  "id": "mcgill-judicature",
   "abbreviation": "Judicature",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-judicature"
  },
  {
-  "id": "mcgill-kan-l-rev",
   "abbreviation": "Kan L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-kan-l-rev"
  },
  {
-  "id": "mcgill-kel-j-kel",
   "abbreviation": "Kel J / Kel",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-kel-j-kel"
  },
  {
-  "id": "mcgill-k-j",
   "abbreviation": "K & J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-k-j"
  },
  {
-  "id": "mcgill-klr",
   "abbreviation": "KLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-klr"
  },
  {
-  "id": "mcgill-korean-j-comp-l",
   "abbreviation": "Korean J Comp L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-korean-j-comp-l"
  },
  {
-  "id": "mcgill-korean-j-intl-comp-l",
   "abbreviation": "Korean J Intl & Comp L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-korean-j-intl-comp-l"
  },
  {
-  "id": "mcgill-la-bj",
   "abbreviation": "La BJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-la-bj"
  },
  {
-  "id": "mcgill-la-law",
   "abbreviation": "LA Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-la-law"
  },
  {
-  "id": "mcgill-land-water-l-rev",
   "abbreviation": "Land & Water L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-land-water-l-rev"
  },
  {
-  "id": "mcgill-lar",
   "abbreviation": "LAR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-lar"
  },
  {
-  "id": "mcgill-law-firm-partnership-ben-rep",
   "abbreviation": "Law Firm Partnership & Ben Rep",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-firm-partnership-ben-rep"
  },
  {
-  "id": "mcgill-law-inequality",
   "abbreviation": "Law & Inequality",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-inequality"
  },
  {
-  "id": "mcgill-law-j",
   "abbreviation": "Law J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-j"
  },
  {
-  "id": "mcgill-law-librn",
   "abbreviation": "Law Librn",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-librn"
  },
  {
-  "id": "mcgill-law-off-mgmt-admin-rep",
   "abbreviation": "Law Off Mgmt & Admin Rep",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-off-mgmt-admin-rep"
  },
  {
-  "id": "mcgill-law-off-tech-rev",
   "abbreviation": "Law Off Tech Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-off-tech-rev"
  },
  {
-  "id": "mcgill-law-phil-intl-j",
   "abbreviation": "Law & Phil Intl J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-phil-intl-j"
  },
  {
-  "id": "mcgill-law-pol-book-rev",
   "abbreviation": "Law & Pol Book Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-pol-book-rev"
  },
  {
-  "id": "mcgill-law-prac-intl-courts-trib",
   "abbreviation": "Law & Prac Intl Courts & Trib",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-prac-intl-courts-trib"
  },
  {
-  "id": "mcgill-law-prac-mgmt",
   "abbreviation": "Law Prac Mgmt",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-prac-mgmt"
  },
  {
-  "id": "mcgill-law-psychol-rev",
   "abbreviation": "Law & Psychol Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-psychol-rev"
  },
  {
-  "id": "mcgill-law-q-rev",
   "abbreviation": "Law Q Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-q-rev"
  },
  {
-  "id": "mcgill-law-rev-mich-st-u-det-c-l",
   "abbreviation": "Law Rev Mich St U Det C L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-rev-mich-st-u-det-c-l"
  },
  {
-  "id": "mcgill-law-sexuality",
   "abbreviation": "Law & Sexuality",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-sexuality"
  },
  {
-  "id": "mcgill-law-soc-y-gaz",
   "abbreviation": "Law Soc'y Gaz",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-soc-y-gaz"
  },
  {
-  "id": "mcgill-law-text-culture",
   "abbreviation": "Law Text Culture",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-text-culture"
  },
  {
-  "id": "mcgill-law-week",
   "abbreviation": "Law Week",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-law-week"
  },
  {
-  "id": "mcgill-lc-jur",
   "abbreviation": "LC Jur",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-lc-jur"
  },
  {
-  "id": "mcgill-lclj",
   "abbreviation": "LCLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-lclj"
  },
  {
-  "id": "mcgill-legal-hist-rev",
   "abbreviation": "Legal Hist Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-legal-hist-rev"
  },
  {
-  "id": "mcgill-legal-info-mgmt",
   "abbreviation": "Legal Info Mgmt",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-legal-info-mgmt"
  },
  {
-  "id": "mcgill-legal-ref-serv-q",
   "abbreviation": "Legal Ref Serv Q",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-legal-ref-serv-q"
  },
  {
-  "id": "mcgill-legal-theory",
   "abbreviation": "Legal Theory",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-legal-theory"
  },
  {
-  "id": "mcgill-legislative-studies-q",
   "abbreviation": "Legislative Studies Q",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-legislative-studies-q"
  },
  {
-  "id": "mcgill-leiden-j-intl-l",
   "abbreviation": "Leiden J Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-leiden-j-intl-l"
  },
  {
-  "id": "mcgill-lhr",
   "abbreviation": "LHR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-lhr"
  },
  {
-  "id": "mcgill-liei",
   "abbreviation": "LIEI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-liei"
  },
  {
-  "id": "mcgill-lmclq",
   "abbreviation": "LMCLQ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-lmclq"
  },
  {
-  "id": "mcgill-l-med-q",
   "abbreviation": "L Med Q",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-l-med-q"
  },
  {
-  "id": "mcgill-ln",
   "abbreviation": "LN",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ln"
  },
  {
-  "id": "mcgill-local-ct-gaz",
   "abbreviation": "Local Ct Gaz",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-local-ct-gaz"
  },
  {
-  "id": "mcgill-loy-con-prot-j",
   "abbreviation": "Loy Con Prot J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-loy-con-prot-j"
  },
  {
-  "id": "mcgill-loy-la-ent-lr",
   "abbreviation": "Loy LA Ent LR",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-loy-la-ent-lr"
  },
  {
-  "id": "mcgill-loy-la-intl-comp-lj",
   "abbreviation": "Loy LA Intl & Comp LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-loy-la-intl-comp-lj"
  },
  {
-  "id": "mcgill-loy-poverty-lj",
   "abbreviation": "Loy Poverty LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-loy-poverty-lj"
  },
  {
-  "id": "mcgill-loy-u-chicago-lj",
   "abbreviation": "Loy U Chicago LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-loy-u-chicago-lj"
  },
  {
-  "id": "mcgill-ls",
   "abbreviation": "LS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ls"
  },
  {
-  "id": "mcgill-l-soc-y-gaz-guardian-gaz",
   "abbreviation": "L Soc'y Gaz & Guardian Gaz",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-l-soc-y-gaz-guardian-gaz"
  },
  {
-  "id": "mcgill-macq-j-intl-cenvtl-l",
   "abbreviation": "Macq J Intl & CEnvtl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-macq-j-intl-cenvtl-l"
  },
  {
-  "id": "mcgill-mal-l-rev",
   "abbreviation": "Mal L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-mal-l-rev"
  },
  {
-  "id": "mcgill-man-bar-n",
   "abbreviation": "Man Bar N",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-man-bar-n"
  },
  {
-  "id": "mcgill-man-lj",
   "abbreviation": "Man LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-man-lj"
  },
  {
-  "id": "mcgill-maori-l-rev",
   "abbreviation": "Maori L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-maori-l-rev"
  },
  {
-  "id": "mcgill-marq-sports-lj",
   "abbreviation": "Marq Sports LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-marq-sports-lj"
  },
  {
-  "id": "mcgill-mc",
   "abbreviation": "MC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-mc"
  },
  {
-  "id": "mcgill-mcc",
   "abbreviation": "MCC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-mcc"
  },
  {
-  "id": "mcgill-mcd",
   "abbreviation": "MCD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-mcd"
  },
  {
-  "id": "mcgill-mcgill-jl-health",
   "abbreviation": "McGill JL & Health",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-mcgill-jl-health"
  },
  {
-  "id": "mcgill-mcr",
   "abbreviation": "MCR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-mcr"
  },
  {
-  "id": "mcgill-media-l-pol-y",
   "abbreviation": "Media L & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-media-l-pol-y"
  },
  {
-  "id": "mcgill-med-l",
   "abbreviation": "Med & L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-med-l"
  },
  {
-  "id": "mcgill-med-leg-j",
   "abbreviation": "Med Leg J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-med-leg-j"
  },
  {
-  "id": "mcgill-med-l-rev",
   "abbreviation": "Med L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-med-l-rev"
  },
  {
-  "id": "mcgill-med-sci-law",
   "abbreviation": "Med Sci Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-med-sci-law"
  },
  {
-  "id": "mcgill-melbourne-u-l-rev",
   "abbreviation": "Melbourne U L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-melbourne-u-l-rev"
  },
  {
-  "id": "mcgill-mich-bj",
   "abbreviation": "Mich BJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-mich-bj"
  },
  {
-  "id": "mcgill-mich-jl-reform",
   "abbreviation": "Mich JL Reform",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-mich-jl-reform"
  },
  {
-  "id": "mcgill-mich-lj",
   "abbreviation": "Mich LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-mich-lj"
  },
  {
-  "id": "mcgill-mich-l-pol-y-rev",
   "abbreviation": "Mich L & Pol'y Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-mich-l-pol-y-rev"
  },
  {
-  "id": "mcgill-miss-l-rev",
   "abbreviation": "Miss L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-miss-l-rev"
  },
  {
-  "id": "mcgill-mjecl",
   "abbreviation": "MJECL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-mjecl"
  },
  {
-  "id": "mcgill-mlj",
   "abbreviation": "MLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-mlj"
  },
  {
-  "id": "mcgill-mont-law",
   "abbreviation": "Mont Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-mont-law"
  },
  {
-  "id": "mcgill-msu-dcl-j-intl-l",
   "abbreviation": "MSU-DCL J Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-msu-dcl-j-intl-l"
  },
  {
-  "id": "mcgill-murdoch-u-ejl",
   "abbreviation": "Murdoch U EJL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-murdoch-u-ejl"
  },
  {
-  "id": "mcgill-nafta-l-bus-rev-am",
   "abbreviation": "NAFTA L & Bus Rev Am",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nafta-l-bus-rev-am"
  },
  {
-  "id": "mcgill-nat-l-banking-l-rev",
   "abbreviation": "Nat'l Banking L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nat-l-banking-l-rev"
  },
  {
-  "id": "mcgill-nat-l-insolv-rev",
   "abbreviation": "Nat'l Insolv Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nat-l-insolv-rev"
  },
  {
-  "id": "mcgill-nat-l-inst-just-j",
   "abbreviation": "Nat'l Inst Just J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nat-l-inst-just-j"
  },
  {
-  "id": "mcgill-nat-l-j-sexual-orientation-l",
   "abbreviation": "Nat'l J Sexual Orientation L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nat-l-j-sexual-orientation-l"
  },
  {
-  "id": "mcgill-nat-l-l-rev",
   "abbreviation": "Nat'l L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nat-l-l-rev"
  },
  {
-  "id": "mcgill-nat-l-real-plr",
   "abbreviation": "Nat'l Real PLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-nat-l-real-plr"
  },
  {
-  "id": "mcgill-nat-l-tax-j",
   "abbreviation": "Nat'l Tax J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nat-l-tax-j"
  },
  {
-  "id": "mcgill-nat-resources-env-t",
   "abbreviation": "Nat Resources & Env't",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-nat-resources-env-t"
  },
  {
-  "id": "mcgill-nav-l-rev",
   "abbreviation": "Nav L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nav-l-rev"
  },
  {
-  "id": "mcgill-nbestd",
   "abbreviation": "NBESTD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-nbestd"
  },
  {
-  "id": "mcgill-nbllc",
   "abbreviation": "NBLLC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-nbllc"
  },
  {
-  "id": "mcgill-nc-centr-lj",
   "abbreviation": "NC Centr LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nc-centr-lj"
  },
  {
-  "id": "mcgill-nebd",
   "abbreviation": "NEBD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-nebd"
  },
  {
-  "id": "mcgill-nethl-intl-l-rev",
   "abbreviation": "Nethl Intl L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nethl-intl-l-rev"
  },
  {
-  "id": "mcgill-nethl-qhr",
   "abbreviation": "Nethl QHR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-nethl-qhr"
  },
  {
-  "id": "mcgill-new-eur-l-rev",
   "abbreviation": "New Eur L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-new-eur-l-rev"
  },
  {
-  "id": "mcgill-nexus-j-opinion",
   "abbreviation": "NEXUS J Opinion",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nexus-j-opinion"
  },
  {
-  "id": "mcgill-ni",
   "abbreviation": "NI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ni"
  },
  {
-  "id": "mcgill-n-ir-legal-q",
   "abbreviation": "N Ir Legal Q",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-n-ir-legal-q"
  },
  {
-  "id": "mcgill-njcl",
   "abbreviation": "NJCL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-njcl"
  },
  {
-  "id": "mcgill-nlr",
   "abbreviation": "NLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-nlr"
  },
  {
-  "id": "mcgill-nlr-ns",
   "abbreviation": "NLR (NS)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-nlr-ns"
  },
  {
-  "id": "mcgill-nlr-os",
   "abbreviation": "NLR (OS)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-nlr-os"
  },
  {
-  "id": "mcgill-non-state-act-intl-l",
   "abbreviation": "Non-State Act & Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-non-state-act-intl-l"
  },
  {
-  "id": "mcgill-nordic-j-intl-l",
   "abbreviation": "Nordic J Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nordic-j-intl-l"
  },
  {
-  "id": "mcgill-npdr",
   "abbreviation": "NPDR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-npdr"
  },
  {
-  "id": "mcgill-ntar",
   "abbreviation": "NTAR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ntar"
  },
  {
-  "id": "mcgill-nwtscr",
   "abbreviation": "NWTSCR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-nwtscr"
  },
  {
-  "id": "mcgill-nyl-rev",
   "abbreviation": "NYL Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nyl-rev"
  },
  {
-  "id": "mcgill-ny-st-bj",
   "abbreviation": "NY St BJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ny-st-bj"
  },
  {
-  "id": "mcgill-nzlj",
   "abbreviation": "NZLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-nzlj"
  },
  {
-  "id": "mcgill-nzl-rev",
   "abbreviation": "NZL Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nzl-rev"
  },
  {
-  "id": "mcgill-nzul-rev",
   "abbreviation": "NZUL Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-nzul-rev"
  },
  {
-  "id": "mcgill-ocean-devel-intl-l",
   "abbreviation": "Ocean Devel & Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ocean-devel-intl-l"
  },
  {
-  "id": "mcgill-oecd-j-comp-l-pol-y",
   "abbreviation": "OECD J Comp L & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-oecd-j-comp-l-pol-y"
  },
  {
-  "id": "mcgill-oeld",
   "abbreviation": "OELD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-oeld"
  },
  {
-  "id": "mcgill-oflr",
   "abbreviation": "OFLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-oflr"
  },
  {
-  "id": "mcgill-ohio-st-j-disp-resol",
   "abbreviation": "Ohio St J Disp Resol",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ohio-st-j-disp-resol"
  },
  {
-  "id": "mcgill-ojd",
   "abbreviation": "OJD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ojd"
  },
  {
-  "id": "mcgill-oji",
   "abbreviation": "OJI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-oji"
  },
  {
-  "id": "mcgill-ojl",
   "abbreviation": "OJL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ojl"
  },
  {
-  "id": "mcgill-ombr",
   "abbreviation": "OMBR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ombr"
  },
  {
-  "id": "mcgill-ombudsman-j",
   "abbreviation": "Ombudsman J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ombudsman-j"
  },
  {
-  "id": "mcgill-ont-ipc-om",
   "abbreviation": "Ont IPC OM",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ont-ipc-om"
  },
  {
-  "id": "mcgill-ont-ipc-op",
   "abbreviation": "Ont IPC OP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ont-ipc-op"
  },
  {
-  "id": "mcgill-ont-ipc-sum-app",
   "abbreviation": "Ont IPC Sum App",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ont-ipc-sum-app"
  },
  {
-  "id": "mcgill-ont-lab-mgmt-arb-comm-n-bull",
   "abbreviation": "Ont Lab-Mgmt Arb Comm'n Bull",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ont-lab-mgmt-arb-comm-n-bull"
  },
  {
-  "id": "mcgill-ont-law-gaz",
   "abbreviation": "Ont Law Gaz",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ont-law-gaz"
  },
  {
-  "id": "mcgill-ont-law-week",
   "abbreviation": "Ont Law Week",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ont-law-week"
  },
  {
-  "id": "mcgill-orders",
   "abbreviation": "Orders",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-orders"
  },
  {
-  "id": "mcgill-ordres",
   "abbreviation": "Ordres",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ordres"
  },
  {
-  "id": "mcgill-osaka-u-l-rev",
   "abbreviation": "Osaka U L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-osaka-u-l-rev"
  },
  {
-  "id": "mcgill-osc-bull",
   "abbreviation": "OSC Bull",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-osc-bull"
  },
  {
-  "id": "mcgill-osteurop-r",
   "abbreviation": "Osteurop-R",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-osteurop-r"
  },
  {
-  "id": "mcgill-ouclj",
   "abbreviation": "OUCLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ouclj"
  },
  {
-  "id": "mcgill-oxford-j-legal-stud",
   "abbreviation": "Oxford J Legal Stud",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-oxford-j-legal-stud"
  },
  {
-  "id": "mcgill-pace-yb-intl-l",
   "abbreviation": "Pace YB Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-pace-yb-intl-l"
  },
  {
-  "id": "mcgill-panstwo-i-prawo",
   "abbreviation": "Panstwo i Prawo",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-panstwo-i-prawo"
  },
  {
-  "id": "mcgill-pei",
   "abbreviation": "PEI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-pei"
  },
  {
-  "id": "mcgill-per",
   "abbreviation": "PER",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-per"
  },
  {
-  "id": "mcgill-per-cs",
   "abbreviation": "Per CS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-per-cs"
  },
  {
-  "id": "mcgill-philanthropist",
   "abbreviation": "Philanthropist",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-philanthropist"
  },
  {
-  "id": "mcgill-philippine-lj",
   "abbreviation": "Philippine LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-philippine-lj"
  },
  {
-  "id": "mcgill-pittsburgh-legal-j",
   "abbreviation": "Pittsburgh Legal J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-pittsburgh-legal-j"
  },
  {
-  "id": "mcgill-pl",
   "abbreviation": "PL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-pl"
  },
  {
-  "id": "mcgill-ppr",
   "abbreviation": "PPR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ppr"
  },
  {
-  "id": "mcgill-prbr",
   "abbreviation": "PRBR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-prbr"
  },
  {
-  "id": "mcgill-prob-prop",
   "abbreviation": "Prob & Prop",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-prob-prop"
  },
  {
-  "id": "mcgill-procurement-law",
   "abbreviation": "Procurement Law",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-procurement-law"
  },
  {
-  "id": "mcgill-prov-judges-j",
   "abbreviation": "Prov Judges J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-prov-judges-j"
  },
  {
-  "id": "mcgill-psychol-pub-pol-y-l",
   "abbreviation": "Psychol Pub Pol'y & L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-psychol-pub-pol-y-l"
  },
  {
-  "id": "mcgill-pub-int-l-rev",
   "abbreviation": "Pub Int L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-pub-int-l-rev"
  },
  {
-  "id": "mcgill-pub-land-l-rev",
   "abbreviation": "Pub Land L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-pub-land-l-rev"
  },
  {
-  "id": "mcgill-q-st-r",
   "abbreviation": "Q St R",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-q-st-r"
  },
  {
-  "id": "mcgill-queen-s-lj",
   "abbreviation": "Queen's LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-queen-s-lj"
  },
  {
-  "id": "mcgill-rac",
   "abbreviation": "RAC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rac"
  },
  {
-  "id": "mcgill-race-ethnic-anc-l-dig",
   "abbreviation": "Race & Ethnic Anc L Dig",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-race-ethnic-anc-l-dig"
  },
  {
-  "id": "mcgill-radic",
   "abbreviation": "RADIC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-radic"
  },
  {
-  "id": "mcgill-rat",
   "abbreviation": "RAT",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rat"
  },
  {
-  "id": "mcgill-ratio-juris",
   "abbreviation": "Ratio Juris",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ratio-juris"
  },
  {
-  "id": "mcgill-rb",
   "abbreviation": "RB",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rb"
  },
  {
-  "id": "mcgill-rb-can",
   "abbreviation": "RB Can",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rb-can"
  },
  {
-  "id": "mcgill-rcct",
   "abbreviation": "RCCT",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rcct"
  },
  {
-  "id": "mcgill-rcda",
   "abbreviation": "RCDA",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rcda"
  },
  {
-  "id": "mcgill-rcda-3e",
   "abbreviation": "RCDA (3e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rcda-3e"
  },
  {
-  "id": "mcgill-rcda-4e",
   "abbreviation": "RCDA (4e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rcda-4e"
  },
  {
-  "id": "mcgill-rcdi",
   "abbreviation": "RCDI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rcdi"
  },
  {
-  "id": "mcgill-rcdp",
   "abbreviation": "RCDP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rcdp"
  },
  {
-  "id": "mcgill-rcds",
   "abbreviation": "RCDS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rcds"
  },
  {
-  "id": "mcgill-rcdt-3e",
   "abbreviation": "RCDT (3e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rcdt-3e"
  },
  {
-  "id": "mcgill-rcdvm",
   "abbreviation": "RCDVM",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rcdvm"
  },
  {
-  "id": "mcgill-rclf",
   "abbreviation": "RCLF",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rclf"
  },
  {
-  "id": "mcgill-rclj",
   "abbreviation": "RCLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rclj"
  },
  {
-  "id": "mcgill-rcpi",
   "abbreviation": "RCPI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rcpi"
  },
  {
-  "id": "mcgill-rcras",
   "abbreviation": "RCRAS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rcras"
  },
  {
-  "id": "mcgill-rdai",
   "abbreviation": "RDAI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rdai"
  },
  {
-  "id": "mcgill-r-de-j",
   "abbreviation": "R de J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-r-de-j"
  },
  {
-  "id": "mcgill-r-de-l",
   "abbreviation": "R de L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-r-de-l"
  },
  {
-  "id": "mcgill-rdisdp",
   "abbreviation": "RDISDP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rdisdp"
  },
  {
-  "id": "mcgill-rdjc",
   "abbreviation": "RDJC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rdjc"
  },
  {
-  "id": "mcgill-rdjc-2e",
   "abbreviation": "RDJC (2e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rdjc-2e"
  },
  {
-  "id": "mcgill-rdjc-3e",
   "abbreviation": "RDJC (3e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rdjc-3e"
  },
  {
-  "id": "mcgill-rdjc-4e",
   "abbreviation": "RDJC (4e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rdjc-4e"
  },
  {
-  "id": "mcgill-rdjc-5e",
   "abbreviation": "RDJC (5e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rdjc-5e"
  },
  {
-  "id": "mcgill-rd-mcgill",
   "abbreviation": "RD McGill",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rd-mcgill"
  },
  {
-  "id": "mcgill-rd-ottawa",
   "abbreviation": "RD Ottawa",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rd-ottawa"
  },
  {
-  "id": "mcgill-rdpdd",
   "abbreviation": "RDPDD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rdpdd"
  },
  {
-  "id": "mcgill-rdrtq",
   "abbreviation": "RDRTQ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rdrtq"
  },
  {
-  "id": "mcgill-rd-sante-mcgill",
   "abbreviation": "RD & santé McGill",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rd-sante-mcgill"
  },
  {
-  "id": "mcgill-rdt",
   "abbreviation": "RDT",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rdt"
  },
  {
-  "id": "mcgill-r-du-n",
   "abbreviation": "R du N",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-r-du-n"
  },
  {
-  "id": "mcgill-rd-un-b",
   "abbreviation": "RD UN-B",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rd-un-b"
  },
  {
-  "id": "mcgill-rdus",
   "abbreviation": "RDUS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rdus"
  },
  {
-  "id": "mcgill-rec-des-cours",
   "abbreviation": "Rec des Cours",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rec-des-cours"
  },
  {
-  "id": "mcgill-reciel",
   "abbreviation": "RECIEL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-reciel"
  },
  {
-  "id": "mcgill-recj",
   "abbreviation": "RECJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-recj"
  },
  {
-  "id": "mcgill-red-prive",
   "abbreviation": "RED privé",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-red-prive"
  },
  {
-  "id": "mcgill-red-public",
   "abbreviation": "RED public",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-red-public"
  },
  {
-  "id": "mcgill-reform",
   "abbreviation": "Reform",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-reform"
  },
  {
-  "id": "mcgill-rej",
   "abbreviation": "REJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rej"
  },
  {
-  "id": "mcgill-res-communes-vermont-s-j-env-t",
   "abbreviation": "Res Communes: Vermont's J Env't",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-res-communes-vermont-s-j-env-t"
  },
  {
-  "id": "mcgill-rev-admin",
   "abbreviation": "Rev admin",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-admin"
  },
  {
-  "id": "mcgill-rev-arb",
   "abbreviation": "Rev arb",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-arb"
  },
  {
-  "id": "mcgill-rev-bdi",
   "abbreviation": "Rev BDI",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-bdi"
  },
  {
-  "id": "mcgill-rev-can-crim",
   "abbreviation": "Rev can crim",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-can-crim"
  },
  {
-  "id": "mcgill-rev-can-dr-comm",
   "abbreviation": "Rev can dr comm",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-can-dr-comm"
  },
  {
-  "id": "mcgill-rev-can-dr-commun",
   "abbreviation": "Rev can dr commun",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-can-dr-commun"
  },
  {
-  "id": "mcgill-rev-can-dr-fam",
   "abbreviation": "Rev can dr fam",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-can-dr-fam"
  },
  {
-  "id": "mcgill-rev-cent-e-eur-l",
   "abbreviation": "Rev Cent & E Eur L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-cent-e-eur-l"
  },
  {
-  "id": "mcgill-rev-const-stud",
   "abbreviation": "Rev Const Stud",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-const-stud"
  },
  {
-  "id": "mcgill-rev-crit-dr-int-prive",
   "abbreviation": "Rev crit dr int privé",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-crit-dr-int-prive"
  },
  {
-  "id": "mcgill-rev-di-dc",
   "abbreviation": "Rev DI & DC",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-di-dc"
  },
  {
-  "id": "mcgill-rev-dp-sp",
   "abbreviation": "Rev DP & SP",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-dp-sp"
  },
  {
-  "id": "mcgill-rev-dr-ulb",
   "abbreviation": "Rev dr ULB",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-dr-ulb"
  },
  {
-  "id": "mcgill-rev-du",
   "abbreviation": "Rev DU",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-du"
  },
  {
-  "id": "mcgill-rev-edi",
   "abbreviation": "Rev EDI",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-edi"
  },
  {
-  "id": "mcgill-rev-fr-dr-constl",
   "abbreviation": "Rev fr dr constl",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-fr-dr-constl"
  },
  {
-  "id": "mcgill-rev-hist-dr",
   "abbreviation": "Rev hist dr",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-hist-dr"
  },
  {
-  "id": "mcgill-rev-hist-dr-fr-etran",
   "abbreviation": "Rev hist dr fr & étran",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-hist-dr-fr-etran"
  },
  {
-  "id": "mcgill-rev-hist-dr-int",
   "abbreviation": "Rev hist dr int",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-hist-dr-int"
  },
  {
-  "id": "mcgill-rev-idp",
   "abbreviation": "Rev IDP",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-idp"
  },
  {
-  "id": "mcgill-rev-ipc",
   "abbreviation": "Rev IPC",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-ipc"
  },
  {
-  "id": "mcgill-rev-jur-femme-dr",
   "abbreviation": "Rev jur femme dr",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-jur-femme-dr"
  },
  {
-  "id": "mcgill-rev-juristes-de-l-ont",
   "abbreviation": "Rev juristes de l'Ont",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-juristes-de-l-ont"
  },
  {
-  "id": "mcgill-rev-jur-uipr",
   "abbreviation": "Rev Jur UIPR",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-jur-uipr"
  },
  {
-  "id": "mcgill-rev-serv-arb",
   "abbreviation": "Rev serv arb",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-serv-arb"
  },
  {
-  "id": "mcgill-rev-societes",
   "abbreviation": "Rev sociétés",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rev-societes"
  },
  {
-  "id": "mcgill-rfd",
   "abbreviation": "RFD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rfd"
  },
  {
-  "id": "mcgill-rgd",
   "abbreviation": "RGD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rgd"
  },
  {
-  "id": "mcgill-rgdip",
   "abbreviation": "RGDIP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rgdip"
  },
  {
-  "id": "mcgill-rhdi",
   "abbreviation": "RHDI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rhdi"
  },
  {
-  "id": "mcgill-ricr",
   "abbreviation": "RICR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ricr"
  },
  {
-  "id": "mcgill-ridc",
   "abbreviation": "RIDC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ridc"
  },
  {
-  "id": "mcgill-rid-econ",
   "abbreviation": "RID écon",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rid-econ"
  },
  {
-  "id": "mcgill-rie",
   "abbreviation": "RIE",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rie"
  },
  {
-  "id": "mcgill-risj",
   "abbreviation": "RISJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-risj"
  },
  {
-  "id": "mcgill-rjc-5e",
   "abbreviation": "RJC (5e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rjc-5e"
  },
  {
-  "id": "mcgill-rjda",
   "abbreviation": "RJDA",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rjda"
  },
  {
-  "id": "mcgill-rjda-2e",
   "abbreviation": "RJDA (2e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rjda-2e"
  },
  {
-  "id": "mcgill-rjda-3e",
   "abbreviation": "RJDA (3e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rjda-3e"
  },
  {
-  "id": "mcgill-rjda-4e",
   "abbreviation": "RJDA (4e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rjda-4e"
  },
  {
-  "id": "mcgill-rjdm-2e",
   "abbreviation": "RJDM (2e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rjdm-2e"
  },
  {
-  "id": "mcgill-rjeul",
   "abbreviation": "RJEUL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rjeul"
  },
  {
-  "id": "mcgill-rjf-5e",
   "abbreviation": "RJF (5e)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rjf-5e"
  },
  {
-  "id": "mcgill-rjt",
   "abbreviation": "RJT",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rjt"
  },
  {
-  "id": "mcgill-rlr",
   "abbreviation": "RLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rlr"
  },
  {
-  "id": "mcgill-rndc",
   "abbreviation": "RNDC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rndc"
  },
  {
-  "id": "mcgill-rontc",
   "abbreviation": "RONTC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rontc"
  },
  {
-  "id": "mcgill-rpei",
   "abbreviation": "RPEI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rpei"
  },
  {
-  "id": "mcgill-rqdi",
   "abbreviation": "RQDI",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rqdi"
  },
  {
-  "id": "mcgill-rr",
   "abbreviation": "RR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rr"
  },
  {
-  "id": "mcgill-rs",
   "abbreviation": "RS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rs"
  },
  {
-  "id": "mcgill-rtc",
   "abbreviation": "RTC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rtc"
  },
  {
-  "id": "mcgill-rtd-civ",
   "abbreviation": "RTD civ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rtd-civ"
  },
  {
-  "id": "mcgill-rtd-eur",
   "abbreviation": "RTD eur",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rtd-eur"
  },
  {
-  "id": "mcgill-rutgers-camden-lj",
   "abbreviation": "Rutgers-Camden LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-rutgers-camden-lj"
  },
  {
-  "id": "mcgill-rutgers-jl-religion",
   "abbreviation": "Rutgers JL & Religion",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-rutgers-jl-religion"
  },
  {
-  "id": "mcgill-r-etudes-const",
   "abbreviation": "R études const",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-r-etudes-const"
  },
  {
-  "id": "mcgill-sag",
   "abbreviation": "SAG",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-sag"
  },
  {
-  "id": "mcgill-saint-louis-u-lj",
   "abbreviation": "Saint Louis U LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-saint-louis-u-lj"
  },
  {
-  "id": "mcgill-sajhr",
   "abbreviation": "SAJHR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-sajhr"
  },
  {
-  "id": "mcgill-salj",
   "abbreviation": "SALJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-salj"
  },
  {
-  "id": "mcgill-san-joaquin-agric-l-rev",
   "abbreviation": "San Joaquin Agric L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-san-joaquin-agric-l-rev"
  },
  {
-  "id": "mcgill-sask-bar-rev",
   "abbreviation": "Sask Bar Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-sask-bar-rev"
  },
  {
-  "id": "mcgill-sask-l-rev",
   "abbreviation": "Sask L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-sask-l-rev"
  },
  {
-  "id": "mcgill-sayb-intl-l",
   "abbreviation": "SAYB Intl L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-sayb-intl-l"
  },
  {
-  "id": "mcgill-s-cal-interdisciplinary-lj",
   "abbreviation": "S Cal Interdisciplinary LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-s-cal-interdisciplinary-lj"
  },
  {
-  "id": "mcgill-s-cal-rev-l-women-s-stud",
   "abbreviation": "S Cal Rev L & Women's Stud",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-s-cal-rev-l-women-s-stud"
  },
  {
-  "id": "mcgill-scand-stud-l",
   "abbreviation": "Scand Stud L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-scand-stud-l"
  },
  {
-  "id": "mcgill-sccb",
   "abbreviation": "SCCB",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-sccb"
  },
  {
-  "id": "mcgill-sccd",
   "abbreviation": "SCCD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-sccd"
  },
  {
-  "id": "mcgill-sccr",
   "abbreviation": "SCCR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-sccr"
  },
  {
-  "id": "mcgill-sclr",
   "abbreviation": "SCLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-sclr"
  },
  {
-  "id": "mcgill-scot-curr-lyb",
   "abbreviation": "Scot Curr LYB",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-scot-curr-lyb"
  },
  {
-  "id": "mcgill-sec-reg-lj",
   "abbreviation": "Sec Reg LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-sec-reg-lj"
  },
  {
-  "id": "mcgill-sem-jur",
   "abbreviation": "Sem Jur",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-sem-jur"
  },
  {
-  "id": "mcgill-sess-cas-f",
   "abbreviation": "Sess Cas F",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-sess-cas-f"
  },
  {
-  "id": "mcgill-sing-ac-l-ann-rev",
   "abbreviation": "Sing Ac L Ann Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-sing-ac-l-ann-rev"
  },
  {
-  "id": "mcgill-sing-ac-lj",
   "abbreviation": "Sing Ac LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-sing-ac-lj"
  },
  {
-  "id": "mcgill-sing-jicl",
   "abbreviation": "Sing JICL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-sing-jicl"
  },
  {
-  "id": "mcgill-sing-jls",
   "abbreviation": "Sing JLS",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-sing-jls"
  },
  {
-  "id": "mcgill-sing-l-rev",
   "abbreviation": "Sing L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-sing-l-rev"
  },
  {
-  "id": "mcgill-sllr",
   "abbreviation": "SLLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-sllr"
  },
  {
-  "id": "mcgill-slr-r",
   "abbreviation": "SLR (R)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-slr-r"
  },
  {
-  "id": "mcgill-soc-leg-stud",
   "abbreviation": "Soc & Leg Stud",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-soc-leg-stud"
  },
  {
-  "id": "mcgill-space-pol-y",
   "abbreviation": "Space Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-space-pol-y"
  },
  {
-  "id": "mcgill-spec-lect-lsuc",
   "abbreviation": "Spec Lect LSUC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-spec-lect-lsuc"
  },
  {
-  "id": "mcgill-sslr",
   "abbreviation": "SSLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-sslr"
  },
  {
-  "id": "mcgill-stan-j-animal-l-pol-y",
   "abbreviation": "Stan J Animal L & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-stan-j-animal-l-pol-y"
  },
  {
-  "id": "mcgill-stan-j-legal-stud",
   "abbreviation": "Stan J Legal Stud",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-stan-j-legal-stud"
  },
  {
-  "id": "mcgill-stat-l-rev",
   "abbreviation": "Stat L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-stat-l-rev"
  },
  {
-  "id": "mcgill-s-tex-lj",
   "abbreviation": "S Tex LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-s-tex-lj"
  },
  {
-  "id": "mcgill-st-john-s-j-legal-comment",
   "abbreviation": "St John's J Legal Comment",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-st-john-s-j-legal-comment"
  },
  {
-  "id": "mcgill-st-msd",
   "abbreviation": "St-MSD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-st-msd"
  },
  {
-  "id": "mcgill-str",
   "abbreviation": "STR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-str"
  },
  {
-  "id": "mcgill-stud-canon",
   "abbreviation": "Stud Canon",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-stud-canon"
  },
  {
-  "id": "mcgill-suffolk-j-trial-appellate-advoc",
   "abbreviation": "Suffolk J Trial & Appellate Advoc",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-suffolk-j-trial-appellate-advoc"
  },
  {
-  "id": "mcgill-suffolk-transnat-l-lj",
   "abbreviation": "Suffolk Transnat'l LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-suffolk-transnat-l-lj"
  },
  {
-  "id": "mcgill-sup-ct-econ-rev",
   "abbreviation": "Sup Ct Econ Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-sup-ct-econ-rev"
  },
  {
-  "id": "mcgill-sw-jl-trade-am",
   "abbreviation": "Sw JL & Trade Am",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-sw-jl-trade-am"
  },
  {
-  "id": "mcgill-sybil",
   "abbreviation": "SYBIL",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-sybil"
  },
  {
-  "id": "mcgill-taat",
   "abbreviation": "TAAT",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-taat"
  },
  {
-  "id": "mcgill-taq",
   "abbreviation": "TAQ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-taq"
  },
  {
-  "id": "mcgill-tbr",
   "abbreviation": "TBR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-tbr"
  },
  {
-  "id": "mcgill-tbrd-ns",
   "abbreviation": "TBRD (NS)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-tbrd-ns"
  },
  {
-  "id": "mcgill-tcd",
   "abbreviation": "TCD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-tcd"
  },
  {
-  "id": "mcgill-te",
   "abbreviation": "TE",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-te"
  },
  {
-  "id": "mcgill-temp-lq",
   "abbreviation": "Temp LQ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-temp-lq"
  },
  {
-  "id": "mcgill-terr-sea-j",
   "abbreviation": "Terr Sea J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-terr-sea-j"
  },
  {
-  "id": "mcgill-tex-bj",
   "abbreviation": "Tex BJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-tex-bj"
  },
  {
-  "id": "mcgill-tex-hispanic-jl-pol-y",
   "abbreviation": "Tex Hispanic JL & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-tex-hispanic-jl-pol-y"
  },
  {
-  "id": "mcgill-textes-adoptes",
   "abbreviation": "Textes adoptés",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-textes-adoptes"
  },
  {
-  "id": "mcgill-texts-adopted",
   "abbreviation": "Texts Adopted",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-texts-adopted"
  },
  {
-  "id": "mcgill-theor-inq-l",
   "abbreviation": "Theor Inq L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-theor-inq-l"
  },
  {
-  "id": "mcgill-thomas-jefferson-l-rev",
   "abbreviation": "Thomas Jefferson L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-thomas-jefferson-l-rev"
  },
  {
-  "id": "mcgill-tilburg-foreign-l-rev",
   "abbreviation": "Tilburg Foreign L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-tilburg-foreign-l-rev"
  },
  {
-  "id": "mcgill-tj",
   "abbreviation": "TJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-tj"
  },
  {
-  "id": "mcgill-tmr",
   "abbreviation": "TMR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-tmr"
  },
  {
-  "id": "mcgill-tolley-s-comm-l",
   "abbreviation": "Tolley's Comm L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-tolley-s-comm-l"
  },
  {
-  "id": "mcgill-touro-envtl-lj",
   "abbreviation": "Touro Envtl LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-touro-envtl-lj"
  },
  {
-  "id": "mcgill-travaux-de-l-assoc-henri-capitant",
   "abbreviation": "Travaux de l'assoc Henri Capitant",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-travaux-de-l-assoc-henri-capitant"
  },
  {
-  "id": "mcgill-tribal-lj",
   "abbreviation": "Tribal LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-tribal-lj"
  },
  {
-  "id": "mcgill-trusts-est",
   "abbreviation": "Trusts & Est",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-trusts-est"
  },
  {
-  "id": "mcgill-ttc",
   "abbreviation": "TTC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ttc"
  },
  {
-  "id": "mcgill-ttj",
   "abbreviation": "TTJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ttj"
  },
  {
-  "id": "mcgill-ttr",
   "abbreviation": "TTR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ttr"
  },
  {
-  "id": "mcgill-ttr-2d",
   "abbreviation": "TTR (2d)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ttr-2d"
  },
  {
-  "id": "mcgill-ubc-l-rev",
   "abbreviation": "UBC L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ubc-l-rev"
  },
  {
-  "id": "mcgill-uc-davis-j-intl-l-pol-y",
   "abbreviation": "UC Davis J Intl L & Pol'y",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-uc-davis-j-intl-l-pol-y"
  },
  {
-  "id": "mcgill-u-chicago-legal-f",
   "abbreviation": "U Chicago Legal F",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-u-chicago-legal-f"
  },
  {
-  "id": "mcgill-u-chicago-l-rev",
   "abbreviation": "U Chicago L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-u-chicago-l-rev"
  },
  {
-  "id": "mcgill-u-chicago-l-sch-roundtable",
   "abbreviation": "U Chicago L Sch Roundtable",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-u-chicago-l-sch-roundtable"
  },
  {
-  "id": "mcgill-ucla-asian-pac-am-lj",
   "abbreviation": "UCLA Asian Pac Am LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ucla-asian-pac-am-lj"
  },
  {
-  "id": "mcgill-uclj",
   "abbreviation": "UCLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-uclj"
  },
  {
-  "id": "mcgill-udc-l-rev",
   "abbreviation": "UDC L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-udc-l-rev"
  },
  {
-  "id": "mcgill-uglj",
   "abbreviation": "UGLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-uglj"
  },
  {
-  "id": "mcgill-u-mal-l-rev",
   "abbreviation": "U Mal L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-u-mal-l-rev"
  },
  {
-  "id": "mcgill-u-miami-ent-sports-l-rev",
   "abbreviation": "U Miami Ent & Sports L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-u-miami-ent-sports-l-rev"
  },
  {
-  "id": "mcgill-u-mich-jl-ref",
   "abbreviation": "U Mich JL Ref",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-u-mich-jl-ref"
  },
  {
-  "id": "mcgill-unblj",
   "abbreviation": "UNBLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-unblj"
  },
  {
-  "id": "mcgill-unif-comm-code-lj",
   "abbreviation": "Unif Comm Code LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-unif-comm-code-lj"
  },
  {
-  "id": "mcgill-unif-l-conf-proc",
   "abbreviation": "Unif L Conf Proc",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-unif-l-conf-proc"
  },
  {
-  "id": "mcgill-unif-l-rev",
   "abbreviation": "Unif L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-unif-l-rev"
  },
  {
-  "id": "mcgill-unswlj",
   "abbreviation": "UNSWLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-unswlj"
  },
  {
-  "id": "mcgill-u-pa-j-lab-employment-l",
   "abbreviation": "U Pa J Lab & Employment L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-u-pa-j-lab-employment-l"
  },
  {
-  "id": "mcgill-uqlj",
   "abbreviation": "UQLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-uqlj"
  },
  {
-  "id": "mcgill-usf-jl-soc-challenges",
   "abbreviation": "USF JL & Soc Challenges",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-usf-jl-soc-challenges"
  },
  {
-  "id": "mcgill-us-mex-lj",
   "abbreviation": "US-Mex LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-us-mex-lj"
  },
  {
-  "id": "mcgill-utah-bj",
   "abbreviation": "Utah BJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-utah-bj"
  },
  {
-  "id": "mcgill-u-tasm-l-rev",
   "abbreviation": "U Tasm L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-u-tasm-l-rev"
  },
  {
-  "id": "mcgill-ut-fac-l-rev",
   "abbreviation": "UT Fac L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-ut-fac-l-rev"
  },
  {
-  "id": "mcgill-utlj",
   "abbreviation": "UTLJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-utlj"
  },
  {
-  "id": "mcgill-uwa-l-rev",
   "abbreviation": "UWA L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-uwa-l-rev"
  },
  {
-  "id": "mcgill-uwo-l-rev",
   "abbreviation": "UWO L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-uwo-l-rev"
  },
  {
-  "id": "mcgill-va-j-sports-l",
   "abbreviation": "Va J Sports & L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-va-j-sports-l"
  },
  {
-  "id": "mcgill-vand-j-ent-l-prac",
   "abbreviation": "Vand J Ent L & Prac",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-vand-j-ent-l-prac"
  },
  {
-  "id": "mcgill-vietnam-l-legal-forum",
   "abbreviation": "Vietnam L & Legal Forum",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-vietnam-l-legal-forum"
  },
  {
-  "id": "mcgill-vt-bj",
   "abbreviation": "Vt BJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-vt-bj"
  },
  {
-  "id": "mcgill-vuwlr",
   "abbreviation": "VUWLR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-vuwlr"
  },
  {
-  "id": "mcgill-waikato-l-rev",
   "abbreviation": "Waikato L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-waikato-l-rev"
  },
  {
-  "id": "mcgill-war-ns",
   "abbreviation": "WAR (NS)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-war-ns"
  },
  {
-  "id": "mcgill-waseda-bull-comp-l",
   "abbreviation": "Waseda Bull Comp L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-waseda-bull-comp-l"
  },
  {
-  "id": "mcgill-wash-lee-race-ethnic-ancestry-lj",
   "abbreviation": "Wash & Lee Race & Ethnic Ancestry LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-wash-lee-race-ethnic-ancestry-lj"
  },
  {
-  "id": "mcgill-wash-u-global-studies-l-rev",
   "abbreviation": "Wash U Global Studies L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-wash-u-global-studies-l-rev"
  },
  {
-  "id": "mcgill-wdcp",
   "abbreviation": "WDCP",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-wdcp"
  },
  {
-  "id": "mcgill-wdcp-2d",
   "abbreviation": "WDCP (2d)",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-wdcp-2d"
  },
  {
-  "id": "mcgill-web-j-cli",
   "abbreviation": "Web J CLI",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-web-j-cli"
  },
  {
-  "id": "mcgill-w-ed-law-rep",
   "abbreviation": "W Ed Law Rep",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-w-ed-law-rep"
  },
  {
-  "id": "mcgill-west-l-rev",
   "abbreviation": "West L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-west-l-rev"
  },
  {
-  "id": "mcgill-west-ont-l-rev",
   "abbreviation": "West Ont L Rev",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-west-ont-l-rev"
  },
  {
-  "id": "mcgill-willamette-j-intl-l-disp-resol",
   "abbreviation": "Willamette J Intl L & Disp Resol",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-willamette-j-intl-l-disp-resol"
  },
  {
-  "id": "mcgill-windsor-rev-legal-soc-issues",
   "abbreviation": "Windsor Rev Legal Soc Issues",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-windsor-rev-legal-soc-issues"
  },
  {
-  "id": "mcgill-windsor-yb-access-just",
   "abbreviation": "Windsor YB Access Just",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-windsor-yb-access-just"
  },
  {
-  "id": "mcgill-wlac",
   "abbreviation": "WLAC",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-wlac"
  },
  {
-  "id": "mcgill-wlrbd",
   "abbreviation": "WLRBD",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-wlrbd"
  },
  {
-  "id": "mcgill-wltr",
   "abbreviation": "WLTR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-wltr"
  },
  {
-  "id": "mcgill-wtam",
   "abbreviation": "WTAM",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-wtam"
  },
  {
-  "id": "mcgill-w-va-jl-t",
   "abbreviation": "W Va JL & T",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-w-va-jl-t"
  },
  {
-  "id": "mcgill-yale-human-rts-dev-lj",
   "abbreviation": "Yale Human Rts & Dev LJ",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-yale-human-rts-dev-lj"
  },
  {
-  "id": "mcgill-yb-air-sp-l",
   "abbreviation": "YB Air & Sp L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-yb-air-sp-l"
  },
  {
-  "id": "mcgill-yb-cba",
   "abbreviation": "YB CBA",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-yb-cba"
  },
  {
-  "id": "mcgill-yb-comm-arb",
   "abbreviation": "YB Comm Arb",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-yb-comm-arb"
  },
  {
-  "id": "mcgill-yb-copyright-media-l",
   "abbreviation": "YB Copyright & Media L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-yb-copyright-media-l"
  },
  {
-  "id": "mcgill-yb-eur-conv-hr",
   "abbreviation": "YB Eur Conv HR",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-yb-eur-conv-hr"
  },
  {
-  "id": "mcgill-yb-eur-l",
   "abbreviation": "YB Eur L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-yb-eur-l"
  },
  {
-  "id": "mcgill-ybhr",
   "abbreviation": "YBHR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ybhr"
  },
  {
-  "id": "mcgill-ybicj",
   "abbreviation": "YBICJ",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ybicj"
  },
  {
-  "id": "mcgill-yb-intl-env-l",
   "abbreviation": "YB Intl Env L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-yb-intl-env-l"
  },
  {
-  "id": "mcgill-yb-intl-human-l",
   "abbreviation": "YB Intl Human L",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-yb-intl-human-l"
  },
  {
-  "id": "mcgill-ybun",
   "abbreviation": "YBUN",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-ybun"
  },
  {
-  "id": "mcgill-y-j",
   "abbreviation": "Y & J",
-  "source": "mcgill"
+  "source": "mcgill",
+  "citation_id": "mcgill-y-j"
  },
  {
-  "id": "mcgill-yr",
   "abbreviation": "YR",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-yr"
  },
  {
-  "id": "mcgill-zaorv",
   "abbreviation": "ZaöRV",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-zaorv"
  },
  {
-  "id": "mcgill-zug",
   "abbreviation": "ZUG",
   "source": "mcgill",
-  "verified": false
+  "verified": false,
+  "citation_id": "mcgill-zug"
  }
 ]
