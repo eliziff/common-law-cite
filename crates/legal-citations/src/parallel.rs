@@ -103,7 +103,7 @@ pub(crate) fn distinct(left: &Citation, right: &Citation) -> bool {
     // Evidence-backed aliases can contradict a printed parallel even when
     // the two members use different reporters and have no written courts.
     let canonical = |citation: &Citation| {
-        crate::aliases::resolve(citation).map(|target| target.key.clone())
+        crate::aliases::resolve(citation).map(|target| target.key)
             .or_else(|| (citation.format == Some(Format::Neutral)).then(|| key::key(citation)).flatten())
     };
     if let (Some(left), Some(right)) = (canonical(left), canonical(right)) {
