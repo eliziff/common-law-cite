@@ -311,29 +311,52 @@ pub struct Extent {
     pub paragraphs: Option<u64>,
 }
 
-/// `read` of each item, in the items' order, read on as many of the machine's cores as there are items to share:
-/// each thread takes the next unread item. A target without threads (WebAssembly) reads them in turn.
-pub(crate) fn read_each<T: Sync, R: Send>(items: &[T], read: impl Fn(&T) -> R + Sync) -> Vec<R> {
+/// `read` of each item, in the items' order, read on the engine's reading threads, each taking the next unread item.
+/// The threads live as long as the engine, so a grammar keeps one set of search caches per reading thread rather
+/// than one per thread an extraction ever started. A reading thread (a nested read) and a target without threads
+/// (WebAssembly) read them in turn.
+pub(crate) fn read_each<T: Send + Sync + 'static, R: Send + 'static>(
+    items: Vec<T>, read: impl Fn(&T) -> R + Send + Sync + 'static) -> Vec<R> {
     #[cfg(not(target_arch = "wasm32"))]
-    {
-        let threads = std::thread::available_parallelism().map_or(1, |count| count.get()).min(items.len());
-        if threads > 1 {
-            let next = std::sync::atomic::AtomicUsize::new(0);
-            let mut read_by: Vec<(usize, R)> = std::thread::scope(|scope| {
-                let workers: Vec<_> = (0..threads).map(|_| scope.spawn(|| {
-                    let mut done = Vec::new();
-                    loop {
-                        let index = next.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-                        let Some(item) = items.get(index) else { break done };
-                        done.push((index, read(item)));
-                    }
-                })).collect();
-                workers.into_iter().flat_map(|worker| worker.join().unwrap_or_else(|panic| std::panic::resume_unwind(panic)))
-                    .collect()
-            });
-            read_by.sort_unstable_by_key(|(index, _)| *index);
-            return read_by.into_iter().map(|(_, value)| value).collect();
+    thread_local!(static READER: std::cell::Cell<bool> = const { std::cell::Cell::new(false) });
+    #[cfg(not(target_arch = "wasm32"))]
+    if items.len() > 1 && !READER.get() {
+        use std::sync::{atomic::{AtomicUsize, Ordering}, mpsc, Arc, Mutex, OnceLock};
+        type Job = Box<dyn FnOnce() + Send>;
+        static READERS: OnceLock<(Mutex<mpsc::Sender<Job>>, usize)> = OnceLock::new();
+        let (jobs, threads) = READERS.get_or_init(|| {
+            // Two read as fast as one per core: every thread past the second added a set of caches, not speed.
+            let threads = std::thread::available_parallelism().map_or(1, |count| count.get()).min(2);
+            let (jobs, waiting) = mpsc::channel::<Job>();
+            let waiting = Arc::new(Mutex::new(waiting));
+            for _ in 0..threads {
+                let waiting = Arc::clone(&waiting);
+                std::thread::spawn(move || loop {
+                    READER.set(true);
+                    let job = waiting.lock().expect("reading jobs").recv();
+                    let Ok(job) = job else { break };
+                    job();
+                });
+            }
+            (Mutex::new(jobs), threads)
+        });
+        let shared = Arc::new((items, read, AtomicUsize::new(0)));
+        let (sender, results) = mpsc::channel();
+        for _ in 0..(*threads).min(shared.0.len()) {
+            let (shared, sender) = (Arc::clone(&shared), sender.clone());
+            jobs.lock().expect("reading jobs").send(Box::new(move || loop {
+                let index = shared.2.fetch_add(1, Ordering::Relaxed);
+                let Some(item) = shared.0.get(index) else { break };
+                let read = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| (shared.1)(item)));
+                if sender.send((index, read)).is_err() { break }
+            })).expect("reading threads");
         }
+        drop(sender);
+        let mut read_by: Vec<Option<R>> = (0..shared.0.len()).map(|_| None).collect();
+        for (index, read) in results {
+            read_by[index] = Some(read.unwrap_or_else(|panic| std::panic::resume_unwind(panic)));
+        }
+        return read_by.into_iter().map(|read| read.expect("every item read")).collect();
     }
     items.iter().map(read).collect()
 }
