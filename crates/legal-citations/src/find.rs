@@ -118,7 +118,7 @@ static ANTECEDENT_NAME: LazyLock<Screened<CompiledEcmascriptGrammar>> =
 static SECTION_SYMBOL: LazyLock<Screened<CompiledEcmascriptGrammar>> =
     LazyLock::new(|| Screened::linear("cite.section-symbol"));
 // Complete existing cores. The permissive splitter does not discover anchors.
-static REPORTER_PATTERN: LazyLock<Screened<CompiledGrammar>> =
+pub(crate) static REPORTER_PATTERN: LazyLock<Screened<CompiledGrammar>> =
     LazyLock::new(|| Screened::backtracking("cite.reporter.splitter"));
 static JOURNAL_PATTERN: LazyLock<Screened<CompiledEcmascriptGrammar>> =
     LazyLock::new(|| Screened::linear("cite.journal.toa"));
@@ -163,7 +163,7 @@ static SECONDARY_ECMASCRIPT: [OnceLock<CompiledEcmascriptGrammar>; 11] = [const 
 // Article without a first page ("… (2020) The Journal of Value Inquiry at 1")
 // needs a lookahead so the pinpoint stays outside the core, which is the
 // backtracking dialect rather than the linear one.
-static JOURNAL_ARTICLE: LazyLock<Screened<CompiledGrammar>> =
+pub(crate) static JOURNAL_ARTICLE: LazyLock<Screened<CompiledGrammar>> =
     LazyLock::new(|| Screened::backtracking("cite.journal.article"));
 static ONLINE_SOURCE: LazyLock<Screened<CompiledEcmascriptGrammar>> = LazyLock::new(|| Screened::linear("cite.url"));
 // Forms that carry no reporter, journal or imprint the grammars above read, with the guides that

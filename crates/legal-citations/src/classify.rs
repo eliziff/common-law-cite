@@ -36,8 +36,6 @@ static STATUTE_TITLED: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.statute.titled"));
 pub(crate) static ROUTING: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.provider-routing"));
-static JOURNAL_ARTICLE: LazyLock<CompiledGrammar> =
-    LazyLock::new(|| backtracking("cite.journal.article"));
 static BOOK: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.book.imprint"));
 static UNREPORTED: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.case.unreported"));
 static NUMBERLESS: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.neutral.numberless"));
@@ -646,7 +644,7 @@ fn journal_article(core: &str) -> Option<Reading> {
     // A block written straight after the article's quoted title is read where it was found, after that title's
     // closing quotation mark.
     fn ending<'t>(text: &'t str, core: &str) -> Option<legal_grammar::GrammarCaptures<'t>> {
-        JOURNAL_ARTICLE.captures(text).ok().flatten().filter(|captures| captures.get(0)
+        crate::find::JOURNAL_ARTICLE.captures(text).ok().flatten().filter(|captures| captures.get(0)
             .is_some_and(|whole| whole.end() == text.len() && whole.start() == text.len() - core.len()))
     }
     let quoted = format!("\u{201d} {core}");
@@ -1154,7 +1152,7 @@ pub(crate) fn apply(citation: &mut Citation, mut reading: Reading, options: &cra
 pub(crate) fn warm() {
     crate::warm_statics!(
         NEUTRAL, TRIBUNAL, BRACKETED, PARENTHESIZED, CANLII, STATUTE, STATUTE_TITLED, ROUTING,
-        JOURNAL_ARTICLE, BOOK, UNREPORTED, COURT_FILE, PARLIAMENTARY, FRENCH_REPORTER,
+        BOOK, UNREPORTED, COURT_FILE, PARLIAMENTARY, FRENCH_REPORTER,
         INSTRUMENT_KIND, BOOK_CHAPTER, FRENCH_SERIES
     );
 }
