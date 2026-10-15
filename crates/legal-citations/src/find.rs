@@ -1640,8 +1640,9 @@ fn cores(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<C
     boundaries.dedup();
     // Each input is read on its own, so they are read at once.
     let ranges = boundaries.windows(2).map(|range| (range[0], range[1])).collect::<Vec<_>>();
-    crate::read_each(&ranges, |&(start, end)| {
-        cores_in(&text[start..end], options, &[], enrich).into_iter().map(move |mut core| {
+    let (text, options): (std::sync::Arc<str>, Options) = (text.into(), options.clone());
+    crate::read_each(ranges, move |&(start, end)| {
+        cores_in(&text[start..end], &options, &[], enrich).into_iter().map(move |mut core| {
             core.span = core.span.start + start..core.span.end + start;
             if let CoreKind::Full(anchor) = &mut core.kind {
                 anchor.span = core.span.clone();

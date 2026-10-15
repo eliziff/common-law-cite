@@ -250,7 +250,7 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         }
         "quoteCitationUnits" => {
             let request: QuoteCitationUnitsRequest = parse(method, request)?;
-            to_value(crate::read_each(&request.texts, |text| quote_citation_unit(text)))
+            to_value(crate::read_each(request.texts, |text| quote_citation_unit(text)))
         }
         "splitNotes" => to_value(split_notes(&parse(method, request)?)?),
         "quotedTitles" => {
