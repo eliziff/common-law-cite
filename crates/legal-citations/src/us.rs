@@ -513,17 +513,20 @@ static COMMON: LazyLock<Screened<legal_grammar::AsciiBoundedGrammar>> = LazyLock
         legal_grammar::ascii_bounded_table_entry_literals("cite.us.law.common").unwrap()));
 // The custom reporters are read only for extended US citations; a statute is read as one by the
 // laws whatever the reader asks for.
-static CUSTOM: LazyLock<[(&str, legal_grammar::AsciiBoundedGrammar); 2]> = LazyLock::new(||
-        ["cite.us.reporter.custom.full", "cite.us.reporter.custom.short"].map(|id|
-            (id, legal_grammar::compile_ascii_bounded_table_entry(id).unwrap())));
-static LAWS: LazyLock<[(&str, legal_grammar::AsciiBoundedGrammar); 2]> = LazyLock::new(||
-        ["cite.us.law.full", "cite.us.law.short"].map(|id|
-            (id, legal_grammar::compile_ascii_bounded_table_entry(id).unwrap())));
+// Each compiled the first time a text holding one of its literals is read.
+fn ascii_bounded(ids: [&'static str; 2]) -> [(&'static str, Screened<legal_grammar::AsciiBoundedGrammar>); 2] {
+    ids.map(|id| (id, Screened::new(move || legal_grammar::compile_ascii_bounded_table_entry(id).unwrap(),
+        legal_grammar::ascii_bounded_table_entry_literals(id).unwrap())))
+}
+static CUSTOM: LazyLock<[(&str, Screened<legal_grammar::AsciiBoundedGrammar>); 2]> =
+    LazyLock::new(|| ascii_bounded(["cite.us.reporter.custom.full", "cite.us.reporter.custom.short"]));
+static LAWS: LazyLock<[(&str, Screened<legal_grammar::AsciiBoundedGrammar>); 2]> =
+    LazyLock::new(|| ascii_bounded(["cite.us.law.full", "cite.us.law.short"]));
 
 pub(crate) fn is_law(core: &str) -> bool {
     let whole = |span: &Range<usize>| span.start == 0 && span.end == core.len();
     COMMON.find_spans(core).iter().any(whole) || LAWS.iter().any(|(_, grammar)|
-        grammar.find_spans(core).iter().any(whole))
+        grammar.may_match(core) && grammar.find_spans(core).iter().any(whole))
 }
 
 pub(crate) fn common_law_spans(text: &str) -> Vec<Range<usize>> {
@@ -544,7 +547,7 @@ fn extend_native_spans(text: &str, extended: bool, spans: &mut Vec<Range<usize>>
         for (start, end) in fallback_ranges(text) {
             let candidate = &text[start..end];
             for (id, grammar) in CUSTOM.iter().chain(LAWS.iter()) {
-                if id.ends_with(".short") && !candidate.contains(" at") { continue; }
+                if id.ends_with(".short") && !candidate.contains(" at") || !grammar.may_match(candidate) { continue; }
                 spans.extend(grammar.find_spans(candidate).into_iter()
                     .map(|hit| start + hit.start..start + hit.end));
             }
@@ -699,4 +702,5 @@ pub(crate) fn finish(citation: &mut crate::Citation) {
 pub(crate) fn warm() {
     names::warm();
     crate::warm_statics!(COMPILED, FILTER, CUSTOM, LAWS, SURFACES, CANDIDATE, EDITIONS; screened COMMON, PATTERN, EXTENDED, CUE);
+    for (_, grammar) in CUSTOM.iter().chain(LAWS.iter()) { grammar.warm(); }
 }

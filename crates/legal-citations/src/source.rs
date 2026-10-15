@@ -1,6 +1,7 @@
 //! Deterministic source splitter. Source boundaries are independent of
 //! citation extents: delimiters and prose remain part of the input document.
 
+use crate::find::REPORTER_PATTERN as REPORTER;
 use crate::screen::Screened;
 use legal_grammar::CompiledGrammar;
 use num_bigint::BigUint;
@@ -17,7 +18,7 @@ macro_rules! pattern {
     };
 }
 pattern! {
-    URL => "cite.url", ONLINE_ADDRESS => "cite.url.online-unbracketed", NEUTRAL => "cite.neutral", REPORTER => "cite.reporter.splitter",
+    URL => "cite.url", ONLINE_ADDRESS => "cite.url.online-unbracketed", NEUTRAL => "cite.neutral",
     STATUTE => "cite.statute.splitter",
     JOURNAL => "cite.journal.splitter", BOOK => "frame.book",
     REFERENCE => "ref.token", PURE_REFERENCE => "ref.pure.splitter", LINK => "attach.link",
