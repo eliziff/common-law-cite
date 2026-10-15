@@ -9,6 +9,8 @@ use std::sync::{Arc, OnceLock};
 
 mod grammar_word;
 mod literals;
+pub mod table;
+pub mod us_extractors;
 
 use grammar_word::SOURCE_WORD;
 
@@ -58,8 +60,6 @@ impl AsciiBoundedGrammar {
 pub const GRAMMAR_CORPUS_FORMAT: &str = "legal-grammar-corpus:v1";
 /// The embedded corpus, byte for byte, so consumers can fingerprint it.
 pub const GRAMMAR_CORPUS_JSON: &str = include_str!("../data/grammar-corpus.json");
-/// Pinned reporters-db extractors, retaining Eyecite's captures and editions.
-pub const US_EXTRACTORS_JSON: &str = include_str!("../data/us-extractors.json");
 
 fn inflate_json(bytes: &[u8]) -> String {
     let mut text = String::new();
@@ -71,12 +71,6 @@ fn inflate_json(bytes: &[u8]) -> String {
 pub fn grammar_corpus_json() -> &'static str {
     static TEXT: OnceLock<String> = OnceLock::new();
     TEXT.get_or_init(|| inflate_json(include_bytes!(concat!(env!("OUT_DIR"), "/grammar-corpus.json.gz"))))
-}
-
-/// The pinned extractor bytes, restored once from the compact runtime representation.
-pub fn us_extractors_json() -> &'static str {
-    static TEXT: OnceLock<String> = OnceLock::new();
-    TEXT.get_or_init(|| inflate_json(include_bytes!(concat!(env!("OUT_DIR"), "/us-extractors.json.gz"))))
 }
 pub const SOURCE_WHITESPACE: &str = concat!(
     r" \t\n\r\f\v\x1c-\x1f\x85\u00a0\u1680",
