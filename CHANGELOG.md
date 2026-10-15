@@ -10,6 +10,13 @@ versioned separately and noted here when they change.
 
 ## [Unreleased]
 
+- The alias evidence and the pinned US reporter extractors compile at build time
+  into compact tables read in place from the binary (`legal_grammar::table`,
+  `legal_grammar::us_extractors`), and a registered works pack is kept as one
+  row of numbers per extent: none is parsed into heap copies at run time.
+  `aliases::resolve` returns an owned target; `US_EXTRACTORS_JSON`,
+  `us_extractors_json`, `register_extents` and `extents_from_pack` are gone
+  (the `registerExtents` API method is unchanged). Output is unchanged.
 - Supra registry matching returns opaque source identifiers (`target`) rather
   than requiring a `link`; optional URLs enrich an association afterward.
   Registry records also retain inherited source names. JSON schema version 3

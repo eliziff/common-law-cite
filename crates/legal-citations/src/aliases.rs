@@ -5,7 +5,7 @@
 use crate::{key, registry, Citation, Form, Format};
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
-use std::io::Read;
+use legal_grammar::table::{Blob, Rows, Strings, Words};
 use std::sync::LazyLock;
 
 /// One citation's complete alias closure from an installed source index.
@@ -75,47 +75,49 @@ pub struct AliasTarget {
     pub records: Vec<String>,
 }
 
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
+/// The alias mappings build.rs compiles from registry/aliases.json: targets by structural key and
+/// observed spellings by folded form (each with its target, records and court), and the blocked forms.
 struct Table {
-    key_version: String,
-    targets: HashMap<String, AliasTarget>,
-    blocked_forms: HashSet<String>,
-    #[serde(default)]
-    observed: HashMap<String, Observed>,
-    #[serde(skip)]
-    target_courts: HashMap<String, String>,
+    strings: Strings,
+    targets: Rows,
+    observed: Rows,
+    records: Words,
+    blocked: Rows,
 }
 
-#[derive(Deserialize)]
-struct Observed {
-    #[serde(flatten)]
-    target: AliasTarget,
-    court: String,
-}
+const NO_COURT: u32 = u32::MAX;
 
 static TABLE: LazyLock<Table> = LazyLock::new(|| {
-    let mut data = Vec::new();
-    flate2::read::GzDecoder::new(&include_bytes!(concat!(env!("OUT_DIR"), "/aliases.json.gz"))[..])
-        .read_to_end(&mut data).expect("embedded reporter aliases");
-    let mut table: Table = serde_json::from_slice(&data)
-        .expect("validated reporter aliases");
-    assert_eq!(table.key_version, key::KEY_VERSION, "alias keys must match this engine");
-    let record_courts: HashMap<_, _> = table.observed.values().flat_map(|evidence|
-        evidence.target.records.iter().map(move |id| (id, &evidence.court))).collect();
-    for (key, target) in &table.targets {
-        let courts: Option<HashSet<_>> = target.records.iter().map(|id| record_courts.get(id)).collect();
-        if let Some(courts) = courts.filter(|courts| courts.len() == 1) {
-            table.target_courts.insert(key.clone(), (***courts.iter().next().unwrap()).clone());
+    let blob = Blob::new(include_bytes!(concat!(env!("OUT_DIR"), "/aliases.bin")));
+    let strings = blob.strings(0);
+    assert_eq!(strings.get(blob.words(2).get(0)), key::KEY_VERSION, "alias keys must match this engine");
+    Table { strings, targets: blob.rows(3, 6), observed: blob.rows(4, 6), records: blob.words(5), blocked: blob.rows(6, 1) }
+});
+
+impl Table {
+    /// The target of a `rows` row: its key, citation and records.
+    fn target(&self, rows: Rows, row: usize) -> AliasTarget {
+        AliasTarget {
+            key: self.strings.get(rows.get(row, 1)).to_owned(),
+            citation: self.strings.get(rows.get(row, 2)).to_owned(),
+            records: self.records.run(rows.get(row, 3), rows.get(row, 4))
+                .map(|id| self.strings.get(id).to_owned()).collect(),
         }
     }
-    table
-});
+
+    fn court(&self, rows: Rows, row: usize) -> Option<&'static str> {
+        Some(rows.get(row, 5)).filter(|&id| id != NO_COURT).map(|id| self.strings.get(id))
+    }
+
+    fn blocked(&self, form: &str) -> bool {
+        self.blocked.find(self.strings, 0, form).is_some()
+    }
+}
 
 /// An observed spelling is source evidence,
 /// including misspellings that have no structural reporter interpretation.
 pub(crate) fn observed_form(text: &str) -> bool {
-    TABLE.observed.contains_key(&registry::fold(text))
+    TABLE.observed.find(TABLE.strings, 0, &registry::fold(text)).is_some()
 }
 
 fn supports_court(citation: &Citation, court: &str) -> bool {
@@ -129,20 +131,22 @@ fn supports_court(citation: &Citation, court: &str) -> bool {
         && citation.court.as_ref().is_none_or(|candidate| candidate.id == court)
 }
 
-pub(crate) fn for_key(citation: &Citation, structural_key: &str) -> Option<&'static AliasTarget> {
-    if citation.is_ambiguous() || TABLE.blocked_forms.contains(&registry::fold(&citation.span.text)) {
+pub(crate) fn for_key(citation: &Citation, structural_key: &str) -> Option<AliasTarget> {
+    if citation.is_ambiguous() || TABLE.blocked(&registry::fold(&citation.span.text)) {
         return None;
     }
-    if TABLE.target_courts.get(structural_key).is_some_and(|court| !supports_court(citation, court)) {
+    let row = TABLE.targets.find(TABLE.strings, 0, structural_key)?;
+    if TABLE.court(TABLE.targets, row).is_some_and(|court| !supports_court(citation, court)) {
         return None;
     }
-    TABLE.targets.get(structural_key)
+    Some(TABLE.target(TABLE.targets, row))
 }
 
-fn observed(citation: &Citation) -> Option<&'static Observed> {
+/// The observed row of the citation's written form, when that form identifies its record and court.
+fn observed(citation: &Citation) -> Option<usize> {
     let form = registry::fold(&citation.span.text);
-    if TABLE.blocked_forms.contains(&form) { return None; }
-    let evidence = TABLE.observed.get(&form)?;
+    if TABLE.blocked(&form) { return None; }
+    let evidence = TABLE.observed.find(TABLE.strings, 0, &form)?;
     // A bare volume/page can recur when a reporter uses the year as its
     // volume or changes numbering regimes. The source index's observed row
     // identifies its record, but the shorter written form does not identify
@@ -153,22 +157,27 @@ fn observed(citation: &Citation) -> Option<&'static Observed> {
         if registry.reporters_by_surface(surface).len() == 1
             && key::key_in(citation, registry).is_none() { return None; }
     }
-    if !supports_court(citation, &evidence.court) { return None; }
+    if !supports_court(citation, observed_court_id(evidence)) { return None; }
     Some(evidence)
 }
 
-pub(crate) fn observed_court(citation: &Citation) -> Option<&'static registry::Court> {
-    registry::registry().court(&observed(citation)?.court)
+fn observed_court_id(row: usize) -> &'static str {
+    TABLE.court(TABLE.observed, row).expect("observed court")
 }
 
-pub fn resolve(citation: &Citation) -> Option<&'static AliasTarget> {
+pub(crate) fn observed_court(citation: &Citation) -> Option<&'static registry::Court> {
+    registry::registry().court(observed_court_id(observed(citation)?))
+}
+
+pub fn resolve(citation: &Citation) -> Option<AliasTarget> {
     if citation.form != Form::Full || citation.is_ambiguous() { return None; }
     let structural = key::key_in(citation, registry::registry())
         .and_then(|key| for_key(citation, &key));
     if let Some(evidence) = observed(citation) {
         // Keep the full provenance for equivalent structural spellings. An
         // exact observed form still controls when the structural reading differs.
-        return structural.filter(|target| target.key == evidence.target.key).or(Some(&evidence.target));
+        let key = TABLE.strings.get(TABLE.observed.get(evidence, 1));
+        return structural.filter(|target| target.key == key).or_else(|| Some(TABLE.target(TABLE.observed, evidence)));
     }
     structural
 }
@@ -194,15 +203,18 @@ mod tests {
         for members in data["conflicts"].as_object().unwrap().values() {
             accounted.extend(members.as_array().unwrap().iter().map(|id| id.as_str().unwrap()));
         }
-        for (alias_key, target) in &TABLE.targets {
+        let mut records = Vec::new();
+        for row in 0..TABLE.targets.len() {
+            let (alias_key, target) = (TABLE.strings.get(TABLE.targets.get(row, 0)), TABLE.target(TABLE.targets, row));
             assert!(alias_key.starts_with(&format!("{}:", key::KEY_VERSION)));
             assert!(target.key.starts_with(&format!("{}:", key::KEY_VERSION)));
             assert!(!target.records.is_empty());
-            if let Some(next) = TABLE.targets.get(&target.key) {
-                assert_eq!(next.key, target.key, "unreviewed identity chain");
+            if let Some(next) = TABLE.targets.find(TABLE.strings, 0, &target.key) {
+                assert_eq!(TABLE.target(TABLE.targets, next).key, target.key, "unreviewed identity chain");
             }
-            accounted.extend(target.records.iter().map(String::as_str));
+            records.extend(target.records);
         }
+        accounted.extend(records.iter().map(String::as_str));
         assert_eq!(accounted, aliases.keys().map(String::as_str).collect());
         for review in data["reviews"].as_object().unwrap().values() {
             assert!(!review["evidence"].as_array().unwrap().is_empty());

@@ -1,9 +1,9 @@
 //! Pinned Eyecite reporter extractors and whitespace-insensitive prefilter.
-use crate::model::{Fields, SourceEdition};
+use crate::model::{Fields, SourceEdition, SourceReporter};
 use aho_corasick::AhoCorasick;
 use chrono::Datelike;
 use legal_grammar::CompiledGrammar;
-use serde::Deserialize;
+use legal_grammar::us_extractors::extractors;
 use std::collections::{BTreeMap, BTreeSet};
 use std::ops::Range;
 use crate::screen::Screened;
@@ -332,32 +332,35 @@ pub(crate) fn case_names(text: &str, citations: &[(Range<usize>, Option<&str>, O
     names::extract(text, citations, markup)
 }
 
-#[derive(Deserialize)]
-struct Extractor {
-    pattern: String,
-    exact: Vec<usize>,
-    variations: Vec<usize>,
-    strings: Vec<String>,
-    short: bool,
-    standard: bool,
-    #[serde(default)]
-    ecmascript: bool,
-    #[serde(skip)]
-    compiled: OnceLock<CompiledGrammar>,
-    /// The literals one of which every match of the pattern contains.
-    #[serde(skip)]
+/// What an extractor builds the first time a text names its reporter: the literals one of which every
+/// match of its pattern contains, and the compiled pattern.
+#[derive(Default)]
+struct Compiled {
     literals: OnceLock<Option<AhoCorasick>>,
+    pattern: OnceLock<Box<CompiledGrammar>>,
 }
 
-#[derive(Deserialize)]
-struct Data {
-    editions: Vec<SourceEdition>,
-    extractors: Vec<Extractor>,
+static COMPILED: LazyLock<Box<[Compiled]>> = LazyLock::new(||
+    (0..extractors().len()).map(|_| Compiled::default()).collect());
+
+fn edition(index: usize) -> SourceEdition {
+    let edition = extractors().edition(index);
+    SourceEdition {
+        short_name: edition.short_name.to_owned(),
+        reporter: SourceReporter {
+            short_name: edition.reporter_short_name.to_owned(),
+            name: edition.reporter_name.to_owned(),
+            cite_type: edition.cite_type.to_owned(),
+            source: edition.source.to_owned(),
+        },
+        start: edition.start.map(str::to_owned),
+        end: edition.end.map(str::to_owned),
+    }
 }
 
-static DATA: LazyLock<Data> = LazyLock::new(|| {
-    serde_json::from_str(legal_grammar::us_extractors_json()).expect("pinned US extractors")
-});
+fn reported(index: usize) -> bool {
+    matches!(extractors().edition(index).source, "reporters" | "journals")
+}
 
 fn compact(text: &str) -> String {
     text.chars().filter(|c| !crate::text::python_whitespace(*c)).collect()
@@ -366,9 +369,10 @@ fn compact(text: &str) -> String {
 static FILTER: LazyLock<(AhoCorasick, Vec<Vec<usize>>, Vec<usize>)> = LazyLock::new(|| {
     let mut strings: BTreeMap<String, Vec<usize>> = BTreeMap::new();
     let mut unfiltered = Vec::new();
-    for (index, extractor) in DATA.extractors.iter().enumerate() {
-        if extractor.strings.is_empty() { unfiltered.push(index); }
-        for string in &extractor.strings {
+    for index in 0..extractors().len() {
+        let extractor = extractors().get(index);
+        if extractor.strings().next().is_none() { unfiltered.push(index); }
+        for string in extractor.strings() {
             strings.entry(compact(string)).or_default().push(index);
         }
     }
@@ -450,13 +454,12 @@ static EXTENDED: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| {
 });
 static EDITIONS: LazyLock<BTreeMap<String, (BTreeSet<usize>, BTreeSet<usize>)>> = LazyLock::new(|| {
     let mut map = BTreeMap::<String, (BTreeSet<usize>, BTreeSet<usize>)>::new();
-    for extractor in &DATA.extractors {
-        for surface in &extractor.strings {
+    for index in 0..extractors().len() {
+        let extractor = extractors().get(index);
+        for surface in extractor.strings() {
             let entry = map.entry(compact(surface)).or_default();
-            entry.0.extend(extractor.exact.iter().copied().filter(|&index|
-                matches!(DATA.editions[index].reporter.source.as_str(), "reporters" | "journals")));
-            entry.1.extend(extractor.variations.iter().copied().filter(|&index|
-                matches!(DATA.editions[index].reporter.source.as_str(), "reporters" | "journals")));
+            entry.0.extend(extractor.exact().filter(|&index| reported(index)));
+            entry.1.extend(extractor.variations().filter(|&index| reported(index)));
         }
     }
     map
@@ -484,8 +487,8 @@ fn standard_matches(text: &str, extended: bool) -> Vec<Match> {
                 let fields = Fields {
                     source_groups: ["volume", "reporter", "page"].into_iter().map(|name|
                         (name.to_owned(), captures.name(name).map(|matched| matched.as_str().to_owned()))).collect(),
-                    exact_editions: exact.iter().map(|&index| DATA.editions[index].clone()).collect(),
-                    variation_editions: variations.difference(exact).map(|&index| DATA.editions[index].clone()).collect(),
+                    exact_editions: exact.iter().map(|&index| edition(index)).collect(),
+                    variation_editions: variations.difference(exact).map(|&index| edition(index)).collect(),
                     ..Fields::default()
                 };
                 found.push(Match { span: start + core.start()..start + core.end(), fields, short_at,
@@ -562,39 +565,40 @@ pub(crate) fn find(text: &str, extended: bool, native: Option<&mut Vec<Range<usi
     }
     let mut found = Vec::new();
     for index in selected {
-        let extractor = &DATA.extractors[index];
-        if !extended && !extractor.standard { continue; }
+        let extractor = extractors().get(index);
+        if !extended && !extractor.standard() { continue; }
         // The reporter's name read without spaces selects an extractor; one whose pattern's literals
         // the text does not hold cannot match it.
-        let literals = extractor.literals.get_or_init(|| if extractor.ecmascript {
-            legal_grammar::ecmascript_backtracking_pattern_literals(&extractor.pattern, "")
+        let compiled = &COMPILED[index];
+        let literals = compiled.literals.get_or_init(|| if extractor.ecmascript() {
+            legal_grammar::ecmascript_backtracking_pattern_literals(extractor.pattern(), "")
         } else {
-            legal_grammar::python_pattern_literals(&extractor.pattern, "")
+            legal_grammar::python_pattern_literals(extractor.pattern(), "")
         }.unwrap_or_else(|error| panic!("reporter extractor {index}: {error}"))
             .map(|literals| AhoCorasick::new(literals).expect("reporter extractor literals")));
         if literals.as_ref().is_some_and(|literals| !literals.is_match(text)) { continue; }
-        let pattern = extractor.compiled.get_or_init(|| {
-            let compiled = if extractor.ecmascript {
-                legal_grammar::compile_ecmascript_backtracking_pattern("source extractor", &extractor.pattern, "")
+        let pattern = compiled.pattern.get_or_init(|| {
+            let compiled = if extractor.ecmascript() {
+                legal_grammar::compile_ecmascript_backtracking_pattern("source extractor", extractor.pattern(), "")
             } else {
-                legal_grammar::compile_python_pattern(&extractor.pattern, "")
+                legal_grammar::compile_python_pattern(extractor.pattern(), "")
             };
-            compiled.unwrap_or_else(|error| panic!("reporter extractor {index}: {error}"))
+            Box::new(compiled.unwrap_or_else(|error| panic!("reporter extractor {index}: {error}")))
         });
         for captures in pattern.captures_iter(text).flatten() {
             if !extended && captures.name("page").is_some_and(|page|
                 !page.as_str().chars().all(|c| c.is_ascii_digit() || c == '_')) { continue; }
             let core = captures.name("__citation").expect("source citation span");
-            let editions = |indices: &[usize]| {
+            let editions = |indices: &mut dyn Iterator<Item = usize>| {
                 let mut editions = Vec::new();
                 for index in indices {
-                    let edition = &DATA.editions[*index];
-                    if !editions.contains(edition) { editions.push(edition.clone()); }
+                    let edition = edition(index);
+                    if !editions.contains(&edition) { editions.push(edition); }
                 }
                 editions
             };
-            let exact_editions = editions(&extractor.exact);
-            let variation_editions = editions(&extractor.variations).into_iter()
+            let exact_editions = editions(&mut extractor.exact());
+            let variation_editions = editions(&mut extractor.variations()).into_iter()
                 .filter(|edition| !exact_editions.contains(edition)).collect();
             let fields = Fields {
                 source_groups: pattern.capture_names().flatten()
@@ -605,7 +609,7 @@ pub(crate) fn find(text: &str, extended: bool, native: Option<&mut Vec<Range<usi
                 variation_editions,
                 ..Fields::default()
             };
-            found.push(Match { span: core.start()..core.end(), fields, short: extractor.short, ecmascript: extractor.ecmascript, preceding_text_end: None,
+            found.push(Match { span: core.start()..core.end(), fields, short: extractor.short(), ecmascript: extractor.ecmascript(), preceding_text_end: None,
                 short_at: captures.name("__short_at").map(|at| at.start() - core.start()) });
         }
     }
@@ -694,5 +698,5 @@ pub(crate) fn finish(citation: &mut crate::Citation) {
 /// Build this module's lazily built statics now ([`crate::warm`]).
 pub(crate) fn warm() {
     names::warm();
-    crate::warm_statics!(DATA, FILTER, CUSTOM, LAWS, SURFACES, CANDIDATE, EDITIONS; screened COMMON, PATTERN, EXTENDED, CUE);
+    crate::warm_statics!(COMPILED, FILTER, CUSTOM, LAWS, SURFACES, CANDIDATE, EDITIONS; screened COMMON, PATTERN, EXTENDED, CUE);
 }

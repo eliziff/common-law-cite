@@ -100,7 +100,7 @@ pub const KEY_VERSION: &str = "3";
 
 /// The v3 key of a full citation against the embedded registry.
 pub fn key(citation: &Citation) -> Option<String> {
-    crate::aliases::resolve(citation).map(|target| target.key.clone())
+    crate::aliases::resolve(citation).map(|target| target.key)
         .or_else(|| key_in(citation, registry::registry()))
 }
 

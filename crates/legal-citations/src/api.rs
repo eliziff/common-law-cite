@@ -155,7 +155,7 @@ impl std::error::Error for ApiError {}
 
 /// Dispatch one JSON request. `request_json` may be empty for methods that take
 /// no arguments.
-/// What the host knows of works' extents, for every later extraction: a works pack (see extents_from_pack).
+/// What the host knows of works' extents, for every later extraction: a works pack (see extents::register).
 #[derive(Deserialize)]
 struct RegisterExtentsRequest {
     pack: String,
@@ -181,7 +181,7 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         "extract" => to_value(extract(&parse(method, request)?)?),
         "registerExtents" => {
             let request: RegisterExtentsRequest = parse(method, request)?;
-            crate::register_extents(crate::extents_from_pack(&request.pack));
+            crate::extents::register(&request.pack);
             Ok(Value::Null)
         }
         "resolve" => to_value(resolve(&parse(method, request)?)?),
@@ -924,7 +924,7 @@ pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
         // may have removed or edited citations since the previous resolution.
         citation.antecedent = None;
         citation.reasons.retain(|reason| reason != "source_alias_conflict");
-        citation.alias = crate::aliases::resolve(citation).cloned();
+        citation.alias = crate::aliases::resolve(citation);
         citation.key = citation.alias.as_ref().map(|target| target.key.clone())
             .or_else(|| key_stage::key_in(citation, crate::registry::registry()));
     }

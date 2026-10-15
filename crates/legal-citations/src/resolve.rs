@@ -988,10 +988,10 @@ impl<'a> Resolver<'a> {
     }
 
     /// What the host knows of a citation's work, by its key: the request's ([`crate::Options::extents`]), else what
-    /// the host registered ([`crate::register_extents`]).
+    /// the host registered (`registerExtents`).
     fn extent(&self, citation: &Citation) -> Option<crate::Extent> {
         let key = citation.key.as_deref()?;
-        self.extents.iter().find(|extent| extent.key == key).cloned().or_else(|| crate::registered_extent(key))
+        self.extents.iter().find(|extent| extent.key == key).cloned().or_else(|| crate::extents::registered(key))
     }
 
     /// The clause of the text a reference's note hangs from: its words before the note's marker, back to the
