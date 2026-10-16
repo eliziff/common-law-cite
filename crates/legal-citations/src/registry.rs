@@ -104,6 +104,10 @@ pub struct Court {
     /// identifier (`2019 CSC 5` lives under `fr/ca/csc`, not `ca/scc`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub canlii_fr: Option<CanLiiRoute>,
+    /// CanLII publishes the court's decisions under its French interface only
+    /// (Quebec courts: `fr/qc/qcca`), whatever the requested language.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub canlii_french: bool,
     /// First and last year the court issued decisions under this identity.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub start: Option<u16>,

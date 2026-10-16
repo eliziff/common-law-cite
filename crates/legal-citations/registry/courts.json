@@ -4251,6 +4251,7 @@
    "jurisdiction": "qc",
    "database": "qcadmaq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des administrateurs agréés du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4267,6 +4268,7 @@
    "jurisdiction": "qc",
    "database": "qcagq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des agronomes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4283,6 +4285,7 @@
    "jurisdiction": "qc",
    "database": "qcamf"
   },
+  "canlii_french": true,
   "region": "ca-qc",
   "level": "tribunal",
   "type": "tribunal"
@@ -4298,6 +4301,7 @@
    "jurisdiction": "qc",
    "database": "qcamp"
   },
+  "canlii_french": true,
   "name_fr": "Autorité des marchés publics",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4319,6 +4323,7 @@
    "jurisdiction": "qc",
    "database": "qcca"
   },
+  "canlii_french": true,
   "name_fr": "Cour d'appel du Québec",
   "region": "ca-qc",
   "level": "iac",
@@ -4335,6 +4340,7 @@
    "jurisdiction": "qc",
    "database": "qccai"
   },
+  "canlii_french": true,
   "name_fr": "Commission d'accès à l'information",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4351,6 +4357,7 @@
    "jurisdiction": "qc",
    "database": "qccalp"
   },
+  "canlii_french": true,
   "name_fr": "Commission d'appel en matière de lésions professionnelles du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4367,6 +4374,7 @@
    "jurisdiction": "qc",
    "database": "qccdbq"
   },
+  "canlii_french": true,
   "name_fr": "Barreau du Québec Disciplinary Council",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4383,6 +4391,7 @@
    "jurisdiction": "qc",
    "database": "qccdccoq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline des Conseillers et conseillères d'orientation du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4399,6 +4408,7 @@
    "jurisdiction": "qc",
    "database": "qccdchad"
   },
+  "canlii_french": true,
   "name_fr": "Comité de discipline de la Chambre de l'assurance de dommages",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4415,6 +4425,7 @@
    "jurisdiction": "qc",
    "database": "qccdcm"
   },
+  "canlii_french": true,
   "region": "ca-qc",
   "level": "tribunal",
   "type": "tribunal"
@@ -4430,6 +4441,7 @@
    "jurisdiction": "qc",
    "database": "qccdcrim"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des criminologues du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4446,6 +4458,7 @@
    "jurisdiction": "qc",
    "database": "qccdcsf"
   },
+  "canlii_french": true,
   "name_fr": "Comité de discipline de la Chambre de la sécurité financière",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4462,6 +4475,7 @@
    "jurisdiction": "qc",
    "database": "qccddtp"
   },
+  "canlii_french": true,
   "name_fr": "Ordre des diététistes-nutritionnistes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4478,6 +4492,7 @@
    "jurisdiction": "qc",
    "database": "qccdhj"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de la Chambre des huissiers de justice du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4494,6 +4509,7 @@
    "jurisdiction": "qc",
    "database": "qccdnq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de la Chambre des notaires du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4510,6 +4526,7 @@
    "jurisdiction": "qc",
    "database": "qccdoii"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des infirmières et infirmiers du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4526,6 +4543,7 @@
    "jurisdiction": "qc",
    "database": "qccdoiia"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des infirmières et infirmiers auxiliaires du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4542,6 +4560,7 @@
    "jurisdiction": "qc",
    "database": "qccdoiq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des ingénieurs du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4558,6 +4577,7 @@
    "jurisdiction": "qc",
    "database": "qccdomv"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des médecins vétérinaires du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4574,6 +4594,7 @@
    "jurisdiction": "qc",
    "database": "qccdoooq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des opticiens d'ordonnances du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4590,6 +4611,7 @@
    "jurisdiction": "qc",
    "database": "qccdopq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des pharmaciens du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4606,6 +4628,7 @@
    "jurisdiction": "qc",
    "database": "qccdosfq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des sages-femmes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4622,6 +4645,7 @@
    "jurisdiction": "qc",
    "database": "qccdottdq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des techniciens et techniciennes dentaires du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4638,6 +4662,7 @@
    "jurisdiction": "qc",
    "database": "qccdppq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline des psychoéducateurs et psychoéducatrices du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4654,6 +4679,7 @@
    "jurisdiction": "qc",
    "database": "qccdrhri"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre professionnel des conseillers en ressources humaines et en relations industrielles agrées du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4670,6 +4696,7 @@
    "jurisdiction": "qc",
    "database": "qcces"
   },
+  "canlii_french": true,
   "name_fr": "Commission de l'équité salariale",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4686,6 +4713,7 @@
    "jurisdiction": "qc",
    "database": "qccfp"
   },
+  "canlii_french": true,
   "name_fr": "Commission de la fonction publique",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4702,6 +4730,7 @@
    "jurisdiction": "qc",
    "database": "qccja"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de la justice administrative",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4718,6 +4747,7 @@
    "jurisdiction": "qc",
    "database": "qcclp"
   },
+  "canlii_french": true,
   "name_fr": "Commission des lésions professionnelles du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4734,6 +4764,7 @@
    "jurisdiction": "qc",
    "database": "qccm"
   },
+  "canlii_french": true,
   "name_fr": "Cours municipales",
   "region": "ca-qc",
   "level": "ljc",
@@ -4750,6 +4781,7 @@
    "jurisdiction": "qc",
    "database": "qccmeq"
   },
+  "canlii_french": true,
   "name_fr": "Corporation des maîtres électriciens du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4766,6 +4798,7 @@
    "jurisdiction": "qc",
    "database": "qccmnq"
   },
+  "canlii_french": true,
   "name_fr": "Commission municipale du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4782,6 +4815,7 @@
    "jurisdiction": "qc",
    "database": "qccmpmq"
   },
+  "canlii_french": true,
   "region": "ca-qc",
   "level": "tribunal",
   "type": "tribunal"
@@ -4797,6 +4831,7 @@
    "jurisdiction": "qc",
    "database": "qccmq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de la magistrature",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4813,6 +4848,7 @@
    "jurisdiction": "qc",
    "database": "qccnesst"
   },
+  "canlii_french": true,
   "name_fr": "Commission des normes, de l’équité, de la santé et de la sécurité du travail",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4829,6 +4865,7 @@
    "jurisdiction": "qc",
    "database": "qccpa"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des comptables professionnels agréés du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4845,6 +4882,7 @@
    "jurisdiction": "qc",
    "database": "qccptaq"
   },
+  "canlii_french": true,
   "name_fr": "Commission de protection du territoire agricole du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4865,6 +4903,7 @@
    "jurisdiction": "qc",
    "database": "qccq"
   },
+  "canlii_french": true,
   "name_fr": "Cour du Québec",
   "region": "ca-qc",
   "level": "ljc",
@@ -4881,6 +4920,7 @@
    "jurisdiction": "qc",
    "database": "qcqlc"
   },
+  "canlii_french": true,
   "region": "ca-qc",
   "level": "tribunal",
   "type": "tribunal"
@@ -4896,6 +4936,7 @@
    "jurisdiction": "qc",
    "database": "qccraaap"
   },
+  "canlii_french": true,
   "name_fr": "Commission de reconnaissance des associations d'artistes et des associations de producteurs",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4912,6 +4953,7 @@
    "jurisdiction": "qc",
    "database": "qccrt"
   },
+  "canlii_french": true,
   "name_fr": "Commission des relations du travail",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4934,6 +4976,7 @@
    "jurisdiction": "qc",
    "database": "qccs"
   },
+  "canlii_french": true,
   "name_fr": "Cour supérieure du Québec",
   "region": "ca-qc",
   "level": "gjc",
@@ -4950,6 +4993,7 @@
    "jurisdiction": "qc",
    "database": "qccse"
   },
+  "canlii_french": true,
   "name_fr": "Conseil des services essentiels",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4966,6 +5010,7 @@
    "jurisdiction": "qc",
    "database": "qccsj"
   },
+  "canlii_french": true,
   "name_fr": "Commission des services juridiques",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4982,6 +5027,7 @@
    "jurisdiction": "qc",
    "database": "qccsst"
   },
+  "canlii_french": true,
   "name_fr": "Commission de la santé et de la sécurité du travail",
   "region": "ca-qc",
   "level": "tribunal",
@@ -4998,6 +5044,7 @@
    "jurisdiction": "qc",
    "database": "qcct"
   },
+  "canlii_french": true,
   "region": "ca-qc",
   "level": "tribunal",
   "type": "tribunal"
@@ -5013,6 +5060,7 @@
    "jurisdiction": "qc",
    "database": "qcctq"
   },
+  "canlii_french": true,
   "name_fr": "Commission des transports du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5029,6 +5077,7 @@
    "jurisdiction": "qc",
    "database": "qccvm"
   },
+  "canlii_french": true,
   "name_fr": "Commission des valeurs mobilières du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5045,6 +5094,7 @@
    "jurisdiction": "qc",
    "database": "qcla"
   },
+  "canlii_french": true,
   "region": "ca-qc",
   "level": "tribunal",
   "type": "tribunal"
@@ -5060,6 +5110,7 @@
    "jurisdiction": "qc",
    "database": "qcoaciq"
   },
+  "canlii_french": true,
   "name_fr": "Comité de discipline de l'organisme d'autoréglementation du courtage immobilier du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5076,6 +5127,7 @@
    "jurisdiction": "qc",
    "database": "qcoagbrn"
   },
+  "canlii_french": true,
   "region": "ca-qc",
   "level": "tribunal",
   "type": "tribunal"
@@ -5091,6 +5143,7 @@
    "jurisdiction": "qc",
    "database": "qcoagq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des arpenteurs-géomètres du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5107,6 +5160,7 @@
    "jurisdiction": "qc",
    "database": "qcoapq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des audioprothésistes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5123,6 +5177,7 @@
    "jurisdiction": "qc",
    "database": "qcoaq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des acupuncteurs du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5139,6 +5194,7 @@
    "jurisdiction": "qc",
    "database": "qcoarq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des architectes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5155,6 +5211,7 @@
    "jurisdiction": "qc",
    "database": "qcochq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre professionnel des chimistes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5171,6 +5228,7 @@
    "jurisdiction": "qc",
    "database": "qcocq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des chiropraticiens du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5187,6 +5245,7 @@
    "jurisdiction": "qc",
    "database": "qcodlq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre professionnel des denturologistes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5203,6 +5262,7 @@
    "jurisdiction": "qc",
    "database": "qcodq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des dentistes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5219,6 +5279,7 @@
    "jurisdiction": "qc",
    "database": "qcoeaq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre professionnel des évaluateurs agréés du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5235,6 +5296,7 @@
    "jurisdiction": "qc",
    "database": "qcoeq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des ergothérapeutes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5251,6 +5313,7 @@
    "jurisdiction": "qc",
    "database": "qcohdq"
   },
+  "canlii_french": true,
   "name_fr": "Ordre des hygiénistes dentaires du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5267,6 +5330,7 @@
    "jurisdiction": "qc",
    "database": "qcoifq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre professionnel des ingénieurs forestiers du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5283,6 +5347,7 @@
    "jurisdiction": "qc",
    "database": "qcolf"
   },
+  "canlii_french": true,
   "name_fr": "Office de la langue française",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5299,6 +5364,7 @@
    "jurisdiction": "qc",
    "database": "qcooaq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre professionnel des orthophonistes et audiologistes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5315,6 +5381,7 @@
    "jurisdiction": "qc",
    "database": "qcooq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des optométristes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5331,6 +5398,7 @@
    "jurisdiction": "qc",
    "database": "qcopgq"
   },
+  "canlii_french": true,
   "name_fr": "Ordre professionnel des géologues du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5347,6 +5415,7 @@
    "jurisdiction": "qc",
    "database": "qcopiq"
   },
+  "canlii_french": true,
   "name_fr": "Ordre professionnel des inhalothérapeutes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5363,6 +5432,7 @@
    "jurisdiction": "qc",
    "database": "qcopodq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des podiatres du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5379,6 +5449,7 @@
    "jurisdiction": "qc",
    "database": "qcoppq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre professionnel de la physiothérapie du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5395,6 +5466,7 @@
    "jurisdiction": "qc",
    "database": "qcopq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des psychologues du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5411,6 +5483,7 @@
    "jurisdiction": "qc",
    "database": "qcopsq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des sexologues du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5427,6 +5500,7 @@
    "jurisdiction": "qc",
    "database": "qcotimro"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des technologues en imagerie médicale et en radio-oncologie du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5443,6 +5517,7 @@
    "jurisdiction": "qc",
    "database": "qcotmq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre professionnel des technologistes médicaux du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5459,6 +5534,7 @@
    "jurisdiction": "qc",
    "database": "qcotpq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des technologues professionnels du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5475,6 +5551,7 @@
    "jurisdiction": "qc",
    "database": "qcotstcfq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre professionnel des travailleurs sociaux et des thérapeutes conjugaux et familiaux du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5491,6 +5568,7 @@
    "jurisdiction": "qc",
    "database": "qcottiaq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre professionnel des traducteurs, terminologues et interprètes agréés du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5507,6 +5585,7 @@
    "jurisdiction": "qc",
    "database": "qcouq"
   },
+  "canlii_french": true,
   "name_fr": "Conseil de discipline de l'Ordre des urbanistes du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5523,6 +5602,7 @@
    "jurisdiction": "qc",
    "database": "qcracj"
   },
+  "canlii_french": true,
   "name_fr": "Régie des alcools des courses et des jeux",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5539,6 +5619,7 @@
    "jurisdiction": "qc",
    "database": "qcrbq"
   },
+  "canlii_french": true,
   "name_fr": "Régie du Bâtiment - licences d'entrepreneur de construction",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5555,6 +5636,7 @@
    "jurisdiction": "qc",
    "database": "qcrde"
   },
+  "canlii_french": true,
   "name_fr": "Régie de l'énergie",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5571,6 +5653,7 @@
    "jurisdiction": "qc",
    "database": "qcrmaaq"
   },
+  "canlii_french": true,
   "name_fr": "Régie des marchés agricoles et alimentaires du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5587,6 +5670,7 @@
    "jurisdiction": "qc",
    "database": "qcta"
   },
+  "canlii_french": true,
   "name_fr": "Tribunal d'arbitrage (RQ and CARRA)",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5603,6 +5687,7 @@
    "jurisdiction": "qc",
    "database": "qctaa"
   },
+  "canlii_french": true,
   "name_fr": "Tribunal d'arbitrage (performing, recording and film artists)",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5619,6 +5704,7 @@
    "jurisdiction": "qc",
    "database": "qctadp"
   },
+  "canlii_french": true,
   "name_fr": "Tribunal administratif de déontologie policière",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5635,6 +5721,7 @@
    "jurisdiction": "qc",
    "database": "qctal"
   },
+  "canlii_french": true,
   "name_fr": "Tribunal administratif du logement",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5651,6 +5738,7 @@
    "jurisdiction": "qc",
    "database": "qctaq"
   },
+  "canlii_french": true,
   "name_fr": "Tribunal administratif du Québec",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5667,6 +5755,7 @@
    "jurisdiction": "qc",
    "database": "qctat"
   },
+  "canlii_french": true,
   "name_fr": "Tribunal administratif du travail",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5683,6 +5772,7 @@
    "jurisdiction": "qc",
    "database": "qctdp"
   },
+  "canlii_french": true,
   "name_fr": "Tribunal des droits de la personne",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5699,6 +5789,7 @@
    "jurisdiction": "qc",
    "database": "qctmf"
   },
+  "canlii_french": true,
   "name_fr": "Tribunal administratif des marchés financiers",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5715,6 +5806,7 @@
    "jurisdiction": "qc",
    "database": "qctp"
   },
+  "canlii_french": true,
   "name_fr": "Tribunal des professions",
   "region": "ca-qc",
   "level": "tribunal",
@@ -5731,6 +5823,7 @@
    "jurisdiction": "qc",
    "database": "qctt"
   },
+  "canlii_french": true,
   "region": "ca-qc",
   "level": "ljc",
   "type": "trial"
