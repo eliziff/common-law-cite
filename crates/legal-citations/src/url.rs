@@ -162,7 +162,7 @@ static SOURCE_ROUTES: LazyLock<SourceRoutes> = LazyLock::new(|| {
             if code.contains(char::is_whitespace) { continue; }
             let translated = (position % 2 == 1).then_some(court.canlii_fr.as_ref()).flatten();
             let path = translated.map_or_else(|| path.clone(), |route| format!("{}/{}", route.jurisdiction, route.database));
-            if translated.is_some() {
+            if translated.is_some() || court.canlii_french {
                 result.french_routes.entry(code.to_ascii_uppercase()).or_insert_with(|| path.clone());
             }
             result.routes.entry(code.to_ascii_uppercase()).or_insert(path);
@@ -457,7 +457,7 @@ pub fn canlii_alias_target_info(target: &str, language: Language) -> Option<Alia
     Some(AliasTargetInfo {
         url: page_url(route.map_or(jurisdiction, |route| route.jurisdiction.as_str()),
         route.map_or(&path[2], |route| route.database.as_str()), &path[4], &path[3],
-        if court.is_some() { language } else { Language::En }),
+        match court { Some(court) if court.canlii_french => Language::Fr, Some(_) => language, None => Language::En }),
         year: path[4].to_owned(),
         court_id: court.map(|court| court.id.clone()),
     })
