@@ -88,6 +88,12 @@ pub const METHODS: &[&str] = &[
     "canliiCitationUrl",
     "canliiAliasTarget",
     "canliiAliasTargetInfo",
+    "sourceAnchor",
+    "sourceUrl",
+    "canliiPinpointUrl",
+    "passageLocator",
+    "canliiPdfPage",
+    "canliiLawPage",
     "annotate",
     "annotationRanges",
     "clean",
@@ -304,6 +310,42 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             struct Request { text: String, language: Option<String> }
             let request: Request = parse(method, request)?;
             to_value(url_stage::canlii_citation_url(&request.text, request.language.as_deref().unwrap_or("en")))
+        },
+        "sourceAnchor" => {
+            #[derive(Deserialize)]
+            #[serde(deny_unknown_fields)]
+            struct Request { url: String, kind: String, label: String }
+            let request: Request = parse(method, request)?;
+            to_value(url_stage::source_anchor(&request.url, &request.kind, &request.label))
+        },
+        "sourceUrl" => {
+            #[derive(Deserialize)]
+            #[serde(deny_unknown_fields)]
+            struct Request { url: String, anchor: Option<String> }
+            let request: Request = parse(method, request)?;
+            to_value(url_stage::source_url(&request.url, request.anchor.as_deref()))
+        },
+        "canliiPinpointUrl" | "passageLocator" => {
+            #[derive(Deserialize)]
+            #[serde(deny_unknown_fields)]
+            struct Request { url: String, #[serde(default)] pinpoints: Vec<String> }
+            let request: Request = parse(method, request)?;
+            if method == "canliiPinpointUrl" {
+                to_value(url_stage::canlii_pinpoint_url(&request.url, &request.pinpoints))
+            } else {
+                to_value(url_stage::passage_locator(&request.url, &request.pinpoints))
+            }
+        },
+        "canliiPdfPage" | "canliiLawPage" => {
+            #[derive(Deserialize)]
+            #[serde(deny_unknown_fields)]
+            struct Request { url: String }
+            let request: Request = parse(method, request)?;
+            if method == "canliiPdfPage" {
+                to_value(url_stage::canlii_pdf_page(&request.url))
+            } else {
+                to_value(url_stage::canlii_law_page(&request.url))
+            }
         },
         "sourceCanliiRoutes" => {
             #[derive(Deserialize)]
