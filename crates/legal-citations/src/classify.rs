@@ -148,9 +148,15 @@ fn court_score(court: &Court, surface: &str, reading: &Reading, neutral: bool,
     if reporter.map_or_else(|| reading.jurisdiction.as_deref().is_some_and(|jurisdiction|
         !within(&court.jurisdiction, jurisdiction) && !within(jurisdiction, &court.jurisdiction)),
         |reporter| !reporter_supports_court(reporter, court)) { return None; }
-    Some((priority(Some(&court.jurisdiction), options), false,
-        neutral && !court.neutral.iter().any(|code| fold(code) == fold(surface)),
-        neutral && within(&court.jurisdiction, "ca") == reading.bracketed, false))
+    // A neutral citation is written as its court's jurisdiction writes them: a Canadian one never brackets its year
+    // ("2020 FCA 5"), a Commonwealth one does ("[2020] FCA 5"). Where the identifier is several courts' and one
+    // of them writes the form, a court that does not is no reading of it, whatever the jurisdictions' order.
+    let identifies = |court: &Court| court.neutral.iter().any(|code| fold(code) == fold(surface));
+    let writes = |court: &Court| within(&court.jurisdiction, "ca") != reading.bracketed;
+    if neutral && identifies(court) && !writes(court) && registry().courts_by_surface(surface).into_iter()
+        .any(|other| other.id != court.id && identifies(other) && writes(other)) { return None; }
+    Some((priority(Some(&court.jurisdiction), options), false, neutral && !identifies(court),
+        neutral && !writes(court), false))
 }
 
 fn court_for(surface: &str, reading: &Reading, neutral: bool, citation: &mut Citation, options: &crate::Options) -> Option<&'static Court> {

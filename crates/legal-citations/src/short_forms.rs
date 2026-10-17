@@ -495,8 +495,8 @@ fn resolve_hint<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[
             "exact_sf" => !wanted.is_empty() && short_of(entry) == wanted,
             "token_sf" => !tokens.is_empty() && entry.short_form.as_ref().is_some_and(|short| !short.is_empty() && if rules.matching {
                 let held = word_tokens(short, 1);
-                tokens.iter().all(|token| held.contains(token))
-            } else { matches_tokens(&ref_normalize(short)) }),
+                tokens.iter().all(|token| held.contains(token)) && names_article(&tokens, short, |value| word_tokens(value, 3))
+            } else { matches_tokens(&ref_normalize(short)) && names_article(&tokens, short, ref_tokens) }),
             _ => !tokens.is_empty() && matches_entry(entry),
         }).collect::<Vec<_>>();
         if pool.is_empty() { continue; }
@@ -508,6 +508,15 @@ fn resolve_hint<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[
         return (target, "bracket_definition");
     }
     (String::new(), numbered.unwrap_or(abstain))
+}
+
+/// Whether a name's words can name the article a short form writes whole, its authors, a comma and its title ("Catherine
+/// Ordway et al, “Human Rights … in Elite Sport …”"): they hold an author's name or open the title, as an article's
+/// short form does, not a word from within the title ("Sport, supra note 8"). Any other short form they can.
+fn names_article(tokens: &[String], short: &str, words: impl Fn(&str) -> Vec<String>) -> bool {
+    let Some(quote) = short.find(['“', '"', '«']).filter(|&quote| short[..quote].trim_end().ends_with(',')) else { return true; };
+    let authors = words(&short[..quote]);
+    tokens.iter().any(|token| authors.contains(token)) || words(&short[quote..]).starts_with(tokens)
 }
 
 /// The work whose bracketed definition is the name; with `clean`, a definition read without its McGill
