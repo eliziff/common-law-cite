@@ -870,8 +870,8 @@ pub fn convert_citations(document: &ScalarText<'_>, citations: &mut [Citation], 
 // ---------------------------------------------------------------- resolve
 
 /// Resolve an existing citation list without extracting it again. Note ranges
-/// and citation spans must use the same offset unit; resolution does not slice
-/// the document, so no conversion or original text is needed.
+/// and citation spans must use the same offset unit; resolution slices the
+/// document only for the body-name rules, and only when given its text.
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
@@ -900,6 +900,11 @@ pub struct ResolveRequest {
     pub notes: Option<Vec<crate::NoteRange>>,
     #[serde(default)]
     pub alias_groups: Vec<crate::aliases::SourceAliasGroup>,
+    /// The text the citations and notes were found in, for the body before a note's marker that the body-name rules
+    /// read ([`crate::Linking::body_names`]), as `extract` reads its own text. The citations', notes' and parts'
+    /// offsets are read as its UTF-8 byte offsets, as an `extract` with `offsetUnit: "byte"` gives them.
+    #[serde(default)]
+    pub text: Option<String>,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -973,7 +978,7 @@ pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
     let resolutions = crate::resolve::resolve_with_sources(&citations, request.notes.as_deref(), &links,
         order, &request.source_parts, request.supra_hint_mode.unwrap_or(crate::SupraMode::Aggressive),
         request.supra_linking_mode.unwrap_or(crate::SupraMode::Safe), request.split_tier,
-        request.linking.as_ref(), &request.extents, None);
+        request.linking.as_ref(), &request.extents, request.text.as_deref());
     for resolution in &resolutions {
         if let Some(citation) = citations.iter_mut().find(|citation| citation.index == resolution.index) {
             citation.antecedent = resolution.antecedent;
