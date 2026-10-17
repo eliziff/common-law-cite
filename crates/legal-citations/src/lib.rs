@@ -297,6 +297,14 @@ impl Linking {
             SplitTier::Aggressive => Self { party_names: true, no_ibid_last_part: true, ..moderate },
         }
     }
+
+    /// Safer than the safe tier's mechanisms: those, and a supra whose name is found only past the note it writes
+    /// links there only where the document's supras drift by that distance ([`Linking::confirmed_drift`]).
+    /// Measured 2026-10-17 against the safe tier (right / wrong links, build partition): DOCX 9,146 / 171 from
+    /// 9,385 / 177; journals 4,621 / 72 from 4,726 / 90 (evaluation partition: journals 1,119 / 30 from 1,142 / 39).
+    pub fn safer() -> Self {
+        Self { confirmed_drift: true, ..Self::for_tier(SplitTier::Safe) }
+    }
 }
 
 /// A work's extent as the host knows it, by the work's citation key ([`crate::key`]): a report's or article's last
