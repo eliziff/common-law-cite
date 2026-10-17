@@ -647,6 +647,24 @@ pub(crate) fn distinctive_party_words(style: &str) -> Vec<String> {
             if depth > 0 || character == ')' { ' ' } else { character }
         }).collect::<String>();
         if jurisdictions.contains(&fold(&plain)) { continue; }
+        // A party known by initials is one word of them, given initials first: "M(A)", as McGill writes the
+        // surname's initial before the given name's, and "A.M." are both "am".
+        let (mut given, mut surname, mut tokens, mut depth) = (String::new(), String::new(), 0, 0i32);
+        let initials = party.split_inclusive(|character: char| !character.is_alphanumeric()).all(|piece| {
+            let letters = piece.trim_end_matches(|character: char| !character.is_alphanumeric());
+            let inside = depth > 0;
+            depth += piece.matches('(').count() as i32 - piece.matches(')').count() as i32;
+            if letters.is_empty() { return true; }
+            tokens += 1;
+            if inside { given.push_str(letters) } else { surname.push_str(letters) }
+            letters.chars().all(char::is_uppercase)
+        }) && (2..=4).contains(&(given.chars().count() + surname.chars().count()))
+            && (tokens == 1 || given.chars().count() + surname.chars().count() == tokens);
+        if initials {
+            let word = (given + &surname).to_lowercase();
+            if !words.contains(&word) { words.push(word); }
+            continue;
+        }
         for word in plain.split(|character: char| !character.is_alphanumeric() && character != '\'' && character != '\u{2019}') {
             let word = word.strip_suffix("'s").or_else(|| word.strip_suffix("\u{2019}s")).unwrap_or(word)
                 .trim_end_matches(['\'', '\u{2019}']);
