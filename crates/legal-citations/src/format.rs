@@ -648,7 +648,8 @@ pub(crate) fn distinctive_party_words(style: &str) -> Vec<String> {
         }).collect::<String>();
         if jurisdictions.contains(&fold(&plain)) { continue; }
         // A party known by initials is one word of them, given initials first: "M(A)", as McGill writes the
-        // surname's initial before the given name's, and "A.M." are both "am".
+        // surname's initial before the given name's, and "A.M." are both "am"; the surname's alone ("m") is
+        // kept too, for a name that gives only it ("R v S" for "R. v. S. (S.)").
         let (mut given, mut surname, mut tokens, mut depth) = (String::new(), String::new(), 0, 0i32);
         let initials = party.split_inclusive(|character: char| !character.is_alphanumeric()).all(|piece| {
             let letters = piece.trim_end_matches(|character: char| !character.is_alphanumeric());
@@ -661,8 +662,9 @@ pub(crate) fn distinctive_party_words(style: &str) -> Vec<String> {
         }) && (2..=4).contains(&(given.chars().count() + surname.chars().count()))
             && (tokens == 1 || given.chars().count() + surname.chars().count() == tokens);
         if initials {
-            let word = (given + &surname).to_lowercase();
-            if !words.contains(&word) { words.push(word); }
+            for word in [(given + &surname).to_lowercase(), surname.to_lowercase()] {
+                if !words.contains(&word) { words.push(word); }
+            }
             continue;
         }
         for word in plain.split(|character: char| !character.is_alphanumeric() && character != '\'' && character != '\u{2019}') {
@@ -678,7 +680,8 @@ pub(crate) fn distinctive_party_words(style: &str) -> Vec<String> {
 }
 
 /// Whether a style of cause can name the case another names: they share a distinctive word of a
-/// party's name ("Parranto" and "R v Murtaza" do not; "R v Toth" and "R. v. Toth" do). Where either
+/// party's name ("Parranto" and "R v Murtaza" do not; "R v Toth" and "R. v. Toth" do), a long word
+/// misspelled by a letter or two still shared ("Gattelero" and "Gattellaro"). Where either
 /// gives no such word ("R v R", "Canada (AG) v Ontario"), they are taken to agree: nothing tells them
 /// apart. `written` holds the names a document gives the case: its style of cause, its short form.
 pub fn case_names_agree(request: &CaseNamesRequest) -> CaseNamesAgreement {
@@ -689,8 +692,29 @@ pub fn case_names_agree(request: &CaseNamesRequest) -> CaseNamesAgreement {
         }
     }
     let other = distinctive_party_words(&request.other);
-    let agrees = written.is_empty() || other.is_empty() || written.iter().any(|word| other.contains(word));
+    let agrees = written.is_empty() || other.is_empty()
+        || written.iter().any(|word| other.iter().any(|name| same_name_word(word, name)));
     CaseNamesAgreement { agrees, written, other }
+}
+
+/// Whether two folded words of party names are one name, allowing a misspelling of a long one: one letter
+/// in five to seven letters, two from eight ("Gattelero" for "Gattellaro"), with the first letter kept.
+fn same_name_word(left: &str, right: &str) -> bool {
+    if left == right { return true; }
+    let (left, right) = (left.chars().collect::<Vec<_>>(), right.chars().collect::<Vec<_>>());
+    let shorter = left.len().min(right.len());
+    let allowed = match shorter { 0..=4 => return false, 5..=7 => 1, _ => 2 };
+    if left[0] != right[0] || left.len().abs_diff(right.len()) > allowed { return false; }
+    let mut previous = (0..=right.len()).collect::<Vec<_>>();
+    for (row, &letter) in left.iter().enumerate() {
+        let mut current = vec![row + 1; right.len() + 1];
+        for (column, &other) in right.iter().enumerate() {
+            current[column + 1] = (previous[column] + usize::from(letter != other))
+                .min(previous[column + 1] + 1).min(current[column] + 1);
+        }
+        previous = current;
+    }
+    previous[right.len()] <= allowed
 }
 
 #[derive(Clone, Debug, serde::Deserialize)]
