@@ -672,6 +672,39 @@ pub fn source_anchor(page_url: &str, kind: &str, label: &str) -> Option<String> 
     }
 }
 
+/// A statute's page where its address is the publisher's machine-readable copy (BC Laws `…/xml`, Justice Laws
+/// `/eng/XML/C-46.xml`, Ontario e-Laws' API): a browser shows that copy as data, where no paragraph anchor or text
+/// fragment lands, so the link opens the page that renders the same statute.
+fn statute_page(url: &mut url::Url) {
+    static JUSTICE_XML: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^/(eng|fra)/XML/([^/]+)\.xml$").unwrap());
+    static REGULATION: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^(?:SOR|SI|C\.?R\.?C\.?|DORS|TR)\b").unwrap());
+    static ELAWS_API: LazyLock<Regex> = LazyLock::new(||
+        Regex::new(r"(?i)^/laws/api/v2/legislation/en/doc-search/(statute|regulation)/([^/]+)$").unwrap());
+    let host = url.host_str().unwrap_or("").to_ascii_lowercase();
+    let path = url.path().to_owned();
+    if (host == "bclaws.gov.bc.ca" || host.ends_with(".bclaws.gov.bc.ca")) && path.ends_with("/xml") {
+        url.set_path(&path[..path.len() - "/xml".len()]);
+    } else if host == "laws-lois.justice.gc.ca" {
+        if let Some(found) = JUSTICE_XML.captures(&path) {
+            let language = found[1].to_ascii_lowercase();
+            let id = &found[2];
+            let collection = match (language.as_str(), REGULATION.is_match(id)) {
+                ("fra", true) => "reglements",
+                ("fra", false) => "lois",
+                (_, true) => "regulations",
+                (_, false) => "acts",
+            };
+            url.set_path(&format!("/{language}/{collection}/{id}/FullText.html"));
+        }
+    } else if host == "ontario.ca" || host == "www.ontario.ca" {
+        if let Some(found) = ELAWS_API.captures(&path) {
+            let path = format!("/laws/{}/{}", found[1].to_ascii_lowercase(), &found[2]);
+            let _ = url.set_host(Some("www.ontario.ca"));
+            url.set_path(&path);
+        }
+    }
+}
+
 /// A legal source's address as it is linked, at `anchor` (else the anchor it has): None for an
 /// address that is not http(s) or a host whose pages cannot be linked; a CanLII PDF opens its page
 /// unless the anchor is a PDF page; a PDF keeps only a `page=N` anchor; a Decisia decision opens
@@ -684,6 +717,7 @@ pub fn source_url(address: &str, anchor: Option<&str>) -> Option<String> {
     if url.host_str().is_some_and(|host| UNLINKABLE.is_match(host)) || !matches!(url.scheme(), "http" | "https") {
         return None;
     }
+    statute_page(&mut url);
     let existing = url.fragment().unwrap_or("").split(":~:").next().unwrap_or("").to_owned();
     let pdf = |url: &url::Url| url.path().to_lowercase().ends_with(".pdf");
     let converted = on_canlii_org(&url) && pdf(&url) && !anchor.unwrap_or(&existing).starts_with("page=");
