@@ -63,7 +63,6 @@ pub const METHODS: &[&str] = &[
     "reanchorReference",
     "splitSources",
     "quoteCitationUnits",
-    "registryLinks",
     "registerExtents",
     "pureReferenceClauses",
     "quotedTitles",
@@ -227,10 +226,6 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         "resolveRegistryReference" => {
             let request: RegistryReferenceRequest = parse(method, request)?;
             to_value(crate::short_forms::resolve_registry(&request.text, &request.registry, request.aggressive))
-        }
-        "registryLinks" => {
-            let request: RegistryLinksRequest = parse(method, request)?;
-            to_value(registry_links(request))
         }
         "reanchorReference" => {
             let request: ReanchorRequest = parse(method, request)?;
@@ -469,65 +464,6 @@ pub struct SupraHintRequest {
     pub aggressive: bool,
     #[serde(default)]
     pub fallback: bool,
-}
-
-/// An article's parts in order, each with what its link starts from.
-#[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
-pub struct RegistryLinksRequest {
-    pub parts: Vec<RegistryLinkPart>,
-    pub aggressive: bool,
-}
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
-pub struct RegistryLinkPart {
-    pub text: String,
-    /// "ibid", "supra", another reference's kind, or "" for a full citation.
-    pub kind: String,
-    /// The link an editor or the author gave the part, or "".
-    pub own: String,
-    /// A full citation's own link at its first pinpoint, or "".
-    pub anchored: String,
-    /// The note the part is in, as a reference names it.
-    pub note: String,
-    pub short_form: Option<String>,
-    /// Whether the part is its note's last.
-    pub ends_note: bool,
-}
-
-/// Each reference's link from the article's earlier parts, before the reference's chain is followed: an ibid the
-/// part before it's, a supra
-/// that of the earlier part its name or note names, over the notes before its own. "" for a full citation, or a part
-/// with its own link.
-fn registry_links(request: RegistryLinksRequest) -> Vec<String> {
-    let mut registry: Vec<crate::short_forms::ReferenceSource> = Vec::new();
-    let mut pending: Vec<crate::short_forms::ReferenceSource> = Vec::new();
-    request.parts.into_iter().map(|part| {
-        let kind = part.kind.as_str();
-        let mut link = if !part.own.is_empty() { part.own.clone() } else if kind.is_empty() { part.anchored } else { String::new() };
-        if part.own.is_empty() && kind == "ibid" {
-            let before = pending.last().or(registry.last()).and_then(|entry| entry.target.as_deref());
-            if let Some(target) = before.filter(|target| !target.is_empty()) {
-                link = crate::short_forms::reanchor_reference(target, &part.text);
-            }
-        }
-        if part.own.is_empty() && kind == "supra" {
-            let (resolved, _) = crate::short_forms::resolve_registry(&part.text, &registry, request.aggressive);
-            if !resolved.is_empty() {
-                link = crate::short_forms::reanchor_reference(&resolved, &part.text);
-            }
-        }
-        let registered = if !kind.is_empty() && part.own.is_empty() { link.clone() } else { String::new() };
-        pending.push(crate::short_forms::ReferenceSource { note: serde_json::Value::String(part.note),
-            verbatim: Some(part.text), target: Some(link), short_form: part.short_form, ..Default::default() });
-        if part.ends_note {
-            registry.append(&mut pending);
-        }
-        registered
-    }).collect()
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
