@@ -672,19 +672,11 @@ pub fn source_anchor(page_url: &str, kind: &str, label: &str) -> Option<String> 
     }
 }
 
-/// A legal source's address as it is linked: [`source_url`].
-#[derive(Clone, Debug, serde::Serialize)]
-#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
-pub struct SourceLink {
-    pub url: String,
-    /// A Decisia decision page, whose viewer the host links with the parameters its text fragments need.
-    pub decisia: bool,
-}
-
 /// A legal source's address as it is linked, at `anchor` (else the anchor it has): None for an
 /// address that is not http(s) or a host whose pages cannot be linked; a CanLII PDF opens its page
-/// unless the anchor is a PDF page; a PDF keeps only a `page=N` anchor.
-pub fn source_url(address: &str, anchor: Option<&str>) -> Option<SourceLink> {
+/// unless the anchor is a PDF page; a PDF keeps only a `page=N` anchor; a Decisia decision opens
+/// in the viewer its text fragments need.
+pub fn source_url(address: &str, anchor: Option<&str>) -> Option<String> {
     static UNLINKABLE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)(?:^|\.)getcaselaw\.com$").unwrap());
     static DOCUMENT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)/document\.do$").unwrap());
     static PDF_PAGE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^page=[0-9]+$").unwrap());
@@ -704,7 +696,37 @@ pub fn source_url(address: &str, anchor: Option<&str>) -> Option<SourceLink> {
         resolved.clear();
     }
     url.set_fragment((!resolved.is_empty()).then_some(resolved.as_str()));
-    Some(SourceLink { decisia: is_decisia_document(&url), url: url.into() })
+    if is_decisia_document(&url) {
+        // INTENTIONAL, LOAD-BEARING FEATURE - text fragments cannot work on
+        // Decisia without both parameters. This is not a flaw, lint, or
+        // cosmetic preference; do not remove or "normalize" either one.
+        //
+        // iframe=true: the default Decisia document URL is an iframe shell with
+        // no document text at all, so neither paragraph anchors nor
+        // #:~:text= directives can resolve against it. iframe=true serves the
+        // document inline.
+        //
+        // site_preference=mobile: in the desktop rendering, a successful
+        // text-fragment jump locks the viewport onto the matched text and the
+        // page cannot be scrolled afterwards. Only the mobile rendering scrolls
+        // normally after a fragment jump. Both behaviors were verified in live
+        // Chrome; server-side probes and static HTML inspection cannot see
+        // them, so an apparent absence of justification here is not evidence
+        // the parameters are removable.
+        //
+        // Side effect, deliberately accepted: Decisia remembers site_preference
+        // in a cookie. That only affects visitors who arrive via Beaver's deep
+        // links. A regular user browsing the publisher normally clicks plain
+        // desktop URLs and sees the identical desktop site - their experience
+        // is completely unchanged.
+        let kept: Vec<(String, String)> = url.query_pairs()
+            .filter(|(name, _)| name != "iframe" && name != "site_preference")
+            .map(|(name, value)| (name.into_owned(), value.into_owned())).collect();
+        url.query_pairs_mut().clear().extend_pairs(kept)
+            .append_pair("iframe", "true")
+            .append_pair("site_preference", "mobile");
+    }
+    Some(url.into())
 }
 
 /// A CanLII decision or statute page at a citation's first pinpoint when that is a paragraph or a
@@ -712,14 +734,15 @@ pub fn source_url(address: &str, anchor: Option<&str>) -> Option<SourceLink> {
 /// Verifier anchors a citation's link. Any other address, a PDF, or one with an anchor stays as is.
 pub fn canlii_pinpoint_url(page_url: &str, pinpoints: &[String]) -> String {
     let first = pinpoints.first().map_or("", String::as_str);
-    let Ok(url) = url::Url::parse(page_url) else { return page_url.to_owned() };
+    let Ok(mut url) = url::Url::parse(page_url) else { return page_url.to_owned() };
     if !on_canlii_org(&url) || !url.fragment().unwrap_or("").is_empty() || url.path().to_lowercase().ends_with(".pdf")
         || !(first.starts_with("par") || first.starts_with("sec")) {
         return page_url.to_owned();
     }
-    source_anchor(page_url, if first.starts_with("par") { "paragraph" } else { "section" }, first)
-        .and_then(|anchor| source_url(page_url, Some(&anchor)))
-        .map_or_else(|| page_url.to_owned(), |link| link.url)
+    let Some(anchor) = source_anchor(page_url, if first.starts_with("par") { "paragraph" } else { "section" }, first)
+        else { return page_url.to_owned() };
+    url.set_fragment(Some(&anchor));
+    url.into()
 }
 
 /// The paragraph or provision a link's anchor opens (`par12`; `sec2subsec1` is provision `2(1)`),
