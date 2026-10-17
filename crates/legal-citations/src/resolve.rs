@@ -611,11 +611,24 @@ impl<'a> Resolver<'a> {
         let straddled = positions.is_empty() && self.citations.iter().enumerate().any(|(position, citation)|
             self.note_of[position] == Some(note) && citation.span.start < part.end && part.start < citation.span.end);
         if straddled { return; }
-        let own_target = if reference.kind.is_empty() {
+        // A part that writes its work's authors and title before all it reads as references, with words between, is
+        // that work's ("Roderick J. Wood, “The Reform of Judgement Enforcement Law in Alberta” (1995) 25 CBLJ at 110";
+        // "Kerri A Froc and Elizabeth Sheehy, “Last Among Equals …” 2022 73 UNBLJ 268 … in Brown (SCC), supra
+        // note 2"), not a reference's: "Netolitzky, “History #2,” supra note 24" is one reference, and a quotation
+        // ("the Court held that “…” in Haida, supra note 4") is its reference's words.
+        let titled = |position: usize| {
+            let at = self.citations[position].full_span.start.saturating_sub(part.start);
+            let Some(before) = part.text.get(..at) else { return false };
+            let Some(close) = before.rfind(['”', '"']) else { return false };
+            let Some(open) = before[..close].rfind(['“', '"']) else { return false };
+            before[..open].trim_end().ends_with(',') && before[close..].chars().skip(1).any(char::is_alphanumeric)
+        };
+        let passing = full.is_empty() && !positions.is_empty() && positions.iter().all(|&(_, position)| titled(position));
+        let own_target = if reference.kind.is_empty() || passing {
             if full.is_empty() {
                 // An opaque source can be associated without inventing a
                 // citation identity. A record citation remains a barrier.
-                (positions.is_empty()
+                ((positions.is_empty() || passing)
                     && !fields.reasons.contains(&"embedded_second_source"))
                     .then_some(Target::Source(part_index))
             } else {
@@ -691,6 +704,13 @@ impl<'a> Resolver<'a> {
             let own = (several && citation.form == Form::Supra).then(|| self.resolve_supra_text(
                 &citation.full_span.text, &history.records[..prior_records],
                 &history.inferred[..prior_inferred], Some(range.sequence), Some(position)));
+            // An ibid after another citation in its own part continues that citation, the nearest before it
+            // ("Mikisew, supra note 10 applies this test (ibid at para 31)").
+            let before = positions.iter().map(|&(_, other)| other).take_while(|&other| other != position).last();
+            let own = own.or_else(|| before.filter(|_| citation.form == Form::Ibid).map(|other| match self.resolved[other].clone() {
+                Some(target) => (Some(target), "ibid_previous"),
+                None => (None, "ibid_after_unresolved"),
+            }));
             let override_result = own.or_else(|| matches!(citation.form, Form::Supra | Form::Ibid)
                 .then(|| part_result.clone()).flatten())
                 .map(|(target, reason)| (target, reason, Some(part_index)));
@@ -698,7 +718,7 @@ impl<'a> Resolver<'a> {
             self.process_citation(position, history, previous, output, override_result, record);
             seen[position] = true;
         }
-        let part_target = part_result.map_or_else(|| own_target.or_else(||
+        let part_target = part_result.filter(|_| !passing).map_or_else(|| own_target.or_else(||
             unique_resource(positions.iter().map(|&(_, position)| self.resolved[position].clone()))),
             |(target, _)| target);
         // One emitted source part is registered, after resolving every reference

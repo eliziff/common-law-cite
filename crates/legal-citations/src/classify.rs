@@ -708,6 +708,11 @@ fn legislation(core: &str) -> Option<Reading> {
             fields.year = group(&captures, "year");
             fields.chapter = group(&captures, "chapter");
             fields.schedule = group(&captures, "schedule");
+        } else if group(&captures, "rcs_series").is_some() {
+            // The Revised Statutes of Canada written with the Supreme Court Reports' French abbreviation.
+            fields.series = Some("RSC".to_owned());
+            fields.year = group(&captures, "rcs_year");
+            fields.chapter = group(&captures, "rcs_chapter");
         } else if let Some(series) = group(&captures, "compiled_series") {
             fields.series = Some(series);
             fields.chapter = group(&captures, "compiled_chapter");
