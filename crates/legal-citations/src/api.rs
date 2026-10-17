@@ -620,13 +620,18 @@ pub fn split_notes(request: &SplitNotesRequest) -> Result<Vec<crate::source::Sou
 }
 
 fn convert_parts(document: &ScalarText<'_>, parts: &mut [crate::source::SourcePart], unit: OffsetUnit) {
+    map_part_offsets(parts, |byte| from_byte(document, byte, unit));
+}
+
+/// Every offset in `parts` (their extents and anchor spans) mapped by `convert`.
+fn map_part_offsets(parts: &mut [crate::source::SourcePart], convert: impl Fn(usize) -> usize) {
     for part in parts {
         for (start, end) in &mut part.anchor_spans {
-            *start = from_byte(document, *start, unit);
-            *end = from_byte(document, *end, unit);
+            *start = convert(*start);
+            *end = convert(*end);
         }
-        part.start = from_byte(document, part.start, unit);
-        part.end = from_byte(document, part.end, unit);
+        part.start = convert(part.start);
+        part.end = convert(part.end);
     }
 }
 
@@ -705,12 +710,8 @@ fn extract_citations(
 fn byte_options(document: &ScalarText<'_>, options: &Options, unit: OffsetUnit) -> Result<Options, ApiError> {
     let mut options = options.clone();
     if let Some(notes) = options.notes.as_mut() {
-        for note in notes.iter_mut() {
-            note.start = to_byte(document, note.start, unit, "options.notes[].start")?;
-            note.end = to_byte(document, note.end, unit, "options.notes[].end")?;
-            if let Some(anchor) = note.anchor {
-                note.anchor = Some(to_byte(document, anchor, unit, "options.notes[].anchor")?);
-            }
+        byte_notes(document, notes, unit, "options.notes[]")?;
+        for note in notes.iter() {
             if note.start > note.end {
                 return Err(ApiError::new(
                     ErrorCode::InvalidOffset,
@@ -725,6 +726,18 @@ fn byte_options(document: &ScalarText<'_>, options: &Options, unit: OffsetUnit) 
         }
     }
     Ok(options)
+}
+
+/// Note ranges and anchors in `unit` read as byte offsets of `document`.
+fn byte_notes(document: &ScalarText<'_>, notes: &mut [crate::NoteRange], unit: OffsetUnit, what: &str) -> Result<(), ApiError> {
+    for note in notes {
+        note.start = to_byte(document, note.start, unit, &format!("{what}.start"))?;
+        note.end = to_byte(document, note.end, unit, &format!("{what}.end"))?;
+        if let Some(anchor) = note.anchor {
+            note.anchor = Some(to_byte(document, anchor, unit, &format!("{what}.anchor"))?);
+        }
+    }
+    Ok(())
 }
 
 fn to_byte(
@@ -753,7 +766,11 @@ pub fn convert_citations(document: &ScalarText<'_>, citations: &mut [Citation], 
     if unit == OffsetUnit::Byte {
         return;
     }
-    let convert = |byte| from_byte(document, byte, unit);
+    map_citation_offsets(citations, |byte| from_byte(document, byte, unit));
+}
+
+/// Every offset in `citations` (spans, pinpoints, parentheticals, history) mapped by `convert`.
+fn map_citation_offsets(citations: &mut [Citation], convert: impl Fn(usize) -> usize) {
     let convert_span = |span: &mut Span| {
         span.start = convert(span.start);
         span.end = convert(span.end);
@@ -778,8 +795,8 @@ pub fn convert_citations(document: &ScalarText<'_>, citations: &mut [Citation], 
         }
         if let Some(name) = citation.fields.source_case_name.as_mut() {
             name.full_span_start = convert(name.full_span_start);
-            name.full_span_end = name.full_span_end.map(convert);
-            name.pin_cite_span_end = name.pin_cite_span_end.map(convert);
+            name.full_span_end = name.full_span_end.map(&convert);
+            name.pin_cite_span_end = name.pin_cite_span_end.map(&convert);
             if let Some(pre) = name.pre_citation.as_mut() { convert_span(pre); }
             if let Some(pin) = name.pin_cite.as_mut() { convert_span(pin); }
             if let Some(reference) = name.reference_span.as_mut() { convert_span(reference); }
@@ -837,10 +854,12 @@ pub struct ResolveRequest {
     #[serde(default)]
     pub alias_groups: Vec<crate::aliases::SourceAliasGroup>,
     /// The text the citations and notes were found in, for the body before a note's marker that the body-name rules
-    /// read ([`crate::Linking::body_names`]), as `extract` reads its own text. The citations', notes' and parts'
-    /// offsets are read as its UTF-8 byte offsets, as an `extract` with `offsetUnit: "byte"` gives them.
+    /// read ([`crate::Linking::body_names`]), as `extract` reads its own text.
     #[serde(default)]
     pub text: Option<String>,
+    /// Unit of every offset in the request and the response; a unit other than bytes needs `text`.
+    #[serde(default)]
+    pub offset_unit: OffsetUnit,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -852,7 +871,26 @@ pub struct ResolveResponse {
 }
 
 pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
+    let unit = request.offset_unit;
+    let document = request.text.as_deref().map(ScalarText::new);
     let mut citations = request.citations.clone();
+    let mut notes = request.notes.clone();
+    let mut source_parts = request.source_parts.clone();
+    if unit != OffsetUnit::Byte {
+        let Some(document) = document.as_ref() else {
+            return Err(ApiError::invalid("resolve: an offsetUnit other than byte needs the text"));
+        };
+        // The resolver reads offsets as bytes of the text; the citations go back in `unit`.
+        let failed = std::cell::Cell::new(None);
+        let byte = |offset| to_byte(document, offset, unit, "resolve").unwrap_or_else(|_| { failed.set(Some(offset)); 0 });
+        map_citation_offsets(&mut citations, &byte);
+        map_part_offsets(&mut source_parts, &byte);
+        if let Some(offset) = failed.get() {
+            return Err(ApiError::new(ErrorCode::InvalidOffset,
+                format!("resolve: {offset} is not a {unit:?} boundary inside the text")));
+        }
+        if let Some(notes) = notes.as_mut() { byte_notes(document, notes, unit, "notes[]")?; }
+    }
     let mut indices = std::collections::HashSet::new();
     for citation in &mut citations {
         if !indices.insert(citation.index) {
@@ -869,21 +907,21 @@ pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
         citation.key = citation.alias.as_ref().map(|target| target.key.clone())
             .or_else(|| key_stage::key_in(citation, crate::registry::registry()));
     }
-    if request.notes.as_ref().is_some_and(|notes| notes.iter().any(|note| note.start > note.end)) {
+    if notes.as_ref().is_some_and(|notes| notes.iter().any(|note| note.start > note.end)) {
         return Err(ApiError::invalid("resolve: note start is after its end"));
     }
-    if let Some(notes) = request.notes.as_deref() {
+    if let Some(notes) = notes.as_deref() {
         let mut ranges = notes.iter().map(|note| (note.start, note.end)).collect::<Vec<_>>();
         ranges.sort_unstable();
         if ranges.windows(2).any(|pair| pair[0].1 > pair[1].0) {
             return Err(ApiError::invalid("resolve: note ranges overlap"));
         }
     }
-    if !request.source_parts.is_empty() {
-        let Some(notes) = request.notes.as_deref().filter(|notes| !notes.is_empty()) else {
+    if !source_parts.is_empty() {
+        let Some(notes) = notes.as_deref().filter(|notes| !notes.is_empty()) else {
             return Err(ApiError::invalid("resolve: sourceParts require note ranges"));
         };
-        let mut parts = request.source_parts.iter().collect::<Vec<_>>();
+        let mut parts = source_parts.iter().collect::<Vec<_>>();
         parts.sort_by_key(|part| (part.start, part.end));
         if parts.windows(2).any(|pair| pair[0].end > pair[1].start) {
             return Err(ApiError::invalid("resolve: source parts overlap"));
@@ -911,8 +949,8 @@ pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
         }
         Ok(order.iter().map(|index| positions[index]).collect::<Vec<_>>())
     }).transpose()?;
-    let resolutions = crate::resolve::resolve_with_sources(&citations, request.notes.as_deref(), &links,
-        order, &request.source_parts, request.supra_hint_mode.unwrap_or(crate::SupraMode::Aggressive),
+    let resolutions = crate::resolve::resolve_with_sources(&citations, notes.as_deref(), &links,
+        order, &source_parts, request.supra_hint_mode.unwrap_or(crate::SupraMode::Aggressive),
         request.supra_linking_mode.unwrap_or(crate::SupraMode::Safe), request.split_tier,
         request.linking.as_ref(), &request.extents, request.text.as_deref());
     for resolution in &resolutions {
@@ -921,6 +959,9 @@ pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
         }
     }
     let authorities = crate::resolve::authorities_with_resolutions(&citations, &links, &resolutions);
+    if let Some(document) = document.as_ref().filter(|_| unit != OffsetUnit::Byte) {
+        convert_citations(document, &mut citations, unit);
+    }
     Ok(ResolveResponse { citations, resolutions, authorities })
 }
 
