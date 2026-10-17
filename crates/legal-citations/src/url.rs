@@ -616,6 +616,183 @@ pub fn canlii_pdf_url(page_url: &str) -> Option<String> {
 }
 
 // ---------------------------------------------------------------------------
+// A source's page at a pinpoint: the anchor each publisher's page has for it
+
+/// Whether `url` is on canlii.org (any subdomain).
+fn on_canlii_org(url: &url::Url) -> bool {
+    url.host_str().is_some_and(|host| host == "canlii.org" || host.ends_with(".canlii.org"))
+}
+
+/// A Decisia (Lexum Norma) decision page: SCC, FCA, FC, TCC, ONCA, NSCA, the tribunals and
+/// decisia.lexum.com's tenants, `…/item/N/index.do`. Its plain address is an iframe shell with no
+/// text and no anchors; `iframe=true` serves the decision inline with `parN` anchors (live-verified
+/// on 14 hosts, 2026-07-27). Known by host and path alone: some older decisions have no anchors.
+fn is_decisia_document(url: &url::Url) -> bool {
+    static HOST: LazyLock<Regex> = LazyLock::new(|| Regex::new(
+        r"(?i)^(?:decisions?\.[A-Za-z0-9_-]+\.(?:gc\.)?ca|decisia\.lexum\.com|coadecisions\.ontariocourts\.ca)$").unwrap());
+    static ITEM: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)/item/[0-9]+/index\.do$").unwrap());
+    url.host_str().is_some_and(|host| HOST.is_match(host)) && ITEM.is_match(url.path())
+}
+
+/// A number as written without its leading zeros (`007` is `7`).
+fn plain_number(digits: &str) -> &str {
+    let trimmed = digits.trim_start_matches('0');
+    if trimmed.is_empty() { "0" } else { trimmed }
+}
+
+/// The anchor a source's page has for a locator its reading labels (`par12`, `page 3`, `2(1)`,
+/// `sec2subsec1`): `par12` on a CanLII decision or a Decisia decision, `page=3` on a PDF, and on a
+/// CanLII statute `sec2` or `sec2subsec1`. None where the page has no such anchor.
+pub fn source_anchor(page_url: &str, kind: &str, label: &str) -> Option<String> {
+    static PARAGRAPH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^par([0-9]+)").unwrap());
+    static PAGE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^(?:page=?)?([0-9]+)").unwrap());
+    static NUMBERED: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"^([0-9]+(?:\.[0-9]+)*)(?:\s*\(([0-9]+)\))?").unwrap());
+    static SECTION: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^sec[A-Za-z0-9_.-]+").unwrap());
+    let url = url::Url::parse(page_url).ok()?;
+    let canlii = on_canlii_org(&url);
+    match kind {
+        "paragraph" => {
+            let number = PARAGRAPH.captures(label)?;
+            ((canlii && url.path().contains("/doc/")) || is_decisia_document(&url))
+                .then(|| format!("par{}", plain_number(&number[1])))
+        }
+        "page" => {
+            let number = PAGE.captures(label)?;
+            url.path().to_lowercase().ends_with(".pdf").then(|| format!("page={}", plain_number(&number[1])))
+        }
+        // CanLII anchors a section as sec2 and a subsection as sec2subsec1.
+        _ => {
+            let section = SECTION.find(label).map(|found| found.as_str().to_owned()).or_else(|| {
+                NUMBERED.captures(label).map(|numbered| format!("sec{}{}", &numbered[1],
+                    numbered.get(2).map(|subsection| format!("subsec{}", subsection.as_str())).unwrap_or_default()))
+            })?;
+            (canlii && url.path().contains("/laws/")).then_some(section)
+        }
+    }
+}
+
+/// A legal source's address as it is linked: [`source_url`].
+#[derive(Clone, Debug, serde::Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct SourceLink {
+    pub url: String,
+    /// A Decisia decision page, whose viewer the host links with the parameters its text fragments need.
+    pub decisia: bool,
+}
+
+/// A legal source's address as it is linked, at `anchor` (else the anchor it has): None for an
+/// address that is not http(s) or a host whose pages cannot be linked; a CanLII PDF opens its page
+/// unless the anchor is a PDF page; a PDF keeps only a `page=N` anchor.
+pub fn source_url(address: &str, anchor: Option<&str>) -> Option<SourceLink> {
+    static UNLINKABLE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)(?:^|\.)getcaselaw\.com$").unwrap());
+    static DOCUMENT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)/document\.do$").unwrap());
+    static PDF_PAGE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^page=[0-9]+$").unwrap());
+    let mut url = url::Url::parse(address).ok()?;
+    if url.host_str().is_some_and(|host| UNLINKABLE.is_match(host)) || !matches!(url.scheme(), "http" | "https") {
+        return None;
+    }
+    let existing = url.fragment().unwrap_or("").split(":~:").next().unwrap_or("").to_owned();
+    let pdf = |url: &url::Url| url.path().to_lowercase().ends_with(".pdf");
+    let converted = on_canlii_org(&url) && pdf(&url) && !anchor.unwrap_or(&existing).starts_with("page=");
+    if converted {
+        let path = url.path().to_owned();
+        url.set_path(&format!("{}.html", &path[..path.len() - ".pdf".len()]));
+    }
+    let mut resolved = anchor.map_or_else(|| if converted { String::new() } else { existing }, str::to_owned);
+    if (DOCUMENT.is_match(url.path()) || pdf(&url)) && !PDF_PAGE.is_match(&resolved) {
+        resolved.clear();
+    }
+    url.set_fragment((!resolved.is_empty()).then_some(resolved.as_str()));
+    Some(SourceLink { decisia: is_decisia_document(&url), url: url.into() })
+}
+
+/// A CanLII decision or statute page at a citation's first pinpoint when that is a paragraph or a
+/// section (`par12`, `sec4`, as [`crate::source::SourceFields`] names them), as the ALR Quote
+/// Verifier anchors a citation's link. Any other address, a PDF, or one with an anchor stays as is.
+pub fn canlii_pinpoint_url(page_url: &str, pinpoints: &[String]) -> String {
+    let first = pinpoints.first().map_or("", String::as_str);
+    let Ok(url) = url::Url::parse(page_url) else { return page_url.to_owned() };
+    if !on_canlii_org(&url) || !url.fragment().unwrap_or("").is_empty() || url.path().to_lowercase().ends_with(".pdf")
+        || !(first.starts_with("par") || first.starts_with("sec")) {
+        return page_url.to_owned();
+    }
+    source_anchor(page_url, if first.starts_with("par") { "paragraph" } else { "section" }, first)
+        .and_then(|anchor| source_url(page_url, Some(&anchor)))
+        .map_or_else(|| page_url.to_owned(), |link| link.url)
+}
+
+/// The paragraph or provision a link's anchor opens (`par12`; `sec2subsec1` is provision `2(1)`),
+/// and for a provision the part of it the citation pinpoints (`sec2(1)(a)` gives `2(1)(a)`).
+#[derive(Clone, Debug, serde::Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct PassageLocator {
+    /// "paragraph" or "section".
+    pub kind: &'static str,
+    pub label: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub part: Option<String>,
+}
+
+/// [`PassageLocator`] of `link` (absolute, or a path on this host), from its anchor.
+pub fn passage_locator(link: &str, pinpoints: &[String]) -> Option<PassageLocator> {
+    static PARAGRAPH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^par([0-9]+)$").unwrap());
+    static SECTION: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"^sec([A-Za-z0-9_.-]+?)(?:subsec([A-Za-z0-9_]+))?$").unwrap());
+    static LOCAL: LazyLock<url::Url> = LazyLock::new(|| url::Url::parse("http://mike.local").unwrap());
+    let url = url::Url::options().base_url(Some(&LOCAL)).parse(link).ok()?;
+    let anchor = url.fragment().unwrap_or("");
+    if let Some(paragraph) = PARAGRAPH.captures(anchor) {
+        return Some(PassageLocator { kind: "paragraph", label: paragraph[1].to_owned(), part: None });
+    }
+    let section = SECTION.captures(anchor)?;
+    let label = format!("{}{}", &section[1], section.get(2).map(|sub| format!("({})", sub.as_str())).unwrap_or_default());
+    let part = pinpoints.iter().filter_map(|pinpoint| pinpoint.strip_prefix("sec").filter(|rest| !rest.is_empty()))
+        .find(|value| value.starts_with(&format!("{label}("))).map(str::to_owned);
+    Some(PassageLocator { kind: "section", label, part })
+}
+
+/// A CanLII PDF link as its page, its anchor kept, unless the anchor names a PDF page (paragraph
+/// and section anchors are the page's): alr_quote_verifier.py `_canlii_pdf_to_html_sibling`.
+pub fn canlii_pdf_page(link: &str) -> String {
+    static CANLII: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^https?://(?:[^/]+\.)?canlii\.org/").unwrap());
+    static PDF: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)\.pdf$").unwrap());
+    static PDF_PAGE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^page=-?[0-9]+$").unwrap());
+    let (base, anchor) = link.split_once('#').map_or((link, None), |(base, anchor)| (base, Some(anchor)));
+    if !CANLII.is_match(base) || !PDF.is_match(base)
+        || PDF_PAGE.is_match(crate::text::trim_javascript_whitespace(anchor.unwrap_or(""))) {
+        return link.to_owned();
+    }
+    format!("{}.html{}", &base[..base.len() - ".pdf".len()], anchor.map(|anchor| format!("#{anchor}")).unwrap_or_default())
+}
+
+/// The statute or regulation a CanLII legislation page is of, at any version
+/// (`/en/on/laws/stat/rso-1990-c-c43/latest/…`).
+#[derive(Clone, Debug, serde::Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct CanliiLawPage {
+    pub language: String,
+    /// CanLII's jurisdiction segment: `ca`, `on`, `bc`, ….
+    pub jurisdiction: String,
+    /// `stat`, `astat`, `regu`, ….
+    pub kind: String,
+    /// The statute's or regulation's id: `rso-1990-c-c43`.
+    pub id: String,
+}
+
+pub fn canlii_law_page(page_url: &str) -> Option<CanliiLawPage> {
+    static LAW: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"^/(en|fr)/([a-z]+)/laws/([a-z]+)/([^/]+)/").unwrap());
+    if !is_canlii_url(page_url) {
+        return None;
+    }
+    let url = url::Url::parse(page_url).ok()?;
+    let law = LAW.captures(url.path())?;
+    Some(CanliiLawPage { language: law[1].to_owned(), jurisdiction: law[2].to_owned(), kind: law[3].to_owned(),
+        id: law[4].to_owned() })
+}
+
+// ---------------------------------------------------------------------------
 // Legislation
 
 /// The CanLII id and path segment (`stat`, `astat`, `regu`) of a statute or
