@@ -382,6 +382,7 @@ fn resolve(mut found: Vec<Anchor>) -> Vec<Anchor> {
 /// parliamentary papers, treaties, database identifiers and online-only sources.
 fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>) -> Vec<Anchor> {
     let mut found = Vec::new();
+    let floors = CaseFloors::new(value);
     let present = SECONDARY_SCREEN.present(value);
     let first_source = SECONDARY_LINEAR.len();
     let sources = SECONDARY_SOURCES.len();
@@ -389,7 +390,7 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
         let pattern = SECONDARY_ECMASCRIPT[slot].get_or_init(|| linear(id));
         for matched in pattern.find_iter(value) {
             let start = matched.start();
-            if *reason == "unreported_grammar" && case_style_start(value, start, 0) == start {
+            if *reason == "unreported_grammar" && case_style_start_above(value, start, floors.paragraph_floor(start)) == start {
                 continue;
             }
             // A year and capitals cite a decision only where they are a registered court's.
@@ -402,7 +403,7 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             if *reason == "ca_statute_grammar" && pattern.captures(matched.as_str()).is_some_and(|capture|
                 capture.name("series").is_some() && capture.name("chapter").is_none() && capture.name("schedule").is_none())
                 && !value[matched.end()..].trim_start_matches([',', ' ']).starts_with("App")
-                && statute_style_start(value, start, 0) == start {
+                && statute_style_start_above(value, start, floors.paragraph_floor(start)) == start {
                 continue;
             }
             if *reason == "book_grammar" && pattern.captures(matched.as_str()).is_some_and(|capture|
@@ -476,7 +477,11 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
     // An enactment the reproduced text of another names in its own history ("3 [Repealed, SOR/2009-223,
     // s. 4]", "(e) repealed AR 143/2011 s2 (4)") is that text's note, not a citation.
     found.retain(|anchor| !anchor.family.is_some_and(|(kind, _)| kind == "statute") || !{
-        let before = value[..anchor.span.start].trim_end_matches([' ', ',']).to_lowercase();
+        // Each character lowercases to at least one, whatever precedes it (but for a Greek sigma,
+        // no letter of these words), so the thirteen read here come from the last sixteen.
+        let before = value[..anchor.span.start].trim_end_matches([' ', ',']);
+        let tail = before.char_indices().rev().nth(15).map_or(0, |(at, _)| at);
+        let before = before[tail..].to_lowercase();
         before.ends_with("repealed") && !before.ends_with(" not repealed")
     });
     resolve(found)
@@ -926,7 +931,12 @@ fn matched_style(
 /// The Act's title, past the Part or Division of it the text names ("Division I of Part III of the
 /// Bankruptcy and Insolvency Act" is the Bankruptcy and Insolvency Act).
 fn statute_style_start(text: &str, core_start: usize, floor: usize) -> usize {
-    let start = matched_style(&STATUTE_TITLE, "title", text, core_start, paragraph_floor(text, floor, core_start));
+    statute_style_start_above(text, core_start, paragraph_floor(text, floor, core_start))
+}
+
+/// [`statute_style_start`] above a paragraph floor already found.
+fn statute_style_start_above(text: &str, core_start: usize, paragraph: usize) -> usize {
+    let start = matched_style(&STATUTE_TITLE, "title", text, core_start, paragraph);
     let part = STATUTE_PART.find_screened(&text[start..core_start]).filter(|found| found.start() == 0).map_or(0, |found| found.end());
     if part > 0 && text[start + part..core_start].starts_with(char::is_uppercase) { start + part } else { start }
 }
@@ -989,25 +999,63 @@ fn past_lead_in(text: &str, start: usize, core_start: usize) -> usize {
 /// paragraph, and under a list of authorities' group heading. A heading word that ends the line
 /// before the citation itself ("Food and Drug Regulations ⏎ CRC, c 870") is the title, not a heading.
 fn paragraph_floor(text: &str, floor: usize, core_start: usize) -> usize {
-    CASE_FLOOR.find_all(&text[floor..core_start]).filter_map(|found| {
-        let matched = found.as_str();
-        let at = if matched.starts_with('\n') { floor + found.start() + matched.len() - matched.trim_start().len() }
-            else { floor + found.end() };
-        // A word a name quotes ("Re Toys “R” Us (Canada) Ltd.") closes no quotation the name follows.
-        if matched.starts_with(['\u{201d}', '"']) {
-            let before = &text[floor..floor + found.start()];
-            let quoted = before.rfind(['\u{201c}', '"']).map(|open| (&before[..open], &before[open..]));
-            if quoted.is_some_and(|(lead, word)| word.chars().count() <= 13 && !word.contains(char::is_whitespace)
-                && lead.strip_suffix(' ').is_some_and(|lead| lead.ends_with(char::is_alphabetic))) { return None; }
+    CASE_FLOOR.find_all(&text[floor..core_start])
+        .filter_map(|found| floor_after(text, floor, core_start, floor + found.start()..floor + found.end()))
+        .last().unwrap_or(floor)
+}
+
+/// Where a style can start after `found`, a `style.case-floor` match between `floor` and `core_start`.
+fn floor_after(text: &str, floor: usize, core_start: usize, found: Hit) -> Option<usize> {
+    let matched = &text[found.clone()];
+    let at = if matched.starts_with('\n') { found.start + matched.len() - matched.trim_start().len() } else { found.end };
+    // A word a name quotes ("Re Toys “R” Us (Canada) Ltd.") closes no quotation the name follows.
+    if matched.starts_with(['\u{201d}', '"']) {
+        let before = &text[floor..found.start];
+        let quoted = before.rfind(['\u{201c}', '"']).map(|open| (&before[..open], &before[open..]));
+        if quoted.is_some_and(|(lead, word)| word.chars().count() <= 13 && !word.contains(char::is_whitespace)
+            && lead.strip_suffix(' ').is_some_and(|lead| lead.ends_with(char::is_alphabetic))) { return None; }
+    }
+    // A paragraph that goes on in lower case ("… Inc." then "v 1905393 …") is one name broken across
+    // a page, not a new start.
+    (!text[at..core_start].trim().is_empty() && !text[at..].starts_with(char::is_lowercase)).then_some(at)
+}
+
+/// A text's `style.case-floor` matches, found once for the many styles read back to its start.
+/// A match reads nothing past its end (the grammar asserts nothing there), so each whole-text
+/// match that ends before a core is one `&text[..core]` holds too; only the text after the last of
+/// them is read again.
+struct CaseFloors<'t> {
+    text: &'t str,
+    found: OnceLock<Vec<Hit>>,
+}
+
+impl<'t> CaseFloors<'t> {
+    fn new(text: &'t str) -> Self {
+        Self { text, found: OnceLock::new() }
+    }
+
+    /// [`paragraph_floor`] from the text's start.
+    fn paragraph_floor(&self, core_start: usize) -> usize {
+        let found = self.found.get_or_init(|| CASE_FLOOR.find_all(self.text).map(|found| found.range()).collect());
+        let kept = found.partition_point(|hit| hit.end < core_start);
+        let mut at = found[..kept].last().map_or(0, |hit| hit.end);
+        let mut after = Vec::new();
+        // The grammar matches no empty text, so each search starts where the last match ended.
+        while let Some(next) = CASE_FLOOR.find_at(&self.text[..core_start], at).filter(|next| !next.is_empty()) {
+            after.push(next.range());
+            at = next.end();
         }
-        // A paragraph that goes on in lower case ("… Inc." then "v 1905393 …") is one name broken across
-        // a page, not a new start.
-        (!text[at..core_start].trim().is_empty() && !text[at..].starts_with(char::is_lowercase)).then_some(at)
-    }).last().unwrap_or(floor)
+        after.into_iter().rev().chain(found[..kept].iter().rev().cloned())
+            .find_map(|found| floor_after(self.text, 0, core_start, found)).unwrap_or(0)
+    }
 }
 
 fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
-    let floor = paragraph_floor(text, floor, core_start);
+    case_style_start_above(text, core_start, paragraph_floor(text, floor, core_start))
+}
+
+/// [`case_style_start`] above a paragraph floor already found.
+fn case_style_start_above(text: &str, core_start: usize, floor: usize) -> usize {
     // A style of cause opens after a sentence that ends before its signal ("… on the Crown. See
     // R v Oakes"); an abbreviation's period ("Mar. Overseas Corp.") is no sentence's end.
     // No style of cause runs back over a semicolon, which parts one citation from the next.
