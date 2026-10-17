@@ -609,7 +609,9 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
     }
     for (pattern, reason) in [(&*CASE_START, "new_case_frame"), (&*AUTHOR, "new_author_title_frame"),
         (&*NOTE_START, "new_note_reference")] {
-        for found in pattern.find_all(text).skip(1) {
+        // A text's first frame starts it, but a case's may follow a source cited before it ("Criminal Code, RSC
+        // 1985, c C-46, s 33.1: R v Brown, 2022 SCC 18"); the evidence on both sides decides.
+        for found in pattern.find_all(text).skip(usize::from(reason != "new_case_frame")) {
             let found = found.expect("source frame");
             let mut position = found.start();
             // An author comes before a title's opening quote, not its closing one ("…the Regulation of Private Care" in …).
@@ -624,6 +626,8 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
                 position = start;
             }
             if reason == "new_case_frame" {
+                // A case named in a title's words starts no source ("“Last Among Equals: …, R v Brown, and …”").
+                if inside_quotes(text, position) { continue; }
                 let prefix = &text[..position];
                 let tail = prefix.char_indices().rev().nth(11).map_or(prefix, |(start, _)| &prefix[start..]);
                 if prefix.ends_with('(') || matches(&CONJUNCTION_END, tail) { continue; }
@@ -641,9 +645,32 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
         }
     }
     for found in CONJUNCTION.find_all(text) {
-        let position = found.expect("conjoined citation").start();
+        let found = found.expect("conjoined citation");
+        let position = found.start();
         if inside_quotes(text, position) { continue; }
         let start = segment_start(&boundaries, position);
+        // An "and" between two capitalized words joins one name's, a body's or its authors' ("Parliamentary Research
+        // Branch: Political and Social Affairs Division", "Kerri A Froc and Elizabeth Sheehy"): a citation ends with
+        // a number, a bracket or a parenthesis, never such a word. Where prose leads into the name ("… as well as
+        // Kerri A Froc and …"), a new source starts with it.
+        let name_word = |word: &str| word.starts_with(char::is_uppercase)
+            && (word.chars().all(|c| c.is_alphabetic() || "'’-".contains(c))
+                || word.len() <= 3 && word.ends_with('.') && word[..word.len() - 1].chars().all(char::is_uppercase));
+        let mut words = text[start..position].trim_end().rsplit(char::is_whitespace);
+        if !text[position..].starts_with('&') && !text[found.end()..].starts_with("the ") && words.clone().next().is_some_and(name_word) {
+            let mut name = position;
+            let mut lead = None;
+            for word in words.by_ref() {
+                if word.is_empty() { continue; }
+                if !name_word(word) { lead = Some(word); break; }
+                name = word.as_ptr() as usize - text.as_ptr() as usize;
+            }
+            if lead.is_some_and(|word| word.chars().all(|c| c.is_lowercase())) && name > start
+                && evidence(&text[start..name], extended_us) && evidence(&text[name..segment_end(&boundaries, position, text.len())], extended_us) {
+                boundaries.push((name, name, "conjoined_citation"));
+            }
+            continue;
+        }
         // An "&" joins names (authors, editors, a journal's or a firm's) unless a citation ends just before it, at
         // most its court after it ("2018 BCCA 408 & Cassandro v Glass", "1995 CanLII 9050 (ABKB) & Heritage …").
         if text[position..].starts_with('&') && !whole_anchors.iter().any(|&(left, right, _)| start <= left && right <= position && {
@@ -993,6 +1020,15 @@ pub fn extract_fields(part: &SourcePart, extended_us: bool) -> SourceFields {
     let found = URL.find(text).expect("source URL").map(|found| (found.as_str(), found.end(), false))
         .or_else(|| ONLINE_ADDRESS.captures(text).expect("unbracketed online address")
             .map(|found| { let address = found.name("address").unwrap(); (address.as_str(), address.end(), true) }));
+    // A site's name written before the address it stands for ("<publications.gc.ca>
+    // [https://publications.gc.ca/collections/…pdf]") gives way to that address.
+    let found = found.map(|(raw, end, unbracketed)| {
+        let site = |link: &str| link.split_once("://").map_or(link, |(_, rest)| rest).trim_start_matches("www.").to_owned();
+        let domain = site(bare_link(raw));
+        let full = (!domain.contains('/')).then(|| URL.find(&text[end..]).expect("source URL")).flatten()
+            .filter(|next| site(bare_link(next.as_str())).strip_prefix(domain.as_str()).is_some_and(|path| path.starts_with('/')));
+        full.map_or((raw, end, unbracketed), |next| (next.as_str(), end + next.end(), false))
+    });
     let link = found.map_or_else(|| "other".to_owned(), |(raw, end, unbracketed)| {
         let link = bare_link(raw);
         match broken_address_tail(text, end, raw) {
