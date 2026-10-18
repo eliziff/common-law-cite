@@ -558,7 +558,6 @@ pub fn canlii_pdf_url(page_url: &str) -> Option<String> {
     Some(parsed.into())
 }
 
-/// Whether `url` is on canlii.org (any subdomain).
 /// Whether a publisher's page may print a legal reference inside the text it quotes (BC Laws annotates them).
 pub fn publisher_annotates_legal_references(address: &str) -> bool {
     url::Url::options().base_url(Some(&url::Url::parse("http://mike.local").unwrap())).parse(address)
