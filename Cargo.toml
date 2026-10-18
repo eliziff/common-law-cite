@@ -12,7 +12,7 @@ repository = "https://github.com/eliziff/common-law-cite"
 rust-version = "1.85"
 
 [workspace.dependencies]
-legal-grammar = { path = "crates/legal-grammar", version = "0.1.0" }
+legal-grammar = { path = "crates/legal-grammar", version = "0.1.0", default-features = false }
 legal-citations = { path = "crates/legal-citations", version = "0.1.0" }
 fancy-regex = "0.19"
 regex = "1.11"

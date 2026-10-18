@@ -8,6 +8,11 @@ repository.workspace = true
 rust-version.workspace = true
 include = ["src/**", "data/**", "build.rs", "Cargo.toml", "LICENSE", "NOTICE"]
 
+[features]
+default = ["us"]
+# The US reporter, journal and law extractors (eyecite/reporters-db snapshot).
+us = []
+
 [build-dependencies]
 flate2 = "1"
 serde_json.workspace = true

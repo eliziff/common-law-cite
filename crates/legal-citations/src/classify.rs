@@ -596,6 +596,7 @@ pub(crate) fn reported_fields(
 }
 
 /// Use the fields and source family captured by the pinned U.S. extractor.
+#[cfg(feature = "us")]
 pub(crate) fn extracted(core: &str, mut fields: Fields, short_at: Option<usize>) -> Reading {
     let group = |name: &str| fields.source_groups.get(name).cloned().flatten();
     fields.reporter = group("reporter");
@@ -870,9 +871,18 @@ pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
         .or_else(|| treaty(core))
         .or_else(|| parliamentary(core))
         .or_else(|| legislation(core))
-        .or_else(|| (crate::us::is_journal(core)).then(|| publication(true)).flatten())
+        .or_else(|| us_journal(core).then(|| publication(true)).flatten())
         .or_else(|| publication(reason == "journal_grammar"))
         .or_else(|| book(core, style))
+}
+
+/// Whether `core` is a US journal citation, by the US extractors (none without the `us` feature).
+#[cfg_attr(not(feature = "us"), allow(unused_variables))]
+fn us_journal(core: &str) -> bool {
+    #[cfg(feature = "us")]
+    return crate::us::is_journal(core);
+    #[cfg(not(feature = "us"))]
+    false
 }
 
 /// Complete a reading from the registry: court ids, canonical reporters,

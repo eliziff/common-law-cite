@@ -16,7 +16,13 @@ fn main() {
     fs::write(output.join("grammar-corpus.json.gz"), compressed.finish().expect("finish grammar"))
         .expect("embedded grammar");
 
-    // src/us_extractors.rs reads this layout.
+    if env::var_os("CARGO_FEATURE_US").is_some() {
+        us_extractors(&output);
+    }
+}
+
+/// The compiled US extractors src/us_extractors.rs reads.
+fn us_extractors(output: &std::path::Path) {
     let source = "data/us-extractors.json";
     println!("cargo:rerun-if-changed={source}");
     let data: Value = serde_json::from_slice(&fs::read(source).expect("US extractors")).expect("valid US extractors");

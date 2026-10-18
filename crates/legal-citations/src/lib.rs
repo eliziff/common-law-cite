@@ -38,6 +38,7 @@ pub mod short_forms;
 pub mod source;
 pub mod text;
 pub mod url;
+#[cfg(feature = "us")]
 mod us;
 
 pub use legal_grammar as grammar;
@@ -81,6 +82,7 @@ pub fn warm() {
     resolve::warm();
     short_forms::warm();
     source::warm();
+    #[cfg(feature = "us")]
     us::warm();
     text::warm();
     clean::warm();
@@ -439,6 +441,7 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     }
     metadata::attach(text, &mut citations);
     find::anchor_titles(text, &mut citations, options.notes.as_deref().unwrap_or(&[]));
+    #[cfg(feature = "us")]
     for citation in &mut citations {
         us::finish(citation);
     }

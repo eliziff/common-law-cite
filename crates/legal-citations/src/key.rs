@@ -604,6 +604,7 @@ fn indexed(registry: &Registry) -> bool {
     std::ptr::eq(registry, registry::registry())
 }
 
+#[cfg_attr(not(feature = "canada"), allow(dead_code))]
 pub(crate) fn court<'r>(registry: &'r Registry, id: &str) -> Option<&'r Court> {
     if indexed(registry) {
         registry.court(id)
