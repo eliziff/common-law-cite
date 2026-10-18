@@ -558,10 +558,11 @@ pub fn canlii_pdf_url(page_url: &str) -> Option<String> {
     Some(parsed.into())
 }
 
-/// Whether a publisher's page may print a legal reference inside the text it quotes (BC Laws annotates them).
+/// Whether a publisher's page may print a legal reference inside the text it quotes: BC Laws annotates them, and the
+/// Supreme Court's site links each one with an icon and a no-break space after it (334 of 474 cached pages, 2026-10-18).
 pub fn publisher_annotates_legal_references(address: &str) -> bool {
     url::Url::options().base_url(Some(&url::Url::parse("http://mike.local").unwrap())).parse(address)
-        .is_ok_and(|url| url.host_str() == Some("www.bclaws.gov.bc.ca"))
+        .is_ok_and(|url| matches!(url.host_str(), Some("www.bclaws.gov.bc.ca" | "decisions.scc-csc.ca")))
 }
 
 /// The CanLII page of an A2AJ legislation record (`LEGISLATION-ON`, `REGULATIONS-FED`) by its citation slugged as CanLII
