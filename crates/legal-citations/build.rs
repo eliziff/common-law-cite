@@ -59,8 +59,17 @@ fn compile_aliases(out: &std::path::Path) {
         words(pool), words(blocked)])).expect("compiled alias mappings");
 }
 
+/// The statute titles src/reference_names.rs reads (registry/statute-titles.txt, tools/statute-titles.py), compressed.
+fn compress_statute_titles(out: &std::path::Path) {
+    println!("cargo:rerun-if-changed=registry/statute-titles.txt");
+    let mut compressed = GzEncoder::new(Vec::new(), Compression::best());
+    compressed.write_all(&fs::read("registry/statute-titles.txt").expect("statute titles")).unwrap();
+    fs::write(out.join("statute-titles.txt.gz"), compressed.finish().unwrap()).unwrap();
+}
+
 fn main() {
     let out = PathBuf::from(env::var_os("OUT_DIR").unwrap());
     build_registry::compile(&out);
     compile_aliases(&out);
+    compress_statute_titles(&out);
 }

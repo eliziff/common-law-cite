@@ -31,6 +31,7 @@ pub mod key;
 pub mod metadata;
 pub mod model;
 pub mod parallel;
+pub mod reference_names;
 pub mod registry;
 pub mod resolve;
 mod screen;
