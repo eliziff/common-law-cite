@@ -198,6 +198,20 @@ fn reporter_candidates(surface: &str, fields: &Fields) -> Vec<(&'static Reporter
     candidates
 }
 
+/// `surface` without a trailing ordinal series ("SCLR (2d)" -> "SCLR"), or all of it where it has none.
+fn journal_base(surface: &str) -> &str {
+    static SERIES: std::sync::OnceLock<regex::Regex> = std::sync::OnceLock::new();
+    let series = SERIES.get_or_init(|| regex::Regex::new(r"\s*\(\d+(?:st|nd|rd|th|d)\)\s*$").unwrap());
+    series.find(surface).map_or(surface, |found| &surface[..found.start()])
+}
+
+/// The one journal the registry knows by `surface` without its ordinal series, where it has a series.
+fn series_journal(surface: &str) -> Option<&'static Journal> {
+    let base = journal_base(surface);
+    let journals = (base.len() < surface.len()).then(|| registry().journals_by_surface(base)).unwrap_or_default();
+    (journals.len() == 1).then(|| journals[0])
+}
+
 fn journal_candidates(surface: &str, fields: &Fields) -> Vec<&'static Journal> {
     let mut candidates = registry().journals_by_surface(surface);
     for edition in fields.exact_editions.iter().chain(&fields.variation_editions) {
@@ -979,6 +993,19 @@ fn resolve(reading: &mut Reading, citation: &mut Citation, options: &crate::Opti
             if let Some((_, canonical)) = candidates.first() {
                 if candidates.iter().all(|(_, other)| other == canonical) {
                     fields.reporter_canonical = Some((*canonical).to_owned());
+                }
+            }
+            // A journal printed with its series ("(2012), 57 SCLR (2d) 111") that no reporter's spelling holds: the
+            // journal the registry knows without the series, the series kept in its name.
+            if candidates.is_empty() && reading.authority == Some(Authority::Case) {
+                if let Some(journal) = series_journal(&surface) {
+                    fields.reporter_canonical = Some(format!("{} {}", journal.abbreviation, &surface[journal_base(&surface).len()..].trim()));
+                    reading.authority = Some(Authority::Journal);
+                    reading.format = Some(Format::Publication);
+                    reading.reason = "journal_grammar";
+                    if let Some(jurisdiction) = &journal.jurisdiction {
+                        reading.jurisdiction.get_or_insert_with(|| jurisdiction.clone());
+                    }
                 }
             }
         }
