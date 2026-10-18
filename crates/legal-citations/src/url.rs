@@ -98,7 +98,9 @@ fn plain_number(digits: &str) -> &str {
 
 /// The anchor a source's page has for a locator its reading labels (`par12`, `page 3`, `2(1)`,
 /// `sec2subsec1`): `par12` on a CanLII decision or a Decisia decision, `page=3` on a PDF, and on a
-/// CanLII statute `sec2` or `sec2subsec1`. None where the page has no such anchor.
+/// CanLII statute `sec2` or `sec2subsec1`; on a statute page of Justice Laws, BC Laws, Manitoba,
+/// New Brunswick or Newfoundland and Labrador, the id that publisher prints for the provision
+/// ([`canada::statute_anchor`]). None where the page has no such anchor.
 pub fn source_anchor(page_url: &str, kind: &str, label: &str) -> Option<String> {
     static PARAGRAPH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^par([0-9]+)").unwrap());
     static PAGE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^(?:page=?)?([0-9]+)").unwrap());
@@ -118,6 +120,12 @@ pub fn source_anchor(page_url: &str, kind: &str, label: &str) -> Option<String> 
             url.path().to_lowercase().ends_with(".pdf").then(|| format!("page={}", plain_number(&number[1])))
         }
         // CanLII anchors a section as sec2 and a subsection as sec2subsec1.
+        _ if !canlii => {
+            #[cfg(feature = "canada")]
+            return canada::statute_anchor(&url, label);
+            #[cfg(not(feature = "canada"))]
+            None
+        }
         _ => {
             let section = SECTION.find(label).map(|found| found.as_str().to_owned()).or_else(|| {
                 NUMBERED.captures(label).map(|numbered| format!("sec{}{}", &numbered[1],
