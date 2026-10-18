@@ -46,6 +46,26 @@ fn region(values: &Value) -> String {
     }).collect();
     if values.len() == 1 { values.into_iter().next().unwrap() } else { "us".into() }
 }
+/// Whether the crate is built with the jurisdiction `jurisdiction` (`ca-on`, `us`, `uk-ew`) belongs to:
+/// its feature (`canada`, `us`, `uk`, ...). International and unplaced rows are always kept.
+fn enabled(jurisdiction: &str) -> bool {
+    let feature = match jurisdiction.split('-').next().unwrap_or("") {
+        "ca" => "CANADA", "us" => "US", "uk" => "UK", "au" => "AUSTRALIA", "nz" => "NEW_ZEALAND",
+        "ie" => "IRELAND", "hk" => "HONG_KONG", "sg" => "SINGAPORE", "za" => "SOUTH_AFRICA",
+        _ => return true,
+    };
+    std::env::var_os(format!("CARGO_FEATURE_{feature}")).is_some()
+}
+
+/// The jurisdiction a registry row belongs to: its own, else `us` for a reporters-db record.
+fn row_jurisdiction(row: &Value) -> &str {
+    match string(&row["jurisdiction"]) {
+        "" if string(&row["source"]) == "reporters-db" => "us",
+        "" => string(&row["region"]),
+        jurisdiction => jurisdiction,
+    }
+}
+
 fn names(row: &Value) -> Value {
     let mut result = json!({"en": row["name"]});
     if let Some(fr) = row.get("name_fr") { result["fr"] = fr.clone(); }
@@ -100,7 +120,8 @@ pub fn compile(out: &Path) {
         .filter(|(code, _)| code.len() == 2).map(|(code, name)| (string(name).to_lowercase(), code.to_lowercase())).collect();
     codes.insert("washington d.c.".into(), "dc".into());
     codes.insert("district of columbia".into(), "dc".into());
-    let jurisdictions = read("registry/jurisdictions.json");
+    let mut jurisdictions = read("registry/jurisdictions.json");
+    jurisdictions.as_array_mut().unwrap().retain(|row| enabled(string(&row["id"])));
     let mut index = json!({"jurisdictions": jurisdictions});
     let mut source = json!({"jurisdictions": jurisdictions, "states": states,
         "regexes": read("registry/upstream/reporters-db/regexes.json")});
@@ -151,6 +172,7 @@ pub fn compile(out: &Path) {
                 court["hierarchy"] = json!(hierarchy);
                 all.push(court);
             }
+            all.retain(|court| enabled(row_jurisdiction(court)));
             source[file] = json!(all);
         } else {
             let upstream = read(&format!("registry/upstream/reporters-db/{file}.json"));
@@ -216,6 +238,14 @@ pub fn compile(out: &Path) {
                     all.entry(key).or_insert_with(|| json!([])).as_array_mut().unwrap().push(original);
                 }
             }
+            // An upstream (reporters-db) record is US unless its own region says otherwise.
+            for entries in all.values_mut() {
+                entries.as_array_mut().unwrap().retain(|row| enabled(match row_jurisdiction(row) {
+                    "" if row.get("cite_type").is_some() => "us",
+                    jurisdiction => jurisdiction,
+                }));
+            }
+            all.retain(|_, entries| !entries.as_array().unwrap().is_empty());
             source[file] = Value::Object(all);
         }
         let fields: &[&str] = match table {
@@ -225,6 +255,7 @@ pub fn compile(out: &Path) {
             "journals" => &["id", "name", "abbreviation", "variations", "jurisdiction", "source", "verified"],
             _ => unreachable!(),
         };
+        rows.retain(|row| enabled(row_jurisdiction(row)));
         for row in &mut rows { row.as_object_mut().unwrap().retain(|key, _| fields.contains(&key.as_str())); }
         index[table] = json!(rows);
     }

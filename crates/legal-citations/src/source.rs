@@ -401,6 +401,12 @@ fn full_match(pattern: &Screened<CompiledGrammar>, text: &str) -> bool {
         .is_some_and(|found| found.start() == 0 && found.end() == text.len())
 }
 
+#[cfg(not(feature = "us"))]
+fn us_matches(_: &str) -> Vec<Anchor> {
+    Vec::new()
+}
+
+#[cfg(feature = "us")]
 fn us_matches(text: &str) -> Vec<Anchor> {
     crate::us::find(text, true, None).into_iter().map(|found| {
         // Preserve the source-routing precedence independently of the
@@ -1000,6 +1006,7 @@ fn typeset_space(character: char) -> bool {
 }
 
 /// The offset in `text` of the byte at `offset` in its [`spaced`] reading.
+#[cfg(feature = "canada")]
 pub(crate) fn unspaced_offset(text: &str, offset: usize) -> usize {
     let mut at = 0;
     for (index, character) in text.char_indices() {

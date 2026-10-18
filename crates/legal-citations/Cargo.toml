@@ -35,6 +35,18 @@ ts-rs = { version = "12", optional = true, features = ["serde-json-impl"] }
 scraper = { version = "0.27", default-features = false }
 
 [features]
+default = ["canada", "uk", "us", "australia", "new-zealand", "ireland", "hong-kong", "singapore", "south-africa"]
+# Each jurisdiction's grammar, data and publishers.
+canada = []
+uk = []
+australia = []
+new-zealand = []
+ireland = []
+hong-kong = []
+singapore = []
+south-africa = []
+# US reporters, journals and laws (legal-grammar's eyecite/reporters-db extractors) and CourtListener.
+us = ["legal-grammar/us"]
 binding-types = ["dep:ts-rs"]
 
 [[bin]]

@@ -555,6 +555,7 @@ fn occurrence_family(core: &str) -> (&'static str, &'static str) {
     if JOURNAL_PATTERN.find_screened(core).is_some_and(|hit| whole(hit.range())) {
         return ("journal", "journal_grammar");
     }
+    #[cfg(feature = "us")]
     if crate::us::is_law(core) { return ("statute", "statute_grammar"); }
     if let Some(captures) = crate::classify::ROUTING.captures(core) {
         if whole(captures.get(0).unwrap().range()) {
@@ -569,8 +570,10 @@ fn occurrence_family(core: &str) -> (&'static str, &'static str) {
     (if core.contains("CanLII") { "case" } else { "other" }, "citation_grammar")
 }
 
+#[cfg_attr(not(feature = "us"), allow(unused_variables))]
 fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationStyle]>, scopes: &[usize], enrich: bool) -> Vec<Anchor> {
     let (mut found, reporters) = primary_ranges(value);
+    #[cfg(feature = "us")]
     let mut captured = if enrich {
         crate::us::find(value, extended_us, Some(&mut found))
     } else {
@@ -578,6 +581,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
         Vec::new()
     };
     found.retain(|hit| !numbered_on(&value[hit.end..]) && !no_report(value, hit.clone()));
+    #[cfg(feature = "us")]
     captured.retain(|matched| !numbered_on(&value[matched.span.end..]) && !no_report(value, matched.span.clone()));
     // A (year) volume publication page block the citation grammar read only
     // part of is one citation: "(2023) 57:3 RJT 487" is not the issue "3 RJT
@@ -636,6 +640,8 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     if !enrich { return anchors; }
     // Primary and secondary occurrences are selected before Eyecite attaches
     // source tokens. Source-only discoveries cannot displace native extents.
+    #[cfg(feature = "us")]
+    {
     let mut additional = Vec::new();
     for matched in captured {
         let index = anchors.partition_point(|anchor| anchor.span.end <= matched.span.start);
@@ -655,6 +661,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
         }
     }
     anchors.extend(additional);
+    }
     anchors.sort_by_key(|anchor| anchor.span.start);
     // Eyecite's captured fields already supply their reading. Parse only the
     // remaining native families, instead of parsing then replacing those fields.
@@ -706,8 +713,10 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     anchors
 }
 
+#[cfg_attr(not(feature = "us"), allow(unused_variables, unused_mut))]
 pub(crate) fn citation_hits(value: &str, extended_us: bool) -> Vec<Hit> {
     let (mut spans, _) = primary_ranges(value);
+    #[cfg(feature = "us")]
     spans.extend(crate::us::citation_spans(value, extended_us));
     resolve(spans.into_iter().map(|span| Anchor { span, ..Anchor::default() }).collect())
         .into_iter().map(|anchor| anchor.span).collect()
@@ -1235,6 +1244,7 @@ impl CitationRanges {
             > self.ends.partition_point(|end| *end <= range.start)
     }
 
+    #[cfg(feature = "us")]
     pub(crate) fn contains(&self, position: usize) -> bool {
         self.starts.partition_point(|start| *start <= position)
             > self.ends.partition_point(|end| *end <= position)
@@ -2018,6 +2028,9 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
     scopes.sort_unstable();
     let cores = cores(text, options, &scopes, enrich);
     if cores.is_empty() { return Vec::new(); }
+    #[cfg(not(feature = "us"))]
+    let source_names: std::collections::BTreeMap<usize, crate::SourceCaseName> = Default::default();
+    #[cfg(feature = "us")]
     let source_names = if enrich { crate::us::case_names(text, &cores.iter().filter_map(|core| match &core.kind {
         CoreKind::Full(anchor) if anchor.reading.as_ref().is_some_and(|reading| reading.source_captured()) =>
             Some((anchor.source_span.as_ref().unwrap_or(&core.span).clone(),

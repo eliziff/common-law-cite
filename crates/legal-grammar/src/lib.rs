@@ -10,6 +10,7 @@ use std::sync::{Arc, OnceLock};
 mod grammar_word;
 mod literals;
 pub mod table;
+#[cfg(feature = "us")]
 pub mod us_extractors;
 
 use grammar_word::SOURCE_WORD;

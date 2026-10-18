@@ -207,6 +207,7 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             let request: InferShortFormsRequest = parse(method, request)?;
             to_value(crate::source::derive_bare_citation(&request.text, &request.kind))
         }
+        #[cfg(feature = "canada")]
         "legislationLookup" => {
             let request: HasCitationRequest = parse(method, request)?;
             to_value(url_stage::legislation_lookup(&request.text))
@@ -304,6 +305,7 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             to_value(request.values.iter().map(|values| format_stage::pinpoint_layout(&request.kind, values, request.style.as_deref() == Some("full"))).collect::<Vec<_>>())
         },
         "url" => to_value(url(&parse(method, request)?)?),
+        #[cfg(feature = "canada")]
         "canliiCitationUrl" => {
             #[derive(Deserialize)]
             #[serde(deny_unknown_fields)]
@@ -330,12 +332,15 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             #[serde(deny_unknown_fields)]
             struct Request { url: String, #[serde(default)] pinpoints: Vec<String> }
             let request: Request = parse(method, request)?;
-            if method == "canliiPinpointUrl" {
-                to_value(url_stage::canlii_pinpoint_url(&request.url, &request.pinpoints))
-            } else {
-                to_value(url_stage::passage_locator(&request.url, &request.pinpoints))
+            if method == "passageLocator" {
+                return to_value(url_stage::passage_locator(&request.url, &request.pinpoints));
             }
+            #[cfg(feature = "canada")]
+            return to_value(url_stage::canlii_pinpoint_url(&request.url, &request.pinpoints));
+            #[cfg(not(feature = "canada"))]
+            Err(ApiError::invalid("canliiPinpointUrl: built without the canada feature"))
         },
+        #[cfg(feature = "canada")]
         "canliiPdfPage" | "canliiLawPage" => {
             #[derive(Deserialize)]
             #[serde(deny_unknown_fields)]
@@ -347,6 +352,7 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
                 to_value(url_stage::canlii_law_page(&request.url))
             }
         },
+        #[cfg(feature = "canada")]
         "sourceCanliiRoutes" => {
             #[derive(Deserialize)]
             #[serde(deny_unknown_fields)]
@@ -354,11 +360,13 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             let _: Empty = parse(method, request)?;
             to_value(url_stage::source_canlii_routes())
         },
+        #[cfg(feature = "canada")]
         "canliiAliasTarget" => {
             let request: AliasTargetRequest = parse(method, request)?;
             let page = url_stage::canlii_alias_target(&request.target, api_language("canliiAliasTarget", request.language.as_deref())?);
             to_value(if request.pdf { page.and_then(|page| url_stage::canlii_pdf_url(&page)) } else { page })
         },
+        #[cfg(feature = "canada")]
         "canliiAliasTargetInfo" => {
             let request: AliasTargetRequest = parse(method, request)?;
             let mut info = url_stage::canlii_alias_target_info(&request.target, api_language("canliiAliasTargetInfo", request.language.as_deref())?);
@@ -415,6 +423,15 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             ),
         )),
     }
+}
+
+/// `page` at the CanLII anchor of `citation`'s pinpoint (only CanLII pages have one; none without `canada`).
+#[cfg_attr(not(feature = "canada"), allow(unused_variables))]
+fn with_pinpoint(page: &str, citation: &crate::Citation) -> String {
+    #[cfg(feature = "canada")]
+    return url_stage::with_pinpoint(page, citation);
+    #[cfg(not(feature = "canada"))]
+    page.to_owned()
 }
 
 fn parse<T: for<'de> Deserialize<'de>>(method: &str, mut request: Value) -> Result<T, ApiError> {
@@ -1365,7 +1382,7 @@ pub fn url(request: &UrlRequest) -> Result<UrlResponse, ApiError> {
             let explicit = source_urls.get(&citation.index).cloned();
             let url = explicit.or_else(|| url_stage::url(authority, language)).map(|page| {
                 if request.anchor && !source_urls.contains_key(&citation.index) {
-                    url_stage::with_pinpoint(&page, citation)
+                    with_pinpoint(&page, citation)
                 } else {
                     page
                 }

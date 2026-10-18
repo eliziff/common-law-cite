@@ -541,10 +541,12 @@ fn process_parenthetical(value: &str) -> Option<String> {
         .then(|| value.to_owned())
 }
 
+#[cfg(feature = "us")]
 static POST_SHORT: LazyLock<CompiledGrammar> = LazyLock::new(||
     legal_grammar::compile_python_table_entry("parenthetical.us.post-short").unwrap());
 /// Eyecite extract_pin_cite: prepend the token's page and stop at the caller's
 /// first non-string token. Prefix offsets are subtracted from the matched extent.
+#[cfg(feature = "us")]
 pub(crate) fn short_reference(text: &str, token: Range<usize>, limit: usize, prefix: &str) -> crate::SourceCaseName {
     let window: String = prefix.chars().chain(text[token.end..limit].chars()).take(300).collect();
     let mut result = crate::SourceCaseName {

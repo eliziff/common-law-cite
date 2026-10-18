@@ -302,6 +302,7 @@ pub(crate) struct Markup<'a> {
     pub source: &'a str,
     to_source: SpanUpdater<'a>,
     to_text: SpanUpdater<'a>,
+    #[cfg_attr(not(feature = "us"), allow(dead_code))]
     emphasis: Vec<(Range<usize>, Range<usize>)>,
 }
 
@@ -323,6 +324,7 @@ impl<'a> Markup<'a> {
         self.to_source.byte(position, true).expect("plain text boundary")
     }
 
+    #[cfg(feature = "us")]
     pub fn tag_at(&self, position: usize) -> Option<(usize, &Range<usize>)> {
         let position = self.source_offset(position);
         let mut tags = self.emphasis.iter().filter(|(source, _)| source.contains(&position));

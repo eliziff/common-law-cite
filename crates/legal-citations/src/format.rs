@@ -915,21 +915,15 @@ pub struct CaseCitationRequest {
     pub provider: Option<String>,
 }
 
-/// Chooses a case's display citation: apply the display grammars and
-/// first-match order without extracting identities or resolving references.
-pub fn choose_case_citation(request: &CaseCitationRequest) -> String {
-    static PATTERNS: LazyLock<[legal_grammar::CompiledGrammar; 10]> = LazyLock::new(||
-        ["case-neutral", "reporter-separator", "not-reporter", "reporter-bracketed",
-            "reporter-numbered", "case-canlii", "case-in-house", "reporter-preference.official",
-            "reporter-preference.fr", "reporter-preference.en"].map(|name| format_pattern(&format!("format.{name}"))));
+/// The first Canadian neutral citation in `texts` (a code CanLII routes), in the language's own code
+/// where the texts carry that form too (`2019 CSC 5` for French when written).
+#[cfg(feature = "canada")]
+fn canadian_neutral(texts: &[&String], french: bool, neutral: &legal_grammar::CompiledGrammar) -> Option<String> {
     static TRANSLATIONS: LazyLock<std::collections::HashMap<String, std::collections::HashMap<String, String>>> = LazyLock::new(||
         serde_json::from_str(include_str!("../registry/neutral-translations.json")).expect("neutral translation preferences"));
-    static CANLII_NAME: LazyLock<Regex> = LazyLock::new(|| Regex::new("(?i)canlii").unwrap());
-    let french = request.language.as_deref().unwrap_or("en").to_lowercase().starts_with("fr");
-    let texts = request.texts.iter().chain(std::iter::once(&request.fallback)).collect::<Vec<_>>();
     let mut neutrals = Vec::new();
-    for text in &texts {
-        for found in PATTERNS[0].captures_iter(&normalize_space(text)).flatten() {
+    for text in texts {
+        for found in neutral.captures_iter(&normalize_space(text)).flatten() {
             let [year, code, number] = [1, 2, 3].map(|index| found.get(index).unwrap().as_str());
             if crate::url::source_canlii_routes().contains_key(code)
                 || crate::url::source_canlii_french_routes().contains_key(code) {
@@ -937,11 +931,26 @@ pub fn choose_case_citation(request: &CaseCitationRequest) -> String {
             }
         }
     }
-    if let Some(first) = neutrals.first() {
-        let parts = first.split_whitespace().collect::<Vec<_>>();
-        let translated = TRANSLATIONS[if french { "fr" } else { "en" }].get(parts[1])
-            .map(|code| format!("{} {code} {}", parts[0], parts[2]));
-        return translated.filter(|value| neutrals.contains(value)).unwrap_or_else(|| first.clone());
+    let first = neutrals.first()?;
+    let parts = first.split_whitespace().collect::<Vec<_>>();
+    let translated = TRANSLATIONS[if french { "fr" } else { "en" }].get(parts[1])
+        .map(|code| format!("{} {code} {}", parts[0], parts[2]));
+    Some(translated.filter(|value| neutrals.contains(value)).unwrap_or_else(|| first.clone()))
+}
+
+/// Chooses a case's display citation: apply the display grammars and
+/// first-match order without extracting identities or resolving references.
+pub fn choose_case_citation(request: &CaseCitationRequest) -> String {
+    static PATTERNS: LazyLock<[legal_grammar::CompiledGrammar; 10]> = LazyLock::new(||
+        ["case-neutral", "reporter-separator", "not-reporter", "reporter-bracketed",
+            "reporter-numbered", "case-canlii", "case-in-house", "reporter-preference.official",
+            "reporter-preference.fr", "reporter-preference.en"].map(|name| format_pattern(&format!("format.{name}"))));
+    static CANLII_NAME: LazyLock<Regex> = LazyLock::new(|| Regex::new("(?i)canlii").unwrap());
+    let french = request.language.as_deref().unwrap_or("en").to_lowercase().starts_with("fr");
+    let texts = request.texts.iter().chain(std::iter::once(&request.fallback)).collect::<Vec<_>>();
+    #[cfg(feature = "canada")]
+    if let Some(neutral) = canadian_neutral(&texts, french, &PATTERNS[0]) {
+        return neutral;
     }
     let mut reporters = Vec::new();
     for text in &texts {

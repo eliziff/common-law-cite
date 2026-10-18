@@ -128,6 +128,15 @@ pub struct ReferenceRequest {
     #[serde(default)] pub previous: Option<(ReferenceRecord, usize)>,
 }
 
+/// Whether a part's own link gives way to its source fallback: a Canadian case citing the SCR.
+#[cfg_attr(not(feature = "canada"), allow(unused_variables))]
+fn prefers_fallback(kind: &str, text: &str) -> bool {
+    #[cfg(feature = "canada")]
+    return crate::url::source_prefers_fallback(kind, text);
+    #[cfg(not(feature = "canada"))]
+    false
+}
+
 fn unique_resource<T: PartialEq>(resources: impl IntoIterator<Item = Option<T>>) -> Option<T> {
     let mut resources = resources.into_iter();
     let first = resources.next()?;
@@ -591,15 +600,20 @@ impl<'a> Resolver<'a> {
         let reference = short_forms::reference_info(&part.text);
         let full = positions.iter().map(|&(_, position)| &self.citations[position])
             .filter(|citation| citation.form == Form::Full && !cites_record(citation)).collect::<Vec<_>>();
+        #[cfg(feature = "canada")]
         let fallback = crate::url::source_fallback(&full, &fields, part)
             .filter(|(index, _)| full.iter().any(|citation| citation.index == *index && !citation.is_ambiguous()));
+        #[cfg(not(feature = "canada"))]
+        let fallback: Option<(usize, String)> = None;
         // Explicit URLs on reference parts are cleared before the part's
         // link is resolved.
         let explicit = reference.kind.is_empty() && !fields.link_candidate.is_empty()
             && fields.link_candidate.to_lowercase() != "other"
-            && !(fallback.is_some() && crate::url::source_prefers_fallback(fields.kind, &part.text));
+            && !(fallback.is_some() && prefers_fallback(fields.kind, &part.text));
+        #[cfg_attr(not(feature = "canada"), allow(unused_mut))]
         let mut own_url = part.resolved_url.clone().or_else(|| if explicit { Some(fields.link_candidate.clone()) }
             else { fallback.as_ref().map(|(_, url)| url.clone()) });
+        #[cfg(feature = "canada")]
         if let Some(url) = &mut own_url {
             if part.resolved_url.is_none() {
                 *url = crate::url::source_first_pinpoint(url, &fields.pinpoint_fragments);
