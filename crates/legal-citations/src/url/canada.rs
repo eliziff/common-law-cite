@@ -574,6 +574,14 @@ pub fn publisher_may_repeat_passages(address: &str) -> bool {
         .is_ok_and(|url| url.host_str().is_some_and(|host| host == "canlii.org" || host.ends_with(".canlii.org")))
 }
 
+/// Whether a publisher's page prints a section's number against its first word with nothing between ("57An
+/// application"): New Brunswick's does, so a browser finds no word boundary before that word (measured 2026-10-18:
+/// 16 of 29 section openings painted nothing there, every subsection's "(1)" opening painted).
+pub fn publisher_glues_section_labels(address: &str) -> bool {
+    url::Url::options().base_url(Some(&url::Url::parse("http://mike.local").unwrap())).parse(address)
+        .is_ok_and(|url| matches!(url.host_str(), Some("laws.gnb.ca")))
+}
+
 /// The CanLII page of an A2AJ legislation record (`LEGISLATION-ON`, `REGULATIONS-FED`) by its citation slugged as CanLII
 /// slugs it: `RSO 1990, c C.43` in LEGISLATION-ON is `…/on/laws/stat/rso-1990-c-c.43/latest/rso-1990-c-c.43.html`.
 pub fn canlii_a2aj_law_url(dataset: &str, citation: &str, language: &str) -> Option<String> {
