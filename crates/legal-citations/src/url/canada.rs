@@ -565,6 +565,15 @@ pub fn publisher_annotates_legal_references(address: &str) -> bool {
         .is_ok_and(|url| matches!(url.host_str(), Some("www.bclaws.gov.bc.ca" | "decisions.scc-csc.ca")))
 }
 
+/// Whether a publisher's page may print a passage again where the document holds it once: CanLII prepends a reporter's
+/// headnote to a reported decision and sets "[See Note n below]" lines, so a quotation's words recur before their
+/// paragraph (measured 2026-10-18: a bare quotation painted the headnote's copy on 14 cached pages). A court's or
+/// legislature's own page is the document.
+pub fn publisher_may_repeat_passages(address: &str) -> bool {
+    url::Url::options().base_url(Some(&url::Url::parse("http://mike.local").unwrap())).parse(address)
+        .is_ok_and(|url| url.host_str().is_some_and(|host| host == "canlii.org" || host.ends_with(".canlii.org")))
+}
+
 /// The CanLII page of an A2AJ legislation record (`LEGISLATION-ON`, `REGULATIONS-FED`) by its citation slugged as CanLII
 /// slugs it: `RSO 1990, c C.43` in LEGISLATION-ON is `…/on/laws/stat/rso-1990-c-c.43/latest/rso-1990-c-c.43.html`.
 pub fn canlii_a2aj_law_url(dataset: &str, citation: &str, language: &str) -> Option<String> {
@@ -636,6 +645,60 @@ pub(super) fn statute_page(url: &mut url::Url) {
             let _ = url.set_host(Some("www.ontario.ca"));
             url.set_path(&path);
         }
+    }
+}
+
+/// The id a federal or provincial statute page prints for a provision (`5`, `5(2)`, `sec5subsec2`), at the deepest
+/// level that publisher's ids reach, read from the publishers' pages (experiments/text-fragment-fidelity/
+/// provider-anchors.md). Each id sits where its unit's text starts and is unique to it, except where a page prints the
+/// sections of its amending instruments after its own (Justice Laws `s-1` repeats there; the first is the text's).
+///
+/// * Justice Laws, `…/eng/acts/C-46/FullText.html`: the section, `s-5`, `s-5.01`; no id for a subsection.
+/// * BC Laws, `…/complete/statreg/…`: the section, `section5`, `section7.1`; its subsection ids are opaque.
+/// * Manitoba, `web2.gov.mb.ca/laws/…`: the section `5` or subsection `5(2)`, `5.3(4)`; none for a paragraph.
+/// * New Brunswick, `laws.gnb.ca/en/document/…`: the whole chain, `se:5`, `se:5-ss:2`, `se:5-ss:2-p1:b-p2:ii`, a
+///   decimal's point an underscore (`se:36_1`).
+/// * Newfoundland and Labrador, `assembly.nl.ca/Legislation/sr/…`: the section, `5_`, `6_1`, ahead of its heading.
+///
+/// Ontario e-Laws prints `s5` and `s5s2` on about one page in ten and an ordinal bookmark (`BK26`) on the rest;
+/// Alberta's King's Printer, Nova Scotia's and the PDF sites print none.
+pub(super) fn statute_anchor(url: &url::Url, label: &str) -> Option<String> {
+    let value = match label.get(..3) {
+        Some(prefix) if prefix.eq_ignore_ascii_case("sec") => match label[3..].split_once("subsec") {
+            Some((section, subsection)) => format!("{section}({subsection})"),
+            None => label[3..].to_owned(),
+        },
+        _ => label.to_owned(),
+    };
+    let provision = crate::format::parse_locator(&value)?;
+    let (root, parts) = (provision.root.as_str(), &provision.suffixes);
+    let host = url.host_str()?.to_ascii_lowercase();
+    let path = url.path().to_ascii_lowercase();
+    let subsection = parts.first().filter(|part| part.starts_with(|digit: char| digit.is_ascii_digit())
+        && part.chars().all(|digit| digit.is_ascii_digit() || digit == '.'));
+    match host.as_str() {
+        "laws-lois.justice.gc.ca" => (path.starts_with("/eng/") && path.ends_with("/fulltext.html"))
+            .then(|| format!("s-{root}")),
+        "www.bclaws.gov.bc.ca" => path.starts_with("/civix/document/id/complete/statreg/")
+            .then(|| format!("section{root}")),
+        "web2.gov.mb.ca" => (path.starts_with("/laws/statutes/") || path.starts_with("/laws/regs/"))
+            .then(|| subsection.map_or_else(|| root.to_owned(), |part| format!("{root}({part})"))),
+        "laws.gnb.ca" => path.starts_with("/en/document/").then(|| {
+            let mut anchor = format!("se:{}", root.replace('.', "_"));
+            let mut levels = ["p1", "p2", "c1"].into_iter();
+            for (index, part) in parts.iter().enumerate() {
+                let level = if index == 0 && subsection.is_some() { Some("ss") } else { levels.next() };
+                match level {
+                    Some(level) if part.chars().all(|character| character.is_ascii_alphanumeric() || character == '.') =>
+                        anchor.push_str(&format!("-{level}:{}", part.replace('.', "_"))),
+                    _ => break,
+                }
+            }
+            anchor
+        }),
+        "www.assembly.nl.ca" => path.starts_with("/legislation/sr/")
+            .then(|| if root.contains('.') { root.replace('.', "_") } else { format!("{root}_") }),
+        _ => None,
     }
 }
 
