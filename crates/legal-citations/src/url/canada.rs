@@ -559,6 +559,38 @@ pub fn canlii_pdf_url(page_url: &str) -> Option<String> {
 }
 
 /// Whether `url` is on canlii.org (any subdomain).
+/// Whether a publisher's page may print a legal reference inside the text it quotes (BC Laws annotates them).
+pub fn publisher_annotates_legal_references(address: &str) -> bool {
+    url::Url::options().base_url(Some(&url::Url::parse("http://mike.local").unwrap())).parse(address)
+        .is_ok_and(|url| url.host_str() == Some("www.bclaws.gov.bc.ca"))
+}
+
+/// The CanLII page of an A2AJ legislation record (`LEGISLATION-ON`, `REGULATIONS-FED`) by its citation slugged as CanLII
+/// slugs it: `RSO 1990, c C.43` in LEGISLATION-ON is `…/on/laws/stat/rso-1990-c-c.43/latest/rso-1990-c-c.43.html`.
+pub fn canlii_a2aj_law_url(dataset: &str, citation: &str, language: &str) -> Option<String> {
+    static DATASET: LazyLock<Regex> = LazyLock::new(||
+        Regex::new(r"^(LEGISLATION|REGULATIONS)-(FED|AB|BC|MB|NB|NL|NS|NT|NU|ON|PE|QC|SK|YT)$").unwrap());
+    static SEPARATORS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[^a-z0-9.]+").unwrap());
+    let dataset = DATASET.captures(dataset.trim())?;
+    let lowered = citation.trim().to_lowercase();
+    let slug = SEPARATORS.replace_all(&lowered, "-");
+    let slug = slug.trim_matches('-');
+    if slug.is_empty() {
+        return None;
+    }
+    let jurisdiction = if &dataset[2] == "FED" { "ca".to_owned() } else { dataset[2].to_lowercase() };
+    let kind = if &dataset[1] == "LEGISLATION" { "stat" } else { "regu" };
+    Some(format!("https://www.canlii.org/{language}/{jurisdiction}/laws/{kind}/{slug}/latest/{slug}.html"))
+}
+
+/// A2AJ Law Web's reader of a document (`https://law.a2aj.ca/document?citation=…&doc_type=…`), which draws the
+/// A2AJ text itself.
+pub fn law_web_document(citation: &str, doc_type: &str) -> String {
+    let mut url = url::Url::parse("https://law.a2aj.ca/document").unwrap();
+    url.query_pairs_mut().append_pair("citation", citation).append_pair("doc_type", doc_type);
+    url.into()
+}
+
 pub(super) fn on_canlii_org(url: &url::Url) -> bool {
     url.host_str().is_some_and(|host| host == "canlii.org" || host.ends_with(".canlii.org"))
 }

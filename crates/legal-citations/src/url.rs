@@ -199,6 +199,26 @@ pub struct PassageLocator {
     pub part: Option<String>,
 }
 
+/// Whether an address (absolute, or a path on this host) opens a PDF: a `.pdf`, a Decisia `document.do`, a
+/// `rendition=pdf` download, or a territory's or province's statute files served as PDFs.
+pub fn is_pdf_address(address: &str) -> bool {
+    static LOCAL: LazyLock<url::Url> = LazyLock::new(|| url::Url::parse("http://mike.local").unwrap());
+    static SASKATCHEWAN: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"publications\.saskatchewan\.ca/api/v1/products/[^/]+/formats/").unwrap());
+    let Ok(url) = url::Url::options().base_url(Some(&LOCAL)).parse(address) else {
+        let path = address.to_lowercase();
+        let path = path.split(['?', '#']).next().unwrap_or("");
+        return path.ends_with(".pdf") || path.ends_with("/document.do");
+    };
+    let path = url.path().to_lowercase();
+    let href = url.as_str().to_lowercase();
+    path.ends_with(".pdf") || path.ends_with("/document.do")
+        || url.query_pairs().any(|(name, value)| name == "rendition" && value.eq_ignore_ascii_case("pdf"))
+        || ["laws.yukon.ca/cms/images/legislation/", "justice.gov.nt.ca/en/files/legislation/",
+            "princeedwardisland.ca/sites/default/files/legislation/"].iter().any(|part| href.contains(part))
+        || SASKATCHEWAN.is_match(&href)
+}
+
 /// [`PassageLocator`] of `link` (absolute, or a path on this host), from its anchor.
 pub fn passage_locator(link: &str, pinpoints: &[String]) -> Option<PassageLocator> {
     static PARAGRAPH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^par([0-9]+)$").unwrap());
