@@ -13,8 +13,8 @@ license = "BSD-2-Clause"
 
 [reporters-db]
 repository = "freelawproject/reporters-db"
-version = "3.2.66"
-commit = "7a5b9b06fcdc829546705fd874023990f493e751"
+version = "3.2.67"
+commit = "faddc86aad58ebde19d81b6f1ba64d229a801092"
 license = "BSD-2-Clause"
 [reporters-db.sha256]
 "reporters_db/data/journals.json" = "acad477ad889f745afe09a738e0c0091fdb59ab05a40d0bf55deba9c0ae2d10f"
