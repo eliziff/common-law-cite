@@ -4,4 +4,9 @@
  * Candidate spellings for an external CanLII TSV index. These
  * are lookup hints, never authority keys or unverified source URLs.
  */
-export type LegislationLookup = { candidates: Array<string>, jurisdiction: string, };
+export type LegislationLookup = { candidates: Array<string>, jurisdiction: string, 
+/**
+ * The citation's [`canlii_citation_keys`]: an index of CanLII's
+ * own printed citations, keyed the same way, identifies the instrument exactly.
+ */
+keys: Array<string>, };

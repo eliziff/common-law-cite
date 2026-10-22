@@ -16,23 +16,102 @@ fn language_segment(language: Language) -> &'static str {
 
 /// Candidate spellings for an external CanLII TSV index. These
 /// are lookup hints, never authority keys or unverified source URLs.
+/// `keys` are the citation's [`canlii_citation_keys`]: an index of CanLII's
+/// own printed citations, keyed the same way, identifies the instrument exactly.
 #[derive(Clone, Debug, serde::Serialize)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct LegislationLookup {
     pub candidates: Vec<String>,
     pub jurisdiction: String,
+    pub keys: Vec<String>,
+}
+
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct LookupRules {
+    series: std::collections::HashSet<String>,
+    regulation_prefixes: HashMap<String, String>,
+    series_jurisdictions: HashMap<String, String>,
+    /// Groups of key prefixes that name one CanLII series (French and older names).
+    key_aliases: Vec<Vec<String>>,
+    /// Key prefixes of the statute and regulation series CanLII publishes, by jurisdiction.
+    key_jurisdictions: HashMap<String, String>,
+}
+
+static LOOKUP_RULES: LazyLock<LookupRules> = LazyLock::new(||
+    serde_json::from_str(include_str!("../../registry/canlii-index.json")).expect("CanLII index rules"));
+
+/// CanLII's citation identity for a statute or regulation: the printed
+/// citation folded to the spelling of CanLII's own legislation citations, so
+/// "R.S.O. 1990, c. H.8" and "RSO 1990, c H.8" are both `rso-1990-c-h.8`.
+/// Accents, case and abbreviation periods go; a period inside a number ("H.8",
+/// "18.1") stays; every other run of spaces and punctuation is one hyphen.
+pub fn canlii_citation_key(value: &str) -> String {
+    let folded = value.nfkd().filter(|c| !unicode_normalization::char::is_combining_mark(*c))
+        .collect::<String>().to_lowercase();
+    let mut key = String::with_capacity(folded.len());
+    let mut gap = false;
+    let mut chars = folded.chars().peekable();
+    while let Some(c) = chars.next() {
+        let number_point = c == '.' && chars.peek().is_some_and(char::is_ascii_digit);
+        if c == '.' && !number_point { continue; }
+        if c.is_ascii_lowercase() || c.is_ascii_digit() || number_point {
+            if gap && !key.is_empty() { key.push('-'); }
+            gap = false;
+            key.push(c);
+        } else {
+            gap = true;
+        }
+    }
+    key
+}
+
+/// [`canlii_citation_key`] and its equivalent spellings, most specific first:
+/// the citation as written, then without a trailing provision pinpoint or
+/// amendment note (a CanLII citation can itself end "s 7", for an act enacted
+/// by a section of another; Quebec's "r 0.1" and Ontario's "Sch 24" are always
+/// identity), the same series under its French or older name (`rlrq-c-` and
+/// `cqlr-c-`, `dors-` and `sor-`) and a numbered regulation's two- or
+/// four-digit year (O Reg 191/11 and O Reg 191/2011).
+pub fn canlii_citation_keys(value: &str) -> Vec<String> {
+    static TAIL: LazyLock<Regex> = LazyLock::new(||
+        Regex::new(r"(?i)\s*,\s*(?:as am\b.*|(?:ss?|arts?)\.?\s*\d.*)$").expect("citation tail"));
+    let mut keys = Vec::new();
+    for written in [value.to_owned(), TAIL.replace(value, "").into_owned()] {
+        for key in canlii_citation_spellings(&written) {
+            if !keys.contains(&key) { keys.push(key); }
+        }
+    }
+    keys
+}
+
+fn canlii_citation_spellings(value: &str) -> Vec<String> {
+    static LONG_YEAR: LazyLock<Regex> = LazyLock::new(||
+        Regex::new(r"^((?:.*-)?(?:reg|sor|si|yoic|nlr|cnlr)-[^-]+-)(?:19|20)(\d{2})$").expect("regulation year"));
+    static SHORT_YEAR: LazyLock<Regex> = LazyLock::new(||
+        Regex::new(r"^((?:.*-)?(?:reg|sor|si|yoic|nlr|cnlr)-[^-]+-)(\d{2})$").expect("regulation year"));
+    let base = canlii_citation_key(value);
+    if base.is_empty() { return Vec::new(); }
+    let mut keys = vec![base.clone()];
+    let push = |keys: &mut Vec<String>, key: String| if !keys.contains(&key) { keys.push(key) };
+    for group in &LOOKUP_RULES.key_aliases {
+        if let Some(prefix) = group.iter().find(|prefix| base.starts_with(prefix.as_str())) {
+            for other in group { push(&mut keys, format!("{other}{}", &base[prefix.len()..])); }
+        }
+    }
+    for key in keys.clone() {
+        if let Some(year) = LONG_YEAR.captures(&key) {
+            push(&mut keys, format!("{}{}", &year[1], &year[2]));
+        } else if let Some(year) = SHORT_YEAR.captures(&key) {
+            let century = if year[2].parse::<u32>().unwrap_or(0) > 40 { "19" } else { "20" };
+            push(&mut keys, format!("{}{century}{}", &year[1], &year[2]));
+        }
+    }
+    keys
 }
 
 pub fn legislation_lookup(value: &str) -> LegislationLookup {
-    #[derive(serde::Deserialize)]
-    #[serde(rename_all = "camelCase")]
-    struct Rules {
-        series: std::collections::HashSet<String>,
-        regulation_prefixes: std::collections::HashMap<String, String>,
-        series_jurisdictions: std::collections::HashMap<String, String>,
-    }
-    static RULES: LazyLock<Rules> = LazyLock::new(||
-        serde_json::from_str(include_str!("../../registry/canlii-index.json")).expect("CanLII index rules"));
+    let rules = &*LOOKUP_RULES;
     static PATTERNS: LazyLock<[legal_grammar::CompiledEcmascriptGrammar; 7]> = LazyLock::new(|| {
         ["statute", "regulation", "instrument", "crc", "jurisdiction-statute", "jurisdiction-instrument", "jurisdiction-crc"]
             .map(|name| legal_grammar::compile_ecmascript_table_entry(&format!("lookup.canlii-legislation.{name}"))
@@ -47,14 +126,14 @@ pub fn legislation_lookup(value: &str) -> LegislationLookup {
     };
     for matched in PATTERNS[0].captures_iter(&citation) {
         let series = series_key(&matched[1]);
-        if !RULES.series.contains(&series) { continue; }
+        if !rules.series.contains(&series) { continue; }
         let chapter = matched[3].to_lowercase();
         for chapter in [chapter.clone(), chapter.replace('.', "-"), chapter.replace(['.', '-'], "")] {
             add(format!("{series}-{}-c-{chapter}", &matched[2]));
         }
     }
     if let Some(matched) = PATTERNS[1].captures(&citation) {
-        if let Some(prefix) = RULES.regulation_prefixes.get(&series_key(&matched[1])) {
+        if let Some(prefix) = rules.regulation_prefixes.get(&series_key(&matched[1])) {
             add(format!("{prefix}-reg-{}-{}", &matched[2], &matched[3]));
         }
     }
@@ -62,17 +141,31 @@ pub fn legislation_lookup(value: &str) -> LegislationLookup {
         add(format!("{}-{}-{}", &matched[1], &matched[2], &matched[3]));
     }
     if let Some(matched) = PATTERNS[3].captures(&citation) { add(format!("crc-c-{}", &matched[1])); }
+    // Most CanLII identifiers are the citation key itself, or it without the
+    // period of a chapter number (RSO 1990, c H.8 is rso-1990-c-h8).
+    let keys = canlii_citation_keys(value);
+    for key in &keys {
+        add(key.clone());
+        add(key.replace('.', ""));
+        add(key.replace('.', "-"));
+    }
     // The original jurisdiction lookup uses the written text, without the
     // candidate spelling's NFKC/dash normalization.
-    let jurisdiction = if let Some(matched) = PATTERNS[4].captures(value) {
-        RULES.series_jurisdictions.get(&series_key(&matched[1])).cloned().unwrap_or_default()
+    let mut jurisdiction = if let Some(matched) = PATTERNS[4].captures(value) {
+        rules.series_jurisdictions.get(&series_key(&matched[1])).cloned().unwrap_or_default()
     } else if let Some(matched) = PATTERNS[1].captures(value) {
-        match RULES.regulation_prefixes.get(&series_key(&matched[1])).map(String::as_str).unwrap_or("") {
+        match rules.regulation_prefixes.get(&series_key(&matched[1])).map(String::as_str).unwrap_or("") {
             "alta" => "ab", "o" => "on", "man" => "mb", "sask" => "sk", prefix => prefix,
         }.to_owned()
     } else if PATTERNS[5].is_match(value) || PATTERNS[6].is_match(value) { "ca".to_owned() }
     else { String::new() };
-    LegislationLookup { candidates, jurisdiction }
+    if jurisdiction.is_empty() {
+        jurisdiction = keys.iter().find_map(|key| rules.key_jurisdictions.iter()
+            .filter(|(prefix, _)| key.starts_with(prefix.as_str()))
+            .max_by_key(|(prefix, _)| prefix.len()).map(|(_, value)| value.clone()))
+            .unwrap_or_default();
+    }
+    LegislationLookup { candidates, jurisdiction, keys }
 }
 
 // ---------------------------------------------------------------------------
@@ -120,9 +213,34 @@ static SOURCE_ROUTES: LazyLock<SourceRoutes> = LazyLock::new(|| {
             }
             result.routes.entry(code.to_ascii_uppercase()).or_insert(path);
         }
+        // Codes CanLII uses in decision ids, which link but do not identify the court.
+        for code in &court.canlii_codes {
+            result.routes.entry(code.to_ascii_uppercase()).or_insert_with(|| path.clone());
+        }
+        let french = court.canlii_fr.as_ref().map_or_else(|| path.clone(), |route| format!("{}/{}", route.jurisdiction, route.database));
+        for code in &court.canlii_codes_fr {
+            result.french_routes.entry(code.to_ascii_uppercase()).or_insert_with(|| french.clone());
+            result.routes.entry(code.to_ascii_uppercase()).or_insert_with(|| french.clone());
+        }
     }
     result
 });
+
+/// A decision number as CanLII writes it in decision ids: without leading zeros
+/// (`2009 PSST 0013` is `2009psst13`).
+fn id_number(number: &str) -> &str {
+    let trimmed = number.trim_start_matches('0');
+    if trimmed.is_empty() && !number.is_empty() { "0" } else { trimmed }
+}
+
+/// The court whose CanLII-only decision-id codes include `written`, and whether the code is French.
+fn canlii_code_court<'r>(registry: &'r Registry, written: &str) -> Option<(&'r registry::Court, bool)> {
+    let folded = fold(written);
+    registry.courts.iter().find_map(|court| {
+        if court.canlii_codes_fr.iter().any(|code| fold(code) == folded) { return Some((court, true)); }
+        court.canlii_codes.iter().any(|code| fold(code) == folded).then_some((court, false))
+    })
+}
 
 pub(crate) fn source_canlii_french_routes() -> &'static HashMap<String, String> {
     &SOURCE_ROUTES.french_routes
@@ -150,7 +268,7 @@ pub fn canlii_citation_url(text: &str, language: &str) -> Option<String> {
     let route = SOURCE_ROUTES.french_routes.get(&code).or_else(|| SOURCE_ROUTES.routes.get(&code))?;
     let (jurisdiction, database) = route.split_once('/')?;
     let slug = if is_canlii { format!("{year}canlii{second}") }
-        else { format!("{year}{code}{third}").to_lowercase().chars().filter(char::is_ascii_alphanumeric).collect() };
+        else { format!("{year}{code}{}", id_number(third)).to_lowercase().chars().filter(char::is_ascii_alphanumeric).collect() };
     Some(page_url(jurisdiction, database, year, &slug, if french { Language::Fr } else { Language::En }))
 }
 
@@ -279,7 +397,7 @@ fn source_canlii_case(citation: &Citation, language: Language) -> Option<String>
     let route = source_canlii_routes().get(&written.to_ascii_uppercase())?;
     let (jurisdiction, database) = route.split_once('/').unwrap_or(("", route));
     let code = if citation.format == Some(Format::CanLii) { "canlii".to_owned() } else { written.to_ascii_lowercase() };
-    let slug = format!("{year}{code}{number}");
+    let slug = format!("{year}{code}{}", id_number(number));
     Some(page_url(jurisdiction, database, &year, &slug, language))
 }
 
@@ -294,6 +412,7 @@ pub fn canlii_case_in(citation: &Citation, language: Language, registry: &Regist
     if number.is_empty() || !number.chars().all(|character| character.is_ascii_digit()) {
         return None;
     }
+    let number = id_number(number);
     match citation.format? {
         Format::Neutral => {
             let written = fields.series.as_deref()?.trim();
@@ -305,18 +424,42 @@ pub fn canlii_case_in(citation: &Citation, language: Language, registry: &Regist
                 .court
                 .as_ref()
                 .and_then(|court| key::court(registry, &court.id))
-                .or_else(|| key::court_by_surface(registry, written))?;
-            if !(court.jurisdiction == "ca" || court.jurisdiction.starts_with("ca-")) {
-                return None;
-            }
-            // The written code must be one of the court's own neutral codes.
-            let position = court.neutral.iter().position(|code| fold(code) == fold(written))?;
+                .or_else(|| key::court_by_surface(registry, written));
             // The code as written, lowercased: `SCC-L` → `scc-l`.
             let code = written
                 .chars()
                 .filter(|character| character.is_ascii_alphanumeric() || *character == '-')
                 .collect::<String>()
                 .to_ascii_lowercase();
+            // A code CanLII uses in the court's decision ids without identifying the court by it
+            // (`CRTFP`, `SSTAD`): the court's route, under /fr/ for a French code.
+            let neutral_position = court.and_then(|court| court.neutral.iter().position(|value| fold(value) == fold(written)));
+            if neutral_position.is_none() {
+                let (court, french) = court
+                    .and_then(|court| {
+                        let folded = fold(written);
+                        if court.canlii_codes_fr.iter().any(|value| fold(value) == folded) { return Some((court, true)); }
+                        court.canlii_codes.iter().any(|value| fold(value) == folded).then_some((court, false))
+                    })
+                    .or_else(|| canlii_code_court(registry, written))?;
+                if !(court.jurisdiction == "ca" || court.jurisdiction.starts_with("ca-")) {
+                    return None;
+                }
+                let route = if french { court.canlii_fr.as_ref().or(court.canlii.as_ref())? } else { court.canlii.as_ref()? };
+                return Some(page_url(
+                    &route.jurisdiction,
+                    &route.database,
+                    &year,
+                    &format!("{year}{code}{number}"),
+                    if french { Language::Fr } else { language },
+                ));
+            }
+            let court = court?;
+            if !(court.jurisdiction == "ca" || court.jurisdiction.starts_with("ca-")) {
+                return None;
+            }
+            // The written code must be one of the court's own neutral codes.
+            let position = neutral_position?;
             // Neutral codes are listed English first, then French (`SCC`, `CSC`).
             if position % 2 == 1 {
                 if let Some(route) = &court.canlii_fr {

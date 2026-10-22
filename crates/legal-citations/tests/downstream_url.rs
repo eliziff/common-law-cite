@@ -3,7 +3,7 @@ mod downstream_common;
 use downstream_common::*;
 use legal_citations::format::Language;
 use legal_citations::url::{
-    canlii_anchor, canlii_case_in, canlii_legislation_in, canlii_noteup, canlii_pdf_url, canlii_search,
+    canlii_anchor, canlii_case_in, canlii_citation_url, canlii_legislation_in, canlii_noteup, canlii_pdf_url, canlii_search,
     courtlistener_in, encode_component, is_canlii_url, justice_laws, legislation_gov_uk, paragraph_anchor, uk_caselaw,
     url_in, with_pinpoint, SearchField,
 };
@@ -117,6 +117,46 @@ fn canlii_abstains_when_uncertain() {
     let mut supra = neutral("2016", "SCC", "27");
     supra.form = Form::Supra;
     assert_eq!(canlii_case_in(&supra, Language::En, registry()), None);
+}
+
+#[test]
+fn canlii_decision_id_codes() {
+    // Codes CanLII uses in a court's decision ids without the court being identified by them:
+    // a French code under /fr/ and the court's route, a division's code under the court's route.
+    // Each URL was checked against canlii.org. Against the built-in registry, which carries them.
+    let cases = [
+        ("2010", "PSLRB", "14", "https://www.canlii.org/en/ca/pslrb/doc/2010/2010pslrb14/2010pslrb14.html"),
+        ("2010", "CRTFP", "14", "https://www.canlii.org/fr/ca/pslrb/doc/2010/2010crtfp14/2010crtfp14.html"),
+        ("2015", "CRTEFP", "40", "https://www.canlii.org/fr/ca/pslreb/doc/2015/2015crtefp40/2015crtefp40.html"),
+        ("2021", "CRTESPF", "110", "https://www.canlii.org/fr/ca/pslreb/doc/2021/2021crtespf110/2021crtespf110.html"),
+        ("2009", "TDFP", "0013", "https://www.canlii.org/fr/ca/psst/doc/2009/2009tdfp13/2009tdfp13.html"),
+        ("2019", "TSS", "1537", "https://www.canlii.org/fr/ca/sst/doc/2019/2019tss1537/2019tss1537.html"),
+        ("2014", "SSTAD", "300", "https://www.canlii.org/en/ca/sst/doc/2014/2014sstad300/2014sstad300.html"),
+        ("2014", "TSSDA", "300", "https://www.canlii.org/fr/ca/sst/doc/2014/2014tssda300/2014tssda300.html"),
+        ("2019", "TPFD", "1", "https://www.canlii.org/fr/ca/psdpt/doc/2019/2019tpfd1/2019tpfd1.html"),
+        ("2021", "TATCE", "22", "https://www.canlii.org/en/ca/tatc/doc/2021/2021tatce22/2021tatce22.html"),
+        ("2021", "TATCF", "22", "https://www.canlii.org/fr/ca/tatc/doc/2021/2021tatcf22/2021tatcf22.html"),
+        ("2022", "CI", "62", "https://www.canlii.org/fr/ca/oic/doc/2022/2022ci62/2022ci62.html"),
+        ("2020", "SCTC", "1", "https://www.canlii.org/en/ca/sct/doc/2020/2020sctc1/2020sctc1.html"),
+    ];
+    let missing: Vec<_> = cases.iter().filter(|(year, code, number, _)| canlii_case_in(&neutral(year, code, number), Language::En, legal_citations::registry::registry()).is_none())
+        .map(|(year, code, number, _)| format!("{year} {code} {number}")).collect();
+    assert!(missing.is_empty(), "no CanLII URL for {missing:?}");
+    for (year, code, number, url) in cases {
+        assert_eq!(canlii(canlii_case_in(&neutral(year, code, number), Language::En, legal_citations::registry::registry())), url, "{year} {code} {number}");
+        assert_eq!(canlii_citation_url(&format!("{year} {code} {number}"), "en").as_deref(), Some(url), "{year} {code} {number}");
+    }
+    // A decision number's leading zeros are not part of CanLII's id.
+    assert_eq!(
+        canlii_citation_url("2009 PSST 0013", "en").as_deref(),
+        Some("https://www.canlii.org/en/ca/psst/doc/2009/2009psst13/2009psst13.html")
+    );
+    // Codes CanLII does not use in decision ids stay without a link (the Competition
+    // Tribunal's decisions are CanLII-cited; SST's EI and income security divisions are not
+    // published under their own codes; CRAC is also a reporter).
+    for text in ["2020 Comp Trib 7", "2016 SSTADEI 250", "2017 SSTGDIS 32", "2026 CRAC 18"] {
+        assert_eq!(canlii_citation_url(text, "en"), None, "{text}");
+    }
 }
 
 #[test]
@@ -394,4 +434,38 @@ fn encode_component_matches_javascript() {
     assert_eq!(encode_component("a b&c/d?e=f"), "a%20b%26c%2Fd%3Fe%3Df");
     assert_eq!(encode_component("-_.!~*'()"), "-_.!~*'()");
     assert_eq!(encode_component("é"), "%C3%A9");
+}
+
+#[test]
+fn canlii_citation_keys_match_canlii_printed_citations() {
+    use legal_citations::url::{canlii_citation_key, canlii_citation_keys, legislation_lookup};
+    // A provider's periods and CanLII's McGill spelling fold to one key.
+    assert_eq!(canlii_citation_key("R.S.O. 1990, c. H.8"), "rso-1990-c-h.8");
+    assert_eq!(canlii_citation_key("RSO 1990, c H.8"), "rso-1990-c-h.8");
+    assert_eq!(canlii_citation_key("RRS c T-18.1 Reg 1"), "rrs-c-t-18.1-reg-1");
+    assert_eq!(canlii_citation_key("CQLR c C-25.01, r 0.1"), "cqlr-c-c-25.01-r-0.1");
+    assert_eq!(canlii_citation_key("SO 2010, c 1, Sch 24"), "so-2010-c-1-sch-24");
+    assert_eq!(canlii_citation_key("NWT Reg (Nu) 060-93"), "nwt-reg-nu-060-93");
+    // The citation as written comes first; without its pinpoint, after every spelling of it.
+    let keys = canlii_citation_keys("RSC 1985, c C-46, s 2");
+    assert_eq!(keys[0], "rsc-1985-c-c-46-s-2");
+    assert!(keys.iter().position(|key| key == "rsc-1985-c-c-46") > keys.iter().position(|key| key == "lrc-1985-c-c-46-s-2"));
+    assert_eq!(canlii_citation_key("SC 2005, c 11, s 7"), "sc-2005-c-11-s-7");
+    assert!(canlii_citation_keys("RLRQ c C-12").contains(&"cqlr-c-c-12".to_owned()));
+    assert!(canlii_citation_keys("O. Reg. 191/2011").contains(&"o-reg-191-11".to_owned()));
+    assert!(canlii_citation_keys("BC Reg 337/95").contains(&"bc-reg-337-1995".to_owned()));
+    // Series the fixed lookup patterns never covered now yield CanLII's identifiers.
+    for (citation, id, jurisdiction) in [
+        ("RRO 1990, Reg 194", "rro-1990-reg-194", "on"), ("NLR 2/05", "nlr-2-05", "nl"),
+        ("CQLR c C-12", "cqlr-c-c-12", "qc"), ("CCSM c E110", "ccsm-c-e110", "mb"),
+        ("RRS c T-18.1 Reg 1", "rrs-c-t-18.1-reg-1", "sk"), ("YOIC 2020/68", "yoic-2020-68", "yk"),
+        ("NWT Reg 089-2019", "nwt-reg-089-2019", "nt"), ("Nu Reg 001-2007", "nu-reg-001-2007", "nu"),
+        ("PEI Reg EC342/06", "pei-reg-ec342-06", "pe"), ("NB Reg 84-20", "nb-reg-84-20", "nb"),
+        ("SQ 2019, c 28", "sq-2019-c-28", "qc"), ("SNu 2008, c 15", "snu-2008-c-15", "nu"),
+        ("RSO 1990, c H.8", "rso-1990-c-h8", "on"),
+    ] {
+        let lookup = legislation_lookup(citation);
+        assert!(lookup.candidates.contains(&id.to_owned()), "{citation}: {:?}", lookup.candidates);
+        assert_eq!(lookup.jurisdiction, jurisdiction, "{citation}");
+    }
 }

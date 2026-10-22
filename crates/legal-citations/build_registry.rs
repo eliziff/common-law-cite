@@ -249,7 +249,7 @@ pub fn compile(out: &Path) {
             source[file] = Value::Object(all);
         }
         let fields: &[&str] = match table {
-            "courts" => &["id", "name", "jurisdiction", "level", "neutral", "aliases", "citation_string", "source_dates", "canlii", "canlii_fr", "canlii_french", "start", "end", "parent"],
+            "courts" => &["id", "name", "jurisdiction", "level", "neutral", "aliases", "citation_string", "source_dates", "canlii", "canlii_fr", "canlii_french", "canlii_codes", "canlii_codes_fr", "start", "end", "parent"],
             "reporters" => &["id", "name", "kind", "jurisdiction", "courts", "default_court", "editions", "variations", "year_volume", "source", "verified"],
             "series" => &["id", "name", "kind", "jurisdiction", "abbreviation", "variations", "language", "canlii"],
             "journals" => &["id", "name", "abbreviation", "variations", "jurisdiction", "source", "verified"],
