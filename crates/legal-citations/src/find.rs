@@ -436,7 +436,8 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             // with the Court of Appeal for Court File No. A-290-21").
             .filter(|matched| *reason != "court_file_grammar" || !matched.as_str().starts_with("Court")
                 || !value[..matched.start()].strip_suffix(' ').is_some_and(|before| {
-                    let word = &before[before.rfind(|c: char| !c.is_alphabetic()).map_or(0, |at| at + 1)..];
+                    let word = &before[before.char_indices().rev().find(|(_, c)| !c.is_alphabetic())
+                        .map_or(0, |(at, c)| at + c.len_utf8())..];
                     !word.is_empty() && word.chars().all(|c| c.is_lowercase())
                         && before.len() > word.len() && before[..before.len() - word.len()].ends_with(' ')
                 }))

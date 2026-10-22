@@ -1007,6 +1007,23 @@
       }
     },
     {
+      "name": "court-file-number-after-a-curly-possessive",
+      "status": "pass",
+      "input": "He filed a statement of claim to be issued in the Ontario Superior Court of Justice’s Court File No. CV-22-00690473-0000.",
+      "expect": {
+        "citations": [
+          {
+            "form": "full",
+            "authority": "case",
+            "span": {
+              "text": "Court File No. CV-22-00690473-0000"
+            },
+            "style": null
+          }
+        ]
+      }
+    },
+    {
       "name": "mcgill/tab-label-before-a-style",
       "convention": "mcgill",
       "status": "pass",
