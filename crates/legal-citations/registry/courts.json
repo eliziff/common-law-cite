@@ -2916,6 +2916,9 @@
    "jurisdiction": "ca",
    "database": "oic"
   },
+  "canlii_codes_fr": [
+   "CI"
+  ],
   "name_fr": "Commissaire à l'information du Canada",
   "region": "ca",
   "level": "tribunal",
@@ -4188,6 +4191,9 @@
    "jurisdiction": "ca",
    "database": "psdpt"
   },
+  "canlii_codes_fr": [
+   "TPFD"
+  ],
   "name_fr": "Tribunal de la protection des fonctionnaires divulgateurs",
   "region": "ca",
   "level": "tribunal",
@@ -4205,14 +4211,39 @@
    "jurisdiction": "ca",
    "database": "pslreb"
   },
+  "canlii_codes_fr": [
+   "CRTEFP",
+   "CRTESPF"
+  ],
   "name_fr": "Commission des relations de travail et de l'emploi dans le secteur public fédéral",
   "region": "ca",
   "level": "tribunal",
   "type": "tribunal"
  },
  {
-  "id": "pssrb",
+  "id": "pslrb",
   "name": "Public Service Labour Relations Board",
+  "neutral": [
+   "PSLRB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "pslrb"
+  },
+  "canlii_codes_fr": [
+   "CRTFP"
+  ],
+  "name_fr": "Commission des relations de travail dans la fonction publique",
+  "start": 2005,
+  "end": 2014,
+  "region": "ca",
+  "level": "tribunal",
+  "type": "tribunal"
+ },
+ {
+  "id": "pssrb",
+  "name": "Public Service Staff Relations Board",
   "neutral": [
    "PSSRB"
   ],
@@ -4236,6 +4267,9 @@
    "jurisdiction": "ca",
    "database": "psst"
   },
+  "canlii_codes_fr": [
+   "TDFP"
+  ],
   "region": "ca",
   "level": "tribunal",
   "type": "tribunal"
@@ -5882,6 +5916,9 @@
    "jurisdiction": "ca",
    "database": "sct"
   },
+  "canlii_codes": [
+   "SCTC"
+  ],
   "name_fr": "Tribunal des revendications particulières",
   "region": "ca",
   "level": "tribunal",
@@ -6337,6 +6374,13 @@
    "jurisdiction": "ca",
    "database": "sst"
   },
+  "canlii_codes": [
+   "SSTAD"
+  ],
+  "canlii_codes_fr": [
+   "TSS",
+   "TSSDA"
+  ],
   "name_fr": "Tribunal de la sécurité sociale",
   "region": "ca",
   "level": "tribunal",
@@ -6353,6 +6397,12 @@
    "jurisdiction": "ca",
    "database": "tatc"
   },
+  "canlii_codes": [
+   "TATCE"
+  ],
+  "canlii_codes_fr": [
+   "TATCF"
+  ],
   "name_fr": "Tribunal d'appel des transports du Canada",
   "region": "ca",
   "level": "tribunal",

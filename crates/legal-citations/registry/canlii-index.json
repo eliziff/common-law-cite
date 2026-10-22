@@ -98,5 +98,141 @@
     "rlrq": "qc",
     "rsq": "qc",
     "lq": "qc"
+  },
+  "keyAliases": [
+    [
+      "cqlr-c-",
+      "rlrq-c-",
+      "rsq-c-",
+      "lrq-c-"
+    ],
+    [
+      "rsc-",
+      "lrc-"
+    ],
+    [
+      "sc-",
+      "lc-"
+    ],
+    [
+      "sor-",
+      "dors-"
+    ],
+    [
+      "si-",
+      "tr-"
+    ],
+    [
+      "sq-",
+      "lq-"
+    ],
+    [
+      "rso-",
+      "lro-"
+    ],
+    [
+      "so-",
+      "lo-"
+    ],
+    [
+      "rsm-",
+      "lrm-"
+    ],
+    [
+      "sm-",
+      "lm-"
+    ],
+    [
+      "ccsm-c-",
+      "cplm-c-"
+    ],
+    [
+      "o-reg-",
+      "ont-reg-",
+      "regl-de-l-ont-"
+    ],
+    [
+      "alta-reg-",
+      "regl-de-l-alb-"
+    ],
+    [
+      "bc-reg-",
+      "regl-de-la-c-b-"
+    ],
+    [
+      "nb-reg-",
+      "regl-du-n-b-"
+    ],
+    [
+      "man-reg-",
+      "regl-du-man-"
+    ],
+    [
+      "nlr-",
+      "nfld-reg-",
+      "nfld-r-"
+    ]
+  ],
+  "keyJurisdictions": {
+    "rsc-": "ca",
+    "sc-": "ca",
+    "crc-": "ca",
+    "sor-": "ca",
+    "si-": "ca",
+    "dors-": "ca",
+    "tr-": "ca",
+    "lrc-": "ca",
+    "lc-": "ca",
+    "rsa-": "ab",
+    "sa-": "ab",
+    "alta-reg-": "ab",
+    "rsbc-": "bc",
+    "sbc-": "bc",
+    "bc-reg-": "bc",
+    "rsm-": "mb",
+    "sm-": "mb",
+    "ccsm-": "mb",
+    "man-reg-": "mb",
+    "rsnb-": "nb",
+    "snb-": "nb",
+    "nb-reg-": "nb",
+    "rsnl-": "nl",
+    "snl-": "nl",
+    "nlr-": "nl",
+    "cnlr-": "nl",
+    "rsns-": "ns",
+    "sns-": "ns",
+    "ns-reg-": "ns",
+    "rsnwt-": "nt",
+    "snwt-": "nt",
+    "rrnwt-": "nt",
+    "nwt-reg-": "nt",
+    "rsnwt-nu-": "nu",
+    "snwt-nu-": "nu",
+    "rrnwt-nu-": "nu",
+    "nwt-reg-nu-": "nu",
+    "snu-": "nu",
+    "csnu-": "nu",
+    "nu-reg-": "nu",
+    "rso-": "on",
+    "so-": "on",
+    "rro-": "on",
+    "o-reg-": "on",
+    "rspei-": "pe",
+    "spei-": "pe",
+    "pei-reg-": "pe",
+    "cqlr-": "qc",
+    "rlrq-": "qc",
+    "rsq-": "qc",
+    "sq-": "qc",
+    "rrq-": "qc",
+    "lq-": "qc",
+    "rss-": "sk",
+    "ss-": "sk",
+    "rrs-": "sk",
+    "sask-reg-": "sk",
+    "rsy-": "yk",
+    "sy-": "yk",
+    "yoic-": "yk"
   }
 }
