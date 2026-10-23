@@ -208,19 +208,22 @@ pub struct PassageLocator {
 }
 
 /// Whether an address (absolute, or a path on this host) opens a PDF: a `.pdf`, a Decisia `document.do`, a
-/// `rendition=pdf` download, or a territory's or province's statute files served as PDFs.
+/// `rendition=pdf` download, a territory's or province's statute files served as PDFs, or any address opened at a PDF
+/// page (`#page=12`, the PDF open parameter: a journal's PDF served without the extension).
 pub fn is_pdf_address(address: &str) -> bool {
     static LOCAL: LazyLock<url::Url> = LazyLock::new(|| url::Url::parse("http://mike.local").unwrap());
     static SASKATCHEWAN: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"publications\.saskatchewan\.ca/api/v1/products/[^/]+/formats/").unwrap());
     let Ok(url) = url::Url::options().base_url(Some(&LOCAL)).parse(address) else {
-        let path = address.to_lowercase();
-        let path = path.split(['?', '#']).next().unwrap_or("");
-        return path.ends_with(".pdf") || path.ends_with("/document.do");
+        let address = address.to_lowercase();
+        let path = address.split(['?', '#']).next().unwrap_or("");
+        return path.ends_with(".pdf") || path.ends_with("/document.do")
+            || address.split_once('#').is_some_and(|(_, fragment)| fragment.starts_with("page="));
     };
     let path = url.path().to_lowercase();
     let href = url.as_str().to_lowercase();
     path.ends_with(".pdf") || path.ends_with("/document.do")
+        || url.fragment().is_some_and(|fragment| fragment.to_lowercase().starts_with("page="))
         || url.query_pairs().any(|(name, value)| name == "rendition" && value.eq_ignore_ascii_case("pdf"))
         || ["laws.yukon.ca/cms/images/legislation/", "justice.gov.nt.ca/en/files/legislation/",
             "princeedwardisland.ca/sites/default/files/legislation/"].iter().any(|part| href.contains(part))
