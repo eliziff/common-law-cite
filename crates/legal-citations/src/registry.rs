@@ -117,15 +117,6 @@ pub struct Court {
     /// there is one (`2010 CRTFP 14` is `fr/ca/pslrb/doc/2010/2010crtfp14`).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub canlii_codes_fr: Vec<String>,
-    /// Further codes CanLII uses in the ids of this court's decisions (a division's code:
-    /// `2014 SSTAD 300` is `ca/sst/doc/2014/2014sstad300`). They build CanLII links only: the
-    /// court is not recognized or keyed by them.
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub canlii_codes: Vec<String>,
-    /// As [`Court::canlii_codes`], under CanLII's French interface and the `canlii_fr` route when
-    /// there is one (`2010 CRTFP 14` is `fr/ca/pslrb/doc/2010/2010crtfp14`).
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub canlii_codes_fr: Vec<String>,
     /// First and last year the court issued decisions under this identity.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub start: Option<u16>,
