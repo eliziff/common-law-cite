@@ -431,16 +431,27 @@ pub fn extract_markup(text: &str, markup: Option<&str>, options: &Options) -> Ve
 
 pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
     -> (Vec<Citation>, Vec<source::SourcePart>, Vec<resolve::Resolution>) {
+    let timing = std::env::var_os("LEGALPDF_PHASE_TIMING").is_some();
+    let mut stage_started = std::time::Instant::now();
+    let mut stage = |name: &str| {
+        if timing {
+            eprintln!("phase	citations.{name}	{}", stage_started.elapsed().as_micros());
+            stage_started = std::time::Instant::now();
+        }
+    };
     let markup = markup.map(|source| clean::Markup::new(text, source));
     let mut citations = find::find_styled(text, options, markup.as_ref());
     if options.source_only { citations.retain(|citation| citation.fields.source_case_name.is_some()); }
+    stage("find_styled");
     let mut citations = find::filter_citations(citations);
     if options.skip_authority_lists {
         let listed = find::authority_list_citations(text, &citations, options.notes.as_deref().unwrap_or(&[]));
         citations.retain(|citation| !listed.contains(&citation.index));
         for (index, citation) in citations.iter_mut().enumerate() { citation.index = index; }
     }
+    stage("filter_and_lists");
     metadata::attach(text, &mut citations);
+    stage("metadata");
     find::anchor_titles(text, &mut citations, options.notes.as_deref().unwrap_or(&[]));
     #[cfg(feature = "us")]
     for citation in &mut citations {
@@ -454,8 +465,10 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
         citation.key = citation.alias.as_ref().map(|target| target.key.clone())
             .or_else(|| key::key_in(citation, registry::registry()));
     }
+    stage("titles_finish_group_alias");
     find::ocr_twins(&mut citations);
     find::titled_chapters(&mut citations);
+    stage("twins_chapters");
     let notes = options.notes.as_deref().unwrap_or(&[]);
     let mut parts = source::split_notes(text, notes, options.split_tier, &citations, &options.jurisdiction_priority);
     if options.split_tier.is_some() { source::merge_split_citations(text, notes, &mut parts, &citations); }
@@ -503,6 +516,7 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
     if options.remove_ambiguous {
         citations.retain(|citation| !citation.is_ambiguous());
     }
+    stage("notes_and_short_forms");
     (citations, parts, resolutions)
 }
 
