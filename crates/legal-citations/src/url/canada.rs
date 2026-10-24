@@ -36,6 +36,8 @@ struct LookupRules {
     key_aliases: Vec<Vec<String>>,
     /// Key prefixes of the statute and regulation series CanLII publishes, by jurisdiction.
     key_jurisdictions: HashMap<String, String>,
+    /// The imperial statutes CanLII's constitutional collection holds, by their citation, and its id for each.
+    constitutional_documents: HashMap<String, String>,
 }
 
 static LOOKUP_RULES: LazyLock<LookupRules> = LazyLock::new(||
@@ -889,8 +891,19 @@ pub fn canlii_law_page(page_url: &str) -> Option<CanliiLawPage> {
     let law = LAW.captures(url.path())?;
     // The French interface names the kinds in French (lois, loisa, regl).
     let kind = match &law[3] { "lois" => "stat", "loisa" => "astat", "regl" => "regu", kind => kind };
+    // An id as CanLII writes it, not as an address escapes it (`c-c%E2%80%9113.2` is `c-c\u{2011}13.2`).
+    let id = law[4].as_bytes();
+    let mut bytes = Vec::with_capacity(id.len());
+    let mut at = 0;
+    while at < id.len() {
+        let hex = |at: usize| id.get(at).and_then(|byte| (*byte as char).to_digit(16));
+        match (id[at], hex(at + 1), hex(at + 2)) {
+            (b'%', Some(high), Some(low)) => { bytes.push((high * 16 + low) as u8); at += 3; }
+            (byte, _, _) => { bytes.push(byte); at += 1; }
+        }
+    }
     Some(CanliiLawPage { language: law[1].to_owned(), jurisdiction: law[2].to_owned(), kind: kind.to_owned(),
-        id: law[4].to_owned() })
+        id: String::from_utf8_lossy(&bytes).into_owned() })
 }
 
 // ---------------------------------------------------------------------------
@@ -926,6 +939,8 @@ fn canlii_legislation_id(citation: &Citation, registry: &Registry, french: bool)
     } };
     let year = fields.year.as_deref().unwrap_or("");
     let path = match path {
+        // A series CanLII files statutes' schedules among its regulations (Newfoundland and Labrador's).
+        _ if fields.schedule.is_some() && route.schedules.as_deref() == Some("regu") => "regu",
         "astat" if fields.schedule.is_some() || route.as_enacted_from.as_deref().is_some_and(|from| year < from) => "stat",
         "stat" if route.historical_before.as_deref().is_some_and(|before| !year.is_empty() && year < before) => "hstat",
         path => path,
@@ -942,6 +957,12 @@ fn canlii_legislation_id(citation: &Citation, registry: &Registry, french: bool)
             let chapter = if series_id == "rso" && fields.year.as_deref() == Some("1990") {
                 chapter.replace('-', ".")
             } else { chapter };
+            // A revision whose own chapters are lettered numbers its one supplement's (RSA 1980, c 1 is its Supp's).
+            let chapter = match route.numbered_supplement.as_deref() {
+                Some(year) if fields.year.as_deref() == Some(year) && fields.volume.is_none()
+                    && chapter.chars().all(|character| character.is_ascii_digit()) => format!("{chapter} (Supp)"),
+                _ => chapter,
+            };
             let mut id = match fields.volume.as_deref().or(fields.year.as_deref()) {
                 Some(volume) => format!("{series_id}-{}-c-{}", canlii_slug(volume), canlii_slug(&chapter)),
                 None => format!("{series_id}-c-{}", canlii_slug(&chapter)),
@@ -998,18 +1019,23 @@ fn canlii_legislation_id(citation: &Citation, registry: &Registry, french: bool)
 }
 
 /// CanLII's id for a citation as CanLII writes it: accents folded, lowercased, parentheses, brackets, commas and
-/// apostrophes dropped, a dot closing a letter dropped (`c A.1` -> `c-a1`, `Reg.` -> `reg`), and every other run of
-/// characters but a number's dot a dash (`SS 1980-81, c E-0.02` -> `ss-1980-81-c-e-0.02`). Measured against CanLII's
-/// legislation list (2026-10-23): CanLII's own citation gives its id for 90,687 of 91,669.
+/// apostrophes dropped, a dot closing a letter dropped (`c A.1` -> `c-a1`, `Reg.` -> `reg`), a non-breaking hyphen
+/// kept, and every other mark a dash, a run of spaces one (`SS 1980-81, c E-0.02` -> `ss-1980-81-c-e-0.02`, `30 & 31
+/// Vict` -> `30---31-vict`). Measured against CanLII's legislation list (2026-10-23).
 pub fn canlii_slug(citation: &str) -> String {
     let characters = citation.nfd().filter(|character| !unicode_normalization::char::is_combining_mark(*character))
         .flat_map(char::to_lowercase).filter(|character| !"()[],'\u{2019}".contains(*character)).collect::<Vec<_>>();
     let mut id = String::with_capacity(characters.len());
     for (at, &character) in characters.iter().enumerate() {
         let closes_letter = character == '.' && at > 0 && characters[at - 1].is_alphabetic();
-        if character.is_alphanumeric() || character == '.' && !closes_letter {
+        if character.is_alphanumeric() || character == '\u{2011}' || character == '.' && !closes_letter {
             id.push(character);
-        } else if !closes_letter && !id.ends_with('-') {
+        } else if character.is_whitespace() {
+            // A run of spaces is one separator; each other mark is its own (`30 & 31 Vict` -> `30---31-vict`).
+            if !characters[..at].last().is_some_and(|previous| previous.is_whitespace()) {
+                id.push('-');
+            }
+        } else if !closes_letter {
             id.push('-');
         }
     }
@@ -1085,11 +1111,36 @@ pub fn canlii_legislation_in(citation: &Citation, language: Language, registry: 
     if citation.form != Form::Full {
         return None;
     }
+    if let Some(page) = canlii_constitutional_page(citation, language) {
+        return Some(page);
+    }
     let (jurisdiction, id, path, french) = canlii_legislation_page(citation, registry)?;
     if jurisdiction.is_empty() {
         return None;
     }
     Some(canlii_law_address(&jurisdiction, &id, path, french, language))
+}
+
+/// The CanLII page of an imperial statute CanLII's constitutional collection holds, which the citation names by its
+/// regnal year or its United Kingdom citation (`30 & 31 Vict, c 3`; `… Schedule B to the Canada Act 1982 (UK), 1982,
+/// c 11`).
+pub fn canlii_constitutional_page(citation: &Citation, language: Language) -> Option<String> {
+    if citation.form != Form::Full {
+        return None;
+    }
+    canlii_constitutional_document(citation).map(|id| canlii_law_address("ca", id, "stat", false, language))
+}
+
+fn canlii_constitutional_document(citation: &Citation) -> Option<&'static str> {
+    if citation.fields.series.is_some() {
+        return None;
+    }
+    let written = canlii_citation_key(&citation.full_span.text);
+    LOOKUP_RULES.constitutional_documents.iter().find_map(|(document, id)| {
+        let key = canlii_citation_key(document);
+        written.match_indices(&key).any(|(at, _)| (at == 0 || written[..at].ends_with('-'))
+            && written[at + key.len()..].chars().next().is_none_or(|next| next == '-')).then_some(id.as_str())
+    })
 }
 
 /// A citation's CanLII page: its French page where it is written in French (`LRC 1985, c C-46`, `RLRQ c C-12`,

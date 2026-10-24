@@ -90,6 +90,13 @@ pub struct CanLiiRoute {
     /// statutes.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub historical_before: Option<String>,
+    /// The revision whose own chapters are lettered and whose one supplement's are numbered: a numbered chapter cited
+    /// in it is the supplement's (RSA 1980, c 1).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub numbered_supplement: Option<String>,
+    /// Where CanLII files a series' statutes' schedules where not with the statutes: `regu`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub schedules: Option<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]

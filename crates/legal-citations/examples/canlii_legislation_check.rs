@@ -31,7 +31,8 @@ fn main() {
             for found in extract(&text, &options) {
                 println!("{text} => {:?} {:?} {:?} \"{}\" (whole \"{}\") {:?} -> {:?}", found.authority, found.format, found.form,
                     found.span.text, found.full_span.text, found.fields, url::canlii_legislation(&found, Language::En));
-                println!("    as a consolidated record -> {:?}", url::canlii_consolidated_legislation(&found, Language::En));
+                println!("    as a consolidated record -> {:?}; product -> {:?}", url::canlii_consolidated_legislation(&found, Language::En),
+                    url::url(&found, Language::En));
             }
         }
         return;
@@ -50,8 +51,9 @@ fn main() {
         let [database, jurisdiction, id, citation] = line.splitn(4, '\t').collect::<Vec<_>>()[..] else { continue };
         total += 1;
         let read = extract(citation, &options).into_iter()
-            .find(|found| matches!(found.authority, Authority::Statute | Authority::Regulation));
-        let built = read.as_ref().and_then(|found| url::canlii_legislation(found, Language::En));
+            .find(|found| matches!(found.authority, Authority::Statute | Authority::Regulation | Authority::Constitution));
+        // The product's address for it: CanLII's page where the builder makes one (aliases resolved).
+        let built = read.as_ref().and_then(|found| url::url(found, Language::En)).filter(|page| url::is_canlii_url(page));
         let page = built.as_deref().and_then(url::canlii_law_page);
         let entry = databases.entry(database).or_default();
         entry.0 += 1;
@@ -84,5 +86,6 @@ fn main() {
 
 /// CanLII's database id ends in its pages' kind: s(tat), a(stat), r(egu), h(stat).
 fn kind_of(database: &str) -> &'static str {
-    match database.as_bytes().last() { Some(b's') => "stat", Some(b'a') => "astat", Some(b'r') => "regu", Some(b'h') => "hstat", _ => "" }
+    // The constitutional documents (cac) are statutes' pages.
+    match database.as_bytes().last() { Some(b's' | b'c') => "stat", Some(b'a') => "astat", Some(b'r') => "regu", Some(b'h') => "hstat", _ => "" }
 }

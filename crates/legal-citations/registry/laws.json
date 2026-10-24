@@ -178,7 +178,8 @@
   "canlii": {
    "jurisdiction": "ab",
    "database": "abs",
-   "historical_before": "2000"
+   "historical_before": "2000",
+   "numbered_supplement": "1980"
   },
   "citation_id": "rsa"
  },
@@ -382,6 +383,17 @@
   "citation_id": "rsns"
  },
  {
+  "name": "Revised Statutes of Nova Scotia, Third Series (1864)",
+  "kind": "revised_statutes",
+  "jurisdiction": "ca-ns",
+  "abbreviation": "RS Third Series",
+  "canlii": {
+   "jurisdiction": "ns",
+   "database": "nss"
+  },
+  "citation_id": "rsthirdseries"
+ },
+ {
   "name": "Statutes of Nova Scotia",
   "kind": "annual_statutes",
   "jurisdiction": "ca-ns",
@@ -470,7 +482,8 @@
   "canlii": {
    "jurisdiction": "nl",
    "database": "nla",
-   "as_enacted_from": "1991"
+   "as_enacted_from": "1991",
+   "schedules": "regu"
   },
   "citation_id": "snl"
  },
@@ -553,6 +566,78 @@
   "citation_id": "yco"
  },
  {
+  "name": "Yukon orders CanLII files as YOCSST",
+  "kind": "regulations",
+  "jurisdiction": "ca-yt",
+  "abbreviation": "YOCSST",
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ykr",
+   "year": "written"
+  },
+  "citation_id": "yocsst"
+ },
+ {
+  "name": "Yukon orders CanLII files as YSFVO",
+  "kind": "regulations",
+  "jurisdiction": "ca-yt",
+  "abbreviation": "YSFVO",
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ykr",
+   "year": "written"
+  },
+  "citation_id": "ysfvo"
+ },
+ {
+  "name": "Yukon orders CanLII files as YDM",
+  "kind": "regulations",
+  "jurisdiction": "ca-yt",
+  "abbreviation": "YDM",
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ykr",
+   "year": "written"
+  },
+  "citation_id": "ydm"
+ },
+ {
+  "name": "Yukon orders CanLII files as YFSO",
+  "kind": "regulations",
+  "jurisdiction": "ca-yt",
+  "abbreviation": "YFSO",
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ykr",
+   "year": "written"
+  },
+  "citation_id": "yfso"
+ },
+ {
+  "name": "Yukon orders CanLII files as YSO",
+  "kind": "regulations",
+  "jurisdiction": "ca-yt",
+  "abbreviation": "YSO",
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ykr",
+   "year": "written"
+  },
+  "citation_id": "yso"
+ },
+ {
+  "name": "Yukon orders CanLII files as YOC",
+  "kind": "regulations",
+  "jurisdiction": "ca-yt",
+  "abbreviation": "YOC",
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ykr",
+   "year": "written"
+  },
+  "citation_id": "yoc"
+ },
+ {
   "name": "Yukon Ministerial Orders",
   "kind": "regulations",
   "jurisdiction": "ca-yt",
@@ -624,6 +709,18 @@
    "northwestterritories Reg"
   ],
   "citation_id": "nwtreg"
+ },
+ {
+  "name": "Federal regulations the Northwest Territories kept",
+  "kind": "regulations",
+  "jurisdiction": "ca-nt",
+  "abbreviation": "SOR (NT)",
+  "canlii": {
+   "jurisdiction": "nt",
+   "database": "ntr",
+   "series": "SOR"
+  },
+  "citation_id": "sornt"
  },
  {
   "name": "Revised Regulations of the Northwest Territories",
@@ -713,9 +810,33 @@
    "database": "nur"
   },
   "variations": [
-   "nunavut Reg"
+   "nunavut Reg",
+   "Règl Nu"
   ],
   "citation_id": "nureg"
+ },
+ {
+  "name": "Consolidated Regulations of Nunavut",
+  "kind": "regulations",
+  "jurisdiction": "ca-nu",
+  "abbreviation": "CR Nu",
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nur"
+  },
+  "citation_id": "crnu"
+ },
+ {
+  "name": "Federal regulations Nunavut kept",
+  "kind": "regulations",
+  "jurisdiction": "ca-nu",
+  "abbreviation": "SOR (Nu)",
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nur",
+   "series": "SOR"
+  },
+  "citation_id": "sornu"
  },
  {
   "name": "Compilation of Quebec Laws and Regulations",
