@@ -75,6 +75,21 @@ pub struct CanLiiRoute {
     pub jurisdiction: String,
     /// CanLII database id with its exact casing (`scc`, `fct`, `NBQB`).
     pub database: String,
+    /// A series CanLII files under another's abbreviation (`CQLR` for RRQ).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub series: Option<String>,
+    /// How CanLII writes a series' regulation years where it is not two digits before 2000 and four after: `four`,
+    /// `two` or `written`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub year: Option<String>,
+    /// The first year CanLII holds an annual series as enacted; an earlier act, and a schedule, is on its consolidated
+    /// statutes' page.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub as_enacted_from: Option<String>,
+    /// The year of the revision a series' current consolidation replaced: older revisions are CanLII's historical
+    /// statutes.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub historical_before: Option<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]

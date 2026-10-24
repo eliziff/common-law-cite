@@ -34,6 +34,7 @@ static STATUTE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.ca.statute.first"));
 static STATUTE_TITLED: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.statute.titled"));
+static GAZETTE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.ca.gazette"));
 pub(crate) static ROUTING: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.provider-routing"));
 static BOOK: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.book.imprint"));
@@ -721,8 +722,12 @@ fn legislation(core: &str) -> Option<Reading> {
         if let Some(series) = group(&captures, "series") {
             fields.series = Some(series);
             fields.year = group(&captures, "year");
+            // The volume as written, where it says more than its year: `1980-81`, `1975(2)`, `1986 (Supp)`.
+            fields.volume = group(&captures, "volume").filter(|volume| fields.year.as_ref() != Some(volume));
             fields.chapter = group(&captures, "chapter");
-            fields.schedule = group(&captures, "schedule");
+            // A schedule with no number of its own (`SO 2000, c 36, Sch`) is the chapter's one schedule.
+            fields.schedule = group(&captures, "schedule")
+                .or_else(|| captures.name("schedule_label").map(|_| String::new()));
         } else if group(&captures, "rcs_series").is_some() {
             // The Revised Statutes of Canada written with the Supreme Court Reports' French abbreviation.
             fields.series = Some("RSC".to_owned());
@@ -731,6 +736,12 @@ fn legislation(core: &str) -> Option<Reading> {
         } else if let Some(series) = group(&captures, "compiled_series") {
             fields.series = Some(series);
             fields.chapter = group(&captures, "compiled_chapter");
+            // A chapter's regulation by its number (`RRS c E-9.1 Reg 2`).
+            if let Some(regulation) = group(&captures, "compiled_regulation") {
+                fields.regulation = Some(regulation);
+                reading.authority = Some(Authority::Regulation);
+                reading.format = Some(Format::RegulationSeries);
+            }
         } else if let Some(regnal) = group(&captures, "regnal") {
             fields.regnal = Some(regnal);
             fields.chapter = group(&captures, "regnal_chapter");
@@ -755,10 +766,17 @@ fn legislation(core: &str) -> Option<Reading> {
                 fields.regulation = Some(regulation[split..].trim().to_owned());
             } else {
                 let regulation = group(&captures, "regulation")?;
-                let split = regulation
-                    .char_indices()
-                    .find(|(_, character)| character.is_ascii_digit())
-                    .map_or(0, |(at, _)| at);
+                // The number follows the instrument's word (`PEI Reg EC342/06`, `NWT Reg R-071-2022`, `YOIC 2020/68`);
+                // a series that names none (`NLR 54/02`) ends at the first digit.
+                let split = regulation.rfind("Reg").map(|at| at + 3).or_else(|| regulation.rfind("OIC").map(|at| at + 3))
+                    .map(|at| {
+                        let rest = regulation[at..].trim_start_matches('.').trim_start();
+                        let rest = rest.strip_prefix("(Nu)").unwrap_or(rest);
+                        regulation.len() - rest.len()
+                    })
+                    .unwrap_or_else(|| regulation.char_indices()
+                        .find(|(_, character)| character.is_ascii_digit())
+                        .map_or(0, |(at, _)| at));
                 fields.series = Some(regulation[..split].trim().trim_end_matches('.').to_owned());
                 fields.regulation = Some(regulation[split..].trim().to_owned());
             }
@@ -818,6 +836,20 @@ pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
     if verified {
         if let Some(reading) = neutral(core) { return Some(neutral_with_publication(reading)); }
         if let Some(reading) = publication(reason == "journal_grammar") { return Some(reading); }
+    }
+    // A notice or regulation by its gazette, part and page: `(1991) A Gaz I, 1609`, `1991 GOQ 2, 1447 [2]`.
+    if reason == "securities_grammar" {
+        if let Some(captures) = whole(&GAZETTE, core) {
+            let either = |mcgill: &str, canlii: &str| group(&captures, mcgill).or_else(|| group(&captures, canlii));
+            let mut reading = Reading::new(Authority::Regulation, Some(Format::RegulationSeries), "securities_grammar");
+            reading.fields.series = either("gazette", "canlii_gazette");
+            reading.fields.year = either("year", "canlii_year");
+            let part = either("part", "canlii_part")?;
+            let part = match part.as_str() { "I" => "1", "II" => "2", "III" => "3", part => part }.to_owned();
+            let sequence = group(&captures, "canlii_sequence").map(|sequence| format!(" [{sequence}]")).unwrap_or_default();
+            reading.fields.regulation = Some(format!("{part}, {}{sequence}", either("page", "canlii_page")?));
+            return Some(reading);
+        }
     }
     // The Guide forms the finder's own grammars name keep the family their grammar read.
     const NAMED: [(&str, Authority); 24] = [
@@ -1157,10 +1189,11 @@ pub(crate) fn apply(citation: &mut Citation, mut reading: Reading, options: &cra
         instrument_kind(title, &mut reading);
     }
     // A chapter-numbered Quebec regulation carries its number as a rule
-    // (`RLRQ, c C-25.01, r 0.1`): part of its identity, not a pinpoint.
+    // (`RLRQ, c C-25.01, r 0.1`; `RRQ 1981, c M-20, r 1`): part of its identity, not a pinpoint.
     if reading.format == Some(Format::StatuteVolume)
-        && reading.fields.year.is_none()
-        && reading.fields.series.is_some()
+        && reading.fields.series.as_deref().is_some_and(|series| reading.fields.year.is_none()
+            || crate::registry::registry().series_by_surface(series)
+                .is_some_and(|series| series.kind == crate::registry::SeriesKind::Regulations))
         && citation.pinpoints.first().is_some_and(|pinpoint| pinpoint.kind == PinpointKind::Rule)
     {
         let rule = citation.pinpoints.remove(0);
@@ -1201,6 +1234,6 @@ pub(crate) fn warm() {
     crate::warm_statics!(
         NEUTRAL, TRIBUNAL, BRACKETED, PARENTHESIZED, CANLII, STATUTE, STATUTE_TITLED, ROUTING,
         BOOK, UNREPORTED, COURT_FILE, PARLIAMENTARY, FRENCH_REPORTER,
-        INSTRUMENT_KIND, BOOK_CHAPTER, FRENCH_SERIES
+        INSTRUMENT_KIND, BOOK_CHAPTER, FRENCH_SERIES, GAZETTE
     );
 }

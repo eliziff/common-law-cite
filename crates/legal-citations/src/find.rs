@@ -401,7 +401,7 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             // title leads it ("Companies' Creditors Arrangement Act, R.S.C. 1985") or it is cited for
             // its appendix ("RSC 1985, App II, No 5").
             if *reason == "ca_statute_grammar" && pattern.captures(matched.as_str()).is_some_and(|capture|
-                capture.name("series").is_some() && capture.name("chapter").is_none() && capture.name("schedule").is_none())
+                capture.name("series").is_some() && capture.name("chapter").is_none() && capture.name("schedule_label").is_none())
                 && !value[matched.end()..].trim_start_matches([',', ' ']).starts_with("App")
                 && statute_style_start_above(value, start, floors.paragraph_floor(start)) == start {
                 continue;
@@ -471,8 +471,9 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
     }
     // A secondary form that begins inside a report or neutral citation misreads that citation
     // and its date ("2030 BCCA 431 (2032)" is no news item); an article that holds one starts
-    // before it ("(2023) 57:3 RJT 487").
-    found.retain(|anchor| anchor.family.is_some_and(|(_, reason)| reason == "article_grammar" || reason == "treaty_grammar")
+    // before it ("(2023) 57:3 RJT 487"), and a gazette page holds the year and capitals it opens with ("1991 GOQ 2, 1447").
+    found.retain(|anchor| anchor.family.is_some_and(|(_, reason)|
+            reason == "article_grammar" || reason == "treaty_grammar" || reason == "securities_grammar")
         || !primary.iter().any(|core| core.start <= anchor.span.start && anchor.span.start < core.end
             && occurrence_family(&value[core.clone()]).0 == "case"));
     // An enactment the reproduced text of another names in its own history ("3 [Repealed, SOR/2009-223,
@@ -593,8 +594,10 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     let mut primary = Vec::new();
     for anchor in resolve(found.into_iter().map(|span| Anchor { span, ..Anchor::default() }).collect()) {
         let hit = &anchor.span;
-        // A treaty series block ("Can TS 1994 No 2") holds the number the in-text grammar reads.
-        match secondary.iter_mut().find(|whole| whole.family.is_some_and(|(_, reason)| reason == "article_grammar" || reason == "treaty_grammar")
+        // A treaty series block ("Can TS 1994 No 2") holds the number the in-text grammar reads, and a gazette page
+        // ("1991 GOQ 2, 1447") the year, capitals and number it reads as a decision.
+        match secondary.iter_mut().find(|whole| whole.family.is_some_and(|(_, reason)|
+            reason == "article_grammar" || reason == "treaty_grammar" || reason == "securities_grammar")
             && whole.span.start <= hit.start && hit.end <= whole.span.end && whole.span != *hit) {
             Some(whole) => if whole.reading.is_none() && whole.family.is_some_and(|(_, reason)| reason == "article_grammar") {
                 whole.read(value);
