@@ -763,9 +763,18 @@ fn legislation(core: &str) -> Option<Reading> {
             reading.format = Some(Format::RegulationSeries);
             if let Some(instrument) = group(&captures, "instrument") {
                 let (series, number) = instrument.split_once('/')?;
-                fields.series = Some(series.to_owned());
-                fields.regulation = Some(number.to_owned());
-                reading.jurisdiction = Some("ca".to_owned());
+                // A federal regulation a territory kept is its own (`SOR/78-68 NT`): the series it is filed under.
+                match group(&captures, "instrument_territory") {
+                    Some(territory) => {
+                        fields.series = Some(format!("{series} ({territory})"));
+                        fields.regulation = Some(format!("{number} {territory}"));
+                    }
+                    None => {
+                        fields.series = Some(series.to_owned());
+                        fields.regulation = Some(number.to_owned());
+                        reading.jurisdiction = Some("ca".to_owned());
+                    }
+                }
             } else if let Some(chapter) = group(&captures, "consolidated_chapter") {
                 fields.series = Some("CRC".to_owned());
                 fields.chapter = Some(chapter);
@@ -787,9 +796,11 @@ fn legislation(core: &str) -> Option<Reading> {
                         let rest = rest.strip_prefix("(Nu)").unwrap_or(rest);
                         regulation.len() - rest.len()
                     })
-                    .unwrap_or_else(|| regulation.char_indices()
-                        .find(|(_, character)| character.is_ascii_digit())
-                        .map_or(0, |(at, _)| at));
+                    .unwrap_or_else(|| {
+                        // Else at the space before the number (`CR Nu R-011-2005`), or its first digit (`NLR54/02`).
+                        let digit = regulation.find(|character: char| character.is_ascii_digit()).unwrap_or(0);
+                        regulation[..digit].rfind(char::is_whitespace).filter(|_| digit > 0).map_or(digit, |at| at + 1)
+                    });
                 fields.series = Some(regulation[..split].trim().trim_end_matches('.').to_owned());
                 fields.regulation = Some(regulation[split..].trim().to_owned());
             }

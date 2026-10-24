@@ -282,6 +282,13 @@ pub fn url_in(citation: &Citation, language: Language, registry: &Registry) -> O
         return None;
     }
     let mut found = None;
+    // The Constitution Acts by their imperial citation, however the grammar shaped the rest.
+    #[cfg(feature = "canada")]
+    if matches!(citation.authority, crate::model::Authority::Statute | crate::model::Authority::Constitution) {
+        if let Some(page) = canlii_constitutional_page(citation, language) {
+            return Some(page);
+        }
+    }
     match citation.format? {
         Format::Neutral | Format::CanLii => {
             #[cfg(feature = "canada")]
