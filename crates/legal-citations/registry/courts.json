@@ -5932,7 +5932,8 @@
   "id": "sct",
   "name": "Specific Claims Tribunal Canada",
   "neutral": [
-   "SCT"
+   "SCT",
+   "SCTC"
   ],
   "aliases": [
    "SCTC"
@@ -6394,7 +6395,8 @@
    "SSTADEI",
    "SSTGD",
    "SSTGDIS",
-   "SSTGDEI"
+   "SSTGDEI",
+   "TSS"
   ],
   "aliases": [
    "TSS"
