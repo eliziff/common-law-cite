@@ -525,7 +525,8 @@
   "id": "abtsb",
   "name": "Alberta Transportation Safety Board",
   "neutral": [
-   "ABTSB"
+   "ABTSB",
+   "ABSTB"
   ],
   "aliases": [],
   "canlii": {
@@ -2161,7 +2162,8 @@
   "id": "nlpc",
   "name": "Provincial Court of Newfoundland and Labrador",
   "neutral": [
-   "NLPC"
+   "NLPC",
+   "PCNL"
   ],
   "aliases": [],
   "canlii": {
@@ -2828,7 +2830,8 @@
   "id": "nuhrt",
   "name": "Nunavut Human Rights Tribunal",
   "neutral": [
-   "NUHRT"
+   "NUHRT",
+   "NHRT"
   ],
   "aliases": [],
   "canlii": {
@@ -3616,7 +3619,8 @@
    "ONLSTH",
    "ONLSHP",
    "ONLSTA",
-   "ONLSAP"
+   "ONLSAP",
+   "ONSLHP"
   ],
   "aliases": [],
   "canlii": {
@@ -7826,5 +7830,35 @@
   "region": "uk-ew",
   "level": "ljc",
   "type": "trial"
+ },
+ {
+  "id": "nlpb",
+  "name": "Newfoundland and Labrador Pharmacy Board",
+  "neutral": [
+   "NLPB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "nl",
+   "database": "nlpb"
+  },
+  "region": "ca-nl",
+  "level": "tribunal",
+  "type": "tribunal"
+ },
+ {
+  "id": "bcitab",
+  "name": "Industry Training Appeal Board",
+  "neutral": [
+   "BCITAB"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "bc",
+   "database": "bcitab"
+  },
+  "region": "ca-bc",
+  "level": "tribunal",
+  "type": "tribunal"
  }
 ]
