@@ -130,7 +130,8 @@ fn select(
             else if let Some(context) = context { context }
             else if count == 1 { "unique_match" }
             else if scores[at].is_some_and(|(_, outside, _, _, _)| !outside)
-                && scores.iter().flatten().any(|(_, outside, _, _, _)| *outside) { "reporter_period" }
+                && scores.iter().flatten().any(|(_, outside, _, _, _)| *outside) {
+                if reading.kind == "court" { "court_period" } else { "reporter_period" } }
             else { "citation_form" }.to_owned();
     }
     if count > 1 || chosen.is_none() {
@@ -155,7 +156,11 @@ fn court_score(court: &Court, surface: &str, reading: &Reading, neutral: bool,
     let writes = |court: &Court| within(&court.jurisdiction, "ca") != reading.bracketed;
     if neutral && identifies(court) && !writes(court) && registry().courts_by_surface(surface).into_iter()
         .any(|other| other.id != court.id && identifies(other) && writes(other)) { return None; }
-    Some((priority(Some(&court.jurisdiction), options), false, neutral && !identifies(court),
+    // Where courts share an identifier ("NBBR" is the Court of Queen's Bench and, from 2022, the Court of King's
+    // Bench), the one that sat in the citation's year reads it before one that did not.
+    let year = reading.fields.year.as_deref().and_then(|year| year.parse::<u16>().ok());
+    let outside = year.is_some_and(|year| court.start.is_some_and(|start| year < start) || court.end.is_some_and(|end| year > end));
+    Some((priority(Some(&court.jurisdiction), options), outside, neutral && !identifies(court),
         neutral && !writes(court), false))
 }
 
@@ -176,9 +181,17 @@ fn court_for(surface: &str, reading: &Reading, neutral: bool, citation: &mut Cit
         kind: "court".into(), id: court.id.clone(), canonical: court.neutral.first().cloned().unwrap_or_else(|| surface.to_owned()),
         jurisdiction: Some(court.jurisdiction.clone()), selected: false, reason: String::new(),
     }).collect();
-    let scores = candidates.iter().map(|court| court_score(court, surface, reading, neutral,
-        explicit.as_deref(), reporter, options)).collect();
-    select(citation, readings, scores, explicit.as_ref().map(|_| "explicit_court")).map(|at| candidates[at])
+    let mut scores = candidates.iter().map(|court| court_score(court, surface, reading, neutral,
+        explicit.as_deref(), reporter, options)).collect::<Vec<_>>();
+    // A neutral citation names its court. A parenthetical after it that names none of its courts belongs to
+    // another part of the reference ("274 NR 47, 2001 FCA 93 at para 43 (CA)") or names the case ("2015 FCA 95
+    // (Martin)"); it does not unname the court.
+    let mut context = explicit.as_ref().map(|_| "explicit_court");
+    if neutral && explicit.is_some() && scores.iter().all(Option::is_none) {
+        scores = candidates.iter().map(|court| court_score(court, surface, reading, neutral, None, reporter, options)).collect();
+        context = None;
+    }
+    select(citation, readings, scores, context).map(|at| candidates[at])
 }
 
 fn source_match(canonical: &str, name: &str, editions: &[crate::SourceEdition]) -> bool {
