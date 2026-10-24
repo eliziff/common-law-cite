@@ -715,7 +715,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "bc",
-   "database": "bcegbc"
+   "database": "bceg"
   },
   "region": "ca-bc",
   "level": "tribunal",
@@ -731,7 +731,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "bc",
-   "database": "bcerat"
+   "database": "bcogat"
   },
   "region": "ca-bc",
   "level": "tribunal",
@@ -1199,7 +1199,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "ca",
-   "database": "cb"
+   "database": "cbc"
   },
   "region": "ca",
   "level": "tribunal",
@@ -1281,7 +1281,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "ca",
-   "database": "cicc"
+   "database": "iccrc"
   },
   "region": "ca",
   "level": "tribunal",
@@ -1859,7 +1859,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "nb",
-   "database": "nbfcst"
+   "database": "nbsec"
   },
   "region": "ca-nb",
   "level": "tribunal",
@@ -1949,7 +1949,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "nb",
-   "database": "nblsb"
+   "database": "nbls"
   },
   "region": "ca-nb",
   "level": "tribunal",
@@ -1965,7 +1965,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "nb",
-   "database": "nbombud"
+   "database": "nbomb"
   },
   "region": "ca-nb",
   "level": "tribunal",
@@ -5842,7 +5842,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "qc",
-   "database": "qctmf"
+   "database": "qcbdrvm"
   },
   "canlii_french": true,
   "name_fr": "Tribunal administratif des marchés financiers",
@@ -6016,7 +6016,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "sk",
-   "database": "skcppdc"
+   "database": "skcp"
   },
   "region": "ca-sk",
   "level": "tribunal",
