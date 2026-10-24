@@ -197,7 +197,9 @@
   "neutral": [
    "ABESAB"
   ],
-  "aliases": [],
+  "aliases": [
+   "AB ESU"
+  ],
   "canlii": {
    "jurisdiction": "ab",
    "database": "abesab"
@@ -558,7 +560,9 @@
   "neutral": [
    "AHRC"
   ],
-  "aliases": [],
+  "aliases": [
+   "AB HRC"
+  ],
   "canlii": {
    "jurisdiction": "ab",
    "database": "ahrc"
@@ -573,7 +577,9 @@
   "neutral": [
    "ALRB"
   ],
-  "aliases": [],
+  "aliases": [
+   "AB LRB"
+  ],
   "canlii": {
    "jurisdiction": "ab",
    "database": "alrb"
@@ -1086,7 +1092,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "bc",
-   "database": "bwcwcat"
+   "database": "bcwcat"
   },
   "region": "ca-bc",
   "level": "tribunal",
@@ -1243,7 +1249,9 @@
   "neutral": [
    "CGYSDAB"
   ],
-  "aliases": [],
+  "aliases": [
+   "AB SDAB"
+  ],
   "canlii": {
    "jurisdiction": "ab",
    "database": "cgysdab"
@@ -1535,7 +1543,9 @@
   "neutral": [
    "IIROC"
   ],
-  "aliases": [],
+  "aliases": [
+   "CA CAIIROC"
+  ],
   "canlii": {
    "jurisdiction": "ca",
    "database": "iiroc"
@@ -2352,7 +2362,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "ns",
-   "database": "nsrb"
+   "database": "nslrb"
   },
   "region": "ca-ns",
   "level": "tribunal",
@@ -2394,7 +2404,9 @@
   "neutral": [
    "NSOIPC"
   ],
-  "aliases": [],
+  "aliases": [
+   "NS FOIPOP"
+  ],
   "canlii": {
    "jurisdiction": "ns",
    "database": "nsoipc"
@@ -2592,7 +2604,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "nt",
-   "database": "ntesa"
+   "database": "ntlsb"
   },
   "region": "ca-nt",
   "level": "tribunal",
@@ -2768,7 +2780,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "nt",
-   "database": "ntyadab"
+   "database": "ntydab"
   },
   "region": "ca-nt",
   "level": "tribunal",
@@ -3036,7 +3048,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "on",
-   "database": "onaslpdt"
+   "database": "oncaspd"
   },
   "region": "ca-on",
   "level": "tribunal",
@@ -3319,7 +3331,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "on",
-   "database": "oncpdt"
+   "database": "oncocoo"
   },
   "region": "ca-on",
   "level": "tribunal",
@@ -3762,7 +3774,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "on",
-   "database": "onotdt"
+   "database": "oncoto"
   },
   "region": "ca-on",
   "level": "tribunal",
@@ -3805,7 +3817,9 @@
    "ONPSDT",
    "ONCPSD"
   ],
-  "aliases": [],
+  "aliases": [
+   "ON CPS"
+  ],
   "canlii": {
    "jurisdiction": "on",
    "database": "onpsdt"
@@ -3885,7 +3899,7 @@
   "aliases": [],
   "canlii": {
    "jurisdiction": "on",
-   "database": "onrpdt"
+   "database": "oncrpo"
   },
   "region": "ca-on",
   "level": "tribunal",
@@ -4227,7 +4241,8 @@
    "PSDPT"
   ],
   "aliases": [
-   "PSDPTC"
+   "PSDPTC",
+   "CA CAPSDPT"
   ],
   "canlii": {
    "jurisdiction": "ca",
@@ -6189,7 +6204,9 @@
   "neutral": [
    "SKMB"
   ],
-  "aliases": [],
+  "aliases": [
+   "SK SMB"
+  ],
   "canlii": {
    "jurisdiction": "sk",
    "database": "skmb"
@@ -7860,85 +7877,6 @@
    "database": "bcitab"
   },
   "region": "ca-bc",
-  "level": "tribunal",
-  "type": "tribunal"
- },
- {
-  "id": "oncrpo",
-  "name": "College of Registered Psychotherapists and Registered Mental Health Therapists of Ontario, Discipline Committee",
-  "neutral": [
-   "ONCRPO",
-   "ONRPDT",
-   "ONCRPRMHTO"
-  ],
-  "aliases": [],
-  "canlii": {
-   "jurisdiction": "on",
-   "database": "oncrpo"
-  },
-  "region": "ca-on",
-  "level": "tribunal",
-  "type": "tribunal"
- },
- {
-  "id": "oncaspd",
-  "name": "College of Audiologists and Speech-Language Pathologists of Ontario, Discipline Committee",
-  "neutral": [
-   "ONCASPD",
-   "ONASLPDT"
-  ],
-  "aliases": [],
-  "canlii": {
-   "jurisdiction": "on",
-   "database": "oncaspd"
-  },
-  "region": "ca-on",
-  "level": "tribunal",
-  "type": "tribunal"
- },
- {
-  "id": "oncocoo",
-  "name": "College of Chiropodists of Ontario, Discipline Committee",
-  "neutral": [
-   "ONCOCOO",
-   "ONCPDT"
-  ],
-  "aliases": [],
-  "canlii": {
-   "jurisdiction": "on",
-   "database": "oncocoo"
-  },
-  "region": "ca-on",
-  "level": "tribunal",
-  "type": "tribunal"
- },
- {
-  "id": "oncoto",
-  "name": "College of Occupational Therapists of Ontario, Discipline Committee",
-  "neutral": [
-   "ONCOT"
-  ],
-  "aliases": [],
-  "canlii": {
-   "jurisdiction": "on",
-   "database": "oncoto"
-  },
-  "region": "ca-on",
-  "level": "tribunal",
-  "type": "tribunal"
- },
- {
-  "id": "ntlsb",
-  "name": "Northwest Territories Employment Standards Appeals",
-  "neutral": [
-   "NTESA"
-  ],
-  "aliases": [],
-  "canlii": {
-   "jurisdiction": "nt",
-   "database": "ntlsb"
-  },
-  "region": "ca-nt",
   "level": "tribunal",
   "type": "tribunal"
  },
