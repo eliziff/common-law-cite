@@ -646,6 +646,12 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     for matched in captured {
         let index = anchors.partition_point(|anchor| anchor.span.end <= matched.span.start);
         let native = anchors.get_mut(index).filter(|anchor| anchor.span.start < matched.span.end);
+        // A source token that opens before a native citation and ends inside it read across that citation's
+        // start: a party named like a nominative reporter takes the year of the neutral citation after it as its
+        // page ("Smith v Thompson, 2019 SCC 14" is no "Thompson, 2019"). The native citation keeps its reading.
+        if native.as_ref().is_some_and(|anchor| matched.span.start < anchor.span.start && matched.span.end < anchor.span.end) {
+            continue;
+        }
         let mut reading = crate::classify::extracted(&value[matched.span.clone()], matched.fields, matched.short_at);
         if let Some(anchor) = native {
             if anchor.span.start < matched.span.start && reading.fields.year.is_none() {
