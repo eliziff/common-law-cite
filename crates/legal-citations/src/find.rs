@@ -2026,7 +2026,13 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
     let mut scopes = options.notes.iter().flatten()
         .flat_map(|note| [note.start, note.end]).collect::<Vec<_>>();
     scopes.sort_unstable();
+    let timing = std::env::var_os("LEGALPDF_PHASE_TIMING").is_some();
+    let cores_started = std::time::Instant::now();
     let cores = cores(text, options, &scopes, enrich);
+    if timing {
+        eprintln!("phase	find.cores	{}", cores_started.elapsed().as_micros());
+    }
+    let enrich_started = std::time::Instant::now();
     if cores.is_empty() { return Vec::new(); }
     #[cfg(not(feature = "us"))]
     let source_names: std::collections::BTreeMap<usize, crate::SourceCaseName> = Default::default();
@@ -2129,6 +2135,9 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
     citations.sort_by_key(|citation| citation.span.start);
     for (index, citation) in citations.iter_mut().enumerate() {
         citation.index = index;
+    }
+    if timing {
+        eprintln!("phase	find.enrich	{}", enrich_started.elapsed().as_micros());
     }
     citations
 }
