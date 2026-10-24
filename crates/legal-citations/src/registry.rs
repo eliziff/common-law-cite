@@ -407,9 +407,32 @@ impl Registry {
         if let Some(positions) = self.index.court_by_parenthetical.get(&normalized) {
             return positions.iter().map(|&at| &self.courts[at]).collect();
         }
-        self.index.court_by_parenthetical.range(normalized.clone()..)
+        let by_prefix: Vec<&Court> = self.index.court_by_parenthetical.range(normalized.clone()..)
             .take_while(|(prefix, _)| prefix.starts_with(&normalized))
-            .flat_map(|(_, positions)| positions.iter().map(|&at| &self.courts[at])).collect()
+            .flat_map(|(_, positions)| positions.iter().map(|&at| &self.courts[at])).collect();
+        if !by_prefix.is_empty() { return by_prefix; }
+        self.courts_by_canlii_parenthetical(surface)
+    }
+
+    /// CanLII writes the court of a CanLII-number citation as its database id split at the
+    /// jurisdiction: "(ON LTB)" is onltb, "(BC WCAT)" bcwcat, "(CA VRAB)" vrab, "(CA CITT)"
+    /// citt-tcce. The surface read that way names the court whose CanLII database it is.
+    pub fn courts_by_canlii_parenthetical(&self, surface: &str) -> Vec<&Court> {
+        let tokens: Vec<String> = surface.split(|c: char| !c.is_ascii_alphanumeric()).filter(|t| !t.is_empty())
+            .map(|t| t.to_ascii_lowercase()).collect();
+        let candidates: Vec<String> = match tokens.as_slice() {
+            [code] => vec![code.clone()],
+            [jurisdiction, code] if jurisdiction == "ca" => vec![code.clone()],
+            [jurisdiction, code] => vec![format!("{jurisdiction}{code}")],
+            _ => return Vec::new(),
+        };
+        let matches = |court: &Court| {
+            [court.canlii.as_ref(), court.canlii_fr.as_ref()].into_iter().flatten().any(|route| {
+                let database = route.database.to_ascii_lowercase();
+                candidates.iter().any(|c| database == *c || database.split('-').next() == Some(c.as_str()))
+            })
+        };
+        self.courts.iter().filter(|court| matches(court)).collect()
     }
 
     /// The reporter and canonical edition abbreviation a surface form names.
