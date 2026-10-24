@@ -881,13 +881,15 @@ pub struct CanliiLawPage {
 
 pub fn canlii_law_page(page_url: &str) -> Option<CanliiLawPage> {
     static LAW: LazyLock<Regex> =
-        LazyLock::new(|| Regex::new(r"^/(en|fr)/([a-z]+)/laws/([a-z]+)/([^/]+)/").unwrap());
+        LazyLock::new(|| Regex::new(r"^/(en|fr)/([a-z]+)/(?:laws|legis)/([a-z]+)/([^/]+)/").unwrap());
     if !is_canlii_url(page_url) {
         return None;
     }
     let url = url::Url::parse(page_url).ok()?;
     let law = LAW.captures(url.path())?;
-    Some(CanliiLawPage { language: law[1].to_owned(), jurisdiction: law[2].to_owned(), kind: law[3].to_owned(),
+    // The French interface names the kinds in French (lois, loisa, regl).
+    let kind = match &law[3] { "lois" => "stat", "loisa" => "astat", "regl" => "regu", kind => kind };
+    Some(CanliiLawPage { language: law[1].to_owned(), jurisdiction: law[2].to_owned(), kind: kind.to_owned(),
         id: law[4].to_owned() })
 }
 
@@ -895,8 +897,10 @@ pub fn canlii_law_page(page_url: &str) -> Option<CanliiLawPage> {
 // Legislation
 
 /// The CanLII id and path segment (`stat`, `astat`, `regu`) of a statute or
-/// regulation whose registry series CanLII publishes.
-fn canlii_legislation_id(citation: &Citation, registry: &Registry) -> Option<(String, String, &'static str)> {
+/// regulation whose registry series CanLII publishes; its French page's id (the citation written in French slugged,
+/// `lrc-1985-c-c-46`) where `french`.
+fn canlii_legislation_id(citation: &Citation, registry: &Registry, french: bool)
+    -> Option<(String, String, &'static str)> {
     let fields = &citation.fields;
     let series = key::selected_series(citation, registry, fields.series.as_deref()?)?;
     let route = series.canlii.as_ref()?;
@@ -926,8 +930,11 @@ fn canlii_legislation_id(citation: &Citation, registry: &Registry) -> Option<(St
         "stat" if route.historical_before.as_deref().is_some_and(|before| !year.is_empty() && year < before) => "hstat",
         path => path,
     };
-    // CanLII files some series under another's name (RRQ 1981 under CQLR).
-    let series_id = canlii_slug(route.series.as_deref().unwrap_or(&series.abbreviation));
+    // CanLII files some series under another's name (RRQ 1981 under CQLR); a French page by its French name.
+    let series_id = match fields.series.as_deref() {
+        Some(written) if french => canlii_slug(written),
+        _ => canlii_slug(route.series.as_deref().unwrap_or(&series.abbreviation)),
+    };
     let id = match citation.format? {
         Format::StatuteVolume => {
             let chapter = chapter_value(fields.chapter.as_deref()?)?;
@@ -1062,7 +1069,7 @@ pub fn canlii_consolidated_legislation(citation: &Citation, language: Language) 
     if citation.form != Form::Full {
         return None;
     }
-    let (jurisdiction, id, path) = canlii_legislation_id(citation, registry::registry())?;
+    let (jurisdiction, id, path, french) = canlii_legislation_page(citation, registry::registry())?;
     let path = if path == "astat" { "stat" } else { path };
     let after = citation.full_span.text.get(citation.span.end.saturating_sub(citation.full_span.start)..)
         .filter(|_| citation.format == Some(Format::StatuteVolume)).unwrap_or("");
@@ -1070,7 +1077,7 @@ pub fn canlii_consolidated_legislation(citation: &Citation, language: Language) 
         sections if sections.is_empty() => id,
         sections => format!("{id}-{sections}"),
     };
-    Some(format!("https://www.canlii.org/{}/{jurisdiction}/laws/{path}/{id}/latest/{id}.html", language_segment(language)))
+    Some(canlii_law_address(&jurisdiction, &id, path, french, language))
 }
 
 /// [`canlii_legislation`] against `registry`.
@@ -1078,14 +1085,35 @@ pub fn canlii_legislation_in(citation: &Citation, language: Language, registry: 
     if citation.form != Form::Full {
         return None;
     }
-    let (jurisdiction, id, path) = canlii_legislation_id(citation, registry)?;
+    let (jurisdiction, id, path, french) = canlii_legislation_page(citation, registry)?;
     if jurisdiction.is_empty() {
         return None;
     }
-    Some(format!(
-        "https://www.canlii.org/{}/{jurisdiction}/laws/{path}/{id}/latest/{id}.html",
-        language_segment(language)
-    ))
+    Some(canlii_law_address(&jurisdiction, &id, path, french, language))
+}
+
+/// A citation's CanLII page: its French page where it is written in French (`LRC 1985, c C-46`, `RLRQ c C-12`,
+/// `DORS/98-106` are not the series' English names), as a decision cited by its French neutral identifier is; else
+/// its English page. CanLII's French interface holds no historical statutes, which stay on the English page.
+fn canlii_legislation_page(citation: &Citation, registry: &Registry) -> Option<(String, String, &'static str, bool)> {
+    let french = citation.language.as_deref() == Some("fr") && citation.fields.series.as_deref().is_some_and(|written|
+        key::selected_series(citation, registry, written).is_some_and(|series| fold(written) != fold(&series.abbreviation)));
+    match canlii_legislation_id(citation, registry, french)? {
+        (_, _, "hstat") if french => canlii_legislation_id(citation, registry, false).map(|(j, id, path)| (j, id, path, false)),
+        (jurisdiction, id, path) => Some((jurisdiction, id, path, french)),
+    }
+}
+
+/// CanLII's address of a statute or regulation page: the English interface's (`/en/on/laws/stat/…/latest/`), whatever
+/// the reader's language, which CanLII has for every statute; or, for a citation written in French, the French
+/// interface's (`/fr/on/legis/lois/lro-1990-c-c43/derniere/`), which names the kinds in French.
+fn canlii_law_address(jurisdiction: &str, id: &str, path: &str, french: bool, _language: Language) -> String {
+    if french {
+        let kind = match path { "stat" => "lois", "astat" => "loisa", _ => "regl" };
+        format!("https://www.canlii.org/fr/{jurisdiction}/legis/{kind}/{id}/derniere/{id}.html")
+    } else {
+        format!("https://www.canlii.org/en/{jurisdiction}/laws/{path}/{id}/latest/{id}.html")
+    }
 }
 
 /// Justice Laws for RSC 1985 acts (`/eng/acts/C-46/`) and SOR, SI and CRC
