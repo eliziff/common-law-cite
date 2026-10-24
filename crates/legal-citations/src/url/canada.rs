@@ -725,24 +725,6 @@ pub fn publisher_glues_section_labels(address: &str) -> bool {
         .is_ok_and(|url| matches!(url.host_str(), Some("laws.gnb.ca")))
 }
 
-/// The CanLII page of an A2AJ legislation record (`LEGISLATION-ON`, `REGULATIONS-FED`) by its citation slugged as CanLII
-/// slugs it: `RSO 1990, c C.43` in LEGISLATION-ON is `…/on/laws/stat/rso-1990-c-c.43/latest/rso-1990-c-c.43.html`.
-pub fn canlii_a2aj_law_url(dataset: &str, citation: &str, language: &str) -> Option<String> {
-    static DATASET: LazyLock<Regex> = LazyLock::new(||
-        Regex::new(r"^(LEGISLATION|REGULATIONS)-(FED|AB|BC|MB|NB|NL|NS|NT|NU|ON|PE|QC|SK|YT)$").unwrap());
-    static SEPARATORS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[^a-z0-9.]+").unwrap());
-    let dataset = DATASET.captures(dataset.trim())?;
-    let lowered = citation.trim().to_lowercase();
-    let slug = SEPARATORS.replace_all(&lowered, "-");
-    let slug = slug.trim_matches('-');
-    if slug.is_empty() {
-        return None;
-    }
-    let jurisdiction = if &dataset[2] == "FED" { "ca".to_owned() } else { dataset[2].to_lowercase() };
-    let kind = if &dataset[1] == "LEGISLATION" { "stat" } else { "regu" };
-    Some(format!("https://www.canlii.org/{language}/{jurisdiction}/laws/{kind}/{slug}/latest/{slug}.html"))
-}
-
 /// A2AJ Law Web's reader of a document (`https://law.a2aj.ca/document?citation=…&doc_type=…`), which draws the
 /// A2AJ text itself.
 pub fn law_web_document(citation: &str, doc_type: &str) -> String {
@@ -918,7 +900,8 @@ fn canlii_legislation_id(citation: &Citation, registry: &Registry) -> Option<(St
     let fields = &citation.fields;
     let series = key::selected_series(citation, registry, fields.series.as_deref()?)?;
     let route = series.canlii.as_ref()?;
-    let path = match route.database.as_str() {
+    // A regulation is in CanLII's regulations whatever its series' own database (CQLR c C-26, r 1).
+    let path = if citation.format == Some(Format::RegulationSeries) { "regu" } else { match route.database.as_str() {
         "stat" => "stat",
         "astat" => "astat",
         "regu" => "regu",
@@ -936,37 +919,67 @@ fn canlii_legislation_id(citation: &Citation, registry: &Registry) -> Option<(St
             SeriesKind::Regulations => "regu",
             SeriesKind::Code => return None,
         },
+    } };
+    let year = fields.year.as_deref().unwrap_or("");
+    let path = match path {
+        "astat" if fields.schedule.is_some() || route.as_enacted_from.as_deref().is_some_and(|from| year < from) => "stat",
+        "stat" if route.historical_before.as_deref().is_some_and(|before| !year.is_empty() && year < before) => "hstat",
+        path => path,
     };
-    let slug = |value: &str| key::ident(value);
-    let series_id = slug(&series.abbreviation);
+    // CanLII files some series under another's name (RRQ 1981 under CQLR).
+    let series_id = canlii_slug(route.series.as_deref().unwrap_or(&series.abbreviation));
     let id = match citation.format? {
         Format::StatuteVolume => {
             let chapter = chapter_value(fields.chapter.as_deref()?)?;
-            // The Ontario 1990 consolidation's published ids close the
-            // letter-number chapter (D-16 -> d16); the other series retain
-            // the written separator (for example RSC C-46 -> c-46).
+            // Ontario's 1990 consolidation numbers a chapter with a dot (c D.16, id d16); it is often written c D-16.
             let chapter = if series_id == "rso" && fields.year.as_deref() == Some("1990") {
-                chapter.replace('-', "")
+                chapter.replace('-', ".")
             } else { chapter };
-            match fields.year.as_deref() {
-                Some(year) => format!("{series_id}-{}-c-{}", slug(year), slug(&chapter)),
-                None => format!("{series_id}-c-{}", slug(&chapter)),
+            let mut id = match fields.volume.as_deref().or(fields.year.as_deref()) {
+                Some(volume) => format!("{series_id}-{}-c-{}", canlii_slug(volume), canlii_slug(&chapter)),
+                None => format!("{series_id}-c-{}", canlii_slug(&chapter)),
+            };
+            if let Some(schedule) = fields.schedule.as_deref() {
+                id.push_str("-sch");
+                if !schedule.is_empty() {
+                    id = format!("{id}-{}", canlii_slug(schedule));
+                }
             }
+            id
         }
         Format::RegulationSeries => {
-            if let Some(chapter) = fields.chapter.as_deref() {
-                let chapter = slug(&chapter_value(chapter)?);
-                match fields.regulation.as_deref() {
-                    Some(regulation) => format!("{series_id}-c-{chapter}-r-{}", slug(regulation)),
-                    None => format!("{series_id}-c-{chapter}"),
+            let regulation = fields.regulation.as_deref();
+            if series_id == "goq" {
+                // A regulation by its Gazette officielle page: 2005 GOQ 2, 1581 [2].
+                format!("{}-goq-{}", fields.year.as_deref()?, canlii_slug(regulation?))
+            } else if let Some(chapter) = fields.chapter.as_deref() {
+                // A chapter's regulation: CQLR c T-15.01, r 4; RRQ 1981, c M-20, r 1; RRS c E-9.1 Reg 2.
+                let chapter = canlii_slug(&chapter_value(chapter)?);
+                // The revision's year written in the citation (RRQ 1981), never a date after it (CQLR c C-26, r 1 (2015)).
+                let year = fields.year.as_deref().filter(|year| citation.span.text.contains(year))
+                    .map(|year| format!("-{year}")).unwrap_or_default();
+                let label = if series_id == "rrs" { "reg" } else { "r" };
+                match regulation {
+                    Some(regulation) => format!("{series_id}{year}-c-{chapter}-{label}-{}", canlii_slug(regulation)),
+                    None => format!("{series_id}{year}-c-{chapter}"),
                 }
+            } else if let (Some(year), Some(number)) = (fields.year.as_deref().filter(|year| citation.span.text.contains(year)),
+                regulation.filter(|number| !number.contains(['/', '-'])))
+            {
+                // A revision's regulation: RRO 1990, Reg 194.
+                format!("{series_id}-{year}-reg-{}", canlii_slug(number))
             } else {
-                let (year, number) = regulation_parts(citation)?;
-                if series_id == "sor" || series_id == "si" {
-                    format!("{series_id}-{year}-{number}")
-                } else {
-                    format!("{series_id}-{number}-{year}")
-                }
+                // A numbered regulation in its written order (NB Reg 2009-140, NWT Reg 085-95, YOIC 2020/68), the year
+                // after a slash written as CanLII writes the series' years (Alta Reg 115/93 -> alta-reg-115-1993).
+                let written = regulation?;
+                let written = match written.split_once('/') {
+                    Some((number, after)) => {
+                        let digits = after.find(|character: char| !character.is_ascii_digit()).unwrap_or(after.len());
+                        format!("{number}/{}{}", canlii_year(&after[..digits], route.year.as_deref())?, &after[digits..])
+                    }
+                    None => written.to_owned(),
+                };
+                format!("{series_id}-{}", canlii_slug(&written))
             }
         }
         _ => return None,
@@ -975,6 +988,46 @@ fn canlii_legislation_id(citation: &Citation, registry: &Registry) -> Option<(St
         return None;
     }
     Some((route.jurisdiction.clone(), id, path))
+}
+
+/// CanLII's id for a citation as CanLII writes it: accents folded, lowercased, parentheses, brackets, commas and
+/// apostrophes dropped, a dot closing a letter dropped (`c A.1` -> `c-a1`, `Reg.` -> `reg`), and every other run of
+/// characters but a number's dot a dash (`SS 1980-81, c E-0.02` -> `ss-1980-81-c-e-0.02`). Measured against CanLII's
+/// legislation list (2026-10-23): CanLII's own citation gives its id for 90,687 of 91,669.
+pub fn canlii_slug(citation: &str) -> String {
+    let characters = citation.nfd().filter(|character| !unicode_normalization::char::is_combining_mark(*character))
+        .flat_map(char::to_lowercase).filter(|character| !"()[],'\u{2019}".contains(*character)).collect::<Vec<_>>();
+    let mut id = String::with_capacity(characters.len());
+    for (at, &character) in characters.iter().enumerate() {
+        let closes_letter = character == '.' && at > 0 && characters[at - 1].is_alphabetic();
+        if character.is_alphanumeric() || character == '.' && !closes_letter {
+            id.push(character);
+        } else if !closes_letter && !id.ends_with('-') {
+            id.push('-');
+        }
+    }
+    id.trim_matches(['-', '.']).to_owned()
+}
+
+/// A regulation's year (`93`, `1993`) as CanLII writes it for a series: `four` digits, `two`, as `written`, or by
+/// default two before 2000 and four from 2000 (measured per series against CanLII's legislation list, 2026-10-23).
+/// Two digits up to 30 are this century's: CanLII's regulations written so reach back to the 1930s.
+fn canlii_year(year: &str, form: Option<&str>) -> Option<String> {
+    if form == Some("written") {
+        return Some(year.to_owned());
+    }
+    let full = match year.len() {
+        2 => format!("{}{year}", if year <= "30" { "20" } else { "19" }),
+        4 => year.to_owned(),
+        _ => return None,
+    };
+    Some(match form {
+        Some("written") => year.to_owned(),
+        Some("four") => full,
+        Some("two") => full[2..].to_owned(),
+        _ if full.as_str() < "2000" => full[2..].to_owned(),
+        _ => full,
+    })
 }
 
 /// `(year as written, number)` of a numbered regulation.
@@ -1000,6 +1053,24 @@ fn regulation_parts(citation: &Citation) -> Option<(String, String)> {
 /// `https://www.canlii.org/en/ca/laws/stat/rsc-1985-c-c-46/latest/rsc-1985-c-c-46.html`.
 pub fn canlii_legislation(citation: &Citation, language: Language) -> Option<String> {
     canlii_legislation_in(citation, language, registry::registry())
+}
+
+/// The CanLII page of a consolidated statute's own citation, as an A2AJ legislation record carries it: an annual act at
+/// its consolidation (`/stat/`), not as enacted, and the sections after its chapter part of what it is (`SC 2018, c 27,
+/// s 675` is the act that section enacted, `sc-2018-c-27-s-675`).
+pub fn canlii_consolidated_legislation(citation: &Citation, language: Language) -> Option<String> {
+    if citation.form != Form::Full {
+        return None;
+    }
+    let (jurisdiction, id, path) = canlii_legislation_id(citation, registry::registry())?;
+    let path = if path == "astat" { "stat" } else { path };
+    let after = citation.full_span.text.get(citation.span.end.saturating_sub(citation.full_span.start)..)
+        .filter(|_| citation.format == Some(Format::StatuteVolume)).unwrap_or("");
+    let id = match canlii_slug(after) {
+        sections if sections.is_empty() => id,
+        sections => format!("{id}-{sections}"),
+    };
+    Some(format!("https://www.canlii.org/{}/{jurisdiction}/laws/{path}/{id}/latest/{id}.html", language_segment(language)))
 }
 
 /// [`canlii_legislation`] against `registry`.

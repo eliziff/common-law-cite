@@ -24,7 +24,8 @@
   ],
   "canlii": {
    "jurisdiction": "ca",
-   "database": "caa"
+   "database": "caa",
+   "as_enacted_from": "2001"
   },
   "name_fr": "Lois du Canada",
   "citation_id": "sc"
@@ -96,7 +97,8 @@
   ],
   "canlii": {
    "jurisdiction": "on",
-   "database": "ona"
+   "database": "ona",
+   "as_enacted_from": "2000"
   },
   "name_fr": "Lois de l'Ontario",
   "citation_id": "so"
@@ -113,7 +115,8 @@
   ],
   "canlii": {
    "jurisdiction": "on",
-   "database": "onr"
+   "database": "onr",
+   "year": "two"
   },
   "name_fr": "Règlements de l'Ontario",
   "citation_id": "oreg"
@@ -148,7 +151,8 @@
   "abbreviation": "SBC",
   "canlii": {
    "jurisdiction": "bc",
-   "database": "bca"
+   "database": "bca",
+   "as_enacted_from": "1997"
   },
   "citation_id": "sbc"
  },
@@ -173,7 +177,8 @@
   "abbreviation": "RSA",
   "canlii": {
    "jurisdiction": "ab",
-   "database": "abs"
+   "database": "abs",
+   "historical_before": "2000"
   },
   "citation_id": "rsa"
  },
@@ -184,7 +189,8 @@
   "abbreviation": "SA",
   "canlii": {
    "jurisdiction": "ab",
-   "database": "aba"
+   "database": "aba",
+   "as_enacted_from": "1906"
   },
   "citation_id": "sa"
  },
@@ -199,7 +205,8 @@
   ],
   "canlii": {
    "jurisdiction": "ab",
-   "database": "abr"
+   "database": "abr",
+   "year": "four"
   },
   "citation_id": "altareg"
  },
@@ -210,7 +217,8 @@
   "abbreviation": "RSS",
   "canlii": {
    "jurisdiction": "sk",
-   "database": "sks"
+   "database": "sks",
+   "historical_before": "1978"
   },
   "citation_id": "rss"
  },
@@ -221,7 +229,8 @@
   "abbreviation": "SS",
   "canlii": {
    "jurisdiction": "sk",
-   "database": "ska"
+   "database": "ska",
+   "as_enacted_from": "1906"
   },
   "citation_id": "ss"
  },
@@ -260,7 +269,8 @@
   ],
   "canlii": {
    "jurisdiction": "mb",
-   "database": "mbs"
+   "database": "mbs",
+   "historical_before": "1990"
   },
   "name_fr": "Lois révisées du Manitoba",
   "citation_id": "rsm"
@@ -290,7 +300,8 @@
   ],
   "canlii": {
    "jurisdiction": "mb",
-   "database": "mba"
+   "database": "mba",
+   "as_enacted_from": "1987"
   },
   "name_fr": "Lois du Manitoba",
   "citation_id": "sm"
@@ -321,7 +332,8 @@
   ],
   "canlii": {
    "jurisdiction": "nb",
-   "database": "nbs"
+   "database": "nbs",
+   "historical_before": "1974"
   },
   "name_fr": "Lois révisées du Nouveau-Brunswick",
   "citation_id": "rsnb"
@@ -336,7 +348,8 @@
   ],
   "canlii": {
    "jurisdiction": "nb",
-   "database": "nba"
+   "database": "nba",
+   "as_enacted_from": "1904"
   },
   "name_fr": "Lois du Nouveau-Brunswick",
   "citation_id": "snb"
@@ -375,7 +388,8 @@
   "abbreviation": "SNS",
   "canlii": {
    "jurisdiction": "ns",
-   "database": "nsa"
+   "database": "nsa",
+   "as_enacted_from": "1995"
   },
   "citation_id": "sns"
  },
@@ -411,7 +425,8 @@
   "abbreviation": "SPEI",
   "canlii": {
    "jurisdiction": "pe",
-   "database": "pea"
+   "database": "pea",
+   "as_enacted_from": "2002"
   },
   "citation_id": "spei"
  },
@@ -422,7 +437,8 @@
   "abbreviation": "PEI Reg",
   "canlii": {
    "jurisdiction": "pe",
-   "database": "per"
+   "database": "per",
+   "year": "two"
   },
   "variations": [
    "princeedwardisland Reg"
@@ -453,7 +469,8 @@
   ],
   "canlii": {
    "jurisdiction": "nl",
-   "database": "nla"
+   "database": "nla",
+   "as_enacted_from": "1991"
   },
   "citation_id": "snl"
  },
@@ -470,7 +487,8 @@
   ],
   "canlii": {
    "jurisdiction": "nl",
-   "database": "nlr"
+   "database": "nlr",
+   "year": "two"
   },
   "citation_id": "nlr"
  },
@@ -481,7 +499,8 @@
   "abbreviation": "CNLR",
   "canlii": {
    "jurisdiction": "nl",
-   "database": "nlr"
+   "database": "nlr",
+   "year": "two"
   },
   "citation_id": "cnlr"
  },
@@ -492,7 +511,8 @@
   "abbreviation": "RSY",
   "canlii": {
    "jurisdiction": "yk",
-   "database": "yks"
+   "database": "yks",
+   "historical_before": "2002"
   },
   "citation_id": "rsy"
  },
@@ -503,7 +523,8 @@
   "abbreviation": "SY",
   "canlii": {
    "jurisdiction": "yk",
-   "database": "yka"
+   "database": "yka",
+   "as_enacted_from": "1987"
   },
   "citation_id": "sy"
  },
@@ -514,9 +535,58 @@
   "abbreviation": "YOIC",
   "canlii": {
    "jurisdiction": "yk",
-   "database": "ykr"
+   "database": "ykr",
+   "year": "written"
   },
   "citation_id": "yoic"
+ },
+ {
+  "name": "Yukon Commissioner's Orders",
+  "kind": "regulations",
+  "jurisdiction": "ca-yt",
+  "abbreviation": "YCO",
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ykr",
+   "year": "written"
+  },
+  "citation_id": "yco"
+ },
+ {
+  "name": "Yukon Ministerial Orders",
+  "kind": "regulations",
+  "jurisdiction": "ca-yt",
+  "abbreviation": "YMO",
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ykr",
+   "year": "written"
+  },
+  "citation_id": "ymo"
+ },
+ {
+  "name": "Yukon Workers' Compensation Board Orders",
+  "kind": "regulations",
+  "jurisdiction": "ca-yt",
+  "abbreviation": "YWCBO",
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ykr",
+   "year": "written"
+  },
+  "citation_id": "ywcbo"
+ },
+ {
+  "name": "Yukon Workers' Compensation Health and Safety Board Orders",
+  "kind": "regulations",
+  "jurisdiction": "ca-yt",
+  "abbreviation": "YWCHSBO",
+  "canlii": {
+   "jurisdiction": "yk",
+   "database": "ykr",
+   "year": "written"
+  },
+  "citation_id": "ywchsbo"
  },
  {
   "name": "Revised Statutes of the Northwest Territories",
@@ -536,7 +606,8 @@
   "abbreviation": "SNWT",
   "canlii": {
    "jurisdiction": "nt",
-   "database": "nta"
+   "database": "nta",
+   "as_enacted_from": "2004"
   },
   "citation_id": "snwt"
  },
@@ -566,13 +637,58 @@
   "citation_id": "rrnwt"
  },
  {
+  "name": "Revised Statutes of the Northwest Territories (Nunavut)",
+  "kind": "revised_statutes",
+  "jurisdiction": "ca-nu",
+  "abbreviation": "RSNWT (Nu)",
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nus"
+  },
+  "citation_id": "rsnwtnu"
+ },
+ {
+  "name": "Statutes of the Northwest Territories (Nunavut)",
+  "kind": "annual_statutes",
+  "jurisdiction": "ca-nu",
+  "abbreviation": "SNWT (Nu)",
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nus"
+  },
+  "citation_id": "snwtnu"
+ },
+ {
+  "name": "Northwest Territories Regulations (Nunavut)",
+  "kind": "regulations",
+  "jurisdiction": "ca-nu",
+  "abbreviation": "NWT Reg (Nu)",
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nur"
+  },
+  "citation_id": "nwtregnu"
+ },
+ {
+  "name": "Revised Regulations of the Northwest Territories (Nunavut)",
+  "kind": "regulations",
+  "jurisdiction": "ca-nu",
+  "abbreviation": "RRNWT (Nu)",
+  "canlii": {
+   "jurisdiction": "nu",
+   "database": "nur"
+  },
+  "citation_id": "rrnwtnu"
+ },
+ {
   "name": "Statutes of Nunavut",
   "kind": "annual_statutes",
   "jurisdiction": "ca-nu",
   "abbreviation": "SNu",
   "canlii": {
    "jurisdiction": "nu",
-   "database": "nua"
+   "database": "nua",
+   "as_enacted_from": "1999"
   },
   "citation_id": "snu"
  },
@@ -626,7 +742,7 @@
   ],
   "canlii": {
    "jurisdiction": "qc",
-   "database": "qcs"
+   "database": "qch"
   },
   "name_fr": "Lois refondues du Québec",
   "citation_id": "rsq"
@@ -641,7 +757,8 @@
   ],
   "canlii": {
    "jurisdiction": "qc",
-   "database": "qca"
+   "database": "qca",
+   "as_enacted_from": "1996"
   },
   "name_fr": "Lois du Québec",
   "citation_id": "sq"
@@ -653,10 +770,34 @@
   "abbreviation": "RRQ",
   "canlii": {
    "jurisdiction": "qc",
-   "database": "qcr"
+   "database": "qcr",
+   "series": "CQLR"
   },
   "name_fr": "Règlements refondus du Québec",
   "citation_id": "rrq"
+ },
+ {
+  "name": "Regulations of Quebec",
+  "kind": "regulations",
+  "jurisdiction": "ca-qc",
+  "abbreviation": "RQ",
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcr"
+  },
+  "citation_id": "rq"
+ },
+ {
+  "name": "Gazette officielle du Québec",
+  "kind": "regulations",
+  "jurisdiction": "ca-qc",
+  "abbreviation": "GOQ",
+  "canlii": {
+   "jurisdiction": "qc",
+   "database": "qcr"
+  },
+  "name_fr": "Gazette officielle du Québec",
+  "citation_id": "goq"
  },
  {
   "name": "Statutory Instruments (United Kingdom)",
