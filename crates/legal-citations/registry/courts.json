@@ -1850,7 +1850,9 @@
   "neutral": [
    "NBFCSC"
   ],
-  "aliases": [],
+  "aliases": [
+   "NB FC"
+  ],
   "canlii": {
    "jurisdiction": "nb",
    "database": "nbfcsc"
@@ -1867,7 +1869,9 @@
    "NBSECE",
    "NBFCSTE"
   ],
-  "aliases": [],
+  "aliases": [
+   "NB FC"
+  ],
   "canlii": {
    "jurisdiction": "nb",
    "database": "nbsec"
@@ -6735,7 +6739,9 @@
    "PC",
    "JCPC",
    "UKJCPC",
-   "UK JCPC"
+   "UK JCPC",
+   "CA UKPC",
+   "UK PC"
   ],
   "canlii": {
    "jurisdiction": "ca",
