@@ -7994,5 +7994,23 @@
   "region": "ca-on",
   "level": "tribunal",
   "type": "tribunal"
+ },
+ {
+  "id": "casa",
+  "name": "Canada Labour Arbitration Awards",
+  "name_fr": "Sentences arbitrales en matière de travail (Canada)",
+  "neutral": [],
+  "aliases": [
+   "CA CASA",
+   "CASA",
+   "CA LA"
+  ],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "casa-cala"
+  },
+  "region": "ca",
+  "level": "tribunal",
+  "type": "tribunal"
  }
 ]
