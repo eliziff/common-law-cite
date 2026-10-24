@@ -75,7 +75,7 @@ pub struct CanLiiRoute {
     pub jurisdiction: String,
     /// CanLII database id with its exact casing (`scc`, `fct`, `NBQB`).
     pub database: String,
-    /// A series CanLII files under another's abbreviation (`CQLR` for RRQ).
+    /// A series CanLII files under another's abbreviation (`SOR` for the federal regulations a territory kept).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub series: Option<String>,
     /// How CanLII writes a series' regulation years where it is not two digits before 2000 and four after: `four`,

@@ -891,8 +891,7 @@
   "abbreviation": "RRQ",
   "canlii": {
    "jurisdiction": "qc",
-   "database": "qcr",
-   "series": "CQLR"
+   "database": "qcr"
   },
   "name_fr": "Règlements refondus du Québec",
   "citation_id": "rrq"

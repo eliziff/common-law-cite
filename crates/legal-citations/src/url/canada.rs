@@ -945,7 +945,7 @@ fn canlii_legislation_id(citation: &Citation, registry: &Registry, french: bool)
         "stat" if route.historical_before.as_deref().is_some_and(|before| !year.is_empty() && year < before) => "hstat",
         path => path,
     };
-    // CanLII files some series under another's name (RRQ 1981 under CQLR); a French page by its French name.
+    // CanLII files some series under another's name (SOR (NT) under SOR); a French page by its French name.
     let series_id = match fields.series.as_deref() {
         Some(written) if french => canlii_slug(written),
         _ => canlii_slug(route.series.as_deref().unwrap_or(&series.abbreviation)),
