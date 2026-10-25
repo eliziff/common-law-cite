@@ -448,9 +448,13 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             .map(|matched| Anchor::new(matched.start()..matched.end(), (*kind, *reason))));
         }
     }
-    // The Charter's enacting instrument is its core; the title before it styles it.
+    // The Charter's enacting instrument is its core; the title before it styles it. Without its title or "Part I of",
+    // the instrument is the Constitution Act, 1982 or the Canada Act 1982 itself, not the Charter.
     if present[first_source + sources] && styles.is_none_or(|styles| styles.iter().any(|style| CANADA.contains(style))) {
-        found.extend(CHARTER.captures_all(value).flatten().filter_map(|captures| captures.name("source"))
+        found.extend(CHARTER.captures_all(value).flatten()
+            .filter(|captures| captures.name("title").is_some()
+                || captures.name("source").is_some_and(|source| source.as_str().starts_with("Part") || source.as_str().starts_with("partie")))
+            .filter_map(|captures| captures.name("source"))
             .map(|source| Anchor::new(source.start()..source.end(), ("statute", "charter_grammar"))));
     }
     if present[first_source + sources + 1] {
@@ -617,11 +621,13 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     let mut claimed = Vec::with_capacity(primary.len());
     let mut floor = 0;
     for hit in &primary {
-        // A style of cause never swallows a statute the secondary grammars found before it.
-        let statute_end = secondary.iter().filter(|anchor| anchor.family.is_some_and(|(kind, _)| kind == "statute")
+        // A style of cause never swallows a statute the secondary grammars found before it, nor a decision they read
+        // by a tribunal's identifier or a database's ("Fen v Videotron, 2022 Comp Trib 3, 2022 CanLII 9498").
+        let secondary_end = secondary.iter().filter(|anchor| anchor.family.is_some_and(|(kind, reason)| kind == "statute"
+                || reason == "neutral_grammar" || reason == "database_grammar")
             && anchor.span.end <= hit.span.start).map(|anchor| anchor.span.end).max().unwrap_or(0);
         let start = if hit.family.is_some_and(|(kind, _)| kind == "case") {
-            case_style_start(value, hit.span.start, floor.max(statute_end).max(scope_floor(scopes, hit.span.start)))
+            case_style_start(value, hit.span.start, floor.max(secondary_end).max(scope_floor(scopes, hit.span.start)))
         } else {
             hit.span.start
         };
@@ -772,7 +778,10 @@ fn no_report(value: &str, hit: Hit) -> bool {
     let dated = REPORTER_MONTH.captures_screened(&value[hit.clone()]).is_some_and(|captures| captures.name("month").is_some())
         && after.strip_prefix(", ").is_some_and(|rest| digits(rest) == 4
             && (rest.starts_with("19") || rest.starts_with("20")));
+    // A group after a thousands separator is three digits; a year after a comma with no space is the next citation's
+    // ("2007 CarswellNS 470,2007 NSSM 64").
     let thousands = value[..hit.start].strip_suffix(',').is_some_and(|rest| rest.ends_with(|c: char| c.is_ascii_digit()))
+            && digits(&value[hit.start..]) == 3
         || after.strip_prefix(',').is_some_and(|rest| digits(rest) == 3);
     let leader = before.ends_with("...") || before.ends_with('\u{2026}');
     dated || thousands || leader
@@ -1576,8 +1585,10 @@ fn full_citation(
     if let Some((options, mut reading)) = options.and_then(|options| anchor.reading.clone().map(|reading| (options, reading))) {
         if reading.family().0 == "case" {
             reading.fields.source_case_name = source_name.cloned();
+            // A citation's own year ("[2004] 1 S.C.R. 303") is its; the year its case name carries ("Hamilton (2003),
+            // 2004 SCC 9, [2004] 1 S.C.R. 303") fills one without.
             if let Some(year) = source_name.and_then(|name| name.year.clone()) {
-                reading.fields.year = Some(year);
+                reading.fields.year.get_or_insert(year);
             }
         } else if reading.source_captured() {
             reading.fields.source_case_name = Some(crate::SourceCaseName {

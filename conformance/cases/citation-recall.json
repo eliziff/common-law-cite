@@ -2891,6 +2891,176 @@
           }
         ]
       }
+    },
+    {
+      "name": "case/style-year-before-neutral",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen Bakery Ltd (2030), 2031 SCC 9",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:neutral:2031:scc:9"
+          }
+        ]
+      },
+      "note": "The decision's year in parentheses after the style of cause is not a report's volume year."
+    },
+    {
+      "name": "case/style-year-before-neutral-without-comma",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen (2030) 2030 BCSC 1276",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:neutral:2030:bcsc:1276"
+          }
+        ]
+      },
+      "note": "No comma after the parenthesized year."
+    },
+    {
+      "name": "case/style-year-before-canlii",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen (1965), 1965 CanLII 5961 (SCC)",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:canlii:1965:5961"
+          }
+        ]
+      },
+      "note": "A CanLII identifier after the decision's year."
+    },
+    {
+      "name": "case/style-year-before-report-stays-a-report",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen (1990), 71 OR (2d) 725",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:reporter:or:or2d:71:725"
+          }
+        ]
+      },
+      "note": "Control: a report after the year is still the report."
+    },
+    {
+      "name": "case/parallel-report-keeps-its-own-year",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen Bakery Ltd (2030), 2031 SCC 9, [2031] 1 SCR 303",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:neutral:2031:scc:9"
+          },
+          {
+            "key": "3:reporter:scr:scr:2031:1:303"
+          }
+        ]
+      },
+      "note": "The year the style of cause carries fills only a citation without one of its own."
+    },
+    {
+      "name": "case/tribunal-neutral-then-canlii",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen v Videotron, 2031 Comp Trib 3, 2031 CanLII 9498",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:neutral:2031:cact:3"
+          },
+          {
+            "key": "3:canlii:2031:9498"
+          }
+        ]
+      },
+      "note": "The parallel's style of cause does not swallow a tribunal's multi-word neutral citation."
+    },
+    {
+      "name": "case/parallel-after-comma-without-space",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen, 2031 CarswellNS 470,2031 NSSM 64",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:database:carswellns:2031:470"
+          },
+          {
+            "key": "3:neutral:2031:nssm:64"
+          }
+        ]
+      },
+      "note": "A four-digit year after a comma is the next citation, not a thousands group."
+    },
+    {
+      "name": "statute/uk-act-chapter-after-jurisdiction",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen Drainage Act 2031 (UK), c 42",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "authority": "statute",
+            "span": {
+              "text": "Fen Drainage Act 2031 (UK), c 42"
+            }
+          }
+        ]
+      },
+      "note": "McGill 7.1.3: a UK statute's chapter follows its jurisdiction."
+    },
+    {
+      "name": "statute/canada-act-alone-is-not-the-charter",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Canada Act 1982 (UK), 1982, c 11",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "fields": {
+              "instrumentTitle": null
+            },
+            "span": {
+              "text": "Canada Act 1982 (UK), 1982, c 11"
+            }
+          }
+        ]
+      },
+      "note": "Without the Charter's title or \"Part I of\", the instrument is the Canada Act itself."
     }
   ]
 }

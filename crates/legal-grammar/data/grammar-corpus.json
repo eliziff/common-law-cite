@@ -513,6 +513,43 @@
           ]
         },
         {
+          "id": "cite.neutral.dated",
+          "pattern": "^\\((?<decided>(?:17|18|19|20)\\d{2})\\),?\\s+(?<citation>(?:17|18|19|20)\\d{2}\\s+\\S.*)$",
+          "flags": "",
+          "provenance": "Authored for the legal-citations extraction stages. A neutral citation or a CanLII identifier written after its decision's year in parentheses, as a style of cause may carry the year: 'Hamilton v Open Window Bakery Ltd (2003), 2004 SCC 9', 'Meady v Greyhound (2008), 2008 ONCA 468', 'Smith v Jones (1965), 1965 CanLII 596 (SCC)', and without the comma '(2006) 2006 BCSC 1276'. Found in 2,484 of the A2AJ store's decisions, where the report grammar read the citation's year as a volume. classify.rs reads the rest as the citation only when it is CanLII's or a registered court's, so a report whose volume is a year stays a report.",
+          "vectors": [
+            {
+              "input": "(2003), 2004 SCC 9",
+              "groups": {
+                "decided": "2003",
+                "citation": "2004 SCC 9"
+              }
+            },
+            {
+              "input": "(1965), 1965 CanLII 596",
+              "groups": {
+                "decided": "1965",
+                "citation": "1965 CanLII 596"
+              }
+            },
+            {
+              "input": "(2006) 2006 BCSC 1276",
+              "groups": {
+                "decided": "2006",
+                "citation": "2006 BCSC 1276"
+              }
+            },
+            {
+              "input": "(1990), 71 OR (2d) 725",
+              "groups": null
+            },
+            {
+              "input": "2004 SCC 9",
+              "groups": null
+            }
+          ]
+        },
+        {
           "id": "cite.neutral.tribunal",
           "pattern": "\\b(?<year>(?:17|18|19|20)\\d{2})\\s+(?<court>Comp\\.\\s+Trib\\.|Trib\\.\\s+conc\\.|Comp\\s+Trib\\.|CAPPRT\\s+LD|Comp\\s+Trib|Comp\\s+trib|TCRPAP\\s+LD|TRIB\\s+COMP|Trib\\s+Comp|Trib\\s+Conc|Trib\\s+conc|CCRI\\s+LD|CIRB\\s+LD)\\s+(?<num>\\d+)\\b",
           "flags": "",
@@ -1180,10 +1217,40 @@
         },
         {
           "id": "cite.foreign.titled-statute",
-          "pattern": "\\b(?:[A-Z][\\w'’&-]*|\\((?:No\\s+\\d+|[A-Z][^()\\n]{0,40})\\)|of|the|and|for|to|etc|on|in)(?:\\s+(?:[A-Z][\\w'’&-]*|\\((?:No\\s+\\d+|[A-Z][^()\\n]{0,40})\\)|of|the|and|for|to|etc|on|in)){0,14}\\s+(?:Act|Measure|Order|Regulations?|Rules|Bill)(?:\\s+\\[HL\\])?(?:\\s+(?:\\(No\\s+\\d+\\)\\s+)?(?:1[6-9]|20)\\d{2})?\\s*\\((?:UK|U\\.K\\.|NI|N\\s?Ireland|Scot|Wales|Eng|Austl|Cth|Commonwealth|New\\s+South\\s+Wales|NSW|Victoria|Vic|Queensland|Qld|South\\s+Australia|SA|Western\\s+Australia|WA|Tasmania|Tas|Northern\\s+Territory|NT|ACT|NZ|S\\s?Afr|Ire|Ireland|India|HK|Sing|Jam|Ghana|Kenya|Nigeria)\\)",
+          "pattern": "\\b(?:[A-Z][\\w'’&-]*|\\((?:No\\s+\\d+|[A-Z][^()\\n]{0,40})\\)|of|the|and|for|to|etc|on|in)(?:\\s+(?:[A-Z][\\w'’&-]*|\\((?:No\\s+\\d+|[A-Z][^()\\n]{0,40})\\)|of|the|and|for|to|etc|on|in)){0,14}\\s+(?:Act|Measure|Order|Regulations?|Rules|Bill)(?:\\s+\\[HL\\])?(?:\\s+(?:\\(No\\s+\\d+\\)\\s+)?(?:1[6-9]|20)\\d{2})?\\s*\\((?:UK|U\\.K\\.|NI|N\\s?Ireland|Scot|Wales|Eng|Austl|Cth|Commonwealth|New\\s+South\\s+Wales|NSW|Victoria|Vic|Queensland|Qld|South\\s+Australia|SA|Western\\s+Australia|WA|Tasmania|Tas|Northern\\s+Territory|NT|ACT|NZ|S\\s?Afr|Ire|Ireland|India|HK|Sing|Jam|Ghana|Kenya|Nigeria)\\)(?:\\s*,\\s*(?:(?:1[6-9]|20)\\d{2}\\s*,\\s*)?c\\.?\\s*(?<chapter>\\d{1,4}))?",
           "flags": "",
           "canonical": {},
-          "provenance": "Authored from the McGill Guide (10th ed), chapter 7 (foreign sources). A statute, measure, order or bill of another common law jurisdiction by its title, year and jurisdiction ('Northern Ireland Act 1998 (UK)')."
+          "provenance": "Authored from the McGill Guide (10th ed), chapter 7 (foreign sources). A statute, measure, order or bill of another common law jurisdiction by its title, year and jurisdiction ('Northern Ireland Act 1998 (UK)'). Authored from the McGill Guide (10th ed), 7.1.3: a United Kingdom statute's chapter follows its jurisdiction ('Human Rights Act 1998 (UK), c 42'), after the regnal or calendar year that numbers it where the citation writes that year ('Canada Act 1982 (UK), 1982, c 11'), and is part of the citation.",
+          "vectors": [
+            {
+              "input": "Human Rights Act 1998 (UK), c 42",
+              "groups": {
+                "chapter": "42"
+              }
+            },
+            {
+              "input": "Canada Act 1982 (UK), 1982, c 11",
+              "groups": {
+                "chapter": "11"
+              }
+            },
+            {
+              "input": "Northern Ireland Act 1998 (UK)",
+              "groups": {
+                "chapter": null
+              }
+            },
+            {
+              "input": "Corporations Act 2001 (Cth), s 9",
+              "groups": {
+                "chapter": null
+              }
+            },
+            {
+              "input": "the Act applies",
+              "groups": null
+            }
+          ]
         },
         {
           "id": "cite.foreign.uk-instrument",

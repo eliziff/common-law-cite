@@ -671,6 +671,10 @@ fn recall_boundaries(text: &str, extended_us: bool, whole_anchors: &[Anchor], ti
                 if !name_word(word) { lead = Some(word); break; }
                 name = word.as_ptr() as usize - text.as_ptr() as usize;
             }
+            // An article opens the name it leads ("…, the Marsh and Bog Protection Act, RSA 2031, c M-9").
+            if let Some(article) = lead.filter(|word| matches!(*word, "the" | "a" | "an")) {
+                name = article.as_ptr() as usize - text.as_ptr() as usize;
+            }
             if lead.is_some_and(|word| word.chars().all(|c| c.is_lowercase())) && name > start
                 && evidence(&text[start..name], extended_us) && evidence(&text[name..segment_end(&boundaries, position, text.len())], extended_us) {
                 boundaries.push((name, name, "conjoined_citation"));
