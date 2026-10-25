@@ -1,0 +1,1189 @@
+[
+ {
+  "id": "rsc",
+  "is_publication": false,
+  "reason_if_not": "'N R.S.C. YEAR' (1 R.S.C. 1985, 10 R.S.C. 1970) is chapter N of the Revised Statutes of Canada of that year, a statute series cited by chapter, not a report. The lone '(1904), 35 R.S.C. 14' has a year before the volume, the report pattern; it is probably a mis-parse of another series but no fetched page says so.",
+  "abbreviation": "R.S.C.",
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": null,
+  "facts": [],
+  "notes": "Judgment from the example pattern only; no page fetched for it."
+ },
+ {
+  "id": "larticle",
+  "is_publication": false,
+  "reason_if_not": "French words 'L'article N' (section N) after a footnote number; a pinpoint, not a publication.",
+  "abbreviation": null,
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": null,
+  "facts": [],
+  "notes": ""
+ },
+ {
+  "id": "no",
+  "is_publication": false,
+  "reason_if_not": "'No.' is an issue designator in '(YEAR), VOL No. N'; the journal title that should precede it is missing from the examples.",
+  "abbreviation": null,
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": null,
+  "facts": [],
+  "notes": "Cannot be resolved without the source documents."
+ },
+ {
+  "id": "cs",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "C.S.",
+  "variations": [
+   "CS"
+  ],
+  "name": "Rapports judiciaires officiels de Québec: Cour supérieure (1892-1966); Recueils de jurisprudence du Québec: Cour supérieure (1967-1985)",
+  "name_fr": "Rapports judiciaires officiels de Québec: Cour supérieure / Recueils de jurisprudence du Québec: Cour supérieure",
+  "kind": "reporter",
+  "jurisdiction": "ca-qc",
+  "series_by_period": [
+   {
+    "name": "Rapports judiciaires officiels de Québec: Cour supérieure",
+    "start": 1892,
+    "end": 1966
+   },
+   {
+    "name": "Recueils de jurisprudence du Québec: Cour supérieure",
+    "start": 1967,
+    "end": 1985
+   }
+  ],
+  "facts": [
+   {
+    "fact": "start",
+    "value": "1892 (Rapports judiciaires officiels de Québec: Cour supérieure)",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide2019/appendix-3.html",
+    "quote": "CS Rapports judiciaries officiels de Québec: Cour supérieure 1892–1966",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": "1966 (first series)",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide2019/appendix-3.html",
+    "quote": "CS Rapports judiciaries officiels de Québec: Cour supérieure 1892–1966",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": "1967 (Recueils de jurisprudence du Québec: Cour supérieure)",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide2019/appendix-3.html",
+    "quote": "CS Recueils de jurisprudence du Québec: Cour supérieure 1967–1985",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": "1985 (second series)",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide2019/appendix-3.html",
+    "quote": "CS Recueils de jurisprudence du Québec: Cour supérieure 1967–1985",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "C.S. (with periods)",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "C.S. Recueils de jurisprudence du Québec. Cour supérieure",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "by year, cited [YEAR] C.S. page",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Examples: [1959] and [1963] fall in the 1892-1966 series; [1974], [1976], [1977] fall in the 1967-1985 series. '5 C's 4' is not this series (not a publication). The NZ guide spells 'judiciaries' (sic) as quoted."
+ },
+ {
+  "id": "bccaaano",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "B.C.C.A.A.A.",
+  "variations": [
+   "BCCAAA"
+  ],
+  "name": "British Columbia Collective Agreement Arbitration Awards (probable expansion)",
+  "name_fr": null,
+  "kind": "database_identifier",
+  "jurisdiction": "ca-bc",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "British Columbia Collective Agreement Arbitration Awards",
+    "status": "unverified",
+    "url": "https://www.courthouselibrary.ca/how-we-can-help/our-legal-knowledge-base/bc-labour-decisions-and-arbitration-awards",
+    "quote": ""
+   },
+   {
+    "fact": "start",
+    "value": 1974,
+    "status": "unverified",
+    "url": "https://www.courthouselibrary.ca/how-we-can-help/our-legal-knowledge-base/bc-labour-decisions-and-arbitration-awards",
+    "quote": ""
+   }
+  ],
+  "notes": "Related page says: 'Electronic sources (full text) 1974 - Quicklaw (search for Source: BCAR or British Columbia Collective Agreement Arbitration Awards'. That names a Quicklaw source (coverage 1974) but never writes B.C.C.A.A.A., so the equality of the abbreviation with that source and the 1974 start for this identifier stay unverified. Numbered awards ('No. 241'), per-year numbering is not stated."
+ },
+ {
+  "id": "hlr",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "H.L.R.",
+  "variations": [
+   "HLR"
+  ],
+  "name": "Harvard Law Review",
+  "name_fr": null,
+  "kind": "journal",
+  "jurisdiction": "us",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Harvard Law Review",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "H.L.R. Harvard law review",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1887,
+    "status": "unverified",
+    "url": "https://harvardlawreview.org/about/",
+    "quote": ""
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Laval's list gives H.L.R. = Harvard law review (the only expansion found). The page at harvardlawreview.org shows only a copyright range '1887-2026', not a statement of first publication, so start is left unverified. The examples (vols 16-21) are consistent with it but that is not proof."
+ },
+ {
+  "id": "ca",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "C.A.",
+  "variations": [
+   "CA"
+  ],
+  "name": "Recueils de jurisprudence du Québec: Cour d'appel",
+  "name_fr": "Recueils de jurisprudence du Québec: Cour d'appel",
+  "kind": "reporter",
+  "jurisdiction": "ca-qc",
+  "series_by_period": [
+   {
+    "name": "Recueils de jurisprudence du Québec: Cour d'appel",
+    "start": 1970,
+    "end": 1985
+   }
+  ],
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1970,
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide2019/appendix-3.html",
+    "quote": "CA Recueils de jurisprudence du Québec: Cour d'appel 1970–1985",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": 1985,
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide2019/appendix-3.html",
+    "quote": "CA Recueils de jurisprudence du Québec: Cour d'appel 1970–1985",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "C.A. (with periods)",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "C.A. Recueils de jurisprudence du Québec. Cour d'appel",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "by year, cited [YEAR] C.A. page",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "All examples ([1971]-[1976]) fall within 1970-1985. A separate catalogue record (https://sclqld.org.au/catalogue/records/19894, titled 'Recueils de jurisprudence du Quebec Cour d'Appel.') says 'Publication details: Montreal: Editeur officiel du Quebec, 1921-75.' and lists earlier Banc de la Reine/Court of Appeal reports among its added titles, so it describes a longer bibliographic run; it differs from the 1970 start. The earlier verified.json treated 1921-1975 as contradicting 1970-1985; I read it as a different bibliographic span (includes the BR series), not as a contradiction for the series the examples cite."
+ },
+ {
+  "id": "bcsc",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "BCSC",
+  "variations": [
+   "B.C.S.C."
+  ],
+  "name": "Supreme Court of British Columbia (neutral citation)",
+  "name_fr": null,
+  "kind": "neutral_court_code",
+  "jurisdiction": "ca-bc",
+  "facts": [
+   {
+    "fact": "start",
+    "value": "January 2000",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide2019/appendix-3.html",
+    "quote": "Court of Appeal BCCA January 1999 Supreme Court BCSC January 2000 Provincial Court BCPC February 1999",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "ordinal within year: YEAR BCSC N",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Examples 2000-2007 all fall on/after the January 2000 adoption date. Page also says 'Note that some earlier decisions have been given what look like neutral citations by the Canadian Legal Information Institute (CanLII). These are not official'."
+ },
+ {
+  "id": "canlrbr",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "Can. L.R.B.R.",
+  "variations": [
+   "Can.L.R.B.R.",
+   "C.L.R.B.R.",
+   "Can LRBR"
+  ],
+  "name": "Canadian Labour Relations Board Reports",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Canadian Labour Relations Board Reports",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "Can.L.R.B.R. Canadian Labour Relations Board Reports",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "C.L.R.B.R / Can.L.R.B.R.",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "C.L.R.B.R Canadian Labour Relations Board Reports",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1974,
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   },
+   {
+    "fact": "end",
+    "value": 1982,
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   },
+   {
+    "fact": "numbering",
+    "value": "volumes within each year: [YEAR] N Can LRBR page",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "The 1974-1982 original series (and a New Series from 1983) comes only from Cardiff search summaries; Cardiff returned 403 on every raw fetch, so no dates are claimed. Examples are [1975]-[1982]."
+ },
+ {
+  "id": "regulation",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "Regulation",
+  "variations": [],
+  "name": "Regulation",
+  "name_fr": null,
+  "kind": "journal",
+  "jurisdiction": "us",
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1977,
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/Regulation_(magazine)",
+    "quote": "First issue July/August 1977",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "volume per year from 1977",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Policy magazine started by the American Enterprise Institute (Wikipedia: 'was started as a bimonthly magazine'; 'acquired by Cato in 1989'). Cato's own pages returned 403. Examples (1979) vol 3 etc. are consistent with year-based volumes but numbering is not stated by a fetched page. Cited by its full title, no abbreviation found."
+ },
+ {
+  "id": "rlr",
+  "is_publication": null,
+  "reason_if_not": null,
+  "abbreviation": "RLR",
+  "variations": [
+   "R.L.R."
+  ],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": null,
+  "facts": [],
+  "notes": "Unresolved. Not in Laval's abbreviation list (only R.L. Revue légale and R.L.C./R.L.N.S. found). Several searches for [1995] RLR found nothing. Earlier files' guess (Refugee Law Reports) has no fetched source."
+ },
+ {
+  "id": "bcca",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "BCCA",
+  "variations": [
+   "B.C.C.A."
+  ],
+  "name": "Court of Appeal for British Columbia (neutral citation)",
+  "name_fr": null,
+  "kind": "neutral_court_code",
+  "jurisdiction": "ca-bc",
+  "facts": [
+   {
+    "fact": "start",
+    "value": "January 1999",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide2019/appendix-3.html",
+    "quote": "Court of Appeal BCCA January 1999 Supreme Court BCSC January 2000 Provincial Court BCPC February 1999",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "ordinal within year: YEAR BCCA N",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Examples 1999-2004 are on/after adoption."
+ },
+ {
+  "id": "scc",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "SCC",
+  "variations": [
+   "S.C.C.",
+   "CSC"
+  ],
+  "name": "Supreme Court of Canada (neutral citation)",
+  "name_fr": "Cour suprême du Canada (CSC)",
+  "kind": "neutral_court_code",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "start",
+    "value": "January 2000",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide2019/appendix-3.html",
+    "quote": "Supreme Court of Canada SCC, CSC January 2000",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "ordinal within year: YEAR SCC N",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Neutral citations from 2000 onward ('2000 S.C.C. 15', '[2008] SCC 1'). '[1978] 2 S. C. C. 1299' precedes 2000 so is not a neutral citation; likely a mis-read of the Supreme Court Reports (S.C.R.) but no fetched page states that, so left unresolved."
+ },
+ {
+  "id": "rss",
+  "is_publication": false,
+  "reason_if_not": "'N R.S.S. YEAR' (1 R.S.S. 1965, 8 R.S.S. 1967) is chapter N of the Revised Statutes of Saskatchewan of that year: a statute series cited by chapter, not a report.",
+  "abbreviation": "R.S.S.",
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": null,
+  "facts": [],
+  "notes": "Judgment from the example pattern; no page fetched."
+ },
+ {
+  "id": "ilm",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "I.L.M.",
+  "variations": [
+   "ILM"
+  ],
+  "name": "International Legal Materials",
+  "name_fr": null,
+  "kind": "journal",
+  "jurisdiction": "int",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "International Legal Materials",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "I.L.M. International Legal Materials",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1962,
+    "status": "verified",
+    "url": "https://www.asil.org/resources/international-legal-materials",
+    "quote": "Published on a bimonthly basis since 1962, International Legal Materials reproduces primary international legal documents",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": "Vol. 1, no. 1 Aug. 1962",
+    "status": "verified",
+    "url": "https://www.cca.qc.ca/en/search/details/library/publication/49234981",
+    "quote": "Washington, D.C. : American Society of International Law, 1962-",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": null,
+    "status": "verified",
+    "url": "https://www.asil.org/resources/international-legal-materials",
+    "quote": "Published on a bimonthly basis since 1962",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes (Vol. 1 = 1962), issues within",
+    "status": "unverified",
+    "url": "https://www.cca.qc.ca/en/search/details/library/publication/49234981",
+    "quote": "Vol. 1, no. 1 (Aug. 1962)-"
+   }
+  ],
+  "notes": "Still publishing (now Cambridge University Press). The quote proves volume 1 began in 1962 but not that volumes are continuous rather than yearly, hence numbering unverified."
+ },
+ {
+  "id": "canybintllaw",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "Can. Y.B. Int'l L.",
+  "variations": [
+   "Can.Y.B.Int.L",
+   "Can. Y.B. Intl Law"
+  ],
+  "name": "Canadian Yearbook of International Law",
+  "name_fr": "Annuaire canadien de droit international",
+  "kind": "journal",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Canadian Yearbook of International Law = Annuaire canadien de droit international",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "Can.Y.B.Int.L Canadian Yearbook of International Law = Annuaire canadien de droit international",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "Can. Y.B. Int'l L",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "Can. Y.B. Int'l L Canadian Yearbook of International Law=Annuaire canadien de droit international",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1963,
+    "status": "verified",
+    "url": "https://www.ubcpress.ca/canadian-yearbook-of-international-law",
+    "quote": "the first volume of which was published in 1963",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": null,
+    "status": "unverified",
+    "url": "https://www.ubcpress.ca/canadian-yearbook-of-international-law",
+    "quote": ""
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous annual volumes, one per year (Vol. 1 = 1963; Vol. 50 = 2012)",
+    "status": "verified",
+    "url": "https://www.ubcpress.ca/canadian-yearbook-of-international-law",
+    "quote": "The Canadian Yearbook of International Law, Vol. 50, 2012",
+    "checked": "found"
+   }
+  ],
+  "notes": "Page also says the volumes after 'As of 2015 (volume 52), The Canadian Yearbook of International Law is published by Cambridge' - still running. Examples (2000) 38 and (2002) 40 match one volume per year."
+ },
+ {
+  "id": "pl",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "P.L.",
+  "variations": [
+   "PL"
+  ],
+  "name": "Public Law",
+  "name_fr": null,
+  "kind": "journal",
+  "jurisdiction": "uk",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Public Law",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "P.L. Public Law",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1956,
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/Public_Law_(journal)",
+    "quote": "The journal was established in 1956",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": null,
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/Public_Law_(journal)",
+    "quote": "History 1956-present",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "cited by year [YEAR] P.L. page (journal)",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Examples '[1999] P.L. 682', '[2000] P.L. 61', '1966 P.L. 89' fit this journal. '31 P.L. 100', '43 P.L. 235', '5 P.L. 48' have volume numbers and do not match a year-cited journal; they are probably another title (Laval's list also shows 'P.L.R. Patent Law Review') but this is not established. Wikipedia is secondary."
+ },
+ {
+  "id": "otc",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "O.T.C.",
+  "variations": [
+   "OTC"
+  ],
+  "name": null,
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "ca-on",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Ontario Trial Cases (expansion from memory, not proven)",
+    "status": "unverified",
+    "url": "https://ca.vlex.com/vid/cas-v-s-c-681084357",
+    "quote": ""
+   }
+  ],
+  "notes": "A fetched vLex page for an Ontario Superior Court of Justice judgment shows 'Citation [2002] O.T.C. 901 (SC)' and 'MLB headnote and full text' (a Maritime Law Book headnote), which places it as an Ontario trial-level reporter, but no fetched page expands the abbreviation or gives its dates. Not in Laval's list."
+ },
+ {
+  "id": "lt",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "L.T.",
+  "variations": [
+   "LT",
+   "L.T.R."
+  ],
+  "name": "Law Times Reports",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "uk",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Law Times Reports",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "L.T. Law Times Reports",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "LT. (Cited)",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=11840",
+    "quote": "Cited: LT.",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1859,
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=11840",
+    "quote": "Publication Date Range: 1859-[1948]",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": 1948,
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=11840",
+    "quote": "Publication Date Range: 1859-[1948]",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes, New Series v.1 from Nov. 1859",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=11840",
+    "quote": "Beginning in Nov. 1859 the Law times reports were issued as a separate publication and numbered beginning with new ser., v. 1.",
+    "checked": "found"
+   }
+  ],
+  "notes": "The same record: 'Vol. 1-17 issued as 'New series'; v. 1-4 also numbered v. 35-38, continuing the numbering of the old series.' The end year is in brackets in the catalogue (inferred by the cataloguer), and differs from the 1947 in earlier files (Cardiff summary, unfetched); I report the fetched 1948. Examples (1888 vol 57, 1922 vol 127) fall within 1859-1948."
+ },
+ {
+  "id": "rra",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "R.R.A.",
+  "variations": [
+   "RRA"
+  ],
+  "name": "Recueil en responsabilité et assurance",
+  "name_fr": "Recueil en responsabilité et assurance",
+  "kind": "reporter",
+  "jurisdiction": "ca-qc",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Recueil en responsabilité et assurance",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "R.R.A. Recueil en responsabilité et assurance",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1986,
+    "status": "unverified",
+    "url": "https://legalabbrevs.cardiff.ac.uk/titles/view/id/6213",
+    "quote": ""
+   },
+   {
+    "fact": "numbering",
+    "value": "by year, cited [YEAR] R.R.A. page",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Cardiff (403) is the only source seen for a 1986 start, via a search summary, so unverified."
+ },
+ {
+  "id": "ttr",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "T.T.R.",
+  "variations": [
+   "TTR"
+  ],
+  "name": "Trade and Tariff Reports",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Trade and Tariff Reports",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "T.T.R. Trade and Tariff Reports",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": null,
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   },
+   {
+    "fact": "end",
+    "value": null,
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes (examples vol 1-3)",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Laval's list gives the call number KE 6088.5 C213r (a Canadian-law class). No dates found. Earlier files' guesses (Trinidad, Territories Law Reports) are not supported."
+ },
+ {
+  "id": "rtr",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "R.T.R.",
+  "variations": [
+   "RTR"
+  ],
+  "name": "Road Traffic Reports",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "uk",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Road traffic reports",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19776",
+    "quote": "Road traffic reports.",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "RTR / R.T.R.",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19776",
+    "quote": "Variant title: RTR R.T.R.",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1970,
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19776",
+    "quote": "Publication details: London : Kenneth Mason/Sweet Maxwell, 1970-.",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": null,
+    "status": "unverified",
+    "url": "https://sclqld.org.au/catalogue/records/19776",
+    "quote": "1970-."
+   },
+   {
+    "fact": "numbering",
+    "value": "by year, cited [YEAR] R.T.R. page",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Open-ended record, so no end year. A search listing of Sweet & Maxwell's product page gave a 1971 date; that page was not fetched, so not used."
+ },
+ {
+  "id": "crimlr",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "Crim. L.R.",
+  "variations": [
+   "Crim.L.R.",
+   "Crim LR",
+   "C.L.R.",
+   "Crim.L.Rev."
+  ],
+  "name": "Criminal Law Review",
+  "name_fr": null,
+  "kind": "journal",
+  "jurisdiction": "uk",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Criminal law review",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/20037",
+    "quote": "Criminal law review.",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "Crim.L.R. / C.L.R. / Crim LR / Crim.L.Rev.",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/20037",
+    "quote": "Variant title: Crim.L.R. C.L.R. Crim LR Crim.L.Rev.",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1954,
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/20037",
+    "quote": "Publication details: London : Sweet Maxwell, 1954-",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": "January 1954",
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/The_Criminal_Law_Review",
+    "quote": "The journal was established in January 1954.",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": null,
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/The_Criminal_Law_Review",
+    "quote": "History Since 1954",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "by year, cited [YEAR] Crim. L.R. page",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Monthly, Sweet & Maxwell. The record's Tübingen/New York 'Criminal law review' of 1954 is a different title and was not used."
+ },
+ {
+  "id": "conclusion",
+  "is_publication": false,
+  "reason_if_not": "'Conclusion' is a table-of-contents heading followed by dot leaders and page numbers ('24 Conclusion.. 25').",
+  "abbreviation": null,
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": null,
+  "facts": [],
+  "notes": ""
+ },
+ {
+  "id": "acf",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "A.C.F.",
+  "variations": [
+   "ACF"
+  ],
+  "name": "Arrêts de la Cour fédérale du Canada (Federal Court Judgments, F.C.J.)",
+  "name_fr": "Arrêts de la Cour fédérale du Canada",
+  "kind": "database_identifier",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Arrêts de la Cour fédérale du Canada = Federal Court of Canada Judgements (F.C.J)",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "ACF Arrêts de la Cour fédérale du Canada = Federal Court of Canada Judgements (F.C.J)",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": null,
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   },
+   {
+    "fact": "numbering",
+    "value": "numbered judgments per year; '[2005] 1 ACF 485' has a volume and may be a different series",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Laval's list pairs ACF with FCJ (a judgment database/service; its list has 'FCJ Federal Court Judgments'), not the Federal Courts Reports (listed there as F.C./F.C.R.; French R.C.F.). '[2005] 1 ACF 485' and '[2017] 1 ACF 167' carry a volume digit like a printed report, so they may be R.C.F. mis-read; not established. Australia's Federal Court Reports is not this."
+ },
+ {
+  "id": "cded",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "C. de D.",
+  "variations": [
+   "C.de D.",
+   "Cah. droit",
+   "Cahiers Dr"
+  ],
+  "name": "Les cahiers de droit",
+  "name_fr": "Les Cahiers de droit",
+  "kind": "journal",
+  "jurisdiction": "ca-qc",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Les cahiers de droit",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/72672",
+    "quote": "Les cahiers de droit .",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "C. de D. and variants",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/72672",
+    "quote": "Variant title: Cah. droit Cahiers de droit C. de D. Cah.de Droit Cahiers Dr Cahiers Droit",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1954,
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/72672",
+    "quote": "Publication details: Québec : Faculté de droit, Université Laval, 1954-",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes, early volumes spanning two years (Vols. 1 1954-1955 to 7 1965-1966)",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/72672",
+    "quote": "Vols. 1 (1954-1955)-7 (1965-1966).",
+    "checked": "found"
+   }
+  ],
+  "notes": "Open-ended record. Example (1977) vol 18 consistent with continuous numbering but arithmetic is not proof."
+ },
+ {
+  "id": "intllaborrightscasel",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "Int'l Lab. Rights Case L.",
+  "variations": [
+   "Intl Labor Rights Case L."
+  ],
+  "name": "International Labor Rights Case Law",
+  "name_fr": null,
+  "kind": "journal",
+  "jurisdiction": "int",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "International Labor Rights Case Law",
+    "status": "verified",
+    "url": "https://brill.com/view/journals/ilrc/ilrc-overview.xml",
+    "quote": "International Labor Rights Case Law Annotated Jurisprudence on Fundamental Rights at the Workplace",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 2015,
+    "status": "verified",
+    "url": "https://brill.com/view/journals/ilrc/ilrc-overview.xml",
+    "quote": "Volume: 1 (2015)",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": null,
+    "status": "verified",
+    "url": "https://brill.com/view/journals/ilrc/ilrc-overview.xml",
+    "quote": "Volume: 12 (2026)",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "one volume per year, Vol. 1 = 2015",
+    "status": "verified",
+    "url": "https://brill.com/view/journals/ilrc/ilrc-overview.xml",
+    "quote": "Volume: 3 (2017) Show Items Volume: 2 (2016) Show Items Volume: 1 (2015)",
+    "checked": "found"
+   }
+  ],
+  "notes": "Brill | Nijhoff. Example (2017), 3 matches Volume 3 (2017). Earlier file said volume 3 in 2017 'conflicts' with 5 in 2019; the Brill list gives Vol. 5 = 2019, Vol. 3 = 2017, consistent. Abbreviation 'Int'l Lab. Rights Case L.' not seen on a page; ISSNs 2405-688X (print), 2405-6901 (online)."
+ },
+ {
+  "id": "lawcritique",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "Law Critique",
+  "variations": [
+   "Law Crit."
+  ],
+  "name": "Law and Critique",
+  "name_fr": null,
+  "kind": "journal",
+  "jurisdiction": "int",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Law and Critique",
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/Law_and_Critique",
+    "quote": "Law and Critique Discipline International law",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "Law Crit. (ISO 4)",
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/Law_and_Critique",
+    "quote": "ISO 4 Law Crit.",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1990,
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/Law_and_Critique",
+    "quote": "It was established in 1990",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": null,
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/Law_and_Critique",
+    "quote": "History 1990–present",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Springer's page returned a bot challenge. Wikipedia is secondary. 'Law Critique' as cited is not in the sources."
+ },
+ {
+  "id": "asilproc",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "A.S.I.L. Proc.",
+  "variations": [
+   "A.S.I.L.Proc.",
+   "ASIL Proc."
+  ],
+  "name": "Proceedings of the American Society of International Law",
+  "name_fr": null,
+  "kind": "journal",
+  "jurisdiction": "int",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Proceedings of the American Society of International Law",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "A.S.I.L.Proc. Proceedings of the American Society of International Law",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": null,
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   },
+   {
+    "fact": "end",
+    "value": null,
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes (vol 98 = 2004 in the example)",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Library records that would give 1907 and the later title 'Proceedings of the Annual Meeting' returned 403 or empty pages; no dates claimed. The title changed over time per search summaries (unfetched)."
+ },
+ {
+  "id": "rndc",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "R.N.D.C.",
+  "variations": [
+   "R.n.droit const."
+  ],
+  "name": "National Journal of Constitutional Law",
+  "name_fr": "Revue nationale de droit constitutionnel",
+  "kind": "journal",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "National Journal of Constitutional Law",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/62964",
+    "quote": "National journal of constitutional law = Revue nationale de droit constitutionnel.",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "R.N.D.C.",
+    "status": "verified",
+    "url": "https://www.bibl.ulaval.ca/explorer-par-discipline/droit/abreviations-juridiques",
+    "quote": "R.N.D.C. Revue nationale de droit constitutionnel = National Journal of Constitutional Law",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1991,
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/62964",
+    "quote": "Publication details: Scarborough, Ontario : Carswell, 1991-",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": null,
+    "status": "unverified",
+    "url": "https://sclqld.org.au/catalogue/records/62964",
+    "quote": "Carswell, 1991-"
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes, more than one per year (vol 17 in 2004, 25 in 2008)",
+    "status": "unverified",
+    "url": "",
+    "quote": ""
+   }
+  ],
+  "notes": "Earlier file said R.N.D.C. was unresolved; Laval's list resolves it. The catalogue record lists variant titles 'Natl. j. const. law Nat'l J. Const. L. Revue nationale de droit constitutionnel NJCL' and ISSN 1181-9340. Whether it still publishes is not stated."
+ }
+]

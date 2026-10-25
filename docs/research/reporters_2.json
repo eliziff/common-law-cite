@@ -1,0 +1,899 @@
+[
+ {
+  "reporter_id": "cpc",
+  "edition": "CPC (6th)",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [],
+  "notes": "No fetched page states the run of any Carswell Practice Cases series. Nothing verified."
+ },
+ {
+  "reporter_id": "oac",
+  "edition": "OAC",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "UNB Law Library holdings range for Ontario Appeal Cases (holdings, not the series run)",
+    "value": "1984-1999",
+    "status": "unverified",
+    "url": "https://www.unb.ca/fredericton/law/library/about/law-reports-locator.pdf",
+    "quote": "Ontario Appeal Cases (1984–1999)"
+   }
+  ],
+  "notes": "Only a library holdings range was found; the publisher/national-library run was not established."
+ },
+ {
+  "reporter_id": "ccc",
+  "edition": "CCC (NS)",
+  "start": 1963,
+  "end": 1970,
+  "current": false,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "Canadian criminal cases (new series) publication dates",
+    "value": "1963-1970",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/64121",
+    "quote": "Toronto : Law Book Co., 1963-1970.",
+    "checked": "found"
+   },
+   {
+    "fact": "Extent",
+    "value": "30 volumes",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/64121",
+    "quote": "Phys. description: 30 volumes",
+    "checked": "found"
+   },
+   {
+    "fact": "Continues first series, continued by second series",
+    "value": "CCC annotated -> new series -> second series",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/64121",
+    "quote": "Continues: Canadian criminal cases annotated. Continued by: Canadian criminal cases (second series)",
+    "checked": "found"
+   },
+   {
+    "fact": "Second series (CCC (2d)) dates",
+    "value": "not stated on any fetched page",
+    "status": "unverified",
+    "url": "https://sclqld.org.au/catalogue/records/64122",
+    "quote": "Continues: Canadian criminal cases (second series)"
+   }
+  ],
+  "notes": "Supreme Court Library Queensland catalogue record 64121 (library catalogue). Numbering style not stated."
+ },
+ {
+  "reporter_id": "cpr",
+  "edition": "CPR (4th)",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "Fourth series first volume per CiNii record",
+    "value": "Vol. 1 (2000)",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA12174343?l=en",
+    "quote": "Canadian patent reporter. Fourth series Canada Law Book, 2000- Vol. 1 (2000)-",
+    "checked": "found"
+   },
+   {
+    "fact": "Third series last volume",
+    "value": "v. 87 ([1999])",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA1121182X?l=en",
+    "quote": "Canadian patent reporter. Third series Canada Law Book, -c1999 -v. 87 ([1999])",
+    "checked": "found"
+   },
+   {
+    "fact": "Third series first volume (LC MARC)",
+    "value": "Vol. 1 (Jan. 1985)",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA1121182X?l=en",
+    "quote": "VLYR of LC MARC: Vol. 1 (Jan. 1985)-",
+    "checked": "found"
+   }
+  ],
+  "notes": "WARNING: the CiNii catalogue dates volume 1 of the 4th series 2000, but the registry has a citation example from 1999 for a 4th-series volume 2 (not used as evidence). A catalogue year can be the cataloguer's first-issue date; start left null (not asserted) until a publisher page confirms. Third series ended with v. 87 ([1999])."
+ },
+ {
+  "reporter_id": "rfl",
+  "edition": "RFL",
+  "start": 1971,
+  "end": 1978,
+  "current": false,
+  "numbering": [
+   {
+    "start": 1971,
+    "end": 1978,
+    "by": "volume",
+    "url": "https://ci.nii.ac.jp/ncid/AA00375756?l=en",
+    "quote": "Reports of family law Carswell Vol. 1 (1971)-v. 30 (1978)",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1971,
+    "url": "https://ci.nii.ac.jp/ncid/AA00375756?l=en",
+    "quote": "Vol. 1 (1971)",
+    "checked": "found"
+   },
+   {
+    "volume": 30,
+    "year": 1978,
+    "url": "https://ci.nii.ac.jp/ncid/AA00375756?l=en",
+    "quote": "v. 30 (1978)",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "Second series volumes",
+    "value": "Vol. 1 (1978)-50 (1986)",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA10807835?l=en",
+    "quote": "Reports of family law. 2d ser Carswell, 1978-1986 Vol. 1 (1978)-50 (1986)",
+    "checked": "found"
+   },
+   {
+    "fact": "Third series starts",
+    "value": "Vol. 1 (1986)",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA10850040?l=en",
+    "quote": "Reports of family law. 3d ser Carswell Vol. 1 (1986)-",
+    "checked": "found"
+   }
+  ],
+  "notes": "First series RFL = 1971-1978, vols 1-30, per CiNii bibliographic record (NII, Japan). Boundaries of 2d (1978-1986) and 3d (1986-) shown in facts. RFL (4th) start not established."
+ },
+ {
+  "reporter_id": "nfldpeir",
+  "edition": "Nfld & PEIR",
+  "start": 1971,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "Series start (NZ Law Style Guide period column)",
+    "value": 1971,
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide/nzlsg_appendix_3.html",
+    "quote": "Nfld & PEIR Newfoundland & Prince Edward Island Reports 1971–",
+    "checked": "found"
+   },
+   {
+    "fact": "UNB Law Library holdings range (holdings, not the series run)",
+    "value": "1971-2016",
+    "status": "unverified",
+    "url": "https://www.unb.ca/fredericton/law/library/about/law-reports-locator.pdf",
+    "quote": "Newfoundland and PEI Reports (1971–2016)"
+   }
+  ],
+  "notes": "Style guide period 1971- is open-ended and does not prove the series is still current or when it ended; UNB range is a holdings range."
+ },
+ {
+  "reporter_id": "cnlr",
+  "edition": "CNLR",
+  "start": 1979,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "Series began",
+    "value": 1979,
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA10875008?l=en",
+    "quote": "LC MARC: Began publication in 1979",
+    "checked": "found"
+   }
+  ],
+  "notes": "Predecessor: Canadian native law bulletin (page: \"Continues: Canadian native law bulletin.\"). No page fetched states an end year or that CNLR is current."
+ },
+ {
+  "reporter_id": "cr",
+  "edition": "CR (3d)",
+  "start": 1978,
+  "end": 1991,
+  "current": false,
+  "numbering": [
+   {
+    "start": 1978,
+    "end": 1991,
+    "by": "volume",
+    "url": "https://ci.nii.ac.jp/ncid/AA10840364?l=en",
+    "quote": "Criminal reports. Third series Carswell, 1978-1991 Vol. 1 (1978)-v. 80 (1991)",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1978,
+    "url": "https://ci.nii.ac.jp/ncid/AA10840364?l=en",
+    "quote": "Vol. 1 (1978)",
+    "checked": "found"
+   },
+   {
+    "volume": 80,
+    "year": 1991,
+    "url": "https://ci.nii.ac.jp/ncid/AA10840364?l=en",
+    "quote": "v. 80 (1991)",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "Cumulative index",
+    "value": "v. 51-80 issued 1991",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA10840364?l=en",
+    "quote": "Consolidated index covering v. 51-80 issued in 1991",
+    "checked": "found"
+   }
+  ],
+  "notes": "CiNii record (NII, Japan). Other sources (Cardiff index, blocked) reportedly say 1978-1990; not verified."
+ },
+ {
+  "reporter_id": "or",
+  "edition": "OR",
+  "start": 1882,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "Ontario Reports (first series) volumes and successor title",
+    "value": "1882-1900 Ontario Reports; 1901-1931 Ontario Law Reports",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19886",
+    "quote": "Contents: 1882-1900, Ontario Reports --1901-1931, Ontario Law Reports.",
+    "checked": "found"
+   },
+   {
+    "fact": "Catalogue publication date",
+    "value": "1882-",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19886",
+    "quote": "Agincourt, Ont. : Canada Law Book, 1882-.",
+    "checked": "found"
+   },
+   {
+    "fact": "Ontario Weekly Notes (1921-1962) continued by Ontario reports",
+    "value": "OWN 1921-1962 -> Ontario reports",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19888",
+    "quote": "Toronto : Canada Law Book, 1921-1962.",
+    "checked": "found"
+   },
+   {
+    "fact": "Online coverage of Ontario Reports (coverage, not run)",
+    "value": "1931-present",
+    "status": "unverified",
+    "url": "https://libguides.mcmaster.ca/case-law/sources",
+    "quote": "Ontario Reports cited as: O.R. 1931- present"
+   },
+   {
+    "fact": "NZ Law Style Guide dates Ontario Law Reports 1900-1931 (disagrees with catalogue 1901)",
+    "value": "1900-1931",
+    "status": "contradicted",
+    "url": "https://lawfoundation.org.nz/style-guide/nzlsg_appendix_3.html",
+    "quote": "OLR Ontario Law Reports 1900–1931"
+   },
+   {
+    "fact": "NZ Law Style Guide periods for OR (2d) and OR (3d)",
+    "value": "OR (2d) 1973-1990; OR (3d) 1991-",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide/nzlsg_appendix_3.html",
+    "quote": "OR (2d) Ontario Reports (2d) 1973–1990 OR (3d) Ontario Reports (3d) 1991–",
+    "checked": "found"
+   }
+  ],
+  "notes": "Plain \"OR\" covers the first Ontario Reports 1882-1900 (vols 1-32) per the catalogue contents note; the title was reused later (name resumed after Ontario Law Reports/Ontario Weekly Notes), so end left null. On the 1900 vs 1901 start of Ontario Law Reports the catalogue (Supreme Court Library Queensland) is the more authoritative than a style guide."
+ },
+ {
+  "reporter_id": "manr",
+  "edition": "Man R (2d)",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "Manitoba Reports (first series) period",
+    "value": "1883-1961",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide/nzlsg_appendix_3.html",
+    "quote": "Man R Manitoba Reports 1883–1961",
+    "checked": "found"
+   },
+   {
+    "fact": "UNB holdings range, apparently second series (holdings, not run)",
+    "value": "1975-2015",
+    "status": "unverified",
+    "url": "https://www.unb.ca/fredericton/law/library/about/law-reports-locator.pdf",
+    "quote": "Manitoba Reports (1975–2015)"
+   }
+  ],
+  "notes": "First series ended 1961 per NZ Law Style Guide; second series start not stated on any fetched page."
+ },
+ {
+  "reporter_id": "ccc",
+  "edition": "CCC",
+  "start": 1898,
+  "end": 1962,
+  "current": false,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "First series (Canadian criminal cases annotated) publication dates; end year is cataloguer-bracketed",
+    "value": "1898-[1962]",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/63286",
+    "quote": "Toronto : Canada Law Journal Company, 1898-[1962]",
+    "checked": "found"
+   },
+   {
+    "fact": "Variant title shows C.C.C. is the first series abbreviation",
+    "value": "Canadian criminal cases C.C.C.",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/63286",
+    "quote": "Variant title: Canadian criminal cases C.C.C.",
+    "checked": "found"
+   },
+   {
+    "fact": "Collection of all series from 1898 (Westlaw CriminalSource blog)",
+    "value": "all series, 1898 to the present",
+    "status": "verified",
+    "url": "https://yorku.ca/osgoode/libblog/?p=1209",
+    "quote": "from 1898 to the present",
+    "checked": "found"
+   },
+   {
+    "fact": "McMaster coverage (online coverage, not run)",
+    "value": "1898-present",
+    "status": "unverified",
+    "url": "https://libguides.mcmaster.ca/case-law/sources",
+    "quote": "Canadian Criminal Cases cited as: C.C.C. 1898- present"
+   },
+   {
+    "fact": "Third series (CCC (3d)) begins",
+    "value": 1983,
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/64122",
+    "quote": "Ontario : Candada Law Book Ltd., 1983-",
+    "checked": "found"
+   }
+  ],
+  "notes": "End 1962 is bracketed in the catalogue (cataloguer-supplied), and agrees with the new series record starting 1963. Numbering (continuous volumes) not stated on a fetched page."
+ },
+ {
+  "reporter_id": "ch",
+  "edition": "Ch",
+  "start": 1891,
+  "end": null,
+  "current": true,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "Law Reports Chancery Division period",
+    "value": "1891-",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide/nzlsg_appendix_4.html",
+    "quote": "Ch Chancery Division 1891–",
+    "checked": "found"
+   },
+   {
+    "fact": "Predecessor Ch D",
+    "value": "1875-1890",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide/nzlsg_appendix_4.html",
+    "quote": "Ch D Chancery Division 1875–1890",
+    "checked": "found"
+   },
+   {
+    "fact": "ICLR (publisher) states Ch is one of its official Law Reports series (present tense, page footer 2026)",
+    "value": "current",
+    "status": "verified",
+    "url": "https://www.iclr.co.uk/about/",
+    "quote": "Where a judgment is reported in the official Law Reports (AC, QB, Ch, Fam) published by the Incorporated Council of Law Reporting for England and Wales, that report must be cited.",
+    "checked": "found"
+   },
+   {
+    "fact": "ICLR page footer date",
+    "value": 2026,
+    "status": "verified",
+    "url": "https://www.iclr.co.uk/about/",
+    "quote": "© 2026 The Incorporated Council of Law Reporting for England & Wales",
+    "checked": "found"
+   }
+  ],
+  "notes": "current=true rests on the publisher's present-tense statement, not on a dated recent volume. Numbering (by year) not stated on a fetched page."
+ },
+ {
+  "reporter_id": "cr",
+  "edition": "CR (4th)",
+  "start": 1991,
+  "end": null,
+  "current": null,
+  "numbering": [
+   {
+    "start": 1991,
+    "end": null,
+    "by": "volume",
+    "url": "https://ci.nii.ac.jp/ncid/AA10840386?l=en",
+    "quote": "Criminal reports. Fourth series = Recueil de jurisprudence en droit criminel. Quatrième série Carswell, 1991- Vol. 1 (1991)-",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1991,
+    "url": "https://ci.nii.ac.jp/ncid/AA10840386?l=en",
+    "quote": "Quatrième série Carswell, 1991- Vol. 1 (1991)-",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "Fifth series starts (so 4th ended by then); last 4th-series volume/year not stated",
+    "value": "Vol. 1 (1997)",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA11176547?l=en",
+    "quote": "Cinquième série Carswell, 1997- Vol. 1 (1997)-",
+    "checked": "found"
+   }
+  ],
+  "notes": "End year of 4th series not stated; the 5th series begins 1997."
+ },
+ {
+  "reporter_id": "lac",
+  "edition": "LAC (4th)",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "McMaster online coverage for L.A.C. (coverage, not series run)",
+    "value": "1948-present",
+    "status": "unverified",
+    "url": "https://libguides.mcmaster.ca/case-law/sources",
+    "quote": "Labour Arbitration Cases cited as: L.A.C. 1948- present BestCase"
+   }
+  ],
+  "notes": "Series boundaries (4th series start) not established by a fetched page."
+ },
+ {
+  "reporter_id": "cr",
+  "edition": "CR (NS)",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [],
+  "notes": "Not established. No fetched page gives dates for Criminal Reports, New Series (Cardiff Index lists 1967-1978 but is blocked to raw fetch; not recorded). The third series begins 1978 (see CR (3d))."
+ },
+ {
+  "reporter_id": "ctc",
+  "edition": "CTC",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [],
+  "notes": "Nothing verified for Canada Tax Cases."
+ },
+ {
+  "reporter_id": "cpc",
+  "edition": "CPC (4th)",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [],
+  "notes": "No fetched page states the run of any Carswell Practice Cases series. Nothing verified."
+ },
+ {
+  "reporter_id": "altalr",
+  "edition": "Alta LR (3d)",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "Alberta Law Reports first series period",
+    "value": "1908-1932",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide/nzlsg_appendix_3.html",
+    "quote": "Alta LR Alberta Law Reports 1908–1932",
+    "checked": "found"
+   },
+   {
+    "fact": "UNB holdings range (probably 2d series; holdings only)",
+    "value": "1977-1990",
+    "status": "unverified",
+    "url": "https://www.unb.ca/fredericton/law/library/about/law-reports-locator.pdf",
+    "quote": "Alberta Law Reports (1977–1990)"
+   }
+  ],
+  "notes": "Third series dates not established."
+ },
+ {
+  "reporter_id": "cbr",
+  "edition": "CBR (3d)",
+  "start": 1991,
+  "end": null,
+  "current": null,
+  "numbering": [
+   {
+    "start": 1991,
+    "end": null,
+    "by": "volume",
+    "url": "https://ci.nii.ac.jp/ncid/AA10955311?l=en",
+    "quote": "Canadian bankruptcy reports. Third series Carswell [etc.], c1991- Vol. 1 (1991)-",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1991,
+    "url": "https://ci.nii.ac.jp/ncid/AA10955311?l=en",
+    "quote": "Vol. 1 (1991)",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "New series volume/year index ranges",
+    "value": "vols 1-36 = 1960-1981; vols 61-76 = 1986-1990",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA11012696?l=en",
+    "quote": "New ser., vol. 1-36, 1960-1981.",
+    "checked": "found"
+   },
+   {
+    "fact": "New series later index range",
+    "value": "vols 61-76 = 1986-1990",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA11012696?l=en",
+    "quote": "New ser., vol. 61-76, 1986-1990",
+    "checked": "found"
+   }
+  ],
+  "notes": "3d series start 1991 from CiNii. CBR (NS) ran at least 1960-1990 per index notes (index date ranges, not stated series boundaries). End of 3d series not established."
+ },
+ {
+  "reporter_id": "rfl",
+  "edition": "RFL (4th)",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "Third series start (4th series presumably after it; 4th start not stated on any fetched page)",
+    "value": "Vol. 1 (1986)",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA10850040?l=en",
+    "quote": "Reports of family law. 3d ser Carswell Vol. 1 (1986)-",
+    "checked": "found"
+   }
+  ],
+  "notes": "Nothing verified for the fourth series; only the third series start (1986) is on a fetched page."
+ },
+ {
+  "reporter_id": "cpc",
+  "edition": "CPC (7th)",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [],
+  "notes": "No fetched page states the run of any Carswell Practice Cases series. Nothing verified."
+ },
+ {
+  "reporter_id": "cr",
+  "edition": "CR (5th)",
+  "start": 1997,
+  "end": null,
+  "current": null,
+  "numbering": [
+   {
+    "start": 1997,
+    "end": null,
+    "by": "volume",
+    "url": "https://ci.nii.ac.jp/ncid/AA11176547?l=en",
+    "quote": "Cinquième série Carswell, 1997- Vol. 1 (1997)-",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1997,
+    "url": "https://ci.nii.ac.jp/ncid/AA11176547?l=en",
+    "quote": "Cinquième série Carswell, 1997- Vol. 1 (1997)-",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "Continues fourth series",
+    "value": "yes",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA11176547?l=en",
+    "quote": "Continues: Criminal reports. Fourth series",
+    "checked": "found"
+   }
+  ],
+  "notes": "End year of the 5th series and whether current: not established."
+ },
+ {
+  "reporter_id": "nzlr",
+  "edition": "NZLR",
+  "start": 1883,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "Publication dates per library catalogue (authoritative)",
+    "value": "1883-",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19687",
+    "quote": "Wellington : New Zealand Council of Law Reporting, 1883-.",
+    "checked": "found"
+   },
+   {
+    "fact": "IALS records NZ reports from 1883",
+    "value": "1883 onwards, active as at 2013",
+    "status": "verified",
+    "url": "https://resources.ials.sas.ac.uk/node/683533",
+    "quote": "1 title containing court reports for New Zealand from 1883 onwards.",
+    "checked": "found"
+   },
+   {
+    "fact": "IALS accrual status",
+    "value": "Active as at 2013",
+    "status": "verified",
+    "url": "https://resources.ials.sas.ac.uk/node/683533",
+    "quote": "Accrual status: Active as at 2013",
+    "checked": "found"
+   },
+   {
+    "fact": "University of Melbourne guide gives 1881 for volume 1",
+    "value": 1881,
+    "status": "contradicted",
+    "url": "https://unimelb.libguides.com/authorised_law_reports/NewZealand",
+    "quote": "Publication Date: 1881 - v.1 1881 -"
+   }
+  ],
+  "notes": "Contradiction: Melbourne libguide says v.1 1881; two catalogues (SCLQ, IALS) say 1883. Catalogues treated as authoritative. current not proven by a dated recent volume."
+ },
+ {
+  "reporter_id": "nbr",
+  "edition": "NBR (2d)",
+  "start": 1969,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "New Brunswick Reports (2d) period",
+    "value": "1969-",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide/nzlsg_appendix_3.html",
+    "quote": "NBR (2d) New Brunswick Reports (2d) 1969–",
+    "checked": "found"
+   },
+   {
+    "fact": "First series period",
+    "value": "1825-1929",
+    "status": "verified",
+    "url": "https://lawfoundation.org.nz/style-guide/nzlsg_appendix_3.html",
+    "quote": "NBR New Brunswick Reports 1825–1929",
+    "checked": "found"
+   }
+  ],
+  "notes": "NZ Law Style Guide period column, open ended: end/current not established."
+ },
+ {
+  "reporter_id": "fcr",
+  "edition": "FCR",
+  "start": 2004,
+  "end": null,
+  "current": null,
+  "numbering": [
+   {
+    "start": 2004,
+    "end": null,
+    "by": "year_and_volume",
+    "url": "https://publications.gc.ca/site/eng/9.500463/publication.html",
+    "quote": "Chronology Vol. 1. Part 1 (2004)- Frequency 4 volumes a year,",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 2004,
+    "url": "https://publications.gc.ca/site/eng/9.500463/publication.html",
+    "quote": "Chronology Vol. 1. Part 1 (2004)-",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "Publisher and start",
+    "value": "Ottawa : Office of the Commissioner for Federal Judicial Affairs, [2004]-",
+    "status": "verified",
+    "url": "https://publications.gc.ca/site/eng/9.500463/publication.html",
+    "quote": "Publishing information Ottawa : Office of the Commissioner for Federal Judicial Affairs, [2004]-",
+    "checked": "found"
+   },
+   {
+    "fact": "Latest issue listed on the publications.gc.ca record",
+    "value": "2023 Vol. 3 Part 1",
+    "status": "verified",
+    "url": "https://publications.gc.ca/site/eng/9.500463/publication.html",
+    "quote": "2023;Vol.3;Part.1: JU1-2-1-2023-3-1.pdf",
+    "checked": "found"
+   },
+   {
+    "fact": "Predecessor Federal Court Reports (FC), 1971-2003, holdings (Melbourne guide)",
+    "value": "1971-2003",
+    "status": "unverified",
+    "url": "https://unimelb.libguides.com/authorised_law_reports/canada",
+    "quote": "Federal Court Reports (FC) 1971 - 2003"
+   }
+  ],
+  "notes": "Volumes are numbered 1-4 within each year (4 volumes a year), cited by year. current left null: newest volume visible on the record is 2023. Predecessor (Federal Court Reports) is cited as FC; FCR began with 2004 vol. 1 per this catalogue record."
+ },
+ {
+  "reporter_id": "cr",
+  "edition": "CR",
+  "start": 1946,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "Criminal Reports begun",
+    "value": 1946,
+    "status": "verified",
+    "url": "https://www.slaw.ca/2010/09/19/cr-ccc-crcc/",
+    "quote": "Criminal Reports: Born 1946",
+    "checked": "found"
+   }
+  ],
+  "notes": "1946 start from the Slaw article heading; end of first series (before the New Series) not established by a fetched page."
+ },
+ {
+  "reporter_id": "mcgill-clrbr",
+  "edition": "CLRBR (2d)",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "McMaster holdings range for C.L.R.B.R. (holdings only)",
+    "value": "1974-2019",
+    "status": "unverified",
+    "url": "https://libguides.mcmaster.ca/case-law/sources",
+    "quote": "cited as: C.L.R.B.R. - - 1974-2019 MILLS (3rd floor)"
+   }
+  ],
+  "notes": "Second series start not established."
+ },
+ {
+  "reporter_id": "crr",
+  "edition": "CRR (2d)",
+  "start": 1991,
+  "end": null,
+  "current": null,
+  "numbering": [
+   {
+    "start": 1991,
+    "end": null,
+    "by": "volume",
+    "url": "https://ci.nii.ac.jp/ncid/AA10849551?l=en",
+    "quote": "Canadian rights reporter. Second series Butterworths, c1991- Vol. 1 (1991)-",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1991,
+    "url": "https://ci.nii.ac.jp/ncid/AA10849551?l=en",
+    "quote": "Vol. 1 (1991)",
+    "checked": "found"
+   },
+   {
+    "volume": 254,
+    "year": 2012,
+    "url": "https://ci.nii.ac.jp/ncid/AA10849551?l=en",
+    "quote": "Imprint varies: Markham, Ont. : LexisNexis Canada, <v. 254 (2012)>-",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "First series CRR",
+    "value": "Vol. 1 (1982)-v. 50 (1991)",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA10849788?l=en",
+    "quote": "Canadian rights reporter Butterworth (Canada), c1982-c1991 Vol. 1 (1982)-v. 50 (1991)",
+    "checked": "found"
+   }
+  ],
+  "notes": "First series 1982-1991 (50 vols); second series from 1991, continuous volumes. End/current of 2d series not established."
+ },
+ {
+  "reporter_id": "wcb",
+  "edition": "WCB (2d)",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "McMaster online coverage of W.C.B. (coverage, not run)",
+    "value": "1977-present",
+    "status": "unverified",
+    "url": "https://libguides.mcmaster.ca/case-law/sources",
+    "quote": "Weekly Criminal Bulletin cited as: W.C.B. 1977- present BestCase"
+   }
+  ],
+  "notes": "Second series start not established."
+ },
+ {
+  "reporter_id": "wac",
+  "edition": "WAC",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [],
+  "notes": "Nothing found for Western Appeal Cases."
+ }
+]

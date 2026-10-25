@@ -1,0 +1,2361 @@
+[
+ {
+  "id": "canbarrev",
+  "is_journal": true,
+  "really_is": null,
+  "title": "The Canadian Bar Review = La revue du barreau canadien",
+  "title_history": [
+   {
+    "title": "The Canadian Bar Review = La revue du barreau canadien",
+    "start": 1923,
+    "end": null,
+    "url": "https://ci.nii.ac.jp/ncid/AA00116510",
+    "quote": "The Canadian bar review = La revue du barreau canadien Canadian Bar Association, 1923-",
+    "checked": "found"
+   }
+  ],
+  "start": 1923,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1923,
+    "url": "https://cbr.cba.org/index.php/cbr/issue/archive/24",
+    "quote": "Vol. 1 No. 3 (1923)",
+    "checked": "found"
+   },
+   {
+    "volume": 17,
+    "year": 1939,
+    "url": "https://cbr.cba.org/index.php/cbr/issue/archive/18",
+    "quote": "Vol. 17 No. 1 (1939)",
+    "checked": "found"
+   },
+   {
+    "volume": 38,
+    "year": 1960,
+    "url": "https://cbr.cba.org/index.php/cbr/issue/archive/10",
+    "quote": "Vol. 38 No. 1 (1960)",
+    "checked": "found"
+   },
+   {
+    "volume": 75,
+    "year": 1996,
+    "url": "https://cbr.cba.org/index.php/cbr/issue/archive/4",
+    "quote": "Vol. 75 No. 1 (1996)",
+    "checked": "found"
+   },
+   {
+    "volume": 104,
+    "year": 2026,
+    "url": "https://cbr.cba.org/index.php/cbr/issue/archive",
+    "quote": "Vol. 104 No. 2 (2026)",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1923,
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA00116510",
+    "quote": "Vol. 1 (1923)-",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://cbr.cba.org/index.php/cbr/issue/archive",
+    "quote": "Vol. 104 No. 2 (2026)",
+    "checked": "found"
+   },
+   {
+    "fact": "volume spans two years (vol 93 = 2015 and 2016)",
+    "value": "vol 93 2015-2016",
+    "status": "verified",
+    "url": "https://cbr.cba.org/index.php/cbr/issue/archive/2",
+    "quote": "Vol. 93 No. 3 (2016) Vol. 93 No. 2 (2015) Vol. 93 No. 1 (2015)",
+    "checked": "found"
+   },
+   {
+    "fact": "several volumes in one year (2016: vols 93 and 94)",
+    "value": 2016,
+    "status": "verified",
+    "url": "https://cbr.cba.org/index.php/cbr/issue/archive/2",
+    "quote": "Vol. 94 No. 1 (2016) Vol. 93 No. 3 (2016)",
+    "checked": "found"
+   },
+   {
+    "fact": "frequency",
+    "value": "10 times a year 1923-1957; quarterly 1958-",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA00116510",
+    "quote": "10 times a year, 1923-1957; quarterly, 1958-",
+    "checked": "found"
+   },
+   {
+    "fact": "incorporated titles",
+    "value": "Canada law journal; Canadian law times",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA00116510",
+    "quote": "With which are incorporated the Canada law journal and the Canadian law times",
+    "checked": "found"
+   }
+  ],
+  "notes": "Journal's own OJS archive (cbr.cba.org) pages 1-24; older volumes have up to 10 numbers a year. The bilingual title form appears in the catalogue record; the date it was adopted was not found on a fetched page."
+ },
+ {
+  "id": "harvlrev",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Harvard Law Review",
+  "title_history": [
+   {
+    "title": "Harvard Law Review",
+    "start": 1887,
+    "end": null,
+    "url": "https://en.wikisource.org/wiki/Harvard_Law_Review",
+    "quote": "Volume 1 (1887–88)",
+    "checked": "found"
+   }
+  ],
+  "start": 1887,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1887,
+    "url": "https://en.wikisource.org/wiki/Harvard_Law_Review",
+    "quote": "Volume 1 (1887–88)",
+    "checked": "found"
+   },
+   {
+    "volume": 4,
+    "year": 1890,
+    "url": "https://en.wikisource.org/wiki/Harvard_Law_Review",
+    "quote": "Volume 4 (1890-91)",
+    "checked": "found"
+   },
+   {
+    "volume": 12,
+    "year": 1898,
+    "url": "https://en.wikisource.org/wiki/Harvard_Law_Review",
+    "quote": "Volume 12 (1898-99)",
+    "checked": "found"
+   },
+   {
+    "volume": 32,
+    "year": 1918,
+    "url": "https://en.wikisource.org/wiki/Harvard_Law_Review",
+    "quote": "Volume 32 (1918-19)",
+    "checked": "found"
+   },
+   {
+    "volume": 35,
+    "year": 1921,
+    "url": "https://en.wikisource.org/wiki/Harvard_Law_Review",
+    "quote": "Volume 35 (1921-22)",
+    "checked": "found"
+   },
+   {
+    "volume": 139,
+    "year": 2026,
+    "url": "https://harvardlawreview.org/print/",
+    "quote": "Vol. 139 No. 8 June 2026",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "volumes span two calendar years",
+    "value": "Volume 1 (1887-88), Volume 2 (1888-89)",
+    "status": "verified",
+    "url": "https://en.wikisource.org/wiki/Harvard_Law_Review",
+    "quote": "Volume 1 (1887–88) ( transcription project ) Volume 2 (1888-89)",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://harvardlawreview.org/print/",
+    "quote": "Vol. 139 No. 8 June 2026",
+    "checked": "found"
+   },
+   {
+    "fact": "journal site copyright range",
+    "value": "1887-2026",
+    "status": "verified",
+    "url": "https://harvardlawreview.org/about/",
+    "quote": "Copyright © 1887-2026 Harvard Law Review",
+    "checked": "found"
+   }
+  ],
+  "notes": "Wikisource (not the journal) gives academic-year spans for vols 1-12 and 32-35; the anchor year is the first year of the span. The journal's own explore-by-volume page lists volumes without years; its print page gives Vol. 139 No. 8 June 2026."
+ },
+ {
+  "id": "mcgilllj",
+  "is_journal": true,
+  "really_is": null,
+  "title": "McGill Law Journal / Revue de droit de McGill",
+  "title_history": [
+   {
+    "title": "McGill Law Journal",
+    "start": 1952,
+    "end": null,
+    "url": "https://lawjournal.mcgill.ca/article/prefece-to-the-twenty-fifth-anniversary-volume/",
+    "quote": "when the first number of the first volume appear- ed in the autumn of 1952",
+    "checked": "found"
+   },
+   {
+    "title": "also known as Revue de droit de McGill",
+    "start": 1977,
+    "end": null,
+    "url": "https://lawjournal.mcgill.ca/article/prefece-to-the-twenty-fifth-anniversary-volume/",
+    "quote": "known as well since 1977 as the Revue de Droit de McGill",
+    "checked": "found"
+   }
+  ],
+  "start": 1952,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1952,
+    "url": "https://lawjournal.mcgill.ca/issues/",
+    "quote": "Volume 1 1952-54",
+    "checked": "found"
+   },
+   {
+    "volume": 10,
+    "year": 1964,
+    "url": "https://lawjournal.mcgill.ca/issues/",
+    "quote": "Volume 10 1964",
+    "checked": "found"
+   },
+   {
+    "volume": 26,
+    "year": 1980,
+    "url": "https://lawjournal.mcgill.ca/issues/",
+    "quote": "Volume 26 1980-81",
+    "checked": "found"
+   },
+   {
+    "volume": 43,
+    "year": 1998,
+    "url": "https://lawjournal.mcgill.ca/issues/",
+    "quote": "Volume 43 1998",
+    "checked": "found"
+   },
+   {
+    "volume": 71,
+    "year": 2026,
+    "url": "https://lawjournal.mcgill.ca/issues/",
+    "quote": "Volume 71 2026",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1952,
+    "status": "verified",
+    "url": "https://lawjournal.mcgill.ca/article/prefece-to-the-twenty-fifth-anniversary-volume/",
+    "quote": "when the first number of the first volume appear- ed in the autumn of 1952",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 1 span (issues page)",
+    "value": "1952-54",
+    "status": "contradicted",
+    "url": "https://lawjournal.mcgill.ca/issues/",
+    "quote": "Volume 1 1952-54 No1 No2 No3 No4 Volume 2 1955-56"
+   },
+   {
+    "fact": "first two volumes span (preface)",
+    "value": "1952-1957 across two volumes",
+    "status": "contradicted",
+    "url": "https://lawjournal.mcgill.ca/article/prefece-to-the-twenty-fifth-anniversary-volume/",
+    "quote": "The first two volumes of the Journal covered in effect more than two calendar years (1952-1957)"
+   },
+   {
+    "fact": "two volumes in 1967",
+    "value": "Volume 12 1966-67; Volume 13 1967",
+    "status": "verified",
+    "url": "https://lawjournal.mcgill.ca/issues/",
+    "quote": "Volume 12 1966-67 No1 No2 No3 No4 Volume 13 1967",
+    "checked": "found"
+   },
+   {
+    "fact": "two volumes in 2010",
+    "value": "Volume 55 2010; Volume 56 2010-11",
+    "status": "verified",
+    "url": "https://lawjournal.mcgill.ca/issues/",
+    "quote": "Volume 55 2010 No1 No2 No3 No4 Volume 56 2010-11",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://lawjournal.mcgill.ca/issues/",
+    "quote": "Volume 71 2026 No1 No2 No3",
+    "checked": "found"
+   }
+  ],
+  "notes": "Both fetched pages are the journal's own. They differ on the vol 1/2 spans (issues page: vol 1 = 1952-54, vol 2 = 1955-56; preface: first two volumes together ran 1952-1957). Registry examples (1969,15), (1973,19), (1975,21), (1981,26) agree with the issues page (15=1969, 19=1973, 21=1975, 26=1980-81)."
+ },
+ {
+  "id": "utlj",
+  "is_journal": true,
+  "really_is": null,
+  "title": "University of Toronto Law Journal",
+  "title_history": [
+   {
+    "title": "The University of Toronto Law Journal",
+    "start": 1935,
+    "end": 2000,
+    "url": "https://api.crossref.org/journals/0042-0220/works?filter=from-pub-date:1935,until-pub-date:1935&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1935]]},\"container-title\":[\"The University of Toronto Law Journal\"]}",
+    "checked": "found"
+   },
+   {
+    "title": "University of Toronto Law Journal",
+    "start": 2025,
+    "end": null,
+    "url": "https://api.crossref.org/journals/0042-0220/works?filter=from-pub-date:2025,until-pub-date:2025&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"75\",\"issued\":{\"date-parts\":[[2025,10,1]]},\"container-title\":[\"University of Toronto Law Journal\"]}",
+    "checked": "found"
+   }
+  ],
+  "start": 1935,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1935,
+    "url": "https://api.crossref.org/journals/0042-0220/works?filter=from-pub-date:1935,until-pub-date:1935&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1935]]},\"container-title\":[\"The University of Toronto Law Journal\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 8,
+    "year": 1950,
+    "url": "https://api.crossref.org/journals/0042-0220/works?filter=from-pub-date:1950,until-pub-date:1950&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"8\",\"issued\":{\"date-parts\":[[1950]]},\"container-title\":[\"The University of Toronto Law Journal\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 25,
+    "year": 1975,
+    "url": "https://api.crossref.org/journals/0042-0220/works?filter=from-pub-date:1975,until-pub-date:1975&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"25\",\"issued\":{\"date-parts\":[[1975]]},\"container-title\":[\"The University of Toronto Law Journal\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 30,
+    "year": 1980,
+    "url": "https://api.crossref.org/journals/0042-0220/works?filter=from-pub-date:1980,until-pub-date:1980&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"30\",\"issued\":{\"date-parts\":[[1980]]},\"container-title\":[\"The University of Toronto Law Journal\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 50,
+    "year": 2000,
+    "url": "https://api.crossref.org/journals/0042-0220/works?filter=from-pub-date:2000,until-pub-date:2000&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"50\",\"issued\":{\"date-parts\":[[2000]]},\"container-title\":[\"The University of Toronto Law Journal\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 75,
+    "year": 2025,
+    "url": "https://api.crossref.org/journals/0042-0220/works?filter=from-pub-date:2025,until-pub-date:2025&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"75\",\"issued\":{\"date-parts\":[[2025,10,1]]},\"container-title\":[\"University of Toronto Law Journal\"]}",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": null,
+  "facts": [
+   {
+    "fact": "start (vol 1 Lent term 1935)",
+    "value": 1935,
+    "status": "verified",
+    "url": "https://librarysearch.aut.ac.nz/vufind/Record/1417910",
+    "quote": "Published: Vol. 1 (Lent term 1935)-",
+    "checked": "unfetchable"
+   },
+   {
+    "fact": "established",
+    "value": 1935,
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/University_of_Toronto_Law_Journal",
+    "quote": "The journal was established in 1935",
+    "checked": "found"
+   },
+   {
+    "fact": "finding aid",
+    "value": "Vols. 1-5 (1935-44)",
+    "status": "verified",
+    "url": "https://librarysearch.aut.ac.nz/vufind/Record/1417910",
+    "quote": "Vols. 1-5 (1935-44)",
+    "checked": "unfetchable"
+   },
+   {
+    "fact": "frequency",
+    "value": "Quarterly, 1968-",
+    "status": "verified",
+    "url": "https://librarysearch.aut.ac.nz/vufind/Record/1417910",
+    "quote": "Quarterly, 1968-",
+    "checked": "unfetchable"
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://api.crossref.org/journals/0042-0220/works?filter=from-pub-date:2025,until-pub-date:2025&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"75\",\"issued\":{\"date-parts\":[[2025,10,1]]},\"container-title\":[\"University of Toronto Law Journal\"]}",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 1 appears under both 1935 and 1936 in Crossref",
+    "value": "vol 1 spans 1935-36",
+    "status": "verified",
+    "url": "https://api.crossref.org/journals/0042-0220/works?filter=from-pub-date:1936,until-pub-date:1936&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1936]]},\"container-title\":[\"The University of Toronto Law Journal\"]}",
+    "checked": "found"
+   }
+  ],
+  "notes": "Anchors are from the Crossref API (volume + issued date per article); the journal's own site (utpjournals.press) and JSTOR blocked raw fetch. Crossref lists vol 76 for 2026 as the latest. Crossref display title is \"The University of Toronto Law Journal\" up to 2000 and \"University of Toronto Law Journal\" in 2025; the change date was not pinned."
+ },
+ {
+  "id": "osgoodehalllj",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Osgoode Hall Law Journal",
+  "title_history": [
+   {
+    "title": "Osgoode Hall Law Journal",
+    "start": 1958,
+    "end": null,
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 1, Number 1 (June 1958)",
+    "checked": "found"
+   }
+  ],
+  "start": 1958,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1958,
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 1, Number 1 (June 1958)",
+    "checked": "found"
+   },
+   {
+    "volume": 2,
+    "year": 1960,
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 2, Number 1 (April 1960)",
+    "checked": "found"
+   },
+   {
+    "volume": 12,
+    "year": 1974,
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 12, Number 3 (December 1974)",
+    "checked": "found"
+   },
+   {
+    "volume": 30,
+    "year": 1992,
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 30, Number 1 (Spring 1992)",
+    "checked": "found"
+   },
+   {
+    "volume": 50,
+    "year": 2013,
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 50, Issue 3 (Spring 2013)",
+    "checked": "found"
+   },
+   {
+    "volume": 63,
+    "year": 2026,
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 63, Number 1 (Fall 2026)",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1958,
+    "status": "verified",
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 1, Number 1 (June 1958)",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 1 also dated 1959",
+    "value": "Volume 1 (April 1959)",
+    "status": "verified",
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 1, Number 2 (April 1959)",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 2 spans 1960-1963",
+    "value": "Volume 2 issues April 1960, 1961, 1962, 1963",
+    "status": "verified",
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 2, Number 4 (April 1963)",
+    "checked": "found"
+   },
+   {
+    "fact": "two volumes in 2012",
+    "value": "Volume 49 Summer 2012; Volume 50 Winter 2012",
+    "status": "verified",
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 49, Number 3 (Summer 2012)",
+    "checked": "found"
+   },
+   {
+    "fact": "two volumes in 2012 (second)",
+    "value": "Volume 50 Winter 2012",
+    "status": "verified",
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 50, Issue 2 (Winter 2012)",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/all_issues.html",
+    "quote": "Volume 63, Number 1 (Fall 2026)",
+    "checked": "found"
+   },
+   {
+    "fact": "continuous since",
+    "value": 1958,
+    "status": "verified",
+    "url": "https://digitalcommons.osgoode.yorku.ca/ohlj/",
+    "quote": "Publishing continuously since 1958",
+    "checked": "found"
+   }
+  ],
+  "notes": "Journal's own Digital Commons all-issues list. Early volumes ran several years (vol 2 = April 1960 to April 1963, vol 3 = 1964-65); later volumes run an academic year (vol 49 Fall 2011 to Summer 2012). Earlier title not verified."
+ },
+ {
+  "id": "yalelj",
+  "is_journal": true,
+  "really_is": null,
+  "title": "The Yale Law Journal",
+  "title_history": [
+   {
+    "title": "The Yale Law Journal",
+    "start": 1891,
+    "end": null,
+    "url": "https://api.crossref.org/journals/0044-0094/works?filter=from-pub-date:1891,until-pub-date:1891&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1891,10]]},\"container-title\":[\"The Yale Law Journal\"]}",
+    "checked": "found"
+   }
+  ],
+  "start": 1891,
+  "end": null,
+  "current": null,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1891,
+    "url": "https://api.crossref.org/journals/0044-0094/works?filter=from-pub-date:1891,until-pub-date:1891&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1891,10]]},\"container-title\":[\"The Yale Law Journal\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 28,
+    "year": 1919,
+    "url": "https://api.crossref.org/journals/0044-0094/works?filter=from-pub-date:1919,until-pub-date:1919&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"28\",\"issued\":{\"date-parts\":[[1919,2]]},\"container-title\":[\"The Yale Law Journal\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 59,
+    "year": 1950,
+    "url": "https://api.crossref.org/journals/0044-0094/works?filter=from-pub-date:1950,until-pub-date:1950&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"59\",\"issued\":{\"date-parts\":[[1950,2]]},\"container-title\":[\"The Yale Law Journal\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 89,
+    "year": 1980,
+    "url": "https://api.crossref.org/journals/0044-0094/works?filter=from-pub-date:1980,until-pub-date:1980&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"89\",\"issued\":{\"date-parts\":[[1980,4]]},\"container-title\":[\"The Yale Law Journal\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 118,
+    "year": 2008,
+    "url": "https://api.crossref.org/journals/0044-0094/works?filter=from-pub-date:2008,until-pub-date:2008&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"118\",\"issued\":{\"date-parts\":[[2008,10,1]]},\"container-title\":[\"The Yale Law Journal\"]}",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "two volumes issued in 1980",
+    "value": "vol 89 and vol 90 (quotes: vol 90 item shown; vol 89 is anchor)",
+    "status": "verified",
+    "url": "https://api.crossref.org/journals/0044-0094/works?filter=from-pub-date:1980,until-pub-date:1980&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"90\",\"issued\":{\"date-parts\":[[1980,12]]},\"container-title\":[\"The Yale Law Journal\"]}",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": null,
+    "status": "unverified",
+    "url": "https://www.yalelawjournal.org/issues",
+    "quote": null
+   }
+  ],
+  "notes": "Crossref API only (yalelawjournal.org returned a block page; Crossref has no Yale items after 2008). Start 1891 is the issued year of volume 1 items in Crossref, not an explicit statement. Registry example (1949) 58:8 is consistent: vol 59 is 1950."
+ },
+ {
+  "id": "queenslj",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Queen's Law Journal",
+  "title_history": [
+   {
+    "title": "Queen's Intramural Law Journal",
+    "start": 1968,
+    "end": 1971,
+    "url": "https://en.wikipedia.org/wiki/Queen%27s_Law_Journal",
+    "quote": "established in 1968 as the Queen's Intramural Law Journal",
+    "checked": "found"
+   },
+   {
+    "title": "Queen's Law Journal",
+    "start": 1971,
+    "end": null,
+    "url": "https://en.wikipedia.org/wiki/Queen%27s_Law_Journal",
+    "quote": "obtaining its current title in 1971",
+    "checked": "found"
+   }
+  ],
+  "start": null,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 38,
+    "year": 2013,
+    "url": "https://journal.queenslaw.ca/issues",
+    "quote": "Volume 38, No. 2, Spring 2013",
+    "checked": "found"
+   },
+   {
+    "volume": 40,
+    "year": 2014,
+    "url": "https://journal.queenslaw.ca/issues",
+    "quote": "Volume 40, No. 1, Fall 2014",
+    "checked": "found"
+   },
+   {
+    "volume": 46,
+    "year": 2020,
+    "url": "https://journal.queenslaw.ca/issues",
+    "quote": "Volume 46, No. 1, Fall 2020",
+    "checked": "found"
+   },
+   {
+    "volume": 51,
+    "year": 2026,
+    "url": "https://journal.queenslaw.ca/issues",
+    "quote": "Volume 51, No. 2, Winter 2026",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "predecessor start",
+    "value": 1968,
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/Queen%27s_Law_Journal",
+    "quote": "established in 1968 as the Queen's Intramural Law Journal",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 1 year",
+    "value": 1971,
+    "status": "unverified",
+    "url": "https://lawcat.berkeley.edu/record/1159556",
+    "quote": null
+   },
+   {
+    "fact": "volumes span two calendar years",
+    "value": "Volume 46: Fall 2020 and Spring 2021",
+    "status": "verified",
+    "url": "https://journal.queenslaw.ca/issues",
+    "quote": "Volume 46, No. 2, Spring 2021",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://journal.queenslaw.ca/issues",
+    "quote": "Volume 51, No. 2, Winter 2026",
+    "checked": "found"
+   }
+  ],
+  "notes": "Wikipedia (fetched) states 1968 founding as Queen's Intramural Law Journal and the 1971 title change; it does not state the volume 1 year. Catalogue pages with vol 1 (1971) blocked the raw fetch, so start stays null. Journal's own issues page lists vols 38-51 only. Registry examples with vols 3-10 (1977-85) could not be checked."
+ },
+ {
+  "id": "sclr2d",
+  "is_journal": true,
+  "really_is": "Supreme Court Law Review, Second Series: a commentary review of Supreme Court of Canada decisions, not a law report",
+  "title": "The Supreme Court Law Review, Second Series",
+  "title_history": [
+   {
+    "title": "The Supreme Court law review. Second series",
+    "start": 1990,
+    "end": null,
+    "url": "https://ci.nii.ac.jp/ncid/AA10819357",
+    "quote": "Vol. 1 (1990)-v. 115 (2024)",
+    "checked": "found"
+   }
+  ],
+  "start": 1990,
+  "end": null,
+  "current": null,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1990,
+    "url": "https://ci.nii.ac.jp/ncid/AA10819357",
+    "quote": "Vol. 1 (1990)-v. 115 (2024)",
+    "checked": "found"
+   },
+   {
+    "volume": 19,
+    "year": 2003,
+    "url": "https://ci.nii.ac.jp/ncid/AA10819357",
+    "quote": "Vol. 19 (2003)- published by LexisNexis",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": null,
+  "facts": [
+   {
+    "fact": "last volume held in catalogue",
+    "value": "v. 115 (2024)",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA10819357",
+    "quote": "Vol. 1 (1990)-v. 115 (2024)",
+    "checked": "found"
+   },
+   {
+    "fact": "catalogue metadata date span",
+    "value": "1991-2024",
+    "status": "contradicted",
+    "url": "https://ci.nii.ac.jp/ncid/AA10819357",
+    "quote": "\"datePublished\": \"1991-2024\""
+   },
+   {
+    "fact": "frequency",
+    "value": "annual 1990-1999; semiannual 2001, 2024; approximately quarterly 2002-2023",
+    "status": "verified",
+    "url": "https://ci.nii.ac.jp/ncid/AA10819357",
+    "quote": "Frequency varies: annual, 1990-1999; semiannual, 2001, 2024; approximately quarterly, 2002-2023",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": 2024,
+    "status": "unverified",
+    "url": "https://ci.nii.ac.jp/ncid/AA10819357",
+    "quote": null
+   },
+   {
+    "fact": "predecessor series",
+    "value": "Supreme Court Law Review (Butterworths) 1980-1989",
+    "status": "unverified",
+    "url": "https://ci.nii.ac.jp/ncid/AA10819357",
+    "quote": null
+   }
+  ],
+  "notes": "Only a Japanese union catalogue record (CiNii) was fetched. It gives \"Vol. 1 (1990)\" in the bibliographic field but \"1991-2024\" in its metadata. Whether the series ceased after vol 115 (2024) is not shown. Registry example vol 21 (2003) next to catalogue vol 19 (2003) implies several volumes in 2003; no page lists them. Registry examples (2004,25),(2007,36),(2008,40) not checked."
+ },
+ {
+  "id": "altalrev",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Alberta Law Review",
+  "title_history": [
+   {
+    "title": "Alberta Law Review",
+    "start": null,
+    "end": null,
+    "url": "https://api.crossref.org/journals/0002-4821/works?filter=from-pub-date:1976,until-pub-date:1976&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"14\",\"issued\":{\"date-parts\":[[1976,3,1]]},\"container-title\":[\"Alberta Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "start": null,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 14,
+    "year": 1976,
+    "url": "https://api.crossref.org/journals/0002-4821/works?filter=from-pub-date:1976,until-pub-date:1976&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"14\",\"issued\":{\"date-parts\":[[1976,3,1]]},\"container-title\":[\"Alberta Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 34,
+    "year": 1996,
+    "url": "https://api.crossref.org/journals/0002-4821/works?filter=from-pub-date:1996,until-pub-date:1996&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"34\",\"issued\":{\"date-parts\":[[1996,2,1]]},\"container-title\":[\"Alberta Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 48,
+    "year": 2010,
+    "url": "https://api.crossref.org/journals/0002-4821/works?filter=from-pub-date:2010,until-pub-date:2010&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"48\",\"issued\":{\"date-parts\":[[2010,12,1]]},\"container-title\":[\"Alberta Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 62,
+    "year": 2025,
+    "url": "https://albertalawreview.com/index.php/ALR/issue/archive",
+    "quote": "Vol 62, No 4 2025",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "volumes 34 and 35 both in 1996",
+    "value": "vol 35 (vol 34 is anchor)",
+    "status": "verified",
+    "url": "https://api.crossref.org/journals/0002-4821/works?filter=from-pub-date:1996,until-pub-date:1996&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"35\",\"issued\":{\"date-parts\":[[1996,11,1]]},\"container-title\":[\"Alberta Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "fact": "earliest Crossref item",
+    "value": 1955,
+    "status": "unverified",
+    "url": "https://api.crossref.org/journals/0002-4821/works?sort=issued&order=asc&rows=3&select=volume,issued,container-title",
+    "quote": null
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://albertalawreview.com/index.php/ALR/issue/archive",
+    "quote": "Vol 64, No 1 Vol 63, No 4 2026",
+    "checked": "found"
+   }
+  ],
+  "notes": "Journal's own OJS archive lists vol/no with few years; only 62/2025 appears paired. Crossref supplies 14/1976, 34 and 35/1996, 48/2010. Crossref has many Alberta items with empty volume; earliest is dated 1955 without a volume, so start stays null. Registry example (1964) 3:2 could not be checked."
+ },
+ {
+  "id": "ubclrev",
+  "is_journal": true,
+  "really_is": null,
+  "title": "UBC Law Review",
+  "title_history": [
+   {
+    "title": "UBC Legal Notes",
+    "start": 1949,
+    "end": 1959,
+    "url": "https://historyproject.allard.ubc.ca/law-history-project/milestone/founding-ubc-law-review",
+    "quote": "first published in 1949 as a collection of student essays entitled the UBC Legal Notes",
+    "checked": "found"
+   },
+   {
+    "title": "UBC Law Review",
+    "start": 1959,
+    "end": null,
+    "url": "https://historyproject.allard.ubc.ca/law-history-project/milestone/founding-ubc-law-review",
+    "quote": "In 1959, it officially became the UBC Law Review",
+    "checked": "found"
+   }
+  ],
+  "start": null,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 44,
+    "year": 2011,
+    "url": "https://commons.allard.ubc.ca/ubclawreview/all_issues.html",
+    "quote": "Volume 44 Issue 1 (2011)",
+    "checked": "found"
+   },
+   {
+    "volume": 48,
+    "year": 2015,
+    "url": "https://commons.allard.ubc.ca/ubclawreview/all_issues.html",
+    "quote": "Volume 48 Issue 1 (2015)",
+    "checked": "found"
+   },
+   {
+    "volume": 52,
+    "year": 2019,
+    "url": "https://commons.allard.ubc.ca/ubclawreview/all_issues.html",
+    "quote": "Volume 52 Issue 1 (2019)",
+    "checked": "found"
+   },
+   {
+    "volume": 59,
+    "year": 2026,
+    "url": "https://commons.allard.ubc.ca/ubclawreview/all_issues.html",
+    "quote": "Volume 59 Issue 1 (2026)",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": false,
+  "facts": [
+   {
+    "fact": "predecessor start",
+    "value": 1949,
+    "status": "verified",
+    "url": "https://historyproject.allard.ubc.ca/law-history-project/milestone/founding-ubc-law-review",
+    "quote": "first published in 1949 as a collection of student essays entitled the UBC Legal Notes",
+    "checked": "found"
+   },
+   {
+    "fact": "became UBC Law Review",
+    "value": 1959,
+    "status": "verified",
+    "url": "https://historyproject.allard.ubc.ca/law-history-project/milestone/founding-ubc-law-review",
+    "quote": "In 1959, it officially became the UBC Law Review",
+    "checked": "found"
+   },
+   {
+    "fact": "catalogue publication date",
+    "value": 1959,
+    "status": "verified",
+    "url": "https://courthouselibrary.ca/catalogue-item?cid=8941",
+    "quote": "Publication Date: 1959",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 1 year",
+    "value": null,
+    "status": "unverified",
+    "url": "https://commons.allard.ubc.ca/ubclawreview/all_issues.html",
+    "quote": null
+   }
+  ],
+  "notes": "Journal's own Digital Commons lists vols 44-59 (2011-2026), one per year (several_volumes false only for that range). Older volumes not online. Volume-1 year and how numbering relates to 1959 not found; registry example (1967) vol 3 is unchecked."
+ },
+ {
+  "id": "njcl",
+  "is_journal": true,
+  "really_is": null,
+  "title": "National Journal of Constitutional Law",
+  "title_history": [],
+  "start": null,
+  "end": null,
+  "current": null,
+  "anchors": [],
+  "several_volumes_some_year": null,
+  "facts": [
+   {
+    "fact": "start (vol 1 no 1 March 1991)",
+    "value": 1991,
+    "status": "unverified",
+    "url": "https://descubridor.academia.cl/Record/ssj0030092/Description",
+    "quote": null
+   },
+   {
+    "fact": "publisher",
+    "value": "Carswell, Scarborough",
+    "status": "unverified",
+    "url": "https://descubridor.academia.cl/Record/ssj0030092/Description",
+    "quote": null
+   }
+  ],
+  "notes": "No page for this journal could be fetched raw (catalogue hosts returned block pages; Cardiff 403). Search-result snippets mention vol 1 no 1 March 1991 and Carswell; none confirmed by a fetched page. Registry examples (1993) 3, (1997) 7, (1998) 9, (2000) 11 and 12 (two volumes in 2000) unchecked."
+ },
+ {
+  "id": "crimlq",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Criminal Law Quarterly",
+  "title_history": [
+   {
+    "title": "Criminal Law Quarterly",
+    "start": 1958,
+    "end": null,
+    "url": "https://wildy.com/isbn/0011-1333/criminal-law-quarterly-journal-canada-law-book",
+    "quote": "has been connecting criminal law practitioners to important issues and cases since 1958",
+    "checked": "found"
+   }
+  ],
+  "start": 1958,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 72,
+    "year": 2024,
+    "url": "https://wildy.com/isbn/0011-1333/criminal-law-quarterly-journal-canada-law-book",
+    "quote": "Volume 72 Number 3 2024",
+    "checked": "found"
+   },
+   {
+    "volume": 73,
+    "year": 2025,
+    "url": "https://wildy.com/isbn/0011-1333/criminal-law-quarterly-journal-canada-law-book",
+    "quote": "Volume 73 Number 3 2025",
+    "checked": "found"
+   },
+   {
+    "volume": 74,
+    "year": 2026,
+    "url": "https://wildy.com/isbn/0011-1333/criminal-law-quarterly-journal-canada-law-book",
+    "quote": "Volume 74 Number 3 2026",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1958,
+    "status": "verified",
+    "url": "https://wildy.com/isbn/0011-1333/criminal-law-quarterly-journal-canada-law-book",
+    "quote": "has been connecting criminal law practitioners to important issues and cases since 1958",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://wildy.com/isbn/0011-1333/criminal-law-quarterly-journal-canada-law-book",
+    "quote": "Volume 74 Number 3 2026 September 22, 2026",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 73 labelled 2025 and 2026 (bound volume 2026)",
+    "value": "vol 73",
+    "status": "verified",
+    "url": "https://wildy.com/isbn/0011-1333/criminal-law-quarterly-journal-canada-law-book",
+    "quote": "Volume 73 Number Bound Volume 2026 January 12, 2026",
+    "checked": "found"
+   },
+   {
+    "fact": "vol 72 labelled 2024 and 2025",
+    "value": "vol 72",
+    "status": "verified",
+    "url": "https://wildy.com/isbn/0011-1333/criminal-law-quarterly-journal-canada-law-book",
+    "quote": "Volume 72 Number Bound Volume 2025 January 16, 2025",
+    "checked": "found"
+   }
+  ],
+  "notes": "Only a bookseller listing (Wildy) was fetched; start is its marketing text, release dates are per-part. Volumes 72 and 73 are labelled with two years (parts in year Y, bound volume released in Y+1). No early anchors fetched. Registry examples (1963) 5, (1971) 14, (1980-81) 23, (1987) 29, (1993) 35, (1998) 40 not checked."
+ },
+ {
+  "id": "lawqrev",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Law Quarterly Review",
+  "title_history": [
+   {
+    "title": "Law Quarterly Review",
+    "start": 1885,
+    "end": null,
+    "url": "https://en.wikipedia.org/wiki/Law_Quarterly_Review",
+    "quote": "History 1885–present",
+    "checked": "found"
+   }
+  ],
+  "start": 1885,
+  "end": null,
+  "current": null,
+  "anchors": [],
+  "several_volumes_some_year": null,
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1885,
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/Law_Quarterly_Review",
+    "quote": "History 1885–present",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 1 year",
+    "value": 1885,
+    "status": "unverified",
+    "url": "https://search.library.wisc.edu/catalog/999543210902121/staff",
+    "quote": null
+   },
+   {
+    "fact": "anchors",
+    "value": null,
+    "status": "unverified",
+    "url": "https://en.wikipedia.org/wiki/Law_Quarterly_Review",
+    "quote": null
+   }
+  ],
+  "notes": "Only Wikipedia fetched (infobox History 1885-present). No archive page with volume/year pairs could be fetched (Westlaw UK, HeinOnline, JSTOR not reachable raw). Registry examples (1892) 8, (1930) 46, (1939) 55, (1962) 78 unchecked."
+ },
+ {
+  "id": "dallj",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Dalhousie Law Journal",
+  "title_history": [
+   {
+    "title": "Dalhousie Law Journal",
+    "start": 1973,
+    "end": null,
+    "url": "https://digitalcommons.schulichlaw.dal.ca/dlj/all_issues.html",
+    "quote": "Volume 1 Issue 1 (1973)",
+    "checked": "found"
+   }
+  ],
+  "start": 1973,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1973,
+    "url": "https://digitalcommons.schulichlaw.dal.ca/dlj/all_issues.html",
+    "quote": "Volume 1 Issue 1 (1973)",
+    "checked": "found"
+   },
+   {
+    "volume": 13,
+    "year": 1990,
+    "url": "https://digitalcommons.schulichlaw.dal.ca/dlj/all_issues.html",
+    "quote": "Volume 13 Issue 1 (1990)",
+    "checked": "found"
+   },
+   {
+    "volume": 25,
+    "year": 2002,
+    "url": "https://digitalcommons.schulichlaw.dal.ca/dlj/all_issues.html",
+    "quote": "Volume 25 Issue 1 (2002)",
+    "checked": "found"
+   },
+   {
+    "volume": 38,
+    "year": 2015,
+    "url": "https://digitalcommons.schulichlaw.dal.ca/dlj/all_issues.html",
+    "quote": "Volume 38 Issue 1 (2015)",
+    "checked": "found"
+   },
+   {
+    "volume": 49,
+    "year": 2026,
+    "url": "https://digitalcommons.schulichlaw.dal.ca/dlj/all_issues.html",
+    "quote": "Volume 49 Issue 1 (2026)",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1973,
+    "status": "verified",
+    "url": "https://digitalcommons.schulichlaw.dal.ca/dlj/all_issues.html",
+    "quote": "Volume 1 Issue 1 (1973)",
+    "checked": "found"
+   },
+   {
+    "fact": "two volumes issue 1 in 1984",
+    "value": "Volume 8 and Volume 9",
+    "status": "verified",
+    "url": "https://digitalcommons.schulichlaw.dal.ca/dlj/all_issues.html",
+    "quote": "Volume 9 Issue 1 (1984)",
+    "checked": "found"
+   },
+   {
+    "fact": "two volumes issue 1 in 1984 (vol 8)",
+    "value": "Volume 8",
+    "status": "verified",
+    "url": "https://digitalcommons.schulichlaw.dal.ca/dlj/all_issues.html",
+    "quote": "Volume 8 Issue 1 (1984)",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://digitalcommons.schulichlaw.dal.ca/dlj/all_issues.html",
+    "quote": "Volume 49 Issue 1 (2026)",
+    "checked": "found"
+   }
+  ],
+  "notes": "Journal's own Digital Commons all-issues page gives the year of issue 1 of each volume. Gaps show vols 8 and 9 both starting in 1984, vol 11 in 1987 and 12 in 1989 (no 1988). Registry example (1983) 7 cannot be placed: vol 7 issue 1 is 1982. Earlier title not checked."
+ },
+ {
+  "id": "columlrev",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Columbia Law Review",
+  "title_history": [
+   {
+    "title": "Columbia Law Review",
+    "start": 1901,
+    "end": null,
+    "url": "https://api.crossref.org/journals/0010-1958/works?filter=from-pub-date:1901,until-pub-date:1901&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1901,12]]},\"container-title\":[\"Columbia Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "start": 1901,
+  "end": null,
+  "current": null,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1901,
+    "url": "https://api.crossref.org/journals/0010-1958/works?filter=from-pub-date:1901,until-pub-date:1901&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1901,12]]},\"container-title\":[\"Columbia Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 47,
+    "year": 1947,
+    "url": "https://api.crossref.org/journals/0010-1958/works?filter=from-pub-date:1947,until-pub-date:1947&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"47\",\"issued\":{\"date-parts\":[[1947,1]]},\"container-title\":[\"Columbia Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 80,
+    "year": 1980,
+    "url": "https://api.crossref.org/journals/0010-1958/works?filter=from-pub-date:1980,until-pub-date:1980&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"80\",\"issued\":{\"date-parts\":[[1980,5]]},\"container-title\":[\"Columbia Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 104,
+    "year": 2004,
+    "url": "https://api.crossref.org/journals/0010-1958/works?filter=from-pub-date:2004,until-pub-date:2004&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"104\",\"issued\":{\"date-parts\":[[2004,6]]},\"container-title\":[\"Columbia Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": null,
+  "facts": [
+   {
+    "fact": "start per Wikipedia infobox",
+    "value": 1901,
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/Columbia_Law_Review",
+    "quote": "History 1901–present",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": null,
+    "status": "unverified",
+    "url": "https://columbialawreview.org/",
+    "quote": null
+   }
+  ],
+  "notes": "Crossref API (volume + issued); journal site blocked raw fetch and Crossref has nothing after 2004 for this ISSN, so current status is unproven. Wikipedia infobox says 1901-present."
+ },
+ {
+  "id": "unblj",
+  "is_journal": true,
+  "really_is": null,
+  "title": "University of New Brunswick Law Journal",
+  "title_history": [],
+  "start": 1947,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1947,
+    "url": "https://journals.lib.unb.ca/index.php/UNBLJ/issue/archive/2",
+    "quote": "Vol. 1 No. 1 (1947)",
+    "checked": "found"
+   },
+   {
+    "volume": 13,
+    "year": 1961,
+    "url": "https://journals.lib.unb.ca/index.php/UNBLJ/issue/archive/2",
+    "quote": "Vol. 13 (1961)",
+    "checked": "found"
+   },
+   {
+    "volume": 27,
+    "year": 1978,
+    "url": "https://journals.lib.unb.ca/index.php/UNBLJ/issue/archive/2",
+    "quote": "Vol. 27 (1978)",
+    "checked": "found"
+   },
+   {
+    "volume": 45,
+    "year": 1996,
+    "url": "https://journals.lib.unb.ca/index.php/UNBLJ/issue/archive",
+    "quote": "Vol. 45 (1996)",
+    "checked": "found"
+   },
+   {
+    "volume": 76,
+    "year": 2025,
+    "url": "https://journals.lib.unb.ca/index.php/UNBLJ/issue/archive",
+    "quote": "Vol. 76 (2025)",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1947,
+    "status": "verified",
+    "url": "https://journals.lib.unb.ca/index.php/UNBLJ/issue/archive/2",
+    "quote": "Vol. 1 No. 1 (1947)",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 1 also listed in 1948",
+    "value": "Vol. 1 No. 2 (1948)",
+    "status": "verified",
+    "url": "https://journals.lib.unb.ca/index.php/UNBLJ/issue/archive/2",
+    "quote": "Vol. 1 No. 2 (1948)",
+    "checked": "found"
+   },
+   {
+    "fact": "two volumes in 1952",
+    "value": "Vol 5 and Vol 6",
+    "status": "verified",
+    "url": "https://journals.lib.unb.ca/index.php/UNBLJ/issue/archive/2",
+    "quote": "Vol. 6 No. 1 (1952)",
+    "checked": "found"
+   },
+   {
+    "fact": "two volumes in 1952 (vol 5)",
+    "value": "Vol 5",
+    "status": "verified",
+    "url": "https://journals.lib.unb.ca/index.php/UNBLJ/issue/archive/2",
+    "quote": "Vol. 5 No. 2 (1952)",
+    "checked": "found"
+   },
+   {
+    "fact": "two volumes in 2010 (vol 61)",
+    "value": "Vol 61",
+    "status": "verified",
+    "url": "https://journals.lib.unb.ca/index.php/UNBLJ/issue/archive",
+    "quote": "Vol. 61 (2010)",
+    "checked": "found"
+   },
+   {
+    "fact": "two volumes in 2010 (vol 60)",
+    "value": "Vol 60",
+    "status": "verified",
+    "url": "https://journals.lib.unb.ca/index.php/UNBLJ/issue/archive",
+    "quote": "Vol. 60 (2010)",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://journals.lib.unb.ca/index.php/UNBLJ/issue/archive",
+    "quote": "Vol. 76 (2025)",
+    "checked": "found"
+   }
+  ],
+  "notes": "Journal's own OJS archive (2 pages) lists vols 1-76. Vol 1 appears under 1947 and 1948; vols 5 and 6 both in 1952; vols 60 and 61 both in 2010; vols 3 and 4 both under 1950. Journal title wording on those pages was not extracted, so title_history is empty. Registry examples (1978,27),(1984,33),(1989,38),(1990,39),(1995,44),(1996,45) agree with the archive."
+ },
+ {
+  "id": "modlrev",
+  "is_journal": true,
+  "really_is": null,
+  "title": "The Modern Law Review",
+  "title_history": [
+   {
+    "title": "The Modern Law Review",
+    "start": 1937,
+    "end": null,
+    "url": "https://api.crossref.org/journals/0026-7961/works?filter=from-pub-date:1937,until-pub-date:1937&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1937,6]]},\"container-title\":[\"The Modern Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "start": 1937,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1937,
+    "url": "https://api.crossref.org/journals/0026-7961/works?filter=from-pub-date:1937,until-pub-date:1937&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1937,6]]},\"container-title\":[\"The Modern Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 3,
+    "year": 1939,
+    "url": "https://api.crossref.org/journals/0026-7961/works?filter=from-pub-date:1939,until-pub-date:1939&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"3\",\"issued\":{\"date-parts\":[[1939,6]]},\"container-title\":[\"The Modern Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 18,
+    "year": 1955,
+    "url": "https://api.crossref.org/journals/0026-7961/works?filter=from-pub-date:1955,until-pub-date:1955&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"18\",\"issued\":{\"date-parts\":[[1955,11]]},\"container-title\":[\"The Modern Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 43,
+    "year": 1980,
+    "url": "https://api.crossref.org/journals/0026-7961/works?filter=from-pub-date:1980,until-pub-date:1980&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"43\",\"issued\":{\"date-parts\":[[1980,3]]},\"container-title\":[\"The Modern Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 88,
+    "year": 2025,
+    "url": "https://api.crossref.org/journals/0026-7961/works?filter=from-pub-date:2025,until-pub-date:2025&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"88\",\"issued\":{\"date-parts\":[[2025,2,24]]},\"container-title\":[\"The Modern Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 89,
+    "year": 2026,
+    "url": "https://api.crossref.org/journals/0026-7961/works?filter=from-pub-date:2026,until-pub-date:2026&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"89\",\"issued\":{\"date-parts\":[[2026,4,5]]},\"container-title\":[\"The Modern Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "vol 1 and vol 2 both in 1938",
+    "value": "1938",
+    "status": "verified",
+    "url": "https://api.crossref.org/journals/0026-7961/works?filter=from-pub-date:1938,until-pub-date:1938&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1938,3]]},\"container-title\":[\"The Modern Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "fact": "vol 2 also dated 1938 (companion)",
+    "value": "vol 2",
+    "status": "verified",
+    "url": "https://api.crossref.org/journals/0026-7961/works?filter=from-pub-date:1938,until-pub-date:1938&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"2\",\"issued\":{\"date-parts\":[[1938,9]]},\"container-title\":[\"The Modern Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "fact": "vol 2 also in 1939",
+    "value": "vol 2 in 1938 and 1939",
+    "status": "verified",
+    "url": "https://api.crossref.org/journals/0026-7961/works?filter=from-pub-date:1939,until-pub-date:1939&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"2\",\"issued\":{\"date-parts\":[[1939,3]]},\"container-title\":[\"The Modern Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "fact": "current (vol 89 in 2026)",
+    "value": true,
+    "status": "verified",
+    "url": "https://api.crossref.org/journals/0026-7961/works?filter=from-pub-date:2026,until-pub-date:2026&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"89\",\"issued\":{\"date-parts\":[[2026,4,5]]},\"container-title\":[\"The Modern Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "notes": "Crossref API (volume + issued); Wiley/MLR site blocked. Vol 1 = 1937, vol 2 spans 1938-39, vol 88 in 2025 and vol 89 in both 2025/2026 range. Registry example (1939) 3 and (1955) 18 match."
+ },
+ {
+  "id": "windsorybaccessjust",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Windsor Yearbook of Access to Justice",
+  "title_history": [],
+  "start": null,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 25,
+    "year": 2007,
+    "url": "https://ojs.uwindsor.ca/index.php/WYAJ/issue/archive/2",
+    "quote": "Vol. 25 No. 2 (2007)",
+    "checked": "found"
+   },
+   {
+    "volume": 28,
+    "year": 2010,
+    "url": "https://ojs.uwindsor.ca/index.php/WYAJ/issue/archive",
+    "quote": "Vol. 28 No. 1 (2010)",
+    "checked": "found"
+   },
+   {
+    "volume": 31,
+    "year": 2013,
+    "url": "https://ojs.uwindsor.ca/index.php/WYAJ/issue/archive",
+    "quote": "Vol. 31 No. 1 (2013)",
+    "checked": "found"
+   },
+   {
+    "volume": 36,
+    "year": 2019,
+    "url": "https://ojs.uwindsor.ca/index.php/WYAJ/issue/archive",
+    "quote": "Vol. 36 (2019)",
+    "checked": "found"
+   },
+   {
+    "volume": 41,
+    "year": 2025,
+    "url": "https://ojs.uwindsor.ca/index.php/WYAJ/issue/archive",
+    "quote": "Vol. 41 (2025)",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": false,
+  "facts": [
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://ojs.uwindsor.ca/index.php/WYAJ/issue/archive",
+    "quote": "Vol. 41 (2025)",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 1 year",
+    "value": null,
+    "status": "unverified",
+    "url": "https://ojs.uwindsor.ca/index.php/WYAJ/issue/archive",
+    "quote": null
+   },
+   {
+    "fact": "gap: no volume in 2014",
+    "value": "Vol 31 (2013) then Vol 32 (2015)",
+    "status": "verified",
+    "url": "https://ojs.uwindsor.ca/index.php/WYAJ/issue/archive",
+    "quote": "Vol. 32 No. 1 (2015)",
+    "checked": "found"
+   }
+  ],
+  "notes": "Journal's own OJS archive back to vol 25 (2007) only; earlier volumes (registry examples (1984) 4, (1998) 16, (2003) 22) not on a fetched page. Crossref returned items with wrong/odd dates for this ISSN (vol 33 dated 1969), so Crossref was not used. several_volumes_some_year false only within vols 25-41."
+ },
+ {
+  "id": "jenvtllprac",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Journal of Environmental Law and Practice",
+  "title_history": [],
+  "start": null,
+  "end": null,
+  "current": null,
+  "anchors": [],
+  "several_volumes_some_year": null,
+  "facts": [
+   {
+    "fact": "start (vol 1 no 1 Sept 1990)",
+    "value": 1990,
+    "status": "unverified",
+    "url": "https://lawcat.berkeley.edu/record/535143",
+    "quote": null
+   }
+  ],
+  "notes": "No page fetched raw (Berkeley and academia.cl catalogue hosts returned empty/block responses). Search snippet only says vol 1 no 1 Sept 1990, Carswell, ISSN 1181-7534. Registry examples show vol 11 in 2001, vol 14 in 2004 and 15 in 2004 and 2005 (two volumes in 2004/ vol 15 in 2004 and 2005) unchecked."
+ },
+ {
+  "id": "rdmcgill",
+  "is_journal": false,
+  "really_is": "French title of McGill Law Journal (id mcgilllj)",
+  "title": "Revue de droit de McGill",
+  "title_history": [
+   {
+    "title": "Revue de droit de McGill (parallel title)",
+    "start": 1977,
+    "end": null,
+    "url": "https://lawjournal.mcgill.ca/article/prefece-to-the-twenty-fifth-anniversary-volume/",
+    "quote": "known as well since 1977 as the Revue de Droit de McGill",
+    "checked": "found"
+   }
+  ],
+  "start": null,
+  "end": null,
+  "current": null,
+  "anchors": [
+   {
+    "volume": 37,
+    "year": 1992,
+    "url": "https://lawjournal.mcgill.ca/issues/",
+    "quote": "Volume 37 1992",
+    "checked": "found"
+   },
+   {
+    "volume": 43,
+    "year": 1998,
+    "url": "https://lawjournal.mcgill.ca/issues/",
+    "quote": "Volume 43 1998",
+    "checked": "found"
+   },
+   {
+    "volume": 45,
+    "year": 2000,
+    "url": "https://lawjournal.mcgill.ca/issues/",
+    "quote": "Volume 45 2000",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": null,
+  "facts": [
+   {
+    "fact": "duplicate of mcgilllj",
+    "value": "same journal",
+    "status": "verified",
+    "url": "https://lawjournal.mcgill.ca/article/prefece-to-the-twenty-fifth-anniversary-volume/",
+    "quote": "known as well since 1977 as the Revue de Droit de McGill",
+    "checked": "found"
+   }
+  ],
+  "notes": "Duplicate entry: the same journal as mcgilllj; see that entry for start, current and anchors. The three anchors here are the registry examples (37/1992, 43/1998, 45/2000) found on the McGill issues page."
+ },
+ {
+  "id": "ottawalrev",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Ottawa Law Review",
+  "title_history": [],
+  "start": null,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 53,
+    "year": 2021,
+    "url": "https://api.crossref.org/journals/0048-2331/works?filter=from-pub-date:2021,until-pub-date:2021&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"53\",\"issued\":{\"date-parts\":[[2021]]},\"container-title\":[\"Ottawa Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 56,
+    "year": 2024,
+    "url": "https://api.crossref.org/journals/0048-2331/works?filter=from-pub-date:2024,until-pub-date:2024&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"56\",\"issued\":{\"date-parts\":[[2024]]},\"container-title\":[\"Ottawa Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": null,
+  "facts": [
+   {
+    "fact": "foundation",
+    "value": 1966,
+    "status": "verified",
+    "url": "https://www.uottawa.ca/faculty-law/common-law/research/ottawa-law-review",
+    "quote": "Since its foundation in 1966, the Ottawa Law Review",
+    "checked": "found"
+   },
+   {
+    "fact": "frequency",
+    "value": "biannual",
+    "status": "verified",
+    "url": "https://www.uottawa.ca/faculty-law/common-law/research/ottawa-law-review",
+    "quote": "published biannually",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 1 year",
+    "value": null,
+    "status": "unverified",
+    "url": "https://www.uottawa.ca/faculty-law/common-law/research/ottawa-law-review",
+    "quote": null
+   },
+   {
+    "fact": "latest volume in Crossref",
+    "value": "vol 56 (2024)",
+    "status": "verified",
+    "url": "https://api.crossref.org/journals/0048-2331/works?filter=from-pub-date:2024,until-pub-date:2024&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"56\",\"issued\":{\"date-parts\":[[2024]]},\"container-title\":[\"Ottawa Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "notes": "Faculty page states foundation in 1966 but not the volume 1 year, so start stays null. Anchors from Crossref (53/2021, 56/2024); Crossref has only 49 items for this title. Registry examples (1976,8),(1983,15),(1988,20),(1996-97,28) unchecked."
+ },
+ {
+  "id": "michlrev",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Michigan Law Review",
+  "title_history": [
+   {
+    "title": "Michigan Law Review",
+    "start": 1902,
+    "end": null,
+    "url": "https://repository.law.umich.edu/mlr/vol1/",
+    "quote": "Volume 1 Issue 1 1902",
+    "checked": "found"
+   }
+  ],
+  "start": 1902,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1902,
+    "url": "https://repository.law.umich.edu/mlr/vol1/",
+    "quote": "Volume 1 Issue 1 1902",
+    "checked": "found"
+   },
+   {
+    "volume": 29,
+    "year": 1930,
+    "url": "https://repository.law.umich.edu/mlr/vol29/",
+    "quote": "Volume 29 Issue 1 1930",
+    "checked": "found"
+   },
+   {
+    "volume": 52,
+    "year": 1953,
+    "url": "https://repository.law.umich.edu/mlr/vol52/",
+    "quote": "Volume 52 Issue 1 1953",
+    "checked": "found"
+   },
+   {
+    "volume": 72,
+    "year": 1973,
+    "url": "https://repository.law.umich.edu/mlr/vol72/",
+    "quote": "Volume 72 Issue 1 1973",
+    "checked": "found"
+   },
+   {
+    "volume": 85,
+    "year": 1986,
+    "url": "https://repository.law.umich.edu/mlr/vol85/",
+    "quote": "Volume 85 Issue 1 1986",
+    "checked": "found"
+   },
+   {
+    "volume": 125,
+    "year": 2026,
+    "url": "https://repository.law.umich.edu/mlr/vol125/",
+    "quote": "Volume 125 Issue 1 2026",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1902,
+    "status": "verified",
+    "url": "https://repository.law.umich.edu/mlr/vol1/",
+    "quote": "Volume 1 Issue 1 1902",
+    "checked": "found"
+   },
+   {
+    "fact": "vol 2 spans 1903-1904",
+    "value": "Volume 2 Issue 1 1903 ... Issue 4 1904",
+    "status": "verified",
+    "url": "https://repository.law.umich.edu/mlr/vol2/",
+    "quote": "Volume 2 Issue 1 1903 Issue 2 1903 Issue 3 1903 Issue 4 1904",
+    "checked": "found"
+   },
+   {
+    "fact": "vol 51 and vol 52 both in 1953",
+    "value": "vol 51 issue 3 1953; vol 52 issue 1 1953",
+    "status": "verified",
+    "url": "https://repository.law.umich.edu/mlr/vol51/",
+    "quote": "Volume 51 Issue 1 1952 Issue 2 1952 Issue 3 1953",
+    "checked": "found"
+   },
+   {
+    "fact": "vol 52 spans 1953-1954",
+    "value": "vol 52",
+    "status": "verified",
+    "url": "https://repository.law.umich.edu/mlr/vol52/",
+    "quote": "Volume 52 Issue 1 1953 Issue 2 1953 Issue 3 1954",
+    "checked": "found"
+   },
+   {
+    "fact": "vol 79 spans 1980-1981",
+    "value": "vol 79",
+    "status": "verified",
+    "url": "https://repository.law.umich.edu/mlr/vol79/",
+    "quote": "Volume 79 Issue 1 1980 Issue 2 1980 Issue 3 1981",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://repository.law.umich.edu/mlr/vol125/",
+    "quote": "Volume 125 Issue 1 2026 Issue 2 2026",
+    "checked": "found"
+   }
+  ],
+  "notes": "Journal's own repository (repository.law.umich.edu) volume pages: each volume runs from autumn to the following spring/summer, so most volumes span two calendar years and consecutive volumes can share a year. Registry examples (1931) 29, (1938) 36, (1953) 52:1, (1974) 72, (1980) 79, (1986) 85 all consistent."
+ },
+ {
+  "id": "minnlrev",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Minnesota Law Review",
+  "title_history": [
+   {
+    "title": "Minnesota Law Review",
+    "start": 1917,
+    "end": null,
+    "url": "https://api.crossref.org/journals/0026-5535/works?filter=from-pub-date:1917,until-pub-date:1917&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1917]]},\"container-title\":[\"Minnesota Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "start": 1917,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1917,
+    "url": "https://api.crossref.org/journals/0026-5535/works?filter=from-pub-date:1917,until-pub-date:1917&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1917]]},\"container-title\":[\"Minnesota Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 2,
+    "year": 1918,
+    "url": "https://api.crossref.org/journals/0026-5535/works?filter=from-pub-date:1918,until-pub-date:1918&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"2\",\"issued\":{\"date-parts\":[[1918]]},\"container-title\":[\"Minnesota Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 9,
+    "year": 1925,
+    "url": "https://api.crossref.org/journals/0026-5535/works?filter=from-pub-date:1925,until-pub-date:1925&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"9\",\"issued\":{\"date-parts\":[[1925]]},\"container-title\":[\"Minnesota Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 74,
+    "year": 1990,
+    "url": "https://api.crossref.org/journals/0026-5535/works?filter=from-pub-date:1990,until-pub-date:1990&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"74\",\"issued\":{\"date-parts\":[[1990]]},\"container-title\":[\"Minnesota Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 109,
+    "year": 2025,
+    "url": "https://api.crossref.org/journals/0026-5535/works?filter=from-pub-date:2025,until-pub-date:2025&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"109\",\"issued\":{\"date-parts\":[[2025]]},\"container-title\":[\"Minnesota Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "vols 1 and 2 both in 1917",
+    "value": "vol 2 in 1917",
+    "status": "verified",
+    "url": "https://api.crossref.org/journals/0026-5535/works?filter=from-pub-date:1917,until-pub-date:1917&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"2\",\"issued\":{\"date-parts\":[[1917]]},\"container-title\":[\"Minnesota Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "fact": "current (vol 109 in 2025)",
+    "value": true,
+    "status": "verified",
+    "url": "https://api.crossref.org/journals/0026-5535/works?filter=from-pub-date:2025,until-pub-date:2025&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"109\",\"issued\":{\"date-parts\":[[2025]]},\"container-title\":[\"Minnesota Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "notes": "Crossref API only (scholarship.law.umn.edu blocked). Crossref has no items dated 1916, so vol 1 = 1917 is the earliest issued year there and may reflect deposit dating rather than the first issue. Registry examples (1918) 2:5, (1919) 3:5, (1924) 8, (1925) 9:4 agree with Crossref vols 2 and 9."
+ },
+ {
+  "id": "iclq",
+  "is_journal": true,
+  "really_is": null,
+  "title": "International and Comparative Law Quarterly",
+  "title_history": [
+   {
+    "title": "International and Comparative Law Quarterly",
+    "start": 1952,
+    "end": null,
+    "url": "https://www.cambridge.org/core/journals/international-and-comparative-law-quarterly/all-issues",
+    "quote": "1952 - Volume 1 Archive content Issue 4 October 1952",
+    "checked": "found"
+   }
+  ],
+  "start": 1952,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1952,
+    "url": "https://www.cambridge.org/core/journals/international-and-comparative-law-quarterly/all-issues",
+    "quote": "1952 - Volume 1 Archive content Issue 4 October 1952",
+    "checked": "found"
+   },
+   {
+    "volume": 45,
+    "year": 1996,
+    "url": "https://www.cambridge.org/core/journals/international-and-comparative-law-quarterly/all-issues",
+    "quote": "Volume 45 Issue 4 October 1996",
+    "checked": "found"
+   },
+   {
+    "volume": 56,
+    "year": 2007,
+    "url": "https://www.cambridge.org/core/journals/international-and-comparative-law-quarterly/all-issues",
+    "quote": "Volume 56 Issue 4 October 2007",
+    "checked": "found"
+   },
+   {
+    "volume": 74,
+    "year": 2025,
+    "url": "https://www.cambridge.org/core/journals/international-and-comparative-law-quarterly/all-issues",
+    "quote": "Volume 74 Issue 4 October 2025",
+    "checked": "found"
+   },
+   {
+    "volume": 75,
+    "year": 2026,
+    "url": "https://www.cambridge.org/core/journals/international-and-comparative-law-quarterly/all-issues",
+    "quote": "Volume 75 Issue 2 April 2026",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": false,
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1952,
+    "status": "verified",
+    "url": "https://www.cambridge.org/core/journals/international-and-comparative-law-quarterly/all-issues",
+    "quote": "Issue 1 January 1952",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://www.cambridge.org/core/journals/international-and-comparative-law-quarterly/all-issues",
+    "quote": "Volume 75 Issue 2 April 2026",
+    "checked": "found"
+   },
+   {
+    "fact": "vol 1 issues Jan-Oct 1952",
+    "value": "one volume in 1952",
+    "status": "verified",
+    "url": "https://www.cambridge.org/core/journals/international-and-comparative-law-quarterly/all-issues",
+    "quote": "Issue 3 July 1952",
+    "checked": "found"
+   }
+  ],
+  "notes": "Journal's own Cambridge Core all-issues page lists every volume with issue months. In the volumes shown (vols 45-75 and vol 1) each volume carries a single calendar year (issues Jan-Oct), so no volume spans two years and no year has two volumes there. Registry example years agree with the vol-to-year pattern shown (e.g. vol 53 = 2004 appears in the listing as 53.4 October 2004)."
+ },
+ {
+  "id": "canbuslj",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Canadian Business Law Journal",
+  "title_history": [],
+  "start": null,
+  "end": null,
+  "current": null,
+  "anchors": [],
+  "several_volumes_some_year": null,
+  "facts": [
+   {
+    "fact": "established",
+    "value": 1974,
+    "status": "verified",
+    "url": "https://jackmanlaw.utoronto.ca/canadian-business-law-journal",
+    "quote": "Established in 1974, the Canadian Business Law Journal",
+    "checked": "found"
+   },
+   {
+    "fact": "established (library guide)",
+    "value": 1974,
+    "status": "verified",
+    "url": "https://learn.library.torontomu.ca/businesslaw/journals",
+    "quote": "was established in 1974 to provide Canadian lawyers",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 1 year",
+    "value": 1975,
+    "status": "unverified",
+    "url": "https://www.slaw.ca/?p=2605",
+    "quote": null
+   },
+   {
+    "fact": "current",
+    "value": null,
+    "status": "unverified",
+    "url": "https://jackmanlaw.utoronto.ca/canadian-business-law-journal",
+    "quote": " are grateful to have the opportunity to work on this land. © 2026 Henry N.R. Jackman Faculty of Law"
+   }
+  ],
+  "notes": "Two journal-side pages state establishment in 1974 (managed from U of T Law). No page with volume/year pairs fetched; start (volume 1) stays null. Registry examples (1990) 16, (1992) 20, (2004) 40, (2004) 41, (2005) 41 cannot be checked; vol 41 appears under both 2004 and 2005, flagged for review. Page footer copyright 2026 is not proof of a recent issue, so current is only asserted from the site still describing \"current editors\"."
+ },
+ {
+  "id": "oscbull",
+  "is_journal": false,
+  "really_is": "Ontario Securities Commission Bulletin: a regulator bulletin, not a journal",
+  "title": "Ontario Securities Commission Bulletin",
+  "title_history": [],
+  "start": null,
+  "end": null,
+  "current": null,
+  "anchors": [],
+  "several_volumes_some_year": null,
+  "facts": [],
+  "notes": "Not a journal. Not researched further (regulator publication cited as [year] O.S.C. Bull.)."
+ },
+ {
+  "id": "rdub",
+  "is_journal": true,
+  "really_is": "Revue du Barreau (Barreau du Quebec)",
+  "title": "Revue du Barreau",
+  "title_history": [],
+  "start": null,
+  "end": null,
+  "current": null,
+  "anchors": [],
+  "several_volumes_some_year": null,
+  "facts": [
+   {
+    "fact": "start (vol 1 1941)",
+    "value": 1941,
+    "status": "unverified",
+    "url": "https://lawcat.berkeley.edu/record/127640",
+    "quote": null
+   },
+   {
+    "fact": "earlier title Revue du Barreau de la province de Quebec",
+    "value": "to 1969 (catalogue snippet)",
+    "status": "unverified",
+    "url": "https://lawcat.berkeley.edu/record/127640",
+    "quote": null
+   }
+  ],
+  "notes": "No raw page fetched. Search snippets suggest a title Revue du Barreau de la province de Quebec before 1969 and ISSN 0383-669X; unverified. Registry examples (1959) 19, (1980) 40, (1982) 42, (1991) 51, (1998) 58 unchecked."
+ },
+ {
+  "id": "valrev",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Virginia Law Review",
+  "title_history": [
+   {
+    "title": "Virginia Law Review",
+    "start": 1913,
+    "end": null,
+    "url": "https://api.crossref.org/journals/0042-6601/works?filter=from-pub-date:1913,until-pub-date:1913&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1913,12]]},\"container-title\":[\"Virginia Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "start": 1913,
+  "end": null,
+  "current": null,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1913,
+    "url": "https://api.crossref.org/journals/0042-6601/works?filter=from-pub-date:1913,until-pub-date:1913&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"1\",\"issued\":{\"date-parts\":[[1913,12]]},\"container-title\":[\"Virginia Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 53,
+    "year": 1967,
+    "url": "https://api.crossref.org/journals/0042-6601/works?filter=from-pub-date:1967,until-pub-date:1967&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"53\",\"issued\":{\"date-parts\":[[1967,5]]},\"container-title\":[\"Virginia Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 82,
+    "year": 1996,
+    "url": "https://api.crossref.org/journals/0042-6601/works?filter=from-pub-date:1996,until-pub-date:1996&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"82\",\"issued\":{\"date-parts\":[[1996,10]]},\"container-title\":[\"Virginia Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "volume": 90,
+    "year": 2004,
+    "url": "https://api.crossref.org/journals/0042-6601/works?filter=from-pub-date:2004,until-pub-date:2004&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"90\",\"issued\":{\"date-parts\":[[2004,6]]},\"container-title\":[\"Virginia Law Review\"]}",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "vol 1 and vol 2 both in 1914",
+    "value": "vol 2 in 1914",
+    "status": "verified",
+    "url": "https://api.crossref.org/journals/0042-6601/works?filter=from-pub-date:1914,until-pub-date:1914&rows=100&select=volume,issued,container-title",
+    "quote": "{\"volume\":\"2\",\"issued\":{\"date-parts\":[[1914,10]]},\"container-title\":[\"Virginia Law Review\"]}",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": null,
+    "status": "unverified",
+    "url": "https://virginialawreview.org/",
+    "quote": null
+   }
+  ],
+  "notes": "Crossref API only (virginialawreview.org blocked); Crossref has no Virginia items after 2004, so current is unproven. Registry example (1967) 53 and (1996) 82 agree."
+ },
+ {
+  "id": "canjfaml",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Canadian Journal of Family Law / Revue canadienne de droit familial",
+  "title_history": [
+   {
+    "title": "Canadian Journal of Family Law / Revue canadienne de droit familial",
+    "start": 1978,
+    "end": null,
+    "url": "https://cdnjfl.allard.ubc.ca/?p=2578",
+    "quote": "Canadian Journal of Family Law/Revue canadienne de droit familial Volume 1, Number 1, 1978",
+    "checked": "found"
+   }
+  ],
+  "start": 1978,
+  "end": null,
+  "current": true,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1978,
+    "url": "https://cdnjfl.allard.ubc.ca/?p=2578",
+    "quote": "Volume 1, Number 1, 1978",
+    "checked": "found"
+   },
+   {
+    "volume": 26,
+    "year": 2010,
+    "url": "https://commons.allard.ubc.ca/can-j-fam-l/all_issues.html",
+    "quote": "Volume 26 Number 1 (2010)",
+    "checked": "found"
+   },
+   {
+    "volume": 30,
+    "year": 2017,
+    "url": "https://commons.allard.ubc.ca/can-j-fam-l/all_issues.html",
+    "quote": "Volume 30 Number 1 (2017)",
+    "checked": "found"
+   },
+   {
+    "volume": 33,
+    "year": 2020,
+    "url": "https://commons.allard.ubc.ca/can-j-fam-l/all_issues.html",
+    "quote": "Volume 33 Number 1 (2020)",
+    "checked": "found"
+   },
+   {
+    "volume": 36,
+    "year": 2025,
+    "url": "https://commons.allard.ubc.ca/can-j-fam-l/all_issues.html",
+    "quote": "Volume 36 Number 1 (2025)",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1978,
+    "status": "verified",
+    "url": "https://cdnjfl.allard.ubc.ca/?p=2578",
+    "quote": "Volume 1, Number 1, 1978",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": true,
+    "status": "verified",
+    "url": "https://commons.allard.ubc.ca/can-j-fam-l/",
+    "quote": "Current Issue: Volume 36, Number 2 (2025)",
+    "checked": "found"
+   },
+   {
+    "fact": "vol 28 spans 2012-2014",
+    "value": "Number 1 (2012), Number 2 (2014)",
+    "status": "verified",
+    "url": "https://commons.allard.ubc.ca/can-j-fam-l/all_issues.html",
+    "quote": "Volume 28 Number 1 (2012)",
+    "checked": "found"
+   },
+   {
+    "fact": "vol 29 spans 2014-2015",
+    "value": "Number 1 (2014), Number 2 (2015)",
+    "status": "verified",
+    "url": "https://commons.allard.ubc.ca/can-j-fam-l/all_issues.html",
+    "quote": "Volume 29 Number 1 (2014) Number 2 (2015)",
+    "checked": "found"
+   },
+   {
+    "fact": "vol 28 no 2 = 2014 and vol 29 no 1 = 2014 (two volumes in 2014)",
+    "value": 2014,
+    "status": "verified",
+    "url": "https://commons.allard.ubc.ca/can-j-fam-l/all_issues.html",
+    "quote": "Volume 28 Number 1 (2012)",
+    "checked": "found"
+   },
+   {
+    "fact": "vol 31 no 2 year (commons)",
+    "value": 2018,
+    "status": "contradicted",
+    "url": "https://commons.allard.ubc.ca/can-j-fam-l/all_issues.html",
+    "quote": "Volume 31 Number 1 (2018): Remembering Professor Judith Mosoff Number 2 (2018)"
+   },
+   {
+    "fact": "vol 31 no 2 year (journal website)",
+    "value": 2019,
+    "status": "contradicted",
+    "url": "https://cdnjfl.allard.ubc.ca/?p=2578",
+    "quote": "Vol. 31, No. 1, 2018 Vol. 31, No. 2, 2019"
+   }
+  ],
+  "notes": "Two pages of the journal's own: site (cdnjfl.allard.ubc.ca, lists Vol. 1 No. 1 1978 to current) and open-access repository (commons.allard.ubc.ca; vols 26-36). They contradict on vol 31 no 2 (2018 repository vs 2019 site), and the site lists \"Vol. 32, No. 2, 2022\" under volume 34 (typo, repository says Number 2 (2022) for vol 34). Registry example (1998) 15:2 and (2004) 21:1, (2008) 24:1, (2009) 25:1 cannot be checked from fetched pages; repository gives 26 = 2010."
+ },
+ {
+  "id": "revconststud",
+  "is_journal": true,
+  "really_is": null,
+  "title": "Review of Constitutional Studies / Revue d'etudes constitutionnelles",
+  "title_history": [
+   {
+    "title": "Review of Constitutional Studies / Revue d'etudes constitutionnelles",
+    "start": 1993,
+    "end": null,
+    "url": "https://www.constitutionalstudies.ca/journals/review-of-constitutional-studies/all-issues/page/5/",
+    "quote": "Volume 1.1 (1993)",
+    "checked": "found"
+   }
+  ],
+  "start": 1993,
+  "end": null,
+  "current": null,
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1993,
+    "url": "https://www.constitutionalstudies.ca/journals/review-of-constitutional-studies/all-issues/page/5/",
+    "quote": "Volume 1.1 (1993)",
+    "checked": "found"
+   },
+   {
+    "volume": 5,
+    "year": 1999,
+    "url": "https://www.constitutionalstudies.ca/journals/review-of-constitutional-studies/all-issues/page/4/",
+    "quote": "Volume 5.1 (1999)",
+    "checked": "found"
+   },
+   {
+    "volume": 12,
+    "year": 2006,
+    "url": "https://www.constitutionalstudies.ca/journals/review-of-constitutional-studies/all-issues/page/3/",
+    "quote": "Volume 12.1 (2006)",
+    "checked": "found"
+   },
+   {
+    "volume": 19,
+    "year": 2014,
+    "url": "https://www.constitutionalstudies.ca/journals/review-of-constitutional-studies/all-issues/page/2/",
+    "quote": "Volume 19.1 (2014)",
+    "checked": "found"
+   },
+   {
+    "volume": 27,
+    "year": 2023,
+    "url": "https://www.constitutionalstudies.ca/journals/review-of-constitutional-studies/all-issues/",
+    "quote": "Volume 27.2 (2023)",
+    "checked": "found"
+   }
+  ],
+  "several_volumes_some_year": true,
+  "facts": [
+   {
+    "fact": "start",
+    "value": 1993,
+    "status": "verified",
+    "url": "https://www.constitutionalstudies.ca/journals/review-of-constitutional-studies/all-issues/page/5/",
+    "quote": "Volume 1.1 (1993)",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 1 also 1994",
+    "value": "Volume 1.2 (1994)",
+    "status": "verified",
+    "url": "https://www.constitutionalstudies.ca/journals/review-of-constitutional-studies/all-issues/page/5/",
+    "quote": "Volume 1.2 (1994)",
+    "checked": "found"
+   },
+   {
+    "fact": "two volumes in 2019 (24.1/24.2 and 25.1)",
+    "value": "Volume 24.2 (2019 - 2020); Volume 25.1 (2019 - 2020)",
+    "status": "verified",
+    "url": "https://www.constitutionalstudies.ca/journals/review-of-constitutional-studies/all-issues/",
+    "quote": "Volume 25.1 (2019 - 2020)",
+    "checked": "found"
+   },
+   {
+    "fact": "registry example 19(1) in 2010",
+    "value": "Volume 19.1 is 2014",
+    "status": "contradicted",
+    "url": "https://www.constitutionalstudies.ca/journals/review-of-constitutional-studies/all-issues/page/2/",
+    "quote": "Volume 19.1 (2014)"
+   },
+   {
+    "fact": "founding",
+    "value": 1993,
+    "status": "verified",
+    "url": "https://constitutionalstudies.ca/publications/review",
+    "quote": "Published by the Centre for Constitutional Studies since 1993",
+    "checked": "found"
+   },
+   {
+    "fact": "latest listed",
+    "value": "Volume 27.2 (2023)",
+    "status": "verified",
+    "url": "https://www.constitutionalstudies.ca/journals/review-of-constitutional-studies/all-issues/",
+    "quote": "Volume 27.2 (2023)",
+    "checked": "found"
+   },
+   {
+    "fact": "current",
+    "value": null,
+    "status": "unverified",
+    "url": "https://www.constitutionalstudies.ca/journals/review-of-constitutional-studies/all-issues/",
+    "quote": null
+   }
+  ],
+  "notes": "Journal's own all-issues pages (5 pages). Issues are numbered volume.number (e.g. 19.1 = vol 19 no 1); volumes skip 7, 9, 10 in the listing (pages show 6.1, 8.1, 11.1). The latest issue listed is 27.2 (2023); current status unproven (web search said volume 28 moved online-only; not fetched). Registry example (2010) 19(1) conflicts: vol 19 no 1 is 2014; (2011) 15, 16 fit (15.2 = 2011; 16.1 = 2011); (1994) 2:1 and (2004) 9:1 - 2.1 = 1994 fits; vol 9 is not listed."
+ }
+]

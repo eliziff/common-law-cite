@@ -1,0 +1,1465 @@
+[
+ {
+  "reporter_id": "scr",
+  "edition": "SCR",
+  "start": 1876,
+  "end": null,
+  "current": null,
+  "numbering": [
+   {
+    "start": 1876,
+    "end": 1923,
+    "by": "volume",
+    "url": "https://lib.unb.ca/eresources?id=3166",
+    "quote": "for citations to volumes 1 (1876/77)-64 (1923), but enter the volume year without brackets and the volume number if applicable for citations to volumes published after v.64 (1923)",
+    "checked": "found"
+   },
+   {
+    "start": 1923,
+    "end": null,
+    "by": "year_and_volume",
+    "url": "https://lib.unb.ca/eresources?id=3166",
+    "quote": "but enter the volume year without brackets and the volume number if applicable for citations to volumes published after v.64 (1923)",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1876,
+    "url": "https://search.library.wisc.edu/catalog/999890332402121",
+    "quote": "Vol. 1 (1876/1877)-v. 64 (1922/1923)",
+    "checked": "found"
+   },
+   {
+    "volume": 64,
+    "year": 1923,
+    "url": "https://lib.unb.ca/eresources?id=3166",
+    "quote": "for citations to volumes 1 (1876/77)-64 (1923)",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "first volume year",
+    "value": "1876",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19854",
+    "quote": "Publication details: Ottawa : Queen's Pr, 1876-.",
+    "checked": "found"
+   },
+   {
+    "fact": "first volume year (publisher-type source)",
+    "value": "1876",
+    "status": "verified",
+    "url": "https://home.heinonline.org/?p=3763",
+    "quote": "beginning with the first volume published in 1876",
+    "checked": "found"
+   },
+   {
+    "fact": "imprint years of vols 1-64 (differs from 1876)",
+    "value": "1878-1923",
+    "status": "contradicted",
+    "url": "https://publications.gc.ca/site/eng/9.814249/publication.html",
+    "quote": "Publishing information Ottawa : Queen's Printer, 1878-1923. Chronology Vol. 1 -v. 64, no. 3."
+   },
+   {
+    "fact": "imprint years of vols 1-64 (library catalogue)",
+    "value": "1878-1923",
+    "status": "contradicted",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8996",
+    "quote": "Publication Date: 1923 Publication Date Range: 1878-1923"
+   },
+   {
+    "fact": "Melbourne guide start year of first series",
+    "value": "1875",
+    "status": "contradicted",
+    "url": "https://unimelb.libguides.com/authorised_law_reports/canada",
+    "quote": "1923 - 1969: Canada Law Reports: Supreme Court of Canada - 1875 - 1922: Reports of the Supreme Court of Canada"
+   },
+   {
+    "fact": "title changes: Reports of the SCC to v.64; Canada Law Reports 1923-1969; Canada Supreme Court Reports 1970-",
+    "value": "1923; 1970",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19854",
+    "quote": "Note: 1878-1923, Reports of the Supreme Court of Canada-- 1923-1969, Canada Law Reports : Supreme Court of Canada.",
+    "checked": "found"
+   },
+   {
+    "fact": "v.64 is the last numbered volume; later volumes identified by year",
+    "value": "1923",
+    "status": "verified",
+    "url": "https://search.library.wisc.edu/catalog/999890332402121",
+    "quote": "Publication Date Vol. 1 (1876/1877)-v. 64 (1922/1923) Physical Details 64 volumes",
+    "checked": "found"
+   },
+   {
+    "fact": "current (recent volume proof)",
+    "value": "not fetched",
+    "status": "unverified",
+    "url": "https://libguides.bodleian.ox.ac.uk/law-can/cases",
+    "quote": "Supreme Court Reports (SCR) (1923 - ) Cw Can 100 C90"
+   }
+  ],
+  "notes": "Registry start 1876 agrees with two catalogues and HeinOnline. 1876 is the first volume's decision year; printed imprint is 1878. Open-ended Bodleian holdings line is not proof of a recent volume."
+ },
+ {
+  "reporter_id": "ac",
+  "edition": "AC",
+  "start": 1891,
+  "end": null,
+  "current": true,
+  "numbering": [
+   {
+    "start": 1891,
+    "end": null,
+    "by": "year",
+    "url": "https://www.iclr.co.uk/history/",
+    "quote": "In 1891 the Council introduced the simplified arrangement of dated annual volumes in four series which continues to this day, comprising Appeal Cases",
+    "checked": "found"
+   }
+  ],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "start of Appeal Cases (AC) series",
+    "value": "1891",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/20130",
+    "quote": "Publication details: London : Incorporated Council of Law Reporting, 1891-.",
+    "checked": "found"
+   },
+   {
+    "fact": "continues today (ICLR present tense)",
+    "value": "true",
+    "status": "verified",
+    "url": "https://www.iclr.co.uk/products/law-report-series/the-law-reports/",
+    "quote": "Published monthly since 1865, The Law Reports are widely regarded as the most authoritative series of law reports for England and Wales.",
+    "checked": "found"
+   },
+   {
+    "fact": "sub-volume numbers within a year",
+    "value": "year in brackets; volume number used in some years",
+    "status": "verified",
+    "url": "https://www.iclr.co.uk/products/law-report-series/the-law-reports/",
+    "quote": "In some earlier years, individual subdivisions may also appear with a volume number.",
+    "checked": "found"
+   },
+   {
+    "fact": "predecessor series Appeal Cases (House of Lords) 1875-1890 cited as App Cas / LR App Cas, numbered by volume",
+    "value": "1875-1890",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/20124",
+    "quote": "The law reports : Appeal cases, 1875-1890. Copy direct link Share Available online Online via ICLR online vol1 (1875) - vol5(1890)",
+    "checked": "found"
+   },
+   {
+    "fact": "Registry example (1888) 14 A.C. predates 1891",
+    "value": "cannot be this series",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/20124",
+    "quote": "Publication details: London : Inc Council of Law Reporting, 1876-1890.",
+    "checked": "found"
+   }
+  ],
+  "notes": "AC from 1891 is dated annual volumes. Pre-1891 'A.C.' cites are Law Reports Appeal Cases 1875-1890 (App Cas), a separate volume-numbered series; the sclqld record shows vol1 (1875) - vol5(1890) which looks like a catalogue shorthand, volume counts not verified. 1891-onwards is Appeal Cases within The Law Reports."
+ },
+ {
+  "reporter_id": "dlr",
+  "edition": "DLR (4th)",
+  "start": 1984,
+  "end": null,
+  "current": true,
+  "numbering": [
+   {
+    "start": 1984,
+    "end": null,
+    "by": "volume",
+    "url": "https://search.library.wisc.edu/catalog/999618282902121",
+    "quote": "3rd ser., v. 1 (1969)-v. 150 (1984); 4th ser., v. 1 (1984)-",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1984,
+    "url": "https://search.library.wisc.edu/catalog/999618282902121",
+    "quote": "4th ser., v. 1 (1984)-",
+    "checked": "found"
+   },
+   {
+    "volume": 274,
+    "year": 2007,
+    "url": "https://sclqld.org.au/catalogue/records/19861",
+    "quote": "4th series, vol. 1 (1984) - vol. 274 (2007)",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "4th series first volume",
+    "value": "1984",
+    "status": "verified",
+    "url": "https://search.library.wisc.edu/catalog/999618282902121",
+    "quote": "Publication Toronto : Canada Law Book Co., 1912- Publication Date Vol. 1 (1912)-v. 70 (1922); 1923, v. 1-1955, v. 5; 2nd ser., v. 1 (1956)-v. 70 (1968); 3rd ser., v. 1 (1969)-v. 150 (1984); 4th ser., v. 1 (1984)-",
+    "checked": "found"
+   },
+   {
+    "fact": "3rd series ends 1984 (range)",
+    "value": "1969-1984",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8970",
+    "quote": "Publication Date: 1984 Publication Date Range: 1969-1984.",
+    "checked": "found"
+   },
+   {
+    "fact": "still issuing: retailer lists monthly releases through October 2026",
+    "value": "current",
+    "status": "verified",
+    "url": "https://www.wildy.com/isbn/0012-5350BV/dominion-law-reports-4th-series-bound-volumes-only-the-carswell-company-ltd",
+    "quote": "Latest Release: October 12, 2026 Publisher: The Carswell Company Ltd",
+    "checked": "found"
+   },
+   {
+    "fact": "holdings-only range (not the series run)",
+    "value": "1912-2009",
+    "status": "unverified",
+    "url": "https://unb.ca/fredericton/law/library/about/law-reports-locator.html",
+    "quote": "Dominion Law Reports (1912–2009): 153–154"
+   }
+  ],
+  "notes": "Current=true rests on a UK retailer's subscription release list (Carswell, Dominion Law Reports 4th Series) with a release dated Oct 2026; no publisher page fetched. No DLR (5th) found in any fetched page (registry editions list a 5th; unverified either way). Anchor 274/2007 is from a library's print holdings statement."
+ },
+ {
+  "reporter_id": "ccc",
+  "edition": "CCC (3d)",
+  "start": 1983,
+  "end": null,
+  "current": null,
+  "numbering": [
+   {
+    "start": 1983,
+    "end": null,
+    "by": "volume",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26018",
+    "quote": "Paper parts issued weekly. Vols. 1-34 (1 v.); v. 35-75 (1 v.); v. 76-100 (1 v.); v. 101-127 (1 v.); v. 128-157 (1 v.); v. 158-188 (1 v.); v. 189-210 (1 v.).",
+    "checked": "found"
+   }
+  ],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "third series start",
+    "value": "1983",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/64122",
+    "quote": "Publication details: Ontario : Candada Law Book Ltd., 1983-",
+    "checked": "found"
+   },
+   {
+    "fact": "second series ends 1983",
+    "value": "1971-1983",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8412",
+    "quote": "Publication Date: 1983 Publication Date Range: 1971-1983.",
+    "checked": "found"
+   },
+   {
+    "fact": "third series continues the second series",
+    "value": "CCC (2d) -> CCC (3d)",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/64122",
+    "quote": "Continues: Canadian criminal cases (second series) : a series of reports of important decisions in criminal and quasi-criminal cases.",
+    "checked": "found"
+   },
+   {
+    "fact": "still publishing",
+    "value": "not proved",
+    "status": "unverified",
+    "url": "https://www.thomsonreuters.ca/en/westlaw-canada/criminalsource.html",
+    "quote": "BestCase Library contains Canada Law Book (CLB) report series, Canadian Criminal Cases, Dominion Law Reports, Labour Arbitration Cases"
+   }
+  ],
+  "notes": "Volume 1 of the 3d series is dated 1983 by catalogue imprint; with 2d ending 1983 volumes may overlap within 1983. Volumes numbered consecutively in the series (at least to v.210 in the catalogue note). Current status not shown by any fetched page."
+ },
+ {
+  "reporter_id": "wwr",
+  "edition": "WWR",
+  "start": 1911,
+  "end": null,
+  "current": null,
+  "numbering": [
+   {
+    "start": 1911,
+    "end": 1916,
+    "by": "volume",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+    "quote": "Vols. for 1911-Sept. 1916 called v. 1-10",
+    "checked": "found"
+   },
+   {
+    "start": 1917,
+    "end": 1950,
+    "by": "year_and_volume",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+    "quote": "Numbering begins each year with v. 1, 1917-1950; 1971-",
+    "checked": "found"
+   },
+   {
+    "start": 1971,
+    "end": null,
+    "by": "year_and_volume",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+    "quote": "Numbering begins each year with v. 1, 1917-1950; 1971-",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1911,
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+    "quote": "Kamloops 1911/1912 v. 1",
+    "checked": "found"
+   },
+   {
+    "volume": 10,
+    "year": 1916,
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+    "quote": "Kamloops 1916 v. 10",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "series boundaries",
+    "value": "first series 1911-1950; New series 1951-1970; current series from 1971",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+    "quote": "First series ceased with issue for Dec. 30, 1950; New series began in 1951, ceased with issue for Dec. 26, 1970; current series began in 1971.",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": "1911",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+    "quote": "Publisher: Carswell Publication Date: 1911 Subject(s): Law reports, digests, etc. - Canada, Western. Notes: Cited: W.W.R.",
+    "checked": "found"
+   },
+   {
+    "fact": "end of WWR 1971- series",
+    "value": "2003 (library holdings range only)",
+    "status": "unverified",
+    "url": "https://unb.ca/fredericton/law/library/about/law-reports-locator.html",
+    "quote": "Western Weekly Reports (1911–2003): 162–163"
+   }
+  ],
+  "notes": "Edition WWR covers the first series (1911-1950) and the 1971- series; WWR (NS) is 1951-1970. No page fetched states when the 1971- series ended; UNB figure is a holdings list. In the 1971- series volumes restart each year."
+ },
+ {
+  "reporter_id": "dlr",
+  "edition": "DLR (3d)",
+  "start": 1969,
+  "end": 1984,
+  "current": false,
+  "numbering": [
+   {
+    "start": 1969,
+    "end": 1984,
+    "by": "volume",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=2556",
+    "quote": "A subject index to D.L.R. (3d), vol. 1 (1969)-v. 150 (1984).",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1969,
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=2556",
+    "quote": "vol. 1 (1969)-v. 150 (1984)",
+    "checked": "found"
+   },
+   {
+    "volume": 150,
+    "year": 1984,
+    "url": "https://search.library.wisc.edu/catalog/999618282902121",
+    "quote": "3rd ser., v. 1 (1969)-v. 150 (1984)",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "range of 3rd series",
+    "value": "1969-1984",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8970",
+    "quote": "Publication Date: 1984 Publication Date Range: 1969-1984. Notes: Cited as DLR (3d).",
+    "checked": "missing"
+   },
+   {
+    "fact": "registry example (1968), 1 D.L.R. (3d) 354",
+    "value": "year precedes verified 1969 start",
+    "status": "contradicted",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8970",
+    "quote": "Publication Date Range: 1969-1984."
+   }
+  ],
+  "notes": "Sources agree on 1969-1984, 150 volumes, continuous volume numbers."
+ },
+ {
+  "reporter_id": "aller",
+  "edition": "All ER",
+  "start": 1936,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "start (Butterworth, as All England law reports annotated 1936-46)",
+    "value": "1936",
+    "status": "verified",
+    "url": "https://search.library.wisc.edu/catalog/999618793502121",
+    "quote": "Other Titles All England law reports annotated 1936-46 All England law reports 1947 All England law reports, incorporating the Law times reports 1948-49 Format Journals, Magazines, Newspapers Language English",
+    "checked": "found"
+   },
+   {
+    "fact": "start per same record",
+    "value": "1936",
+    "status": "verified",
+    "url": "https://search.library.wisc.edu/catalog/999618793502121",
+    "quote": "Publication London : Butterworth Publication Date 1936- Physical Details volumes ; 24 cm",
+    "checked": "found"
+   },
+   {
+    "fact": "online coverage start",
+    "value": "1936",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/19719",
+    "quote": "Available online Online via Lexis+ (1936-)",
+    "checked": "found"
+   },
+   {
+    "fact": "imprint date of the library's main record",
+    "value": "1948",
+    "status": "contradicted",
+    "url": "https://www.sclqld.org.au/catalogue/records/19719",
+    "quote": "Publication details: London : The Law Journal, 1948-."
+   },
+   {
+    "fact": "volumes per year",
+    "value": "2 per year",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/19719",
+    "quote": "Publisher varies: Butterworths, 1955-<1997> Title from caption. Published in 2 vols. per year.",
+    "checked": "missing"
+   },
+   {
+    "fact": "All ER Reprint (All ER Rep) covers 1558-1935, published 1957-1971",
+    "value": "1558-1935",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/19720",
+    "quote": "Publication details: London : Butterworth, 1957-1971. Edition: Record id: 19720 Added title: Law times reports. Author: Format: Series: Subject: Law reports, digests, etc. -- Great Britain. Contents: Summary: Vols. for 1558-1834 selected from early authorised reports; volumes for 1835-1935 selected from the Law times reports.",
+    "checked": "found"
+   }
+  ],
+  "notes": "Start 1936 stated by Wisconsin (Butterworth 1936-) and Lexis+ online coverage; sclqld imprint 1948 is the Law Journal merger. Registry example [1935] All E.R 1 falls in the All ER Reprint (vols 1835-1935), not the 1936- series. Whether citations are year plus volume-in-year is not stated by a fetched page (only 'Published in 2 vols. per year'), so numbering is left empty. No page shows a recent volume."
+ },
+ {
+  "reporter_id": "or",
+  "edition": "OR (3d)",
+  "start": 1991,
+  "end": null,
+  "current": null,
+  "numbering": [
+   {
+    "start": 1991,
+    "end": null,
+    "by": "volume",
+    "url": "https://search.library.wisc.edu/catalog/999620353502121",
+    "quote": "3rd ser., v. 1, pt. 1- ; Feb. 22, 1991-",
+    "checked": "found"
+   }
+  ],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "third series start",
+    "value": "1991",
+    "status": "verified",
+    "url": "https://search.library.wisc.edu/catalog/999620353502121",
+    "quote": "Jan. 11, 1963-Dec. 21, 1973; 2d ser., v. 1-v. 75, pt. 10 ; Jan. 4, 1974-Feb. 8, 1991; 3rd ser., v. 1, pt. 1- ; Feb. 22, 1991-",
+    "checked": "found"
+   },
+   {
+    "fact": "second series range",
+    "value": "1974-1991",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5814",
+    "quote": "Publication Date: 1991 Publication Date Range: 1974-1991. Notes: Cited: O.R. (2d).",
+    "checked": "missing"
+   },
+   {
+    "fact": "third series publisher record",
+    "value": "1991",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=7053",
+    "quote": "Publisher: Butterworths Publication Date: 1991",
+    "checked": "found"
+   },
+   {
+    "fact": "registry example (1988), 39 O.R. (3d) 140",
+    "value": "1988 precedes verified 1991 start",
+    "status": "contradicted",
+    "url": "https://search.library.wisc.edu/catalog/999620353502121",
+    "quote": "3rd ser., v. 1, pt. 1- ; Feb. 22, 1991-"
+   },
+   {
+    "fact": "holdings-only range",
+    "value": "1882-2015",
+    "status": "unverified",
+    "url": "https://unb.ca/fredericton/law/library/about/law-reports-locator.html",
+    "quote": "Ontario Reports (1882–2015): 158"
+   }
+  ],
+  "notes": "Third series open-ended in the Wisconsin catalogue; no page fetched proves a recent volume or an end. The 1988 example is probably a miscopy (not inferred; flagged)."
+ },
+ {
+  "reporter_id": "nsr",
+  "edition": "NSR (2d)",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "2d series catalogue imprint date (single source, no range)",
+    "value": "1970",
+    "status": "unverified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=9119",
+    "quote": "Publisher: Maritime Law Book Co. Publication Date: 1970 Subject(s): Law reports, digests, etc. - Nova Scotia."
+   },
+   {
+    "fact": "predecessor Maritime Provinces Reports range",
+    "value": "1931-1968",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=1252",
+    "quote": "Publication Date: 1968 Publication Date Range: 1931-1968.",
+    "checked": "found"
+   },
+   {
+    "fact": "first series NSR 1-60 range",
+    "value": "1855-1929",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=11315",
+    "quote": "Publication Date: 1929 Publication Date Range: 1855-1929.",
+    "checked": "found"
+   },
+   {
+    "fact": "holdings-only range of Nova Scotia Reports",
+    "value": "1834-2016",
+    "status": "unverified",
+    "url": "https://unb.ca/fredericton/law/library/about/law-reports-locator.html",
+    "quote": "Nova Scotia Reports (1834–2016) 155–156"
+   }
+  ],
+  "notes": "Only one catalogue states 1970 as a bare publication date; left unverified. Volumes appear numbered consecutively (holdings list v. 1, v. 2, ...). No end shown."
+ },
+ {
+  "reporter_id": "dlr",
+  "edition": "DLR",
+  "start": 1912,
+  "end": 1955,
+  "current": false,
+  "numbering": [
+   {
+    "start": 1912,
+    "end": 1922,
+    "by": "volume",
+    "url": "https://search.library.wisc.edu/catalog/999618282902121",
+    "quote": "Vol. 1 (1912)-v. 70 (1922)",
+    "checked": "found"
+   },
+   {
+    "start": 1923,
+    "end": 1955,
+    "by": "year_and_volume",
+    "url": "https://search.library.wisc.edu/catalog/999618282902121",
+    "quote": "1923, v. 1-1955, v. 5",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1912,
+    "url": "https://search.library.wisc.edu/catalog/999618282902121",
+    "quote": "Vol. 1 (1912)-v. 70 (1922)",
+    "checked": "found"
+   },
+   {
+    "volume": 70,
+    "year": 1922,
+    "url": "https://search.library.wisc.edu/catalog/999618282902121",
+    "quote": "Vol. 1 (1912)-v. 70 (1922)",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "first series range (Old plus New series)",
+    "value": "1912-1955",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=1129",
+    "quote": "Publication Date: 1955 Publication Date Range: 1912-1955. Additional Corporate Author:",
+    "checked": "found"
+   },
+   {
+    "fact": "old series/new series split",
+    "value": "old series vols 1-70 (1912-1922); new series 1923-1955 vols 1-5 per year-set ending 1955",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19861",
+    "quote": "SCLQ print holdings: vol. 1 (1912) - vol. 70 (1922) ; new series, vol. 1 (1923) - vol. 5 (1955) ; 2nd series, vol. 1 (1956) - volume 70 (1968)",
+    "checked": "found"
+   },
+   {
+    "fact": "citation of first volume is dated 1912",
+    "value": "1912",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=1129",
+    "quote": "together with Canadian cases appealed to the Privy Council'-t.p., (1912) v. 1.",
+    "checked": "found"
+   }
+  ],
+  "notes": "Edition 'DLR' = first/old and new series before (2d). Wisconsin shows 1923 onward numbered 'v.1' within each year to v.5 in 1955, i.e. year plus volume; the string '1923, v. 1-1955, v. 5' is the library's compact form and the per-year restart is read from it, not stated in prose."
+ },
+ {
+  "reporter_id": "acws",
+  "edition": "ACWS (3d)",
+  "start": 1987,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "third series range",
+    "value": "1987-",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5648",
+    "quote": "Publication Date: 1987 Publication Date Range: 1987- Subject(s): Law reports, digests, etc. - Canada Civil law - Canada - Digests. Notes: Cited: A.C.W.S. (3d).",
+    "checked": "found"
+   },
+   {
+    "fact": "second series range",
+    "value": "1980-1986",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=11457",
+    "quote": "Publication Date: 1986 Publication Date Range: 1980-1986.",
+    "checked": "found"
+   },
+   {
+    "fact": "still publishing",
+    "value": "not proved",
+    "status": "unverified",
+    "url": "https://www.thomsonreuters.ca/en/westlaw-canada/criminalsource.html",
+    "quote": "It also includes CLB's case summary services, such as All-Canada Weekly Summaries and Weekly Criminal Bulletin"
+   }
+  ],
+  "notes": "Case-summary service, not law reports proper. Start 1987 from library range; no end or recent volume proved. Registry example (1991) 27 ACWS (3d) is consistent."
+ },
+ {
+  "reporter_id": "ftr",
+  "edition": "FTR",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "library catalogue imprint",
+    "value": "1986",
+    "status": "contradicted",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=2530",
+    "quote": "Publisher: Maritime Law Book Publication Date: 1986 Subject(s): Law reports, digests, etc. - Canada"
+   },
+   {
+    "fact": "UNB holdings listing",
+    "value": "1980-2002",
+    "status": "contradicted",
+    "url": "https://unb.ca/fredericton/law/library/about/law-reports-locator.html",
+    "quote": "Federal Trial Reports (1980–2002): 152–153"
+   }
+  ],
+  "notes": "Two library pages give different starts (1986 vs 1980) and the UNB range is a holdings list. Authoritative would be Maritime Law Book (publisher, closed 2016); not reached. The registry examples start (1987) 16 FTR."
+ },
+ {
+  "reporter_id": "bclr",
+  "edition": "BCLR (2d)",
+  "start": 1986,
+  "end": 1995,
+  "current": false,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "second series range",
+    "value": "1986-1995",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5644",
+    "quote": "Publication Date: 1995 Publication Date Range: 1986-1995. Subject(s): Law reports, digests, etc. - British Columbia. Notes: Cited: B.C.L.R. (2d).",
+    "checked": "found"
+   },
+   {
+    "fact": "first series range (ends where 2d begins)",
+    "value": "1977-1986",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5660",
+    "quote": "Publication Date: 1986 Publication Date Range: 1977-1986.",
+    "checked": "found"
+   },
+   {
+    "fact": "registry example (1976), 10 BCLR (2d) 172",
+    "value": "1976 precedes verified 1986 start",
+    "status": "contradicted",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5644",
+    "quote": "Publication Date Range: 1986-1995."
+   }
+  ],
+  "notes": "Volume numbers appear consecutive within the series in holdings (v. 1, v. 2 ...). Ranges are catalogue imprint years; a volume may fall in the adjacent year."
+ },
+ {
+  "reporter_id": "nr",
+  "edition": "NR",
+  "start": 1974,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "start",
+    "value": "1974",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=6999",
+    "quote": "Publisher: Maritime Law Book Co. Publication Date: 1974",
+    "checked": "found"
+   },
+   {
+    "fact": "start (second page)",
+    "value": "1974",
+    "status": "verified",
+    "url": "https://libguides.bodleian.ox.ac.uk/law-can/cases",
+    "quote": "National Reporter (1974 - ) Cw Can 100 N20",
+    "checked": "found"
+   },
+   {
+    "fact": "holdings range",
+    "value": "1974-2003",
+    "status": "unverified",
+    "url": "https://unb.ca/fredericton/law/library/about/law-reports-locator.html",
+    "quote": "National Reporter (Canada) (1974–2003): 153"
+   }
+  ],
+  "notes": "Maritime Law Book's National Reporter; end not stated by any publisher or catalogue page. UNB 2003 is holdings."
+ },
+ {
+  "reporter_id": "or",
+  "edition": "OR (2d)",
+  "start": 1974,
+  "end": 1991,
+  "current": false,
+  "numbering": [
+   {
+    "start": 1974,
+    "end": 1991,
+    "by": "volume",
+    "url": "https://search.library.wisc.edu/catalog/999620353502121",
+    "quote": "2d ser., v. 1-v. 75, pt. 10 ; Jan. 4, 1974-Feb. 8, 1991",
+    "checked": "found"
+   }
+  ],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "second series range",
+    "value": "1974-1991",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5814",
+    "quote": "Publication Date: 1991 Publication Date Range: 1974-1991. Notes: Cited: O.R. (2d).",
+    "checked": "missing"
+   },
+   {
+    "fact": "second series dates (issue level)",
+    "value": "Jan. 4, 1974 - Feb. 8, 1991",
+    "status": "verified",
+    "url": "https://search.library.wisc.edu/catalog/999620353502121",
+    "quote": "Jan. 11, 1963-Dec. 21, 1973; 2d ser., v. 1-v. 75, pt. 10 ; Jan. 4, 1974-Feb. 8, 1991; 3rd ser., v. 1, pt. 1- ; Feb. 22, 1991-",
+    "checked": "found"
+   },
+   {
+    "fact": "registry example (1973), 1 O.R. (2d) 113",
+    "value": "1973 precedes verified Jan 1974 start",
+    "status": "contradicted",
+    "url": "https://search.library.wisc.edu/catalog/999620353502121",
+    "quote": "Jan. 11, 1963-Dec. 21, 1973; 2d ser., v. 1-v. 75, pt. 10 ; Jan. 4, 1974-Feb. 8, 1991"
+   }
+  ],
+  "notes": "Wisconsin shows the first series ending Dec. 21, 1973 and the 2d series beginning Jan. 4, 1974; that string is read as consecutive ranges. Courthouse Libraries separately dates the earlier Ontario Reports 1932-1973 (cid 1269)."
+ },
+ {
+  "reporter_id": "er",
+  "edition": "ER",
+  "start": 1900,
+  "end": 1932,
+  "current": false,
+  "numbering": [
+   {
+    "start": 1900,
+    "end": 1932,
+    "by": "volume",
+    "url": "https://www.sclqld.org.au/catalogue/records/19714",
+    "quote": "Phys. description: 178 volumes ; 26 cm",
+    "checked": "found"
+   }
+  ],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "reprint publication years",
+    "value": "1900-1932",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/90710",
+    "quote": "The English Reports reprint, 1220-1865, was issued in 178 volumes, 1900-32 and is in general a straight reprint in which the original footnotes are given.",
+    "checked": "found"
+   },
+   {
+    "fact": "years of the decisions reprinted (use these for citation-year checks, not 1900-1932)",
+    "value": "1220-1865",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/90710",
+    "quote": "Contains decisions of all English courts from 1220 to the commencement of the official Law reports in 1866.",
+    "checked": "found"
+   },
+   {
+    "fact": "volume groups by court and years",
+    "value": "vols 1-11 HL 1694-1865 ... vols 170-176 Nisi Prius 1688-1867",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/90710",
+    "quote": "1-11. House of Lords (1694 to 1865) 12-20. Privy Council (including Indian Appeals) (1809 to 1865) 21-47. Chancery (including Collateral Reports) (1557 to 1865)",
+    "checked": "found"
+   }
+  ],
+  "notes": "start/end here are the reprint's publication years (1900-1932), NOT the years of cited cases. For a citation-year check on '(year) N ER page' the case year may lie anywhere in 1220-1867 per the volume contents. Volumes are continuous (1-178, 176 online)."
+ },
+ {
+  "reporter_id": "qb",
+  "edition": "QB",
+  "start": 1865,
+  "end": null,
+  "current": null,
+  "numbering": [
+   {
+    "start": 1891,
+    "end": null,
+    "by": "year_and_volume",
+    "url": "https://www.iclr.co.uk/history/",
+    "quote": "In 1891 the Council introduced the simplified arrangement of dated annual volumes in four series which continues to this day",
+    "checked": "found"
+   }
+  ],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "Law Reports Court of Queen's Bench (LR QB)",
+    "value": "1865/66-1875, 10 volumes",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/20121",
+    "quote": "Online via ICLR online vol1 (1865) - vol10(1875) Holdings Clear filters Loading holdings... Record details Publication details: London : Printed for the Council of Law Reporting by W. Clowes and Sons, 1866-1875.",
+    "checked": "found"
+   },
+   {
+    "fact": "Queen's Bench Division (QBD) 1875-1890",
+    "value": "vols 1-25",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/20126",
+    "quote": "The law reports : Queen's Bench Division, 1875-1890 / edited by James Redfoord Bulwer. Copy direct link Share Available online Online via ICLR online vol1 (1875) - vol25(1890)",
+    "checked": "found"
+   },
+   {
+    "fact": "QB 1891-1900",
+    "value": "1891-1900",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/24159",
+    "quote": "The law reports : Queen's Bench Division, 1891-1900.",
+    "checked": "found"
+   },
+   {
+    "fact": "KB (King's Bench) in place of QB",
+    "value": "1901-1952",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/87786",
+    "quote": "The law reports : King's Bench Division, 1901-1952.",
+    "checked": "found"
+   },
+   {
+    "fact": "QB resumes 1952/53; ends under that name 2022/23",
+    "value": "1953-2023",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/20131",
+    "quote": "Continues: Law reports. King's Bench Division [1901-1952] Continued by: Law reports. King's Bench Division [2023]-",
+    "checked": "found"
+   },
+   {
+    "fact": "dating ambiguity 2022 vs 2023",
+    "value": "authors 1953-2022; publication 1953-2023",
+    "status": "contradicted",
+    "url": "https://www.sclqld.org.au/catalogue/records/20131",
+    "quote": "Author: Great Britain. High Court of Justice. Queen's Bench Division (1953-2022)"
+   },
+   {
+    "fact": "1952 to 1955 volume title wobble",
+    "value": "1952 v2-1955 v1 Queen's Bench",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=10487",
+    "quote": "1952, volume 2-1955, volume 1, Law reports of the Incorporated Council of Law Reporting. Queen's Bench Division; 1955, volume 2 - , Law reports. Queen's Bench Division",
+    "checked": "found"
+   }
+  ],
+  "notes": "Several distinct series use QB: LR QB (1865-75), QBD (1875-90), QB (1891-1900 and 1952/3-2022/3). Registry example (1852) 18 Q.B. 93 predates all of these and is not this series (likely Adolphus & Ellis new series QB, not proved by a fetched page). The 1865 start is the ICLR online first-volume year; the imprint is 1866."
+ },
+ {
+  "reporter_id": "ccc",
+  "edition": "CCC (2d)",
+  "start": 1971,
+  "end": 1983,
+  "current": false,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "second series range",
+    "value": "1971-1983",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8412",
+    "quote": "Publisher: Canada Law Book Publication Date: 1983 Publication Date Range: 1971-1983. Subject(s): Criminal law - Canada - Cases. Law reports, digests, etc. - Canada Notes: Cited: CCC (2d).",
+    "checked": "found"
+   },
+   {
+    "fact": "New Series (CCC) before it",
+    "value": "1963-1970",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/64121",
+    "quote": "Publication details: Toronto : Law Book Co., 1963-1970.",
+    "checked": "found"
+   },
+   {
+    "fact": "first series Canadian Criminal Cases annotated starts 1898",
+    "value": "1898",
+    "status": "verified",
+    "url": "https://www.canadiana.ca/view/oocihm.8_02258",
+    "quote": "Canadian criminal cases annotated : Vol. I (1898) 1898 Canadian criminal cases annotated : Vol. II (1899) 1899 Canadian criminal cases annotated : Vol. III (1900) 1900",
+    "checked": "found"
+   },
+   {
+    "fact": "second series follows new series",
+    "value": "CCC (new series) -> CCC (2d)",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/64121",
+    "quote": "Continued by: Canadian criminal cases (second series) : a series of reports of important decisions in criminal and quasi-criminal cases.",
+    "checked": "found"
+   },
+   {
+    "fact": "third series begins",
+    "value": "1983",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/64122",
+    "quote": "Publication details: Ontario : Candada Law Book Ltd., 1983-",
+    "checked": "found"
+   }
+  ],
+  "notes": "Boundaries are catalogue imprint ranges (2d: 1971-1983). Registry example (1971) 1 CCC (2d) 463 is consistent. Numbering not stated by a fetched page for this series beyond consecutive-volume holdings; left empty."
+ },
+ {
+  "reporter_id": "wlr",
+  "edition": "WLR",
+  "start": 1953,
+  "end": null,
+  "current": true,
+  "numbering": [
+   {
+    "start": null,
+    "end": null,
+    "by": "year_and_volume",
+    "url": "https://www.iclr.co.uk/products/law-report-series/the-weekly-law-reports/",
+    "quote": "Case reports appearing in volumes 1 to 3 are cited by year, volume, series abbreviation and page number",
+    "checked": "found"
+   }
+  ],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "start",
+    "value": "1953",
+    "status": "verified",
+    "url": "https://www.iclr.co.uk/products/law-report-series/the-weekly-law-reports/",
+    "quote": "Published since 1953, the Weekly Law Reports (WLR) provide the best way to keep up to date with all cases of general interest heard in the superior and appellate courts.",
+    "checked": "found"
+   },
+   {
+    "fact": "succeeded Weekly Notes in 1953",
+    "value": "1953",
+    "status": "verified",
+    "url": "https://www.iclr.co.uk/history/",
+    "quote": "It was superseded in 1953 by the Weekly Law Reports (WLR)",
+    "checked": "found"
+   },
+   {
+    "fact": "catalogue",
+    "value": "1953-",
+    "status": "verified",
+    "url": "https://www.sclqld.org.au/catalogue/records/19968",
+    "quote": "Publication details: London : Incorporated Council of Law Reporting, 1953- Edition:",
+    "checked": "found"
+   },
+   {
+    "fact": "volume 4 cited by year, volume, abbreviation and case number",
+    "value": "current",
+    "status": "verified",
+    "url": "https://www.iclr.co.uk/products/law-report-series/the-weekly-law-reports/",
+    "quote": "Case reports appearing in volume 4 are cited by year, volume, series abbreviation and case number",
+    "checked": "found"
+   },
+   {
+    "fact": "registry examples (1911) 18 W.L.R., (1930) 3 W.L.R.",
+    "value": "not the Weekly Law Reports (Western Law Reporter existed)",
+    "status": "verified",
+    "url": "https://unb.ca/fredericton/law/library/about/law-reports-locator.html",
+    "quote": "Western Law Reporter (1905–1916): 162",
+    "checked": "found"
+   }
+  ],
+  "notes": "ICLR present-tense page supports current. Years in which year+volume citation applied are not stated for the earliest years; numbering start left null. Pre-1953 W.L.R. cites in the registry belong to other series (Western Law Reporter 1905-1916 is a holdings range)."
+ },
+ {
+  "reporter_id": "ar",
+  "edition": "AR",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "library catalogue imprint",
+    "value": "1976",
+    "status": "contradicted",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=9590",
+    "quote": "Publisher: Maritime Law Book Publication Date: 1976 Additional Corporate Author: Law Society of Alberta"
+   },
+   {
+    "fact": "Bodleian print holdings start",
+    "value": "1977",
+    "status": "contradicted",
+    "url": "https://libguides.bodleian.ox.ac.uk/law-can/cases",
+    "quote": "Alberta Reports (1977 - ) Cw Can Alb 100 A20"
+   },
+   {
+    "fact": "companion index imprint",
+    "value": "[1979]-",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=2290",
+    "quote": "Publication Date: 1979 Publication Date Range: [1979]-",
+    "checked": "found"
+   }
+  ],
+  "notes": "1976 vs 1977; publisher not reached. Registry example (1976) 2 A.R. 453 would fit 1976."
+ },
+ {
+  "reporter_id": "dlr",
+  "edition": "DLR (2d)",
+  "start": 1956,
+  "end": 1968,
+  "current": false,
+  "numbering": [
+   {
+    "start": 1956,
+    "end": 1968,
+    "by": "volume",
+    "url": "https://search.library.wisc.edu/catalog/999618282902121",
+    "quote": "2nd ser., v. 1 (1956)-v. 70 (1968)",
+    "checked": "found"
+   }
+  ],
+  "anchors": [
+   {
+    "volume": 1,
+    "year": 1956,
+    "url": "https://search.library.wisc.edu/catalog/999618282902121",
+    "quote": "2nd ser., v. 1 (1956)-v. 70 (1968)",
+    "checked": "found"
+   },
+   {
+    "volume": 70,
+    "year": 1968,
+    "url": "https://sclqld.org.au/catalogue/records/19861",
+    "quote": "2nd series, vol. 1 (1956) - volume 70 (1968)",
+    "checked": "found"
+   }
+  ],
+  "facts": [
+   {
+    "fact": "range",
+    "value": "1956-1968",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=1270",
+    "quote": "Publication Date: 1968 Publication Date Range: 1956-1968.",
+    "checked": "found"
+   },
+   {
+    "fact": "registry example (1955), 1 D.L.R. (2d) 179",
+    "value": "1955 precedes 1956 start",
+    "status": "contradicted",
+    "url": "https://search.library.wisc.edu/catalog/999618282902121",
+    "quote": "2nd ser., v. 1 (1956)-v. 70 (1968)"
+   }
+  ],
+  "notes": "Three catalogues agree: 70 volumes, 1956-1968."
+ },
+ {
+  "reporter_id": "dtc",
+  "edition": "DTC",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "CCH Dominion Tax Cases catalogue date (bare date, single source)",
+    "value": "1940",
+    "status": "unverified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=11394",
+    "quote": "Publisher: CCH Canadian Limited Publication Date: 1940 Additional Corporate Author: CCH Canadian Limited."
+   },
+   {
+    "fact": "coverage note",
+    "value": "Tax Court of Canada decisions included from 1983",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=11394",
+    "quote": "Includes decisions from various courts in Canada, including the Supreme Court, and from 1983- the Tax Court of Canada.",
+    "checked": "found"
+   }
+  ],
+  "notes": "Registry examples cite as '(1974) 74 DTC 6315' i.e. two-digit year as volume; no fetched page states that numbering scheme. Left unverified."
+ },
+ {
+  "reporter_id": "clr",
+  "edition": "CLR",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [],
+  "notes": "Could not settle. Construction Law Reports (Carswell, 1983-) appeared only in a search snippet from a blocked site; no raw page fetched. Likely a misattribution: the examples' volume/year pairs (51 CLR in 1934) are Australian Commonwealth Law Reports. Not proved."
+ },
+ {
+  "reporter_id": "bclr",
+  "edition": "BCLR",
+  "start": 1977,
+  "end": 1986,
+  "current": false,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "first series range",
+    "value": "1977-1986",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5660",
+    "quote": "Publisher: Carswell Publication Date: 1986 Publication Date Range: 1977-1986. Subject(s): Law reports, digests, etc. - British Columbia. Notes: Cited: B.C.L.R.",
+    "checked": "found"
+   },
+   {
+    "fact": "2d series 1986-1995; 3d 1995-2002; 4th 2002-2010; 5th began 2010",
+    "value": "see ranges",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=10898",
+    "quote": "Publication Date Range: 2002-2010. Subject(s): Law reports, digests, etc. - British Columbia. Notes: Cited: B.C.L.R. (4th).",
+    "checked": "found"
+   },
+   {
+    "fact": "fifth series start",
+    "value": "April 2010",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=16015",
+    "quote": "Description based on volume 1, part 1 (Apr. 2010)",
+    "checked": "found"
+   },
+   {
+    "fact": "predecessor BC Reports/case reports 1948-1976",
+    "value": "1948-1976",
+    "status": "verified",
+    "url": "https://courthouselibrary.ca/node/1637",
+    "quote": "BC case reports (1948-1976) | Courthouse Libraries BC",
+    "checked": "found"
+   },
+   {
+    "fact": "UNB holdings entry for BCLR (not the 1977 series run)",
+    "value": "1930-2014",
+    "status": "unverified",
+    "url": "https://unb.ca/fredericton/law/library/about/law-reports-locator.html",
+    "quote": "British Columbia Law Reports (1930–2014): 161–162"
+   }
+  ],
+  "notes": "Holdings list 70 volumes (v. 1-70) for 1977-1986. Registry examples (1978) 7 BCLR consistent. UNB/Bodleian ranges starting 1867/1930 describe older BC Reports, not the 1977 BCLR."
+ },
+ {
+  "reporter_id": "bcac",
+  "edition": "BCAC",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "catalogue imprint date (bare date, single source)",
+    "value": "1991",
+    "status": "unverified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=9107",
+    "quote": "Publisher: Maritime Law Book Publication Date: 1991 Subject(s): British Columbia. Court of Appeal."
+   },
+   {
+    "fact": "companion digest begins v. 1/10 (1991/1992)",
+    "value": "1991/1992",
+    "status": "unverified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=9107",
+    "quote": "Has companion series: British Columbia appeal cases. Digest and consolidated indexes, v. 1/10 (1991/1992)- ."
+   }
+  ],
+  "notes": "Start year not stated as a series start; left unverified. Holdings are volumes 1-100 (index v. 1-100) with no years."
+ },
+ {
+  "reporter_id": "wwr",
+  "edition": "WWR (NS)",
+  "start": 1951,
+  "end": 1970,
+  "current": false,
+  "numbering": [
+   {
+    "start": 1951,
+    "end": 1970,
+    "by": "volume",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+    "quote": "v. for 1951-1970 called also v. 1-75.",
+    "checked": "found"
+   }
+  ],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "new series boundaries",
+    "value": "1951 to Dec. 26, 1970",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+    "quote": "First series ceased with issue for Dec. 30, 1950; New series began in 1951, ceased with issue for Dec. 26, 1970; current series began in 1971.",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering of the new series",
+    "value": "volumes numbered 1-75 over 1951-1970 (also the library says 'called also')",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+    "quote": "Vols. for 1911-Sept. 1916 called v. 1-10; v. for 1951-1970 called also v. 1-75.",
+    "checked": "found"
+   }
+  ],
+  "notes": "'Called also' is ambiguous: the volumes may be cited by year-set plus number; the page gives only the 1-75 numbering. Treat numbering as continuous 1-75."
+ },
+ {
+  "reporter_id": "bclr",
+  "edition": "BCLR (3d)",
+  "start": 1995,
+  "end": 2002,
+  "current": false,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "third series range",
+    "value": "1995-2002",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=7690",
+    "quote": "Publication Date: 2002 Publication Date Range: 1995-2002. Subject(s): Law reports, digests, etc. - British Columbia. Notes: Cited: B.C.L.R. (3d).",
+    "checked": "found"
+   },
+   {
+    "fact": "second series ends 1995",
+    "value": "1986-1995",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5644",
+    "quote": "Publication Date Range: 1986-1995.",
+    "checked": "found"
+   },
+   {
+    "fact": "4th series follows",
+    "value": "2002-2010",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=10898",
+    "quote": "Publication Date Range: 2002-2010.",
+    "checked": "found"
+   },
+   {
+    "fact": "registry example (1985), 26 B.C.L.R. (3d) 353",
+    "value": "1985 precedes verified 1995 start",
+    "status": "contradicted",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=7690",
+    "quote": "Publication Date Range: 1995-2002."
+   }
+  ],
+  "notes": "Catalogue imprint ranges."
+ },
+ {
+  "reporter_id": "cpr",
+  "edition": "CPR (3d)",
+  "start": 1985,
+  "end": 1999,
+  "current": false,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "third series range",
+    "value": "1985-1999",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8714",
+    "quote": "Publication Date Range: 1985-1999. Subject(s): Patent laws and legislation - Canada - Cases. Copyright - Canada - Cases. Trademarks - Canada - Cases. Law reports, digests, etc. - Canada Notes: Cited: C.P.R. (3d).",
+    "checked": "found"
+   },
+   {
+    "fact": "second series",
+    "value": "1971-1984",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=931",
+    "quote": "Publication Date Range: 1971-1984. Subject(s): Law reports, digests, etc. - Canada Patent laws and legislation - Canada - Cases. Copyright - Canada - Cases. Trademarks - Canada - Cases. Notes: Supersedes Canadian patent reporter. Cited: CPR(2d)",
+    "checked": "found"
+   },
+   {
+    "fact": "first series",
+    "value": "1941-1971",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=3056",
+    "quote": "Publication Date Range: 1941-1971",
+    "checked": "found"
+   },
+   {
+    "fact": "fourth series imprint",
+    "value": "1999",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8715",
+    "quote": "Publisher: Canada Law Book Publication Date: 1999 Subject(s): Patent laws and legislation - Canada - Cases.",
+    "checked": "found"
+   },
+   {
+    "fact": "registry example (1984), 3 C.P.R. (3e) 81",
+    "value": "1984 precedes 1985 start (series ranges are imprint years; 2d ends 1984)",
+    "status": "contradicted",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8714",
+    "quote": "Publication Date Range: 1985-1999."
+   }
+  ],
+  "notes": "Imprint ranges; boundary years may overlap by a volume. Volumes numbered consecutively (not stated explicitly)."
+ },
+ {
+  "reporter_id": "rjq",
+  "edition": "RJQ",
+  "start": 1986,
+  "end": null,
+  "current": null,
+  "numbering": [
+   {
+    "start": 1986,
+    "end": null,
+    "by": "year",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=9127",
+    "quote": "Cited as [1986] R.J.Q., etc",
+    "checked": "found"
+   }
+  ],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "start (merged series)",
+    "value": "1986",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=9127",
+    "quote": "Publication Date: 1988 Publication Date Range: 1986-1988. Additional Corporate Author:",
+    "checked": "found"
+   },
+   {
+    "fact": "merger of earlier courts' recueils",
+    "value": "Cour d'appel 1970-1985; Cour supérieure 1967-1985; Cour provinciale 1976-1985",
+    "status": "verified",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=9127",
+    "quote": "Merger of: Les recueils de jurisprudence du Québec. Cour d'appel (1970-1985), Les recueils de jurisprudence du Québec : Cour supérieure (1967-1985), Les recueils de jurisprudence du Québec : Cour provinciale, Cour des sessions de la paix, Cour de bienêtre social (1976-1985).",
+    "checked": "missing"
+   },
+   {
+    "fact": "abbreviation R.J.Q. used for Court of Appeal reports before 1986",
+    "value": "1921-75",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19894",
+    "quote": "Publication details: Montreal: Editeur officiel du Quebec, 1921-75.",
+    "checked": "found"
+   },
+   {
+    "fact": "separate 1989- record",
+    "value": "1989-",
+    "status": "contradicted",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=9128",
+    "quote": "Publication Date: 1989 Publication Date Range: 1989- Additional Corporate Author:"
+   }
+  ],
+  "notes": "1986 matches the registry. Ten parts per year (cid 9127 note), cited by year only. Earlier Court of Appeal reports (1921-75, 1970-85) also abbreviate RJQ/R.J.Q.; a registry using 1986 would reject those pre-1986 cites. Current status not proved."
+ },
+ {
+  "reporter_id": "saskr",
+  "edition": "Sask R",
+  "start": null,
+  "end": null,
+  "current": null,
+  "numbering": [],
+  "anchors": [],
+  "facts": [
+   {
+    "fact": "library catalogue imprint",
+    "value": "1979",
+    "status": "contradicted",
+    "url": "https://www.courthouselibrary.ca/catalogue-item?cid=9122",
+    "quote": "Publisher: Maritime Law Book Publication Date: 1979 Additional Corporate Author: Saskatchewan. Court of Appeal"
+   },
+   {
+    "fact": "Bodleian holdings range",
+    "value": "1980-2004",
+    "status": "contradicted",
+    "url": "https://libguides.bodleian.ox.ac.uk/law-can/cases",
+    "quote": "Saskatchewan Reports (1980 - 2004) Cw Can Sask 100 S20"
+   },
+   {
+    "fact": "UNB holdings range",
+    "value": "1980-2016",
+    "status": "contradicted",
+    "url": "https://unb.ca/fredericton/law/library/about/law-reports-locator.html",
+    "quote": "Saskatchewan Reports (1980–2016): 159–160"
+   }
+  ],
+  "notes": "1979 vs 1980; holdings lists are not series runs. Registry example (1977), 6 Sask. R. 74 is earlier than all of these (probably a miscopy; flagged, not inferred)."
+ }
+]

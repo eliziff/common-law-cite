@@ -1,0 +1,1123 @@
+[
+ {
+  "id": "bclrbdno",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "B.C.L.R.B.D. No.",
+  "variations": [
+   "BCLRBD No"
+  ],
+  "name": null,
+  "name_fr": null,
+  "kind": "database",
+  "jurisdiction": "ca-bc",
+  "facts": [
+   {
+    "fact": "abbreviation",
+    "value": "B.C.L.R.B.D. No.",
+    "status": "unverified",
+    "url": "https://www.lrb.bc.ca/decisions?page=23",
+    "quote": "2025 BCLRB 34"
+   },
+   {
+    "fact": "name",
+    "value": null,
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Database decision-number identifier (year in square brackets + No.) for British Columbia Labour Relations Board decisions; no fetched page states the expansion of B.C.L.R.B.D. or its dates. Context fetched: the Board's own site cites decisions as 'BCLRB' (e.g. 2025 BCLRB 34) and says 'All decisions from January 1, 1990 are available electronically.' (https://www.lrb.bc.ca/decisions?page=42). Courthouse Libraries BC (https://www.courthouselibrary.ca/node/1863) lists print runs: '1974-1987 Decisions Labour Relations Board of British Columbia', '1987-1993 Decision of the Council British Columbia Industrial Relations Council', '1993-1999 British Columbia Labour Relations Board Decisions'. None names B.C.L.R.B.D. The 1974 example year coincides with the Board's establishment ('The LBR was established in 1974.') but that does not establish what the identifier covers."
+ },
+ {
+  "id": "canadianlrbr",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "C.L.R.B.R.",
+  "variations": [
+   "Canadian LRBR",
+   "Can. L.R.B.R."
+  ],
+  "name": "Canadian Labour Relations Board Reports",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "ca",
+  "series_by_period": [
+   {
+    "name": "Canadian Labour Relations Board Reports (first series)",
+    "start": 1974,
+    "end": 1982
+   }
+  ],
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Canadian Labour Relations Board Reports",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   },
+   {
+    "fact": "start",
+    "value": 1974,
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   },
+   {
+    "fact": "end",
+    "value": 1982,
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   },
+   {
+    "fact": "numbering",
+    "value": "volumes numbered continuously within the series (examples cite '[1974] 1 Canadian LRBR'); successor New Series and Second Series restart",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Cardiff (legalabbrevs.cardiff.ac.uk) returned HTTP 403 for every raw fetch, so 1974-1982, C.L.R.B.R., and the New Series (1983-1989) / Second Series (1989-) only come from search-result summaries, not fetched pages. The LexisNexis store page for 'Canadian Labour Relations Boards Reports, 3rd Series' came back as a JS shell with no '1974' text in the raw HTML, so the earlier 'since its initial publication in 1974' quote is not reproduced from a raw page here. Both example citations are 1974 so fall in the first series if the unverified dates hold."
+ },
+ {
+  "id": "canbrev",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "Can. Bar Rev.",
+  "variations": [
+   "CAN. B. REV.",
+   "Can Bar Rev",
+   "Can.B.R.",
+   "Can.B.Rev.",
+   "C.B.R."
+  ],
+  "name": "Canadian Bar Review",
+  "name_fr": "Revue du Barreau canadien",
+  "kind": "journal",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Canadian Bar Review",
+    "status": "verified",
+    "url": "https://cbr.cba.org/index.php/cbr/about",
+    "quote": "Founded in 1923, The Canadian Bar Review is the bilingual peer-reviewed legal journal of the CBA",
+    "checked": "found"
+   },
+   {
+    "fact": "name_fr",
+    "value": "Revue du Barreau canadien",
+    "status": "verified",
+    "url": "https://cbr.cba.org/index.php/cbr/article/view/4883",
+    "quote": "REVUE DU BARREAU CANADIEN | The Canadian Bar Review",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1923,
+    "status": "verified",
+    "url": "https://www.uwindsor.ca/law/node/3322",
+    "quote": "The first volume of the Canadian Bar Review (CBR) was published in 1923.",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "Can Bar Rev",
+    "status": "verified",
+    "url": "https://www.uwindsor.ca/law/node/3322",
+    "quote": "(2023) 101:3 Can Bar Rev 478",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes from vol. 1 (1923)",
+    "status": "unverified",
+    "url": "https://www.uwindsor.ca/law/node/3322",
+    "quote": "(2023) 101:3 Can Bar Rev 478"
+   }
+  ],
+  "notes": "Kind journal, ongoing (no end). Abbreviation verified only in undotted form (2023 citation of vol. 101 issue 3). Quote for the French title is the page heading on the CBA site. Two of the examples pair a year with an implausible volume (e.g. '(1936), 20' and '(1942), 20') but this was not checked against a volume-by-year source, so no correction is claimed."
+ },
+ {
+  "id": "bchrtdno",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "B.C.H.R.T.D. No.",
+  "variations": [
+   "BCHRTD No",
+   "B.C.H.R.T.D.  No."
+  ],
+  "name": null,
+  "name_fr": null,
+  "kind": "database",
+  "jurisdiction": "ca-bc",
+  "facts": [
+   {
+    "fact": "abbreviation",
+    "value": "B.C.H.R.T.D. No.",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Decision-number identifier for British Columbia Human Rights Tribunal decisions (Quicklaw-style). No fetched page uses 'B.C.H.R.T.D.'. Related fetched facts: Lexum neutral-citation table 'British Columbia Human Rights Tribunal (January 2000) Mazuelos v. Mary Jo Clark , 2000 BCHRT 1' (https://lexum.com/ccc-ccr/neutr/index_en.html) and Courthouse Libraries BC record: 'Print format ceased publication at end of 2009; continues to be published on the Internet. Cited as BCHRT.' (https://www.courthouselibrary.ca/catalogue-item?cid=6997). All four examples (2000-2011) are in the period when the neutral code BCHRT also existed."
+ },
+ {
+  "id": "rsbc",
+  "is_publication": false,
+  "reason_if_not": "Revised Statutes of British Columbia 1960: '14 R.S.B.C. 1960' is section/chapter 14 of the statute revision, not a volume of a report.",
+  "abbreviation": "R.S.B.C.",
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": "ca-bc",
+  "facts": [],
+  "notes": "Not a publication to register as a report/journal; a statute revision (statute series) form."
+ },
+ {
+  "id": "s",
+  "is_publication": null,
+  "reason_if_not": null,
+  "abbreviation": "S.",
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": null,
+  "facts": [],
+  "notes": "Examples (11 S. 49, 54 S. 80, 60 S. 49, 149 S. 309) carry no year or context; nothing fetched identifies a series. Candidates (e.g. a Scottish Session Cases form) are unsupported and not claimed."
+ },
+ {
+  "id": "rtsn",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "R.T.S.N.",
+  "variations": [
+   "LNTS",
+   "L.N.T.S."
+  ],
+  "name": "League of Nations Treaty Series",
+  "name_fr": "Recueil des traités et des engagements internationaux enregistrés par le Secrétariat de la Société des Nations",
+  "kind": "treaty_series",
+  "jurisdiction": "int",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Treaty Series: Treaties and International Engagements Registered with the Secretariat of the League of Nations",
+    "status": "verified",
+    "url": "https://libguides.graduateinstitute.ch/league_of_nations/treaty_series",
+    "quote": "Treaty Series: Treaties and International Engagements Registered with the Secretariat of the League of Nations = Recueil des traités : traités et engagements internationaux enregistrés par le Secrétariat de la Société des Nations Vol. 1(1920)-205(1944/1946, 9 indexes vol.)",
+    "checked": "found"
+   },
+   {
+    "fact": "name_fr",
+    "value": "Recueil des traités : traités et engagements internationaux enregistrés par le Secrétariat de la Société des Nations",
+    "status": "verified",
+    "url": "https://libguides.graduateinstitute.ch/league_of_nations/treaty_series",
+    "quote": "Recueil des traités : traités et engagements internationaux enregistrés par le Secrétariat de la Société des Nations",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "LNTS (English abbreviation of the same series)",
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/League_of_Nations_Treaty_Series",
+    "quote": "The League of Nations Treaty Series ( LNTS ) was a result of article 18 of the Covenant of the League of Nations",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "R.T.S.N. (French abbreviation)",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   },
+   {
+    "fact": "start",
+    "value": 1920,
+    "status": "verified",
+    "url": "https://libguides.graduateinstitute.ch/league_of_nations/treaty_series",
+    "quote": "Vol. 1(1920)-205(1944/1946, 9 indexes vol.)",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": 1946,
+    "status": "verified",
+    "url": "https://en.wikipedia.org/wiki/League_of_Nations_Treaty_Series",
+    "quote": "The LNTS began publication in 1920, and was terminated in 1946",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes 1-205 (1920-1946)",
+    "status": "verified",
+    "url": "https://libguides.graduateinstitute.ch/league_of_nations/treaty_series",
+    "quote": "Vol. 1(1920)-205(1944/1946, 9 indexes vol.)",
+    "checked": "found"
+   }
+  ],
+  "notes": "R.T.S.N. is the French-language abbreviation of the same series; that R.T.S.N. itself appears on any fetched page was NOT found (not verified). UN Treaty Collection page (https://treaties.un.org/Pages/Content.aspx?path=DB%2FLoNOnline%2FpageIntro_en.xml) states 'League of Nations Treaty Series (5 July 1920 - 3 October 1948)' for the span of treaties, and 'published in 205 volumes' - so the end year differs by source (1946 publication end per Wikipedia/Graduate Institute vol. 205 '1944/1946'; 1948 is the last treaty date per UN). Examples cite volumes 28, 52, 79, 85, all within vols 1-205."
+ },
+ {
+  "id": "caf",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "CAF",
+  "variations": [
+   "C.A.F."
+  ],
+  "name": "Federal Court of Appeal",
+  "name_fr": "Cour d'appel fédérale",
+  "kind": "neutral_court",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Federal Court of Appeal",
+    "status": "verified",
+    "url": "https://lexum.com/ccc-ccr/neutr/index_en.html",
+    "quote": "Federal Court of Appeal (February 2001) Bouvidard Ltée. v. Canada (Employment Insurance Commission) , 2001 FCA 1",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 2001,
+    "status": "verified",
+    "url": "https://lexum.com/ccc-ccr/neutr/index_en.html",
+    "quote": "Federal Court of Appeal (February 2001)",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "CAF (French form of FCA)",
+    "status": "verified",
+    "url": "https://lexum.com/ccc-ccr/neutr/index_en.html",
+    "quote": "Bouvidard Ltée. c. Canada (Commission de l'assurance emploi) , 2001 CAF 1",
+    "checked": "found"
+   },
+   {
+    "fact": "name_fr",
+    "value": "Cour d'appel fédérale",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "French neutral code of the Federal Court of Appeal; neutral citation began February 2001 (first-application month per Lexum)."
+ },
+ {
+  "id": "lllrep",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "Ll. L. Rep.",
+  "variations": [
+   "Ll.L.Rep.",
+   "Ll L Rep",
+   "Ll L.. Rep.",
+   "Ll.L. Rep"
+  ],
+  "name": "Lloyd's List Law Reports",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "uk",
+  "series_by_period": [
+   {
+    "name": "Lloyd's List Law Reports (Ll L Rep)",
+    "start": 1919,
+    "end": 1950
+   },
+   {
+    "name": "Lloyd's Law Reports (Lloyd's Rep)",
+    "start": 1951,
+    "end": null
+   }
+  ],
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Lloyd's List Law Reports",
+    "status": "verified",
+    "url": "https://www.iclr.co.uk/knowledge/guides/guide-to-uk-law-reports-and-their-citations",
+    "quote": "Ll L Rep Lloyd’s List Law Reports (1919–1950)",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "Ll L Rep",
+    "status": "verified",
+    "url": "https://www.iclr.co.uk/knowledge/guides/guide-to-uk-law-reports-and-their-citations",
+    "quote": "Ll L Rep Lloyd’s List Law Reports (1919–1950)",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1919,
+    "status": "verified",
+    "url": "https://www.i-law.com/ilaw/doc/view.htm?id=134516",
+    "quote": "(1919) 1 Ll L Rep 418",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": 1950,
+    "status": "verified",
+    "url": "https://www.iclr.co.uk/knowledge/guides/guide-to-uk-law-reports-and-their-citations",
+    "quote": "Ll L Rep Lloyd’s List Law Reports (1919–1950)",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes, vol. 1 = 1919",
+    "status": "unverified",
+    "url": "https://www.i-law.com/ilaw/doc/view.htm?id=134516",
+    "quote": "(1919) 1 Ll L Rep 418"
+   }
+  ],
+  "notes": "Examples 1922 (vol. 12) and 1933 (vol. 46) fall in Lloyd's List Law Reports, 1919-1950. The 1999 example '[1999] 2 Ll.L. Rep 277' is after 1950 and so is not in the Ll L Rep series; the successor is Lloyd's Law Reports ('Lloyd's Rep'), which the ICLR page does not date and which is not verified here (a search summary of Cardiff says 1951/1968 differ; not fetched). Queensland record (https://sclqld.org.au/catalogue/records/19758): 'London : Lloyd's of London Press, 1919-' and variant title 'Lloyd's list law reports.' The 1999 citation likely uses the old abbreviation for the successor series."
+ },
+ {
+  "id": "cp",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "C.P.",
+  "variations": [
+   "L.R. C.P.",
+   "L.R.C.P.",
+   "LRCP"
+  ],
+  "name": "Law Reports, Common Pleas",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "uk",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "The law reports : Court of Common Pleas, 1865-1875",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/20120",
+    "quote": "The law reports : Court of Common Pleas, 1865-1875.",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "L.R.C.P. / C.P.",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/20120",
+    "quote": "Variant title: Court of Common Pleas, 1865-1875 Common pleas, 1865-1875 L.R.C.P. LRCP C.P. Com.P.Div.",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1865,
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/20120",
+    "quote": "Online via ICLR online vol1 (1865) - vol10(1875)",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": 1875,
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/20120",
+    "quote": "Online via ICLR online vol1 (1865) - vol10(1875)",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes 1-10 (1865-1875)",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/20120",
+    "quote": "Online via ICLR online vol1 (1865) - vol10(1875)",
+    "checked": "found"
+   }
+  ],
+  "notes": "Identification is by fit, not stated by the examples: the examples ('1 C.P. 274', '9 C.P. 208') have no year or prefix, volume numbers 1 and 9 fit vols 1-10, but another 'C.P.' series (e.g. an Upper Canada Common Pleas report) is not excluded. Treat as probable, with that caveat. Later series: Common Pleas Division 1875-1880 (per library record 'Continued by: Law reports. Common Pleas')."
+ },
+ {
+  "id": "csc",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "CSC",
+  "variations": [
+   "C.S.C."
+  ],
+  "name": "Supreme Court of Canada",
+  "name_fr": "Cour suprême du Canada",
+  "kind": "neutral_court",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Supreme Court of Canada",
+    "status": "verified",
+    "url": "https://lexum.com/ccc-ccr/neutr/index_en.html",
+    "quote": "Supreme Court of Canada (January 2000) Arsenault-Cameron v. Prince Edward Island , 2000 SCC 1",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 2000,
+    "status": "verified",
+    "url": "https://lexum.com/ccc-ccr/neutr/index_en.html",
+    "quote": "Supreme Court of Canada (January 2000)",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "CSC (French form of SCC)",
+    "status": "verified",
+    "url": "https://lexum.com/ccc-ccr/neutr/index_en.html",
+    "quote": "Arsenault-Cameron c. Île-du-Prince-Édouard , 2000 CSC 1",
+    "checked": "found"
+   }
+  ],
+  "notes": "French neutral code; neutral citation began January 2000. The French court name was not on a fetched page."
+ },
+ {
+  "id": "background",
+  "is_publication": false,
+  "reason_if_not": "A heading/section word ('3 Background.. 3'), not a publication.",
+  "abbreviation": null,
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": null,
+  "facts": [],
+  "notes": "Heading or table-of-contents fragment."
+ },
+ {
+  "id": "ltns",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "L.T.",
+  "variations": [
+   "L.T.N.S.",
+   "L.T.(N.S.)",
+   "LT",
+   "L.T.R.",
+   "L.T.R.N.S.",
+   "Law T.Rep.N.S."
+  ],
+  "name": "Law Times Reports (New Series)",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "uk",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Law times reports",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19725",
+    "quote": "Law times reports / Law times office.",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "L.T. / L.T.N.S.",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19725",
+    "quote": "Law times reports (London, England : 1860) L.T. LT L.T.R. L.T.N.S. L.T.R.N.S. Law T.Rep.N.S.",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1859,
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19725",
+    "quote": "Vol. 1 (Nov. 1859 to Mar. 1860)",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": 1947,
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19725",
+    "quote": "vol. 177 (July to Dec. 1947)",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "volumes 1-177 consecutively (177 volumes); library says vols. 1-17 called new series",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19725",
+    "quote": "Phys. description: 177 volumes",
+    "checked": "found"
+   }
+  ],
+  "notes": "Dates are the library's holdings range (vol. 1 Nov 1859 - vol. 177 Dec 1947; record title says 'London : Law Times Office, 1860-1948' and 'Merged with: All England law reports ... to form: All England law reports'), so the end year 1947/1948 is the library record's, not an independent publisher statement. The record says 'Vols. 1-17 called new series, v. 1-4 also carry vol. designation of the \"old series\", v. 35-v. 38.' and that the series 'continues vols. 1-34 of The law times reports [old series]'. Volumes 18, 20, 29 (examples) have no year on the fetched record; no volume-year table was found, so no years for them are claimed. The numbering description is ambiguous in the record."
+ },
+ {
+  "id": "fcj",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "F.C.J.",
+  "variations": [
+   "FCJ",
+   "F.C.J. No.",
+   "F.C.J. (Quicklaw)"
+  ],
+  "name": null,
+  "name_fr": null,
+  "kind": "database",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "abbreviation",
+    "value": "F.C.J. (Quicklaw)",
+    "status": "verified",
+    "url": "https://www.justice.gc.ca/eng/rp-pr/csj-sjc/harmonization/denau/tab_j.html",
+    "quote": "Gervais v. Canada (M.N.R.), [1984] F.C.J. 1040 (Quicklaw) (F.C.T.D.).",
+    "checked": "found"
+   },
+   {
+    "fact": "name",
+    "value": null,
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Federal Court (Canada) decision-number identifier on Quicklaw; the Justice Canada page shows '[1990] F.C.J. (Quicklaw) 234 (F.C.T.D.)'. The page does not expand F.C.J. and gives no dates. Earlier file marked the abbreviation 'contradicted' - that is not a contradiction: F.C.J. is the abbreviation, the Quicklaw label is a database tag."
+ },
+ {
+  "id": "ucr",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "U.C.R.",
+  "variations": [
+   "U.C.Q.B."
+  ],
+  "name": "Upper Canada Queen's Bench Reports, New Series",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "ca-on",
+  "series_by_period": [
+   {
+    "name": "Upper Canada Queen's Bench Reports, Old Series",
+    "start": 1830,
+    "end": 1842
+   },
+   {
+    "name": "Upper Canada Queen's Bench Reports, New Series",
+    "start": 1842,
+    "end": 1882
+   }
+  ],
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Upper Canada Queen’s Bench Reports, New Series",
+    "status": "verified",
+    "url": "https://digitalcommons.osgoode.yorku.ca/lawreports/4",
+    "quote": "Upper Canada Queen’s Bench Reports, New Series, 1842 -1882 (46 v)",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1842,
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19899",
+    "quote": "New Series: v. 1. 1842-1845",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": 1882,
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19899",
+    "quote": "v. 46. 1881-1882",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "46 continuous volumes (New Series), each with years",
+    "status": "verified",
+    "url": "https://sclqld.org.au/catalogue/records/19899",
+    "quote": "v. 9. 1851-1852 v. 10. 1852-1853",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "U.C.R.",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Queensland record (https://sclqld.org.au/catalogue/records/19899): 'Old Series: v. 1. 1830-1831 ... v. 6. 1838-1842' and 'New Series: v. 1. 1842-1845 ...'; the page also shows 'v. 43. 1878' region 'v. 42. 1877-1878 v. 43. 1878'. Example 10 U.C.R. 535 = New Series vol. 10 (1852-1853); 43 U.C.R. 460 = New Series vol. 43 (1878) (the Old Series has only 6 volumes). The abbreviation U.C.R. itself was not on a fetched page (Cardiff 403); the earlier file's 1844 start (a Cardiff snippet, never fetched) is contradicted by the two fetched records (1842). Quote for end/volumes copied from the stripped text of the record."
+ },
+ {
+  "id": "rso",
+  "is_publication": false,
+  "reason_if_not": "Revised Statutes of Ontario: '137 R.S.O. 1990' is chapter/section 137 of the 1990 revision, not a report volume.",
+  "abbreviation": "R.S.O.",
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": "ca-on",
+  "facts": [],
+  "notes": "Statute revision series."
+ },
+ {
+  "id": "rsns",
+  "is_publication": false,
+  "reason_if_not": "Revised Statutes of Nova Scotia 1967: leading number is a chapter, trailing year the revision.",
+  "abbreviation": "R.S.N.S.",
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": "ca-ns",
+  "facts": [],
+  "notes": "Statute revision series."
+ },
+ {
+  "id": "rsn",
+  "is_publication": false,
+  "reason_if_not": "Revised Statutes of Newfoundland 1970: chapter number then revision year.",
+  "abbreviation": "R.S.N.",
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": "ca-nl",
+  "facts": [],
+  "notes": "Statute revision series."
+ },
+ {
+  "id": "rsa",
+  "is_publication": false,
+  "reason_if_not": "Revised Statutes of Alberta 1970: chapter number then revision year.",
+  "abbreviation": "R.S.A.",
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": "ca-ab",
+  "facts": [],
+  "notes": "Statute revision series."
+ },
+ {
+  "id": "ellr",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "E.L.L.R.",
+  "variations": [
+   "ELLR"
+  ],
+  "name": "Employment and Labour Law Reporter",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Employment and Labour Law Reporter",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   },
+   {
+    "fact": "start",
+    "value": 1991,
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   },
+   {
+    "fact": "abbreviation",
+    "value": "E.L.L.R.",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Only Cardiff search summaries (title, E.L.L.R., 'Period : 1991-', ISSN 1183-7152, Canada); Cardiff returned 403 on every fetch and no other page was found. Nothing fetched confirms any fact."
+ },
+ {
+  "id": "slr",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "SLR",
+  "variations": [
+   "S.L.R."
+  ],
+  "name": "Singapore Law Reports",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "sg",
+  "series_by_period": [
+   {
+    "name": "Colony of Singapore Law Reports",
+    "start": 1946,
+    "end": 1957
+   },
+   {
+    "name": "Singapore Law Reports",
+    "start": 1965,
+    "end": 1991
+   },
+   {
+    "name": "Singapore Law Reports",
+    "start": 1992,
+    "end": null
+   }
+  ],
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Singapore Law Reports",
+    "status": "verified",
+    "url": "https://libguides.bodleian.ox.ac.uk/law-singapore/cases",
+    "quote": "Law Report Citations Singapore Law Reports SLR Singapore Law Reports (Reissue) , cited SLR(R)",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "SLR",
+    "status": "verified",
+    "url": "https://libguides.bodleian.ox.ac.uk/law-singapore/cases",
+    "quote": "Law Report Citations Singapore Law Reports SLR Singapore Law Reports (Reissue) , cited SLR(R)",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1965,
+    "status": "verified",
+    "url": "https://libguides.nus.edu.sg/SGlawhistory/cases",
+    "quote": "*Singapore Law Reports SLR 1965-91 1992 -",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "by year from 1992 (examples '[1992] 2 SLR 495')",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "NUS guide lists an earlier series too: 'The Singapore Law Reports Colony of Singapore Law Reports SLR 1950-51 (covers 1946-49) 1954-57 (covers 1953-56)'. All three examples (1992-1994) fall in the '1992 -' run of Singapore Law Reports. 'Singapore Law Reports (Reissue) SLR(R) 2010 (covers 1965 - 2009)' is a reissue. Not a Canadian series; cited in Canadian decisions as a foreign report. The volume-numbering scheme is not stated on a fetched page."
+ },
+ {
+  "id": "crc",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "C.R.C.",
+  "variations": [
+   "CRC"
+  ],
+  "name": "Canadian Railway Cases",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Canadian Railway Cases",
+    "status": "verified",
+    "url": "https://robesideassistance.ca/2017/07/12/asked-and-answered-canadian-railway-cases/",
+    "quote": "The citation “CRC” refers to a dusty, but clearly still useful, law report series titled Canadian Railway Cases .",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1902,
+    "status": "verified",
+    "url": "https://robesideassistance.ca/2017/07/12/asked-and-answered-canadian-railway-cases/",
+    "quote": "The series ran from 1902 to 1939",
+    "checked": "found"
+   },
+   {
+    "fact": "end",
+    "value": 1939,
+    "status": "verified",
+    "url": "https://robesideassistance.ca/2017/07/12/asked-and-answered-canadian-railway-cases/",
+    "quote": "The series ran from 1902 to 1939",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "CRC",
+    "status": "verified",
+    "url": "https://robesideassistance.ca/2017/07/12/asked-and-answered-canadian-railway-cases/",
+    "quote": "The citation is 1 CRC 461.",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "continuous volumes (example '1 CRC 461')",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Published originally by Canada Law Book (page: 'While this was published originally by Canada Law Book'). Dotted C.R.C. not on the page. The citation form 'C.R.C. 1978' with a chapter is the unrelated Consolidated Regulations of Canada; the examples here have volume-then-page so are the cases series."
+ },
+ {
+  "id": "intlawyer",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "Int. Lawyer",
+  "variations": [
+   "Int'l Law.",
+   "Intl Lawyer"
+  ],
+  "name": "The International Lawyer",
+  "name_fr": null,
+  "kind": "journal",
+  "jurisdiction": "us",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "The International Lawyer",
+    "status": "verified",
+    "url": "https://librarycatalog.ecu.edu/catalog/3894087",
+    "quote": "The International lawyerh| [electronic resource].",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 1966,
+    "status": "verified",
+    "url": "https://librarycatalog.ecu.edu/catalog/3894087",
+    "quote": "Began with vol. 1, no. 1 (Oct. 1966).",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "vol. 1 = 1966; quarterly",
+    "status": "unverified",
+    "url": "https://librarycatalog.ecu.edu/catalog/3894087",
+    "quote": "310 a| Quarterly; 362 1 a| Began with vol. 1, no. 1 (Oct. 1966)."
+   },
+   {
+    "fact": "abbreviation",
+    "value": "Int. Lawyer",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Publisher per the MARC record: 'Section of International Law, American Bar Association'. End not checked (ABA and JSTOR pages did not load). The catalogue does not say whether volumes are continuous or one per year."
+ },
+ {
+  "id": "onca",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "ONCA",
+  "variations": [
+   "O.N.C.A."
+  ],
+  "name": "Court of Appeal for Ontario",
+  "name_fr": "Cour d'appel de l'Ontario",
+  "kind": "neutral_court",
+  "jurisdiction": "ca-on",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Ontario Court of Appeal",
+    "status": "verified",
+    "url": "https://lexum.com/ccc-ccr/neutr/index_en.html",
+    "quote": "Ontario Court of Appeal (January 2007) Atec Marketing Limited v. Heart and Stroke Foundation of Canadan , 2007 ONCA 1",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 2007,
+    "status": "verified",
+    "url": "https://lexum.com/ccc-ccr/neutr/index_en.html",
+    "quote": "Ontario Court of Appeal (January 2007)",
+    "checked": "found"
+   },
+   {
+    "fact": "name_fr",
+    "value": "Cour d'appel de l'Ontario",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Neutral code; neutral citation began January 2007 per Lexum. The Lexum page names it 'Ontario Court of Appeal'; 'Court of Appeal for Ontario' is not on that page."
+ },
+ {
+  "id": "cl",
+  "is_publication": null,
+  "reason_if_not": null,
+  "abbreviation": "C.L.",
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": null,
+  "facts": [],
+  "notes": "Single example '11 C.L. 30' with no year; nothing fetched identifies it."
+ },
+ {
+  "id": "chrt",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "CHRT",
+  "variations": [
+   "C.H.R.T.",
+   "TCDP"
+  ],
+  "name": "Canadian Human Rights Tribunal",
+  "name_fr": "Tribunal canadien des droits de la personne",
+  "kind": "neutral_court",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "Canadian Human Rights Tribunal",
+    "status": "verified",
+    "url": "https://lexum.com/ccc-ccr/neutr/index_en.html",
+    "quote": "Canadian Human Rights Tribunal (January 2003) Desormeaux v. Commission de transport régionale d'Ottawa-Carleton , 2003 CHRT 2",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": 2003,
+    "status": "verified",
+    "url": "https://lexum.com/ccc-ccr/neutr/index_en.html",
+    "quote": "Canadian Human Rights Tribunal (January 2003)",
+    "checked": "found"
+   },
+   {
+    "fact": "abbreviation",
+    "value": "TCDP (French code)",
+    "status": "verified",
+    "url": "https://lexum.com/ccc-ccr/neutr/index_en.html",
+    "quote": "Desormeaux c. Commission de transport régionale d'Ottawa-Carleton , 2003 TCDP 2",
+    "checked": "found"
+   },
+   {
+    "fact": "name_fr",
+    "value": "Tribunal canadien des droits de la personne",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Tribunal's neutral citation began January 2003 per Lexum. French code is TCDP, not CHRT."
+ },
+ {
+  "id": "gstc",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "G.S.T.C.",
+  "variations": [
+   "GSTC"
+  ],
+  "name": null,
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "ca",
+  "facts": [
+   {
+    "fact": "abbreviation",
+    "value": "G.S.T.C.",
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   },
+   {
+    "fact": "name",
+    "value": null,
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Used in Canadian case citations for GST decisions (search summary shows '[2010] G.S.T.C. 186'), probably a Carswell/Thomson Reuters Canada reporter, but no raw page fetched states the name, publisher or dates (the KPMG PDF could not be read as text)."
+ },
+ {
+  "id": "olrbrepapril",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "OLRB Rep.",
+  "variations": [
+   "O.L.R.B. Rep.",
+   "OLRB Rep. April"
+  ],
+  "name": "OLRB Reports",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "ca-on",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "OLRB Reports (Ontario Labour Relations Board)",
+    "status": "verified",
+    "url": "https://www.olrb.gov.on.ca/OLRBReportsRequest-EN.asp",
+    "quote": "The Ontario Labour Relations Board publishes a bi-monthly collection of significant decisions. The OLRB Reports are one of the oldest reporting series for labour adjudication in North America.",
+    "checked": "found"
+   },
+   {
+    "fact": "numbering",
+    "value": "bi-monthly issues, month named in citation; volume by year",
+    "status": "unverified",
+    "url": "https://www.olrb.gov.on.ca/OLRBReportsRequest-EN.asp",
+    "quote": "The Ontario Labour Relations Board publishes a bi-monthly collection of significant decisions."
+   },
+   {
+    "fact": "start",
+    "value": null,
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Same series as olrbrepseptember: the month ('April') is the issue, so the registry entry is one series 'OLRB Rep.' with issue months. The Board page does not give a start year (a search summary mentioned 1944 for decisions online, not fetched). Example [1985] OLRB Rep. April 594 is a year-based citation."
+ },
+ {
+  "id": "olrbrepseptember",
+  "is_publication": true,
+  "reason_if_not": null,
+  "abbreviation": "OLRB Rep.",
+  "variations": [
+   "O.L.R.B. Rep.",
+   "OLRB Rep. September"
+  ],
+  "name": "OLRB Reports",
+  "name_fr": null,
+  "kind": "reporter",
+  "jurisdiction": "ca-on",
+  "facts": [
+   {
+    "fact": "name",
+    "value": "OLRB Reports (Ontario Labour Relations Board)",
+    "status": "verified",
+    "url": "https://www.olrb.gov.on.ca/OLRBReportsRequest-EN.asp",
+    "quote": "The Ontario Labour Relations Board publishes a bi-monthly collection of significant decisions. The OLRB Reports are one of the oldest reporting series for labour adjudication in North America.",
+    "checked": "found"
+   },
+   {
+    "fact": "start",
+    "value": null,
+    "status": "unverified",
+    "url": null,
+    "quote": null
+   }
+  ],
+  "notes": "Same series as olrbrepapril; 'September' is an issue month, not part of the title. Example [1993] OLRB Rep. September 873."
+ },
+ {
+  "id": "act",
+  "is_publication": false,
+  "reason_if_not": "A year, the word Act and a number ('1993 Act 459') - a statute citation shape/heading word, not a publication.",
+  "abbreviation": "Act",
+  "variations": [],
+  "name": null,
+  "name_fr": null,
+  "kind": null,
+  "jurisdiction": null,
+  "facts": [],
+  "notes": "Not a publication."
+ }
+]
