@@ -105,6 +105,18 @@ pub(crate) fn reporter_supports_court(reporter: &Reporter, court: &Court) -> boo
     })
 }
 
+/// The reason a citation the registry places only in jurisdictions the reading leaves out carries; it is not read
+/// ([`crate::Options::jurisdictions`]).
+pub(crate) const NOT_READ: &str = "jurisdiction_not_read";
+
+/// Marks a citation [`NOT_READ`] when the registry rows that could identify it are all of jurisdictions left out.
+fn mark_not_read<'a>(citation: &mut Citation, options: &crate::Options, mut jurisdictions: impl Iterator<Item = Option<&'a str>>) {
+    let mut any = false;
+    if jurisdictions.all(|jurisdiction| { any = true; !options.reads_jurisdiction(jurisdiction) }) && any {
+        citation.reasons.push(NOT_READ.to_owned());
+    }
+}
+
 /// Select only a unique best reading. Equal-ranked meanings stay unresolved.
 /// Scores exclude contradictory written courts before applying preferences.
 fn select(
@@ -147,6 +159,7 @@ fn select(
 
 fn court_score(court: &Court, surface: &str, reading: &Reading, neutral: bool,
     explicit: Option<&[&Court]>, reporter: Option<&Reporter>, options: &crate::Options) -> Option<Score> {
+    if !options.reads_jurisdiction(Some(&court.jurisdiction)) { return None; }
     if explicit.is_some_and(|written| !written.iter().any(|candidate| candidate.id == court.id)) { return None; }
     if reporter.map_or_else(|| reading.jurisdiction.as_deref().is_some_and(|jurisdiction|
         !within(&court.jurisdiction, jurisdiction) && !within(jurisdiction, &court.jurisdiction)),
@@ -179,6 +192,7 @@ fn court_for(surface: &str, reading: &Reading, neutral: bool, citation: &mut Cit
     let reporter = reading.fields.reporter_id.as_deref()
         .and_then(|id| registry().reporters.iter().find(|reporter| reporter.id == id));
     let explicit = explicit_courts(citation);
+    if neutral { mark_not_read(citation, options, candidates.iter().map(|court| Some(court.jurisdiction.as_str()))); }
     let readings = candidates.iter().map(|court| crate::Interpretation {
         kind: "court".into(), id: court.id.clone(), canonical: court.neutral.first().cloned().unwrap_or_else(|| surface.to_owned()),
         jurisdiction: Some(court.jurisdiction.clone()), selected: false, reason: String::new(),
@@ -249,6 +263,34 @@ pub(crate) fn holds_year(reporter: &Reporter, year: u16) -> bool {
     start.is_none_or(|start| start <= year) && end.is_none_or(|end| year <= end)
 }
 
+/// Whether the citation's year rules out `canonical`, an edition of `reporter` ([`crate::Options::year_runs`]): the
+/// edition had ended by that year, or, where the year is the volume, had not begun. A decision can be reported a year or
+/// more after it was decided, never before, so a decision's year before an edition began rules nothing out. Only an
+/// edition whose series the citation writes ("C.C.C. (3d)", "W.W.R. (N.S.)") speaks for itself: writers leave the series
+/// out ("[1968] 1 C.C.C. 14" is the New Series, "(2004), 30 B.C.L.R. 103" the fourth) and keep an older name for a later
+/// series ("[2007] 4 F.C. 3"), so otherwise, and where the edition gives no years, the reporter's run (all its
+/// editions) does.
+fn year_contradicts(reporter: &Reporter, canonical: &str, fields: &Fields) -> bool {
+    let Some(year) = fields.year.as_deref().and_then(|year| year.parse::<u16>().ok()) else { return false };
+    let is_volume = fields.volume.as_deref() == fields.year.as_deref();
+    let written_series = fields.reporter.as_deref().is_some_and(|written| {
+        let written = fold(written);
+        written.ends_with("ns") || written.chars().last().is_some_and(|last| last.is_ascii_digit())
+            || ["2d", "3d", "4th", "5th", "6th", "7th", "8th", "2nd", "3rd"].iter().any(|series| written.ends_with(series))
+    });
+    let edition = reporter.editions.iter().find(|edition| edition.abbreviation == canonical)
+        .filter(|edition| written_series && (edition.start.is_some() || edition.end.is_some()));
+    let (start, end) = match edition {
+        Some(edition) => (edition.start, edition.end),
+        None => {
+            let editions = &reporter.editions;
+            (editions.iter().map(|edition| edition.start).collect::<Option<Vec<_>>>().and_then(|starts| starts.into_iter().min()),
+                editions.iter().map(|edition| edition.end).collect::<Option<Vec<_>>>().and_then(|ends| ends.into_iter().max()))
+        }
+    };
+    end.is_some_and(|end| year > end) || is_volume && start.is_some_and(|start| year < start)
+}
+
 /// `mirrored`: a reporters-db row carries this reporter's identity, so the editions the US grammars read speak for it.
 #[allow(clippy::too_many_arguments)]
 fn reporter_score(reporter: &Reporter, canonical: &str, surface: &str, open: Option<&str>, fields: &Fields,
@@ -266,6 +308,8 @@ fn reporter_score(reporter: &Reporter, canonical: &str, surface: &str, open: Opt
         !within(written, candidate) && !within(candidate, written)) { return None; }
     if explicit.is_some_and(|courts| !courts.iter().any(|court| reporter_supports_court(reporter, court))) { return None; }
     if observed.is_some_and(|court| !reporter_supports_court(reporter, court)) { return None; }
+    if !options.reads_jurisdiction(reporter.jurisdiction.as_deref()) { return None; }
+    if options.year_runs && year_contradicts(reporter, canonical, fields) { return None; }
     let jurisdiction = reporter.jurisdiction.as_deref().unwrap_or_default();
     let form_matches = match open {
         Some("(") => within(jurisdiction, "au"),
@@ -287,6 +331,7 @@ fn reporter_for(surface: &str, open: Option<&str>, fields: &Fields, jurisdiction
     // Custom source grammars can recognize spellings beyond a literal alias.
     // Their edition records identify candidates without parsing the text again.
     let candidates = reporter_candidates(surface, fields);
+    mark_not_read(citation, options, candidates.iter().map(|(reporter, _)| reporter.jurisdiction.as_deref()));
     let source_captured = !fields.exact_editions.is_empty() || !fields.variation_editions.is_empty();
     let explicit = explicit_courts(citation);
     let observed = crate::aliases::observed_court(citation).filter(|court| {
@@ -311,9 +356,15 @@ fn reporter_for(surface: &str, open: Option<&str>, fields: &Fields, jurisdiction
             for (score, held) in scores.iter_mut().zip(&held) { if !held { *score = None; } }
         }
     }
-    select(citation, readings, scores, explicit.as_ref().map(|_| "explicit_court")
+    let by_year: Vec<String> = candidates.iter().filter(|(reporter, canonical)| options.year_runs
+        && year_contradicts(reporter, canonical, fields)).map(|(reporter, _)| reporter.id.clone()).collect();
+    let chosen = select(citation, readings, scores, explicit.as_ref().map(|_| "explicit_court")
         .or(observed.map(|_| "observed_alias"))
-        .or(source_captured.then_some("citation_grammar"))).map(|at| (candidates[at].0, candidates[at].1.to_owned()))
+        .or(source_captured.then_some("citation_grammar"))).map(|at| (candidates[at].0, candidates[at].1.to_owned()));
+    for reading in citation.interpretations.iter_mut().filter(|reading| reading.kind == "reporter" && by_year.contains(&reading.id)) {
+        reading.reason = "year_outside_run".to_owned();
+    }
+    chosen
 }
 
 fn journal_score(entry: &Journal, fields: &Fields, jurisdiction: Option<&str>, options: &crate::Options) -> Option<Score> {
@@ -326,6 +377,10 @@ fn journal_score(entry: &Journal, fields: &Fields, jurisdiction: Option<&str>, o
         && !source_match(&entry.abbreviation, name, &fields.variation_editions) { return None; }
     if jurisdiction.zip(entry.jurisdiction.as_deref()).is_some_and(|(written, candidate)|
         !within(written, candidate) && !within(candidate, written)) { return None; }
+    if !options.reads_jurisdiction(entry.jurisdiction.as_deref()) { return None; }
+    // An article's year is its volume's ([`crate::Options::year_runs`]).
+    if options.year_runs && fields.year.as_deref().and_then(|year| year.parse::<u16>().ok()).is_some_and(|year|
+        !entry.holds(fields.volume.as_deref().and_then(|volume| volume.parse().ok()), year)) { return None; }
     Some((priority(entry.jurisdiction.as_deref(), options), false,
         !source_exact && source_captured && entry.source == "reporters-db", false, !entry.verified))
 }
@@ -1010,6 +1065,7 @@ fn resolve(reading: &mut Reading, citation: &mut Citation, options: &crate::Opti
     let fields = &mut reading.fields;
     if reading.authority == Some(Authority::Journal) {
         let candidates = journal_candidates(fields.reporter.as_deref().unwrap_or(""), fields);
+        mark_not_read(citation, options, candidates.iter().map(|entry| entry.jurisdiction.as_deref()));
         let source_captured = !fields.exact_editions.is_empty() || !fields.variation_editions.is_empty();
         let readings = candidates.iter().map(|entry| crate::Interpretation {
             kind: "journal".into(), id: entry.id.clone(), canonical: entry.abbreviation.clone(),
@@ -1106,11 +1162,13 @@ fn resolve(reading: &mut Reading, citation: &mut Citation, options: &crate::Opti
         Some(Format::StatuteVolume | Format::RegulationSeries | Format::Code)
     ) {
         let candidates = fields.series.as_deref().map(|surface| registry.series_candidates(surface)).unwrap_or_default();
+        mark_not_read(citation, options, candidates.iter().map(|entry| Some(entry.jurisdiction.as_str())));
         let readings = candidates.iter().map(|entry| crate::Interpretation {
             kind: "series".into(), id: entry.id.clone(), canonical: entry.abbreviation.clone(),
             jurisdiction: Some(entry.jurisdiction.clone()), selected: false, reason: String::new(),
         }).collect();
         let scores = candidates.iter().map(|entry| {
+            if !options.reads_jurisdiction(Some(&entry.jurisdiction)) { return None; }
             if reading.jurisdiction.as_deref().is_some_and(|written| {
                 !within(written, &entry.jurisdiction) && !within(&entry.jurisdiction, written)
             }) { return None; }

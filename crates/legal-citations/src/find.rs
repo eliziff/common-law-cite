@@ -603,9 +603,11 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     };
     // A report the grammars could not split whose reporter or journal the registry names joins what the native
     // grammars read of its name ("(1989), 49 N" of "(1989), 49 N .B .R . 144"). One the native grammars read whole from
-    // its volume, or the US grammars from the year before it, stays as they read it; so does a citation whose page or
-    // volume the report's volume is ("(1869), L.R. 5" of "(1869), L.R. 5 Ex. 1").
-    let mut registered: Vec<(Hit, usize)> = Vec::new();
+    // its volume, or the US grammars from the year before it, stays as they read it; so does a citation a native reading
+    // of more than it holds ("(1861), 2 De G.F. & J. 287, 45 All E.R 889"), or whose page or volume the report's volume
+    // is ("(1869), L.R. 5" of "(1869), L.R. 5 Ex. 1").
+    // Each with where its reporter starts and the native readings it replaced.
+    let mut registered: Vec<(Hit, usize, Vec<Hit>)> = Vec::new();
     if names {
         #[cfg(feature = "us")]
         let read_by_us = |span: &Hit| us_hits.iter().chain(captured.iter().map(|matched| &matched.span))
@@ -615,13 +617,15 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
         for (span, volume, reporter) in registry_reports(value) {
             if read_by_us(&span) || found.iter().any(|hit| hit.start <= volume && span.end <= hit.end) { continue; }
             let overlapping: Vec<Hit> = found.iter().filter(|hit| hit.start < span.end && span.start < hit.end).cloned().collect();
-            if overlapping.iter().any(|hit| hit.end <= reporter) { continue; }
+            // A native reading joins only where it is this report's: from its year or volume into its name. One that
+            // starts before it, or ends before its name, reads another citation, which keeps its reading.
+            if overlapping.iter().any(|hit| hit.start < span.start || hit.end <= reporter) { continue; }
             let joined = overlapping.iter().fold(span.clone(), |joined, hit| joined.start.min(hit.start)..joined.end.max(hit.end));
             let Some(reading) = crate::classify::read(&closed_up(&value[joined.clone()]), "reporter_grammar", "")
                 .filter(crate::classify::Reading::reported) else { continue };
             found.retain(|hit| !(hit.start < joined.end && joined.start < hit.end));
             found.push(joined.clone());
-            registered.push((joined.clone(), reporter));
+            registered.push((joined.clone(), reporter, overlapping));
             repaired.push((joined, reading));
         }
     }
@@ -635,14 +639,18 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     // The block keeps the family its publication names ("(1879), 5 Ex D 264"
     // is a case).
     let mut secondary = secondary_hits(value, &found, styles);
-    // So does a report found by its registered name whose volume a secondary form reads as its own last number.
-    registered.retain(|(span, reporter)| {
-        let yields = secondary.iter().any(|anchor| anchor.span.start < span.start && span.start < anchor.span.end
-            && anchor.span.end <= *reporter);
-        if yields { found.retain(|hit| hit != span); }
-        !yields
-    });
-    let registered: Vec<Hit> = registered.into_iter().map(|(span, _)| span).collect();
+    // So does a report found by its registered name whose volume a secondary form reads as its own last number: the
+    // native readings it replaced are read again, and the secondary forms around them.
+    let (yielded, kept): (Vec<_>, Vec<_>) = registered.into_iter().partition(|(span, reporter, _)| secondary.iter()
+        .any(|anchor| anchor.span.start < span.start && span.start < anchor.span.end && anchor.span.end <= *reporter));
+    if !yielded.is_empty() {
+        for (span, _, replaced) in yielded {
+            found.retain(|hit| *hit != span);
+            found.extend(replaced.into_iter().filter(|hit| !numbered_on(&value[hit.end..]) && !no_report(value, hit.clone())));
+        }
+        secondary = secondary_hits(value, &found, styles);
+    }
+    let registered: Vec<Hit> = kept.into_iter().map(|(span, _, _)| span).collect();
     let mut primary = Vec::new();
     for anchor in resolve(found.into_iter().map(|span| Anchor { span, ..Anchor::default() }).collect()) {
         let hit = &anchor.span;
@@ -678,8 +686,11 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     for hit in &primary {
         // A style of cause never swallows a statute the secondary grammars found before it, nor a decision they read
         // by a tribunal's identifier or a database's ("Fen v Videotron, 2022 Comp Trib 3, 2022 CanLII 9498").
-        let secondary_end = secondary.iter().filter(|anchor| anchor.family.is_some_and(|(kind, reason)| kind == "statute"
-                || reason == "neutral_grammar" || reason == "database_grammar")
+        // A report found by its registered name claims no secondary form read before it either ("Newby v. Harrison
+        // (1861), 2 De G.F. & J. 287, 45 All E.R 889").
+        let registered_report = registered.contains(&hit.span);
+        let secondary_end = secondary.iter().filter(|anchor| (registered_report || anchor.family.is_some_and(|(kind, reason)|
+                kind == "statute" || reason == "neutral_grammar" || reason == "database_grammar"))
             && anchor.span.end <= hit.span.start).map(|anchor| anchor.span.end).max().unwrap_or(0);
         let start = if hit.family.is_some_and(|(kind, _)| kind == "case") {
             case_style_start(value, hit.span.start, floor.max(secondary_end).max(scope_floor(scopes, hit.span.start)))

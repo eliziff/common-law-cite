@@ -38,7 +38,16 @@ every binding through `registry`. No court, reporter or series tables in Rust
 source, and no per-binding copies. The statute grammar's series names are the
 registry's too: each law row's `forms` (the citation forms it is cited in) and
 `french` (its French names) decide the defs `tools/registry-grammar.py` writes
-into the corpus; run it after editing `laws.json` (`--check` in CI). Authored rows (Canadian, Commonwealth,
+into the corpus; run it after editing `laws.json` (`--check` in CI).
+
+**Years rule readings out, so every year carries its source.** A reporter
+edition's `start`/`end` (with `evidence`) and `journal-years.json` (a journal's
+run and the years its volumes appeared, keyed by its folded abbreviation) feed
+`Options::year_runs` and the year rules in `classify`. A year goes in only with
+the URL and exact quote of a page that states it, re-checked by fetching the
+page again; `docs/registry-research.md` records the research. A library's
+holdings range is not a run, a reprint's dates are not its cases' (the English
+Reports take none), and a decision's year may precede its report's series. Authored rows (Canadian, Commonwealth,
 international) are edited by hand; `registry/upstream/*.json` is generated and
 never hand-edited. An authored row wins over an upstream one with the same
 surface form.

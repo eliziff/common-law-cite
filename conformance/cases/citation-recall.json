@@ -3419,6 +3419,66 @@
       "options": {"ocrRepairs": true},
       "expect": {"citations": [{"span": {"text": "(l915), 52 R.C.S. 294"}, "key": "3:reporter:scr:scr:52:294"}]},
       "note": "OCR read the year's leading 1 as a letter l."
+    },
+    {
+      "name": "general/neutral-dotted-court",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen v Ash, 2006 B.C.S.C. 503, at para 4.",
+      "expect": {"citations": [{"span": {"text": "2006 B.C.S.C. 503"}, "key": "3:neutral:2006:bcsc:503"}]},
+      "note": "A neutral citation's court code written with periods is the court's, not an unknown reporter's."
+    },
+    {
+      "name": "general/neutral-dotted-french-court",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen c Ash, 2001 C.A.F. 254.",
+      "expect": {"citations": [{"key": "3:neutral:2001:fca:254", "language": "fr"}]},
+      "note": "The French code with periods reads as its court, in French."
+    },
+    {
+      "name": "general/jurisdictions-left-out",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen v Ash, 2019 SCC 65.",
+      "options": {"jurisdictions": ["uk"]},
+      "expect": {"citations": []},
+      "note": "A citation the registry places only in a jurisdiction left out is not read."
+    },
+    {
+      "name": "general/jurisdictions-unknown-name",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen v Ash, [2005] O.T.C. 554.",
+      "options": {"jurisdictions": ["uk"]},
+      "expect": {"citations": [{"span": {"text": "[2005] O.T.C. 554"}}]},
+      "note": "A citation whose name the registry does not know is read whatever the jurisdictions."
+    },
+    {
+      "name": "general/jurisdictions-shared-name",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen (1990), 54 OR 768.",
+      "options": {"jurisdictions": ["us"]},
+      "expect": {"citations": [{"key": "3:reporter:or-us:or:54:768"}]},
+      "note": "A name two jurisdictions share reads as the one listed: the Oregon Reports, not the Ontario Reports."
+    },
+    {
+      "name": "general/year-runs-edition-ended",
+      "convention": "bluebook",
+      "status": "pass",
+      "input": "Smith v. Jones, 12 F. 190 (1950).",
+      "options": {"yearRuns": true},
+      "expect": {"citations": [{"span": {"text": "12 F. 190"}, "key": null}]},
+      "note": "The Federal Reporter's first series ended in 1924, so a 1950 decision is no reading of it."
+    },
+    {
+      "name": "general/year-runs-off",
+      "convention": "bluebook",
+      "status": "pass",
+      "input": "Smith v. Jones, 12 F. 190 (1950).",
+      "expect": {"citations": [{"span": {"text": "12 F. 190"}, "key": "3:reporter:f:f:12:190"}]},
+      "note": "Without yearRuns the year rules nothing out."
     }
   ]
 }

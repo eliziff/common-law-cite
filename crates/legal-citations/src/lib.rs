@@ -188,12 +188,20 @@ pub struct Options {
     pub jurisdiction_priority: Vec<String>,
     /// The jurisdictions whose own citation forms are read (`["ca", "uk"]`); every compiled one when absent. A list
     /// without `us` (or a `us-` place) skips the US reporter and law grammars (eyecite's), which hold no
-    /// Commonwealth form the native grammars do not read.
+    /// Commonwealth form the native grammars do not read. A court, reporter, journal or statute series of a
+    /// jurisdiction left out is no reading of a citation, so a shared name reads as the listed jurisdiction's ("54 OR
+    /// 768" is the Ontario Reports with `["ca"]`, the Oregon Reports with `["us"]`), and a citation the registry places
+    /// only in jurisdictions left out is not read. One whose name the registry does not know is read whatever the list.
     pub jurisdictions: Option<Vec<String>>,
     /// Read a report the grammars cannot split by the registry's name for its reporter, however the writer spaced and
     /// pointed it ("[1989] 2 S.C.R . 418", "49 N .B .R . 144", "37 Sask. R. 128"), as the US reporters' names are read.
     /// A report the grammars read whole is read as they read it.
     pub reporter_names: bool,
+    /// Rule out a reporter or journal the citation's year contradicts: a reporter edition that had ended by that year
+    /// (or had not begun, where the year is the volume, "[1932] AC 562"), or a journal outside its run or the years its
+    /// volumes around the cited one appeared. Only years a source states for the registry rule anything out; what it
+    /// does not state passes. Off by default.
+    pub year_runs: bool,
     /// Read a report's year where OCR garbled it: a bracketed year whose closing bracket was read as a 1 ("[19381 2
     /// All E.R. 602"), or whose leading 1 was read as a letter l or I ("(l915)"), where the registry knows the reporter
     /// and it ran that year. For OCR'd text; off by default.
@@ -395,6 +403,7 @@ impl Default for Options {
             jurisdiction_priority: source::default_jurisdiction_priority(),
             jurisdictions: None,
             reporter_names: true,
+            year_runs: false,
             ocr_repairs: false,
             supra_hint_mode: SupraMode::Aggressive,
             supra_linking_mode: SupraMode::Safe,
@@ -419,6 +428,14 @@ impl Options {
     /// Whether the US reporter and law grammars run ([`Options::jurisdictions`]).
     pub(crate) fn reads_us(&self) -> bool {
         self.jurisdictions.as_deref().is_none_or(source::us_jurisdiction)
+    }
+
+    /// Whether a registry row of `jurisdiction` is read ([`Options::jurisdictions`]): every row when the option is
+    /// absent, a row placed in no jurisdiction always, and otherwise one in or within a listed jurisdiction (`ca-on`
+    /// within `ca`).
+    pub(crate) fn reads_jurisdiction(&self, jurisdiction: Option<&str>) -> bool {
+        jurisdiction.is_none_or(|jurisdiction| self.jurisdictions.as_deref().is_none_or(|listed| listed.iter().any(|place|
+            jurisdiction == place || jurisdiction.strip_prefix(place.as_str()).is_some_and(|rest| rest.starts_with('-')))))
     }
 }
 
@@ -471,6 +488,10 @@ fn read_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
     if options.source_only { citations.retain(|citation| citation.fields.source_case_name.is_some()); }
     stage("find_styled");
     let mut citations = find::filter_citations(citations);
+    if options.jurisdictions.is_some() && citations.iter().any(|citation| citation.reasons.iter().any(|reason| reason == classify::NOT_READ)) {
+        citations.retain(|citation| !citation.reasons.iter().any(|reason| reason == classify::NOT_READ));
+        for (index, citation) in citations.iter_mut().enumerate() { citation.index = index; }
+    }
     if options.skip_authority_lists {
         let listed = find::authority_list_citations(text, &citations, options.notes.as_deref().unwrap_or(&[]));
         citations.retain(|citation| !listed.contains(&citation.index));

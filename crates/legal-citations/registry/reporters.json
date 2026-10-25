@@ -115,20 +115,56 @@
       "evidence": "https://lawsocietypei.ca/media/files/Law%20Library%20Catalogue%20Print%20Serials%20April%2028%2C%202016.pdf"
      }
     ],
-    "start": null,
-    "end": null
+    "start": "1912",
+    "end": "1955",
+    "evidence": {
+     "start": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=1129",
+      "quote": "Publication Date: 1955 Publication Date Range: 1912-1955. Additional Corporate Author:"
+     },
+     "end": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=1129",
+      "quote": "Publication Date: 1955 Publication Date Range: 1912-1955. Additional Corporate Author:"
+     }
+    }
    },
    "DLR (2d)": {
-    "start": null,
-    "end": null
+    "start": "1956",
+    "end": "1968",
+    "evidence": {
+     "start": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=1270",
+      "quote": "Publication Date: 1968 Publication Date Range: 1956-1968."
+     },
+     "end": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=1270",
+      "quote": "Publication Date: 1968 Publication Date Range: 1956-1968."
+     }
+    }
    },
    "DLR (3d)": {
-    "start": null,
-    "end": null
+    "start": "1969",
+    "end": "1984",
+    "evidence": {
+     "start": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=2556",
+      "quote": "vol. 1 (1969)-v. 150 (1984)"
+     },
+     "end": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=2556",
+      "quote": "vol. 1 (1969)-v. 150 (1984)"
+     }
+    }
    },
    "DLR (4th)": {
-    "start": null,
-    "end": null
+    "start": "1984",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://search.library.wisc.edu/catalog/999618282902121",
+      "quote": "Publication Toronto : Canada Law Book Co., 1912- Publication Date Vol. 1 (1912)-v. 70 (1922); 1923, v. 1-1955, v. 5; 2nd ser., v. 1 (1956)-v. 70 (1968); 3rd ser., v. 1 (1969)-v. 150 (1984); 4th ser., v. 1 (1984)-"
+     }
+    }
    },
    "DLR (5th)": {
     "start": null,
@@ -165,8 +201,14 @@
   ],
   "editions": {
    "NR": {
-    "start": null,
-    "end": null
+    "start": "1974",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=6999",
+      "quote": "Publisher: Maritime Law Book Co. Publication Date: 1974"
+     }
+    }
    }
   },
   "year_volume": false,
@@ -204,16 +246,38 @@
   "jurisdiction": "ca-on",
   "editions": {
    "OR": {
-    "start": null,
-    "end": null
+    "start": "1882",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://sclqld.org.au/catalogue/records/19886",
+      "quote": "Contents: 1882-1900, Ontario Reports --1901-1931, Ontario Law Reports."
+     }
+    }
    },
    "OR (2d)": {
-    "start": null,
-    "end": null
+    "start": "1974",
+    "end": "1991",
+    "evidence": {
+     "start": {
+      "url": "https://search.library.wisc.edu/catalog/999620353502121",
+      "quote": "Jan. 11, 1963-Dec. 21, 1973; 2d ser., v. 1-v. 75, pt. 10 ; Jan. 4, 1974-Feb. 8, 1991; 3rd ser., v. 1, pt. 1- ; Feb. 22, 1991-"
+     },
+     "end": {
+      "url": "https://search.library.wisc.edu/catalog/999620353502121",
+      "quote": "Jan. 11, 1963-Dec. 21, 1973; 2d ser., v. 1-v. 75, pt. 10 ; Jan. 4, 1974-Feb. 8, 1991; 3rd ser., v. 1, pt. 1- ; Feb. 22, 1991-"
+     }
+    }
    },
    "OR (3d)": {
-    "start": null,
-    "end": null
+    "start": "1991",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://search.library.wisc.edu/catalog/999620353502121",
+      "quote": "Jan. 11, 1963-Dec. 21, 1973; 2d ser., v. 1-v. 75, pt. 10 ; Jan. 4, 1974-Feb. 8, 1991; 3rd ser., v. 1, pt. 1- ; Feb. 22, 1991-"
+     }
+    }
    }
   },
   "variations": {
@@ -322,8 +386,14 @@
       "evidence": "https://www.courthouselibrary.ca/catalogue-item?cid=26021"
      }
     ],
-    "start": null,
-    "end": null
+    "start": "1911",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+      "quote": "Publisher: Carswell Publication Date: 1911 Subject(s): Law reports, digests, etc. - Canada, Western. Notes: Cited: W.W.R."
+     }
+    }
    },
    "WWR (NS)": {
     "numbering": [
@@ -332,8 +402,18 @@
       "evidence": "https://www.courthouselibrary.ca/catalogue-item?cid=26021"
      }
     ],
-    "start": null,
-    "end": null
+    "start": "1951",
+    "end": "1970",
+    "evidence": {
+     "start": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+      "quote": "First series ceased with issue for Dec. 30, 1950; New series began in 1951, ceased with issue for Dec. 26, 1970; current series began in 1971."
+     },
+     "end": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=26021",
+      "quote": "First series ceased with issue for Dec. 30, 1950; New series began in 1951, ceased with issue for Dec. 26, 1970; current series began in 1971."
+     }
+    }
    }
   },
   "year_volume": true,
@@ -351,16 +431,46 @@
   "jurisdiction": "ca-bc",
   "editions": {
    "BCLR": {
-    "start": null,
-    "end": null
+    "start": "1977",
+    "end": "1986",
+    "evidence": {
+     "start": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5660",
+      "quote": "Publisher: Carswell Publication Date: 1986 Publication Date Range: 1977-1986. Subject(s): Law reports, digests, etc. - British Columbia. Notes: Cited: B.C.L.R."
+     },
+     "end": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5660",
+      "quote": "Publisher: Carswell Publication Date: 1986 Publication Date Range: 1977-1986. Subject(s): Law reports, digests, etc. - British Columbia. Notes: Cited: B.C.L.R."
+     }
+    }
    },
    "BCLR (2d)": {
-    "start": null,
-    "end": null
+    "start": "1986",
+    "end": "1995",
+    "evidence": {
+     "start": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5644",
+      "quote": "Publication Date: 1995 Publication Date Range: 1986-1995. Subject(s): Law reports, digests, etc. - British Columbia. Notes: Cited: B.C.L.R. (2d)."
+     },
+     "end": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5644",
+      "quote": "Publication Date: 1995 Publication Date Range: 1986-1995. Subject(s): Law reports, digests, etc. - British Columbia. Notes: Cited: B.C.L.R. (2d)."
+     }
+    }
    },
    "BCLR (3d)": {
-    "start": null,
-    "end": null
+    "start": "1995",
+    "end": "2002",
+    "evidence": {
+     "start": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=7690",
+      "quote": "Publication Date: 2002 Publication Date Range: 1995-2002. Subject(s): Law reports, digests, etc. - British Columbia. Notes: Cited: B.C.L.R. (3d)."
+     },
+     "end": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=7690",
+      "quote": "Publication Date: 2002 Publication Date Range: 1995-2002. Subject(s): Law reports, digests, etc. - British Columbia. Notes: Cited: B.C.L.R. (3d)."
+     }
+    }
    },
    "BCLR (4th)": {
     "start": null,
@@ -604,8 +714,14 @@
     "end": null
    },
    "NBR (2d)": {
-    "start": null,
-    "end": null
+    "start": "1969",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://lawfoundation.org.nz/style-guide/nzlsg_appendix_3.html",
+      "quote": "NBR (2d) New Brunswick Reports (2d) 1969–"
+     }
+    }
    }
   },
   "variations": {
@@ -656,8 +772,14 @@
   "jurisdiction": "ca",
   "editions": {
    "Nfld & PEIR": {
-    "start": null,
-    "end": null
+    "start": "1971",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://lawfoundation.org.nz/style-guide/nzlsg_appendix_3.html",
+      "quote": "Nfld & PEIR Newfoundland & Prince Edward Island Reports 1971–"
+     }
+    }
    }
   },
   "variations": {
@@ -799,8 +921,18 @@
       "edition": "CCC (NS)"
      }
     ],
-    "start": null,
-    "end": null
+    "start": "1898",
+    "end": "1962",
+    "evidence": {
+     "start": {
+      "url": "https://sclqld.org.au/catalogue/records/63286",
+      "quote": "Toronto : Canada Law Journal Company, 1898-[1962]"
+     },
+     "end": {
+      "url": "https://sclqld.org.au/catalogue/records/63286",
+      "quote": "Toronto : Canada Law Journal Company, 1898-[1962]"
+     }
+    }
    },
    "CCC (NS)": {
     "numbering": [
@@ -809,16 +941,42 @@
       "evidence": "https://lawsocietypei.ca/media/files/Law%20Library%20Catalogue%20Print%20Serials%20April%2028%2C%202016.pdf"
      }
     ],
-    "start": null,
-    "end": null
+    "start": "1963",
+    "end": "1970",
+    "evidence": {
+     "start": {
+      "url": "https://sclqld.org.au/catalogue/records/64121",
+      "quote": "Toronto : Law Book Co., 1963-1970."
+     },
+     "end": {
+      "url": "https://sclqld.org.au/catalogue/records/64121",
+      "quote": "Toronto : Law Book Co., 1963-1970."
+     }
+    }
    },
    "CCC (2d)": {
-    "start": null,
-    "end": null
+    "start": "1971",
+    "end": "1983",
+    "evidence": {
+     "start": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8412",
+      "quote": "Publisher: Canada Law Book Publication Date: 1983 Publication Date Range: 1971-1983. Subject(s): Criminal law - Canada - Cases. Law reports, digests, etc. - Canada Notes: Cited: CCC (2d)."
+     },
+     "end": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8412",
+      "quote": "Publisher: Canada Law Book Publication Date: 1983 Publication Date Range: 1971-1983. Subject(s): Criminal law - Canada - Cases. Law reports, digests, etc. - Canada Notes: Cited: CCC (2d)."
+     }
+    }
    },
    "CCC (3d)": {
-    "start": null,
-    "end": null
+    "start": "1983",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://sclqld.org.au/catalogue/records/64122",
+      "quote": "Publication details: Ontario : Candada Law Book Ltd., 1983-"
+     }
+    }
    }
   },
   "variations": {
@@ -844,24 +1002,52 @@
   "jurisdiction": "ca",
   "editions": {
    "CR": {
-    "start": null,
-    "end": null
+    "start": "1946",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://www.slaw.ca/2010/09/19/cr-ccc-crcc/",
+      "quote": "Criminal Reports: Born 1946"
+     }
+    }
    },
    "CR (NS)": {
     "start": null,
     "end": null
    },
    "CR (3d)": {
-    "start": null,
-    "end": null
+    "start": "1978",
+    "end": "1991",
+    "evidence": {
+     "start": {
+      "url": "https://ci.nii.ac.jp/ncid/AA10840364?l=en",
+      "quote": "Vol. 1 (1978)"
+     },
+     "end": {
+      "url": "https://ci.nii.ac.jp/ncid/AA10840364?l=en",
+      "quote": "Consolidated index covering v. 51-80 issued in 1991"
+     }
+    }
    },
    "CR (4th)": {
-    "start": null,
-    "end": null
+    "start": "1991",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://ci.nii.ac.jp/ncid/AA10840386?l=en",
+      "quote": "Quatrième série Carswell, 1991- Vol. 1 (1991)-"
+     }
+    }
    },
    "CR (5th)": {
-    "start": null,
-    "end": null
+    "start": "1997",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://ci.nii.ac.jp/ncid/AA11176547?l=en",
+      "quote": "Cinquième série Carswell, 1997- Vol. 1 (1997)-"
+     }
+    }
    },
    "CR (6th)": {
     "start": null,
@@ -910,8 +1096,14 @@
     "end": null
    },
    "CRR (2d)": {
-    "start": null,
-    "end": null
+    "start": "1991",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://ci.nii.ac.jp/ncid/AA10849788?l=en",
+      "quote": "Canadian rights reporter Butterworth (Canada), c1982-c1991 Vol. 1 (1982)-v. 50 (1991)"
+     }
+    }
    }
   },
   "variations": {
@@ -941,8 +1133,18 @@
     "end": null
    },
    "CPR (3d)": {
-    "start": null,
-    "end": null
+    "start": "1985",
+    "end": "1999",
+    "evidence": {
+     "start": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8714",
+      "quote": "Publication Date Range: 1985-1999. Subject(s): Patent laws and legislation - Canada - Cases. Copyright - Canada - Cases. Trademarks - Canada - Cases. Law reports, digests, etc. - Canada Notes: Cited: C.P.R. (3d)."
+     },
+     "end": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=8714",
+      "quote": "Publication Date Range: 1985-1999. Subject(s): Patent laws and legislation - Canada - Cases. Copyright - Canada - Cases. Trademarks - Canada - Cases. Law reports, digests, etc. - Canada Notes: Cited: C.P.R. (3d)."
+     }
+    }
    },
    "CPR (4th)": {
     "start": null,
@@ -1031,8 +1233,18 @@
   "jurisdiction": "ca",
   "editions": {
    "RFL": {
-    "start": null,
-    "end": null
+    "start": "1971",
+    "end": "1978",
+    "evidence": {
+     "start": {
+      "url": "https://ci.nii.ac.jp/ncid/AA00375756?l=en",
+      "quote": "Vol. 1 (1971)"
+     },
+     "end": {
+      "url": "https://ci.nii.ac.jp/ncid/AA10807835?l=en",
+      "quote": "Reports of family law. 2d ser Carswell, 1978-1986 Vol. 1 (1978)-50 (1986)"
+     }
+    }
    },
    "RFL (2d)": {
     "start": null,
@@ -1659,8 +1871,14 @@
     "end": null
    },
    "CBR (3d)": {
-    "start": null,
-    "end": null
+    "start": "1991",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://ci.nii.ac.jp/ncid/AA10955311?l=en",
+      "quote": "Vol. 1 (1991)"
+     }
+    }
    },
    "CBR (4th)": {
     "start": null,
@@ -1823,8 +2041,14 @@
       "evidence": "https://indigenouslaw.usask.ca/publications/canadian-native-law-reporter.php"
      }
     ],
-    "start": null,
-    "end": null
+    "start": "1979",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://ci.nii.ac.jp/ncid/AA10875008?l=en",
+      "quote": "LC MARC: Began publication in 1979"
+     }
+    }
    }
   },
   "year_volume": true,
@@ -2004,8 +2228,14 @@
     "end": null
    },
    "ACWS (3d)": {
-    "start": null,
-    "end": null
+    "start": "1987",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://www.courthouselibrary.ca/catalogue-item?cid=5648",
+      "quote": "Publication Date: 1987 Publication Date Range: 1987- Subject(s): Law reports, digests, etc. - Canada Civil law - Canada - Digests. Notes: Cited: A.C.W.S. (3d)."
+     }
+    }
    }
   },
   "variations": {
@@ -2434,8 +2664,14 @@
   "jurisdiction": "uk-ew",
   "editions": {
    "QB": {
-    "start": null,
-    "end": null
+    "start": "1865",
+    "end": null,
+    "evidence": {
+     "start": {
+      "url": "https://www.sclqld.org.au/catalogue/records/20121",
+      "quote": "Online via ICLR online vol1 (1865) - vol10(1875) Holdings Clear filters Loading holdings... Record details Publication details: London : Printed for the Council of Law Reporting by W. Clowes and Sons, 1866-1875."
+     }
+    }
    }
   },
   "year_volume": true,

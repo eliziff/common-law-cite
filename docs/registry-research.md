@@ -24,8 +24,9 @@ lacks. Nothing here is in the registry yet; rows go in from this record, each fa
 - **Journal volumes span years, and years hold several volumes.** Osgoode Hall LJ vol. 2 ran April 1960 to
   April 1963; Harvard, Queen's, Cornell, Georgetown and Iowa volumes span two years; McGill (1967), Dalhousie
   (1984) and the Modern LR (1938, 1939) printed two volumes in a year. Writers cite either end of a span
-  ("(1983) 7 Dal LJ", vol. 7 no. 1 being 1982). An anchor carries the span its page shows; a single-year anchor
-  is measured on the corpus before it rules anything out.
+  ("(1983) 7 Dal LJ", vol. 7 no. 1 being 1982), and an anchor names whichever issue's year its page listed. So a
+  volume's year is bounded only by its neighbours: no earlier than an anchored volume before it, no later than an
+  anchored volume after it (that anchor's span where its page shows one). A volume's own anchor bounds nothing.
 - **The English Reports' dates are the reprint's.** 1900-1932 is when the reprint appeared; its cases run
   1220-1865. ER takes no run.
 - **One abbreviation, several series by period.** Quebec's C.S. is the Rapports judiciaires officiels
