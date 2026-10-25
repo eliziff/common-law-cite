@@ -34,9 +34,10 @@ diff-match-patch-rs = { path = "vendor/diff-match-patch-rs", version = "0.5.1" }
 roxmltree = "0.21"
 ts-rs = { version = "12", optional = true, features = ["serde-json-impl"] }
 scraper = { version = "0.27", default-features = false }
+rusqlite = { version = "0.40.2", features = ["bundled"], optional = true }
 
 [features]
-default = ["canada", "uk", "us", "australia", "new-zealand", "ireland", "hong-kong", "singapore", "south-africa"]
+default =["canada", "uk", "us", "australia", "new-zealand", "ireland", "hong-kong", "singapore", "south-africa"]
 # Each jurisdiction's grammar, data and publishers.
 canada = []
 uk = []
@@ -49,8 +50,20 @@ south-africa = []
 # US reporters, journals and laws (legal-grammar's eyecite/reporters-db extractors) and CourtListener.
 us = ["legal-grammar/us"]
 binding-types = ["dep:ts-rs"]
+# The alias evidence collector (src/bin/alias_evidence.rs), which reads the A2AJ and journal stores.
+alias-evidence = ["dep:rusqlite"]
 
 [[bin]]
 name = "export-types"
 path = "src/bin/export_types.rs"
 required-features = ["binding-types"]
+
+[[bin]]
+name = "alias-evidence"
+path = "src/bin/alias_evidence.rs"
+required-features = ["alias-evidence"]
+
+[[bin]]
+name = "alias-inventory"
+path = "src/bin/alias_inventory.rs"
+required-features = ["alias-evidence"]

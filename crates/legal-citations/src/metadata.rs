@@ -464,7 +464,8 @@ pub(crate) fn tail(text: &str, start: usize, limit: usize, rules: TailRules) -> 
         result.source_end = Some(start);
         // Full cases may span parallel citation tokens. Other source forms
         // stop at the next citation as well as the paragraph boundary.
-        let window = &text[start..if source == PostCitation::Case { reach } else { reach.min(limit) }];
+        // A window that ends before it starts (the next citation begins first) reads nothing.
+        let window = text.get(start..if source == PostCitation::Case { reach } else { reach.min(limit) }).unwrap_or_default();
         let end = window.char_indices().nth(300).map_or(window.len(), |(at, _)| at);
         if let Some(captures) = POST_CITATION[source as usize].captures(&window[..end]).expect("post-citation match") {
             {

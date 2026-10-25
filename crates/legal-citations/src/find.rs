@@ -577,10 +577,13 @@ fn occurrence_family(core: &str) -> (&'static str, &'static str) {
 }
 
 #[cfg_attr(not(feature = "us"), allow(unused_variables))]
-fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationStyle]>, scopes: &[usize], enrich: bool) -> Vec<Anchor> {
+fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationStyle]>, scopes: &[usize], enrich: bool,
+    reads_us: bool) -> Vec<Anchor> {
     let (mut found, reporters) = primary_ranges(value);
     #[cfg(feature = "us")]
-    let mut captured = if enrich {
+    let mut captured = if !reads_us {
+        Vec::new()
+    } else if enrich {
         crate::us::find(value, extended_us, Some(&mut found))
     } else {
         found.extend(crate::us::citation_spans(value, extended_us));
@@ -1379,15 +1382,16 @@ fn full_citation(
     // Parentheses inside a section identifier (1.401(a)-1) are not a
     // subdivision. Retain the section suffix in fields without widening the
     // original native occurrence.
+    // A next citation that begins before this one's core ends leaves nothing to read after it.
     let section_suffix = if has_section {
-        LAW_SUBDIVISION.captures_screened(&text[source_core.end..limit])
+        LAW_SUBDIVISION.captures_screened(text.get(source_core.end..limit).unwrap_or_default())
             .and_then(|captures| captures.name("section_suffix"))
             .map(|suffix| source_core.end..source_core.end + suffix.end())
     } else { None };
     // Read actual subdivisions here so `(a)` is never a parenthetical.
     let subdivision_start = section_suffix.as_ref().map_or(source_core.end, |suffix| suffix.end);
     let subdivision = has_section
-        .then(|| LAW_SUBDIVISION.find_screened(&text[subdivision_start..limit]))
+        .then(|| LAW_SUBDIVISION.find_screened(text.get(subdivision_start..limit).unwrap_or_default()))
         .flatten()
         .map(|matched| subdivision_start..subdivision_start + matched.end());
     let core_text = &text[core.clone()];
@@ -1734,7 +1738,7 @@ fn cores(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<C
 }
 
 fn cores_in(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<Core> {
-    let mut cores = citation_anchors(text, options.us_forms(), options.styles.as_deref(), scopes, enrich)
+    let mut cores = citation_anchors(text, options.us_forms(), options.styles.as_deref(), scopes, enrich, options.reads_us())
         .into_iter()
         .map(|anchor| Core {
             span: anchor.span.clone(),

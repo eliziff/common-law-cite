@@ -1185,7 +1185,8 @@
   "id": "cart",
   "name": "Canada Agricultural Review Tribunal",
   "neutral": [
-   "CART"
+   "CART",
+   "CRAC"
   ],
   "aliases": [],
   "canlii": {
@@ -2935,7 +2936,8 @@
   "id": "ohstc",
   "name": "Occupational Health and Safety Tribunal Canada",
   "neutral": [
-   "OHSTC"
+   "OHSTC",
+   "TSSTC"
   ],
   "aliases": [],
   "canlii": {
@@ -2945,7 +2947,10 @@
   "name_fr": "Tribunal de santé et sécurité au travail Canada",
   "region": "ca",
   "level": "tribunal",
-  "type": "tribunal"
+  "type": "tribunal",
+  "canlii_codes_fr": [
+   "TSSTC"
+  ]
  },
  {
   "id": "oic",
@@ -4243,7 +4248,8 @@
   "id": "psdpt",
   "name": "Public Servants Disclosure Protection Tribunal",
   "neutral": [
-   "PSDPT"
+   "PSDPT",
+   "TPFD"
   ],
   "aliases": [
    "PSDPTC",
@@ -4267,7 +4273,8 @@
   "neutral": [
    "FPSLREB",
    "PSLREB",
-   "CRTESPF"
+   "CRTESPF",
+   "CRTEFP"
   ],
   "aliases": [],
   "canlii": {
@@ -4287,7 +4294,8 @@
   "id": "pslrb",
   "name": "Public Service Labour Relations Board",
   "neutral": [
-   "PSLRB"
+   "PSLRB",
+   "CRTFP"
   ],
   "aliases": [],
   "canlii": {
@@ -4308,7 +4316,8 @@
   "id": "pssrb",
   "name": "Public Service Staff Relations Board",
   "neutral": [
-   "PSSRB"
+   "PSSRB",
+   "CRTFP"
   ],
   "aliases": [],
   "canlii": {
@@ -4317,13 +4326,16 @@
   },
   "region": "ca",
   "level": "tribunal",
-  "type": "tribunal"
+  "type": "tribunal",
+  "name_fr": "Commission des relations de travail dans la fonction publique",
+  "end": 2005
  },
  {
   "id": "psst",
   "name": "Public Service Staffing Tribunal",
   "neutral": [
-   "PSST"
+   "PSST",
+   "TDFP"
   ],
   "aliases": [],
   "canlii": {
@@ -5983,7 +5995,8 @@
   "name": "Specific Claims Tribunal Canada",
   "neutral": [
    "SCT",
-   "SCTC"
+   "SCTC",
+   "TRPC"
   ],
   "aliases": [
    "SCTC"
@@ -5998,7 +6011,10 @@
   "name_fr": "Tribunal des revendications particulières",
   "region": "ca",
   "level": "tribunal",
-  "type": "tribunal"
+  "type": "tribunal",
+  "canlii_codes_fr": [
+   "TRPC"
+  ]
  },
  {
   "id": "skac",
@@ -6451,7 +6467,12 @@
    "SSTGD",
    "SSTGDIS",
    "SSTGDEI",
-   "TSS"
+   "TSS",
+   "TSSDA",
+   "TSSDASR",
+   "TSSDAAE",
+   "TSSDGAE",
+   "TSSDGSR"
   ],
   "aliases": [
    "TSS"
@@ -6465,7 +6486,11 @@
   ],
   "canlii_codes_fr": [
    "TSS",
-   "TSSDA"
+   "TSSDA",
+   "TSSDASR",
+   "TSSDAAE",
+   "TSSDGAE",
+   "TSSDGSR"
   ],
   "name_fr": "Tribunal de la sécurité sociale",
   "region": "ca",
@@ -6716,7 +6741,8 @@
   "name": "Canadian Artists and Producers Professional Relations Tribunal",
   "neutral": [
    "CAPPRT LD",
-   "TCRPAP LD"
+   "TCRPAP LD",
+   "TCRPAP"
   ],
   "name_fr": "Tribunal canadien des relations professionnelles artistes-producteurs",
   "region": "ca",

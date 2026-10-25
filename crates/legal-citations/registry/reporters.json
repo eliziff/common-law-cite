@@ -1918,8 +1918,12 @@
     "end": null
    }
   },
+  "variations": {
+   "CACM": "CMAR"
+  },
   "year_volume": false,
   "source": "authored",
+  "name_fr": "Recueil des arrêts de la Cour d'appel de la cour martiale",
   "citation_id": "cmar",
   "abbreviation": "CMAR",
   "edition_order": [

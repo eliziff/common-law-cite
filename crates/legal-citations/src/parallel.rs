@@ -28,22 +28,26 @@ use crate::model::{Authority, Citation, Form, Format};
 use crate::registry::{self, fold, Registry, ReporterKind};
 
 /// Group parallel citations in place. `text` is the text the citations were
-/// extracted from; spans index into it.
+/// extracted from; spans index into it. Neighbours are neighbours in the text:
+/// the list may order a citation by the case name it shares ("R v Ash, 2008 SCC
+/// 69, 2008 CarswellQue 12595, [2008] 3 S.C.R. 560" lists the report with the
+/// neutral citation whose name it carries).
 pub fn group(text: &str, citations: &mut [Citation]) {
-    for position in 1..citations.len() {
-        if !joinable(text, &citations[position - 1], &citations[position]) {
+    let mut order: Vec<usize> = (0..citations.len()).collect();
+    order.sort_by_key(|&at| (citations[at].span.start, citations[at].span.end));
+    for pair in order.windows(2) {
+        let (previous, current) = (pair[0], pair[1]);
+        if !joinable(text, &citations[previous], &citations[current]) {
             continue;
         }
-        let first = citations[position - 1]
-            .parallel_group
-            .unwrap_or(citations[position - 1].index);
-        if citations[..position].iter().any(|member|
+        let first = citations[previous].parallel_group.unwrap_or(citations[previous].index);
+        if citations.iter().any(|member|
             (member.index == first || member.parallel_group == Some(first))
-                && distinct(member, &citations[position])) {
+                && distinct(member, &citations[current])) {
             continue;
         }
-        citations[position - 1].parallel_group = Some(first);
-        citations[position].parallel_group = Some(first);
+        citations[previous].parallel_group = Some(first);
+        citations[current].parallel_group = Some(first);
     }
     share_metadata(citations);
 }
@@ -98,7 +102,7 @@ fn joinable(text: &str, previous: &Citation, current: &Citation) -> bool {
 }
 
 /// Readings that always name two different decisions.
-pub(crate) fn distinct(left: &Citation, right: &Citation) -> bool {
+pub fn distinct(left: &Citation, right: &Citation) -> bool {
     if left.is_ambiguous() || right.is_ambiguous() { return true; }
     // Evidence-backed aliases can contradict a printed parallel even when
     // the two members use different reporters and have no written courts.
@@ -167,24 +171,25 @@ pub(crate) fn distinct(left: &Citation, right: &Citation) -> bool {
     false
 }
 
+/// Each group's members, wherever the list holds them, in the text's order.
 fn share_metadata(citations: &mut [Citation]) {
-    let mut position = 0;
-    while position < citations.len() {
-        let Some(group) = citations[position].parallel_group else {
-            position += 1;
-            continue;
-        };
-        let mut end = position + 1;
-        while end < citations.len() && citations[end].parallel_group == Some(group) {
-            end += 1;
+    let mut groups: Vec<(usize, Vec<usize>)> = Vec::new();
+    for (position, citation) in citations.iter().enumerate() {
+        let Some(group) = citation.parallel_group else { continue };
+        match groups.iter_mut().find(|(id, _)| *id == group) {
+            Some((_, members)) => members.push(position),
+            None => groups.push((group, vec![position])),
         }
-        let members = &mut citations[position..end];
-        let first = members[0].clone();
-        let court = members.iter().find_map(|member| member.court.clone());
-        let jurisdiction = members.iter().find_map(|member| member.jurisdiction.clone());
-        let year = members.iter().find_map(|member| member.fields.year.clone());
-        let year_number = members.iter().find_map(|member| member.fields.year.as_ref().map(|_| member.fields.year_number)).flatten();
-        for member in members.iter_mut() {
+    }
+    for (_, mut members) in groups {
+        members.sort_by_key(|&at| (citations[at].span.start, citations[at].span.end));
+        let first = citations[members[0]].clone();
+        let court = members.iter().find_map(|&at| citations[at].court.clone());
+        let jurisdiction = members.iter().find_map(|&at| citations[at].jurisdiction.clone());
+        let year = members.iter().find_map(|&at| citations[at].fields.year.clone());
+        let year_number = members.iter().find_map(|&at| citations[at].fields.year.as_ref().map(|_| citations[at].fields.year_number)).flatten();
+        for (rank, &at) in members.iter().enumerate() {
+            let member = &mut citations[at];
             if member.court.is_none() {
                 member.court.clone_from(&court);
             }
@@ -195,8 +200,7 @@ fn share_metadata(citations: &mut [Citation]) {
                 member.fields.year.clone_from(&year);
                 member.fields.year_number = year_number;
             }
-        }
-        for member in members.iter_mut().skip(1) {
+            if rank == 0 { continue; }
             if member.parties.is_none() {
                 member.parties.clone_from(&first.parties);
             }
@@ -210,7 +214,6 @@ fn share_metadata(citations: &mut [Citation]) {
                 member.explicit_short_name.clone_from(&first.explicit_short_name);
             }
         }
-        position = end;
     }
 }
 
