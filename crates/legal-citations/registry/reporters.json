@@ -727,6 +727,39 @@
   ]
  },
  {
+  "name": "Quebec Official Reports, King's Bench",
+  "kind": "official",
+  "jurisdiction": "ca-qc",
+  "editions": {
+   "BR": {
+    "start": "1892",
+    "end": "1966",
+    "numbering": [
+     {
+      "start": 1892,
+      "end": 1941,
+      "year_volume": false,
+      "evidence": "https://search.law.villanova.edu/Record/411609"
+     },
+     {
+      "start": 1942,
+      "end": 1966,
+      "year_volume": true,
+      "evidence": "https://search.law.villanova.edu/Record/411609"
+     }
+    ]
+   }
+  },
+  "year_volume": true,
+  "source": "authored",
+  "name_fr": "Rapports judiciaires de Québec, Cour du Banc du Roi / de la Reine",
+  "citation_id": "br-qc",
+  "abbreviation": "BR",
+  "edition_order": [
+   "BR"
+  ]
+ },
+ {
   "name": "Revue de droit judiciaire",
   "kind": "general",
   "jurisdiction": "ca-qc",

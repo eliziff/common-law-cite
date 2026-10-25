@@ -371,6 +371,8 @@ static FILTER: LazyLock<(AhoCorasick, Vec<Vec<usize>>, Vec<usize>)> = LazyLock::
     let mut unfiltered = Vec::new();
     for index in 0..extractors().len() {
         let extractor = extractors().get(index);
+        // The standard extractors are read by the one standard scan.
+        if extractor.standard() && !extractor.ecmascript() { continue; }
         if extractor.strings().next().is_none() { unfiltered.push(index); }
         for string in extractor.strings() {
             strings.entry(compact(string)).or_default().push(index);
@@ -440,18 +442,6 @@ pub(crate) fn is_journal(core: &str) -> bool {
     })
 }
 
-fn screened(source: &str) -> Screened<regex::Regex> {
-    let literals = legal_grammar::linear_pattern_literals(source);
-    let source = source.to_owned();
-    Screened::new(move || regex::Regex::new(&source).unwrap(), literals)
-}
-static PATTERN: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| screened(
-    &legal_grammar::load_tables().unwrap()["cite.us.standard-candidate"].entry.pattern));
-static EXTENDED: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| {
-    let tables = legal_grammar::load_tables().unwrap();
-    screened(&tables["cite.us.standard-candidate"].entry.pattern
-        .replace("[0-9]+|_+", &tables["cite.us.reporter.full"].defs["us_page"]))
-});
 static EDITIONS: LazyLock<BTreeMap<String, (BTreeSet<usize>, BTreeSet<usize>)>> = LazyLock::new(|| {
     let mut map = BTreeMap::<String, (BTreeSet<usize>, BTreeSet<usize>)>::new();
     for index in 0..extractors().len() {
@@ -464,40 +454,32 @@ static EDITIONS: LazyLock<BTreeMap<String, (BTreeSet<usize>, BTreeSet<usize>)>> 
     }
     map
 });
-// Standard U.S. reporter matches. The catalogue lookup ignores
-// whitespace anywhere in the reporter surface, including dotless variants.
+/// The reporter names, without whitespace, that the standard (`$volume $reporter,? $page`) extractors read.
+static STANDARD_SURFACES: LazyLock<BTreeSet<String>> = LazyLock::new(|| (0..extractors().len())
+    .map(|index| extractors().get(index)).filter(|extractor| extractor.standard() && !extractor.ecmascript())
+    .flat_map(|extractor| extractor.strings().map(compact).collect::<Vec<_>>()).collect());
+/// Standard U.S. reporter matches: one scan ([`crate::find::walk_reports`]) in place of the standard extractor of each
+/// reporter, all of which apply the same template. The catalogue lookup ignores whitespace anywhere in the reporter
+/// surface, as each extractor's whitespace-tolerant name does, including dotless variants. With the US forms a page is
+/// any they read ("5 P. xi"), as each extractor's was; without them it is Arabic or a slip opinion's blank.
 fn standard_matches(text: &str, extended: bool) -> Vec<Match> {
-    // Extended pages are scanned only on cue lines.
-    let mut ranges = vec![(0, text.len(), &*PATTERN)];
-    if extended {
-        ranges.extend(fallback_ranges(text).into_iter().map(|(start, end)| (start, end, &*EXTENDED)));
-    }
-    let mut found = Vec::new();
-    for (start, end, pattern) in ranges {
-        let value = &text[start..end];
-        if !pattern.may_match(value) { continue; }
-        let mut cursor = 0;
-        while let Some(captures) = pattern.captures_at(value, cursor) {
-            let core = captures.name("citation").unwrap();
-            let reporter = captures.name("reporter").unwrap().as_str().chars()
-                .filter(|character| !crate::text::javascript_whitespace(*character)).collect::<String>();
-            if standard_source(&reporter).is_some() {
-                let (exact, variations) = &EDITIONS[&reporter];
-                let short_at = captures.name("__short_at").map(|matched| matched.start() - core.start());
-                let fields = Fields {
-                    source_groups: ["volume", "reporter", "page"].into_iter().map(|name|
-                        (name.to_owned(), captures.name(name).map(|matched| matched.as_str().to_owned()))).collect(),
-                    exact_editions: exact.iter().map(|&index| edition(index)).collect(),
-                    variation_editions: variations.difference(exact).map(|&index| edition(index)).collect(),
-                    ..Fields::default()
-                };
-                found.push(Match { span: start + core.start()..start + core.end(), fields, short_at,
-                    short: short_at.is_some(), ecmascript: true, preceding_text_end: None });
-            }
-            cursor = core.start() + 1;
-        }
-    }
-    found
+    let tail = &crate::find::REPORT_TAILS[usize::from(extended)];
+    let spell = |character: char| (!crate::text::javascript_whitespace(character)).then_some(character);
+    crate::find::walk_reports(text, &STANDARD_SURFACES, spell, tail).into_iter().map(|walked| {
+        let (exact, variations) = &EDITIONS[&walked.name];
+        let end = walked.reporter.end;
+        let short_at = walked.tail.name("__short_at").map(|matched| end + matched.start() - walked.start);
+        let fields = Fields {
+            source_groups: [("volume", &text[walked.start..walked.volume_end]), ("reporter", &text[walked.reporter.clone()]),
+                ("page", walked.tail.name("page").unwrap().as_str())]
+                .into_iter().map(|(name, value)| (name.to_owned(), Some(value.to_owned()))).collect(),
+            exact_editions: exact.iter().map(|&index| edition(index)).collect(),
+            variation_editions: variations.difference(exact).map(|&index| edition(index)).collect(),
+            ..Fields::default()
+        };
+        Match { span: walked.start..end + walked.tail.name("citation").unwrap().end(), fields, short_at,
+            short: short_at.is_some(), ecmascript: true, preceding_text_end: None }
+    }).collect()
 }
 
 static CUE: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| Screened::linear("cite.us.fallback-cue"));
@@ -701,6 +683,6 @@ pub(crate) fn finish(citation: &mut crate::Citation) {
 /// Build this module's lazily built statics now ([`crate::warm`]).
 pub(crate) fn warm() {
     names::warm();
-    crate::warm_statics!(COMPILED, FILTER, CUSTOM, LAWS, SURFACES, CANDIDATE, EDITIONS; screened COMMON, PATTERN, EXTENDED, CUE);
+    crate::warm_statics!(COMPILED, FILTER, CUSTOM, LAWS, SURFACES, CANDIDATE, EDITIONS, STANDARD_SURFACES; screened COMMON, CUE);
     for (_, grammar) in CUSTOM.iter().chain(LAWS.iter()) { grammar.warm(); }
 }

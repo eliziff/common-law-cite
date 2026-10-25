@@ -3319,6 +3319,106 @@
         ]
       },
       "note": "A call naming jurisdictions without the US does not run the US reporter and law grammars."
+    },
+    {
+      "name": "general/reporter-spacing",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen, [1989] 2 S.C.R . 418.",
+      "expect": {"citations": [{"span": {"text": "[1989] 2 S.C.R . 418"}, "key": "3:reporter:scr:scr:1989:2:418"}]},
+      "note": "OCR's space before a period inside a reporter abbreviation: the report is read whole, with its year."
+    },
+    {
+      "name": "general/reporter-spacing-each-letter",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen (1989), 49 N .B .R . 144.",
+      "expect": {"citations": [{"span": {"text": "(1989), 49 N .B .R . 144"}, "key": "3:reporter:nbr:nbr:49:144"}]},
+      "note": "A space before every period of the abbreviation, single letters included; the year in front is not read as a report of its own."
+    },
+    {
+      "name": "general/reporter-spacing-off",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen, [1989] 2 S.C.R . 418.",
+      "options": {"reporterNames": false},
+      "expect": {"citations": [{"span": {"text": "2 S.C.R . 418"}, "key": null}]},
+      "note": "With reporterNames off only the US grammars' whitespace-blind catalogue reads the report, without its year."
+    },
+    {
+      "name": "general/br-quebec-year-volume",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen v Ash, [1961] B.R. 771.",
+      "expect": {"citations": [{"key": "3:reporter:br-qc:br:1961:771"}]},
+      "note": "B.R. in the Canadian setting is Quebec's King's Bench reports, by year from 1942."
+    },
+    {
+      "name": "general/br-quebec-volume",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen v Ash (1929), 47 B.R. 286.",
+      "expect": {"citations": [{"key": "3:reporter:br-qc:br:47:286"}]},
+      "note": "Quebec's King's Bench reports numbered their volumes to 1941."
+    },
+    {
+      "name": "general/br-year-outside-quebec-run",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "In re Ash, 12 B.R. 45 (1981).",
+      "expect": {"citations": [{"key": "3:reporter:br:br:12:45"}]},
+      "note": "The citation's year is the text's own evidence: Quebec's reports ended in 1966, so a 1981 B.R. is the US Bankruptcy Reporter whatever the setting."
+    },
+    {
+      "name": "general/br-us-setting",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "1 B.R. 1",
+      "options": {"jurisdictionPriority": ["us"]},
+      "expect": {"citations": [{"key": "3:reporter:br:br:1:1", "fields": {"reporterCanonical": "B.R."}}]},
+      "note": "A US-first reading takes a bare B.R. as the Bankruptcy Reporter, as eyecite does."
+    },
+    {
+      "name": "general/us-journal-name-across-lines",
+      "convention": "bluebook",
+      "status": "pass",
+      "input": "Fen, “Moss” 19941 Wis. L.\nRev. 1425 at 1497.",
+      "expect": {"citations": [{"key": "3:journal:wislrev:19941:1425"}]},
+      "note": "A reporters-db name broken across a line is read as its whitespace-tolerant extractor read it."
+    },
+    {
+      "name": "general/front-matter-and-slip-pages-unkeyed",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v. Fen, 556 U.S. ____ (2009); Fen v Ash, [1987] 1 S.C.R. ix.",
+      "expect": {"citations": [{"span": {"text": "556 U.S. ____"}, "key": null}, {"span": {"text": "1 S.C.R. ix"}, "key": null}]},
+      "note": "A slip opinion's blank page and a volume's front-matter page are found but name no decision's report, so they carry no key."
+    },
+    {
+      "name": "general/ocr-bracket-read-as-one",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen, [19381 2 All E.R. 602.",
+      "options": {"ocrRepairs": true},
+      "expect": {"citations": [{"span": {"text": "[19381 2 All E.R. 602"}, "key": "3:reporter:aller:aller:1938:2:602"}]},
+      "note": "OCR read the year's closing bracket as a 1; the bracket is open on its line and All E.R. ran in 1938."
+    },
+    {
+      "name": "general/ocr-repairs-off-by-default",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen, [19381 2 All E.R. 602.",
+      "expect": {"citations": [{"span": {"text": "2 All E.R. 602"}, "key": null}]},
+      "note": "Without ocrRepairs the garbled year is not read."
+    },
+    {
+      "name": "general/ocr-year-letter-l",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen (l915), 52 R.C.S. 294.",
+      "options": {"ocrRepairs": true},
+      "expect": {"citations": [{"span": {"text": "(l915), 52 R.C.S. 294"}, "key": "3:reporter:scr:scr:52:294"}]},
+      "note": "OCR read the year's leading 1 as a letter l."
     }
   ]
 }

@@ -50,13 +50,13 @@ static INSTRUMENT_KIND: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("title.instrument-kind"));
 static BOOK_CHAPTER: LazyLock<CompiledGrammar> =
     LazyLock::new(|| backtracking("title.book-chapter"));
-/// The French statute series of the shared series defs (`LRC`, `LC`, `RLRQ`).
+/// The French series names of the shared series defs (`LRC`, `LC`, `RLRQ`, `DORS`, `TR`).
 static FRENCH_SERIES: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| {
     let tables = legal_grammar::load_tables().expect("grammar corpus");
     let defs = &tables["cite.ca.statute.first"].defs;
     legal_grammar::compile_ecmascript_pattern(
         "classify.fr-series",
-        &format!("^(?:{}|DORS|TR|R[èe]gl(?:\\s.*)?)$", defs["fr_statute_series"]),
+        &format!("^(?:{}|{}|R[èe]gl(?:\\s.*)?)$", defs["fr_statute_series"], defs["fr_instrument_series"]),
         "",
     )
     .expect("French series grammar")
@@ -240,12 +240,26 @@ fn journal_candidates(surface: &str, fields: &Fields) -> Vec<&'static Journal> {
     candidates
 }
 
+/// Whether a reporter ran in `year`: from its first edition's start, where every edition gives one, to its last
+/// edition's end, where every edition gives one.
+pub(crate) fn holds_year(reporter: &Reporter, year: u16) -> bool {
+    let editions = &reporter.editions;
+    let start = editions.iter().map(|edition| edition.start).collect::<Option<Vec<_>>>().and_then(|starts| starts.into_iter().min());
+    let end = editions.iter().map(|edition| edition.end).collect::<Option<Vec<_>>>().and_then(|ends| ends.into_iter().max());
+    start.is_none_or(|start| start <= year) && end.is_none_or(|end| year <= end)
+}
+
+/// `mirrored`: a reporters-db row carries this reporter's identity, so the editions the US grammars read speak for it.
+#[allow(clippy::too_many_arguments)]
 fn reporter_score(reporter: &Reporter, canonical: &str, surface: &str, open: Option<&str>, fields: &Fields,
-    jurisdiction: Option<&str>, explicit: Option<&[&Court]>, observed: Option<&Court>, options: &crate::Options) -> Option<Score> {
+    jurisdiction: Option<&str>, explicit: Option<&[&Court]>, observed: Option<&Court>, mirrored: bool, options: &crate::Options) -> Option<Score> {
     let source_exact = !fields.exact_editions.is_empty();
     let source_captured = source_exact || !fields.variation_editions.is_empty();
     let exact = source_match(canonical, &reporter.name.en, &fields.exact_editions);
-    if source_exact && !exact { return None; }
+    // The US grammars' editions come from reporters-db and so name only its reporters: they rule out the reporters-db
+    // rows they do not name, and an authored reporter only where a reporters-db row carries its identity. An authored
+    // reporter they cannot know ("[1961] B.R. 771", Quebec's King's Bench reports) is read by the setting.
+    if source_exact && !exact && (reporter.source == "reporters-db" || mirrored) { return None; }
     if !source_exact && source_captured && reporter.source == "reporters-db"
         && !source_match(canonical, &reporter.name.en, &fields.variation_editions) { return None; }
     if jurisdiction.zip(reporter.jurisdiction.as_deref()).is_some_and(|(written, candidate)|
@@ -284,8 +298,19 @@ fn reporter_for(surface: &str, open: Option<&str>, fields: &Fields, jurisdiction
         kind: "reporter".into(), id: reporter.id.clone(), canonical: (*canonical).to_owned(),
         jurisdiction: reporter.jurisdiction.clone(), selected: false, reason: String::new(),
     }).collect();
-    let scores = candidates.iter().map(|(reporter, canonical)| reporter_score(reporter, canonical,
-        surface, open, fields, jurisdiction, explicit.as_deref(), observed, options)).collect();
+    let mut scores = candidates.iter().map(|(reporter, canonical)| {
+        let mirrored = candidates.iter().any(|(other, _)| other.source == "reporters-db" && other.id == reporter.id);
+        reporter_score(reporter, canonical, surface, open, fields, jurisdiction, explicit.as_deref(), observed, mirrored, options)
+    }).collect::<Vec<_>>();
+    // The citation's year is the text's own evidence and outranks the setting: a reporter whose run (all its editions)
+    // does not hold it is no reading where another's does ("12 B.R. 45 (1981)" is not Quebec's King's Bench reports,
+    // which ended in 1966).
+    if let Some(year) = fields.year.as_deref().and_then(|year| year.parse::<u16>().ok()) {
+        let held: Vec<bool> = candidates.iter().map(|(reporter, _)| holds_year(reporter, year)).collect();
+        if scores.iter().zip(&held).any(|(score, held)| score.is_some() && *held) {
+            for (score, held) in scores.iter_mut().zip(&held) { if !held { *score = None; } }
+        }
+    }
     select(citation, readings, scores, explicit.as_ref().map(|_| "explicit_court")
         .or(observed.map(|_| "observed_alias"))
         .or(source_captured.then_some("citation_grammar"))).map(|at| (candidates[at].0, candidates[at].1.to_owned()))
@@ -1154,7 +1179,8 @@ fn competing_family(citation: &mut Citation, reading: Reading, options: &crate::
     let publication_form = !neutral.bracketed;
     let reporter_rank = reporters.iter().filter_map(|(reporter, canonical)|
         reporter_score(reporter, canonical, &publication_surface, reported.open.as_deref(),
-            &publication_fields, written_jurisdiction, explicit.as_deref(), observed, options)
+            &publication_fields, written_jurisdiction, explicit.as_deref(), observed,
+            reporters.iter().any(|(other, _)| other.source == "reporters-db" && other.id == reporter.id), options)
             .map(|(priority, period, variant, form, verified)|
                 (priority, period, variant, form || publication_form, verified))).min();
     let journal_rank = if explicit.is_some() { None } else {

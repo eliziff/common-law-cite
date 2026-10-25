@@ -15,7 +15,8 @@ use crate::text::javascript_whitespace;
 use crate::{CitationStyle, Options};
 use legal_grammar::{CompiledEcmascriptGrammar, CompiledGrammar};
 use regex::Regex;
-use std::ops::Range;
+use std::collections::BTreeSet;
+use std::ops::{Bound, Range};
 use std::sync::{LazyLock, OnceLock};
 
 #[derive(serde::Serialize)]
@@ -319,6 +320,9 @@ struct Anchor {
     source_span: Option<Hit>,
     preceding_text_end: Option<usize>,
     native: bool,
+    /// Read from a copy of its text other than the text itself: OCR's garbling repaired ([`repaired_reports`]), or its
+    /// reporter's spacing closed up ([`registry_reports`]).
+    repaired: bool,
     family: Option<(&'static str, &'static str)>,
     reading: Option<crate::classify::Reading>,
 }
@@ -578,17 +582,50 @@ fn occurrence_family(core: &str) -> (&'static str, &'static str) {
 
 #[cfg_attr(not(feature = "us"), allow(unused_variables))]
 fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationStyle]>, scopes: &[usize], enrich: bool,
-    reads_us: bool) -> Vec<Anchor> {
+    reads_us: bool, names: bool, ocr: bool) -> Vec<Anchor> {
     let (mut found, reporters) = primary_ranges(value);
+    // A report whose year OCR garbled, read repaired, replaces what the grammars read of it unrepaired.
+    let mut repaired = if ocr { repaired_reports(value) } else { Vec::new() };
+    if !repaired.is_empty() {
+        found.retain(|hit| !repaired.iter().any(|(span, _)| hit.start < span.end && span.start < hit.end));
+        found.extend(repaired.iter().map(|(span, _)| span.clone()));
+    }
+    #[cfg_attr(not(feature = "us"), allow(unused_mut))]
+    let mut us_hits: Vec<Hit> = Vec::new();
     #[cfg(feature = "us")]
     let mut captured = if !reads_us {
         Vec::new()
     } else if enrich {
-        crate::us::find(value, extended_us, Some(&mut found))
+        crate::us::find(value, extended_us, Some(&mut us_hits))
     } else {
-        found.extend(crate::us::citation_spans(value, extended_us));
+        us_hits.extend(crate::us::citation_spans(value, extended_us));
         Vec::new()
     };
+    // A report the grammars could not split whose reporter or journal the registry names joins what the native
+    // grammars read of its name ("(1989), 49 N" of "(1989), 49 N .B .R . 144"). One the native grammars read whole from
+    // its volume, or the US grammars from the year before it, stays as they read it; so does a citation whose page or
+    // volume the report's volume is ("(1869), L.R. 5" of "(1869), L.R. 5 Ex. 1").
+    let mut registered: Vec<(Hit, usize)> = Vec::new();
+    if names {
+        #[cfg(feature = "us")]
+        let read_by_us = |span: &Hit| us_hits.iter().chain(captured.iter().map(|matched| &matched.span))
+            .any(|hit| hit.start <= span.start && span.end <= hit.end);
+        #[cfg(not(feature = "us"))]
+        let read_by_us = |_: &Hit| false;
+        for (span, volume, reporter) in registry_reports(value) {
+            if read_by_us(&span) || found.iter().any(|hit| hit.start <= volume && span.end <= hit.end) { continue; }
+            let overlapping: Vec<Hit> = found.iter().filter(|hit| hit.start < span.end && span.start < hit.end).cloned().collect();
+            if overlapping.iter().any(|hit| hit.end <= reporter) { continue; }
+            let joined = overlapping.iter().fold(span.clone(), |joined, hit| joined.start.min(hit.start)..joined.end.max(hit.end));
+            let Some(reading) = crate::classify::read(&closed_up(&value[joined.clone()]), "reporter_grammar", "")
+                .filter(crate::classify::Reading::reported) else { continue };
+            found.retain(|hit| !(hit.start < joined.end && joined.start < hit.end));
+            found.push(joined.clone());
+            registered.push((joined.clone(), reporter));
+            repaired.push((joined, reading));
+        }
+    }
+    found.extend(us_hits);
     found.retain(|hit| !numbered_on(&value[hit.end..]) && !no_report(value, hit.clone()));
     #[cfg(feature = "us")]
     captured.retain(|matched| !numbered_on(&value[matched.span.end..]) && !no_report(value, matched.span.clone()));
@@ -598,14 +635,23 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     // The block keeps the family its publication names ("(1879), 5 Ex D 264"
     // is a case).
     let mut secondary = secondary_hits(value, &found, styles);
+    // So does a report found by its registered name whose volume a secondary form reads as its own last number.
+    registered.retain(|(span, reporter)| {
+        let yields = secondary.iter().any(|anchor| anchor.span.start < span.start && span.start < anchor.span.end
+            && anchor.span.end <= *reporter);
+        if yields { found.retain(|hit| hit != span); }
+        !yields
+    });
+    let registered: Vec<Hit> = registered.into_iter().map(|(span, _)| span).collect();
     let mut primary = Vec::new();
     for anchor in resolve(found.into_iter().map(|span| Anchor { span, ..Anchor::default() }).collect()) {
         let hit = &anchor.span;
         // A treaty series block ("Can TS 1994 No 2") holds the number the in-text grammar reads, and a gazette page
-        // ("1991 GOQ 2, 1447") the year, capitals and number it reads as a decision.
+        // ("1991 GOQ 2, 1447") the year, capitals and number it reads as a decision. So does an article the registry's
+        // names read as much of as its grammar does ("(1976) 17 C.de D. 603").
         match secondary.iter_mut().find(|whole| whole.family.is_some_and(|(_, reason)|
             reason == "article_grammar" || reason == "treaty_grammar" || reason == "securities_grammar")
-            && whole.span.start <= hit.start && hit.end <= whole.span.end && whole.span != *hit) {
+            && whole.span.start <= hit.start && hit.end <= whole.span.end && (whole.span != *hit || registered.contains(hit))) {
             Some(whole) => if whole.reading.is_none() && whole.family.is_some_and(|(_, reason)| reason == "article_grammar") {
                 whole.read(value);
                 if let Some(kind) = whole.reading.as_ref().map(|reading| reading.family().0).filter(|kind| *kind != "other") {
@@ -615,7 +661,13 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
             // A report written right before ", supra" is the short title a supra names ("Nortel
             // 2014, supra note 15"), never a citation of its own.
             None if SUPRA_AFTER.is_match_screened(&value[anchor.span.end..]) => {}
-            None => primary.push(Anchor::new(anchor.span.clone(), occurrence_family(&value[anchor.span]))),
+            None => match repaired.iter().position(|(span, _)| *span == anchor.span) {
+                Some(at) => {
+                    let reading = repaired.swap_remove(at).1;
+                    primary.push(Anchor { reading: Some(reading.clone()), repaired: true, ..Anchor::new(anchor.span.clone(), reading.family()) });
+                }
+                None => primary.push(Anchor::new(anchor.span.clone(), occurrence_family(&value[anchor.span]))),
+            },
         }
     }
     // A case claims its style of cause, and a style of cause can read as a
@@ -665,6 +717,8 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
         if native.as_ref().is_some_and(|anchor| matched.span.start < anchor.span.start && matched.span.end < anchor.span.end) {
             continue;
         }
+        // A repaired report keeps the reading its registered reporter gives it.
+        if native.as_ref().is_some_and(|anchor| anchor.repaired) { continue; }
         let mut reading = crate::classify::extracted(&value[matched.span.clone()], matched.fields, matched.short_at);
         if let Some(anchor) = native {
             if anchor.span.start < matched.span.start && reading.fields.year.is_none() {
@@ -739,6 +793,158 @@ pub(crate) fn citation_hits(value: &str, extended_us: bool) -> Vec<Hit> {
     spans.extend(crate::us::citation_spans(value, extended_us));
     resolve(spans.into_iter().map(|span| Anchor { span, ..Anchor::default() }).collect())
         .into_iter().map(|anchor| anchor.span).collect()
+}
+
+/// What follows a report's reporter: its page, Arabic or a slip opinion's blank, or any page the US forms read
+/// (`cite.report.tail`, `cite.report.tail.us-page`), and the comma or short form's "at" before it.
+pub(crate) static REPORT_TAILS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+    let tables = legal_grammar::load_tables().expect("grammar corpus");
+    ["cite.report.tail", "cite.report.tail.us-page"].map(|id| {
+        let value = &tables[id];
+        Regex::new(&legal_grammar::expand_pattern(&value.entry.pattern, &value.defs).expect(id)).expect(id)
+    })
+});
+
+/// A report [`walk_reports`] read.
+pub(crate) struct Walked<'t> {
+    /// Where its volume starts and ends, and its reporter.
+    pub start: usize,
+    pub volume_end: usize,
+    pub reporter: Range<usize>,
+    /// The reporter as its catalogue spells it.
+    pub name: String,
+    /// The tail read after the reporter, from its end.
+    pub tail: regex::Captures<'t>,
+}
+
+/// The reports by volume, reporter and page whose reporter is one of `names`, in one scan, in place of a pattern per
+/// reporter. A volume is a run of digits not after a letter or digit, then one space; its reporter is the shortest run
+/// after which `tail` matches, read as `spell` keeps its characters, and a report only when that is a name. The walk
+/// stops once what it has read begins no name, since then no longer run can be one.
+pub(crate) fn walk_reports<'t>(text: &'t str, names: &BTreeSet<String>, spell: impl Fn(char) -> Option<char>,
+    tail: &Regex) -> Vec<Walked<'t>> {
+    let bytes = text.as_bytes();
+    let mut found = Vec::new();
+    for (start, _) in text.match_indices(|character: char| ('1'..='9').contains(&character)) {
+        if start > 0 && bytes[start - 1].is_ascii_alphanumeric() { continue; }
+        let digits = bytes[start..].iter().take_while(|byte| byte.is_ascii_digit()).count();
+        let reporter_start = start + digits + 1;
+        if bytes.get(start + digits) != Some(&b' ') { continue; }
+        let mut name = String::new();
+        for (count, (offset, character)) in text[reporter_start..].char_indices().enumerate() {
+            if count == 180 || character == ';' || count == 0 && character.is_whitespace() { break; }
+            if let Some(kept) = spell(character) {
+                name.push(kept);
+                let next = names.range::<str, _>((Bound::Included(name.as_str()), Bound::Unbounded)).next();
+                if !next.is_some_and(|known| known.starts_with(&name)) { break; }
+            }
+            let end = reporter_start + offset + character.len_utf8();
+            if !matches!(bytes.get(end), Some(b',' | b' ')) { continue; }
+            let Some(captures) = tail.captures(&text[end..]) else { continue };
+            if names.contains(&name) {
+                found.push(Walked { start, volume_end: start + digits, reporter: reporter_start..end, name, tail: captures });
+            }
+            break;
+        }
+    }
+    found
+}
+
+/// A letter or digit, as the registry folds a surface, its case kept.
+fn letter_or_digit(character: char) -> Option<char> {
+    character.is_alphanumeric().then_some(character)
+}
+
+/// The names the registry gives the reporters and journals it does not take from reporters-db (each edition of a
+/// reporter, and the variations of each), spelled as [`letter_or_digit`] reads them: "SCR" for "S.C.R.", "NBR2d" for
+/// "N.B.R. (2d)", "CanBarRev" for "Can. Bar Rev.".
+static REGISTRY_NAMES: LazyLock<BTreeSet<String>> = LazyLock::new(|| {
+    let registry = crate::registry::registry();
+    let reporters = registry.reporters.iter().filter(|reporter| reporter.source != "reporters-db")
+        .flat_map(|reporter| reporter.editions.iter().map(|edition| edition.abbreviation.as_str())
+            .chain(reporter.variations.keys().map(String::as_str)));
+    let journals = registry.journals.iter().filter(|journal| journal.source != "reporters-db")
+        .flat_map(|journal| std::iter::once(journal.abbreviation.as_str()).chain(journal.variations.iter().map(String::as_str)));
+    reporters.chain(journals).map(|surface| surface.chars().filter_map(letter_or_digit).collect::<String>())
+        .filter(|name| !name.is_empty()).collect()
+});
+
+/// The year a writer puts before a report's volume, at the end of the text before it (`cite.report.year-before`).
+static YEAR_BEFORE: LazyLock<Regex> = LazyLock::new(|| {
+    let tables = legal_grammar::load_tables().expect("grammar corpus");
+    Regex::new(&tables["cite.report.year-before"].entry.pattern).expect("cite.report.year-before")
+});
+
+/// The reports whose reporter or journal is a name of [`REGISTRY_NAMES`], however the writer spaced and pointed it
+/// ("2 S.C.R . 418", "49 N .B .R . 144", "37 Sask. R. 128", "27 Can . Bar Rev. 1238"), each from the year its writer
+/// puts before it ("[1953] 2 S.C.R . 299"); a short form's "at" is the US forms' alone.
+/// Each with where its volume and its reporter start.
+fn registry_reports(value: &str) -> Vec<(Hit, usize, usize)> {
+    walk_reports(value, &REGISTRY_NAMES, letter_or_digit, &REPORT_TAILS[0]).into_iter()
+        .filter(|walked| walked.tail.name("__short_at").is_none())
+        .map(|walked| {
+            let mut floor = walked.start.saturating_sub(16);
+            while !value.is_char_boundary(floor) { floor += 1; }
+            let start = YEAR_BEFORE.find(&value[floor..walked.start]).map_or(walked.start, |year| floor + year.start());
+            (start..walked.reporter.end + walked.tail.name("citation").unwrap().end(), walked.start, walked.reporter.start)
+        })
+        .collect()
+}
+
+/// A core with the whitespace before each period closed up, as its reading takes it ("49 N.B.R. 144").
+fn closed_up(core: &str) -> String {
+    let mut closed = String::with_capacity(core.len());
+    for character in core.chars() {
+        if character == '.' { closed.truncate(closed.trim_end().len()); }
+        closed.push(character);
+    }
+    closed
+}
+
+/// Reports whose year OCR garbled ([`Options::ocr_repairs`]), each with its reading: a bracketed year whose closing
+/// bracket was read as a 1, the bracket left open on its line ("[19381 2 All E.R. 602" for "[1938] 2 All E.R. 602"),
+/// and a year's leading 1 read as a letter l or I ("(l915)", "[I967]"). The citation grammars read a copy of the text
+/// with each repair made in place, which keeps every offset; a report found only there counts where the registry knows
+/// its reporter or journal and one of its reporters ran that year.
+fn repaired_reports(value: &str) -> Vec<(Hit, crate::classify::Reading)> {
+    let bytes = value.as_bytes();
+    let mut view = bytes.to_vec();
+    let mut repairs = Vec::new();
+    for at in 0..bytes.len() {
+        if !matches!(bytes[at], b'[' | b'(') || at + 6 > bytes.len() { continue; }
+        let year = |digits: &[u8]| digits.iter().all(u8::is_ascii_digit) && matches!(&digits[..2], b"17" | b"18" | b"19" | b"20");
+        let closer = if bytes[at] == b'[' { b']' } else { b')' };
+        if bytes[at] == b'[' && year(&bytes[at + 1..at + 5]) && bytes[at + 5] == b'1'
+            && bytes.get(at + 6).is_some_and(u8::is_ascii_whitespace)
+            && !bytes[at + 1..].iter().take_while(|byte| **byte != b'\n').any(|byte| *byte == b']') {
+            view[at + 5] = b']';
+            repairs.push(at + 5);
+        } else if matches!(bytes[at + 1], b'l' | b'I') && bytes[at + 5] == closer
+            && year(&[b'1', bytes[at + 2], bytes[at + 3], bytes[at + 4]]) {
+            view[at + 1] = b'1';
+            repairs.push(at + 1);
+        }
+    }
+    if repairs.is_empty() { return Vec::new(); }
+    let view = String::from_utf8(view).expect("replacing ASCII bytes with ASCII keeps UTF-8");
+    let (mut hits, reporters) = primary_ranges(&view);
+    hits.extend(reporters);
+    let registry = crate::registry::registry();
+    let holds = |hit: &Hit| {
+        let first = repairs.partition_point(|&at| at < hit.start);
+        repairs.get(first).is_some_and(|&at| at < hit.end)
+    };
+    let candidates = hits.into_iter().filter(|hit| holds(hit))
+        .map(|span| Anchor { span, ..Anchor::default() }).collect();
+    resolve(candidates).into_iter().filter_map(|anchor| {
+        let reading = crate::classify::read(&view[anchor.span.clone()], "reporter_grammar", "")?;
+        let surface = reading.fields.reporter.as_deref().filter(|_| reading.reported())?;
+        let reporters = registry.reporters_by_surface(surface);
+        if reporters.is_empty() && registry.journals_by_surface(surface).is_empty() { return None; }
+        let year = reading.fields.year.as_deref().and_then(|year| year.parse::<u16>().ok())?;
+        if !reporters.iter().any(|(reporter, _)| crate::classify::holds_year(reporter, year)) { return None; }
+        Some((anchor.span, reading))
+    }).collect()
 }
 
 fn primary_ranges(value: &str) -> (Vec<Hit>, Vec<Hit>) {
@@ -1738,7 +1944,8 @@ fn cores(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<C
 }
 
 fn cores_in(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Vec<Core> {
-    let mut cores = citation_anchors(text, options.us_forms(), options.styles.as_deref(), scopes, enrich, options.reads_us())
+    let mut cores = citation_anchors(text, options.us_forms(), options.styles.as_deref(), scopes, enrich, options.reads_us(),
+        options.reporter_names, options.ocr_repairs)
         .into_iter()
         .map(|anchor| Core {
             span: anchor.span.clone(),
@@ -2621,7 +2828,7 @@ pub(crate) fn warm() {
     crate::warm_statics!(
         REPORTER_PARTS, JOURNAL_CUE, TREATY, PARLIAMENTARY_COMMONWEALTH, DATABASE,
         SECONDARY_SOURCES, SECONDARY_SCREEN, MARKUP_REFERENCE_FOLLOWING, MARKUP_REFERENCE_NAME,
-        SOURCE_REFERENCE, SOURCE_REFERENCE_PARTS, SOURCE_NAME_EXCLUDED;
+        SOURCE_REFERENCE, SOURCE_REFERENCE_PARTS, SOURCE_NAME_EXCLUDED, REPORT_TAILS, REGISTRY_NAMES, YEAR_BEFORE;
         screened
         CITATION_PATTERN, REPORTER_MONTH, REPORTER_WORD, CASE_NAME, SIGNAL_PREFIX,
         INTRODUCTORY_SIGNAL, BACK_REFERENCE, INLINE_REFERENCE, INLINE_NOTE,
