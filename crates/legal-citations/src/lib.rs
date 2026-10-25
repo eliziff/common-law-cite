@@ -186,6 +186,10 @@ pub struct Options {
     /// Ordered jurisdiction preferences for ambiguous abbreviations: `["ca"]` by default, `["us"]` or
     /// `["uk", "ca"]` for another order. An explicit court takes precedence. Empty is neutral.
     pub jurisdiction_priority: Vec<String>,
+    /// The jurisdictions whose own citation forms are read (`["ca", "uk"]`); every compiled one when absent. A list
+    /// without `us` (or a `us-` place) skips the US reporter and law grammars (eyecite's), which hold no
+    /// Commonwealth form the native grammars do not read.
+    pub jurisdictions: Option<Vec<String>>,
     /// Supra hint capture uses aggressive mode by default.
     pub supra_hint_mode: SupraMode,
     /// Inferred and bare-note linking runs only in aggressive mode.
@@ -381,6 +385,7 @@ impl Default for Options {
             parallel: true,
             notes: None,
             jurisdiction_priority: source::default_jurisdiction_priority(),
+            jurisdictions: None,
             supra_hint_mode: SupraMode::Aggressive,
             supra_linking_mode: SupraMode::Safe,
             styles: None,
@@ -399,6 +404,11 @@ impl Options {
     pub(crate) fn us_forms(&self) -> bool {
         self.styles.as_ref().is_none_or(|styles| styles.contains(&CitationStyle::Bluebook))
             || source::us_jurisdiction(&self.jurisdiction_priority)
+    }
+
+    /// Whether the US reporter and law grammars run ([`Options::jurisdictions`]).
+    pub(crate) fn reads_us(&self) -> bool {
+        self.jurisdictions.as_deref().is_none_or(source::us_jurisdiction)
     }
 }
 
@@ -429,7 +439,14 @@ pub fn extract_markup(text: &str, markup: Option<&str>, options: &Options) -> Ve
     extract_markup_with_parts(text, markup, options).0
 }
 
+/// Every caller's way in: a text the engine fails on gives no citations rather than stopping its host.
 pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
+    -> (Vec<Citation>, Vec<source::SourcePart>, Vec<resolve::Resolution>) {
+    std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| read_markup_with_parts(text, markup, options)))
+        .unwrap_or_default()
+}
+
+fn read_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
     -> (Vec<Citation>, Vec<source::SourcePart>, Vec<resolve::Resolution>) {
     let timing = std::env::var_os("LEGALPDF_PHASE_TIMING").is_some();
     let mut stage_started = std::time::Instant::now();

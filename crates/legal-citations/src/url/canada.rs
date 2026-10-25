@@ -434,9 +434,11 @@ pub fn canlii_case_in(citation: &Citation, language: Language, registry: &Regist
                 .collect::<String>()
                 .to_ascii_lowercase();
             // A code CanLII uses in the court's decision ids without identifying the court by it
-            // (`CRTFP`, `SSTAD`): the court's route, under /fr/ for a French code.
+            // (`SSTAD`), or a French one, though it is also a neutral code (`CRTFP`): the court's route,
+            // under /fr/ for a French code.
             let neutral_position = court.and_then(|court| court.neutral.iter().position(|value| fold(value) == fold(written)));
-            if neutral_position.is_none() {
+            let french_code = court.is_some_and(|court| court.canlii_codes_fr.iter().any(|value| fold(value) == fold(written)));
+            if neutral_position.is_none() || french_code {
                 let (court, french) = court
                     .and_then(|court| {
                         let folded = fold(written);

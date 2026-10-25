@@ -3147,6 +3147,178 @@
         ]
       },
       "note": "Without a section, the writer's short form names the instrument and later references resolve to it."
+    },
+    {
+      "name": "case/french-neutral-of-the-agricultural-review-tribunal",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen c Ash, 2031 CRAC 18",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:neutral:2031:cart:18"
+          }
+        ]
+      },
+      "note": "CRAC is the Commission de révision agricole du Canada's neutral identifier, CART's."
+    },
+    {
+      "name": "case/french-court-martial-appeal-reports",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "R c Ash, 2031 CACM 5, 9 CACM 404",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:neutral:2031:cmac:5"
+          },
+          {
+            "key": "3:reporter:cmar:cmar:9:404"
+          }
+        ]
+      },
+      "note": "CACM with a volume is the Court Martial Appeal Reports' French title; with a year, the court's neutral identifier."
+    },
+    {
+      "name": "case/french-neutral-of-the-public-service-labour-relations-board",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen c Ash, 2010 CRTFP 134",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:neutral:2010:pslrb:134"
+          }
+        ]
+      },
+      "note": "CRTFP is the PSLRB's French neutral identifier from 2005 (A2AJ pairs them in 1,350 records)."
+    },
+    {
+      "name": "case/french-neutral-of-the-public-service-staff-relations-board",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen c Ash, 2004 CRTFP 60",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:neutral:2004:pssrb:60"
+          }
+        ]
+      },
+      "note": "Before 2005 the same French identifier was the PSSRB's."
+    },
+    {
+      "name": "case/french-neutral-of-the-social-security-tribunal-appeal-division",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen c Ash, 2017 TSSDASR 476",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:neutral:2017:sst:476"
+          }
+        ]
+      },
+      "note": "TSSDASR is the Social Security Tribunal's French income-security appeal identifier, as SSTADIS is its English one."
+    },
+    {
+      "name": "case/french-neutral-of-the-occupational-health-and-safety-tribunal",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Fen c Ash, 2011 TSSTC 19",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:neutral:2011:ohstc:19"
+          }
+        ]
+      },
+      "note": "TSSTC is the OHSTC's French neutral identifier."
+    },
+    {
+      "name": "case/parallels-group-in-text-order-around-a-shared-name",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "R v Ash, 2031 SCC 69, 2031 CarswellQue 12595, 2031 CarswellQue 12596, [2031] 3 S.C.R. 560",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "parallelGroup": 0
+          },
+          {
+            "parallelGroup": 0
+          },
+          {
+            "parallelGroup": 0
+          },
+          {
+            "parallelGroup": 0
+          }
+        ]
+      },
+      "note": "The report carries the neutral citation's name, so it is listed beside it; its parallels are still the citations written next to it, the database's two numbers between them."
+    },
+    {
+      "name": "general/us-reporters-read-by-default",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen, 2031 SCC 9; Fen v Ash, 334 F.3d 274 (2d Cir. 2003).",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:neutral:2031:scc:9"
+          },
+          {
+            "key": "3:reporter:f:f3d:334:274"
+          }
+        ]
+      },
+      "note": "Every compiled jurisdiction's forms are read when the call names none."
+    },
+    {
+      "name": "general/us-reporters-not-read-outside-the-jurisdictions-named",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Ash v Fen, 2031 SCC 9; Fen v Ash, 334 F.3d 274 (2d Cir. 2003).",
+      "options": {
+        "resolve": false,
+        "jurisdictions": [
+          "ca",
+          "uk"
+        ]
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:neutral:2031:scc:9"
+          }
+        ]
+      },
+      "note": "A call naming jurisdictions without the US does not run the US reporter and law grammars."
     }
   ]
 }
