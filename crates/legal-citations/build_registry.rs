@@ -10,6 +10,9 @@ fn read(path: &str) -> Value {
     serde_json::from_slice(&fs::read(path).unwrap()).unwrap()
 }
 fn string(value: &Value) -> &str { value.as_str().unwrap_or("") }
+fn strings(value: &Value) -> Vec<String> {
+    value.as_array().into_iter().flatten().filter_map(Value::as_str).map(str::to_owned).collect()
+}
 fn year(value: &Value) -> Option<u16> { string(value).get(..4)?.parse().ok() }
 fn slug(value: &str) -> String {
     let mut result = String::new();
@@ -112,6 +115,27 @@ fn authored_index(table: &str, row: &Value) -> Value {
             order.iter().position(|key| key == &edition["abbreviation"]).unwrap());
     }
     result
+}
+
+/// The years `registry/journal-years.json` gives journals (their run and the years volumes appeared, each with its
+/// source), on every journal row written as its key is: the journal a citation key names, folded.
+fn journal_years(rows: &mut [Value]) {
+    let years = read("registry/journal-years.json");
+    let years = years.as_object().unwrap();
+    let fold = |text: &str| text.chars().filter(|character| character.is_alphanumeric()).flat_map(char::to_lowercase).collect::<String>();
+    for row in rows {
+        let names = std::iter::once(string(&row["abbreviation"]).to_owned()).chain(strings(&row["variations"]));
+        let Some(entry) = names.map(|name| fold(&name)).find_map(|name| years.get(&name)) else { continue };
+        for bound in ["start", "end"] {
+            if let Some(year) = entry[bound]["year"].as_u64() { row[bound] = json!(year); }
+        }
+        let anchors: Vec<Value> = entry["anchors"].as_array().into_iter().flatten().map(|anchor| {
+            let mut indexed = json!({"volume": anchor["volume"], "year": anchor["year"]});
+            if anchor["last_year"].is_number() { indexed["last_year"] = anchor["last_year"].clone(); }
+            indexed
+        }).collect();
+        if !anchors.is_empty() { row["anchors"] = json!(anchors); }
+    }
 }
 
 pub fn compile(out: &Path) {
@@ -252,10 +276,11 @@ pub fn compile(out: &Path) {
             "courts" => &["id", "name", "jurisdiction", "level", "neutral", "aliases", "citation_string", "source_dates", "canlii", "canlii_fr", "canlii_french", "canlii_codes", "canlii_codes_fr", "start", "end", "parent"],
             "reporters" => &["id", "name", "kind", "jurisdiction", "courts", "default_court", "editions", "variations", "year_volume", "source", "verified"],
             "series" => &["id", "name", "kind", "jurisdiction", "abbreviation", "variations", "language", "canlii"],
-            "journals" => &["id", "name", "abbreviation", "variations", "jurisdiction", "source", "verified"],
+            "journals" => &["id", "name", "abbreviation", "variations", "jurisdiction", "source", "verified", "start", "end", "anchors"],
             _ => unreachable!(),
         };
         rows.retain(|row| enabled(row_jurisdiction(row)));
+        if table == "journals" { journal_years(&mut rows); }
         for row in &mut rows { row.as_object_mut().unwrap().retain(|key, _| fields.contains(&key.as_str())); }
         index[table] = json!(rows);
     }

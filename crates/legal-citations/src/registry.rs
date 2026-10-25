@@ -280,6 +280,38 @@ pub struct Journal {
     /// (see the module documentation).
     #[serde(default = "verified_default", skip_serializing_if = "is_verified")]
     pub verified: bool,
+    /// The year of its first volume and of its last, where a source states them.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub start: Option<u16>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub end: Option<u16>,
+    /// Volumes a source shows with the year (or years) they appeared, by volume.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub anchors: Vec<VolumeYear>,
+}
+
+/// A volume of a periodical and the year it appeared, or the years it spans.
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct VolumeYear {
+    pub volume: u32,
+    pub year: u16,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_year: Option<u16>,
+}
+
+impl Journal {
+    /// Whether the journal can have published `volume` in `year`: within its run, and no earlier than a volume before it
+    /// and no later than a volume after it appeared (volumes only follow one another), where a source gives them. A
+    /// volume's own anchor bounds nothing, since a volume can span years and its anchor names one of them. What no
+    /// source states rules nothing out.
+    pub fn holds(&self, volume: Option<u32>, year: u16) -> bool {
+        if self.start.is_some_and(|start| year < start) || self.end.is_some_and(|end| year > end) { return false; }
+        let Some(volume) = volume else { return true };
+        let before = self.anchors.iter().filter(|anchor| anchor.volume < volume).map(|anchor| anchor.year).max();
+        let after = self.anchors.iter().filter(|anchor| anchor.volume > volume)
+            .map(|anchor| anchor.last_year.unwrap_or(anchor.year)).min();
+        before.is_none_or(|first| first <= year) && after.is_none_or(|last| year <= last)
+    }
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
