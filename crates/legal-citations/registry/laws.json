@@ -7,6 +7,9 @@
   "variations": [
    "LRC"
   ],
+  "french": [
+   "LRC"
+  ],
   "canlii": {
    "jurisdiction": "ca",
    "database": "cas"
@@ -20,6 +23,9 @@
   "jurisdiction": "ca",
   "abbreviation": "SC",
   "variations": [
+   "LC"
+  ],
+  "french": [
    "LC"
   ],
   "canlii": {
@@ -38,6 +44,12 @@
   "variations": [
    "DORS"
   ],
+  "forms": [
+   "instrument"
+  ],
+  "french": [
+   "DORS"
+  ],
   "canlii": {
    "jurisdiction": "ca",
    "database": "car"
@@ -53,6 +65,12 @@
   "variations": [
    "TR"
   ],
+  "forms": [
+   "instrument"
+  ],
+  "french": [
+   "TR"
+  ],
   "canlii": {
    "jurisdiction": "ca",
    "database": "car"
@@ -65,6 +83,9 @@
   "kind": "regulations",
   "jurisdiction": "ca",
   "abbreviation": "CRC",
+  "forms": [
+   "consolidated"
+  ],
   "canlii": {
    "jurisdiction": "ca",
    "database": "car"
@@ -80,6 +101,9 @@
   "variations": [
    "LRO"
   ],
+  "french": [
+   "LRO"
+  ],
   "canlii": {
    "jurisdiction": "on",
    "database": "ons"
@@ -93,6 +117,9 @@
   "jurisdiction": "ca-on",
   "abbreviation": "SO",
   "variations": [
+   "LO"
+  ],
+  "french": [
    "LO"
   ],
   "canlii": {
@@ -126,6 +153,9 @@
   "kind": "regulations",
   "jurisdiction": "ca-on",
   "abbreviation": "RRO",
+  "forms": [
+   "revised_regulation"
+  ],
   "canlii": {
    "jurisdiction": "on",
    "database": "onr"
@@ -240,6 +270,9 @@
   "kind": "regulations",
   "jurisdiction": "ca-sk",
   "abbreviation": "RRS",
+  "forms": [
+   "compiled"
+  ],
   "canlii": {
    "jurisdiction": "sk",
    "database": "skr"
@@ -268,6 +301,9 @@
   "variations": [
    "LRM"
   ],
+  "french": [
+   "LRM"
+  ],
   "canlii": {
    "jurisdiction": "mb",
    "database": "mbs",
@@ -284,6 +320,13 @@
   "variations": [
    "CPLM"
   ],
+  "forms": [
+   "statute",
+   "compiled"
+  ],
+  "french": [
+   "CPLM"
+  ],
   "canlii": {
    "jurisdiction": "mb",
    "database": "mbs"
@@ -297,6 +340,9 @@
   "jurisdiction": "ca-mb",
   "abbreviation": "SM",
   "variations": [
+   "LM"
+  ],
+  "french": [
    "LM"
   ],
   "canlii": {
@@ -331,6 +377,9 @@
   "variations": [
    "LRN-B"
   ],
+  "french": [
+   "LRN-B"
+  ],
   "canlii": {
    "jurisdiction": "nb",
    "database": "nbs",
@@ -345,6 +394,9 @@
   "jurisdiction": "ca-nb",
   "abbreviation": "SNB",
   "variations": [
+   "LN-B"
+  ],
+  "french": [
    "LN-B"
   ],
   "canlii": {
@@ -387,6 +439,9 @@
   "kind": "revised_statutes",
   "jurisdiction": "ca-ns",
   "abbreviation": "RS Third Series",
+  "forms": [
+   "compiled"
+  ],
   "canlii": {
    "jurisdiction": "ns",
    "database": "nss"
@@ -727,6 +782,10 @@
   "kind": "regulations",
   "jurisdiction": "ca-nt",
   "abbreviation": "RRNWT",
+  "forms": [
+   "statute",
+   "compiled"
+  ],
   "canlii": {
    "jurisdiction": "nt",
    "database": "ntr"
@@ -771,6 +830,10 @@
   "kind": "regulations",
   "jurisdiction": "ca-nu",
   "abbreviation": "RRNWT (Nu)",
+  "forms": [
+   "statute",
+   "compiled"
+  ],
   "canlii": {
    "jurisdiction": "nu",
    "database": "nur"
@@ -794,6 +857,9 @@
   "kind": "revised_statutes",
   "jurisdiction": "ca-nu",
   "abbreviation": "CSNu",
+  "forms": [
+   "compiled"
+  ],
   "canlii": {
    "jurisdiction": "nu",
    "database": "nus"
@@ -846,6 +912,14 @@
   "variations": [
    "RLRQ"
   ],
+  "forms": [
+   "statute",
+   "compiled"
+  ],
+  "french": [
+   "CQLR",
+   "RLRQ"
+  ],
   "canlii": {
    "jurisdiction": "qc",
    "database": "qcs"
@@ -859,6 +933,13 @@
   "jurisdiction": "ca-qc",
   "abbreviation": "RSQ",
   "variations": [
+   "LRQ"
+  ],
+  "forms": [
+   "statute",
+   "compiled"
+  ],
+  "french": [
    "LRQ"
   ],
   "canlii": {
@@ -876,6 +957,9 @@
   "variations": [
    "LQ"
   ],
+  "french": [
+   "LQ"
+  ],
   "canlii": {
    "jurisdiction": "qc",
    "database": "qca",
@@ -889,6 +973,10 @@
   "kind": "regulations",
   "jurisdiction": "ca-qc",
   "abbreviation": "RRQ",
+  "forms": [
+   "statute",
+   "compiled"
+  ],
   "canlii": {
    "jurisdiction": "qc",
    "database": "qcr"
@@ -901,6 +989,9 @@
   "kind": "regulations",
   "jurisdiction": "ca-qc",
   "abbreviation": "RQ",
+  "forms": [
+   "compiled"
+  ],
   "canlii": {
    "jurisdiction": "qc",
    "database": "qcr"

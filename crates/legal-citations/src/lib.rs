@@ -190,6 +190,14 @@ pub struct Options {
     /// without `us` (or a `us-` place) skips the US reporter and law grammars (eyecite's), which hold no
     /// Commonwealth form the native grammars do not read.
     pub jurisdictions: Option<Vec<String>>,
+    /// Read a report the grammars cannot split by the registry's name for its reporter, however the writer spaced and
+    /// pointed it ("[1989] 2 S.C.R . 418", "49 N .B .R . 144", "37 Sask. R. 128"), as the US reporters' names are read.
+    /// A report the grammars read whole is read as they read it.
+    pub reporter_names: bool,
+    /// Read a report's year where OCR garbled it: a bracketed year whose closing bracket was read as a 1 ("[19381 2
+    /// All E.R. 602"), or whose leading 1 was read as a letter l or I ("(l915)"), where the registry knows the reporter
+    /// and it ran that year. For OCR'd text; off by default.
+    pub ocr_repairs: bool,
     /// Supra hint capture uses aggressive mode by default.
     pub supra_hint_mode: SupraMode,
     /// Inferred and bare-note linking runs only in aggressive mode.
@@ -386,6 +394,8 @@ impl Default for Options {
             notes: None,
             jurisdiction_priority: source::default_jurisdiction_priority(),
             jurisdictions: None,
+            reporter_names: true,
+            ocr_repairs: false,
             supra_hint_mode: SupraMode::Aggressive,
             supra_linking_mode: SupraMode::Safe,
             styles: None,

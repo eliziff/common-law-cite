@@ -69,3 +69,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: python tools/sync-upstream.py --check
+      - run: python tools/registry-grammar.py --check

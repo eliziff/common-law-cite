@@ -35,7 +35,10 @@ compiling under both the Rust (`fancy-regex`/`regex`) and ECMAScript dialects.
 **Registry data is JSON, not code.** Courts, reporters, series, journals and
 jurisdictions are rows in `crates/legal-citations/registry/*.json`, read by
 every binding through `registry`. No court, reporter or series tables in Rust
-source, and no per-binding copies. Authored rows (Canadian, Commonwealth,
+source, and no per-binding copies. The statute grammar's series names are the
+registry's too: each law row's `forms` (the citation forms it is cited in) and
+`french` (its French names) decide the defs `tools/registry-grammar.py` writes
+into the corpus; run it after editing `laws.json` (`--check` in CI). Authored rows (Canadian, Commonwealth,
 international) are edited by hand; `registry/upstream/*.json` is generated and
 never hand-edited. An authored row wins over an upstream one with the same
 surface form.
