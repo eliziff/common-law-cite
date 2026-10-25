@@ -5,8 +5,8 @@
     "version": "0.10.27"
   },
   "reporters-db": {
-    "commit": "7a5b9b06fcdc829546705fd874023990f493e751",
+    "commit": "faddc86aad58ebde19d81b6f1ba64d229a801092",
     "repository": "freelawproject/reporters-db",
-    "version": "3.2.66"
+    "version": "3.2.67"
   }
 }
