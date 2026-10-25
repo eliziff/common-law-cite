@@ -3061,6 +3061,92 @@
         ]
       },
       "note": "Without the Charter's title or \"Part I of\", the instrument is the Canada Act itself."
+    },
+    {
+      "name": "statute/constitution-act-pinpointed-in-the-charter-is-the-charter",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Constitution Act, 1982, s 7, being Schedule B to the Canada Act 1982 (UK), 1982, c 11",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:statute:ca:-:1982:11",
+            "fields": {
+              "instrumentTitle": "Canadian Charter of Rights and Freedoms"
+            }
+          }
+        ]
+      },
+      "note": "The Charter is ss 1-34 of the Constitution Act, 1982; the pinpoint decides."
+    },
+    {
+      "name": "statute/constitution-act-pinpointed-past-the-charter-is-the-act",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Constitution Act, 1982, s 35, being Schedule B to the Canada Act 1982 (UK), 1982, c 11",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "key": "3:statute:ca:-:1982:11",
+            "fields": {
+              "instrumentTitle": null
+            },
+            "fullSpan": {
+              "text": "Constitution Act, 1982, s 35, being Schedule B to the Canada Act 1982 (UK), 1982, c 11"
+            }
+          }
+        ]
+      },
+      "note": "A pinpoint after the title keeps what the Act is enacted as in the one citation."
+    },
+    {
+      "name": "statute/constitution-act-range-past-the-charter-is-the-act",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Constitution Act, 1982, ss 33-35",
+      "options": {
+        "resolve": false
+      },
+      "expect": {
+        "citations": [
+          {
+            "fields": {
+              "instrumentTitle": null
+            }
+          }
+        ]
+      },
+      "note": "A range reaching past s 34 is not the Charter's alone."
+    },
+    {
+      "name": "statute/constitution-act-named-charter-by-its-short-form",
+      "convention": "mcgill",
+      "status": "pass",
+      "input": "Constitution Act, 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11 [Charter]. The Charter, s 7, protects life.",
+      "options": {
+        "resolve": true
+      },
+      "expect": {
+        "citations": [
+          {
+            "fields": {
+              "instrumentTitle": "Canadian Charter of Rights and Freedoms"
+            },
+            "explicitShortName": "Charter"
+          },
+          {
+            "form": "reference",
+            "antecedent": 0
+          }
+        ]
+      },
+      "note": "Without a section, the writer's short form names the instrument and later references resolve to it."
     }
   ]
 }
