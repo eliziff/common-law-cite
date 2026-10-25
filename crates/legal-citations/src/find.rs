@@ -2457,14 +2457,20 @@ fn join_legislation(text: &str, citations: Vec<Citation>) -> Vec<Citation> {
             previous.full_span = span(text, previous.full_span.start..end);
             continue;
         }
-        let title_only = previous.fields.chapter.is_none() && previous.fields.series.is_none()
-            && previous.pinpoints.is_empty();
+        let titled = previous.fields.chapter.is_none() && previous.fields.series.is_none();
+        let title_only = titled && previous.pinpoints.is_empty();
         // What a titled Act is enacted as is its source, not another authority ("Constitution Act,
-        // 1982, being Schedule B to the Canada Act 1982 (UK), 1982, c 11").
+        // 1982, s 35, being Schedule B to the Canada Act 1982 (UK), 1982, c 11"); the short form and
+        // parentheticals written after that source are the Act's ("… c 11 [Charter]").
         let being = gap.trim_matches(javascript_whitespace).strip_prefix(',').map(|rest| rest.trim_start_matches(javascript_whitespace))
             .is_some_and(|rest| matches!(rest, "being" | "constituant" | "soit"));
-        if title_only && being {
+        if titled && being {
             previous.full_span = span(text, previous.full_span.start..citation.full_span.end);
+            previous.explicit_short_name = previous.explicit_short_name.take().or(citation.explicit_short_name);
+            previous.parentheticals.append(&mut citation.parentheticals);
+            if previous.explicit_short_name.is_some() && !previous.reasons.iter().any(|reason| reason == "short_form_suffix") {
+                previous.reasons.push("short_form_suffix".to_owned());
+            }
             continue;
         }
         if title_only && citation.style.is_none() && citation.fields.chapter.is_some()
@@ -2484,7 +2490,42 @@ fn join_legislation(text: &str, citations: Vec<Citation>) -> Vec<Citation> {
         }
         joined.push(citation);
     }
+    for citation in &mut joined {
+        name_charter(citation);
+    }
     joined
+}
+
+/// The Charter is sections 1 to 34 of the Constitution Act, 1982: a citation of that Act pinpointed
+/// there cites the Charter ("Constitution Act, 1982, s 7, being Schedule B …"), and one pinpointed
+/// elsewhere the rest of the Act ("…, s 35, …"). Without a section, the short form the writer gives
+/// it says ("Constitution Act, 1982, being Schedule B … c 11 [Charter]").
+fn name_charter(citation: &mut Citation) {
+    if citation.form != Form::Full || !citation.authority.is_legislation() || citation.fields.instrument_title.is_some() {
+        return;
+    }
+    let title = citation.style.as_ref().map_or(citation.span.text.as_str(), |style| style.text.as_str());
+    let words = title.split(|c: char| !c.is_alphanumeric()).filter(|word| !word.is_empty())
+        .map(str::to_lowercase).collect::<Vec<_>>();
+    let french = match words.iter().map(String::as_str).collect::<Vec<_>>().as_slice() {
+        ["constitution", "act", "1982"] => false,
+        ["loi", "constitutionnelle", "de", "1982"] => true,
+        _ => return,
+    };
+    let number = |locator: &str| locator.chars().take_while(char::is_ascii_digit).collect::<String>().parse::<u32>().ok();
+    let charter = |locator: &str| number(locator).is_some_and(|section| (1..=34).contains(&section));
+    let sections = citation.pinpoints.iter()
+        .filter(|pinpoint| matches!(pinpoint.kind, PinpointKind::Section | PinpointKind::Subsection | PinpointKind::Article))
+        .collect::<Vec<_>>();
+    let named = if sections.is_empty() {
+        citation.explicit_short_name.as_deref().is_some_and(|short| matches!(short, "Charter" | "Charte"))
+    } else {
+        sections.iter().all(|pinpoint| charter(&pinpoint.first) && pinpoint.last.as_deref().is_none_or(charter))
+    };
+    if named {
+        citation.fields.instrument_title = Some(if french { "Charte canadienne des droits et libertés" }
+            else { "Canadian Charter of Rights and Freedoms" }.to_owned());
+    }
 }
 
 /// Eyecite helpers.filter_citations: source extents order references and
