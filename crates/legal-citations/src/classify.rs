@@ -29,6 +29,7 @@ static BRACKETED: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.neutral.bracketed"));
 static PARENTHESIZED: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.neutral.parenthesized"));
+static DATED: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.neutral.dated"));
 static CANLII: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.canlii"));
 static STATUTE: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.ca.statute.first"));
@@ -842,6 +843,15 @@ fn instrument_kind(title: &str, reading: &mut Reading) {
 }
 
 pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
+    // A neutral or CanLII citation after its decision's year in parentheses ("Hamilton v Open Window Bakery Ltd (2003),
+    // 2004 SCC 9") is that citation, not a report whose volume is a year: when its identifier is CanLII's or a court's.
+    if let Some(rest) = whole(&DATED, core).and_then(|captures| group(&captures, "citation")) {
+        let registered = |reading: &Reading| reading.court.as_deref()
+            .is_some_and(|surface| !registry().courts_by_surface(surface).is_empty());
+        if let Some(reading) = canlii(&rest).or_else(|| neutral(&rest).filter(registered)) {
+            return Some(reading);
+        }
+    }
     // Preserve verified reporter and journal forms before generic families.
     let parts = crate::find::reporter_parts(core);
     let verified = parts.as_ref().and_then(|captures| captures.name("reporter")).is_some_and(|surface| {
@@ -1256,7 +1266,7 @@ pub(crate) fn apply(citation: &mut Citation, mut reading: Reading, options: &cra
 /// Build this module's lazily built statics now ([`crate::warm`]).
 pub(crate) fn warm() {
     crate::warm_statics!(
-        NEUTRAL, TRIBUNAL, BRACKETED, PARENTHESIZED, CANLII, STATUTE, STATUTE_TITLED, ROUTING,
+        NEUTRAL, TRIBUNAL, BRACKETED, PARENTHESIZED, DATED, CANLII, STATUTE, STATUTE_TITLED, ROUTING,
         BOOK, UNREPORTED, COURT_FILE, PARLIAMENTARY, FRENCH_REPORTER,
         INSTRUMENT_KIND, BOOK_CHAPTER, FRENCH_SERIES, GAZETTE
     );
