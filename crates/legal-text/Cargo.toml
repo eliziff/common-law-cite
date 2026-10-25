@@ -1,0 +1,8 @@
+[package]
+name = "legal-text"
+description = "Text as JavaScript reads it: byte, scalar and UTF-16 coordinates over a Rust string, and ECMAScript white space"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true

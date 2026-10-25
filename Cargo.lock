@@ -595,6 +595,7 @@ dependencies = [
  "fancy-regex",
  "flate2",
  "legal-grammar",
+ "legal-text",
  "num-bigint",
  "regex",
  "roxmltree",
@@ -645,6 +646,10 @@ dependencies = [
  "serde",
  "serde_json",
 ]
+
+[[package]]
+name = "legal-text"
+version = "0.1.0"
 
 [[package]]
 name = "libc"

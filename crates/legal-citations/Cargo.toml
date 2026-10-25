@@ -16,6 +16,7 @@ unicode-normalization.workspace = true
 
 [dependencies]
 flate2 = "1"
+legal-text.workspace = true
 legal-grammar.workspace = true
 fancy-regex.workspace = true
 regex.workspace = true
