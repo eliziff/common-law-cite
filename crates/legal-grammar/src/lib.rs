@@ -1052,14 +1052,14 @@ mod tests {
     fn ascii_ignorecase_does_not_add_unicode_casefolds() {
         let pattern = compile_table_entry("ref.token").unwrap();
         assert!(pattern.is_match("SUPRA").unwrap());
-        assert!(!pattern.is_match("Å¿upra").unwrap());
-        assert!(!pattern.is_match("Ä°BID").unwrap());
+        assert!(!pattern.is_match("ſupra").unwrap());
+        assert!(!pattern.is_match("İBID").unwrap());
     }
 
     #[test]
     fn ecmascript_mode_keeps_javascript_word_and_whitespace_semantics() {
         let roman = compile_ecmascript_table_entry("provision.reference.roman").unwrap();
-        assert!(roman.is_match("ARTICLES DÃ‰FINIS"));
+        assert!(roman.is_match("ARTICLES DÉFINIS"));
         let whitespace = compile_ecmascript_pattern("test.ecmascript-space", r"^\s$", "").unwrap();
         assert!(whitespace.is_match("\u{feff}"));
         assert!(!whitespace.is_match("\u{85}"));
