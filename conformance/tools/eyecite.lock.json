@@ -3,6 +3,6 @@
   "repository": "freelawproject/eyecite",
   "commit": "b70a146d20f70b366baf150a1cc9e82229ef5a0d",
   "eyecite": "2.7.8",
-  "reporters-db": "3.2.66",
+  "reporters-db": "3.2.67",
   "courts-db": "0.10.27"
 }
