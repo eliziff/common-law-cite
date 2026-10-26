@@ -200,6 +200,8 @@ pub fn compile(out: &Path) {
             source[file] = json!(all);
         } else {
             let upstream = read(&format!("registry/upstream/reporters-db/{file}.json"));
+            // Edition years reporters-db gets wrong, each with the page that states it, by its key and edition.
+            let corrected = read("registry/edition-years.json");
             let mut all = Map::new();
             for row in authored {
                 let key = string(&row["abbreviation"]);
@@ -223,7 +225,10 @@ pub fn compile(out: &Path) {
                         }};
                         let mut editions: Vec<Value> = original["editions"].as_object().unwrap().iter().map(|(abbreviation, dates)| {
                             let mut edition = json!({"abbreviation": abbreviation});
-                            for bound in ["start", "end"] { if let Some(value) = year(&dates[bound]) { edition[bound] = json!(value); } }
+                            for bound in ["start", "end"] {
+                                let value = corrected[key][abbreviation][bound]["year"].as_u64().and_then(|year| u16::try_from(year).ok()).or_else(|| year(&dates[bound]));
+                                if let Some(value) = value { edition[bound] = json!(value); }
+                            }
                             edition
                         }).collect();
                         editions.sort_by_key(|edition| (edition["start"].as_u64().unwrap_or(0), string(&edition["abbreviation"]).to_owned()));
