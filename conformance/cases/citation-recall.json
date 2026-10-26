@@ -3479,6 +3479,14 @@
       "input": "Smith v. Jones, 12 F. 190 (1950).",
       "expect": {"citations": [{"span": {"text": "12 F. 190"}, "key": "3:reporter:f:f:12:190"}]},
       "note": "Without yearRuns the year rules nothing out."
+    },
+    {
+      "name": "general/reporter-name-with-comma",
+      "convention": "bluebook",
+      "status": "pass",
+      "input": "Smith v. Jones, 49 La. Ann. 656, 21 So, 723 (1897).",
+      "expect": {"citations": [{"span": {"text": "49 La. Ann. 656"}}, {"span": {"text": "21 So, 723"}, "key": "3:reporter:so:so:21:723"}]},
+      "note": "A reporter name may end in a comma (reporters-db's \"So,\" for the Southern Reporter): the walk reads past a shorter run that is no name."
     }
   ]
 }

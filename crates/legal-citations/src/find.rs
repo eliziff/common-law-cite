@@ -829,9 +829,9 @@ pub(crate) struct Walked<'t> {
 }
 
 /// The reports by volume, reporter and page whose reporter is one of `names`, in one scan, in place of a pattern per
-/// reporter. A volume is a run of digits not after a letter or digit, then one space; its reporter is the shortest run
-/// after which `tail` matches, read as `spell` keeps its characters, and a report only when that is a name. The walk
-/// stops once what it has read begins no name, since then no longer run can be one.
+/// reporter. A volume is a run of digits not after a letter or digit, then one space; its reporter is the shortest run,
+/// read as `spell` keeps its characters, that is a name and after which `tail` matches ("So," of "21 So, 723" where "So"
+/// is no name). The walk stops once what it has read begins no name, since then no longer run can be one.
 pub(crate) fn walk_reports<'t>(text: &'t str, names: &BTreeSet<String>, spell: impl Fn(char) -> Option<char>,
     tail: &Regex) -> Vec<Walked<'t>> {
     let bytes = text.as_bytes();
@@ -851,10 +851,9 @@ pub(crate) fn walk_reports<'t>(text: &'t str, names: &BTreeSet<String>, spell: i
             }
             let end = reporter_start + offset + character.len_utf8();
             if !matches!(bytes.get(end), Some(b',' | b' ')) { continue; }
+            if !names.contains(&name) { continue; }
             let Some(captures) = tail.captures(&text[end..]) else { continue };
-            if names.contains(&name) {
-                found.push(Walked { start, volume_end: start + digits, reporter: reporter_start..end, name, tail: captures });
-            }
+            found.push(Walked { start, volume_end: start + digits, reporter: reporter_start..end, name, tail: captures });
             break;
         }
     }
