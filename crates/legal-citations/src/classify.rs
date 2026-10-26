@@ -273,7 +273,10 @@ pub(crate) fn holds_year(reporter: &Reporter, year: u16) -> bool {
 fn year_contradicts(reporter: &Reporter, canonical: &str, fields: &Fields) -> bool {
     let Some(year) = fields.year.as_deref().and_then(|year| year.parse::<u16>().ok()) else { return false };
     let is_volume = fields.volume.as_deref() == fields.year.as_deref();
-    let written_series = fields.reporter.as_deref().is_some_and(|written| {
+    // A reporters-db reporter's series is always written ("F." is the first, "F.2d" the second), as the US grammars'
+    // exact editions say.
+    let written_series = reporter.source == "reporters-db" && !fields.exact_editions.is_empty()
+        || fields.reporter.as_deref().is_some_and(|written| {
         let written = fold(written);
         written.ends_with("ns") || written.chars().last().is_some_and(|last| last.is_ascii_digit())
             || ["2d", "3d", "4th", "5th", "6th", "7th", "8th", "2nd", "3rd"].iter().any(|series| written.ends_with(series))
