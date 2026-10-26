@@ -41,8 +41,10 @@ registry's too: each law row's `forms` (the citation forms it is cited in) and
 into the corpus; run it after editing `laws.json` (`--check` in CI).
 
 **Years rule readings out, so every year carries its source.** A reporter
-edition's `start`/`end` (with `evidence`) and `journal-years.json` (a journal's
-run and the years its volumes appeared, keyed by its folded abbreviation) feed
+edition's `start`/`end` (with `evidence`), `edition-years.json` (corrections to
+reporters-db's edition years, by its key and edition) and `journal-years.json`
+(a journal's run and the years its volumes appeared, keyed by its folded
+abbreviation) feed
 `Options::year_runs` and the year rules in `classify`. A year goes in only with
 the URL and exact quote of a page that states it, re-checked by fetching the
 page again; `docs/registry-research.md` records the research. A library's

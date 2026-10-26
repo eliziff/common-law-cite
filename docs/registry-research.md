@@ -41,6 +41,10 @@ lacks. Nothing here is in the registry yet; rows go in from this record, each fa
 - **Corrections to registry years.** Cahiers de droit began 1954 (not 1959); Cornell Law Quarterly became the
   Cornell Law Review with vol. 53 in 1967 (not 1966); NYU's 1925 is its second volume (founded 1924); UNB LJ began
   1947 (not 1946); Upper Canada Q.B. New Series began 1842 (not 1844); the Law Times ran 1859-[1948].
+- **Corrections to reporters-db years** (`registry/edition-years.json`, applied over the synced rows). reporters-db
+  ends F. Supp. in 1988 and starts F. Supp. 2d in 1988; the first series ran to 1998 ([Wikipedia](https://en.wikipedia.org/wiki/Federal_Supplement):
+  "Published: 1933–1998") and the second began in 1998 ([CiNii](https://ci.nii.ac.jp/ncid/AA11282919): "Vol. 1
+  (1998)-v. 999 ([2014])"), so "728 F. Supp. 438 (E.D. Tex. 1989)" is no longer ruled out.
 - **Not publications** (junk the generic grammar reads): "L'article", "No.", "Conclusion", "Background", and
   statute revisions read as reports ("1 R.S.C. 1985", "14 R.S.B.C. 1960").
 - **Dotted neutral citations** ("2006 B.C.S.C. 503", "2001 C.A.F. 254") are courts the registry has; the
