@@ -1,0 +1,105 @@
+{
+ "source": {
+  "repo": "legal-pinpointer",
+  "path": "canlii-legislation.js",
+  "table": "REGULATION_PREFIXES",
+  "commit": "39d85cfcd5cfd24497ba85f0654f0fae20cb44e2",
+  "extracted_by": "tools/extract-source-tables.py",
+  "note": "Read as `<key> Reg`, the form the source matches."
+ },
+ "kind": "series",
+ "entries": [
+  {
+   "key": "bc Reg",
+   "same_as": "bc Reg"
+  },
+  {
+   "key": "britishcolumbia Reg",
+   "same_as": "bc Reg"
+  },
+  {
+   "key": "alta Reg",
+   "same_as": "alta Reg"
+  },
+  {
+   "key": "alberta Reg",
+   "same_as": "alta Reg"
+  },
+  {
+   "key": "o Reg",
+   "same_as": "o Reg"
+  },
+  {
+   "key": "ont Reg",
+   "same_as": "o Reg"
+  },
+  {
+   "key": "ontario Reg",
+   "same_as": "o Reg"
+  },
+  {
+   "key": "man Reg",
+   "same_as": "man Reg"
+  },
+  {
+   "key": "manitoba Reg",
+   "same_as": "man Reg"
+  },
+  {
+   "key": "nb Reg",
+   "same_as": "nb Reg"
+  },
+  {
+   "key": "newbrunswick Reg",
+   "same_as": "nb Reg"
+  },
+  {
+   "key": "ns Reg",
+   "same_as": "ns Reg"
+  },
+  {
+   "key": "novascotia Reg",
+   "same_as": "ns Reg"
+  },
+  {
+   "key": "nl Reg",
+   "same_as": "nl Reg"
+  },
+  {
+   "key": "newfoundlandandlabrador Reg",
+   "same_as": "nl Reg"
+  },
+  {
+   "key": "pei Reg",
+   "same_as": "pei Reg"
+  },
+  {
+   "key": "princeedwardisland Reg",
+   "same_as": "pei Reg"
+  },
+  {
+   "key": "nwt Reg",
+   "same_as": "nwt Reg"
+  },
+  {
+   "key": "northwestterritories Reg",
+   "same_as": "nwt Reg"
+  },
+  {
+   "key": "nu Reg",
+   "same_as": "nu Reg"
+  },
+  {
+   "key": "nunavut Reg",
+   "same_as": "nu Reg"
+  },
+  {
+   "key": "sask Reg",
+   "same_as": "sask Reg"
+  },
+  {
+   "key": "saskatchewan Reg",
+   "same_as": "sask Reg"
+  }
+ ]
+}

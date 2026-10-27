@@ -1,0 +1,135 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "backend/experiments/deterministic-library-analysis/legalTextAnchors.ts",
+  "table": "CITE_NEUTRAL_RE courts",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "CSC"
+  },
+  {
+   "key": "CAF"
+  },
+  {
+   "key": "CFPI"
+  },
+  {
+   "key": "CF"
+  },
+  {
+   "key": "SCC"
+  },
+  {
+   "key": "FCA"
+  },
+  {
+   "key": "FC"
+  },
+  {
+   "key": "TCC"
+  },
+  {
+   "key": "CCI"
+  },
+  {
+   "key": "ONCA"
+  },
+  {
+   "key": "ONSC"
+  },
+  {
+   "key": "ONCJ"
+  },
+  {
+   "key": "BCCA"
+  },
+  {
+   "key": "BCSC"
+  },
+  {
+   "key": "ABCA"
+  },
+  {
+   "key": "ABQB"
+  },
+  {
+   "key": "ABKB"
+  },
+  {
+   "key": "SKCA"
+  },
+  {
+   "key": "SKQB"
+  },
+  {
+   "key": "SKKB"
+  },
+  {
+   "key": "MBCA"
+  },
+  {
+   "key": "MBQB"
+  },
+  {
+   "key": "MBKB"
+  },
+  {
+   "key": "NSCA"
+  },
+  {
+   "key": "NSSC"
+  },
+  {
+   "key": "NBCA"
+  },
+  {
+   "key": "NBQB"
+  },
+  {
+   "key": "NBKB"
+  },
+  {
+   "key": "QCCA"
+  },
+  {
+   "key": "QCCS"
+  },
+  {
+   "key": "QCCQ"
+  },
+  {
+   "key": "PECA"
+  },
+  {
+   "key": "PESC"
+  },
+  {
+   "key": "NLCA"
+  },
+  {
+   "key": "NLSC"
+  },
+  {
+   "key": "YKCA"
+  },
+  {
+   "key": "YKSC"
+  },
+  {
+   "key": "NWTCA"
+  },
+  {
+   "key": "NWTSC"
+  },
+  {
+   "key": "NUCA"
+  },
+  {
+   "key": "NUCJ"
+  }
+ ]
+}

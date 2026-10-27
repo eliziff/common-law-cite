@@ -1,0 +1,87 @@
+{
+ "source": {
+  "repo": "legal-citations",
+  "path": "crates/legal-grammar/data/grammar-corpus.json",
+  "table": "cite.statute.judgment series",
+  "commit": "dab9bc2c32d38a934a508dc53715241018a003a7",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "series",
+ "entries": [
+  {
+   "key": "RSNWT"
+  },
+  {
+   "key": "SNWT"
+  },
+  {
+   "key": "RSPEI"
+  },
+  {
+   "key": "SPEI"
+  },
+  {
+   "key": "CCSM"
+  },
+  {
+   "key": "RSNB"
+  },
+  {
+   "key": "SNB"
+  },
+  {
+   "key": "RSNS"
+  },
+  {
+   "key": "SNS"
+  },
+  {
+   "key": "RSNL"
+  },
+  {
+   "key": "SNL"
+  },
+  {
+   "key": "RSBC"
+  },
+  {
+   "key": "SBC"
+  },
+  {
+   "key": "RSC"
+  },
+  {
+   "key": "RSO"
+  },
+  {
+   "key": "RSA"
+  },
+  {
+   "key": "RSS"
+  },
+  {
+   "key": "RSM"
+  },
+  {
+   "key": "RSY"
+  },
+  {
+   "key": "SC"
+  },
+  {
+   "key": "SO"
+  },
+  {
+   "key": "SA"
+  },
+  {
+   "key": "SS"
+  },
+  {
+   "key": "SM"
+  },
+  {
+   "key": "SY"
+  }
+ ]
+}

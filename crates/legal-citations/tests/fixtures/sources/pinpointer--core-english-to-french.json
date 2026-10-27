@@ -1,0 +1,32 @@
+{
+ "source": {
+  "repo": "legal-pinpointer",
+  "path": "core.js",
+  "table": "canliiCourtRoute englishToFrench",
+  "commit": "39d85cfcd5cfd24497ba85f0654f0fae20cb44e2",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "SCC",
+   "same_as": "CSC"
+  },
+  {
+   "key": "FCA",
+   "same_as": "CAF"
+  },
+  {
+   "key": "FC",
+   "same_as": "CF"
+  },
+  {
+   "key": "TCC",
+   "same_as": "CCI"
+  },
+  {
+   "key": "CMAC",
+   "same_as": "CACM"
+  }
+ ]
+}

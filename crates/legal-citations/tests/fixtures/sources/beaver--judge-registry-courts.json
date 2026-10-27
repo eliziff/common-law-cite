@@ -1,0 +1,395 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "experiments/a2aj_decision_roster_qwen/scrape_judge_registry.py",
+  "table": "COURTS, FEDERAL_PROFILES",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "SCC",
+   "same_as": "SCC",
+   "name": "Supreme Court of Canada",
+   "source_id": "scc"
+  },
+  {
+   "key": "CSC",
+   "same_as": "SCC",
+   "name": "Supreme Court of Canada",
+   "source_id": "scc"
+  },
+  {
+   "key": "FCA",
+   "same_as": "FCA",
+   "name": "Federal Court of Appeal",
+   "source_id": "fca"
+  },
+  {
+   "key": "CAF",
+   "same_as": "FCA",
+   "name": "Federal Court of Appeal",
+   "source_id": "fca"
+  },
+  {
+   "key": "BCCA",
+   "same_as": "BCCA",
+   "name": "Court of Appeal for British Columbia",
+   "source_id": "bcca"
+  },
+  {
+   "key": "BC Court of Appeal",
+   "same_as": "BCCA",
+   "name": "Court of Appeal for British Columbia",
+   "source_id": "bcca"
+  },
+  {
+   "key": "ONCA",
+   "same_as": "ONCA",
+   "name": "Court of Appeal for Ontario",
+   "source_id": "onca"
+  },
+  {
+   "key": "Ontario Court of Appeal",
+   "same_as": "ONCA",
+   "name": "Court of Appeal for Ontario",
+   "source_id": "onca"
+  },
+  {
+   "key": "NSCA",
+   "same_as": "NSCA",
+   "name": "Nova Scotia Court of Appeal",
+   "source_id": "nsca"
+  },
+  {
+   "key": "Court of Appeal of Nova Scotia",
+   "same_as": "NSCA",
+   "name": "Nova Scotia Court of Appeal",
+   "source_id": "nsca"
+  },
+  {
+   "key": "YKCA",
+   "same_as": "YKCA",
+   "name": "Court of Appeal of Yukon",
+   "source_id": "ykca"
+  },
+  {
+   "key": "Yukon Court of Appeal",
+   "same_as": "YKCA",
+   "name": "Court of Appeal of Yukon",
+   "source_id": "ykca"
+  },
+  {
+   "key": "FC",
+   "same_as": "FC",
+   "name": "Federal Court",
+   "source_id": "fc"
+  },
+  {
+   "key": "TCC",
+   "same_as": "TCC",
+   "name": "Tax Court of Canada",
+   "source_id": "tcc"
+  },
+  {
+   "key": "CCI",
+   "same_as": "TCC",
+   "name": "Tax Court of Canada",
+   "source_id": "tcc"
+  },
+  {
+   "key": "CMAC",
+   "same_as": "CMAC",
+   "name": "Court Martial Appeal Court of Canada",
+   "source_id": "cmac"
+  },
+  {
+   "key": "CACM",
+   "same_as": "CMAC",
+   "name": "Court Martial Appeal Court of Canada",
+   "source_id": "cmac"
+  },
+  {
+   "key": "BCSC",
+   "same_as": "BCSC",
+   "name": "Supreme Court of British Columbia",
+   "source_id": "bcsc"
+  },
+  {
+   "key": "BC Supreme Court",
+   "same_as": "BCSC",
+   "name": "Supreme Court of British Columbia",
+   "source_id": "bcsc"
+  },
+  {
+   "key": "NSSC",
+   "same_as": "NSSC",
+   "name": "Supreme Court of Nova Scotia",
+   "source_id": "nssc"
+  },
+  {
+   "key": "Nova Scotia Supreme Court",
+   "same_as": "NSSC",
+   "name": "Supreme Court of Nova Scotia",
+   "source_id": "nssc"
+  },
+  {
+   "key": "NSPC",
+   "same_as": "NSPC",
+   "name": "Provincial Court of Nova Scotia",
+   "source_id": "nspc"
+  },
+  {
+   "key": "Nova Scotia Provincial Court",
+   "same_as": "NSPC",
+   "name": "Provincial Court of Nova Scotia",
+   "source_id": "nspc"
+  },
+  {
+   "key": "NSFC",
+   "same_as": "NSFC",
+   "name": "Family Court for the Province of Nova Scotia",
+   "source_id": "nsfc"
+  },
+  {
+   "key": "Nova Scotia Family Court",
+   "same_as": "NSFC",
+   "name": "Family Court for the Province of Nova Scotia",
+   "source_id": "nsfc"
+  },
+  {
+   "key": "NSSM",
+   "same_as": "NSSM",
+   "name": "Small Claims Court of Nova Scotia",
+   "source_id": "nssm"
+  },
+  {
+   "key": "Nova Scotia Small Claims Court",
+   "same_as": "NSSM",
+   "name": "Small Claims Court of Nova Scotia",
+   "source_id": "nssm"
+  },
+  {
+   "key": "CHRT",
+   "same_as": "CHRT",
+   "name": "Canadian Human Rights Tribunal",
+   "source_id": "chrt"
+  },
+  {
+   "key": "HRTC",
+   "same_as": "CHRT",
+   "name": "Canadian Human Rights Tribunal",
+   "source_id": "chrt"
+  },
+  {
+   "key": "TCDP",
+   "same_as": "CHRT",
+   "name": "Canadian Human Rights Tribunal",
+   "source_id": "chrt"
+  },
+  {
+   "key": "CIRB",
+   "same_as": "CIRB",
+   "name": "Canada Industrial Relations Board",
+   "source_id": "cirb"
+  },
+  {
+   "key": "CITT",
+   "same_as": "CITT",
+   "name": "Canadian International Trade Tribunal",
+   "source_id": "citt"
+  },
+  {
+   "key": "CT",
+   "same_as": "CT",
+   "name": "Competition Tribunal",
+   "source_id": "ct"
+  },
+  {
+   "key": "RCT",
+   "same_as": "CT",
+   "name": "Competition Tribunal",
+   "source_id": "ct"
+  },
+  {
+   "key": "TC",
+   "same_as": "CT",
+   "name": "Competition Tribunal",
+   "source_id": "ct"
+  },
+  {
+   "key": "FPSLREB",
+   "same_as": "FPSLREB",
+   "name": "Federal Public Sector Labour Relations and Employment Board",
+   "source_id": "fpslreb"
+  },
+  {
+   "key": "PSLREB",
+   "same_as": "FPSLREB",
+   "name": "Federal Public Sector Labour Relations and Employment Board",
+   "source_id": "fpslreb"
+  },
+  {
+   "key": "OHSTC",
+   "same_as": "OHSTC",
+   "name": "Occupational Health and Safety Tribunal Canada",
+   "source_id": "ohstc"
+  },
+  {
+   "key": "OIC",
+   "same_as": "OIC",
+   "name": "Office of the Information Commissioner of Canada",
+   "source_id": "oic"
+  },
+  {
+   "key": "PSDPT",
+   "same_as": "PSDPT",
+   "name": "Public Servants Disclosure Protection Tribunal",
+   "source_id": "psdpt"
+  },
+  {
+   "key": "PSDPTC",
+   "same_as": "PSDPT",
+   "name": "Public Servants Disclosure Protection Tribunal",
+   "source_id": "psdpt"
+  },
+  {
+   "key": "RAD",
+   "same_as": "RAD",
+   "name": "Refugee Appeal Division",
+   "source_id": "rad"
+  },
+  {
+   "key": "SAR",
+   "same_as": "RAD",
+   "name": "Refugee Appeal Division",
+   "source_id": "rad"
+  },
+  {
+   "key": "RPD",
+   "same_as": "RPD",
+   "name": "Refugee Protection Division",
+   "source_id": "rpd"
+  },
+  {
+   "key": "SPR",
+   "same_as": "RPD",
+   "name": "Refugee Protection Division",
+   "source_id": "rpd"
+  },
+  {
+   "key": "RLLR",
+   "same_as": "RPD",
+   "name": "Refugee Protection Division",
+   "source_id": "rpd"
+  },
+  {
+   "key": "SST",
+   "same_as": "SST",
+   "name": "Social Security Tribunal of Canada",
+   "source_id": "sst"
+  },
+  {
+   "key": "TSS",
+   "same_as": "SST",
+   "name": "Social Security Tribunal of Canada",
+   "source_id": "sst"
+  },
+  {
+   "key": "TATC",
+   "same_as": "TATC",
+   "name": "Transportation Appeal Tribunal of Canada",
+   "source_id": "tatc"
+  },
+  {
+   "key": "CART",
+   "same_as": "CART",
+   "name": "Canada Agricultural Review Tribunal",
+   "source_id": "cart"
+  },
+  {
+   "key": "SCT",
+   "same_as": "SCT",
+   "name": "Specific Claims Tribunal",
+   "source_id": "sct"
+  },
+  {
+   "key": "SCTC",
+   "same_as": "SCT",
+   "name": "Specific Claims Tribunal",
+   "source_id": "sct"
+  },
+  {
+   "key": "SST",
+   "same_as": "SST",
+   "source_id": "sst",
+   "note": "FEDERAL_PROFILES organisation code"
+  },
+  {
+   "key": "IRB",
+   "source_id": "irb",
+   "note": "FEDERAL_PROFILES organisation code"
+  },
+  {
+   "key": "CITT",
+   "same_as": "CITT",
+   "source_id": "citt",
+   "note": "FEDERAL_PROFILES organisation code"
+  },
+  {
+   "key": "PSLREB",
+   "same_as": "FPSLREB",
+   "source_id": "fpslreb",
+   "note": "FEDERAL_PROFILES organisation code"
+  },
+  {
+   "key": "HRTC",
+   "same_as": "CHRT",
+   "source_id": "chrt",
+   "note": "FEDERAL_PROFILES organisation code"
+  },
+  {
+   "key": "CIRB",
+   "same_as": "CIRB",
+   "source_id": "cirb",
+   "note": "FEDERAL_PROFILES organisation code"
+  },
+  {
+   "key": "RCT",
+   "same_as": "CT",
+   "source_id": "ct",
+   "note": "FEDERAL_PROFILES organisation code"
+  },
+  {
+   "key": "TATC",
+   "same_as": "TATC",
+   "source_id": "tatc",
+   "note": "FEDERAL_PROFILES organisation code"
+  },
+  {
+   "key": "CART",
+   "same_as": "CART",
+   "source_id": "cart",
+   "note": "FEDERAL_PROFILES organisation code"
+  },
+  {
+   "key": "SCT",
+   "same_as": "SCT",
+   "source_id": "sct",
+   "note": "FEDERAL_PROFILES organisation code"
+  },
+  {
+   "key": "PSDPTC",
+   "same_as": "PSDPT",
+   "source_id": "psdpt",
+   "note": "FEDERAL_PROFILES organisation code"
+  },
+  {
+   "key": "OOIC",
+   "same_as": "OIC",
+   "source_id": "oic",
+   "note": "FEDERAL_PROFILES organisation code"
+  }
+ ]
+}

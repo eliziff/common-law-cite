@@ -1,0 +1,54 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "backend/experiments/a2aj-case-treatment/cli.ts",
+  "table": "COURT_DATASETS",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "BCCA"
+  },
+  {
+   "key": "BCSC"
+  },
+  {
+   "key": "CMAC"
+  },
+  {
+   "key": "FC"
+  },
+  {
+   "key": "FCA"
+  },
+  {
+   "key": "NSCA"
+  },
+  {
+   "key": "NSFC"
+  },
+  {
+   "key": "NSPC"
+  },
+  {
+   "key": "NSSC"
+  },
+  {
+   "key": "NSSM"
+  },
+  {
+   "key": "ONCA"
+  },
+  {
+   "key": "SCC"
+  },
+  {
+   "key": "TCC"
+  },
+  {
+   "key": "YKCA"
+  }
+ ]
+}

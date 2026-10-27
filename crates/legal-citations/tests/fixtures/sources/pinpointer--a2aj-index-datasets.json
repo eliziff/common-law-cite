@@ -1,0 +1,99 @@
+{
+ "source": {
+  "repo": "legal-pinpointer",
+  "path": "a2aj-index/build/datasets.json",
+  "table": "include, notIncluded",
+  "commit": "39d85cfcd5cfd24497ba85f0654f0fae20cb44e2",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "SCC"
+  },
+  {
+   "key": "FCA"
+  },
+  {
+   "key": "FC"
+  },
+  {
+   "key": "CMAC"
+  },
+  {
+   "key": "CHRT"
+  },
+  {
+   "key": "CT"
+  },
+  {
+   "key": "SCT"
+  },
+  {
+   "key": "RAD"
+  },
+  {
+   "key": "RPD"
+  },
+  {
+   "key": "RLLR"
+  },
+  {
+   "key": "ONCA"
+  },
+  {
+   "key": "BCCA"
+  },
+  {
+   "key": "BCSC"
+  },
+  {
+   "key": "NSCA"
+  },
+  {
+   "key": "NSSC"
+  },
+  {
+   "key": "NSPC"
+  },
+  {
+   "key": "NSFC"
+  },
+  {
+   "key": "NSSM"
+  },
+  {
+   "key": "YKCA"
+  },
+  {
+   "key": "TCC"
+  },
+  {
+   "key": "SST"
+  },
+  {
+   "key": "FPSLREB"
+  },
+  {
+   "key": "CITT"
+  },
+  {
+   "key": "CIRB"
+  },
+  {
+   "key": "OHSTC"
+  },
+  {
+   "key": "TATC"
+  },
+  {
+   "key": "CART"
+  },
+  {
+   "key": "OIC"
+  },
+  {
+   "key": "PSDPT"
+  }
+ ]
+}

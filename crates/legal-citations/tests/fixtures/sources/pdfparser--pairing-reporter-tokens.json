@@ -1,0 +1,78 @@
+{
+ "source": {
+  "repo": "legal-pdf-parser",
+  "path": "legal-pdf-support/src/pairing_support.rs",
+  "table": "REPORTER_TOKEN_PATTERN",
+  "commit": "4e484ca9e2805400c694a790ffed03a9fefdb0ec",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "reporter",
+ "entries": [
+  {
+   "key": "S. C. R."
+  },
+  {
+   "key": "D. L. R."
+  },
+  {
+   "key": "C. C. C."
+  },
+  {
+   "key": "O. R."
+  },
+  {
+   "key": "W. W. R."
+  },
+  {
+   "key": "C. R."
+  },
+  {
+   "key": "All E. R."
+  },
+  {
+   "key": "A. C."
+  },
+  {
+   "key": "K. B."
+  },
+  {
+   "key": "Q. B."
+  },
+  {
+   "key": "Q. B. D."
+  },
+  {
+   "key": "Ch."
+  },
+  {
+   "key": "Ch D."
+  },
+  {
+   "key": "App Cas"
+  },
+  {
+   "key": "W. L. R."
+  },
+  {
+   "key": "E. R."
+  },
+  {
+   "key": "T. L. R."
+  },
+  {
+   "key": "Cox C. C."
+  },
+  {
+   "key": "Cr App R."
+  },
+  {
+   "key": "Ex."
+  },
+  {
+   "key": "Eq."
+  },
+  {
+   "key": "H. L. Cas."
+  }
+ ]
+}

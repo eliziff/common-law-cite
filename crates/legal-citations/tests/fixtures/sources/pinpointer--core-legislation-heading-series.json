@@ -1,0 +1,40 @@
+{
+ "source": {
+  "repo": "legal-pinpointer",
+  "path": "core.js",
+  "table": "splitLegislationHeading citationStart",
+  "commit": "39d85cfcd5cfd24497ba85f0654f0fae20cb44e2",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "series",
+ "note": "Closed series tokens of the heading pattern; the open `[A-Z.]{2,8}` and `X Reg` arms are patterns.",
+ "entries": [
+  {
+   "key": "CCSM"
+  },
+  {
+   "key": "CPLM"
+  },
+  {
+   "key": "CQLR"
+  },
+  {
+   "key": "RLRQ"
+  },
+  {
+   "key": "SOR"
+  },
+  {
+   "key": "SI"
+  },
+  {
+   "key": "DORS"
+  },
+  {
+   "key": "TR"
+  },
+  {
+   "key": "CRC"
+  }
+ ]
+}

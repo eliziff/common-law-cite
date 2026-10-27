@@ -1,0 +1,42 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "shared/court-registry.json",
+  "table": "courts",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "ABKB",
+   "name": "Court of King’s Bench of Alberta",
+   "source_id": "ab-kb"
+  },
+  {
+   "key": "ABCA",
+   "name": "Court of Appeal of Alberta",
+   "source_id": "ab-ca"
+  },
+  {
+   "key": "FC",
+   "name": "Federal Court",
+   "source_id": "fc"
+  },
+  {
+   "key": "FCA",
+   "name": "Federal Court of Appeal",
+   "source_id": "fca"
+  },
+  {
+   "key": "FC",
+   "name": "Federal Court or Federal Court of Appeal",
+   "source_id": "fc-fca"
+  },
+  {
+   "key": "FCA",
+   "name": "Federal Court or Federal Court of Appeal",
+   "source_id": "fc-fca"
+  }
+ ]
+}

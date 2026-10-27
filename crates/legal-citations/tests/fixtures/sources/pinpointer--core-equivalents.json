@@ -1,0 +1,36 @@
+{
+ "source": {
+  "repo": "legal-pinpointer",
+  "path": "core.js",
+  "table": "chooseCaseCitation equivalents",
+  "commit": "39d85cfcd5cfd24497ba85f0654f0fae20cb44e2",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "SCC",
+   "same_as": "CSC"
+  },
+  {
+   "key": "FCA",
+   "same_as": "CAF"
+  },
+  {
+   "key": "FC",
+   "same_as": "CF"
+  },
+  {
+   "key": "CSC",
+   "same_as": "SCC"
+  },
+  {
+   "key": "CAF",
+   "same_as": "FCA"
+  },
+  {
+   "key": "CF",
+   "same_as": "FC"
+  }
+ ]
+}

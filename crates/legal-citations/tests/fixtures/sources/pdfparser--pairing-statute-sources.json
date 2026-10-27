@@ -1,0 +1,78 @@
+{
+ "source": {
+  "repo": "legal-pdf-parser",
+  "path": "legal-pdf-support/src/pairing_support.rs",
+  "table": "STATUTE_PATTERN",
+  "commit": "4e484ca9e2805400c694a790ffed03a9fefdb0ec",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "series",
+ "entries": [
+  {
+   "key": "RSC"
+  },
+  {
+   "key": "RSO"
+  },
+  {
+   "key": "RSA"
+  },
+  {
+   "key": "RSBC"
+  },
+  {
+   "key": "RSM"
+  },
+  {
+   "key": "RSNB"
+  },
+  {
+   "key": "RSNS"
+  },
+  {
+   "key": "RSPEI"
+  },
+  {
+   "key": "CQLR"
+  },
+  {
+   "key": "CCSM"
+  },
+  {
+   "key": "SC"
+  },
+  {
+   "key": "SO"
+  },
+  {
+   "key": "SA"
+  },
+  {
+   "key": "SBC"
+  },
+  {
+   "key": "SM"
+  },
+  {
+   "key": "SNB"
+  },
+  {
+   "key": "SNS"
+  },
+  {
+   "key": "SS"
+  },
+  {
+   "key": "SY"
+  },
+  {
+   "key": "SNWT"
+  },
+  {
+   "key": "SNu"
+  },
+  {
+   "key": "RLRQ"
+  }
+ ]
+}

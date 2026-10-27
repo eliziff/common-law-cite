@@ -1,0 +1,28 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "backend/experiments/deterministic-library-analysis/legalTextAnchors.ts",
+  "table": "INSTRUMENT_REGISTERS",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "series",
+ "entries": [
+  {
+   "key": "SOR",
+   "same_as": "SOR"
+  },
+  {
+   "key": "SI",
+   "same_as": "SI"
+  },
+  {
+   "key": "DORS",
+   "same_as": "SOR"
+  },
+  {
+   "key": "TR",
+   "same_as": "SI"
+  }
+ ]
+}
