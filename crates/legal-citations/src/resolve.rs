@@ -1022,10 +1022,20 @@ impl<'a> Resolver<'a> {
     }
 
     /// What the host knows of a citation's work, by its key: the request's ([`crate::Options::extents`]), else what
-    /// the host registered (`registerExtents`).
+    /// the host registered (`registerExtents`). A page is the report's as written ("69 C.R. (3d) 97 at 105" runs in
+    /// the C.R., not in "[1989] 1 SCR 1296", whose key it shares), so its last page is read by the citation's own key;
+    /// a paragraph is the decision's, read by either.
     fn extent(&self, citation: &Citation) -> Option<crate::Extent> {
-        let key = citation.key.as_deref()?;
-        self.extents.iter().find(|extent| extent.key == key).cloned().or_else(|| crate::extents::registered(key))
+        let find = |key: &str| self.extents.iter().find(|extent| extent.key == key).cloned()
+            .or_else(|| crate::extents::registered(key));
+        let own = crate::key::key_in(citation, crate::registry::registry());
+        let written = own.as_deref().and_then(find);
+        let identity = citation.key.as_deref().filter(|key| own.as_deref() != Some(*key)).and_then(find);
+        match (written, identity) {
+            (Some(written), identity) => Some(crate::Extent {
+                paragraphs: written.paragraphs.or(identity.and_then(|identity| identity.paragraphs)), ..written }),
+            (None, identity) => identity.map(|identity| crate::Extent { last_page: None, ..identity }),
+        }
     }
 
     /// The clause of the text a reference's note hangs from: its words before the note's marker, back to the

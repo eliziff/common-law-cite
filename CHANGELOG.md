@@ -25,6 +25,9 @@ versioned separately and noted here when they change.
   longer preferred. `reporterNames` switches the registry's own rows; off, the
   scan reads only reporters-db's. New options `authorities` and `forms` return
   only the listed kinds and forms of citation.
+- New option `aliasKeys` (on by default): off, each citation is keyed as written, by its own reporter, volume and
+  page, not by its decision's identity. A pinpoint's page is checked against the extent of the report it is written
+  in ("69 C.R. (3d) 97 at 105" against the C.R. report, not "[1989] 1 SCR 1296"), its paragraph against the decision.
 - More reports get an identity:
   - A court the parenthetical names in doubt ("477 P. 2d 62 (Okl.)") leaves a
     report's or a law's key alone; the court is part of the identity only of a
