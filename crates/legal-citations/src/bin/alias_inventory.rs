@@ -367,7 +367,14 @@ struct Identities {
     root: Vec<u32>,
     /// At an identity's root, the A2AJ decision (its first key) the identity holds.
     decision: Vec<Option<u32>>,
+    /// At an identity's root, the neutral citation and the CanLII identifier it holds: a decision has one of each.
+    named: Vec<[Option<u32>; 2]>,
     rank: Vec<u8>,
+}
+
+/// Which of [`Identities::named`] a key is: its neutral citation (0) or its CanLII identifier (1).
+fn named_slot(key: &str) -> Option<usize> {
+    match key.split(':').nth(1) { Some("neutral") => Some(0), Some("canlii") => Some(1), _ => None }
 }
 
 impl Identities {
@@ -378,17 +385,25 @@ impl Identities {
         self.keys.push(key.to_owned());
         self.root.push(id);
         self.decision.push(None);
+        let mut named = [None; 2];
+        if let Some(slot) = named_slot(key) { named[slot] = Some(id); }
+        self.named.push(named);
         self.rank.push(u8::MAX);
         id
     }
 
-    /// Joins the identities of `a` and `b`, unless they hold two different decisions.
+    /// Joins the identities of `a` and `b`, unless they hold two different decisions: two of A2AJ's, or two neutral
+    /// citations or CanLII identifiers ("181 D.L.R. (4th) 522", an ALR record of "[1999] 1 SCR 420", is 1999 CanLII
+    /// 5311's, not 1999 CanLII 715's).
     fn join(&mut self, a: u32, b: u32) -> bool {
         let (a, b) = (find(&mut self.root, a), find(&mut self.root, b));
         if a == b { return true; }
         if matches!((self.decision[a as usize], self.decision[b as usize]), (Some(x), Some(y)) if x != y) { return false; }
+        let (left, right) = (self.named[a as usize], self.named[b as usize]);
+        if left.iter().zip(&right).any(|pair| matches!(pair, (Some(x), Some(y)) if x != y)) { return false; }
         self.root[a as usize] = b;
         self.decision[b as usize] = self.decision[b as usize].or(self.decision[a as usize]);
+        self.named[b as usize] = [right[0].or(left[0]), right[1].or(left[1])];
         true
     }
 }
@@ -408,11 +423,17 @@ fn write(evidence: &Evidence, binding: &Binding, from: &str, out: &str, paths: &
     let mut identities = Identities {
         ids: evidence.keys.iter().enumerate().map(|(id, key)| (key.clone(), id as u32)).collect(),
         keys: evidence.keys.clone(), root: binding.root.clone(), decision: vec![None; evidence.keys.len()],
-        rank: evidence.ranks.clone(),
+        named: vec![[None; 2]; evidence.keys.len()], rank: evidence.ranks.clone(),
     };
     for (first, _) in &evidence.records {
         let root = find(&mut identities.root, *first);
         identities.decision[root as usize].get_or_insert(*first);
+    }
+    for id in 0..evidence.keys.len() as u32 {
+        if let Some(slot) = named_slot(&evidence.keys[id as usize]) {
+            let root = find(&mut identities.root, id);
+            identities.named[root as usize][slot].get_or_insert(id);
+        }
     }
     let (mut unresolved, mut conflicts) = (BTreeMap::<String, &str>::new(), BTreeMap::<String, Vec<String>>::new());
     let mut citations: HashMap<u32, String> = HashMap::new();
