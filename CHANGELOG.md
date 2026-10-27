@@ -10,6 +10,38 @@ versioned separately and noted here when they change.
 
 ## [Unreleased]
 
+- Identity keys are now **v4**. A report's page in Roman numerals (a volume's
+  front matter, "[1987] 1 S.C.R. ix") gives no key, and the Victorian Reports
+  from 2000 and the Exchequer Court Reports to 1922 are keyed by volume
+  without their year, as they are numbered.
+- One scan (`named`) reads every report and journal citation by a name the
+  registry knows, its rows written in reporters-db's format (shapes in its
+  template language, `registry/regexes.json` for the variables Commonwealth
+  forms add), reporters-db's own rows among them. An upstream data update
+  arrives as rows; the US extractors no longer search for reports, and only add
+  their editions to the reports whose spelling they know. The in-text grammar
+  still reads a citation by a name no row knows. `jurisdictions` now limits the
+  scan to the listed jurisdictions' rows, and a jurisdiction left out is no
+  longer preferred. `reporterNames` switches the registry's own rows; off, the
+  scan reads only reporters-db's. New options `authorities` and `forms` return
+  only the listed kinds and forms of citation.
+- More reports get an identity:
+  - A court the parenthetical names in doubt ("477 P. 2d 62 (Okl.)") leaves a
+    report's or a law's key alone; the court is part of the identity only of a
+    neutral citation or a docket.
+  - A written court that none of the reporter's candidates could report ("(C.A.)",
+    read only as US courts, after "79 B.C.L.R. (2d) 360") no longer rules the
+    reporter out.
+  - A report written without a year takes the numbering period counted by
+    volume ("17 S.C.R. 151", "33 D.L.R. 12").
+- The registry reads more Commonwealth forms:
+  - the Law Reports' series cited after "L.R." ("L.R. 1 Ex. 265");
+  - the Appeal Cases written "A.C." ("(1877-78) 3 A.C. 193");
+  - "Can. S.C.R." for the Supreme Court Reports;
+  - a name closed by its period that runs into its page ("[1974] 1 W.W.R.481");
+  - a year followed by a period for its comma ("(1957). 21 W.W.R. 134").
+- Three duplicate entries from McGill's abbreviation list (ILR, LR Eq, LR Ex) are
+  removed; the registry's own entries for them stand.
 - The alias evidence and the pinned US reporter extractors compile at build time
   into compact tables read in place from the binary (`legal_grammar::table`,
   `legal_grammar::us_extractors`), and a registered works pack is kept as one

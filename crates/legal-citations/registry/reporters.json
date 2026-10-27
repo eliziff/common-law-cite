@@ -26,7 +26,9 @@
    }
   },
   "variations": {
-   "RCS": "SCR"
+   "RCS": "SCR",
+   "Can SCR": "SCR",
+   "Can SC": "SCR"
   },
   "year_volume": true,
   "source": "authored",
@@ -79,6 +81,19 @@
   "editions": {
    "Ex CR": {
     "start": "1875",
+    "numbering": [
+     {
+      "start": 1875,
+      "end": 1922,
+      "year_volume": false,
+      "evidence": "https://legalabbrevs.cardiff.ac.uk/titles/view/id/3108"
+     },
+     {
+      "start": 1923,
+      "year_volume": true,
+      "evidence": "https://legalabbrevs.cardiff.ac.uk/titles/view/id/3533"
+     }
+    ],
     "end": "1971"
    }
   },
@@ -2650,6 +2665,9 @@
     "end": "1890"
    }
   },
+  "variations": {
+   "AC": "App Cas"
+  },
   "year_volume": false,
   "source": "authored",
   "citation_id": "appcas",
@@ -3174,6 +3192,19 @@
   "editions": {
    "VR": {
     "start": "1957",
+    "numbering": [
+     {
+      "start": 1957,
+      "end": 1999,
+      "year_volume": true,
+      "evidence": "https://latrobe.libguides.com/aglc4/caselaw"
+     },
+     {
+      "start": 2000,
+      "year_volume": false,
+      "evidence": "https://latrobe.libguides.com/aglc4/caselaw"
+     }
+    ],
     "end": null
    }
   },
@@ -6409,24 +6440,6 @@
   ]
  },
  {
-  "name": "ILR",
-  "kind": "general",
-  "editions": {
-   "ILR": {
-    "start": null,
-    "end": null
-   }
-  },
-  "year_volume": false,
-  "source": "mcgill",
-  "verified": false,
-  "citation_id": "mcgill-ilr",
-  "abbreviation": "ILR",
-  "edition_order": [
-   "ILR"
-  ]
- },
- {
   "name": "ILRM",
   "kind": "general",
   "editions": {
@@ -7058,40 +7071,6 @@
   "abbreviation": "LR CP",
   "edition_order": [
    "LR CP"
-  ]
- },
- {
-  "name": "LR Eq",
-  "kind": "specialty",
-  "editions": {
-   "LR Eq": {
-    "start": null,
-    "end": null
-   }
-  },
-  "year_volume": false,
-  "source": "mcgill",
-  "citation_id": "mcgill-lr-eq",
-  "abbreviation": "LR Eq",
-  "edition_order": [
-   "LR Eq"
-  ]
- },
- {
-  "name": "LR Ex",
-  "kind": "specialty",
-  "editions": {
-   "LR Ex": {
-    "start": null,
-    "end": null
-   }
-  },
-  "year_volume": false,
-  "source": "mcgill",
-  "citation_id": "mcgill-lr-ex",
-  "abbreviation": "LR Ex",
-  "edition_order": [
-   "LR Ex"
   ]
  },
  {
@@ -10389,7 +10368,11 @@
   "editions": {
    "LR Eq": {
     "start": "1865",
-    "end": "1875"
+    "end": "1875",
+    "regexes": [
+     "$full_cite",
+     "$commonwealth_report_law_reports"
+    ]
    }
   },
   "variations": {
@@ -10411,7 +10394,14 @@
   "editions": {
    "LR Ex": {
     "start": "1865",
-    "end": "1875"
+    "end": "1875",
+    "regexes": [
+     "$full_cite",
+     "$commonwealth_report_law_reports"
+    ],
+    "examples": [
+     "L.R. 1 Ex. 265"
+    ]
    }
   },
   "variations": {

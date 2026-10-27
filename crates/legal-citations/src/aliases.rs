@@ -226,7 +226,12 @@ mod tests {
             }
             records.extend(target.records);
         }
-        accounted.extend(records.iter().map(String::as_str));
+        for row in 0..TABLE.observed.len() {
+            records.extend(TABLE.target(TABLE.observed, row).records);
+        }
+        // A target only the alias inventory's evidence names cites it (`inventory`), no ALR record.
+        accounted.extend(records.iter().map(String::as_str).filter(|record| *record != "inventory"));
+        assert!(data["inventory"].is_object() || !records.iter().any(|record| record == "inventory"));
         assert_eq!(accounted, aliases.keys().map(String::as_str).collect());
         for review in data["reviews"].as_object().unwrap().values() {
             assert!(!review["evidence"].as_array().unwrap().is_empty());

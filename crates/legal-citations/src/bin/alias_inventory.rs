@@ -11,6 +11,7 @@
 //!                           document read as OCR or unclassified) binds on one such text, not two; a digital-native
 //!                           journal article or digital-born corpus document binds on one, as A2AJ's text does
 //!   --decision-agreement    a pair only A2AJ decisions write binds on two decisions, not one
+//!   --digital-agreement     a pair only digital-born texts write binds on two of them, or one and a PDF text, not one
 //!   --no-anchor             a pair may join two decisions A2AJ's records hold apart
 //!   --no-distinct           a pair may join citations the engine reads as two decisions (`parallel::distinct`)
 //!   --no-order              pairs bind in the store's order, not the most written first
@@ -19,9 +20,18 @@
 //! citations) against the binding: bound to its decision, bound elsewhere, or unbound. `--ablate` scores every gate
 //! off alone, all on and all off. `--split` measures the identities A2AJ cannot judge by split-half agreement: bound
 //! from one half of the text sources, read against the other half's parallels.
-use legal_citations::{aliases, extract, key, parallel, registry, Citation, Options};
+//!
+//!   cargo run --release --features alias-evidence --bin alias-inventory -- EVIDENCE.sqlite… [gates]
+//!       --write registry/aliases.json [--from registry/aliases.json]
+//!
+//! `--judge PAGES.tsv` scores the binding under each configuration (`--ablate`) or the chosen gates against decisions
+//! whose own citations a provider prints, one decision a line (`provider <TAB> text`), by [`judge`].
+//!
+//! `--write` writes the alias table the engine compiles in from the binding under the chosen gates and from the table
+//! it replaces (`--from`, by default the one it writes), whose ALR records, reviews and blocked forms it keeps.
+use legal_citations::{aliases, extract, key, parallel, registry, Authority, Citation, Form, Options};
 use rusqlite::{Connection, OpenFlags};
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, HashMap, HashSet};
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
 
@@ -29,10 +39,17 @@ type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>
 enum Kind { Record, Decision, Digital, Article, Corpus, CorpusDigital }
 
 #[derive(Clone, Copy)]
-struct Gates { journal_agreement: bool, decision_agreement: bool, anchor: bool, distinct: bool, order: bool }
+struct Gates {
+    journal_agreement: bool, decision_agreement: bool, digital_agreement: bool, anchor: bool, distinct: bool, order: bool,
+    /// The most years two identities' decisions may lie apart and join ([`years`]).
+    years: Option<i32>,
+}
 
 impl Default for Gates {
-    fn default() -> Self { Self { journal_agreement: true, decision_agreement: false, anchor: true, distinct: true, order: true } }
+    fn default() -> Self {
+        Self { journal_agreement: true, decision_agreement: false, digital_agreement: false, anchor: true, distinct: true, order: true,
+            years: None }
+    }
 }
 
 #[derive(Default, Clone, Copy)]
@@ -41,6 +58,10 @@ struct Support { records: u32, decisions: u32, digital: u32, articles: u32, file
 struct Evidence {
     keys: Vec<String>,
     forms: Vec<String>,
+    /// Each key's best rank as written (`parallel::rank`).
+    ranks: Vec<u8>,
+    /// The years each key's decision can be from ([`years`]).
+    years: Vec<Option<(i32, i32)>>,
     /// Each A2AJ decision's first key and its other keys.
     records: Vec<(u32, Vec<u32>)>,
     /// Text pairs, by how many sources of each kind write them (records' own pairs apart).
@@ -53,7 +74,7 @@ enum Half { All, Even, Odd }
 
 fn load(paths: &[String], half: Half) -> Result<Evidence> {
     let mut ids: HashMap<String, u32> = HashMap::new();
-    let (mut keys, mut forms) = (Vec::new(), Vec::new());
+    let (mut keys, mut forms, mut ranks) = (Vec::new(), Vec::new(), Vec::<u8>::new());
     let mut records = Vec::new();
     let mut support: HashMap<(u32, u32), Support> = HashMap::new();
     let mut seen: HashSet<(u32, u32)> = HashSet::new();
@@ -86,14 +107,14 @@ fn load(paths: &[String], half: Half) -> Result<Evidence> {
     };
     for (store, path) in paths.iter().enumerate() {
     let connection = Connection::open_with_flags(path, OpenFlags::SQLITE_OPEN_READ_ONLY)?;
-    let mut statement = connection.prepare("SELECT s.id, s.kind, m.parallel_id, m.key, m.form FROM member m
+    let mut statement = connection.prepare("SELECT s.id, s.kind, m.parallel_id, m.key, m.form, m.rank FROM member m
         JOIN parallel p ON p.id = m.parallel_id JOIN source s ON s.id = p.source_id ORDER BY s.id, m.parallel_id, m.rowid")?;
     let mut rows = statement.query([])?;
     // Each store's ids apart from the others'.
     let offset = (store as i64) << 40;
     while let Some(row) = rows.next()? {
-        let (source_id, kind_name, parallel_id, key, form): (i64, String, i64, String, String) =
-            (offset + row.get::<_, i64>(0)?, row.get(1)?, offset + row.get::<_, i64>(2)?, row.get(3)?, row.get(4)?);
+        let (source_id, kind_name, parallel_id, key, form, rank): (i64, String, i64, String, String, u8) =
+            (offset + row.get::<_, i64>(0)?, row.get(1)?, offset + row.get::<_, i64>(2)?, row.get(3)?, row.get(4)?, row.get(5)?);
         if parallel_id != group {
             flush(kind, &mut members, &mut seen);
             group = parallel_id;
@@ -109,7 +130,8 @@ fn load(paths: &[String], half: Half) -> Result<Evidence> {
         };
         let kept = match half { Half::All => true, Half::Even => source_id % 2 == 0, Half::Odd => source_id % 2 == 1 };
         if kind != Kind::Record && !kept { continue; }
-        let id = *ids.entry(key.clone()).or_insert_with(|| { keys.push(key); forms.push(form); keys.len() as u32 - 1 });
+        let id = *ids.entry(key.clone()).or_insert_with(|| { keys.push(key); forms.push(form); ranks.push(rank); keys.len() as u32 - 1 });
+        ranks[id as usize] = ranks[id as usize].min(rank);
         members.push(id);
     }
     }
@@ -122,7 +144,61 @@ fn load(paths: &[String], half: Half) -> Result<Evidence> {
     }
     let mut pairs: Vec<((u32, u32), Support)> = support.into_iter().collect();
     pairs.sort_by_key(|(pair, _)| *pair);
-    Ok(Evidence { keys, forms, records, pairs })
+    let years = years(&keys, &pairs);
+    Ok(Evidence { keys, forms, ranks, years, records, pairs })
+}
+
+/// What a key says of its decision's year: the year it writes (a neutral, CanLII or database citation's, a report's
+/// numbered by its year) or the edition and volume of a report numbered by volume.
+enum Dated { Year(i32), Volume(String, u32), Unknown }
+
+fn dated(key: &str) -> Dated {
+    let parts: Vec<&str> = key.split(':').collect();
+    let year = |part: &&str| part.len() == 4 && part.parse::<i32>().is_ok_and(|year| (1700..=2100).contains(&year));
+    let at = |index: usize| parts.get(index).copied().filter(year).and_then(|part| part.parse().ok()).map_or(Dated::Unknown, Dated::Year);
+    match (parts.get(1).copied(), parts.len()) {
+        (Some("neutral" | "canlii"), _) => at(2),
+        (Some("database"), _) => at(3),
+        (Some("reporter"), 7) => at(4),
+        (Some("reporter"), 6) => match at(4) {
+            Dated::Unknown => parts[4].parse().map_or(Dated::Unknown, |volume| Dated::Volume(format!("{}:{}", parts[2], parts[3]), volume)),
+            dated => dated,
+        },
+        _ => Dated::Unknown,
+    }
+}
+
+/// The years each key's decision can be from: the year it writes, or for a report numbered by volume the year its
+/// volume appeared, the median of the years the citations written as its volume's parallels give (A2AJ's records and
+/// the evidence's pairs), and for a volume none dates, the years between the nearest dated volumes before and after it.
+fn years(keys: &[String], pairs: &[((u32, u32), Support)]) -> Vec<Option<(i32, i32)>> {
+    let dated: Vec<Dated> = keys.iter().map(|key| dated(key)).collect();
+    let mut seen: HashMap<(&str, u32), Vec<i32>> = HashMap::new();
+    for ((left, right), support) in pairs {
+        let weight = (support.records + support.decisions + support.digital + support.digital_files + support.articles
+            + support.files).min(10);
+        for (a, b) in [(left, right), (right, left)] {
+            if let (Dated::Year(year), Dated::Volume(edition, volume)) = (&dated[*a as usize], &dated[*b as usize]) {
+                seen.entry((edition.as_str(), *volume)).or_default().extend(std::iter::repeat_n(*year, weight as usize));
+            }
+        }
+    }
+    let mut volumes: HashMap<&str, BTreeMap<u32, i32>> = HashMap::new();
+    for ((edition, volume), mut years) in seen {
+        years.sort_unstable();
+        volumes.entry(edition).or_default().insert(volume, years[years.len() / 2]);
+    }
+    dated.iter().map(|dated| match dated {
+        Dated::Year(year) => Some((*year, *year)),
+        Dated::Volume(edition, volume) => {
+            let dates = volumes.get(edition.as_str())?;
+            if let Some(&year) = dates.get(volume) { return Some((year, year)); }
+            let before = dates.range(..volume).next_back().map(|(_, &year)| year)?;
+            let after = dates.range(volume..).next().map(|(_, &year)| year)?;
+            Some((before.min(after), before.max(after)))
+        }
+        Dated::Unknown => None,
+    }).collect()
 }
 
 struct Binding { root: Vec<u32>, refused: Vec<(u32, u32, &'static str)> }
@@ -163,11 +239,14 @@ fn bind(evidence: &Evidence, gates: Gates, hold_out: bool, readings: &mut HashMa
             support.decisions + support.digital + support.digital_files)));
     }
     let mut refused = Vec::new();
+    // Each identity's years, at its root.
+    let mut span = evidence.years.clone();
     for &&((left, right), support) in &order {
         let records = if hold_out { 0 } else { support.records };
+        let digital = support.digital + support.digital_files;
         let binds = records > 0
             || support.decisions >= if gates.decision_agreement { 2 } else { 1 }
-            || support.digital + support.digital_files >= 1
+            || if gates.digital_agreement { digital >= 2 || digital >= 1 && support.articles + support.files >= 1 } else { digital >= 1 }
             || support.articles + support.files >= if gates.journal_agreement { 2 } else { 1 };
         if !binds { continue; }
         let (a, b) = (find(&mut root, left), find(&mut root, right));
@@ -175,6 +254,12 @@ fn bind(evidence: &Evidence, gates: Gates, hold_out: bool, readings: &mut HashMa
         if gates.anchor && matches!((anchor[a as usize], anchor[b as usize]), (Some(x), Some(y)) if x != y) {
             refused.push((left, right, "anchor"));
             continue;
+        }
+        if let (Some(apart), Some((a_first, a_last)), Some((b_first, b_last))) = (gates.years, span[a as usize], span[b as usize]) {
+            if a_first.max(b_first) - a_last.min(b_last) > apart {
+                refused.push((left, right, "years"));
+                continue;
+            }
         }
         let (small, large) = if members[a as usize].len() < members[b as usize].len() { (a, b) } else { (b, a) };
         if gates.distinct {
@@ -191,6 +276,10 @@ fn bind(evidence: &Evidence, gates: Gates, hold_out: bool, readings: &mut HashMa
         members[large as usize].extend(moved);
         root[small as usize] = large;
         anchor[large as usize] = anchor[large as usize].or(anchor[small as usize]);
+        span[large as usize] = match (span[large as usize], span[small as usize]) {
+            (Some((a, b)), Some((c, d))) => Some((a.min(c), b.max(d))),
+            (one, other) => one.or(other),
+        };
     }
     for id in 0..count as u32 { find(&mut root, id); }
     Binding { root, refused }
@@ -224,9 +313,200 @@ fn score(evidence: &Evidence, binding: &Binding) -> Score {
     score
 }
 
+/// The decisions of `path` (`provider <TAB> text` a line), each with its provider and the keys of its case citations.
+fn pages(path: &str) -> Result<Vec<(String, Vec<String>)>> {
+    let mut pages = Vec::new();
+    for line in std::fs::read_to_string(path)?.lines() {
+        let Some((provider, text)) = line.split_once('\t') else { continue };
+        let mut keys: Vec<String> = extract(text, &Options { resolve: false, parallel: false, ..Options::default() }).iter()
+            .filter(|citation| citation.form == Form::Full && citation.authority == Authority::Case)
+            .filter_map(|citation| key::key_in(citation, registry::registry())).collect();
+        keys.sort();
+        keys.dedup();
+        pages.push((provider.to_owned(), keys));
+    }
+    Ok(pages)
+}
+
+/// Each pair of the case citations a provider prints for one decision, against `binding`, by provider: linked (one
+/// identity), split (two identities), wrong (two identities that hold two different A2AJ decisions) or unbound (one of
+/// them in no identity). Each wrong pair goes to stderr.
+fn judge(evidence: &Evidence, binding: &Binding, pages: &[(String, Vec<String>)]) -> BTreeMap<String, [u64; 4]> {
+    let ids: HashMap<&str, u32> = evidence.keys.iter().enumerate().map(|(id, key)| (key.as_str(), id as u32)).collect();
+    let mut size: HashMap<u32, u32> = HashMap::new();
+    for &root in &binding.root { *size.entry(root).or_default() += 1; }
+    let mut decision: HashMap<u32, u32> = HashMap::new();
+    for (first, _) in &evidence.records { decision.entry(binding.root[*first as usize]).or_insert(*first); }
+    let mut tally: BTreeMap<String, [u64; 4]> = BTreeMap::new();
+    for (provider, keys) in pages {
+        let roots: Vec<Option<u32>> = keys.iter()
+            .map(|key| ids.get(key.as_str()).map(|&id| binding.root[id as usize]).filter(|root| size[root] > 1)).collect();
+        let counts = tally.entry(provider.clone()).or_default();
+        for (at, left) in roots.iter().enumerate() {
+            for (right, other) in roots.iter().zip(keys).skip(at + 1) {
+                counts[match (left, right) {
+                    (Some(a), Some(b)) if a == b => 0,
+                    (Some(a), Some(b)) if decision.get(a).zip(decision.get(b)).is_some_and(|(x, y)| x != y) => {
+                        eprintln!("wrong\t{provider}\t{}\t{other}\t{}\t{}", keys[at], evidence.keys[decision[a] as usize],
+                            evidence.keys[decision[b] as usize]);
+                        2
+                    }
+                    (Some(_), Some(_)) => 1,
+                    _ => 3,
+                }] += 1;
+            }
+        }
+    }
+    tally
+}
+
+/// Every key the alias table names, with its identity: the binding's keys first, then those only the ALR records name.
+struct Identities {
+    ids: HashMap<String, u32>,
+    keys: Vec<String>,
+    root: Vec<u32>,
+    /// At an identity's root, the A2AJ decision (its first key) the identity holds.
+    decision: Vec<Option<u32>>,
+    rank: Vec<u8>,
+}
+
+impl Identities {
+    fn id(&mut self, key: &str) -> u32 {
+        if let Some(&id) = self.ids.get(key) { return id; }
+        let id = self.keys.len() as u32;
+        self.ids.insert(key.to_owned(), id);
+        self.keys.push(key.to_owned());
+        self.root.push(id);
+        self.decision.push(None);
+        self.rank.push(u8::MAX);
+        id
+    }
+
+    /// Joins the identities of `a` and `b`, unless they hold two different decisions.
+    fn join(&mut self, a: u32, b: u32) -> bool {
+        let (a, b) = (find(&mut self.root, a), find(&mut self.root, b));
+        if a == b { return true; }
+        if matches!((self.decision[a as usize], self.decision[b as usize]), (Some(x), Some(y)) if x != y) { return false; }
+        self.root[a as usize] = b;
+        self.decision[b as usize] = self.decision[b as usize].or(self.decision[a as usize]);
+        true
+    }
+}
+
+/// Writes the alias table (`registry/aliases.json`) from `binding` and `from`, the table it replaces. The ALR records
+/// `from` holds keep their reviews and blocked forms and are read again by this engine: each record's citation joins
+/// its decision's identity, or, where it would join two decisions, is a conflict and joins none; one this engine reads
+/// no citation or identity in is unresolved. Each identity's citation is the A2AJ decision's it holds, else its
+/// best-ranked member's ([`parallel::rank`]); every other member is a target of it, and each ALR record's written form
+/// is observed for it.
+fn write(evidence: &Evidence, binding: &Binding, from: &str, out: &str, paths: &[String], gates: Gates) -> Result<()> {
+    use serde_json::{json, Value};
+    let previous: Value = serde_json::from_str(&std::fs::read_to_string(from)?)?;
+    let records = previous["aliases"].as_object().ok_or("aliases")?;
+    let reviews = previous["reviews"].as_object().ok_or("reviews")?;
+    let blocked: HashSet<&str> = previous["blockedForms"].as_array().ok_or("blockedForms")?.iter().filter_map(Value::as_str).collect();
+    let mut identities = Identities {
+        ids: evidence.keys.iter().enumerate().map(|(id, key)| (key.clone(), id as u32)).collect(),
+        keys: evidence.keys.clone(), root: binding.root.clone(), decision: vec![None; evidence.keys.len()],
+        rank: evidence.ranks.clone(),
+    };
+    for (first, _) in &evidence.records {
+        let root = find(&mut identities.root, *first);
+        identities.decision[root as usize].get_or_insert(*first);
+    }
+    let (mut unresolved, mut conflicts) = (BTreeMap::<String, &str>::new(), BTreeMap::<String, Vec<String>>::new());
+    let mut citations: HashMap<u32, String> = HashMap::new();
+    let mut own_records: HashMap<u32, Vec<String>> = HashMap::new();
+    // The keys an ALR record and the binding give two decisions: neither is taken.
+    let mut refused: HashSet<u32> = HashSet::new();
+    // Each record kept, with its decision's key and its court.
+    let mut kept: Vec<(&String, u32, String)> = Vec::new();
+    for (id, record) in records {
+        let review = reviews.get(id);
+        if blocked.contains(id.as_str()) || review.is_some_and(|review| review["status"] != "corrected") { continue; }
+        let citation = review.and_then(|review| review["canonicalCitation"].as_str())
+            .or_else(|| record["canonical_citation"].as_str()).ok_or("canonical_citation")?;
+        let Ok(canonical) = key::key_for_text(citation) else { unresolved.insert(id.clone(), "no_canonical_identity"); continue };
+        let canonical = identities.id(&canonical);
+        citations.entry(canonical).or_insert_with(|| citation.to_owned());
+        let root = find(&mut identities.root, canonical);
+        identities.decision[root as usize].get_or_insert(canonical);
+        match key::key_for_text(record["alias"].as_str().ok_or("alias")?) {
+            Ok(own) => {
+                let own = identities.id(&own);
+                if !identities.join(own, canonical) {
+                    conflicts.entry(identities.keys[own as usize].clone()).or_default().push(id.clone());
+                    refused.insert(own);
+                    continue;
+                }
+                own_records.entry(own).or_default().push(id.clone());
+            }
+            Err(key::KeyError::NoIdentity) => { unresolved.insert(id.clone(), "no_identity"); }
+            Err(key::KeyError::NoCitation) => { unresolved.insert(id.clone(), "no_citation"); continue; }
+            Err(key::KeyError::Multiple(_)) => { unresolved.insert(id.clone(), "several_citations"); continue; }
+        }
+        let court = previous["observed"][id.as_str()]["court"].as_str().map(str::to_owned)
+            .unwrap_or_else(|| record["dataset"].as_str().unwrap_or_default().to_lowercase());
+        kept.push((id, canonical, court));
+    }
+    let mut members: BTreeMap<u32, Vec<u32>> = BTreeMap::new();
+    for id in 0..identities.keys.len() as u32 {
+        members.entry(find(&mut identities.root, id)).or_default().push(id);
+    }
+    let (mut targets, mut heads) = (BTreeMap::<String, Value>::new(), HashMap::<u32, (String, String)>::new());
+    for (root, ids) in &members {
+        if ids.len() < 2 { continue; }
+        let head = identities.decision[*root as usize].unwrap_or_else(|| *ids.iter()
+            .min_by_key(|&&id| (identities.rank[id as usize], &identities.keys[id as usize])).unwrap());
+        let citation = citations.get(&head).or(evidence.forms.get(head as usize)).ok_or("identity citation")?.clone();
+        let key = identities.keys[head as usize].clone();
+        for &id in ids.iter().filter(|&&id| id != head && !refused.contains(&id)) {
+            let provenance = own_records.get(&id).cloned().unwrap_or_else(|| vec!["inventory".to_owned()]);
+            targets.insert(identities.keys[id as usize].clone(), json!({"key": key, "citation": citation, "records": provenance}));
+        }
+        heads.insert(*root, (key, citation));
+    }
+    let mut observed = BTreeMap::<String, Value>::new();
+    for (id, canonical, court) in kept {
+        let root = find(&mut identities.root, canonical);
+        let (key, citation) = heads.get(&root).cloned()
+            .unwrap_or_else(|| (identities.keys[canonical as usize].clone(), citations[&canonical].clone()));
+        observed.insert(id.clone(), json!({"key": key, "citation": citation, "records": [id], "court": court}));
+    }
+    let evidence_files: Vec<String> = paths.iter().filter_map(|path| std::path::Path::new(path).file_name())
+        .map(|name| name.to_string_lossy().into_owned()).collect();
+    let table = json!({
+        "keyVersion": key::KEY_VERSION,
+        "source": previous["source"],
+        "inventory": {
+            "engine": env!("CARGO_PKG_VERSION"), "evidence": evidence_files,
+            "gates": {"journalAgreement": gates.journal_agreement, "decisionAgreement": gates.decision_agreement,
+                "digitalAgreement": gates.digital_agreement, "yearsApart": gates.years,
+                "anchor": gates.anchor, "distinct": gates.distinct, "order": gates.order},
+            "identities": heads.len(), "targets": targets.len(),
+        },
+        "aliases": previous["aliases"], "reviews": previous["reviews"],
+        "unresolved": unresolved, "conflicts": conflicts, "blockedForms": previous["blockedForms"],
+        "targets": targets, "observed": observed,
+    });
+    let mut text = Vec::new();
+    let mut serializer = serde_json::Serializer::with_formatter(&mut text, serde_json::ser::PrettyFormatter::with_indent(b" "));
+    serde::Serialize::serialize(&table, &mut serializer)?;
+    text.push(b'\n');
+    std::fs::write(out, text)?;
+    eprintln!("{} identities, {} targets, {} observed, {} unresolved, {} conflicts", heads.len(), table["targets"].as_object().map_or(0, |targets| targets.len()),
+        table["observed"].as_object().map_or(0, |observed| observed.len()), table["unresolved"].as_object().map_or(0, |unresolved| unresolved.len()),
+        table["conflicts"].as_object().map_or(0, |conflicts| conflicts.len()));
+    Ok(())
+}
+
 fn main() -> Result<()> {
     let args: Vec<String> = std::env::args().skip(1).collect();
-    let paths: Vec<String> = args.iter().filter(|arg| !arg.starts_with("--")).cloned().collect();
+    let valued = ["--write", "--from", "--judge", "--years"];
+    let value = |name: &str| args.iter().position(|arg| arg == name).and_then(|at| args.get(at + 1)).cloned();
+    let paths: Vec<String> = args.iter().enumerate()
+        .filter(|(at, arg)| !arg.starts_with("--") && !(*at > 0 && valued.contains(&args[at - 1].as_str())))
+        .map(|(_, arg)| arg.clone()).collect();
     if paths.is_empty() { return Err("EVIDENCE.sqlite".into()); }
     let flag = |name: &str| args.iter().any(|arg| arg == name);
     aliases::use_evidence(false);
@@ -242,17 +522,42 @@ fn main() -> Result<()> {
             ("all gates on", on),
             ("journal agreement off", Gates { journal_agreement: false, ..on }),
             ("decision agreement on", Gates { decision_agreement: true, ..on }),
+            ("digital agreement on", Gates { digital_agreement: true, ..on }),
+            ("decision and digital agreement on", Gates { decision_agreement: true, digital_agreement: true, ..on }),
+            ("years over 2 apart refused", Gates { years: Some(2), ..on }),
+            ("years over 1 apart refused", Gates { years: Some(1), ..on }),
             ("anchor off", Gates { anchor: false, ..on }),
             ("distinct off", Gates { distinct: false, ..on }),
             ("order off", Gates { order: false, ..on }),
-            ("all gates off", Gates { journal_agreement: false, decision_agreement: false, anchor: false, distinct: false, order: false }),
+            ("all gates off", Gates { journal_agreement: false, decision_agreement: false, digital_agreement: false, anchor: false,
+                distinct: false, order: false, years: None }),
         ]
     } else {
         vec![("chosen gates", Gates {
             journal_agreement: !flag("--no-journal-agreement"), decision_agreement: flag("--decision-agreement"),
+            digital_agreement: flag("--digital-agreement"),
             anchor: !flag("--no-anchor"), distinct: !flag("--no-distinct"), order: !flag("--no-order"),
+            years: value("--years").and_then(|apart| apart.parse().ok()),
         })]
     };
+    if let Some(path) = value("--judge") {
+        let pages = pages(&path)?;
+        println!("| configuration | provider | linked | split | wrong | unbound | identities | aliases |");
+        println!("|---|---|---|---|---|---|---|---|");
+        for (name, gates) in &configurations {
+            let binding = bind(&evidence, *gates, false, &mut readings);
+            let score = score(&evidence, &binding);
+            for (provider, [linked, split, wrong, unbound]) in judge(&evidence, &binding, &pages) {
+                println!("| {name} | {provider} | {linked} | {split} | {wrong} | {unbound} | {} | {} |", score.identities, score.aliases);
+            }
+        }
+        return Ok(());
+    }
+    if let Some(out) = value("--write") {
+        let gates = configurations[0].1;
+        let binding = bind(&evidence, gates, false, &mut readings);
+        return write(&evidence, &binding, &value("--from").unwrap_or_else(|| out.clone()), &out, &paths, gates);
+    }
     let hold_out = flag("--hold-out") || flag("--ablate");
     let mut unwritten = 0;
     println!("| configuration | bound to its decision | bound to another identity | unbound | precision | recall | identities holding two A2AJ decisions | identities | aliases | seconds |");
@@ -282,7 +587,8 @@ fn split(paths: &[String]) -> Result<()> {
     let mut readings = HashMap::new();
     let configurations = [("all gates on", Gates::default()), ("journal agreement off", Gates { journal_agreement: false, ..Gates::default() }),
         ("distinct off", Gates { distinct: false, ..Gates::default() }),
-        ("all gates off", Gates { journal_agreement: false, decision_agreement: false, anchor: false, distinct: false, order: false })];
+        ("all gates off", Gates { journal_agreement: false, decision_agreement: false, digital_agreement: false, anchor: false,
+            distinct: false, order: false, years: None })];
     println!("| configuration | odd half written by | agrees | contradicts | agreement |");
     println!("|---|---|---|---|---|");
     let id_of: HashMap<&str, u32> = even.keys.iter().enumerate().map(|(id, key)| (key.as_str(), id as u32)).collect();

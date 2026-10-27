@@ -1,0 +1,61 @@
+{
+    "#": "Authored template variables, read beside reporters-db's (upstream/reporters-db/regexes.json) and written as it writes them: a row's regexes name these with $, and $reporter is the slot its own names fill. A variable here never shadows one there.",
+    "commonwealth": {
+        "#": "Commonwealth reports and legislation, as Canadian, UK and other Commonwealth writers cite them.",
+        "year": {
+            "": "(?P<year>(?:1[6-9]|20)\\d{2})",
+            "#": "A year a citation states"
+        },
+        "year_before": {
+            "": "(?:\\[$commonwealth_year\\]|\\((?P<year_parenthesized>(?:1[6-9]|20)\\d{2}(?:-(?:1[6-9]|20)?\\d{2})?)\\)[,.]?) ?",
+            "#": "The year (or years) a writer puts before a volume, read before any citation by volume where the reading asks for it: '[2016] 1 SCR 631', '[1987] 36 CCC (3d) 417', '(1989), 49 NBR 144', '(1981), 401 U.S. 424', '(1943-1944), 57 Harv. L. Rev. 269', and with a period for its comma, '(1957). 21 W.W.R. 134'"
+        },
+        "issue": {
+            "": "(?::(?P<issue>\\d+))?",
+            "#": "The issue a writer puts after a volume, read after any volume where the reading asks for it: '(1998) 43:2 McGill LJ 287'"
+        },
+        "report": {
+            "year_volume": "[\\[(](?P<volume>(?:1[6-9]|20)\\d{2})[\\])],? $reporter $page",
+            "year_volume#": "A report whose volume is its year, in brackets (or, as some write it, parentheses): '[1932] AC 562'",
+            "law_reports": "(?:$commonwealth_year_before)?L\\.? ?R\\.? $volume $reporter,? $page",
+            "law_reports#": "A series of the Law Reports (1865-1875) cited with its volume after 'L.R.' and its own name after the volume: 'L.R. 1 Ex. 265'"
+        },
+        "neutral": {
+            "": "$commonwealth_year $reporter (?P<number>\\d+)",
+            "#": "A court's neutral citation: '2019 SCC 65'",
+            "bracketed": "\\[$commonwealth_year\\] $reporter (?P<number>\\d+)",
+            "bracketed#": "A neutral citation with its year in brackets: '[2024] EWCA Civ 138'"
+        },
+        "statute": {
+            "": "$reporter\\s*,?\\s+\\(?$commonwealth_statute_volume\\)?(?:$commonwealth_statute_chapter)?(?:$commonwealth_statute_schedule)?",
+            "#": "A revised or annual statute by year and chapter: 'RSC 1985, c C-46', 'SO 2002, c 30, Sched A', 'LRC 1985, ch C-46'",
+            "volume": "(?P<volume>(?P<year>(?:1[6-9]|20)\\d{2})(?:-\\d{2}){0,3}(?:\\(\\d[A-Za-z]?\\)|\\s\\((?:\\d(?:st|nd|rd|d|th)\\s+Sess|(?:(?:19|20)\\d{2}\\s)?Supp)\\))?)",
+            "chapter": "(?:\\s*,\\s*|\\s+)[cC](?:h)?\\.?\\s*(?P<chapter>(?:[A-Za-z]{1,2} \\d+(?:\\.\\d+)?|(?:[A-Za-z]+(?:[.\\-‑][A-Za-z]+)*(?:[-‑]\\.|[.\\-‑]))?\\d[A-Za-z0-9]*(?:[.\\-‑][A-Za-z0-9]+)*|[A-Za-z]{1,2}\\d[A-Za-z0-9]*(?:[.\\-‑][A-Za-z0-9]+)*)(?:\\s*\\((?:(?:\\d+(?:st|nd|rd|d|th)\\s+)?Supp\\.?|Private)\\))?)",
+            "schedule": "\\s*,?\\s+(?P<schedule_label>[Ss]ch(?:ed(?:ule)?)?)\\b\\.?(?:\\s*(?P<schedule>[A-Za-z0-9]{1,3}(?:\\.\\d{1,2})?)\\b)?"
+        },
+        "compiled": {
+            "": "$reporter\\s*,?\\s+c\\.?\\s*(?P<chapter>[A-Za-z0-9]+(?:[.\\-][A-Za-z0-9]+)*)(?:,?\\s+Reg\\s+(?P<regulation>\\d+(?:\\.\\d+)*))?",
+            "#": "A compilation cited by chapter alone: 'CQLR c C-12', 'CCSM c C80', 'RRQ, c C-12, r 1'"
+        },
+        "regulation": {
+            "": "$reporter\\.?(?:\\s*\\(Nu\\))?\\s*(?:EC\\s?|R-|SI[\\s-])?(?P<number>(?:\\d{1,4}[A-Za-z]?|(?:Jan|Feb|Mar|Apr|May|June?|July?|Aug|Sept?|Oct|Nov|Dec)\\.\\d{1,2})[-/]\\d{1,4})(?:\\s+R\\b)?(?:\\s*,\\s*(?P<schedule_label>[Ss]ch)\\b\\.?\\s*(?P<schedule>[A-Za-z0-9]{1,3})\\b)?",
+            "#": "A regulation by number and year: 'O Reg 213/91', 'Alta Reg 64/2036', 'SI 2000/1234'"
+        },
+        "instrument": {
+            "": "$reporter/(?P<number>\\d{2,4}[-/]\\d{1,4}[a-z]?)(?:\\s+\\(?(?P<territory>NT|NU)\\b\\)?)?",
+            "#": "A federal statutory instrument: 'SOR/98-106', 'DORS/2002-227', 'SI/2000-12'"
+        },
+        "consolidated": {
+            "": "$reporter,?\\s*c\\.?\\s*(?P<chapter>\\d{1,4}(?:\\.\\d+)?)",
+            "#": "A consolidated regulation by chapter: 'CRC, c 870'"
+        },
+        "revised_regulation": {
+            "": "$reporter\\s+(?P<year>(?:1[6-9]|20)\\d{2}),?\\s+Reg\\.?\\s+(?P<number>\\d{1,5})\\b",
+            "#": "A revised regulation by year and number: 'RRO 1990, Reg 194'"
+        },
+        "numbered_regulation": {
+            "": "$reporter\\s+(?P<number>R-\\d{3}-\\d{4})",
+            "#": "A Nunavut regulation by its registration number: 'CR Nu R-012-2004'"
+        }
+    }
+}

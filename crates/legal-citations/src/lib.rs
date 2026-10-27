@@ -30,6 +30,7 @@ pub mod format;
 pub mod key;
 pub mod metadata;
 pub mod model;
+pub mod named;
 pub mod parallel;
 pub mod reference_names;
 pub mod registry;
@@ -79,6 +80,7 @@ pub fn warm() {
     metadata::warm();
     aliases::warm();
     key::warm();
+    named::warm();
     registry::warm();
     resolve::warm();
     short_forms::warm();
@@ -191,11 +193,19 @@ pub struct Options {
     /// Commonwealth form the native grammars do not read. A court, reporter, journal or statute series of a
     /// jurisdiction left out is no reading of a citation, so a shared name reads as the listed jurisdiction's ("54 OR
     /// 768" is the Ontario Reports with `["ca"]`, the Oregon Reports with `["us"]`), and a citation the registry places
-    /// only in jurisdictions left out is not read. One whose name the registry does not know is read whatever the list.
+    /// only in jurisdictions left out is not read, nor looked for by its name. One whose name the registry does not know
+    /// is read whatever the list. A jurisdiction left out is not preferred either ([`Options::jurisdiction_priority`]).
     pub jurisdictions: Option<Vec<String>>,
-    /// Read a report the grammars cannot split by the registry's name for its reporter, however the writer spaced and
-    /// pointed it ("[1989] 2 S.C.R . 418", "49 N .B .R . 144", "37 Sask. R. 128"), as the US reporters' names are read.
-    /// A report the grammars read whole is read as they read it.
+    /// The kinds of authority whose citations are returned (`["case", "statute"]`), of every jurisdiction read; every
+    /// kind when absent.
+    pub authorities: Option<Vec<Authority>>,
+    /// The forms of citation returned (`["full"]` leaves out short forms, supra, ibid and references); every form when
+    /// absent. A reference still resolves to a full citation left out.
+    pub forms: Option<Vec<Form>>,
+    /// Read reports and journal citations by the registry's own rows ("[1989] 2 S.C.R . 418", "49 N .B .R . 144",
+    /// "248 Nfld. & P.E.I.R. 64") as well as reporters-db's, in the one scan of the registry's named rows
+    /// ([`named`]), and read one written with a space before a period from its text closed up. Off, that scan reads
+    /// only reporters-db's rows, those the US forms (eyecite's) read.
     pub reporter_names: bool,
     /// Rule out a reporter or journal the citation's year contradicts: a reporter edition that had ended by that year
     /// (or had not begun, where the year is the volume, "[1932] AC 562"), or a journal outside its run or the years its
@@ -402,6 +412,8 @@ impl Default for Options {
             notes: None,
             jurisdiction_priority: source::default_jurisdiction_priority(),
             jurisdictions: None,
+            authorities: None,
+            forms: None,
             reporter_names: true,
             year_runs: false,
             ocr_repairs: false,
@@ -433,10 +445,20 @@ impl Options {
     /// Whether a registry row of `jurisdiction` is read ([`Options::jurisdictions`]): every row when the option is
     /// absent, a row placed in no jurisdiction always, and otherwise one in or within a listed jurisdiction (`ca-on`
     /// within `ca`).
-    pub(crate) fn reads_jurisdiction(&self, jurisdiction: Option<&str>) -> bool {
-        jurisdiction.is_none_or(|jurisdiction| self.jurisdictions.as_deref().is_none_or(|listed| listed.iter().any(|place|
-            jurisdiction == place || jurisdiction.strip_prefix(place.as_str()).is_some_and(|rest| rest.starts_with('-')))))
+    /// Whether any of `authorities` is read ([`Options::authorities`]).
+    pub(crate) fn reads_authority(&self, authorities: &[Authority]) -> bool {
+        self.authorities.as_ref().is_none_or(|listed| authorities.iter().any(|authority| listed.contains(authority)))
     }
+
+    pub(crate) fn reads_jurisdiction(&self, jurisdiction: Option<&str>) -> bool {
+        listed(self.jurisdictions.as_deref(), jurisdiction)
+    }
+}
+
+/// Whether `jurisdictions` ([`Options::jurisdictions`]) reads a registry row of `jurisdiction`.
+pub(crate) fn listed(jurisdictions: Option<&[String]>, jurisdiction: Option<&str>) -> bool {
+    jurisdiction.is_none_or(|jurisdiction| jurisdictions.is_none_or(|listed| listed.iter().any(|place|
+        jurisdiction == place || jurisdiction.strip_prefix(place.as_str()).is_some_and(|rest| rest.starts_with('-')))))
 }
 
 /// A footnote's byte range and number, so `supra note 4` resolves to the
@@ -518,7 +540,10 @@ fn read_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
     find::titled_chapters(&mut citations);
     stage("twins_chapters");
     let notes = options.notes.as_deref().unwrap_or(&[]);
-    let mut parts = source::split_notes(text, notes, options.split_tier, &citations, &options.jurisdiction_priority);
+    // A jurisdiction not read is not preferred either: the parts read the forms of those that are.
+    let priority: Vec<String> = options.jurisdiction_priority.iter()
+        .filter(|place| options.reads_jurisdiction(Some(place.split(':').next().unwrap_or(place)))).cloned().collect();
+    let mut parts = source::split_notes(text, notes, options.split_tier, &citations, &priority);
     if options.split_tier.is_some() { source::merge_split_citations(text, notes, &mut parts, &citations); }
     // A work's own short form written after it refers to it ([`Linking::short_form_references`],
     // [`Linking::bare_mentions`]).
@@ -564,6 +589,8 @@ fn read_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
     if options.remove_ambiguous {
         citations.retain(|citation| !citation.is_ambiguous());
     }
+    citations.retain(|citation| options.authorities.as_ref().is_none_or(|listed| listed.contains(&citation.authority))
+        && options.forms.as_ref().is_none_or(|listed| listed.contains(&citation.form)));
     stage("notes_and_short_forms");
     (citations, parts, resolutions)
 }
