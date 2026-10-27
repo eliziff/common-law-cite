@@ -257,8 +257,14 @@ fn chapter_value(chapter: &str) -> Option<String> {
 
 /// The best public URL for a full citation: CanLII, Find Case Law or
 /// CourtListener for decisions; CanLII, Justice Laws or legislation.gov.uk
-/// for legislation. `None` when no source is certain.
+/// for legislation. `None` when no source is certain. A neutral citation or
+/// CanLII identifier links to the document it names ("1929 CanLII 438"); a
+/// report, to its decision's, through the alias table.
 pub fn url(citation: &Citation, language: Language) -> Option<String> {
+    #[cfg(feature = "canada")]
+    if matches!(citation.format, Some(Format::Neutral | Format::CanLii)) {
+        if let Some(url) = canlii_case(citation, language) { return Some(url); }
+    }
     if let Some(target) = crate::aliases::resolve(citation) {
         let options = crate::Options { resolve: false, parallel: false, ..Default::default() };
         let canonical = crate::extract(&target.citation, &options);
@@ -267,10 +273,6 @@ pub fn url(citation: &Citation, language: Language) -> Option<String> {
                 return Some(url);
             }
         }
-    }
-    #[cfg(feature = "canada")]
-    if matches!(citation.format, Some(Format::Neutral | Format::CanLii)) {
-        if let Some(url) = canlii_case(citation, language) { return Some(url); }
     }
     url_in(citation, language, registry::registry())
 }
