@@ -1,0 +1,32 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "backend/experiments/deterministic-library-analysis/legalTextAnchors.ts",
+  "table": "FR_COURTS",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "CSC",
+   "same_as": "SCC"
+  },
+  {
+   "key": "CAF",
+   "same_as": "FCA"
+  },
+  {
+   "key": "CF",
+   "same_as": "FC"
+  },
+  {
+   "key": "CFPI",
+   "same_as": "FC"
+  },
+  {
+   "key": "CCI",
+   "same_as": "TCC"
+  }
+ ]
+}

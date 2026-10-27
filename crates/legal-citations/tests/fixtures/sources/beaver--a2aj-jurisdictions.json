@@ -1,0 +1,68 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "backend/src/lib/legalSources/a2aj.ts",
+  "table": "JURISDICTIONS",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "jurisdiction",
+ "entries": [
+  {
+   "key": "FED",
+   "name": "Federal"
+  },
+  {
+   "key": "AB",
+   "name": "Alberta"
+  },
+  {
+   "key": "BC",
+   "name": "British Columbia"
+  },
+  {
+   "key": "MB",
+   "name": "Manitoba"
+  },
+  {
+   "key": "NB",
+   "name": "New Brunswick"
+  },
+  {
+   "key": "NL",
+   "name": "Newfoundland and Labrador"
+  },
+  {
+   "key": "NS",
+   "name": "Nova Scotia"
+  },
+  {
+   "key": "NT",
+   "name": "Northwest Territories"
+  },
+  {
+   "key": "NU",
+   "name": "Nunavut"
+  },
+  {
+   "key": "ON",
+   "name": "Ontario"
+  },
+  {
+   "key": "PE",
+   "name": "Prince Edward Island"
+  },
+  {
+   "key": "QC",
+   "name": "Quebec"
+  },
+  {
+   "key": "SK",
+   "name": "Saskatchewan"
+  },
+  {
+   "key": "YT",
+   "name": "Yukon"
+  }
+ ]
+}

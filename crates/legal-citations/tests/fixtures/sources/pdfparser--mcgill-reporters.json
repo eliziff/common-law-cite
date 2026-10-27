@@ -1,0 +1,6342 @@
+{
+ "source": {
+  "repo": "legal-pdf-parser",
+  "path": "data/mcgill_reporters.json",
+  "table": "McGill reporter inventory",
+  "commit": "4e484ca9e2805400c694a790ffed03a9fefdb0ec",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "reporter_or_journal",
+ "entries": [
+  {
+   "key": "Wash & Lee Race & Ethnic Ancestry LJ"
+  },
+  {
+   "key": "New Eng J on Crim & Civ Confinement"
+  },
+  {
+   "key": "Santa Clara Computer & High Tech LJ"
+  },
+  {
+   "key": "Employee Rts & Employment Pol'y J"
+  },
+  {
+   "key": "Suffolk J Trial & Appellate Advoc"
+  },
+  {
+   "key": "Travaux de l'assoc Henri Capitant"
+  },
+  {
+   "key": "DePaul-LCA J Art & Ent L & Pol'y"
+  },
+  {
+   "key": "Notre Dame JL Ethics & Pub Pol'y"
+  },
+  {
+   "key": "St Louis-Warsaw Transatlantic LJ"
+  },
+  {
+   "key": "Tol J Great Lakes' L Sci & Pol'y"
+  },
+  {
+   "key": "Willamette J Intl L & Disp Resol"
+  },
+  {
+   "key": "Hastings W-Nw J Envtl L & Pol'y"
+  },
+  {
+   "key": "Intl Rev Ind Prop & Copyright L"
+  },
+  {
+   "key": "J Aff Housing & Community Dev L"
+  },
+  {
+   "key": "Ont Liquor Licence App Trib Dec"
+  },
+  {
+   "key": "Res Communes: Vermont's J Env't"
+  },
+  {
+   "key": "J Leg Pluralism & Unofficial L"
+  },
+  {
+   "key": "J Marshall J Computer & Info L"
+  },
+  {
+   "key": "Law Firm Partnership & Ben Rep"
+  },
+  {
+   "key": "Cambridge Q Healthcare Ethics"
+  },
+  {
+   "key": "Fla St J Transnat'l L & Pol'y"
+  },
+  {
+   "key": "Fla St U J Land Use & Envtl L"
+  },
+  {
+   "key": "J Commonwealth L & Legal Educ"
+  },
+  {
+   "key": "J Energy, Nat'l Res & Envtl L"
+  },
+  {
+   "key": "Law & Prac Intl Courts & Trib"
+  },
+  {
+   "key": "TM Cooley J Prac & Clinical L"
+  },
+  {
+   "key": "Wm & Mary Envtl L & Pol'y Rev"
+  },
+  {
+   "key": "Great Plains Nat Resources J"
+  },
+  {
+   "key": "Nat'l J Sexual Orientation L"
+  },
+  {
+   "key": "Ont Lab-Mgmt Arb Comm'n Bull"
+  },
+  {
+   "key": "Orange Free State Prov Div R"
+  },
+  {
+   "key": "Transnat'l L & Contemp Probs"
+  },
+  {
+   "key": "Windsor Rev Legal Soc Issues"
+  },
+  {
+   "key": "Am U J Gender Soc Pol'y & L"
+  },
+  {
+   "key": "Cambridge YB Eur Legal Stud"
+  },
+  {
+   "key": "Colo J Intl Envtl L & Pol'y"
+  },
+  {
+   "key": "Eur J Crime Crim L & Crim J"
+  },
+  {
+   "key": "Intl J Comp Lab L & Ind Rel"
+  },
+  {
+   "key": "Intl J Off Ther & Comp Crim"
+  },
+  {
+   "key": "J Pat & Trademark Off Soc'y"
+  },
+  {
+   "key": "UCLA J Intl L & Foreign Aff"
+  },
+  {
+   "key": "Wash U Global Studies L Rev"
+  },
+  {
+   "key": "Can HIV/AIDS Pol'y & L Rev"
+  },
+  {
+   "key": "Environs Envtl L & Pol'y J"
+  },
+  {
+   "key": "Geo J on Poverty L & Pol'y"
+  },
+  {
+   "key": "Hastings Intl & Comp L Rev"
+  },
+  {
+   "key": "J Contemp Health L & Pol'y"
+  },
+  {
+   "key": "J Land Resources & Envtl L"
+  },
+  {
+   "key": "L Soc'y Gaz & Guardian Gaz"
+  },
+  {
+   "key": "Mich Telecomm & Tech L Rev"
+  },
+  {
+   "key": "Pub Land & Resources L Rev"
+  },
+  {
+   "key": "Rutgers Computer & Tech LJ"
+  },
+  {
+   "key": "S Cal Interdisciplinary LJ"
+  },
+  {
+   "key": "S Cal Rev L & Women's Stud"
+  },
+  {
+   "key": "U Chicago L Sch Roundtable"
+  },
+  {
+   "key": "U Miami Ent & Sports L Rev"
+  },
+  {
+   "key": "Fordham IP Media & Ent LJ"
+  },
+  {
+   "key": "Intl J Franch & Distrib L"
+  },
+  {
+   "key": "J Intl Wildlife L & Pol'y"
+  },
+  {
+   "key": "J Nat Resources & Envtl L"
+  },
+  {
+   "key": "Law Rev Mich St U Det C L"
+  },
+  {
+   "key": "Md J Contemp Legal Issues"
+  },
+  {
+   "key": "St John's J Legal Comment"
+  },
+  {
+   "key": "U Miami Intl & Comp L Rev"
+  },
+  {
+   "key": "U Pa J Lab & Employment L"
+  },
+  {
+   "key": "UC Davis J Intl L & Pol'y"
+  },
+  {
+   "key": "BC Empl Standards Bd Dec"
+  },
+  {
+   "key": "Can J Intl Bus L & Pol'y"
+  },
+  {
+   "key": "Com Leasing L & Strategy"
+  },
+  {
+   "key": "Fordham Fin Sec & Tax LF"
+  },
+  {
+   "key": "Geo Wash J Intl L & Econ"
+  },
+  {
+   "key": "J Inst Stud Legal Ethics"
+  },
+  {
+   "key": "J Small & Emerging Bus L"
+  },
+  {
+   "key": "J Society Pub Teachers L"
+  },
+  {
+   "key": "Law Off Mgmt & Admin Rep"
+  },
+  {
+   "key": "Suffolk Transnat'l L Rev"
+  },
+  {
+   "key": "Wash U J Urb & Contemp L"
+  },
+  {
+   "key": "Ann Conv eur dr l'Homme"
+  },
+  {
+   "key": "Ann Surv Commonwealth L"
+  },
+  {
+   "key": "Brit Inst Intl & Comp L"
+  },
+  {
+   "key": "Can Council Intl L Proc"
+  },
+  {
+   "key": "Cardozo J Intl & Comp L"
+  },
+  {
+   "key": "Chinese YB Intl L & Aff"
+  },
+  {
+   "key": "Commonwealth Legal Educ"
+  },
+  {
+   "key": "Duke J Gender L & Pol'y"
+  },
+  {
+   "key": "Emory J Intl Disp Resol"
+  },
+  {
+   "key": "Hamline J Pub L & Pol'y"
+  },
+  {
+   "key": "Ind J Global Legal Stud"
+  },
+  {
+   "key": "J Health Care L & Pol'y"
+  },
+  {
+   "key": "J Intercultural Studies"
+  },
+  {
+   "key": "NYL Sch J Intl & Comp L"
+  },
+  {
+   "key": "NYU J Legis & Pub Pol'y"
+  },
+  {
+   "key": "Race & Ethnic Anc L Dig"
+  },
+  {
+   "key": "San Joaquin Agric L Rev"
+  },
+  {
+   "key": "Stan J Animal L & Pol'y"
+  },
+  {
+   "key": "Syracuse J Intl L & Com"
+  },
+  {
+   "key": "Tex Hispanic JL & Pol'y"
+  },
+  {
+   "key": "U Ark Little Rock L Rev"
+  },
+  {
+   "key": "USF JL & Soc Challenges"
+  },
+  {
+   "key": "Vietnam L & Legal Forum"
+  },
+  {
+   "key": "Yale Human Rts & Dev LJ"
+  },
+  {
+   "key": "Ann Surv Intl & Comp L"
+  },
+  {
+   "key": "Antitrust L & Econ Rev"
+  },
+  {
+   "key": "Austl J Leg Philosophy"
+  },
+  {
+   "key": "Berkeley J Emp & Lab L"
+  },
+  {
+   "key": "Colum Sci & Tech L Rev"
+  },
+  {
+   "key": "Cornell JL & Pub Pol'y"
+  },
+  {
+   "key": "DePaul J Health Care L"
+  },
+  {
+   "key": "Dick J Envtl L & Pol'y"
+  },
+  {
+   "key": "Duke Envtl L & Pol'y F"
+  },
+  {
+   "key": "Fordham J Corp & Fin L"
+  },
+  {
+   "key": "Geo Mason U Civ Rts LJ"
+  },
+  {
+   "key": "Hastings Comm & Ent LJ"
+  },
+  {
+   "key": "Immig & Nat'lity L Rev"
+  },
+  {
+   "key": "Intl Rev L Comp & Tech"
+  },
+  {
+   "key": "J Contemp Legal Issues"
+  },
+  {
+   "key": "J Crim L & Criminology"
+  },
+  {
+   "key": "J Empirical Legal Stud"
+  },
+  {
+   "key": "J Health Pol Pol'y & L"
+  },
+  {
+   "key": "J Transnat'l L & Pol'y"
+  },
+  {
+   "key": "Korean J Intl & Comp L"
+  },
+  {
+   "key": "Macq J Intl & CEnvtl L"
+  },
+  {
+   "key": "Marq Intell Prop L Rev"
+  },
+  {
+   "key": "Mo Envtl L & Pol'y Rev"
+  },
+  {
+   "key": "NYU Rev L & Soc Change"
+  },
+  {
+   "key": "Non-State Act & Intl L"
+  },
+  {
+   "key": "Rev hist dr fr & étran"
+  },
+  {
+   "key": "Third World Legal Stud"
+  },
+  {
+   "key": "Thomas Jefferson L Rev"
+  },
+  {
+   "key": "U Miami Inter-Am L Rev"
+  },
+  {
+   "key": "UCLA J Envtl L & Pol'y"
+  },
+  {
+   "key": "Windsor YB Access Just"
+  },
+  {
+   "key": "YB Copyright & Media L"
+  },
+  {
+   "key": "Am U J Intl L & Pol'y"
+  },
+  {
+   "key": "Asian Pac L & Pol'y J"
+  },
+  {
+   "key": "Bull can VIH-SIDA & d"
+  },
+  {
+   "key": "Can Tax'n J Tax Pol'y"
+  },
+  {
+   "key": "Cardozo Arts & Ent LJ"
+  },
+  {
+   "key": "Denv J Intl L & Pol'y"
+  },
+  {
+   "key": "Hofstra Lab & Empl LJ"
+  },
+  {
+   "key": "Ind Intl & Comp L Rev"
+  },
+  {
+   "key": "Intl J Comm L & Pol'y"
+  },
+  {
+   "key": "Intl Leg Practitioner"
+  },
+  {
+   "key": "J Soc Welfare & Fam L"
+  },
+  {
+   "key": "Legislative Studies Q"
+  },
+  {
+   "key": "Loy LA Intl & Comp LJ"
+  },
+  {
+   "key": "Nat Resources & Env't"
+  },
+  {
+   "key": "OECD J Comp L & Pol'y"
+  },
+  {
+   "key": "Psychol Pub Pol'y & L"
+  },
+  {
+   "key": "Real Prop Prob & Tr J"
+  },
+  {
+   "key": "Rev crit dr int privé"
+  },
+  {
+   "key": "Rev juristes de l'Ont"
+  },
+  {
+   "key": "Rich J Global L & Bus"
+  },
+  {
+   "key": "Roger Williams UL Rev"
+  },
+  {
+   "key": "Rutgers JL & Religion"
+  },
+  {
+   "key": "Suffolk Transnat'l LJ"
+  },
+  {
+   "key": "Temp Envtl L & Tech J"
+  },
+  {
+   "key": "Tilburg Foreign L Rev"
+  },
+  {
+   "key": "Tulsa J Comp & Intl L"
+  },
+  {
+   "key": "U Balt Intell Prop LJ"
+  },
+  {
+   "key": "Wm & Mary J Women & L"
+  },
+  {
+   "key": "ABA Ent & Sports Law"
+  },
+  {
+   "key": "Afr-Am L & Pol'y Rep"
+  },
+  {
+   "key": "Ann pr ind art & lit"
+  },
+  {
+   "key": "Ariz J Intl & Comp L"
+  },
+  {
+   "key": "Aus Rev Intl & Eur L"
+  },
+  {
+   "key": "Austl Comp & Cons LJ"
+  },
+  {
+   "key": "BC Intl & Comp L Rev"
+  },
+  {
+   "key": "Bd Trans Comm'rs Can"
+  },
+  {
+   "key": "Can Class Action Rev"
+  },
+  {
+   "key": "Can Compet Pol'y Rec"
+  },
+  {
+   "key": "Can J Admin L & Prac"
+  },
+  {
+   "key": "Cardozo Stud L & Lit"
+  },
+  {
+   "key": "Chicano-Latino L Rev"
+  },
+  {
+   "key": "Colum J Transnat'l L"
+  },
+  {
+   "key": "Colum JL & Soc Probs"
+  },
+  {
+   "key": "Comp & Intl LJ S Afr"
+  },
+  {
+   "key": "Comp Lab L & Pol'y J"
+  },
+  {
+   "key": "Crime L & Soc Change"
+  },
+  {
+   "key": "Duke J Comp & Intl L"
+  },
+  {
+   "key": "Eur J Educ L & Pol'y"
+  },
+  {
+   "key": "Geo Intl Envtl L Rev"
+  },
+  {
+   "key": "ILSA J Intl & Comp L"
+  },
+  {
+   "key": "Intl J Mar & Coast L"
+  },
+  {
+   "key": "Intl JL & Psychiatry"
+  },
+  {
+   "key": "J Comp Bus Cap Mkt L"
+  },
+  {
+   "key": "J Gender Race & Just"
+  },
+  {
+   "key": "J Land Use & Envtl L"
+  },
+  {
+   "key": "J Legal Advoc & Prac"
+  },
+  {
+   "key": "Law & Pol'y Intl Bus"
+  },
+  {
+   "key": "Minn Intell Prop Rev"
+  },
+  {
+   "key": "NAFTA L & Bus Rev Am"
+  },
+  {
+   "key": "NCJ Intl L & Com Reg"
+  },
+  {
+   "key": "Ocean Devel & Intl L"
+  },
+  {
+   "key": "Ohio St J Disp Resol"
+  },
+  {
+   "key": "Quinnipiac Health LJ"
+  },
+  {
+   "key": "Race & Ethnic Anc LJ"
+  },
+  {
+   "key": "Rutgers Race & L Rev"
+  },
+  {
+   "key": "Seton Hall J Sport L"
+  },
+  {
+   "key": "St Louis U Pub L Rev"
+  },
+  {
+   "key": "U Fla JL & Pub Pol'y"
+  },
+  {
+   "key": "UCLA Asian Pac Am LJ"
+  },
+  {
+   "key": "Vill Sports & Ent LJ"
+  },
+  {
+   "key": "Wm & Mary Bill Rts J"
+  },
+  {
+   "key": "AJIL / Am J Int'l L"
+  },
+  {
+   "key": "Alb L Envtl Outlook"
+  },
+  {
+   "key": "Am Bankr Inst L Rev"
+  },
+  {
+   "key": "Berkeley Women's LJ"
+  },
+  {
+   "key": "Case W Res J Intl L"
+  },
+  {
+   "key": "Clev-Marshall L Rev"
+  },
+  {
+   "key": "Colum-VLA JL & Arts"
+  },
+  {
+   "key": "Commonwealth L Bull"
+  },
+  {
+   "key": "Computer L Rev & TJ"
+  },
+  {
+   "key": "Continuity & Change"
+  },
+  {
+   "key": "Geo Mason Ind L Rev"
+  },
+  {
+   "key": "Geo Wash Intl L Rev"
+  },
+  {
+   "key": "Golden Gate U L Rev"
+  },
+  {
+   "key": "Harv BlackLetter LJ"
+  },
+  {
+   "key": "Harv JL & Pub Pol'y"
+  },
+  {
+   "key": "Hastings Women's LJ"
+  },
+  {
+   "key": "Heidelberg J Intl L"
+  },
+  {
+   "key": "Hum Rts Case Digest"
+  },
+  {
+   "key": "Indus & Lab Rel Rev"
+  },
+  {
+   "key": "Intl JL Pol'y & Fam"
+  },
+  {
+   "key": "Intl Mar & Com L YB"
+  },
+  {
+   "key": "Intl Rev Crim Pol'y"
+  },
+  {
+   "key": "J Animal L & Ethics"
+  },
+  {
+   "key": "J Legis & Pub Pol'y"
+  },
+  {
+   "key": "Law & Contemp Probs"
+  },
+  {
+   "key": "Md J Intl L & Trade"
+  },
+  {
+   "key": "Minn J Global Trade"
+  },
+  {
+   "key": "Nat'l Banking L Rev"
+  },
+  {
+   "key": "Oxford J Legal Stud"
+  },
+  {
+   "key": "Pac Rim L & Pol'y J"
+  },
+  {
+   "key": "Seton Hall Const LJ"
+  },
+  {
+   "key": "Temp Intl & Comp LJ"
+  },
+  {
+   "key": "Tul J Intl & Comp L"
+  },
+  {
+   "key": "U Puget Sound L Rev"
+  },
+  {
+   "key": "Vand J Ent L & Prac"
+  },
+  {
+   "key": "Vand J Transnat'l L"
+  },
+  {
+   "key": "Actualités-Justice"
+  },
+  {
+   "key": "Admin & Reg L News"
+  },
+  {
+   "key": "Aus J Pub & Intl L"
+  },
+  {
+   "key": "Austl J Contract L"
+  },
+  {
+   "key": "Austl J Legal Hist"
+  },
+  {
+   "key": "BC Envtl Aff L Rev"
+  },
+  {
+   "key": "Bd Rwy Comm'rs Can"
+  },
+  {
+   "key": "Can Tax Highlights"
+  },
+  {
+   "key": "Cardozo Women's LJ"
+  },
+  {
+   "key": "Chicago-Kent L Rev"
+  },
+  {
+   "key": "Colum J Gender & L"
+  },
+  {
+   "key": "Computer L & Sec R"
+  },
+  {
+   "key": "Corp Mgmt Tax Conf"
+  },
+  {
+   "key": "Ga J Intl & Comp L"
+  },
+  {
+   "key": "Geo J Fighting Pov"
+  },
+  {
+   "key": "Geo J Legal Ethics"
+  },
+  {
+   "key": "How J Crim Justice"
+  },
+  {
+   "key": "Intl Rev Red Cross"
+  },
+  {
+   "key": "Intl Tax & Bus Law"
+  },
+  {
+   "key": "J Confl Resolution"
+  },
+  {
+   "key": "J Energy L & Pol'y"
+  },
+  {
+   "key": "Kan JL & Pub Pol'y"
+  },
+  {
+   "key": "Land & Water L Rev"
+  },
+  {
+   "key": "Law & Pol Book Rev"
+  },
+  {
+   "key": "McGill JL & Health"
+  },
+  {
+   "key": "Mich L & Pol'y Rev"
+  },
+  {
+   "key": "NYU J Intl L & Pol"
+  },
+  {
+   "key": "Ocean & Coastal LJ"
+  },
+  {
+   "key": "Pittsburgh Legal J"
+  },
+  {
+   "key": "Quinnipiac Prob LJ"
+  },
+  {
+   "key": "Rev Cent & E Eur L"
+  },
+  {
+   "key": "Seton Hall Legis J"
+  },
+  {
+   "key": "Stan L & Pol'y Rev"
+  },
+  {
+   "key": "Tex Intell Prop LJ"
+  },
+  {
+   "key": "Tex Wesleyan L Rev"
+  },
+  {
+   "key": "U Pa J Intl Econ L"
+  },
+  {
+   "key": "Va J Soc Pol'y & L"
+  },
+  {
+   "key": "Waseda Bull Comp L"
+  },
+  {
+   "key": "Yale JL & Feminism"
+  },
+  {
+   "key": "Yale L & Pol'y Rev"
+  },
+  {
+   "key": "ABA Tort & Ins LJ"
+  },
+  {
+   "key": "Alb LJ Sci & Tech"
+  },
+  {
+   "key": "Am U J Gender & L"
+  },
+  {
+   "key": "Ann Rev Banking L"
+  },
+  {
+   "key": "Ann dr aér & spat"
+  },
+  {
+   "key": "Annals Air & Sp L"
+  },
+  {
+   "key": "Asia Pac J HR & L"
+  },
+  {
+   "key": "Austl & NZ J Crim"
+  },
+  {
+   "key": "BC Third World LJ"
+  },
+  {
+   "key": "BU J Sci & Tech L"
+  },
+  {
+   "key": "Banking Pol'y Rep"
+  },
+  {
+   "key": "Berkeley J Intl L"
+  },
+  {
+   "key": "Bull info act jur"
+  },
+  {
+   "key": "Can Bioethics Rep"
+  },
+  {
+   "key": "Can J Crim & Corr"
+  },
+  {
+   "key": "Child Legal Rts J"
+  },
+  {
+   "key": "Const Forum Const"
+  },
+  {
+   "key": "Duke L & Tech Rev"
+  },
+  {
+   "key": "Envtl L & Pol'y J"
+  },
+  {
+   "key": "Geo Mason U L Rev"
+  },
+  {
+   "key": "Geo Pub Pol'y Rev"
+  },
+  {
+   "key": "Hague Ct Rep (2d)"
+  },
+  {
+   "key": "Hastings Const LQ"
+  },
+  {
+   "key": "Intl & Comp L Rev"
+  },
+  {
+   "key": "Intl Comm Jur Rev"
+  },
+  {
+   "key": "Intl J Confl Mgmt"
+  },
+  {
+   "key": "Intl J Legal Info"
+  },
+  {
+   "key": "Intl Rev L & Econ"
+  },
+  {
+   "key": "J Cath Legal Stud"
+  },
+  {
+   "key": "J Envtl L & Litig"
+  },
+  {
+   "key": "J Health & Hosp L"
+  },
+  {
+   "key": "J Intl Legal Stud"
+  },
+  {
+   "key": "J Proprietary Rts"
+  },
+  {
+   "key": "Law & Phil Intl J"
+  },
+  {
+   "key": "Law & Psychol Rev"
+  },
+  {
+   "key": "Law & Soc Inquiry"
+  },
+  {
+   "key": "Marq Sports L Rev"
+  },
+  {
+   "key": "Melbourne U L Rev"
+  },
+  {
+   "key": "Mich J Gender & L"
+  },
+  {
+   "key": "NYL Sch J Hum Rts"
+  },
+  {
+   "key": "Nat'l Inst Just J"
+  },
+  {
+   "key": "Nw J Intl L & Bus"
+  },
+  {
+   "key": "Okla City U L Rev"
+  },
+  {
+   "key": "RD & santé McGill"
+  },
+  {
+   "key": "Rev can dr commun"
+  },
+  {
+   "key": "Rich JL & Pub Int"
+  },
+  {
+   "key": "Rutgers-Camden LJ"
+  },
+  {
+   "key": "Santa Clara L Rev"
+  },
+  {
+   "key": "Sing Ac L Ann Rev"
+  },
+  {
+   "key": "Stan J Legal Stud"
+  },
+  {
+   "key": "Stan JL Bus & Fin"
+  },
+  {
+   "key": "U Chicago Legal F"
+  },
+  {
+   "key": "U Det Mercy L Rev"
+  },
+  {
+   "key": "U Miami Bus L Rev"
+  },
+  {
+   "key": "U Miami YB Intl L"
+  },
+  {
+   "key": "UCLA Pac Basin LJ"
+  },
+  {
+   "key": "UIC Selec Dec Ump"
+  },
+  {
+   "key": "Unif Comm Code LJ"
+  },
+  {
+   "key": "Wake Forest L Rev"
+  },
+  {
+   "key": "Wash U JL & Pol'y"
+  },
+  {
+   "key": "Wm Mitchell L Rev"
+  },
+  {
+   "key": "Women's Rts L Rep"
+  },
+  {
+   "key": "ABA Antitrust LJ"
+  },
+  {
+   "key": "ABA Fam Advocate"
+  },
+  {
+   "key": "Advocates' Soc J"
+  },
+  {
+   "key": "Am J Trial Advoc"
+  },
+  {
+   "key": "Am Rev Int'l Arb"
+  },
+  {
+   "key": "Am U Int'l L Rev"
+  },
+  {
+   "key": "Ann Haye dr Intl"
+  },
+  {
+   "key": "Ann Surv Austl L"
+  },
+  {
+   "key": "Ann Surv S Afr L"
+  },
+  {
+   "key": "Ann inst dr Intl"
+  },
+  {
+   "key": "Berkeley Tech LJ"
+  },
+  {
+   "key": "Bol Mex Der Comp"
+  },
+  {
+   "key": "Bridgeport L Rev"
+  },
+  {
+   "key": "Bull ist dir rom"
+  },
+  {
+   "key": "Can Community LJ"
+  },
+  {
+   "key": "Case W Res L Rev"
+  },
+  {
+   "key": "Chicago J Intl L"
+  },
+  {
+   "key": "Conc Comm'r Rpts"
+  },
+  {
+   "key": "Const Commentary"
+  },
+  {
+   "key": "Construction Law"
+  },
+  {
+   "key": "Curr Legal Probs"
+  },
+  {
+   "key": "Dr polon contemp"
+  },
+  {
+   "key": "Emory Intl L Rev"
+  },
+  {
+   "key": "Ent & Sports Law"
+  },
+  {
+   "key": "Envtl L Reporter"
+  },
+  {
+   "key": "Fordham Envtl LJ"
+  },
+  {
+   "key": "Geo J Gender & L"
+  },
+  {
+   "key": "Harv Envtl L Rev"
+  },
+  {
+   "key": "Harv JL & Gender"
+  },
+  {
+   "key": "Harv Negot L Rev"
+  },
+  {
+   "key": "Health & Hum Rts"
+  },
+  {
+   "key": "Intl J Child Rts"
+  },
+  {
+   "key": "Intl J Cult Prop"
+  },
+  {
+   "key": "Intl J Refugee L"
+  },
+  {
+   "key": "Intl Legal Persp"
+  },
+  {
+   "key": "J Envtl L & Prac"
+  },
+  {
+   "key": "J Marshall L Rev"
+  },
+  {
+   "key": "J Plan & Envtl L"
+  },
+  {
+   "key": "J Tech L & Pol'y"
+  },
+  {
+   "key": "Law & Inequality"
+  },
+  {
+   "key": "Law Off Tech Rev"
+  },
+  {
+   "key": "Law Text Culture"
+  },
+  {
+   "key": "Legal Ref Serv Q"
+  },
+  {
+   "key": "Loy U Chicago LJ"
+  },
+  {
+   "key": "MSU-DCL J Intl L"
+  },
+  {
+   "key": "Nat'l Insolv Rev"
+  },
+  {
+   "key": "Nethl Intl L Rev"
+  },
+  {
+   "key": "Notre Dame L Rev"
+  },
+  {
+   "key": "Pace Envtl L Rev"
+  },
+  {
+   "key": "Quinnipiac L Rev"
+  },
+  {
+   "key": "Rev fr dr constl"
+  },
+  {
+   "key": "Rev jur femme dr"
+  },
+  {
+   "key": "Saint Louis U LJ"
+  },
+  {
+   "key": "Seton Hall L Rev"
+  },
+  {
+   "key": "Sw JL & Trade Am"
+  },
+  {
+   "key": "T Marshall L Rev"
+  },
+  {
+   "key": "Tex F on CL & CR"
+  },
+  {
+   "key": "Touro Intl L Rev"
+  },
+  {
+   "key": "Tul Eur & Civ LF"
+  },
+  {
+   "key": "U Balt J Envtl L"
+  },
+  {
+   "key": "Unif L Conf Proc"
+  },
+  {
+   "key": "Wash & Lee L Rev"
+  },
+  {
+   "key": "Widener L Symp J"
+  },
+  {
+   "key": "Willamette L Rev"
+  },
+  {
+   "key": "Air & Space Law"
+  },
+  {
+   "key": "Am Bankr Inst J"
+  },
+  {
+   "key": "Am Indian L Rev"
+  },
+  {
+   "key": "Am J Legal Hist"
+  },
+  {
+   "key": "Am J Pub Health"
+  },
+  {
+   "key": "Am L & Econ Rev"
+  },
+  {
+   "key": "An Mex Der Intl"
+  },
+  {
+   "key": "Ann Surv Engl L"
+  },
+  {
+   "key": "Annals Health L"
+  },
+  {
+   "key": "Asian Pac Am LJ"
+  },
+  {
+   "key": "Auckland UL Rev"
+  },
+  {
+   "key": "Austl Bus L Rev"
+  },
+  {
+   "key": "Baltimore L Rev"
+  },
+  {
+   "key": "Buff Crim L Rev"
+  },
+  {
+   "key": "Buff Pub Int LJ"
+  },
+  {
+   "key": "Buff Women's LJ"
+  },
+  {
+   "key": "CCL Legislation"
+  },
+  {
+   "key": "CCL Législation"
+  },
+  {
+   "key": "Can Med Assoc J"
+  },
+  {
+   "key": "Cardozo EL Bull"
+  },
+  {
+   "key": "Chicago Legal F"
+  },
+  {
+   "key": "Colum Bus L Rev"
+  },
+  {
+   "key": "Colum J Asian L"
+  },
+  {
+   "key": "Colum J E Eur L"
+  },
+  {
+   "key": "Colum J Envtl L"
+  },
+  {
+   "key": "Cons Fin LQ Rep"
+  },
+  {
+   "key": "Construction LJ"
+  },
+  {
+   "key": "Cornell Intl LJ"
+  },
+  {
+   "key": "Creighton L Rev"
+  },
+  {
+   "key": "Crime & Justice"
+  },
+  {
+   "key": "Croatian Arb YB"
+  },
+  {
+   "key": "Drake J Agric L"
+  },
+  {
+   "key": "E Eur Const Rev"
+  },
+  {
+   "key": "Envtl Pol'y & L"
+  },
+  {
+   "key": "Eur Comm'n HRDR"
+  },
+  {
+   "key": "Eur Envtl L Rev"
+  },
+  {
+   "key": "Fordham Intl LJ"
+  },
+  {
+   "key": "Geo Mason L Rev"
+  },
+  {
+   "key": "Hague YB Intl L"
+  },
+  {
+   "key": "Harv CR-CLL Rev"
+  },
+  {
+   "key": "Harv Hum Rts YB"
+  },
+  {
+   "key": "Harv J on Legis"
+  },
+  {
+   "key": "Harv Women's LJ"
+  },
+  {
+   "key": "Hofstra Prop LJ"
+  },
+  {
+   "key": "Intl Crim L Rev"
+  },
+  {
+   "key": "Islamic L & Soc"
+  },
+  {
+   "key": "J Confl & Sec L"
+  },
+  {
+   "key": "J Intell Prop L"
+  },
+  {
+   "key": "J Min L & Pol'y"
+  },
+  {
+   "key": "J Risk Research"
+  },
+  {
+   "key": "J Soc Welfare L"
+  },
+  {
+   "key": "JL Med & Ethics"
+  },
+  {
+   "key": "Korean J Comp L"
+  },
+  {
+   "key": "Law & Sexuality"
+  },
+  {
+   "key": "Law & Soc'y Rev"
+  },
+  {
+   "key": "Legal Info Mgmt"
+  },
+  {
+   "key": "Leiden J Intl L"
+  },
+  {
+   "key": "Man R temp Wood"
+  },
+  {
+   "key": "Media L & Pol'y"
+  },
+  {
+   "key": "Mich J Race & L"
+  },
+  {
+   "key": "Monthly Lab Rev"
+  },
+  {
+   "key": "NEXUS J Opinion"
+  },
+  {
+   "key": "Nat Resources J"
+  },
+  {
+   "key": "Nordic J Intl L"
+  },
+  {
+   "key": "Ont D Crim Conv"
+  },
+  {
+   "key": "Ont D Crim Sent"
+  },
+  {
+   "key": "Ont IPC Sum App"
+  },
+  {
+   "key": "Osgoode Hall LJ"
+  },
+  {
+   "key": "Pace Intl L Rev"
+  },
+  {
+   "key": "Panstwo i Prawo"
+  },
+  {
+   "key": "Procurement Law"
+  },
+  {
+   "key": "Rev can dr comm"
+  },
+  {
+   "key": "Rev hist dr int"
+  },
+  {
+   "key": "San Diego L Rev"
+  },
+  {
+   "key": "Seattle U L Rev"
+  },
+  {
+   "key": "St John's L Rev"
+  },
+  {
+   "key": "St Thomas L Rev"
+  },
+  {
+   "key": "Stan Tech L Rev"
+  },
+  {
+   "key": "Suffolk U L Rev"
+  },
+  {
+   "key": "Sup Ct Econ Rev"
+  },
+  {
+   "key": "TM Cooley L Rev"
+  },
+  {
+   "key": "Tex J Women & L"
+  },
+  {
+   "key": "Tex Rev L & Pol"
+  },
+  {
+   "key": "Tolley's Comm L"
+  },
+  {
+   "key": "U Chicago L Rev"
+  },
+  {
+   "key": "UCLA Women's LJ"
+  },
+  {
+   "key": "Va J Sports & L"
+  },
+  {
+   "key": "W New Eng L Rev"
+  },
+  {
+   "key": "Widener J Pub L"
+  },
+  {
+   "key": "Wm & Mary L Rev"
+  },
+  {
+   "key": "YAD / Young Adm"
+  },
+  {
+   "key": "YB Intl Human L"
+  },
+  {
+   "key": "Yale JL & Human"
+  },
+  {
+   "key": "A imm app (ns)"
+  },
+  {
+   "key": "ABA Criminal J"
+  },
+  {
+   "key": "Admin LR (4th)"
+  },
+  {
+   "key": "Am J Tax Pol'y"
+  },
+  {
+   "key": "Anglo-Am L Rev"
+  },
+  {
+   "key": "Ann Air & Sp L"
+  },
+  {
+   "key": "Ann lég étrang"
+  },
+  {
+   "key": "Antitrust Bull"
+  },
+  {
+   "key": "Asia Pac L Rev"
+  },
+  {
+   "key": "Austl J Corp L"
+  },
+  {
+   "key": "Bar & Bench ND"
+  },
+  {
+   "key": "Brit YB Intl L"
+  },
+  {
+   "key": "Brook J Intl L"
+  },
+  {
+   "key": "CPJI (Sér A/B)"
+  },
+  {
+   "key": "Cal Crim L Rev"
+  },
+  {
+   "key": "Campbell L Rev"
+  },
+  {
+   "key": "Can Comm L Rev"
+  },
+  {
+   "key": "Can Crim L Rev"
+  },
+  {
+   "key": "Can Hum Rts YB"
+  },
+  {
+   "key": "Can L Libr Rev"
+  },
+  {
+   "key": "Can Legal Stud"
+  },
+  {
+   "key": "Capital UL Rev"
+  },
+  {
+   "key": "Clinical L Rev"
+  },
+  {
+   "key": "Comm L & Pol'y"
+  },
+  {
+   "key": "Comp Jurid Rev"
+  },
+  {
+   "key": "Copyright Bull"
+  },
+  {
+   "key": "Crown Coun Rev"
+  },
+  {
+   "key": "Cyberspace Law"
+  },
+  {
+   "key": "Dal J Leg Stud"
+  },
+  {
+   "key": "DePaul Intl LJ"
+  },
+  {
+   "key": "Envtl L & Mgmt"
+  },
+  {
+   "key": "Eur Comp L Rev"
+  },
+  {
+   "key": "Eur J Health L"
+  },
+  {
+   "key": "Eur J Migr & L"
+  },
+  {
+   "key": "Fed B News & J"
+  },
+  {
+   "key": "Fed Circuit BJ"
+  },
+  {
+   "key": "Fem Legal Stud"
+  },
+  {
+   "key": "Fla Coastal LJ"
+  },
+  {
+   "key": "Food & Drug LJ"
+  },
+  {
+   "key": "Fordham Urb LJ"
+  },
+  {
+   "key": "Geo Wash L Rev"
+  },
+  {
+   "key": "Griffith L Rev"
+  },
+  {
+   "key": "Harv Hum Rts J"
+  },
+  {
+   "key": "Harv JL & Tech"
+  },
+  {
+   "key": "Intl Fin L Rev"
+  },
+  {
+   "key": "Issues L & Med"
+  },
+  {
+   "key": "J App Pr & Pro"
+  },
+  {
+   "key": "J Intl L & Bus"
+  },
+  {
+   "key": "J Pers Inj Lit"
+  },
+  {
+   "key": "J Pharmacy & L"
+  },
+  {
+   "key": "J S Legal Hist"
+  },
+  {
+   "key": "J Sci & Tech L"
+  },
+  {
+   "key": "JL & Soc Pol'y"
+  },
+  {
+   "key": "Legal Hist Rev"
+  },
+  {
+   "key": "Loy Con Prot J"
+  },
+  {
+   "key": "Loy Poverty LJ"
+  },
+  {
+   "key": "Marq Sports LJ"
+  },
+  {
+   "key": "McGeorge L Rev"
+  },
+  {
+   "key": "Mich JL Reform"
+  },
+  {
+   "key": "Monash U L Rev"
+  },
+  {
+   "key": "Nat'l Black LJ"
+  },
+  {
+   "key": "Nat'l Real PLR"
+  },
+  {
+   "key": "PCIJ (Ser A/B)"
+  },
+  {
+   "key": "Pace YB Intl L"
+  },
+  {
+   "key": "Philanthropist"
+  },
+  {
+   "key": "Pub Land L Rev"
+  },
+  {
+   "key": "R études const"
+  },
+  {
+   "key": "Rev Const Stud"
+  },
+  {
+   "key": "Rev can dr fam"
+  },
+  {
+   "key": "Rich JL & Tech"
+  },
+  {
+   "key": "Soc & Leg Stud"
+  },
+  {
+   "key": "Spec Lect LSUC"
+  },
+  {
+   "key": "Syracuse L Rev"
+  },
+  {
+   "key": "Tex Tech L Rev"
+  },
+  {
+   "key": "Textes adoptés"
+  },
+  {
+   "key": "Touro Envtl LJ"
+  },
+  {
+   "key": "Transnat'l Law"
+  },
+  {
+   "key": "U Dayton L Rev"
+  },
+  {
+   "key": "U Pa J Const L"
+  },
+  {
+   "key": "UC Davis L Rev"
+  },
+  {
+   "key": "UCLA Ent L Rev"
+  },
+  {
+   "key": "West Ont L Rev"
+  },
+  {
+   "key": "Wis Women's LJ"
+  },
+  {
+   "key": "YB Eur Conv HR"
+  },
+  {
+   "key": "Admin LJ Am U"
+  },
+  {
+   "key": "Admin LR (2d)"
+  },
+  {
+   "key": "Admin LR (3d)"
+  },
+  {
+   "key": "Afr LR (Comm)"
+  },
+  {
+   "key": "Air & Space L"
+  },
+  {
+   "key": "All ER (Comm)"
+  },
+  {
+   "key": "Alta LR (4th)"
+  },
+  {
+   "key": "Alta LR (5th)"
+  },
+  {
+   "key": "Am Crim L Rev"
+  },
+  {
+   "key": "Ann Surv Am L"
+  },
+  {
+   "key": "Austl Bar Rev"
+  },
+  {
+   "key": "Austl J Fam L"
+  },
+  {
+   "key": "Austl J Lab L"
+  },
+  {
+   "key": "Austl Prop LJ"
+  },
+  {
+   "key": "Austl Tax Rev"
+  },
+  {
+   "key": "BU Pub Int LJ"
+  },
+  {
+   "key": "BYU Educ & LJ"
+  },
+  {
+   "key": "Behav Sci & L"
+  },
+  {
+   "key": "Biotech L Rep"
+  },
+  {
+   "key": "Buff Envtl LJ"
+  },
+  {
+   "key": "CPC (Plaxton)"
+  },
+  {
+   "key": "Cal W Intl LJ"
+  },
+  {
+   "key": "Can Pub Pol'y"
+  },
+  {
+   "key": "Can Tax Found"
+  },
+  {
+   "key": "Can YB Intl L"
+  },
+  {
+   "key": "Cardozo L Rev"
+  },
+  {
+   "key": "Chapman L Rev"
+  },
+  {
+   "key": "Chicano L Rev"
+  },
+  {
+   "key": "Clev St L Rev"
+  },
+  {
+   "key": "Colum HRL Rev"
+  },
+  {
+   "key": "Colum J Eur L"
+  },
+  {
+   "key": "Comp Trib dec"
+  },
+  {
+   "key": "Conn J Intl L"
+  },
+  {
+   "key": "Cornell L Rev"
+  },
+  {
+   "key": "Crit Criminol"
+  },
+  {
+   "key": "DePaul Bus LJ"
+  },
+  {
+   "key": "Dep't St Bull"
+  },
+  {
+   "key": "Dick J Intl L"
+  },
+  {
+   "key": "Déc trib Mont"
+  },
+  {
+   "key": "Eur Bus L Rev"
+  },
+  {
+   "key": "Eur J Soc Sec"
+  },
+  {
+   "key": "Eur JL & Econ"
+  },
+  {
+   "key": "Fed Cts L Rev"
+  },
+  {
+   "key": "Fla St UL Rev"
+  },
+  {
+   "key": "Fordham L Rev"
+  },
+  {
+   "key": "Ga St U L Rev"
+  },
+  {
+   "key": "Hamline L Rev"
+  },
+  {
+   "key": "Health Matrix"
+  },
+  {
+   "key": "Hofstra L Rev"
+  },
+  {
+   "key": "Hous J Intl L"
+  },
+  {
+   "key": "ICJ Pleadings"
+  },
+  {
+   "key": "Indigenous LJ"
+  },
+  {
+   "key": "Intl Insights"
+  },
+  {
+   "key": "Intl L Theory"
+  },
+  {
+   "key": "J Air L & Com"
+  },
+  {
+   "key": "J Art & Ent L"
+  },
+  {
+   "key": "J Crim J Educ"
+  },
+  {
+   "key": "J Hist Intl L"
+  },
+  {
+   "key": "J Intell Prop"
+  },
+  {
+   "key": "J Intl Econ L"
+  },
+  {
+   "key": "J Mar L & Com"
+  },
+  {
+   "key": "J Marshall LQ"
+  },
+  {
+   "key": "J World Trade"
+  },
+  {
+   "key": "JL & Equality"
+  },
+  {
+   "key": "JL & Fam Stud"
+  },
+  {
+   "key": "JL & Info Sci"
+  },
+  {
+   "key": "JL & Religion"
+  },
+  {
+   "key": "JL Econ & Org"
+  },
+  {
+   "key": "Law Prac Mgmt"
+  },
+  {
+   "key": "Law Soc'y Gaz"
+  },
+  {
+   "key": "Loy LA Ent LR"
+  },
+  {
+   "key": "Mich J Intl L"
+  },
+  {
+   "key": "Mont Cond Rep"
+  },
+  {
+   "key": "Murdoch U EJL"
+  },
+  {
+   "key": "N Ill U L Rev"
+  },
+  {
+   "key": "NY City L Rev"
+  },
+  {
+   "key": "NY Intl L Rev"
+  },
+  {
+   "key": "NYL Sch L Rev"
+  },
+  {
+   "key": "New Eng J Med"
+  },
+  {
+   "key": "New Eng L Rev"
+  },
+  {
+   "key": "New Eur L Rev"
+  },
+  {
+   "key": "Ohio NU L Rev"
+  },
+  {
+   "key": "Osaka U L Rev"
+  },
+  {
+   "key": "Patr Elec Cas"
+  },
+  {
+   "key": "Peake Add Cas"
+  },
+  {
+   "key": "Penn St L Rev"
+  },
+  {
+   "key": "Philippine LJ"
+  },
+  {
+   "key": "Prov Judges J"
+  },
+  {
+   "key": "Pub Int L Rev"
+  },
+  {
+   "key": "Rec des Cours"
+  },
+  {
+   "key": "Regent UL Rev"
+  },
+  {
+   "key": "Rob / Rob Chr"
+  },
+  {
+   "key": "Rutgers L Rev"
+  },
+  {
+   "key": "Scot Curr LYB"
+  },
+  {
+   "key": "Sel Ca t King"
+  },
+  {
+   "key": "Stan Envtl LJ"
+  },
+  {
+   "key": "Stan J Intl L"
+  },
+  {
+   "key": "Stetson L Rev"
+  },
+  {
+   "key": "Texts Adopted"
+  },
+  {
+   "key": "Tort & Ins LJ"
+  },
+  {
+   "key": "Trib conc déc"
+  },
+  {
+   "key": "U Miami L Rev"
+  },
+  {
+   "key": "U Mich JL Ref"
+  },
+  {
+   "key": "Vill Envtl LJ"
+  },
+  {
+   "key": "Waikato L Rev"
+  },
+  {
+   "key": "YB Air & Sp L"
+  },
+  {
+   "key": "YB Intl Env L"
+  },
+  {
+   "key": "Yale J Intl L"
+  },
+  {
+   "key": "Yale J on Reg"
+  },
+  {
+   "key": "Advocates' Q"
+  },
+  {
+   "key": "Afr LR (Mal)"
+  },
+  {
+   "key": "Alaska L Rev"
+  },
+  {
+   "key": "Alta LR (2d)"
+  },
+  {
+   "key": "Alta LR (3d)"
+  },
+  {
+   "key": "Ann coll loc"
+  },
+  {
+   "key": "Antitrust LJ"
+  },
+  {
+   "key": "Arb Serv Rep"
+  },
+  {
+   "key": "Austl Ins LJ"
+  },
+  {
+   "key": "Baylor L Rev"
+  },
+  {
+   "key": "Bos & Pul NR"
+  },
+  {
+   "key": "Boston Bar J"
+  },
+  {
+   "key": "Brit Tax Rev"
+  },
+  {
+   "key": "Brown & Lush"
+  },
+  {
+   "key": "Buff HRL Rev"
+  },
+  {
+   "key": "Bull Leg Dev"
+  },
+  {
+   "key": "CL World Rev"
+  },
+  {
+   "key": "CPJI (Sér A)"
+  },
+  {
+   "key": "CPJI (Sér B)"
+  },
+  {
+   "key": "CPJI (Sér C)"
+  },
+  {
+   "key": "Cambridge LJ"
+  },
+  {
+   "key": "Can Comp Rec"
+  },
+  {
+   "key": "Can Curr Tax"
+  },
+  {
+   "key": "Can Envtl LN"
+  },
+  {
+   "key": "Can HR Advoc"
+  },
+  {
+   "key": "Can Intl Law"
+  },
+  {
+   "key": "Can JL & Jur"
+  },
+  {
+   "key": "Cath U L Rev"
+  },
+  {
+   "key": "Coastal Mgmt"
+  },
+  {
+   "key": "Computer Law"
+  },
+  {
+   "key": "Conc Bd Rpts"
+  },
+  {
+   "key": "Conn Prob LJ"
+  },
+  {
+   "key": "Cons sup N-F"
+  },
+  {
+   "key": "Cooley L Rev"
+  },
+  {
+   "key": "DePaul L Rev"
+  },
+  {
+   "key": "Del J Corp L"
+  },
+  {
+   "key": "Disp Resol J"
+  },
+  {
+   "key": "ECHR (Ser A)"
+  },
+  {
+   "key": "ECHR (Ser B)"
+  },
+  {
+   "key": "Fla J Intl L"
+  },
+  {
+   "key": "Geo Immig LJ"
+  },
+  {
+   "key": "Geo J Intl L"
+  },
+  {
+   "key": "Global L Rev"
+  },
+  {
+   "key": "Hague Ct Rep"
+  },
+  {
+   "key": "Harv Intl LJ"
+  },
+  {
+   "key": "Health L Can"
+  },
+  {
+   "key": "High Tech LJ"
+  },
+  {
+   "key": "Hong Kong LJ"
+  },
+  {
+   "key": "Hum Rts Trib"
+  },
+  {
+   "key": "I & Comm T L"
+  },
+  {
+   "key": "Indus Rel LJ"
+  },
+  {
+   "key": "Intl Bus Law"
+  },
+  {
+   "key": "Intl Com Lit"
+  },
+  {
+   "key": "Intl J Sem L"
+  },
+  {
+   "key": "Intl J Soc L"
+  },
+  {
+   "key": "Intl JL & IT"
+  },
+  {
+   "key": "J Disp Resol"
+  },
+  {
+   "key": "J Juvenile L"
+  },
+  {
+   "key": "J Legal Econ"
+  },
+  {
+   "key": "J Legal Hist"
+  },
+  {
+   "key": "J Legal Prof"
+  },
+  {
+   "key": "J Legal Stud"
+  },
+  {
+   "key": "Legal Theory"
+  },
+  {
+   "key": "Local Ct Gaz"
+  },
+  {
+   "key": "Loy LA L Rev"
+  },
+  {
+   "key": "Mercer L Rev"
+  },
+  {
+   "key": "Miss C L Rev"
+  },
+  {
+   "key": "N Ir Legal Q"
+  },
+  {
+   "key": "NYU Envtl LJ"
+  },
+  {
+   "key": "Ont Law Week"
+  },
+  {
+   "key": "Ottawa L Rev"
+  },
+  {
+   "key": "PCIJ (Ser A)"
+  },
+  {
+   "key": "PCIJ (Ser B)"
+  },
+  {
+   "key": "PCIJ (Ser C)"
+  },
+  {
+   "key": "Rev Jur UIPR"
+  },
+  {
+   "key": "Rev can crim"
+  },
+  {
+   "key": "Rev serv arb"
+  },
+  {
+   "key": "Rev sociétés"
+  },
+  {
+   "key": "Ritch Eq Rep"
+  },
+  {
+   "key": "SCC Cam (2d)"
+  },
+  {
+   "key": "Sask Bar Rev"
+  },
+  {
+   "key": "Scand Stud L"
+  },
+  {
+   "key": "Sports Law J"
+  },
+  {
+   "key": "St Mary's LJ"
+  },
+  {
+   "key": "Sydney L Rev"
+  },
+  {
+   "key": "Tax ABC (NS)"
+  },
+  {
+   "key": "Trusts & Est"
+  },
+  {
+   "key": "Tul Envtl LJ"
+  },
+  {
+   "key": "U Balt L Rev"
+  },
+  {
+   "key": "U Colo L Rev"
+  },
+  {
+   "key": "U Pitt L Rev"
+  },
+  {
+   "key": "U Rich L Rev"
+  },
+  {
+   "key": "U Tasm L Rev"
+  },
+  {
+   "key": "UC Chamb Rep"
+  },
+  {
+   "key": "UT Fac L Rev"
+  },
+  {
+   "key": "Va JL & Tech"
+  },
+  {
+   "key": "W Ed Law Rep"
+  },
+  {
+   "key": "W St U L Rev"
+  },
+  {
+   "key": "West, t Hard"
+  },
+  {
+   "key": "Wis Envtl LJ"
+  },
+  {
+   "key": "Adelphia LJ"
+  },
+  {
+   "key": "Admin L Rev"
+  },
+  {
+   "key": "Afr LR (SL)"
+  },
+  {
+   "key": "Akron L Rev"
+  },
+  {
+   "key": "Akron Tax J"
+  },
+  {
+   "key": "All ER (EC)"
+  },
+  {
+   "key": "Am Bankr LJ"
+  },
+  {
+   "key": "Am J Comp L"
+  },
+  {
+   "key": "Am J Crim L"
+  },
+  {
+   "key": "Am JL & Med"
+  },
+  {
+   "key": "Anal de pol"
+  },
+  {
+   "key": "Art Ant & L"
+  },
+  {
+   "key": "BYU J Pub L"
+  },
+  {
+   "key": "Bankr Dev J"
+  },
+  {
+   "key": "Brandeis LJ"
+  },
+  {
+   "key": "Brit J Crim"
+  },
+  {
+   "key": "Brod & Bing"
+  },
+  {
+   "key": "Brook L Rev"
+  },
+  {
+   "key": "Can Bar Rev"
+  },
+  {
+   "key": "Can Bus Rev"
+  },
+  {
+   "key": "Can J Fam L"
+  },
+  {
+   "key": "Can J Ins L"
+  },
+  {
+   "key": "Can NL Bull"
+  },
+  {
+   "key": "Chicago Law"
+  },
+  {
+   "key": "China L Rep"
+  },
+  {
+   "key": "Chitty's LJ"
+  },
+  {
+   "key": "Civ Lib Rev"
+  },
+  {
+   "key": "Colum L Rev"
+  },
+  {
+   "key": "Comp Lab LJ"
+  },
+  {
+   "key": "Conn Ins LJ"
+  },
+  {
+   "key": "Coop t Cott"
+  },
+  {
+   "key": "Def Couns J"
+  },
+  {
+   "key": "Denv UL Rev"
+  },
+  {
+   "key": "Drake L Rev"
+  },
+  {
+   "key": "E Distr LDR"
+  },
+  {
+   "key": "E Eur Bus L"
+  },
+  {
+   "key": "Election LJ"
+  },
+  {
+   "key": "Ent L & Fin"
+  },
+  {
+   "key": "Eur HRL Rev"
+  },
+  {
+   "key": "F Supp (2d)"
+  },
+  {
+   "key": "Fed Comm LJ"
+  },
+  {
+   "key": "Fla Intl LJ"
+  },
+  {
+   "key": "Fla Tax Rev"
+  },
+  {
+   "key": "Harr & Hodg"
+  },
+  {
+   "key": "Hastings LJ"
+  },
+  {
+   "key": "Hispanic LJ"
+  },
+  {
+   "key": "Hum Rts Dev"
+  },
+  {
+   "key": "Humboldt FR"
+  },
+  {
+   "key": "Idaho L Rev"
+  },
+  {
+   "key": "Imm AC (2d)"
+  },
+  {
+   "key": "Imm LR (2d)"
+  },
+  {
+   "key": "Imm LR (3d)"
+  },
+  {
+   "key": "J Chinese L"
+  },
+  {
+   "key": "J Contemp L"
+  },
+  {
+   "key": "J Legal Med"
+  },
+  {
+   "key": "J Prod Liab"
+  },
+  {
+   "key": "JL & Health"
+  },
+  {
+   "key": "JL in Soc'y"
+  },
+  {
+   "key": "Kel J / Kel"
+  },
+  {
+   "key": "LR Sc & Div"
+  },
+  {
+   "key": "Law & Pol'y"
+  },
+  {
+   "key": "Lloyd's Rep"
+  },
+  {
+   "key": "Maori L Rev"
+  },
+  {
+   "key": "Med Sci Law"
+  },
+  {
+   "key": "Moo Ind App"
+  },
+  {
+   "key": "NC Centr LJ"
+  },
+  {
+   "key": "Nat'l L Rev"
+  },
+  {
+   "key": "Nat'l Tax J"
+  },
+  {
+   "key": "Nfld & PEIR"
+  },
+  {
+   "key": "Ombudsman J"
+  },
+  {
+   "key": "Ont Law Gaz"
+  },
+  {
+   "key": "Otago L Rev"
+  },
+  {
+   "key": "Prob & Prop"
+  },
+  {
+   "key": "Pub Cont LJ"
+  },
+  {
+   "key": "Ratio Juris"
+  },
+  {
+   "key": "Real Est LJ"
+  },
+  {
+   "key": "Rep t Finch"
+  },
+  {
+   "key": "Rev DI & DC"
+  },
+  {
+   "key": "Rev DP & SP"
+  },
+  {
+   "key": "Rev Jur UPR"
+  },
+  {
+   "key": "Rev hist dr"
+  },
+  {
+   "key": "Ridg t Hard"
+  },
+  {
+   "key": "S Cal L Rev"
+  },
+  {
+   "key": "S Tex L Rev"
+  },
+  {
+   "key": "SAYB Intl L"
+  },
+  {
+   "key": "SC Envtl LJ"
+  },
+  {
+   "key": "Sp Ecc & Ad"
+  },
+  {
+   "key": "Space Pol'y"
+  },
+  {
+   "key": "Tex Intl LJ"
+  },
+  {
+   "key": "Theor Inq L"
+  },
+  {
+   "key": "Touro L Rev"
+  },
+  {
+   "key": "U Cin L Rev"
+  },
+  {
+   "key": "U Fla L Rev"
+  },
+  {
+   "key": "U Haw L Rev"
+  },
+  {
+   "key": "U Ill L Rev"
+  },
+  {
+   "key": "U Kan L Rev"
+  },
+  {
+   "key": "U Mal L Rev"
+  },
+  {
+   "key": "U Mem L Rev"
+  },
+  {
+   "key": "U Tol L Rev"
+  },
+  {
+   "key": "UIC Dec Ump"
+  },
+  {
+   "key": "Va Envtl LJ"
+  },
+  {
+   "key": "Va J Intl L"
+  },
+  {
+   "key": "Val U L Rev"
+  },
+  {
+   "key": "W Va JL & T"
+  },
+  {
+   "key": "Washburn LJ"
+  },
+  {
+   "key": "Wayne L Rev"
+  },
+  {
+   "key": "Welsb H & G"
+  },
+  {
+   "key": "Wis Intl LJ"
+  },
+  {
+   "key": "YB Comm Arb"
+  },
+  {
+   "key": "A Int'l LC"
+  },
+  {
+   "key": "ABA Fam LQ"
+  },
+  {
+   "key": "Adel L Rev"
+  },
+  {
+   "key": "All ER Rep"
+  },
+  {
+   "key": "Alta L Rev"
+  },
+  {
+   "key": "Am J Juris"
+  },
+  {
+   "key": "Am U L Rev"
+  },
+  {
+   "key": "Ariz L Rev"
+  },
+  {
+   "key": "Ariz St LJ"
+  },
+  {
+   "key": "Austl J HR"
+  },
+  {
+   "key": "B Const LR"
+  },
+  {
+   "key": "BCLR (4th)"
+  },
+  {
+   "key": "BCSCW Summ"
+  },
+  {
+   "key": "BU Intl LJ"
+  },
+  {
+   "key": "BU J Tax L"
+  },
+  {
+   "key": "Banking LJ"
+  },
+  {
+   "key": "Bridg Conv"
+  },
+  {
+   "key": "Brit Med J"
+  },
+  {
+   "key": "Buff L Rev"
+  },
+  {
+   "key": "CBA Papers"
+  },
+  {
+   "key": "CCLI (4th)"
+  },
+  {
+   "key": "CLRBR (2d)"
+  },
+  {
+   "key": "CLRBR (NS)"
+  },
+  {
+   "key": "Cal WL Rev"
+  },
+  {
+   "key": "Cameron PC"
+  },
+  {
+   "key": "Cameron SC"
+  },
+  {
+   "key": "Can Bus LJ"
+  },
+  {
+   "key": "Can Fam LQ"
+  },
+  {
+   "key": "Can J Corr"
+  },
+  {
+   "key": "Can J Crim"
+  },
+  {
+   "key": "Cas t Hard"
+  },
+  {
+   "key": "Cas t Talb"
+  },
+  {
+   "key": "Conn L Rev"
+  },
+  {
+   "key": "Coop Ch Ch"
+  },
+  {
+   "key": "Coop Pr Ca"
+  },
+  {
+   "key": "Cornell LJ"
+  },
+  {
+   "key": "Corp Tax'n"
+  },
+  {
+   "key": "Counsellor"
+  },
+  {
+   "key": "Crim L Rev"
+  },
+  {
+   "key": "Cumb L Rev"
+  },
+  {
+   "key": "De G F & J"
+  },
+  {
+   "key": "De G J & S"
+  },
+  {
+   "key": "De G M & G"
+  },
+  {
+   "key": "Dick L Rev"
+  },
+  {
+   "key": "Dr et Cult"
+  },
+  {
+   "key": "Duq Bus LJ"
+  },
+  {
+   "key": "Ecology LQ"
+  },
+  {
+   "key": "El Bl & El"
+  },
+  {
+   "key": "Eur Env YB"
+  },
+  {
+   "key": "Eur IP Rev"
+  },
+  {
+   "key": "Eur JL Ref"
+  },
+  {
+   "key": "Fam Ct Rev"
+  },
+  {
+   "key": "Gonz L Rev"
+  },
+  {
+   "key": "Gr / UC Ch"
+  },
+  {
+   "key": "Harv L Rev"
+  },
+  {
+   "key": "Her Tr Nor"
+  },
+  {
+   "key": "Hous L Rev"
+  },
+  {
+   "key": "How Scroll"
+  },
+  {
+   "key": "Iowa L Rev"
+  },
+  {
+   "key": "J Animal L"
+  },
+  {
+   "key": "J Intl Arb"
+  },
+  {
+   "key": "J Intl Tax"
+  },
+  {
+   "key": "J P Intl L"
+  },
+  {
+   "key": "JL & Pol'y"
+  },
+  {
+   "key": "JL & Soc'y"
+  },
+  {
+   "key": "Judicature"
+  },
+  {
+   "key": "La Raza LJ"
+  },
+  {
+   "key": "Lap Sp Dec"
+  },
+  {
+   "key": "Law & Phil"
+  },
+  {
+   "key": "Law Libr J"
+  },
+  {
+   "key": "Lloyd's LR"
+  },
+  {
+   "key": "M'Cle & Yo"
+  },
+  {
+   "key": "MPLR (4th)"
+  },
+  {
+   "key": "Man R (2d)"
+  },
+  {
+   "key": "Marq L Rev"
+  },
+  {
+   "key": "Mass L Rev"
+  },
+  {
+   "key": "Mich L Rev"
+  },
+  {
+   "key": "Minn L Rev"
+  },
+  {
+   "key": "Miss L Rev"
+  },
+  {
+   "key": "Mont L Rev"
+  },
+  {
+   "key": "N Ky L Rev"
+  },
+  {
+   "key": "Nova L Rev"
+  },
+  {
+   "key": "Nw U L Rev"
+  },
+  {
+   "key": "Ohio St LJ"
+  },
+  {
+   "key": "Okla L Rev"
+  },
+  {
+   "key": "Olmsted PC"
+  },
+  {
+   "key": "Ont D Crim"
+  },
+  {
+   "key": "Ont IPC OM"
+  },
+  {
+   "key": "Ont IPC OP"
+  },
+  {
+   "key": "Osteurop-R"
+  },
+  {
+   "key": "PPSAC (2d)"
+  },
+  {
+   "key": "PPSAC (3d)"
+  },
+  {
+   "key": "Pace L Rev"
+  },
+  {
+   "key": "Pepp L Rev"
+  },
+  {
+   "key": "Queen's LJ"
+  },
+  {
+   "key": "RED public"
+  },
+  {
+   "key": "Rev dr ULB"
+  },
+  {
+   "key": "Rhod & NLR"
+  },
+  {
+   "key": "Rutgers LJ"
+  },
+  {
+   "key": "S Ill U LJ"
+  },
+  {
+   "key": "Sask L Rev"
+  },
+  {
+   "key": "Sec Reg LJ"
+  },
+  {
+   "key": "Sess Cas D"
+  },
+  {
+   "key": "Sess Cas F"
+  },
+  {
+   "key": "Sess Cas M"
+  },
+  {
+   "key": "Sess Cas R"
+  },
+  {
+   "key": "Sess Cas S"
+  },
+  {
+   "key": "Sing Ac LJ"
+  },
+  {
+   "key": "Sing L Rev"
+  },
+  {
+   "key": "Stan L Rev"
+  },
+  {
+   "key": "Stat L Rev"
+  },
+  {
+   "key": "Stud Canon"
+  },
+  {
+   "key": "Sup Ct Rev"
+  },
+  {
+   "key": "Sw U L Rev"
+  },
+  {
+   "key": "Temp L Rev"
+  },
+  {
+   "key": "Tenn L Rev"
+  },
+  {
+   "key": "Terr Sea J"
+  },
+  {
+   "key": "Tul Mar LJ"
+  },
+  {
+   "key": "U Pa L Rev"
+  },
+  {
+   "key": "UCLA L Rev"
+  },
+  {
+   "key": "UMKC L Rev"
+  },
+  {
+   "key": "USF Mar LJ"
+  },
+  {
+   "key": "Unif L Rev"
+  },
+  {
+   "key": "Va Tax Rev"
+  },
+  {
+   "key": "Vand L Rev"
+  },
+  {
+   "key": "Vill L Rev"
+  },
+  {
+   "key": "W Va L Rev"
+  },
+  {
+   "key": "Wash L Rev"
+  },
+  {
+   "key": "West L Rev"
+  },
+  {
+   "key": "A imm app"
+  },
+  {
+   "key": "AALL Spec"
+  },
+  {
+   "key": "ACWS (2d)"
+  },
+  {
+   "key": "ACWS (3d)"
+  },
+  {
+   "key": "ALR (4th)"
+  },
+  {
+   "key": "ALR (5th)"
+  },
+  {
+   "key": "Acta Crim"
+  },
+  {
+   "key": "Ala L Rev"
+  },
+  {
+   "key": "Alb L Rev"
+  },
+  {
+   "key": "Alta LRBD"
+  },
+  {
+   "key": "Alta LRBR"
+  },
+  {
+   "key": "Am Bus LJ"
+  },
+  {
+   "key": "Antitrust"
+  },
+  {
+   "key": "Ark L Rev"
+  },
+  {
+   "key": "B & Cress"
+  },
+  {
+   "key": "BCHRC Dec"
+  },
+  {
+   "key": "BCLR (2d)"
+  },
+  {
+   "key": "BCLR (3d)"
+  },
+  {
+   "key": "BCLRB Dec"
+  },
+  {
+   "key": "BLR (4th)"
+  },
+  {
+   "key": "Barrister"
+  },
+  {
+   "key": "Bos & Pul"
+  },
+  {
+   "key": "Brooke NC"
+  },
+  {
+   "key": "Bus L Rev"
+  },
+  {
+   "key": "CBR (4th)"
+  },
+  {
+   "key": "CBR (5th)"
+  },
+  {
+   "key": "CCEL (2d)"
+  },
+  {
+   "key": "CCEL (3d)"
+  },
+  {
+   "key": "CCLI (2d)"
+  },
+  {
+   "key": "CCLI (3d)"
+  },
+  {
+   "key": "CCLT (2d)"
+  },
+  {
+   "key": "CCLT (3d)"
+  },
+  {
+   "key": "CELR (3d)"
+  },
+  {
+   "key": "CELR (NS)"
+  },
+  {
+   "key": "CPC (4th)"
+  },
+  {
+   "key": "CPC (5th)"
+  },
+  {
+   "key": "CPC (6th)"
+  },
+  {
+   "key": "CPR (4th)"
+  },
+  {
+   "key": "CTAB (NS)"
+  },
+  {
+   "key": "Cal (4th)"
+  },
+  {
+   "key": "Cal L Rev"
+  },
+  {
+   "key": "Can Bar J"
+  },
+  {
+   "key": "Can L Rev"
+  },
+  {
+   "key": "Can Mun J"
+  },
+  {
+   "key": "Can Tax J"
+  },
+  {
+   "key": "Can Tax N"
+  },
+  {
+   "key": "Choyce Ca"
+  },
+  {
+   "key": "Const Rev"
+  },
+  {
+   "key": "Coop t Br"
+  },
+  {
+   "key": "DLR (4th)"
+  },
+  {
+   "key": "De G & Sm"
+  },
+  {
+   "key": "Dears & B"
+  },
+  {
+   "key": "Del L Rev"
+  },
+  {
+   "key": "Documents"
+  },
+  {
+   "key": "Dowl & Ry"
+  },
+  {
+   "key": "Dr et Soc"
+  },
+  {
+   "key": "Dr social"
+  },
+  {
+   "key": "Drew & Sm"
+  },
+  {
+   "key": "Duq L Rev"
+  },
+  {
+   "key": "E Distr R"
+  },
+  {
+   "key": "Educ & LJ"
+  },
+  {
+   "key": "Energy LJ"
+  },
+  {
+   "key": "Envtl Law"
+  },
+  {
+   "key": "Eq Ca Abr"
+  },
+  {
+   "key": "Eur L Rev"
+  },
+  {
+   "key": "Fam L Rev"
+  },
+  {
+   "key": "Fla L Rev"
+  },
+  {
+   "key": "Fox Pat C"
+  },
+  {
+   "key": "HEC Forum"
+  },
+  {
+   "key": "Haw L Rev"
+  },
+  {
+   "key": "Health LJ"
+  },
+  {
+   "key": "Hum Rts Q"
+  },
+  {
+   "key": "ICSID Rev"
+  },
+  {
+   "key": "IPL Newsl"
+  },
+  {
+   "key": "Ind L Rev"
+  },
+  {
+   "key": "Intl J HR"
+  },
+  {
+   "key": "J Barreau"
+  },
+  {
+   "key": "J Envtl L"
+  },
+  {
+   "key": "J Eur Int"
+  },
+  {
+   "key": "J Med & L"
+  },
+  {
+   "key": "J S Pac L"
+  },
+  {
+   "key": "J Space L"
+  },
+  {
+   "key": "JL & Econ"
+  },
+  {
+   "key": "JL & Educ"
+  },
+  {
+   "key": "JL & Tech"
+  },
+  {
+   "key": "Jewish LR"
+  },
+  {
+   "key": "Jurid Rev"
+  },
+  {
+   "key": "Kan L Rev"
+  },
+  {
+   "key": "L Ed (2d)"
+  },
+  {
+   "key": "LAC (4th)"
+  },
+  {
+   "key": "LC Jurist"
+  },
+  {
+   "key": "LR Ch App"
+  },
+  {
+   "key": "Law Librn"
+  },
+  {
+   "key": "Law Q Rev"
+  },
+  {
+   "key": "Loy L Rev"
+  },
+  {
+   "key": "MPLR (2d)"
+  },
+  {
+   "key": "MPLR (3d)"
+  },
+  {
+   "key": "MVR (4th)"
+  },
+  {
+   "key": "MVR (5th)"
+  },
+  {
+   "key": "Mal L Rev"
+  },
+  {
+   "key": "Man Bar N"
+  },
+  {
+   "key": "March, NR"
+  },
+  {
+   "key": "McGill LJ"
+  },
+  {
+   "key": "Med L Rev"
+  },
+  {
+   "key": "Med Leg J"
+  },
+  {
+   "key": "Mil L Rev"
+  },
+  {
+   "key": "Mod L Rev"
+  },
+  {
+   "key": "NB Eq Cas"
+  },
+  {
+   "key": "NSCGA Dec"
+  },
+  {
+   "key": "NYU L Rev"
+  },
+  {
+   "key": "Nav L Rev"
+  },
+  {
+   "key": "Neb L Rev"
+  },
+  {
+   "key": "Nethl QHR"
+  },
+  {
+   "key": "Pat L Ann"
+  },
+  {
+   "key": "Phill Ecc"
+  },
+  {
+   "key": "RCDA (3e)"
+  },
+  {
+   "key": "RCDA (4e)"
+  },
+  {
+   "key": "RCDT (3e)"
+  },
+  {
+   "key": "RD McGill"
+  },
+  {
+   "key": "RD Ottawa"
+  },
+  {
+   "key": "RDJC (2e)"
+  },
+  {
+   "key": "RDJC (3e)"
+  },
+  {
+   "key": "RDJC (4e)"
+  },
+  {
+   "key": "RDJC (5e)"
+  },
+  {
+   "key": "RED privé"
+  },
+  {
+   "key": "RFL (4th)"
+  },
+  {
+   "key": "RFL (5th)"
+  },
+  {
+   "key": "RFL (6th)"
+  },
+  {
+   "key": "RJDA (2e)"
+  },
+  {
+   "key": "RJDA (3e)"
+  },
+  {
+   "key": "RJDA (4e)"
+  },
+  {
+   "key": "RJDM (2e)"
+  },
+  {
+   "key": "RPR (4th)"
+  },
+  {
+   "key": "Rev Litig"
+  },
+  {
+   "key": "Rev admin"
+  },
+  {
+   "key": "Russ & Ry"
+  },
+  {
+   "key": "SCC Coutl"
+  },
+  {
+   "key": "SMU L Rev"
+  },
+  {
+   "key": "Sing JICL"
+  },
+  {
+   "key": "TBRD (NS)"
+  },
+  {
+   "key": "Tax L Rev"
+  },
+  {
+   "key": "Tex L Rev"
+  },
+  {
+   "key": "Transp LJ"
+  },
+  {
+   "key": "Tribal LJ"
+  },
+  {
+   "key": "Tul L Rev"
+  },
+  {
+   "key": "U Balt LF"
+  },
+  {
+   "key": "UBC L Rev"
+  },
+  {
+   "key": "UCQB (OS)"
+  },
+  {
+   "key": "UDC L Rev"
+  },
+  {
+   "key": "US-Mex LJ"
+  },
+  {
+   "key": "USF L Rev"
+  },
+  {
+   "key": "UWA L Rev"
+  },
+  {
+   "key": "UWO L Rev"
+  },
+  {
+   "key": "Ves & Bea"
+  },
+  {
+   "key": "W W & A'B"
+  },
+  {
+   "key": "WDCP (2d)"
+  },
+  {
+   "key": "Wash U LQ"
+  },
+  {
+   "key": "Web J CLI"
+  },
+  {
+   "key": "Wis L Rev"
+  },
+  {
+   "key": "Wms Saund"
+  },
+  {
+   "key": "Wyo L Rev"
+  },
+  {
+   "key": "A Crim R"
+  },
+  {
+   "key": "ALR (2d)"
+  },
+  {
+   "key": "ALR (3d)"
+  },
+  {
+   "key": "Admin LR"
+  },
+  {
+   "key": "Advocate"
+  },
+  {
+   "key": "Ala (NS)"
+  },
+  {
+   "key": "Alaska R"
+  },
+  {
+   "key": "Animal L"
+  },
+  {
+   "key": "Arb Intl"
+  },
+  {
+   "key": "Army Law"
+  },
+  {
+   "key": "Asian LJ"
+  },
+  {
+   "key": "Austl LJ"
+  },
+  {
+   "key": "BC L Rev"
+  },
+  {
+   "key": "BLR (2d)"
+  },
+  {
+   "key": "BLR (3d)"
+  },
+  {
+   "key": "BU L Rev"
+  },
+  {
+   "key": "BYUL Rev"
+  },
+  {
+   "key": "Ball & B"
+  },
+  {
+   "key": "Bull OSC"
+  },
+  {
+   "key": "CBR (3d)"
+  },
+  {
+   "key": "CBR (NS)"
+  },
+  {
+   "key": "CCC (2d)"
+  },
+  {
+   "key": "CCC (3d)"
+  },
+  {
+   "key": "CCC (NS)"
+  },
+  {
+   "key": "CLR (2d)"
+  },
+  {
+   "key": "CLR (3d)"
+  },
+  {
+   "key": "CPC (2d)"
+  },
+  {
+   "key": "CPC (3d)"
+  },
+  {
+   "key": "CPR (2d)"
+  },
+  {
+   "key": "CPR (3d)"
+  },
+  {
+   "key": "CR (4th)"
+  },
+  {
+   "key": "CR (5th)"
+  },
+  {
+   "key": "CR (6th)"
+  },
+  {
+   "key": "CRR (2d)"
+  },
+  {
+   "key": "CT Cases"
+  },
+  {
+   "key": "CTC (NS)"
+  },
+  {
+   "key": "Cal (2d)"
+  },
+  {
+   "key": "Cal (3d)"
+  },
+  {
+   "key": "Can-USLJ"
+  },
+  {
+   "key": "Cape SCR"
+  },
+  {
+   "key": "Cart BNA"
+  },
+  {
+   "key": "Cath Law"
+  },
+  {
+   "key": "Chan Cas"
+  },
+  {
+   "key": "Comm Law"
+  },
+  {
+   "key": "Cong Dig"
+  },
+  {
+   "key": "Cook Adm"
+  },
+  {
+   "key": "Cooke CP"
+  },
+  {
+   "key": "Criminol"
+  },
+  {
+   "key": "Curr LYB"
+  },
+  {
+   "key": "Currents"
+  },
+  {
+   "key": "DC L Rev"
+  },
+  {
+   "key": "DLR (2d)"
+  },
+  {
+   "key": "DLR (3d)"
+  },
+  {
+   "key": "De G & J"
+  },
+  {
+   "key": "Dea & Sw"
+  },
+  {
+   "key": "Dow & Cl"
+  },
+  {
+   "key": "E Afr LR"
+  },
+  {
+   "key": "ETR (2d)"
+  },
+  {
+   "key": "ETR (3d)"
+  },
+  {
+   "key": "Ed L Rev"
+  },
+  {
+   "key": "Elder LJ"
+  },
+  {
+   "key": "Emory LJ"
+  },
+  {
+   "key": "Envtl LJ"
+  },
+  {
+   "key": "Examiner"
+  },
+  {
+   "key": "Exch Rep"
+  },
+  {
+   "key": "FAA Av N"
+  },
+  {
+   "key": "Ga L Rev"
+  },
+  {
+   "key": "Ghana LR"
+  },
+  {
+   "key": "Gilb Cas"
+  },
+  {
+   "key": "Gilb Rep"
+  },
+  {
+   "key": "Holt, Eq"
+  },
+  {
+   "key": "Holt, KB"
+  },
+  {
+   "key": "IPL Bull"
+  },
+  {
+   "key": "Indus LJ"
+  },
+  {
+   "key": "InfoCRTC"
+  },
+  {
+   "key": "Ins Bull"
+  },
+  {
+   "key": "Intl Law"
+  },
+  {
+   "key": "J C & UL"
+  },
+  {
+   "key": "J Corp L"
+  },
+  {
+   "key": "J Crim L"
+  },
+  {
+   "key": "J Tort L"
+  },
+  {
+   "key": "JL & Com"
+  },
+  {
+   "key": "JL & Pol"
+  },
+  {
+   "key": "Jones, T"
+  },
+  {
+   "key": "Jones, W"
+  },
+  {
+   "key": "Kenya LR"
+  },
+  {
+   "key": "LAC (2d)"
+  },
+  {
+   "key": "LAC (3d)"
+  },
+  {
+   "key": "LR A & E"
+  },
+  {
+   "key": "LR P & D"
+  },
+  {
+   "key": "La L Rev"
+  },
+  {
+   "key": "Law Week"
+  },
+  {
+   "key": "MLR (KB)"
+  },
+  {
+   "key": "MLR (QB)"
+  },
+  {
+   "key": "MLR (SC)"
+  },
+  {
+   "key": "MVR (2d)"
+  },
+  {
+   "key": "MVR (3d)"
+  },
+  {
+   "key": "Macl & R"
+  },
+  {
+   "key": "Md L Rev"
+  },
+  {
+   "key": "Me L Rev"
+  },
+  {
+   "key": "Mo L Rev"
+  },
+  {
+   "key": "Mont Law"
+  },
+  {
+   "key": "Moo PCNS"
+  },
+  {
+   "key": "NBR (2d)"
+  },
+  {
+   "key": "NLR (NS)"
+  },
+  {
+   "key": "NLR (OS)"
+  },
+  {
+   "key": "NSR (2d)"
+  },
+  {
+   "key": "NSW St R"
+  },
+  {
+   "key": "NY St BJ"
+  },
+  {
+   "key": "NYS (2d)"
+  },
+  {
+   "key": "NZUL Rev"
+  },
+  {
+   "key": "Nat'l LJ"
+  },
+  {
+   "key": "OLRB Rep"
+  },
+  {
+   "key": "OSC Bull"
+  },
+  {
+   "key": "Ont Elec"
+  },
+  {
+   "key": "Or L Rev"
+  },
+  {
+   "key": "RFL (2d)"
+  },
+  {
+   "key": "RFL (3d)"
+  },
+  {
+   "key": "RID écon"
+  },
+  {
+   "key": "RJC (5e)"
+  },
+  {
+   "key": "RJF (5e)"
+  },
+  {
+   "key": "RPR (2d)"
+  },
+  {
+   "key": "RPR (3d)"
+  },
+  {
+   "key": "Russ & M"
+  },
+  {
+   "key": "S Afr LR"
+  },
+  {
+   "key": "S Tex LJ"
+  },
+  {
+   "key": "SU L Rev"
+  },
+  {
+   "key": "Sess Cas"
+  },
+  {
+   "key": "Sim & St"
+  },
+  {
+   "key": "Sim (NS)"
+  },
+  {
+   "key": "Sing JLS"
+  },
+  {
+   "key": "Sudan LR"
+  },
+  {
+   "key": "TTR (2d)"
+  },
+  {
+   "key": "Tulsa LJ"
+  },
+  {
+   "key": "Turn & R"
+  },
+  {
+   "key": "Va L Rev"
+  },
+  {
+   "key": "Vt L Rev"
+  },
+  {
+   "key": "WAR (NS)"
+  },
+  {
+   "key": "WCB (2d)"
+  },
+  {
+   "key": "WWR (NS)"
+  },
+  {
+   "key": "Y & C Ex"
+  },
+  {
+   "key": "YB Eur L"
+  },
+  {
+   "key": "AFL Rev"
+  },
+  {
+   "key": "AIPLAQJ"
+  },
+  {
+   "key": "ANWTYTR"
+  },
+  {
+   "key": "Ad & El"
+  },
+  {
+   "key": "Alta LQ"
+  },
+  {
+   "key": "Alta LR"
+  },
+  {
+   "key": "App Cas"
+  },
+  {
+   "key": "Arab LQ"
+  },
+  {
+   "key": "Asp MLC"
+  },
+  {
+   "key": "B & Ald"
+  },
+  {
+   "key": "Barn KB"
+  },
+  {
+   "key": "Ben & D"
+  },
+  {
+   "key": "Bing NC"
+  },
+  {
+   "key": "Bridg J"
+  },
+  {
+   "key": "Bridg O"
+  },
+  {
+   "key": "Burrell"
+  },
+  {
+   "key": "Bus & L"
+  },
+  {
+   "key": "Bus Law"
+  },
+  {
+   "key": "CB (NS)"
+  },
+  {
+   "key": "CML Rev"
+  },
+  {
+   "key": "CP du N"
+  },
+  {
+   "key": "CR (3d)"
+  },
+  {
+   "key": "CR (NS)"
+  },
+  {
+   "key": "Can Law"
+  },
+  {
+   "key": "Car & K"
+  },
+  {
+   "key": "Car & M"
+  },
+  {
+   "key": "Car & P"
+  },
+  {
+   "key": "Circles"
+  },
+  {
+   "key": "Comm LR"
+  },
+  {
+   "key": "Conn BJ"
+  },
+  {
+   "key": "Crim LF"
+  },
+  {
+   "key": "Crim LQ"
+  },
+  {
+   "key": "Debates"
+  },
+  {
+   "key": "Del Law"
+  },
+  {
+   "key": "Denv LJ"
+  },
+  {
+   "key": "Duke LJ"
+  },
+  {
+   "key": "Déc B-C"
+  },
+  {
+   "key": "Dés OAL"
+  },
+  {
+   "key": "El & Bl"
+  },
+  {
+   "key": "El & El"
+  },
+  {
+   "key": "Envtl L"
+  },
+  {
+   "key": "Fed Law"
+  },
+  {
+   "key": "Forrest"
+  },
+  {
+   "key": "Gaz Pal"
+  },
+  {
+   "key": "Godbolt"
+  },
+  {
+   "key": "Hag Adm"
+  },
+  {
+   "key": "Hag Con"
+  },
+  {
+   "key": "Hag Ecc"
+  },
+  {
+   "key": "Hay & M"
+  },
+  {
+   "key": "Hold LR"
+  },
+  {
+   "key": "ICJ Rep"
+  },
+  {
+   "key": "IP & TF"
+  },
+  {
+   "key": "Imm ABD"
+  },
+  {
+   "key": "J Afr L"
+  },
+  {
+   "key": "J Air L"
+  },
+  {
+   "key": "J Bus L"
+  },
+  {
+   "key": "J Fam L"
+  },
+  {
+   "key": "J L Rev"
+  },
+  {
+   "key": "J Legis"
+  },
+  {
+   "key": "J Tax'n"
+  },
+  {
+   "key": "JJ prov"
+  },
+  {
+   "key": "Jac & W"
+  },
+  {
+   "key": "Keilway"
+  },
+  {
+   "key": "L Med Q"
+  },
+  {
+   "key": "Lab Law"
+  },
+  {
+   "key": "Le & Ca"
+  },
+  {
+   "key": "M & Rob"
+  },
+  {
+   "key": "MLB Dec"
+  },
+  {
+   "key": "Mac & G"
+  },
+  {
+   "key": "Man & G"
+  },
+  {
+   "key": "Med & L"
+  },
+  {
+   "key": "Mich BJ"
+  },
+  {
+   "key": "Mich LJ"
+  },
+  {
+   "key": "Miss LJ"
+  },
+  {
+   "key": "My & Cr"
+  },
+  {
+   "key": "NCL Rev"
+  },
+  {
+   "key": "NDL Rev"
+  },
+  {
+   "key": "NE (2d)"
+  },
+  {
+   "key": "NML Rev"
+  },
+  {
+   "key": "NW (2d)"
+  },
+  {
+   "key": "NY (2d)"
+  },
+  {
+   "key": "NYL Rev"
+  },
+  {
+   "key": "NZL Rev"
+  },
+  {
+   "key": "Nfld LR"
+  },
+  {
+   "key": "OMB Dec"
+  },
+  {
+   "key": "OR (2d)"
+  },
+  {
+   "key": "OR (3d)"
+  },
+  {
+   "key": "Prec Ch"
+  },
+  {
+   "key": "RD UN-B"
+  },
+  {
+   "key": "RL (ns)"
+  },
+  {
+   "key": "RTD civ"
+  },
+  {
+   "key": "RTD eur"
+  },
+  {
+   "key": "Raym Ld"
+  },
+  {
+   "key": "Rev BDI"
+  },
+  {
+   "key": "Rev EDI"
+  },
+  {
+   "key": "Rev IDP"
+  },
+  {
+   "key": "Rev IPC"
+  },
+  {
+   "key": "Rev arb"
+  },
+  {
+   "key": "Rhod LR"
+  },
+  {
+   "key": "Rob Ecc"
+  },
+  {
+   "key": "Russ ER"
+  },
+  {
+   "key": "SCC Cam"
+  },
+  {
+   "key": "SCL Rev"
+  },
+  {
+   "key": "SDL Rev"
+  },
+  {
+   "key": "SE (2d)"
+  },
+  {
+   "key": "SEC Dec"
+  },
+  {
+   "key": "SLR (R)"
+  },
+  {
+   "key": "SW (2d)"
+  },
+  {
+   "key": "Sask LR"
+  },
+  {
+   "key": "Scot LR"
+  },
+  {
+   "key": "Sem Jur"
+  },
+  {
+   "key": "Show KB"
+  },
+  {
+   "key": "Show PC"
+  },
+  {
+   "key": "So (2d)"
+  },
+  {
+   "key": "Stu Adm"
+  },
+  {
+   "key": "Sw & Tr"
+  },
+  {
+   "key": "Tax ABC"
+  },
+  {
+   "key": "Temp LQ"
+  },
+  {
+   "key": "Terr LR"
+  },
+  {
+   "key": "UCE & A"
+  },
+  {
+   "key": "Utah BJ"
+  },
+  {
+   "key": "Wils Ch"
+  },
+  {
+   "key": "Wils Ex"
+  },
+  {
+   "key": "Wils KB"
+  },
+  {
+   "key": "Y & CCC"
+  },
+  {
+   "key": "Yale LJ"
+  },
+  {
+   "key": "A (2d)"
+  },
+  {
+   "key": "ABAIPL"
+  },
+  {
+   "key": "ABALPM"
+  },
+  {
+   "key": "AI & L"
+  },
+  {
+   "key": "All ER"
+  },
+  {
+   "key": "Ann NU"
+  },
+  {
+   "key": "Ann SN"
+  },
+  {
+   "key": "Appeal"
+  },
+  {
+   "key": "B & Ad"
+  },
+  {
+   "key": "B & dr"
+  },
+  {
+   "key": "Barn C"
+  },
+  {
+   "key": "Barnes"
+  },
+  {
+   "key": "Bli NS"
+  },
+  {
+   "key": "Bro CC"
+  },
+  {
+   "key": "Bro PC"
+  },
+  {
+   "key": "Brownl"
+  },
+  {
+   "key": "C de D"
+  },
+  {
+   "key": "CM & R"
+  },
+  {
+   "key": "CRRBDI"
+  },
+  {
+   "key": "CTCRTC"
+  },
+  {
+   "key": "Can LJ"
+  },
+  {
+   "key": "Can LT"
+  },
+  {
+   "key": "Car LJ"
+  },
+  {
+   "key": "Carter"
+  },
+  {
+   "key": "Ch App"
+  },
+  {
+   "key": "Cl & F"
+  },
+  {
+   "key": "Co Rep"
+  },
+  {
+   "key": "Colles"
+  },
+  {
+   "key": "Com LJ"
+  },
+  {
+   "key": "Coop G"
+  },
+  {
+   "key": "DS / D"
+  },
+  {
+   "key": "Dal LJ"
+  },
+  {
+   "key": "E & TJ"
+  },
+  {
+   "key": "E & TQ"
+  },
+  {
+   "key": "Ethics"
+  },
+  {
+   "key": "Eur LJ"
+  },
+  {
+   "key": "F (2d)"
+  },
+  {
+   "key": "F (3d)"
+  },
+  {
+   "key": "F Supp"
+  },
+  {
+   "key": "Fam LQ"
+  },
+  {
+   "key": "Fam LR"
+  },
+  {
+   "key": "Fitz-G"
+  },
+  {
+   "key": "Fla BJ"
+  },
+  {
+   "key": "Gaz LR"
+  },
+  {
+   "key": "Geo LJ"
+  },
+  {
+   "key": "H & Tw"
+  },
+  {
+   "key": "HL Cas"
+  },
+  {
+   "key": "Haw BJ"
+  },
+  {
+   "key": "How LJ"
+  },
+  {
+   "key": "I Ch R"
+  },
+  {
+   "key": "Ill BJ"
+  },
+  {
+   "key": "Ill LQ"
+  },
+  {
+   "key": "Imm AC"
+  },
+  {
+   "key": "Imm LR"
+  },
+  {
+   "key": "Ind LJ"
+  },
+  {
+   "key": "Intl J"
+  },
+  {
+   "key": "Ir Jur"
+  },
+  {
+   "key": "Isr LR"
+  },
+  {
+   "key": "LA Law"
+  },
+  {
+   "key": "LC Jur"
+  },
+  {
+   "key": "LR CCR"
+  },
+  {
+   "key": "Lab LJ"
+  },
+  {
+   "key": "Man LJ"
+  },
+  {
+   "key": "Man LR"
+  },
+  {
+   "key": "Moo KB"
+  },
+  {
+   "key": "Moo PC"
+  },
+  {
+   "key": "My & K"
+  },
+  {
+   "key": "NBESTD"
+  },
+  {
+   "key": "NJ Law"
+  },
+  {
+   "key": "NSWSCR"
+  },
+  {
+   "key": "NWTSCR"
+  },
+  {
+   "key": "New LJ"
+  },
+  {
+   "key": "Orders"
+  },
+  {
+   "key": "Ordres"
+  },
+  {
+   "key": "P (2d)"
+  },
+  {
+   "key": "P (3d)"
+  },
+  {
+   "key": "Pac LJ"
+  },
+  {
+   "key": "Per CS"
+  },
+  {
+   "key": "Perr P"
+  },
+  {
+   "key": "Pl Com"
+  },
+  {
+   "key": "Pollex"
+  },
+  {
+   "key": "Q St R"
+  },
+  {
+   "key": "R de J"
+  },
+  {
+   "key": "R de L"
+  },
+  {
+   "key": "R du N"
+  },
+  {
+   "key": "RB Can"
+  },
+  {
+   "key": "RDISDP"
+  },
+  {
+   "key": "RECIEL"
+  },
+  {
+   "key": "Raym T"
+  },
+  {
+   "key": "Reform"
+  },
+  {
+   "key": "Rep Ch"
+  },
+  {
+   "key": "Rev DU"
+  },
+  {
+   "key": "Sask R"
+  },
+  {
+   "key": "Sm & G"
+  },
+  {
+   "key": "St-MSD"
+  },
+  {
+   "key": "Stu KB"
+  },
+  {
+   "key": "Tas SR"
+  },
+  {
+   "key": "Tex BJ"
+  },
+  {
+   "key": "UNSWLJ"
+  },
+  {
+   "key": "Ves Jr"
+  },
+  {
+   "key": "Ves Sr"
+  },
+  {
+   "key": "Willes"
+  },
+  {
+   "key": "YB CBA"
+  },
+  {
+   "key": "A & N"
+  },
+  {
+   "key": "ABA J"
+  },
+  {
+   "key": "Alt J"
+  },
+  {
+   "key": "Arb J"
+  },
+  {
+   "key": "B & S"
+  },
+  {
+   "key": "BCWCR"
+  },
+  {
+   "key": "Bla H"
+  },
+  {
+   "key": "Bla W"
+  },
+  {
+   "key": "Bridg"
+  },
+  {
+   "key": "Bulst"
+  },
+  {
+   "key": "Bus Q"
+  },
+  {
+   "key": "C & J"
+  },
+  {
+   "key": "C & M"
+  },
+  {
+   "key": "C & S"
+  },
+  {
+   "key": "CBAYB"
+  },
+  {
+   "key": "CDB-C"
+  },
+  {
+   "key": "CLELJ"
+  },
+  {
+   "key": "CLRBD"
+  },
+  {
+   "key": "CLRBR"
+  },
+  {
+   "key": "CTCDO"
+  },
+  {
+   "key": "Calth"
+  },
+  {
+   "key": "Carey"
+  },
+  {
+   "key": "Carth"
+  },
+  {
+   "key": "Ch CR"
+  },
+  {
+   "key": "Ch Ca"
+  },
+  {
+   "key": "Davis"
+  },
+  {
+   "key": "Dears"
+  },
+  {
+   "key": "Ex CR"
+  },
+  {
+   "key": "F & F"
+  },
+  {
+   "key": "F Cas"
+  },
+  {
+   "key": "FLRAC"
+  },
+  {
+   "key": "FORUM"
+  },
+  {
+   "key": "Foord"
+  },
+  {
+   "key": "Gould"
+  },
+  {
+   "key": "H & C"
+  },
+  {
+   "key": "H & M"
+  },
+  {
+   "key": "H & N"
+  },
+  {
+   "key": "H & W"
+  },
+  {
+   "key": "Hardr"
+  },
+  {
+   "key": "ICSID"
+  },
+  {
+   "key": "IR Eq"
+  },
+  {
+   "key": "J & H"
+  },
+  {
+   "key": "JSDLP"
+  },
+  {
+   "key": "Johns"
+  },
+  {
+   "key": "K & J"
+  },
+  {
+   "key": "Keble"
+  },
+  {
+   "key": "Kel W"
+  },
+  {
+   "key": "Ky LJ"
+  },
+  {
+   "key": "LMCLQ"
+  },
+  {
+   "key": "LR CP"
+  },
+  {
+   "key": "LR Eq"
+  },
+  {
+   "key": "LR Ex"
+  },
+  {
+   "key": "LR Ir"
+  },
+  {
+   "key": "LR QB"
+  },
+  {
+   "key": "LR RP"
+  },
+  {
+   "key": "La BJ"
+  },
+  {
+   "key": "Latch"
+  },
+  {
+   "key": "Law J"
+  },
+  {
+   "key": "Leach"
+  },
+  {
+   "key": "Lewin"
+  },
+  {
+   "key": "Lilly"
+  },
+  {
+   "key": "Ll LR"
+  },
+  {
+   "key": "M & M"
+  },
+  {
+   "key": "M & S"
+  },
+  {
+   "key": "M & W"
+  },
+  {
+   "key": "M'Cle"
+  },
+  {
+   "key": "MJECL"
+  },
+  {
+   "key": "Man R"
+  },
+  {
+   "key": "NB Eq"
+  },
+  {
+   "key": "NBLLC"
+  },
+  {
+   "key": "NSWLR"
+  },
+  {
+   "key": "NSWWN"
+  },
+  {
+   "key": "NZFLR"
+  },
+  {
+   "key": "NZPCC"
+  },
+  {
+   "key": "OUCLJ"
+  },
+  {
+   "key": "P Wms"
+  },
+  {
+   "key": "PPSAC"
+  },
+  {
+   "key": "Peake"
+  },
+  {
+   "key": "Price"
+  },
+  {
+   "key": "RADIC"
+  },
+  {
+   "key": "RCDVM"
+  },
+  {
+   "key": "RCRAS"
+  },
+  {
+   "key": "RDPDD"
+  },
+  {
+   "key": "RDRTQ"
+  },
+  {
+   "key": "RGDIP"
+  },
+  {
+   "key": "RJEUL"
+  },
+  {
+   "key": "RONTC"
+  },
+  {
+   "key": "Rolle"
+  },
+  {
+   "key": "SAJHR"
+  },
+  {
+   "key": "SYBIL"
+  },
+  {
+   "key": "Sp PC"
+  },
+  {
+   "key": "Stark"
+  },
+  {
+   "key": "Swans"
+  },
+  {
+   "key": "Tas R"
+  },
+  {
+   "key": "UNBLJ"
+  },
+  {
+   "key": "VUWLR"
+  },
+  {
+   "key": "Vaugh"
+  },
+  {
+   "key": "Vt BJ"
+  },
+  {
+   "key": "W Rob"
+  },
+  {
+   "key": "WLRBD"
+  },
+  {
+   "key": "Wight"
+  },
+  {
+   "key": "Winch"
+  },
+  {
+   "key": "Y & J"
+  },
+  {
+   "key": "YBICJ"
+  },
+  {
+   "key": "ZaöRV"
+  },
+  {
+   "key": "AALR"
+  },
+  {
+   "key": "ACDI"
+  },
+  {
+   "key": "ACDP"
+  },
+  {
+   "key": "ACLR"
+  },
+  {
+   "key": "ACSR"
+  },
+  {
+   "key": "ACTR"
+  },
+  {
+   "key": "ACWS"
+  },
+  {
+   "key": "ADIL"
+  },
+  {
+   "key": "AELJ"
+  },
+  {
+   "key": "AEUB"
+  },
+  {
+   "key": "AFDI"
+  },
+  {
+   "key": "AILR"
+  },
+  {
+   "key": "AJDQ"
+  },
+  {
+   "key": "ALJR"
+  },
+  {
+   "key": "ALMD"
+  },
+  {
+   "key": "ARSP"
+  },
+  {
+   "key": "Adam"
+  },
+  {
+   "key": "Andr"
+  },
+  {
+   "key": "Anst"
+  },
+  {
+   "key": "Ariz"
+  },
+  {
+   "key": "BCAC"
+  },
+  {
+   "key": "BCLN"
+  },
+  {
+   "key": "BCLR"
+  },
+  {
+   "key": "BFLR"
+  },
+  {
+   "key": "BILC"
+  },
+  {
+   "key": "BISD"
+  },
+  {
+   "key": "Batt"
+  },
+  {
+   "key": "Beat"
+  },
+  {
+   "key": "Beav"
+  },
+  {
+   "key": "Bell"
+  },
+  {
+   "key": "Benl"
+  },
+  {
+   "key": "Bing"
+  },
+  {
+   "key": "Bunb"
+  },
+  {
+   "key": "Burr"
+  },
+  {
+   "key": "CACM"
+  },
+  {
+   "key": "CBES"
+  },
+  {
+   "key": "CCEL"
+  },
+  {
+   "key": "CCLI"
+  },
+  {
+   "key": "CCLR"
+  },
+  {
+   "key": "CCLS"
+  },
+  {
+   "key": "CCLT"
+  },
+  {
+   "key": "CCPB"
+  },
+  {
+   "key": "CCRI"
+  },
+  {
+   "key": "CEDH"
+  },
+  {
+   "key": "CELR"
+  },
+  {
+   "key": "CFLC"
+  },
+  {
+   "key": "CHRR"
+  },
+  {
+   "key": "CIPR"
+  },
+  {
+   "key": "CIRB"
+  },
+  {
+   "key": "CJLS"
+  },
+  {
+   "key": "CJLT"
+  },
+  {
+   "key": "CJWL"
+  },
+  {
+   "key": "CLAS"
+  },
+  {
+   "key": "CLLC"
+  },
+  {
+   "key": "CLLR"
+  },
+  {
+   "key": "CMAR"
+  },
+  {
+   "key": "CNLC"
+  },
+  {
+   "key": "CNLR"
+  },
+  {
+   "key": "CRAC"
+  },
+  {
+   "key": "CRNZ"
+  },
+  {
+   "key": "CRTC"
+  },
+  {
+   "key": "CTAB"
+  },
+  {
+   "key": "CTBR"
+  },
+  {
+   "key": "CTCR"
+  },
+  {
+   "key": "CTST"
+  },
+  {
+   "key": "Camp"
+  },
+  {
+   "key": "Cary"
+  },
+  {
+   "key": "Ch D"
+  },
+  {
+   "key": "Ch R"
+  },
+  {
+   "key": "Chit"
+  },
+  {
+   "key": "Coll"
+  },
+  {
+   "key": "Comb"
+  },
+  {
+   "key": "Cowp"
+  },
+  {
+   "key": "Curt"
+  },
+  {
+   "key": "DCRM"
+  },
+  {
+   "key": "DEFR"
+  },
+  {
+   "key": "DTJL"
+  },
+  {
+   "key": "Dick"
+  },
+  {
+   "key": "Dods"
+  },
+  {
+   "key": "Donn"
+  },
+  {
+   "key": "Doug"
+  },
+  {
+   "key": "Drap"
+  },
+  {
+   "key": "Drew"
+  },
+  {
+   "key": "ECHR"
+  },
+  {
+   "key": "EHRR"
+  },
+  {
+   "key": "EJCL"
+  },
+  {
+   "key": "EJIL"
+  },
+  {
+   "key": "ELLR"
+  },
+  {
+   "key": "ERPL"
+  },
+  {
+   "key": "ETPJ"
+  },
+  {
+   "key": "EULR"
+  },
+  {
+   "key": "EZPR"
+  },
+  {
+   "key": "East"
+  },
+  {
+   "key": "Eden"
+  },
+  {
+   "key": "Ex D"
+  },
+  {
+   "key": "FCAD"
+  },
+  {
+   "key": "FCCR"
+  },
+  {
+   "key": "FLRR"
+  },
+  {
+   "key": "FTLR"
+  },
+  {
+   "key": "Fort"
+  },
+  {
+   "key": "Fost"
+  },
+  {
+   "key": "GSTR"
+  },
+  {
+   "key": "Giff"
+  },
+  {
+   "key": "HJLP"
+  },
+  {
+   "key": "HRIR"
+  },
+  {
+   "key": "HRLJ"
+  },
+  {
+   "key": "Hare"
+  },
+  {
+   "key": "Hodg"
+  },
+  {
+   "key": "Holt"
+  },
+  {
+   "key": "IBLJ"
+  },
+  {
+   "key": "ICLQ"
+  },
+  {
+   "key": "ICLR"
+  },
+  {
+   "key": "IDEA"
+  },
+  {
+   "key": "ILRM"
+  },
+  {
+   "key": "ILTR"
+  },
+  {
+   "key": "IRCL"
+  },
+  {
+   "key": "JILI"
+  },
+  {
+   "key": "JILT"
+  },
+  {
+   "key": "JLSS"
+  },
+  {
+   "key": "JPPL"
+  },
+  {
+   "key": "Jenk"
+  },
+  {
+   "key": "Keen"
+  },
+  {
+   "key": "Keny"
+  },
+  {
+   "key": "L Ed"
+  },
+  {
+   "key": "LCLJ"
+  },
+  {
+   "key": "LIEI"
+  },
+  {
+   "key": "LRHL"
+  },
+  {
+   "key": "LRPC"
+  },
+  {
+   "key": "Lane"
+  },
+  {
+   "key": "Lush"
+  },
+  {
+   "key": "MPLR"
+  },
+  {
+   "key": "Madd"
+  },
+  {
+   "key": "Mood"
+  },
+  {
+   "key": "NEBD"
+  },
+  {
+   "key": "NJCL"
+  },
+  {
+   "key": "NPDR"
+  },
+  {
+   "key": "NSWR"
+  },
+  {
+   "key": "NTAR"
+  },
+  {
+   "key": "NWTR"
+  },
+  {
+   "key": "NYLJ"
+  },
+  {
+   "key": "NZAR"
+  },
+  {
+   "key": "NZLJ"
+  },
+  {
+   "key": "NZLR"
+  },
+  {
+   "key": "Nels"
+  },
+  {
+   "key": "OELD"
+  },
+  {
+   "key": "OFLR"
+  },
+  {
+   "key": "OMBR"
+  },
+  {
+   "key": "PRBR"
+  },
+  {
+   "key": "Palm"
+  },
+  {
+   "key": "Park"
+  },
+  {
+   "key": "Pyke"
+  },
+  {
+   "key": "RCCT"
+  },
+  {
+   "key": "RCDA"
+  },
+  {
+   "key": "RCDI"
+  },
+  {
+   "key": "RCDP"
+  },
+  {
+   "key": "RCDS"
+  },
+  {
+   "key": "RCLF"
+  },
+  {
+   "key": "RCLJ"
+  },
+  {
+   "key": "RCPI"
+  },
+  {
+   "key": "RDAI"
+  },
+  {
+   "key": "RDJC"
+  },
+  {
+   "key": "RDUS"
+  },
+  {
+   "key": "RECJ"
+  },
+  {
+   "key": "RHDI"
+  },
+  {
+   "key": "RIAA"
+  },
+  {
+   "key": "RICR"
+  },
+  {
+   "key": "RIDC"
+  },
+  {
+   "key": "RISJ"
+  },
+  {
+   "key": "RJDA"
+  },
+  {
+   "key": "RNDC"
+  },
+  {
+   "key": "RPEI"
+  },
+  {
+   "key": "RQDI"
+  },
+  {
+   "key": "Russ"
+  },
+  {
+   "key": "S Ct"
+  },
+  {
+   "key": "SALJ"
+  },
+  {
+   "key": "SALR"
+  },
+  {
+   "key": "SASR"
+  },
+  {
+   "key": "SCCB"
+  },
+  {
+   "key": "SCCD"
+  },
+  {
+   "key": "SCCR"
+  },
+  {
+   "key": "SCLR"
+  },
+  {
+   "key": "SLLR"
+  },
+  {
+   "key": "SSLR"
+  },
+  {
+   "key": "Salk"
+  },
+  {
+   "key": "Skin"
+  },
+  {
+   "key": "Swab"
+  },
+  {
+   "key": "TAAT"
+  },
+  {
+   "key": "Talb"
+  },
+  {
+   "key": "Taml"
+  },
+  {
+   "key": "Taun"
+  },
+  {
+   "key": "Toth"
+  },
+  {
+   "key": "UCCP"
+  },
+  {
+   "key": "UCKB"
+  },
+  {
+   "key": "UCLJ"
+  },
+  {
+   "key": "UCQB"
+  },
+  {
+   "key": "UGLJ"
+  },
+  {
+   "key": "UQLJ"
+  },
+  {
+   "key": "UTLJ"
+  },
+  {
+   "key": "Vent"
+  },
+  {
+   "key": "Vern"
+  },
+  {
+   "key": "WALR"
+  },
+  {
+   "key": "WDCP"
+  },
+  {
+   "key": "WDFL"
+  },
+  {
+   "key": "WLAC"
+  },
+  {
+   "key": "WLTR"
+  },
+  {
+   "key": "WTAM"
+  },
+  {
+   "key": "West"
+  },
+  {
+   "key": "Wilm"
+  },
+  {
+   "key": "YBHR"
+  },
+  {
+   "key": "YBUN"
+  },
+  {
+   "key": "AAR"
+  },
+  {
+   "key": "ABC"
+  },
+  {
+   "key": "ABD"
+  },
+  {
+   "key": "AJQ"
+  },
+  {
+   "key": "ALD"
+  },
+  {
+   "key": "ALR"
+  },
+  {
+   "key": "AMC"
+  },
+  {
+   "key": "AOR"
+  },
+  {
+   "key": "APR"
+  },
+  {
+   "key": "ATC"
+  },
+  {
+   "key": "Act"
+  },
+  {
+   "key": "Add"
+  },
+  {
+   "key": "Ala"
+  },
+  {
+   "key": "Amb"
+  },
+  {
+   "key": "And"
+  },
+  {
+   "key": "Ark"
+  },
+  {
+   "key": "Atk"
+  },
+  {
+   "key": "BCR"
+  },
+  {
+   "key": "BLR"
+  },
+  {
+   "key": "Bel"
+  },
+  {
+   "key": "Bli"
+  },
+  {
+   "key": "CAQ"
+  },
+  {
+   "key": "CAR"
+  },
+  {
+   "key": "CAS"
+  },
+  {
+   "key": "CBR"
+  },
+  {
+   "key": "CCC"
+  },
+  {
+   "key": "CCL"
+  },
+  {
+   "key": "CEB"
+  },
+  {
+   "key": "CER"
+  },
+  {
+   "key": "CJQ"
+  },
+  {
+   "key": "CJS"
+  },
+  {
+   "key": "CLD"
+  },
+  {
+   "key": "CLL"
+  },
+  {
+   "key": "CLP"
+  },
+  {
+   "key": "CLR"
+  },
+  {
+   "key": "CMR"
+  },
+  {
+   "key": "CPC"
+  },
+  {
+   "key": "CPD"
+  },
+  {
+   "key": "CPI"
+  },
+  {
+   "key": "CPR"
+  },
+  {
+   "key": "CRC"
+  },
+  {
+   "key": "CRD"
+  },
+  {
+   "key": "CRR"
+  },
+  {
+   "key": "CRT"
+  },
+  {
+   "key": "CSD"
+  },
+  {
+   "key": "CSP"
+  },
+  {
+   "key": "CTC"
+  },
+  {
+   "key": "CTR"
+  },
+  {
+   "key": "Cal"
+  },
+  {
+   "key": "Com"
+  },
+  {
+   "key": "Cox"
+  },
+  {
+   "key": "Cun"
+  },
+  {
+   "key": "DCA"
+  },
+  {
+   "key": "DJC"
+  },
+  {
+   "key": "DJG"
+  },
+  {
+   "key": "DLR"
+  },
+  {
+   "key": "DTC"
+  },
+  {
+   "key": "Dan"
+  },
+  {
+   "key": "Den"
+  },
+  {
+   "key": "Dow"
+  },
+  {
+   "key": "ECR"
+  },
+  {
+   "key": "ELR"
+  },
+  {
+   "key": "ETR"
+  },
+  {
+   "key": "Edw"
+  },
+  {
+   "key": "Esp"
+  },
+  {
+   "key": "FCR"
+  },
+  {
+   "key": "FLD"
+  },
+  {
+   "key": "FLR"
+  },
+  {
+   "key": "FPR"
+  },
+  {
+   "key": "FTR"
+  },
+  {
+   "key": "FTU"
+  },
+  {
+   "key": "Fam"
+  },
+  {
+   "key": "GLR"
+  },
+  {
+   "key": "GTC"
+  },
+  {
+   "key": "Gow"
+  },
+  {
+   "key": "Het"
+  },
+  {
+   "key": "Hob"
+  },
+  {
+   "key": "Hut"
+  },
+  {
+   "key": "IAR"
+  },
+  {
+   "key": "ICC"
+  },
+  {
+   "key": "ICR"
+  },
+  {
+   "key": "ILM"
+  },
+  {
+   "key": "ILR"
+  },
+  {
+   "key": "IPJ"
+  },
+  {
+   "key": "JCP"
+  },
+  {
+   "key": "JDI"
+  },
+  {
+   "key": "JOC"
+  },
+  {
+   "key": "JOD"
+  },
+  {
+   "key": "JOL"
+  },
+  {
+   "key": "Jac"
+  },
+  {
+   "key": "KLR"
+  },
+  {
+   "key": "Kay"
+  },
+  {
+   "key": "LAC"
+  },
+  {
+   "key": "LAR"
+  },
+  {
+   "key": "LCR"
+  },
+  {
+   "key": "LHR"
+  },
+  {
+   "key": "Lee"
+  },
+  {
+   "key": "Leo"
+  },
+  {
+   "key": "Lev"
+  },
+  {
+   "key": "Ley"
+  },
+  {
+   "key": "Lit"
+  },
+  {
+   "key": "Lut"
+  },
+  {
+   "key": "MCC"
+  },
+  {
+   "key": "MCD"
+  },
+  {
+   "key": "MCR"
+  },
+  {
+   "key": "MLJ"
+  },
+  {
+   "key": "MPR"
+  },
+  {
+   "key": "MVR"
+  },
+  {
+   "key": "Mer"
+  },
+  {
+   "key": "Mod"
+  },
+  {
+   "key": "Mos"
+  },
+  {
+   "key": "NBR"
+  },
+  {
+   "key": "NLR"
+  },
+  {
+   "key": "NSR"
+  },
+  {
+   "key": "NTJ"
+  },
+  {
+   "key": "NTR"
+  },
+  {
+   "key": "Noy"
+  },
+  {
+   "key": "OAC"
+  },
+  {
+   "key": "OAR"
+  },
+  {
+   "key": "OJD"
+  },
+  {
+   "key": "OJI"
+  },
+  {
+   "key": "OJL"
+  },
+  {
+   "key": "OLR"
+  },
+  {
+   "key": "OPR"
+  },
+  {
+   "key": "OWN"
+  },
+  {
+   "key": "OWR"
+  },
+  {
+   "key": "PEI"
+  },
+  {
+   "key": "PER"
+  },
+  {
+   "key": "PPR"
+  },
+  {
+   "key": "Pop"
+  },
+  {
+   "key": "QAC"
+  },
+  {
+   "key": "QBD"
+  },
+  {
+   "key": "QLR"
+  },
+  {
+   "key": "QPR"
+  },
+  {
+   "key": "RAC"
+  },
+  {
+   "key": "RAT"
+  },
+  {
+   "key": "RCF"
+  },
+  {
+   "key": "RCS"
+  },
+  {
+   "key": "RDJ"
+  },
+  {
+   "key": "RDT"
+  },
+  {
+   "key": "REJ"
+  },
+  {
+   "key": "RFD"
+  },
+  {
+   "key": "RFL"
+  },
+  {
+   "key": "RGD"
+  },
+  {
+   "key": "RIE"
+  },
+  {
+   "key": "RJQ"
+  },
+  {
+   "key": "RJT"
+  },
+  {
+   "key": "RLR"
+  },
+  {
+   "key": "RPC"
+  },
+  {
+   "key": "RPQ"
+  },
+  {
+   "key": "RPR"
+  },
+  {
+   "key": "RTC"
+  },
+  {
+   "key": "SAG"
+  },
+  {
+   "key": "SCR"
+  },
+  {
+   "key": "SLT"
+  },
+  {
+   "key": "STR"
+  },
+  {
+   "key": "Sav"
+  },
+  {
+   "key": "Say"
+  },
+  {
+   "key": "Sid"
+  },
+  {
+   "key": "Sim"
+  },
+  {
+   "key": "Str"
+  },
+  {
+   "key": "Sty"
+  },
+  {
+   "key": "TAQ"
+  },
+  {
+   "key": "TBR"
+  },
+  {
+   "key": "TCD"
+  },
+  {
+   "key": "TLR"
+  },
+  {
+   "key": "TMR"
+  },
+  {
+   "key": "TTC"
+  },
+  {
+   "key": "TTJ"
+  },
+  {
+   "key": "TTR"
+  },
+  {
+   "key": "VLR"
+  },
+  {
+   "key": "WAC"
+  },
+  {
+   "key": "WAR"
+  },
+  {
+   "key": "WCB"
+  },
+  {
+   "key": "WLR"
+  },
+  {
+   "key": "WWR"
+  },
+  {
+   "key": "Yel"
+  },
+  {
+   "key": "You"
+  },
+  {
+   "key": "ZUG"
+  },
+  {
+   "key": "AC"
+  },
+  {
+   "key": "AD"
+  },
+  {
+   "key": "AR"
+  },
+  {
+   "key": "Al"
+  },
+  {
+   "key": "BR"
+  },
+  {
+   "key": "CA"
+  },
+  {
+   "key": "CB"
+  },
+  {
+   "key": "CP"
+  },
+  {
+   "key": "CR"
+  },
+  {
+   "key": "CS"
+  },
+  {
+   "key": "CT"
+  },
+  {
+   "key": "Ch"
+  },
+  {
+   "key": "DA"
+  },
+  {
+   "key": "DC"
+  },
+  {
+   "key": "DP"
+  },
+  {
+   "key": "Dy"
+  },
+  {
+   "key": "ER"
+  },
+  {
+   "key": "IR"
+  },
+  {
+   "key": "JM"
+  },
+  {
+   "key": "KB"
+  },
+  {
+   "key": "Kn"
+  },
+  {
+   "key": "LN"
+  },
+  {
+   "key": "LS"
+  },
+  {
+   "key": "MC"
+  },
+  {
+   "key": "NE"
+  },
+  {
+   "key": "NI"
+  },
+  {
+   "key": "NR"
+  },
+  {
+   "key": "NW"
+  },
+  {
+   "key": "NY"
+  },
+  {
+   "key": "OR"
+  },
+  {
+   "key": "Ow"
+  },
+  {
+   "key": "PD"
+  },
+  {
+   "key": "PL"
+  },
+  {
+   "key": "Ph"
+  },
+  {
+   "key": "QB"
+  },
+  {
+   "key": "QR"
+  },
+  {
+   "key": "RB"
+  },
+  {
+   "key": "RI"
+  },
+  {
+   "key": "RL"
+  },
+  {
+   "key": "RR"
+  },
+  {
+   "key": "RS"
+  },
+  {
+   "key": "SE"
+  },
+  {
+   "key": "SW"
+  },
+  {
+   "key": "So"
+  },
+  {
+   "key": "TE"
+  },
+  {
+   "key": "TJ"
+  },
+  {
+   "key": "TR"
+  },
+  {
+   "key": "US"
+  },
+  {
+   "key": "VR"
+  },
+  {
+   "key": "YR"
+  },
+  {
+   "key": "A"
+  },
+  {
+   "key": "D"
+  },
+  {
+   "key": "F"
+  },
+  {
+   "key": "P"
+  }
+ ]
+}

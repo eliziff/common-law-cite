@@ -1,0 +1,88 @@
+{
+ "source": {
+  "repo": "legal-pinpointer",
+  "path": "a2aj-index/src/page.mjs",
+  "table": "COURTS",
+  "commit": "39d85cfcd5cfd24497ba85f0654f0fae20cb44e2",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "SCC",
+   "name": "Supreme Court of Canada"
+  },
+  {
+   "key": "FCA",
+   "name": "Federal Court of Appeal"
+  },
+  {
+   "key": "FC",
+   "name": "Federal Court"
+  },
+  {
+   "key": "CMAC",
+   "name": "Court Martial Appeal Court"
+  },
+  {
+   "key": "CHRT",
+   "name": "Canadian Human Rights Tribunal"
+  },
+  {
+   "key": "CT",
+   "name": "Competition Tribunal"
+  },
+  {
+   "key": "SCT",
+   "name": "Specific Claims Tribunal"
+  },
+  {
+   "key": "RAD",
+   "name": "Refugee Appeal Division"
+  },
+  {
+   "key": "RPD",
+   "name": "Refugee Protection Division"
+  },
+  {
+   "key": "RLLR",
+   "name": "Refugee Law Lab Reporter"
+  },
+  {
+   "key": "ONCA",
+   "name": "Ontario Court of Appeal"
+  },
+  {
+   "key": "BCCA",
+   "name": "BC Court of Appeal"
+  },
+  {
+   "key": "BCSC",
+   "name": "BC Supreme Court"
+  },
+  {
+   "key": "NSCA",
+   "name": "NS Court of Appeal"
+  },
+  {
+   "key": "NSSC",
+   "name": "NS Supreme Court"
+  },
+  {
+   "key": "NSPC",
+   "name": "NS Provincial Court"
+  },
+  {
+   "key": "NSFC",
+   "name": "NS Family Court"
+  },
+  {
+   "key": "NSSM",
+   "name": "NS Small Claims"
+  },
+  {
+   "key": "YKCA",
+   "name": "Yukon Court of Appeal"
+  }
+ ]
+}

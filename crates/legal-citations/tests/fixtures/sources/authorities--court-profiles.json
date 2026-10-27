@@ -1,0 +1,28 @@
+{
+ "source": {
+  "repo": "AuthoritiesHelper",
+  "path": "web/court-profiles.json",
+  "table": "profiles",
+  "commit": "864ebde085ec9a9536812e2ee1b2e9be7623a1db",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "abkb",
+   "name": "Alberta Court of King’s Bench"
+  },
+  {
+   "key": "abca",
+   "name": "Alberta Court of Appeal"
+  },
+  {
+   "key": "fc",
+   "name": "Federal Court"
+  },
+  {
+   "key": "fca",
+   "name": "Federal Court of Appeal"
+  }
+ ]
+}

@@ -1,0 +1,1652 @@
+{
+ "source": {
+  "repo": "legal-pinpointer",
+  "path": "canlii-courts.js",
+  "table": "routes",
+  "commit": "39d85cfcd5cfd24497ba85f0654f0fae20cb44e2",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "court",
+ "entries": [
+  {
+   "key": "ABAER",
+   "canlii": "ab/abaer"
+  },
+  {
+   "key": "ABCA",
+   "canlii": "ab/abca"
+  },
+  {
+   "key": "ABCGYARB",
+   "canlii": "ab/abcgyarb"
+  },
+  {
+   "key": "ABCI",
+   "canlii": "ab/abci"
+  },
+  {
+   "key": "ABCJ",
+   "canlii": "ab/abcj"
+  },
+  {
+   "key": "ABCPA",
+   "canlii": "ab/abcpa"
+  },
+  {
+   "key": "ABCPSDC",
+   "canlii": "ab/abcpsdc"
+  },
+  {
+   "key": "ABCPT",
+   "canlii": "ab/abcpt"
+  },
+  {
+   "key": "ABCTIAB",
+   "canlii": "ab/abctiab"
+  },
+  {
+   "key": "ABEAB",
+   "canlii": "ab/abeab"
+  },
+  {
+   "key": "ABECARB",
+   "canlii": "ab/abecarb"
+  },
+  {
+   "key": "ABELARB",
+   "canlii": "ab/abelarb"
+  },
+  {
+   "key": "ABESAB",
+   "canlii": "ab/abesab"
+  },
+  {
+   "key": "ABESDAB",
+   "canlii": "ab/abesdab"
+  },
+  {
+   "key": "ABGAA",
+   "canlii": "ab/abgaa"
+  },
+  {
+   "key": "ABHRAAT",
+   "canlii": "ab/abhraat"
+  },
+  {
+   "key": "ABKB",
+   "canlii": "ab/abkb"
+  },
+  {
+   "key": "ABLCB",
+   "canlii": "ab/ablcb"
+  },
+  {
+   "key": "ABLCSAB",
+   "canlii": "ab/ablcsab"
+  },
+  {
+   "key": "ABLERB",
+   "canlii": "ab/ablerb"
+  },
+  {
+   "key": "ABLPRT",
+   "canlii": "ab/ablprt"
+  },
+  {
+   "key": "ABLS",
+   "canlii": "ab/abls"
+  },
+  {
+   "key": "ABMGB",
+   "canlii": "ab/abmgb"
+  },
+  {
+   "key": "ABOHSAB",
+   "canlii": "ab/abohsab"
+  },
+  {
+   "key": "ABOIPC",
+   "canlii": "ab/aboipc"
+  },
+  {
+   "key": "ABPC",
+   "canlii": "ab/abpc"
+  },
+  {
+   "key": "ABPLAB",
+   "canlii": "ab/abplab"
+  },
+  {
+   "key": "ABQB",
+   "canlii": "ab/abqb"
+  },
+  {
+   "key": "ABRECA",
+   "canlii": "ab/abreca"
+  },
+  {
+   "key": "ABRTDRS",
+   "canlii": "ab/abrtdrs"
+  },
+  {
+   "key": "ABSEC",
+   "canlii": "ab/absec"
+  },
+  {
+   "key": "ABSRA",
+   "canlii": "ab/absra"
+  },
+  {
+   "key": "ABSRB",
+   "canlii": "ab/absrb"
+  },
+  {
+   "key": "ABTSB",
+   "canlii": "ab/abtsb"
+  },
+  {
+   "key": "ABWCAC",
+   "canlii": "ab/abwcac"
+  },
+  {
+   "key": "AHRC",
+   "canlii": "ab/ahrc"
+  },
+  {
+   "key": "ALRB",
+   "canlii": "ab/alrb"
+  },
+  {
+   "key": "HRTO",
+   "canlii": "on/onhrt"
+  },
+  {
+   "key": "BCCA",
+   "canlii": "bc/bcca"
+  },
+  {
+   "key": "BCCCALAB",
+   "canlii": "bc/bcccalab"
+  },
+  {
+   "key": "BCCDS",
+   "canlii": "bc/bccds"
+  },
+  {
+   "key": "BCCNM",
+   "canlii": "bc/bccnm"
+  },
+  {
+   "key": "BCCPS",
+   "canlii": "bc/bccps"
+  },
+  {
+   "key": "BCCRT",
+   "canlii": "bc/bccrt"
+  },
+  {
+   "key": "BCCTC",
+   "canlii": "bc/bcctc"
+  },
+  {
+   "key": "BCEAB",
+   "canlii": "bc/bceab"
+  },
+  {
+   "key": "BCEGBC",
+   "canlii": "bc/bcegbc"
+  },
+  {
+   "key": "BCERAT",
+   "canlii": "bc/bcerat"
+  },
+  {
+   "key": "BCEST",
+   "canlii": "bc/bcest"
+  },
+  {
+   "key": "BCFAC",
+   "canlii": "bc/bcfac"
+  },
+  {
+   "key": "BCFST",
+   "canlii": "bc/bcfst"
+  },
+  {
+   "key": "BCHAB",
+   "canlii": "bc/bchab"
+  },
+  {
+   "key": "BCHPRB",
+   "canlii": "bc/bchprb"
+  },
+  {
+   "key": "BCHRT",
+   "canlii": "bc/bchrt"
+  },
+  {
+   "key": "BCIPC",
+   "canlii": "bc/bcipc"
+  },
+  {
+   "key": "BCLA",
+   "canlii": "bc/bcla"
+  },
+  {
+   "key": "BCLCRB",
+   "canlii": "bc/bclcrb"
+  },
+  {
+   "key": "BCLRB",
+   "canlii": "bc/bclrb"
+  },
+  {
+   "key": "BCORL",
+   "canlii": "bc/bcorl"
+  },
+  {
+   "key": "BCPAAB",
+   "canlii": "bc/bcpaab"
+  },
+  {
+   "key": "BCPC",
+   "canlii": "bc/bcpc"
+  },
+  {
+   "key": "BCRB",
+   "canlii": "bc/bcrb"
+  },
+  {
+   "key": "BCREC",
+   "canlii": "bc/bcrec"
+  },
+  {
+   "key": "BCRMB",
+   "canlii": "bc/bcrmb"
+  },
+  {
+   "key": "BCSC",
+   "canlii": "bc/bcsc"
+  },
+  {
+   "key": "BCSEC",
+   "canlii": "bc/bcsec"
+  },
+  {
+   "key": "BCSFI",
+   "canlii": "bc/bcsfi"
+  },
+  {
+   "key": "BCSP",
+   "canlii": "bc/bcsp"
+  },
+  {
+   "key": "BCSRE",
+   "canlii": "bc/bcsre"
+  },
+  {
+   "key": "BCSTAB",
+   "canlii": "bc/bcstab"
+  },
+  {
+   "key": "BCWCAT",
+   "canlii": "bc/bwcwcat"
+  },
+  {
+   "key": "CACI",
+   "canlii": "ca/caci"
+  },
+  {
+   "key": "CACP",
+   "canlii": "ca/cacp"
+  },
+  {
+   "key": "CACT",
+   "canlii": "ca/cact"
+  },
+  {
+   "key": "CALA",
+   "canlii": "ca/cala"
+  },
+  {
+   "key": "CAMFDA",
+   "canlii": "ca/camfda"
+  },
+  {
+   "key": "CART",
+   "canlii": "ca/cart"
+  },
+  {
+   "key": "CB",
+   "canlii": "ca/cb"
+  },
+  {
+   "key": "CBSC",
+   "canlii": "ca/cbsc"
+  },
+  {
+   "key": "CER",
+   "canlii": "ca/cer"
+  },
+  {
+   "key": "CGYSDAB",
+   "canlii": "ab/cgysdab"
+  },
+  {
+   "key": "CHRT",
+   "canlii": "ca/chrt"
+  },
+  {
+   "key": "CICC",
+   "canlii": "ca/cicc"
+  },
+  {
+   "key": "CIRB",
+   "canlii": "ca/cirb"
+  },
+  {
+   "key": "CIRO",
+   "canlii": "ca/ciro"
+  },
+  {
+   "key": "CITT",
+   "canlii": "ca/citt"
+  },
+  {
+   "key": "CM",
+   "canlii": "ca/cm"
+  },
+  {
+   "key": "CMAC",
+   "canlii": "ca/cmac"
+  },
+  {
+   "key": "CPATA",
+   "canlii": "ca/cpata"
+  },
+  {
+   "key": "EPTC",
+   "canlii": "ca/eptc"
+  },
+  {
+   "key": "EXCH",
+   "canlii": "ca/exch"
+  },
+  {
+   "key": "FC",
+   "canlii": "ca/fct"
+  },
+  {
+   "key": "FCA",
+   "canlii": "ca/fca"
+  },
+  {
+   "key": "FOREP",
+   "canlii": "ca/forep"
+  },
+  {
+   "key": "FPCA",
+   "canlii": "ca/fpca"
+  },
+  {
+   "key": "IIROC",
+   "canlii": "ca/iiroc"
+  },
+  {
+   "key": "IRB",
+   "canlii": "ca/irb"
+  },
+  {
+   "key": "LSBC",
+   "canlii": "bc/lsbc"
+  },
+  {
+   "key": "MBCA",
+   "canlii": "mb/mbca"
+  },
+  {
+   "key": "MBCPSDC",
+   "canlii": "mb/mbcpsdc"
+  },
+  {
+   "key": "MBHAB",
+   "canlii": "mb/mbhab"
+  },
+  {
+   "key": "MBHRC",
+   "canlii": "mb/mbhrc"
+  },
+  {
+   "key": "MBKB",
+   "canlii": "mb/mbkb"
+  },
+  {
+   "key": "MBLA",
+   "canlii": "mb/mbla"
+  },
+  {
+   "key": "MBLB",
+   "canlii": "mb/mblb"
+  },
+  {
+   "key": "MBLS",
+   "canlii": "mb/mbls"
+  },
+  {
+   "key": "MBPC",
+   "canlii": "mb/mbpc"
+  },
+  {
+   "key": "MBQB",
+   "canlii": "mb/mbqb"
+  },
+  {
+   "key": "MBSEC",
+   "canlii": "mb/mbsec"
+  },
+  {
+   "key": "NBAPAB",
+   "canlii": "nb/nbapab"
+  },
+  {
+   "key": "NBBIHRA",
+   "canlii": "nb/nbbihra"
+  },
+  {
+   "key": "NBBR",
+   "canlii": "nb/NBQB"
+  },
+  {
+   "key": "NBCA",
+   "canlii": "nb/nbca"
+  },
+  {
+   "key": "NBCPH",
+   "canlii": "nb/nbcph"
+  },
+  {
+   "key": "NBEUB",
+   "canlii": "nb/nbeub"
+  },
+  {
+   "key": "NBFCSC",
+   "canlii": "nb/nbfcsc"
+  },
+  {
+   "key": "NBFCST",
+   "canlii": "nb/nbfcst"
+  },
+  {
+   "key": "NBKB",
+   "canlii": "nb/nbkb"
+  },
+  {
+   "key": "NBLA",
+   "canlii": "nb/nbla"
+  },
+  {
+   "key": "NBLEB",
+   "canlii": "nb/nbleb"
+  },
+  {
+   "key": "NBLSB",
+   "canlii": "nb/nblsb"
+  },
+  {
+   "key": "NBOMBUD",
+   "canlii": "nb/nbombud"
+  },
+  {
+   "key": "NBPC",
+   "canlii": "nb/nbpc"
+  },
+  {
+   "key": "NBQB",
+   "canlii": "nb/nbqb"
+  },
+  {
+   "key": "NBREA",
+   "canlii": "nb/nbrea"
+  },
+  {
+   "key": "NBSM",
+   "canlii": "nb/nbs"
+  },
+  {
+   "key": "NBWCAT",
+   "canlii": "nb/nbwcat"
+  },
+  {
+   "key": "NLCA",
+   "canlii": "nl/nlca"
+  },
+  {
+   "key": "NLCP",
+   "canlii": "nl/nlcp"
+  },
+  {
+   "key": "NLCPS",
+   "canlii": "nl/nlcps"
+  },
+  {
+   "key": "NLHRC",
+   "canlii": "nl/nlhrc"
+  },
+  {
+   "key": "NLIPC",
+   "canlii": "nl/nlipc"
+  },
+  {
+   "key": "NLLA",
+   "canlii": "nl/nlla"
+  },
+  {
+   "key": "NLLRB",
+   "canlii": "nl/nllrb"
+  },
+  {
+   "key": "NLLS",
+   "canlii": "nl/nlls"
+  },
+  {
+   "key": "NLPC",
+   "canlii": "nl/nlpc"
+  },
+  {
+   "key": "NLSC",
+   "canlii": "nl/nlsc"
+  },
+  {
+   "key": "NSAWAB",
+   "canlii": "ns/nsawab"
+  },
+  {
+   "key": "NSBS",
+   "canlii": "ns/nsbs"
+  },
+  {
+   "key": "NSCA",
+   "canlii": "ns/nsca"
+  },
+  {
+   "key": "NSCPS",
+   "canlii": "ns/nscps"
+  },
+  {
+   "key": "NSERBT",
+   "canlii": "ns/nserbt"
+  },
+  {
+   "key": "NSFC",
+   "canlii": "ns/nsfc"
+  },
+  {
+   "key": "NSHRC",
+   "canlii": "ns/nshrc"
+  },
+  {
+   "key": "NSLA",
+   "canlii": "ns/nsla"
+  },
+  {
+   "key": "NSLB",
+   "canlii": "ns/nslb"
+  },
+  {
+   "key": "NSLRB",
+   "canlii": "ns/nsrb"
+  },
+  {
+   "key": "NSLST",
+   "canlii": "ns/nslst"
+  },
+  {
+   "key": "NSOHSAP",
+   "canlii": "ns/nsohsap"
+  },
+  {
+   "key": "NSOIPC",
+   "canlii": "ns/nsoipc"
+  },
+  {
+   "key": "NSPC",
+   "canlii": "ns/nspc"
+  },
+  {
+   "key": "NSPR",
+   "canlii": "ns/nspr"
+  },
+  {
+   "key": "NSPRB",
+   "canlii": "ns/nsprb"
+  },
+  {
+   "key": "NSSC",
+   "canlii": "ns/nssc"
+  },
+  {
+   "key": "NSSEC",
+   "canlii": "ns/nssec"
+  },
+  {
+   "key": "NSSF",
+   "canlii": "ns/nssf"
+  },
+  {
+   "key": "NSSIRT",
+   "canlii": "ns/nssirt"
+  },
+  {
+   "key": "NSSM",
+   "canlii": "ns/nssm"
+  },
+  {
+   "key": "NSWCAT",
+   "canlii": "ns/nswcat"
+  },
+  {
+   "key": "NTAAT",
+   "canlii": "nt/ntaat"
+  },
+  {
+   "key": "NTCA",
+   "canlii": "nt/ntca"
+  },
+  {
+   "key": "NTESA",
+   "canlii": "nt/ntesa"
+  },
+  {
+   "key": "NTHRAP",
+   "canlii": "nt/nthrap"
+  },
+  {
+   "key": "NTIPC",
+   "canlii": "nt/ntipc"
+  },
+  {
+   "key": "NTLA",
+   "canlii": "nt/ntla"
+  },
+  {
+   "key": "NTLLB",
+   "canlii": "nt/ntllb"
+  },
+  {
+   "key": "NTLS",
+   "canlii": "nt/ntls"
+  },
+  {
+   "key": "NTRO",
+   "canlii": "nt/ntro"
+  },
+  {
+   "key": "NTSC",
+   "canlii": "nt/ntsc"
+  },
+  {
+   "key": "NTSEC",
+   "canlii": "nt/ntsec"
+  },
+  {
+   "key": "NTTC",
+   "canlii": "nt/nttc"
+  },
+  {
+   "key": "NTWCAT",
+   "canlii": "nt/ntwcat"
+  },
+  {
+   "key": "NTYDAB",
+   "canlii": "nt/ntyadab"
+  },
+  {
+   "key": "NTYJC",
+   "canlii": "nt/ntyjc"
+  },
+  {
+   "key": "NUCA",
+   "canlii": "nu/nuca"
+  },
+  {
+   "key": "NUCJ",
+   "canlii": "nu/nucj"
+  },
+  {
+   "key": "NUHRT",
+   "canlii": "nu/nuhrt"
+  },
+  {
+   "key": "NUIPC",
+   "canlii": "nu/nuipc"
+  },
+  {
+   "key": "NULA",
+   "canlii": "nu/nula"
+  },
+  {
+   "key": "NULS",
+   "canlii": "nu/nuls"
+  },
+  {
+   "key": "NUSEC",
+   "canlii": "nu/nusec"
+  },
+  {
+   "key": "NUWCAT",
+   "canlii": "nu/nuwcat"
+  },
+  {
+   "key": "OHSTC",
+   "canlii": "ca/ohstc"
+  },
+  {
+   "key": "OIC",
+   "canlii": "ca/oic"
+  },
+  {
+   "key": "ONACRB",
+   "canlii": "on/onacrb"
+  },
+  {
+   "key": "ONAFRAAT",
+   "canlii": "on/onafraat"
+  },
+  {
+   "key": "ONAGC",
+   "canlii": "on/onagc"
+  },
+  {
+   "key": "ONAPE",
+   "canlii": "on/onape"
+  },
+  {
+   "key": "ONARB",
+   "canlii": "on/onarb"
+  },
+  {
+   "key": "ONASLPDT",
+   "canlii": "on/onaslpdt"
+  },
+  {
+   "key": "ONBCC",
+   "canlii": "on/onbcc"
+  },
+  {
+   "key": "ONCA",
+   "canlii": "on/onca"
+  },
+  {
+   "key": "ONCAT",
+   "canlii": "on/oncat"
+  },
+  {
+   "key": "ONCCB",
+   "canlii": "on/onccb"
+  },
+  {
+   "key": "ONCDHO",
+   "canlii": "on/oncdho"
+  },
+  {
+   "key": "ONCECE",
+   "canlii": "on/oncece"
+  },
+  {
+   "key": "ONCFSRB",
+   "canlii": "on/oncfsrb"
+  },
+  {
+   "key": "ONCICB",
+   "canlii": "on/oncicb"
+  },
+  {
+   "key": "ONCJ",
+   "canlii": "on/oncj"
+  },
+  {
+   "key": "ONCMT",
+   "canlii": "on/oncmt"
+  },
+  {
+   "key": "ONCNO",
+   "canlii": "on/oncno"
+  },
+  {
+   "key": "ONCO",
+   "canlii": "on/onco"
+  },
+  {
+   "key": "ONCONRB",
+   "canlii": "on/onconrb"
+  },
+  {
+   "key": "ONCPA",
+   "canlii": "on/oncpa"
+  },
+  {
+   "key": "ONCPC",
+   "canlii": "on/oncpc"
+  },
+  {
+   "key": "ONCPD",
+   "canlii": "on/oncpd"
+  },
+  {
+   "key": "ONCPDC",
+   "canlii": "on/oncpdc"
+  },
+  {
+   "key": "ONCPDT",
+   "canlii": "on/oncpdt"
+  },
+  {
+   "key": "ONCPO",
+   "canlii": "on/oncpo"
+  },
+  {
+   "key": "ONCRB",
+   "canlii": "on/oncrb"
+  },
+  {
+   "key": "ONCSWSSW",
+   "canlii": "on/oncswssw"
+  },
+  {
+   "key": "ONCTCMPAO",
+   "canlii": "on/onctcmpao"
+  },
+  {
+   "key": "ONCVO",
+   "canlii": "on/oncvo"
+  },
+  {
+   "key": "ONDR",
+   "canlii": "on/ondr"
+  },
+  {
+   "key": "ONERT",
+   "canlii": "on/onert"
+  },
+  {
+   "key": "ONFSC",
+   "canlii": "on/onfsc"
+  },
+  {
+   "key": "ONFSCDRS",
+   "canlii": "on/onfscdrs"
+  },
+  {
+   "key": "ONFST",
+   "canlii": "on/onfst"
+  },
+  {
+   "key": "ONGSB",
+   "canlii": "on/ongsb"
+  },
+  {
+   "key": "ONHPARB",
+   "canlii": "on/onhparb"
+  },
+  {
+   "key": "ONHRAP",
+   "canlii": "on/onhrap"
+  },
+  {
+   "key": "ONHRT",
+   "canlii": "on/onhrt"
+  },
+  {
+   "key": "ONHSARB",
+   "canlii": "on/onhsarb"
+  },
+  {
+   "key": "ONIPC",
+   "canlii": "on/onipc"
+  },
+  {
+   "key": "ONLA",
+   "canlii": "on/onla"
+  },
+  {
+   "key": "ONLAT",
+   "canlii": "on/onlat"
+  },
+  {
+   "key": "ONLPAT",
+   "canlii": "on/onlpat"
+  },
+  {
+   "key": "ONLRB",
+   "canlii": "on/onlrb"
+  },
+  {
+   "key": "ONLST",
+   "canlii": "on/onlst"
+  },
+  {
+   "key": "ONLT",
+   "canlii": "on/onlt"
+  },
+  {
+   "key": "ONLTB",
+   "canlii": "on/onltb"
+  },
+  {
+   "key": "ONMIC",
+   "canlii": "on/onmic"
+  },
+  {
+   "key": "ONMLT",
+   "canlii": "on/onmlt"
+  },
+  {
+   "key": "ONMTDT",
+   "canlii": "on/onmtdt"
+  },
+  {
+   "key": "ONNFPPB",
+   "canlii": "on/onnfppb"
+  },
+  {
+   "key": "ONOCT",
+   "canlii": "on/onoct"
+  },
+  {
+   "key": "ONOMBUD",
+   "canlii": "on/onombud"
+  },
+  {
+   "key": "ONOTDT",
+   "canlii": "on/onotdt"
+  },
+  {
+   "key": "ONPEHT",
+   "canlii": "on/onpeht"
+  },
+  {
+   "key": "ONPPRB",
+   "canlii": "on/onpprb"
+  },
+  {
+   "key": "ONPSDT",
+   "canlii": "on/onpsdt"
+  },
+  {
+   "key": "ONPSGB",
+   "canlii": "on/onpsgb"
+  },
+  {
+   "key": "ONRB",
+   "canlii": "on/onrb"
+  },
+  {
+   "key": "ONRC",
+   "canlii": "on/onrc"
+  },
+  {
+   "key": "ONRCDSO",
+   "canlii": "on/onrcdso"
+  },
+  {
+   "key": "ONRPDT",
+   "canlii": "on/onrpdt"
+  },
+  {
+   "key": "ONSBT",
+   "canlii": "on/onsbt"
+  },
+  {
+   "key": "ONSC",
+   "canlii": "on/onsc"
+  },
+  {
+   "key": "ONSCDC",
+   "canlii": "on/onscdc"
+  },
+  {
+   "key": "ONSCSM",
+   "canlii": "on/onscsm"
+  },
+  {
+   "key": "ONSEC",
+   "canlii": "on/onsec"
+  },
+  {
+   "key": "ONSET",
+   "canlii": "on/onset"
+  },
+  {
+   "key": "ONST",
+   "canlii": "on/onst"
+  },
+  {
+   "key": "ONTLAB",
+   "canlii": "on/ontlab"
+  },
+  {
+   "key": "ONWSIAT",
+   "canlii": "on/onwsiat"
+  },
+  {
+   "key": "ONWSIB",
+   "canlii": "on/onwsib"
+  },
+  {
+   "key": "PCC",
+   "canlii": "ca/pcc"
+  },
+  {
+   "key": "PEC",
+   "canlii": "ca/pec"
+  },
+  {
+   "key": "PEIHRC",
+   "canlii": "pe/peihrc"
+  },
+  {
+   "key": "PEIPC",
+   "canlii": "pe/peipc"
+  },
+  {
+   "key": "PEIRAC",
+   "canlii": "pe/peirac"
+  },
+  {
+   "key": "PELA",
+   "canlii": "pe/pela"
+  },
+  {
+   "key": "PELRB",
+   "canlii": "pe/pelrb"
+  },
+  {
+   "key": "PEPC",
+   "canlii": "pe/pepc"
+  },
+  {
+   "key": "PESCAD",
+   "canlii": "pe/pescad"
+  },
+  {
+   "key": "PESCTD",
+   "canlii": "pe/pesctd"
+  },
+  {
+   "key": "PSDPT",
+   "canlii": "ca/psdpt"
+  },
+  {
+   "key": "PSLREB",
+   "canlii": "ca/pslreb"
+  },
+  {
+   "key": "PSSRB",
+   "canlii": "ca/pssrb"
+  },
+  {
+   "key": "PSST",
+   "canlii": "ca/psst"
+  },
+  {
+   "key": "QCADMAQ",
+   "canlii": "qc/qcadmaq"
+  },
+  {
+   "key": "QCAGQ",
+   "canlii": "qc/qcagq"
+  },
+  {
+   "key": "QCAMF",
+   "canlii": "qc/qcamf"
+  },
+  {
+   "key": "QCAMP",
+   "canlii": "qc/qcamp"
+  },
+  {
+   "key": "QCCA",
+   "canlii": "qc/qcca"
+  },
+  {
+   "key": "QCCAI",
+   "canlii": "qc/qccai"
+  },
+  {
+   "key": "QCCALP",
+   "canlii": "qc/qccalp"
+  },
+  {
+   "key": "QCCDBQ",
+   "canlii": "qc/qccdbq"
+  },
+  {
+   "key": "QCCDCCOQ",
+   "canlii": "qc/qccdccoq"
+  },
+  {
+   "key": "QCCDCHAD",
+   "canlii": "qc/qccdchad"
+  },
+  {
+   "key": "QCCDCM",
+   "canlii": "qc/qccdcm"
+  },
+  {
+   "key": "QCCDCRIM",
+   "canlii": "qc/qccdcrim"
+  },
+  {
+   "key": "QCCDCSF",
+   "canlii": "qc/qccdcsf"
+  },
+  {
+   "key": "QCCDDTP",
+   "canlii": "qc/qccddtp"
+  },
+  {
+   "key": "QCCDHJ",
+   "canlii": "qc/qccdhj"
+  },
+  {
+   "key": "QCCDNQ",
+   "canlii": "qc/qccdnq"
+  },
+  {
+   "key": "QCCDOII",
+   "canlii": "qc/qccdoii"
+  },
+  {
+   "key": "QCCDOIIA",
+   "canlii": "qc/qccdoiia"
+  },
+  {
+   "key": "QCCDOIQ",
+   "canlii": "qc/qccdoiq"
+  },
+  {
+   "key": "QCCDOMV",
+   "canlii": "qc/qccdomv"
+  },
+  {
+   "key": "QCCDOOOQ",
+   "canlii": "qc/qccdoooq"
+  },
+  {
+   "key": "QCCDOPQ",
+   "canlii": "qc/qccdopq"
+  },
+  {
+   "key": "QCCDOSFQ",
+   "canlii": "qc/qccdosfq"
+  },
+  {
+   "key": "QCCDOTTDQ",
+   "canlii": "qc/qccdottdq"
+  },
+  {
+   "key": "QCCDPPQ",
+   "canlii": "qc/qccdppq"
+  },
+  {
+   "key": "QCCDRHRI",
+   "canlii": "qc/qccdrhri"
+  },
+  {
+   "key": "QCCES",
+   "canlii": "qc/qcces"
+  },
+  {
+   "key": "QCCFP",
+   "canlii": "qc/qccfp"
+  },
+  {
+   "key": "QCCJA",
+   "canlii": "qc/qccja"
+  },
+  {
+   "key": "QCCLP",
+   "canlii": "qc/qcclp"
+  },
+  {
+   "key": "QCCM",
+   "canlii": "qc/qccm"
+  },
+  {
+   "key": "QCCMEQ",
+   "canlii": "qc/qccmeq"
+  },
+  {
+   "key": "QCCMNQ",
+   "canlii": "qc/qccmnq"
+  },
+  {
+   "key": "QCCMPMQ",
+   "canlii": "qc/qccmpmq"
+  },
+  {
+   "key": "QCCMQ",
+   "canlii": "qc/qccmq"
+  },
+  {
+   "key": "QCCNESST",
+   "canlii": "qc/qccnesst"
+  },
+  {
+   "key": "QCCPA",
+   "canlii": "qc/qccpa"
+  },
+  {
+   "key": "QCCPTAQ",
+   "canlii": "qc/qccptaq"
+  },
+  {
+   "key": "QCCQ",
+   "canlii": "qc/qccq"
+  },
+  {
+   "key": "QCCQLC",
+   "canlii": "qc/qcqlc"
+  },
+  {
+   "key": "QCCRAAAP",
+   "canlii": "qc/qccraaap"
+  },
+  {
+   "key": "QCCRT",
+   "canlii": "qc/qccrt"
+  },
+  {
+   "key": "QCCS",
+   "canlii": "qc/qccs"
+  },
+  {
+   "key": "QCCSE",
+   "canlii": "qc/qccse"
+  },
+  {
+   "key": "QCCSJ",
+   "canlii": "qc/qccsj"
+  },
+  {
+   "key": "QCCSST",
+   "canlii": "qc/qccsst"
+  },
+  {
+   "key": "QCCT",
+   "canlii": "qc/qcct"
+  },
+  {
+   "key": "QCCTQ",
+   "canlii": "qc/qcctq"
+  },
+  {
+   "key": "QCCVM",
+   "canlii": "qc/qccvm"
+  },
+  {
+   "key": "QCLA",
+   "canlii": "qc/qcla"
+  },
+  {
+   "key": "QCOACIQ",
+   "canlii": "qc/qcoaciq"
+  },
+  {
+   "key": "QCOAGBRN",
+   "canlii": "qc/qcoagbrn"
+  },
+  {
+   "key": "QCOAGQ",
+   "canlii": "qc/qcoagq"
+  },
+  {
+   "key": "QCOAPQ",
+   "canlii": "qc/qcoapq"
+  },
+  {
+   "key": "QCOAQ",
+   "canlii": "qc/qcoaq"
+  },
+  {
+   "key": "QCOARQ",
+   "canlii": "qc/qcoarq"
+  },
+  {
+   "key": "QCOCHQ",
+   "canlii": "qc/qcochq"
+  },
+  {
+   "key": "QCOCQ",
+   "canlii": "qc/qcocq"
+  },
+  {
+   "key": "QCODLQ",
+   "canlii": "qc/qcodlq"
+  },
+  {
+   "key": "QCODQ",
+   "canlii": "qc/qcodq"
+  },
+  {
+   "key": "QCOEAQ",
+   "canlii": "qc/qcoeaq"
+  },
+  {
+   "key": "QCOEQ",
+   "canlii": "qc/qcoeq"
+  },
+  {
+   "key": "QCOHDQ",
+   "canlii": "qc/qcohdq"
+  },
+  {
+   "key": "QCOIFQ",
+   "canlii": "qc/qcoifq"
+  },
+  {
+   "key": "QCOLF",
+   "canlii": "qc/qcolf"
+  },
+  {
+   "key": "QCOOAQ",
+   "canlii": "qc/qcooaq"
+  },
+  {
+   "key": "QCOOQ",
+   "canlii": "qc/qcooq"
+  },
+  {
+   "key": "QCOPGQ",
+   "canlii": "qc/qcopgq"
+  },
+  {
+   "key": "QCOPIQ",
+   "canlii": "qc/qcopiq"
+  },
+  {
+   "key": "QCOPODQ",
+   "canlii": "qc/qcopodq"
+  },
+  {
+   "key": "QCOPPQ",
+   "canlii": "qc/qcoppq"
+  },
+  {
+   "key": "QCOPQ",
+   "canlii": "qc/qcopq"
+  },
+  {
+   "key": "QCOPSQ",
+   "canlii": "qc/qcopsq"
+  },
+  {
+   "key": "QCOTIMRO",
+   "canlii": "qc/qcotimro"
+  },
+  {
+   "key": "QCOTMQ",
+   "canlii": "qc/qcotmq"
+  },
+  {
+   "key": "QCOTPQ",
+   "canlii": "qc/qcotpq"
+  },
+  {
+   "key": "QCOTSTCFQ",
+   "canlii": "qc/qcotstcfq"
+  },
+  {
+   "key": "QCOTTIAQ",
+   "canlii": "qc/qcottiaq"
+  },
+  {
+   "key": "QCOUQ",
+   "canlii": "qc/qcouq"
+  },
+  {
+   "key": "QCRACJ",
+   "canlii": "qc/qcracj"
+  },
+  {
+   "key": "QCRBQ",
+   "canlii": "qc/qcrbq"
+  },
+  {
+   "key": "QCRDE",
+   "canlii": "qc/qcrde"
+  },
+  {
+   "key": "QCRMAAQ",
+   "canlii": "qc/qcrmaaq"
+  },
+  {
+   "key": "QCTA",
+   "canlii": "qc/qcta"
+  },
+  {
+   "key": "QCTAA",
+   "canlii": "qc/qctaa"
+  },
+  {
+   "key": "QCTADP",
+   "canlii": "qc/qctadp"
+  },
+  {
+   "key": "QCTAL",
+   "canlii": "qc/qctal"
+  },
+  {
+   "key": "QCTAQ",
+   "canlii": "qc/qctaq"
+  },
+  {
+   "key": "QCTAT",
+   "canlii": "qc/qctat"
+  },
+  {
+   "key": "QCTDP",
+   "canlii": "qc/qctdp"
+  },
+  {
+   "key": "QCTMF",
+   "canlii": "qc/qctmf"
+  },
+  {
+   "key": "QCTP",
+   "canlii": "qc/qctp"
+  },
+  {
+   "key": "QCTT",
+   "canlii": "qc/qctt"
+  },
+  {
+   "key": "SCC",
+   "canlii": "ca/scc"
+  },
+  {
+   "key": "SCC-L",
+   "canlii": "ca/scc-l"
+  },
+  {
+   "key": "SCT",
+   "canlii": "ca/sct"
+  },
+  {
+   "key": "SKAC",
+   "canlii": "sk/skac"
+  },
+  {
+   "key": "SKAIA",
+   "canlii": "sk/skia"
+  },
+  {
+   "key": "SKATMPA",
+   "canlii": "sk/skatmpa"
+  },
+  {
+   "key": "SKCA",
+   "canlii": "sk/skca"
+  },
+  {
+   "key": "SKCPPDC",
+   "canlii": "sk/skcppdc"
+  },
+  {
+   "key": "SKDC",
+   "canlii": "sk/skdc"
+  },
+  {
+   "key": "SKFCA",
+   "canlii": "sk/skfca"
+  },
+  {
+   "key": "SKHRC",
+   "canlii": "sk/skhrc"
+  },
+  {
+   "key": "SKHRT",
+   "canlii": "sk/skhrt"
+  },
+  {
+   "key": "SKIPC",
+   "canlii": "sk/skipc"
+  },
+  {
+   "key": "SKKB",
+   "canlii": "sk/skkb"
+  },
+  {
+   "key": "SKLA",
+   "canlii": "sk/skla"
+  },
+  {
+   "key": "SKLGB",
+   "canlii": "sk/sklgb"
+  },
+  {
+   "key": "SKLRB",
+   "canlii": "sk/sklrb"
+  },
+  {
+   "key": "SKLSS",
+   "canlii": "sk/sklss"
+  },
+  {
+   "key": "SKMB",
+   "canlii": "sk/skmb"
+  },
+  {
+   "key": "SKMBR",
+   "canlii": "sk/skmbr"
+  },
+  {
+   "key": "SKMT",
+   "canlii": "sk/skmt"
+  },
+  {
+   "key": "SKORT",
+   "canlii": "sk/skort"
+  },
+  {
+   "key": "SKPC",
+   "canlii": "sk/skpc"
+  },
+  {
+   "key": "SKPMB",
+   "canlii": "sk/skpmb"
+  },
+  {
+   "key": "SKQB",
+   "canlii": "sk/skqb"
+  },
+  {
+   "key": "SKREC",
+   "canlii": "sk/skrec"
+  },
+  {
+   "key": "SKSEC",
+   "canlii": "sk/sksec"
+  },
+  {
+   "key": "SKSU",
+   "canlii": "sk/sksu"
+  },
+  {
+   "key": "SKUFC",
+   "canlii": "sk/skufc"
+  },
+  {
+   "key": "SKWCBAT",
+   "canlii": "sk/skwcbat"
+  },
+  {
+   "key": "SOPF",
+   "canlii": "ca/sopf"
+  },
+  {
+   "key": "SST",
+   "canlii": "ca/sst"
+  },
+  {
+   "key": "TATC",
+   "canlii": "ca/tatc"
+  },
+  {
+   "key": "TCC",
+   "canlii": "ca/tcc"
+  },
+  {
+   "key": "TMOB",
+   "canlii": "ca/tmob"
+  },
+  {
+   "key": "UKJCPC",
+   "canlii": "ukjcpc"
+  },
+  {
+   "key": "VRAB",
+   "canlii": "ca/vrab"
+  },
+  {
+   "key": "YJCN",
+   "canlii": "nu/yjcn"
+  },
+  {
+   "key": "YKCA",
+   "canlii": "yt/ykca"
+  },
+  {
+   "key": "YKHRC",
+   "canlii": "yt/ykhrc"
+  },
+  {
+   "key": "YKSC",
+   "canlii": "yt/yksc"
+  },
+  {
+   "key": "YKSM",
+   "canlii": "yt/yksm"
+  },
+  {
+   "key": "YKTC",
+   "canlii": "yt/yktc"
+  },
+  {
+   "key": "YTLA",
+   "canlii": "yt/ytla"
+  },
+  {
+   "key": "YTPSLRB",
+   "canlii": "yt/ytpslrb"
+  },
+  {
+   "key": "YTRTO",
+   "canlii": "yt/ytrto"
+  },
+  {
+   "key": "YTTLRB",
+   "canlii": "yt/yttlrb"
+  }
+ ]
+}

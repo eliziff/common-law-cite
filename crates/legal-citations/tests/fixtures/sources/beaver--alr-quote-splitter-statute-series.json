@@ -1,0 +1,93 @@
+{
+ "source": {
+  "repo": "Beaver",
+  "path": "packages/alr-quote-splitter/deterministic_splitter.py",
+  "table": "_STATUTE_RE series",
+  "commit": "e01dd53e9a27e31b5f358f6c75b95b3d88043536",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "series",
+ "entries": [
+  {
+   "key": "RSC"
+  },
+  {
+   "key": "RSO"
+  },
+  {
+   "key": "RSA"
+  },
+  {
+   "key": "RSS"
+  },
+  {
+   "key": "RSM"
+  },
+  {
+   "key": "RSQ"
+  },
+  {
+   "key": "RSY"
+  },
+  {
+   "key": "RSBC"
+  },
+  {
+   "key": "RSNL"
+  },
+  {
+   "key": "RSNB"
+  },
+  {
+   "key": "RSNS"
+  },
+  {
+   "key": "RSPEI"
+  },
+  {
+   "key": "RSNWT"
+  },
+  {
+   "key": "SC"
+  },
+  {
+   "key": "SO"
+  },
+  {
+   "key": "SA"
+  },
+  {
+   "key": "SS"
+  },
+  {
+   "key": "SM"
+  },
+  {
+   "key": "SQ"
+  },
+  {
+   "key": "SY"
+  },
+  {
+   "key": "SBC"
+  },
+  {
+   "key": "SNL"
+  },
+  {
+   "key": "SNB"
+  },
+  {
+   "key": "SNS"
+  },
+  {
+   "key": "SNWT"
+  },
+  {
+   "key": "CQLR"
+  },
+  {
+   "key": "CCSM"
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+{
+ "source": {
+  "repo": "legal-pinpointer",
+  "path": "core.js",
+  "table": "reporterCandidates notReporter",
+  "commit": "39d85cfcd5cfd24497ba85f0654f0fae20cb44e2",
+  "extracted_by": "tools/extract-source-tables.py"
+ },
+ "kind": "reporter_or_court",
+ "entries": [
+  {
+   "key": "Carswell"
+  },
+  {
+   "key": "CanLII"
+  },
+  {
+   "key": "ACWS"
+  },
+  {
+   "key": "WCB"
+  },
+  {
+   "key": "AWLD"
+  },
+  {
+   "key": "BCWLD"
+  },
+  {
+   "key": "OWLD"
+  },
+  {
+   "key": "WDFL"
+  },
+  {
+   "key": "DTE"
+  },
+  {
+   "key": "JE"
+  },
+  {
+   "key": "EYB"
+  },
+  {
+   "key": "AZ"
+  }
+ ]
+}
