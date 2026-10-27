@@ -711,13 +711,14 @@ fn reported_from_parts(captures: &legal_grammar::GrammarCaptures<'_>, journal: b
         page: fancy_group(&captures, "page"),
         ..Fields::default()
     };
-    Some(reported_fields(fields, journal, fancy_group(&captures, "open"),
+    Some(reported_fields(fields, journal, false, fancy_group(&captures, "open"),
         captures.name("at").map(|matched| matched.start())))
 }
 
-/// Classify fields captured by a reporter grammar without parsing its core again.
+/// Classify fields captured by a reporter grammar without parsing its core again. `issued`: the citation writes an
+/// issue after its volume ("(2016) 54:2 Alta L R 383"), which a journal has and a report does not.
 pub(crate) fn reported_fields(
-    fields: Fields, journal: bool, open: Option<String>, short_at: Option<usize>,
+    fields: Fields, journal: bool, issued: bool, open: Option<String>, short_at: Option<usize>,
 ) -> Reading {
     let surface = fields.reporter.as_deref().expect("reporter grammar capture");
     let known_reporter = registry()
@@ -726,7 +727,7 @@ pub(crate) fn reported_fields(
     let known_journal = registry()
         .journals_by_surface(&surface)
         .iter().any(|journal| journal.verified);
-    let is_journal = (journal && (!known_reporter || known_journal))
+    let is_journal = issued || (journal && (!known_reporter || known_journal))
         || (known_journal && !known_reporter)
         || (!known_reporter && JOURNAL_CUE.is_match(&surface));
     let mut reading = if is_journal {
@@ -802,14 +803,14 @@ pub(crate) fn extracted(core: &str, mut fields: Fields, short_at: Option<usize>)
     }
     if fields.reporter.as_deref().is_some_and(|surface| !registry().courts_by_surface(surface).is_empty()) {
         if let Some(mut reading) = neutral(core) {
-            reading.alternatives.push(reported_fields(fields.clone(), journal, None, short_at));
+            reading.alternatives.push(reported_fields(fields.clone(), journal, false, None, short_at));
             reading.fields.source_groups = fields.source_groups;
             reading.fields.exact_editions = fields.exact_editions;
             reading.fields.variation_editions = fields.variation_editions;
             return reading;
         }
     }
-    reported_fields(fields, journal, None, short_at)
+    reported_fields(fields, journal, false, None, short_at)
 }
 
 fn journal_article(core: &str) -> Option<Reading> {

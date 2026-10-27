@@ -833,7 +833,7 @@ fn named_reading(value: &str, named: &crate::named::Named) -> Option<crate::clas
     let rows = || named.rows.iter().chain(&named.variations);
     let journal = rows().all(|row| row.table == crate::named::Table::Journals)
         && (rows().any(|row| row.source != "mcgill") || occurrence_family(core).0 == "journal");
-    Some(crate::classify::reported_fields(fields, journal, open, named.short_at))
+    Some(crate::classify::reported_fields(fields, journal, group("issue").is_some(), open, named.short_at))
 }
 
 /// The reports, neutral citations and journal citations the named rows read in `value`, screened as the in-text
