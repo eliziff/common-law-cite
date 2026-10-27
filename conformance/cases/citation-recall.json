@@ -3230,11 +3230,11 @@
       "expect": {
         "citations": [
           {
-            "key": "4:neutral:2017:sst:476"
+            "key": "4:neutral:2017:sstadis:476"
           }
         ]
       },
-      "note": "TSSDASR is the Social Security Tribunal's French income-security appeal identifier, as SSTADIS is its English one."
+      "note": "TSSDASR is the Social Security Tribunal's French income-security appeal identifier, as SSTADIS is its English one; each division numbers its own decisions."
     },
     {
       "name": "case/french-neutral-of-the-occupational-health-and-safety-tribunal",

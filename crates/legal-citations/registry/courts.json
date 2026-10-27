@@ -6461,18 +6461,7 @@
   "name": "Social Security Tribunal of Canada",
   "neutral": [
    "SST",
-   "SSTAD",
-   "SSTADIS",
-   "SSTADEI",
-   "SSTGD",
-   "SSTGDIS",
-   "SSTGDEI",
-   "TSS",
-   "TSSDA",
-   "TSSDASR",
-   "TSSDAAE",
-   "TSSDGAE",
-   "TSSDGSR"
+   "TSS"
   ],
   "aliases": [
    "TSS"
@@ -6481,18 +6470,129 @@
    "jurisdiction": "ca",
    "database": "sst"
   },
+  "canlii_codes_fr": [
+   "TSS"
+  ],
+  "name_fr": "Tribunal de la sécurité sociale",
+  "region": "ca",
+  "level": "tribunal",
+  "type": "tribunal"
+ },
+ {
+  "id": "sstad",
+  "name": "Social Security Tribunal of Canada, Appeal Division",
+  "neutral": [
+   "SSTAD",
+   "TSSDA"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "sst"
+  },
   "canlii_codes": [
    "SSTAD"
   ],
   "canlii_codes_fr": [
-   "TSS",
-   "TSSDA",
-   "TSSDASR",
-   "TSSDAAE",
-   "TSSDGAE",
+   "TSSDA"
+  ],
+  "name_fr": "Tribunal de la sécurité sociale, division d'appel",
+  "region": "ca",
+  "level": "tribunal",
+  "type": "tribunal"
+ },
+ {
+  "id": "sstadis",
+  "name": "Social Security Tribunal of Canada, Appeal Division (Income Security)",
+  "neutral": [
+   "SSTADIS",
+   "TSSDASR"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "sst"
+  },
+  "canlii_codes_fr": [
+   "TSSDASR"
+  ],
+  "name_fr": "Tribunal de la sécurité sociale, division d'appel (sécurité du revenu)",
+  "region": "ca",
+  "level": "tribunal",
+  "type": "tribunal"
+ },
+ {
+  "id": "sstadei",
+  "name": "Social Security Tribunal of Canada, Appeal Division (Employment Insurance)",
+  "neutral": [
+   "SSTADEI",
+   "TSSDAAE"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "sst"
+  },
+  "canlii_codes_fr": [
+   "TSSDAAE"
+  ],
+  "name_fr": "Tribunal de la sécurité sociale, division d'appel (assurance-emploi)",
+  "region": "ca",
+  "level": "tribunal",
+  "type": "tribunal"
+ },
+ {
+  "id": "sstgd",
+  "name": "Social Security Tribunal of Canada, General Division",
+  "neutral": [
+   "SSTGD"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "sst"
+  },
+  "name_fr": "Tribunal de la sécurité sociale, division générale",
+  "region": "ca",
+  "level": "tribunal",
+  "type": "tribunal"
+ },
+ {
+  "id": "sstgdis",
+  "name": "Social Security Tribunal of Canada, General Division (Income Security)",
+  "neutral": [
+   "SSTGDIS",
    "TSSDGSR"
   ],
-  "name_fr": "Tribunal de la sécurité sociale",
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "sst"
+  },
+  "canlii_codes_fr": [
+   "TSSDGSR"
+  ],
+  "name_fr": "Tribunal de la sécurité sociale, division générale (sécurité du revenu)",
+  "region": "ca",
+  "level": "tribunal",
+  "type": "tribunal"
+ },
+ {
+  "id": "sstgdei",
+  "name": "Social Security Tribunal of Canada, General Division (Employment Insurance)",
+  "neutral": [
+   "SSTGDEI",
+   "TSSDGAE"
+  ],
+  "aliases": [],
+  "canlii": {
+   "jurisdiction": "ca",
+   "database": "sst"
+  },
+  "canlii_codes_fr": [
+   "TSSDGAE"
+  ],
+  "name_fr": "Tribunal de la sécurité sociale, division générale (assurance-emploi)",
   "region": "ca",
   "level": "tribunal",
   "type": "tribunal"
