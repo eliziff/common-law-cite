@@ -778,10 +778,17 @@
   "kind": "revised_statutes",
   "jurisdiction": "ca-nt",
   "abbreviation": "RSNWT",
+  "variations": [
+   "LRTN-O"
+  ],
+  "french": [
+   "LRTN-O"
+  ],
   "canlii": {
    "jurisdiction": "nt",
    "database": "nts"
   },
+  "name_fr": "Lois révisées des Territoires du Nord-Ouest",
   "citation_id": "rsnwt"
  },
  {
@@ -789,11 +796,18 @@
   "kind": "annual_statutes",
   "jurisdiction": "ca-nt",
   "abbreviation": "SNWT",
+  "variations": [
+   "LTN-O"
+  ],
+  "french": [
+   "LTN-O"
+  ],
   "canlii": {
    "jurisdiction": "nt",
    "database": "nta",
    "as_enacted_from": "2004"
   },
+  "name_fr": "Lois des Territoires du Nord-Ouest",
   "citation_id": "snwt"
  },
  {
@@ -849,10 +863,17 @@
   "kind": "revised_statutes",
   "jurisdiction": "ca-nu",
   "abbreviation": "RSNWT (Nu)",
+  "variations": [
+   "LRTN-O (Nu)"
+  ],
+  "french": [
+   "LRTN-O (Nu)"
+  ],
   "canlii": {
    "jurisdiction": "nu",
    "database": "nus"
   },
+  "name_fr": "Lois révisées des Territoires du Nord-Ouest (Nunavut)",
   "citation_id": "rsnwtnu"
  },
  {
