@@ -502,12 +502,12 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
 
 fn read_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
     -> (Vec<Citation>, Vec<source::SourcePart>, Vec<resolve::Resolution>) {
-    let timing = std::env::var_os("LEGALPDF_PHASE_TIMING").is_some();
-    let mut stage_started = std::time::Instant::now();
+    // The clock is read only when timing: WebAssembly without a host clock has none.
+    let mut stage_started = std::env::var_os("LEGALPDF_PHASE_TIMING").map(|_| std::time::Instant::now());
     let mut stage = |name: &str| {
-        if timing {
-            eprintln!("phase	citations.{name}	{}", stage_started.elapsed().as_micros());
-            stage_started = std::time::Instant::now();
+        if let Some(started) = stage_started.as_mut() {
+            eprintln!("phase	citations.{name}	{}", started.elapsed().as_micros());
+            *started = std::time::Instant::now();
         }
     };
     let markup = markup.map(|source| clean::Markup::new(text, source));
