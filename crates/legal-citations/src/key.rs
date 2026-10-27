@@ -62,8 +62,7 @@
 //!   abbreviations from different jurisdictions never share an identity.
 //! * The year is part of a reporter key when its edition's numbering regime
 //!   marks `year_volume`, falling back to the reporter's default; an ambiguous
-//!   year across numbering regimes produces no key, and a missing one selects
-//!   the regimes numbered by volume. For a reporter
+//!   or missing year across numbering regimes produces no key. For a reporter
 //!   the registry does not know, the year is used when
 //!   the citation opens with a bracketed year (`[1999] 2 XYZ 5`). A
 //!   continuously numbered reporter requires its volume.
@@ -290,11 +289,9 @@ pub(crate) fn reporter_component(
             let (year_volume, canonical) = if edition.numbering.is_empty() {
                 (reporter.year_volume, canonical)
             } else {
-                // With no year written, only a period numbered by volume can hold the citation ("17 S.C.R. 151"): one
-                // numbered by year keys by the year it lacks.
-                let policies: Vec<_> = edition.numbering.iter().filter(|period| match year {
-                    Some(year) => period.start.is_none_or(|start| year >= start) && period.end.is_none_or(|end| year <= end),
-                    None => !period.year_volume,
+                let policies: Vec<_> = edition.numbering.iter().filter(|period| {
+                    year.is_none_or(|year| period.start.is_none_or(|start| year >= start)
+                        && period.end.is_none_or(|end| year <= end))
                 }).map(|period| (period.year_volume, period.edition.as_deref().unwrap_or(canonical))).collect();
                 let first = *policies.first()?;
                 if policies.iter().any(|policy| *policy != first) { return None; }

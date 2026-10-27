@@ -35,8 +35,6 @@ versioned separately and noted here when they change.
   - A written court that none of the reporter's candidates could report ("(C.A.)",
     read only as US courts, after "79 B.C.L.R. (2d) 360") no longer rules the
     reporter out.
-  - A report written without a year takes the numbering period counted by
-    volume ("17 S.C.R. 151", "33 D.L.R. 12").
 - The registry reads more Commonwealth forms:
   - the Law Reports' series cited after "L.R." ("L.R. 1 Ex. 265");
   - the Appeal Cases written "A.C." ("(1877-78) 3 A.C. 193");
