@@ -60,8 +60,8 @@ pub(crate) fn register(pack: &str) {
     for line in pack.split('\n') {
         let fields = line.split('\t').collect::<Vec<_>>();
         let (prefix, list) = match fields.as_slice() {
-            ["N", court, year, list, ..] => (format!("3:neutral:{year}:{court}"), list),
-            ["V", volume, list, ..] => (format!("3:{volume}"), list),
+            ["N", court, year, list, ..] => (format!("{}:neutral:{year}:{court}", crate::key::KEY_VERSION), list),
+            ["V", volume, list, ..] => (format!("{}:{volume}", crate::key::KEY_VERSION), list),
             _ => continue,
         };
         let count = prefixes.len() as u32;

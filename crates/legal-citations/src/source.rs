@@ -408,7 +408,8 @@ fn us_matches(_: &str) -> Vec<Anchor> {
 
 #[cfg(feature = "us")]
 fn us_matches(text: &str) -> Vec<Anchor> {
-    crate::us::find(text, true, None).into_iter().map(|found| {
+    let named = crate::find::named_reports(text, &crate::find::named_selection(None, true, false, true), true);
+    crate::us::find(text, true, &named, None).into_iter().map(|found| {
         // Preserve the source-routing precedence independently of the
         // authority classification: laws, journals, then case reporters.
         let editions = found.fields.exact_editions.iter().chain(&found.fields.variation_editions);

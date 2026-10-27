@@ -62,7 +62,8 @@
 //!   abbreviations from different jurisdictions never share an identity.
 //! * The year is part of a reporter key when its edition's numbering regime
 //!   marks `year_volume`, falling back to the reporter's default; an ambiguous
-//!   or missing year across numbering regimes produces no key. For a reporter
+//!   year across numbering regimes produces no key, and a missing one selects
+//!   the regimes numbered by volume. For a reporter
 //!   the registry does not know, the year is used when
 //!   the citation opens with a bracketed year (`[1999] 2 XYZ 5`). A
 //!   continuously numbered reporter requires its volume.
@@ -96,7 +97,7 @@ static CODE_SECTION: LazyLock<legal_grammar::CompiledEcmascriptGrammar> = LazyLo
     legal_grammar::compile_ecmascript_table_entry("cite.us.code.section").expect("code section grammar")
 });
 
-pub const KEY_VERSION: &str = "3";
+pub const KEY_VERSION: &str = "4";
 
 /// The v3 key of a full citation against the embedded registry.
 pub fn key(citation: &Citation) -> Option<String> {
@@ -109,7 +110,7 @@ pub fn key_in(citation: &Citation, registry: &Registry) -> Option<String> {
     if citation.form != Form::Full {
         return None;
     }
-    if citation.is_ambiguous() {
+    if in_doubt(citation) {
         return None;
     }
     // The Constitution Acts and the Charter are known by their names, whatever chapter is written.
@@ -289,9 +290,11 @@ pub(crate) fn reporter_component(
             let (year_volume, canonical) = if edition.numbering.is_empty() {
                 (reporter.year_volume, canonical)
             } else {
-                let policies: Vec<_> = edition.numbering.iter().filter(|period| {
-                    year.is_none_or(|year| period.start.is_none_or(|start| year >= start)
-                        && period.end.is_none_or(|end| year <= end))
+                // With no year written, only a period numbered by volume can hold the citation ("17 S.C.R. 151"): one
+                // numbered by year keys by the year it lacks.
+                let policies: Vec<_> = edition.numbering.iter().filter(|period| match year {
+                    Some(year) => period.start.is_none_or(|start| year >= start) && period.end.is_none_or(|end| year <= end),
+                    None => !period.year_volume,
                 }).map(|period| (period.year_volume, period.edition.as_deref().unwrap_or(canonical))).collect();
                 let first = *policies.first()?;
                 if policies.iter().any(|policy| *policy != first) { return None; }
@@ -314,7 +317,8 @@ pub(crate) fn reporter_component(
 fn reporter(citation: &Citation, registry: &Registry) -> Option<Vec<String>> {
     let fields = &citation.fields;
     let (component, year_volume) = reporter_component(citation, registry)?;
-    let page = num(fields.page.as_deref()?)?;
+    // A page in Roman numerals is a volume's front matter ("[1987] 1 S.C.R. ix"), no decision's report.
+    let page = num(fields.page.as_deref()?).filter(|page| !page.chars().all(|c| matches!(c, 'i' | 'v' | 'x' | 'l' | 'c' | 'd' | 'm')))?;
     let volume = fields.volume.as_deref().and_then(num);
     let bracketed = citation.span.text.trim_start().starts_with('[');
     let with_year = year_volume.unwrap_or(bracketed);
@@ -680,8 +684,16 @@ pub(crate) fn selected_reporter<'r>(citation: &Citation, registry: &'r Registry)
     reporter_by_surface(registry, surface)
 }
 
+/// Whether a part of the citation's identity is in doubt ([`Citation::is_ambiguous`]): its court only for a neutral
+/// citation or a docket, not for a report or law whose parenthetical names several courts ("477 P. 2d 62 (Okl.)").
+fn in_doubt(citation: &Citation) -> bool {
+    let court_keyed = matches!(citation.format, Some(Format::Neutral | Format::Docket));
+    citation.interpretations.iter().any(|reading| (court_keyed || reading.kind != "court")
+        && !citation.interpretations.iter().any(|candidate| candidate.kind == reading.kind && candidate.selected))
+}
+
 pub(crate) fn selected_journal<'r>(citation: &Citation, registry: &'r Registry, surface: &str) -> Option<&'r Journal> {
-    if citation.is_ambiguous() { return None; }
+    if in_doubt(citation) { return None; }
     if let Some(chosen) = citation.interpretations.iter().find(|entry| entry.kind == "journal" && entry.selected) {
         return registry.journals.iter().find(|journal| journal.id == chosen.id);
     }
@@ -700,7 +712,7 @@ pub(crate) fn selected_journal<'r>(citation: &Citation, registry: &'r Registry, 
 }
 
 pub(crate) fn selected_series<'r>(citation: &Citation, registry: &'r Registry, surface: &str) -> Option<&'r Series> {
-    if citation.is_ambiguous() { return None; }
+    if in_doubt(citation) { return None; }
     if let Some(chosen) = citation.interpretations.iter().find(|entry| entry.kind == "series" && entry.selected) {
         return registry.series.iter().find(|series| series.id == chosen.id);
     }

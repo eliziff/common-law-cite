@@ -458,28 +458,32 @@ static EDITIONS: LazyLock<BTreeMap<String, (BTreeSet<usize>, BTreeSet<usize>)>> 
 static STANDARD_SURFACES: LazyLock<BTreeSet<String>> = LazyLock::new(|| (0..extractors().len())
     .map(|index| extractors().get(index)).filter(|extractor| extractor.standard() && !extractor.ecmascript())
     .flat_map(|extractor| extractor.strings().map(compact).collect::<Vec<_>>()).collect());
-/// Standard U.S. reporter matches: one scan ([`crate::find::walk_reports`]) in place of the standard extractor of each
-/// reporter, all of which apply the same template. The catalogue lookup ignores whitespace anywhere in the reporter
-/// surface, as each extractor's whitespace-tolerant name does, including dotless variants. With the US forms a page is
-/// any they read ("5 P. xi"), as each extractor's was; without them it is Arabic or a slip opinion's blank.
-fn standard_matches(text: &str, extended: bool) -> Vec<Match> {
-    let tail = &crate::find::REPORT_TAILS[usize::from(extended)];
-    let spell = |character: char| (!crate::text::javascript_whitespace(character)).then_some(character);
-    crate::find::walk_reports(text, &STANDARD_SURFACES, spell, tail).into_iter().map(|walked| {
-        let (exact, variations) = &EDITIONS[&walked.name];
-        let end = walked.reporter.end;
-        let short_at = walked.tail.name("__short_at").map(|matched| end + matched.start() - walked.start);
-        let fields = Fields {
-            source_groups: [("volume", &text[walked.start..walked.volume_end]), ("reporter", &text[walked.reporter.clone()]),
-                ("page", walked.tail.name("page").unwrap().as_str())]
-                .into_iter().map(|(name, value)| (name.to_owned(), Some(value.to_owned()))).collect(),
-            exact_editions: exact.iter().map(|&index| edition(index)).collect(),
-            variation_editions: variations.difference(exact).map(|&index| edition(index)).collect(),
-            ..Fields::default()
-        };
-        Match { span: walked.start..end + walked.tail.name("citation").unwrap().end(), fields, short_at,
-            short: short_at.is_some(), ecmascript: true, preceding_text_end: None }
-    }).collect()
+
+/// The US forms' reading of a report the named scan read ([`crate::named`]), as the standard extractor of its reporter
+/// would read it: where it is that extractor's template, a volume, one space and the name (not a year in brackets
+/// before the name, "[1956] S.C.R. 3"), and its name, its whitespace dropped, is a standard extractor's surface, from
+/// its volume, with that extractor's editions.
+pub(crate) fn named_match(text: &str, named: &crate::named::Named) -> Option<Match> {
+    let surface = compact(&text[named.name.clone()]);
+    if !STANDARD_SURFACES.contains(&surface) { return None; }
+    let head = text[named.span.start..named.name.start].strip_suffix(' ')?;
+    let digits = head.len() - head.trim_end_matches(|character: char| character.is_ascii_digit()).len();
+    // Before the volume, the report's head holds only the year its writer gives ("(1981), 401 U.S. 424"), not words of
+    // its own name ("L.R. 1 Ex. 265" is no report of the Exchequer by its volume).
+    let before = head[..head.len() - digits].trim_end();
+    if digits == 0 || !(before.is_empty() || before.ends_with([')', ']', ','])) { return None; }
+    let (exact, variations) = &EDITIONS[&surface];
+    let start = named.span.start + head.len() - digits;
+    let group = |name: &str| named.groups.iter().find(|(key, _)| key == name).map(|(_, value)| value.clone());
+    let fields = Fields {
+        source_groups: [("volume", group("volume")), ("reporter", Some(text[named.name.clone()].to_owned())), ("page", group("page"))]
+            .into_iter().map(|(name, value)| (name.to_owned(), value)).collect(),
+        exact_editions: exact.iter().map(|&index| edition(index)).collect(),
+        variation_editions: variations.difference(exact).map(|&index| edition(index)).collect(),
+        ..Fields::default()
+    };
+    let short_at = named.short_at.map(|at| named.span.start + at - start);
+    Some(Match { span: start..named.span.end, fields, short_at, short: short_at.is_some(), ecmascript: true, preceding_text_end: None })
 }
 
 static CUE: LazyLock<Screened<regex::Regex>> = LazyLock::new(|| Screened::linear("cite.us.fallback-cue"));
@@ -516,9 +520,10 @@ pub(crate) fn common_law_spans(text: &str) -> Vec<Range<usize>> {
 }
 
 /// Citation-hit evidence for excerpt scoring, before identity or metadata.
-/// Its four extended grammars only run on the original cue-selected lines.
+/// Its four extended grammars only run on the original cue-selected lines. The standard reports are the named rows'
+/// ([`crate::find::named_reports`]).
 pub(crate) fn citation_spans(text: &str, extended: bool) -> Vec<Range<usize>> {
-    let mut spans = standard_matches(text, extended).into_iter().map(|hit| hit.span).collect::<Vec<_>>();
+    let mut spans = Vec::new();
     extend_native_spans(text, extended, &mut spans);
     spans
 }
@@ -537,7 +542,9 @@ fn extend_native_spans(text: &str, extended: bool, spans: &mut Vec<Range<usize>>
     }
 }
 
-pub(crate) fn find(text: &str, extended: bool, native: Option<&mut Vec<Range<usize>>>) -> Vec<Match> {
+/// `reports`: the reports the named rows read in `text` ([`crate::find::named_reports`]), which the standard extractors'
+/// readings ([`named_match`]) join.
+pub(crate) fn find(text: &str, extended: bool, reports: &[crate::named::Named], native: Option<&mut Vec<Range<usize>>>) -> Vec<Match> {
     let (automaton, indices, unfiltered) = &*FILTER;
     let mut selected: BTreeSet<usize> = unfiltered.iter().copied().collect();
     // Each reporter name selects its extractors once, however often the text writes it.
@@ -598,12 +605,9 @@ pub(crate) fn find(text: &str, extended: bool, native: Option<&mut Vec<Range<usi
                 short_at: captures.name("__short_at").map(|at| at.start() - core.start()) });
         }
     }
-    let standard = standard_matches(text, extended);
-    if let Some(native) = native {
-        native.extend(standard.iter().map(|hit| hit.span.clone()));
-        extend_native_spans(text, extended, native);
-    }
-    found.extend(standard);
+    // The standard reports are already the named rows' hits; these are its others.
+    if let Some(native) = native { extend_native_spans(text, extended, native); }
+    found.extend(reports.iter().filter_map(|report| named_match(text, report)));
     // Preserve the pinned source token when a broader standard form also matches.
     found.sort_by_key(|m| (m.span.start, m.ecmascript, std::cmp::Reverse(m.span.end)));
     let mut kept: Vec<Match> = Vec::new();

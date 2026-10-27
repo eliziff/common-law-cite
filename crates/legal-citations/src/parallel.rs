@@ -113,7 +113,8 @@ pub fn distinct(left: &Citation, right: &Citation) -> bool {
     if let (Some(left), Some(right)) = (canonical(left), canonical(right)) {
         if left != right { return true; }
     }
-    if left.format == Some(Format::Neutral) && right.format == Some(Format::Neutral) {
+    // A decision has one neutral citation and one CanLII identifier.
+    if left.format == right.format && matches!(left.format, Some(Format::Neutral | Format::CanLii)) {
         let identity = |citation: &Citation| {
             key::key(citation).or_else(|| {
                 Some(format!(

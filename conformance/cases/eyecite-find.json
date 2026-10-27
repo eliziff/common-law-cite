@@ -12735,7 +12735,6 @@
    "name": "FindTest.test_no_duplicate_editions#6",
    "input": "1 B.R. 1",
    "status": "pass",
-   "divergence": "Read in the engine's default Canadian setting (jurisdictionPriority [\"ca\"]), a bare B.R. is Quebec's King's Bench reports; eyecite knows only the US Bankruptcy Reporter. With jurisdictionPriority [\"us\"] the engine reads it as eyecite does (citation-recall general/br-us-setting).",
    "expect": {
     "citations": [
      {
@@ -12754,7 +12753,7 @@
        "volume": "1",
        "reporter": "B.R.",
        "page": "1",
-       "reporterCanonical": "BR"
+       "reporterCanonical": "B.R."
       }
      }
     ]

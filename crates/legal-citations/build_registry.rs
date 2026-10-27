@@ -138,7 +138,195 @@ fn journal_years(rows: &mut [Value]) {
     }
 }
 
+/// reporters-db's template variables (`regexes.json`, as reporters_db.utils.process_variables reads them) and the
+/// authored ones beside them (`registry/regexes.json`): nested keys joined with `_`, notes (`#`) left out, each with
+/// an `_optional` twin, then each expanded until it names no other. A standard page is the one the eyecite port reads
+/// (`us_page`), as `tools/sync-upstream.py` gave its extractors.
+fn template_variables() -> BTreeMap<String, String> {
+    fn flatten(values: &Value, prefix: &str, into: &mut BTreeMap<String, String>) {
+        for (key, value) in values.as_object().unwrap() {
+            if key.ends_with('#') { continue; }
+            let name = [prefix, key].iter().filter(|part| !part.is_empty()).copied().collect::<Vec<_>>().join("_");
+            match value {
+                Value::Object(_) => flatten(value, &name, into),
+                _ => { into.insert(name, string(value).to_owned()); }
+            }
+        }
+    }
+    let mut upstream = read("registry/upstream/reporters-db/regexes.json");
+    let tables = legal_grammar::load_tables().expect("grammar corpus");
+    upstream["page"][""] = json!(format!("(?P<page>{})", tables["cite.us.reporter.full"].defs["us_page"]));
+    let mut variables = BTreeMap::new();
+    flatten(&upstream, "", &mut variables);
+    let mut authored = BTreeMap::new();
+    flatten(&read("registry/regexes.json"), "", &mut authored);
+    for (name, value) in authored {
+        assert!(variables.insert(name.clone(), value).is_none(), "registry/regexes.json: {name} shadows reporters-db's");
+    }
+    let optional: Vec<_> = variables.iter().map(|(name, value)| (format!("{name}_optional"), format!("(?:{value} ?)?"))).collect();
+    variables.extend(optional);
+    let names: Vec<String> = variables.keys().cloned().collect();
+    for name in names {
+        let expanded = expand(&variables[&name], &variables);
+        variables.insert(name, expanded);
+    }
+    variables
+}
+
+/// Python's `string.Template(value).safe_substitute(variables)`, repeated until nothing changes: `$name` (the
+/// longest run of letters, digits and underscores, not starting with a digit) becomes its value when it has one.
+fn expand(value: &str, variables: &BTreeMap<String, String>) -> String {
+    let mut value = value.to_owned();
+    for _ in 0..100 {
+        let mut expanded = String::with_capacity(value.len());
+        let mut rest = value.as_str();
+        while let Some(at) = rest.find('$') {
+            expanded.push_str(&rest[..at]);
+            let after = &rest[at + 1..];
+            if let Some(after) = after.strip_prefix('$') {
+                expanded.push('$');
+                rest = after;
+                continue;
+            }
+            let length = after.bytes().enumerate()
+                .take_while(|&(index, byte)| byte == b'_' || byte.is_ascii_alphabetic() || index > 0 && byte.is_ascii_digit())
+                .count();
+            match variables.get(&after[..length]).filter(|_| length > 0) {
+                Some(variable) => expanded.push_str(variable),
+                None => { expanded.push('$'); expanded.push_str(&after[..length]); }
+            }
+            rest = &after[length..];
+        }
+        expanded.push_str(rest);
+        if expanded == value { return value; }
+        value = expanded;
+    }
+    panic!("template exceeds reporters-db's recursion depth: {value}")
+}
+
+/// One named row: a registry row a citation names, its names (`exact`) and variations, and its templates.
+#[allow(clippy::too_many_arguments)]
+fn named_row(table: &str, id: Option<&Value>, edition: &str, source: &str, jurisdiction: &str, dates: &Value,
+    variations: Vec<String>, templates: Vec<String>, examples: Vec<Value>) -> Value {
+    let mut row = json!({"table": table, "edition": edition, "source": source, "jurisdiction": jurisdiction,
+        "variations": variations, "templates": templates, "examples": examples});
+    if let Some(id) = id.filter(|id| id.is_string()) { row["id"] = id.clone(); }
+    for bound in ["start", "end"] {
+        if let Some(date) = dates.get(bound).filter(|date| date.is_string()) { row[bound] = date.clone(); }
+    }
+    row
+}
+
+/// The named rows of an authored registry row. A row's own `regexes` (a reporter's on each edition) are its
+/// templates; without them a reporter takes reporters-db's standard citation and, when its volume is a year, the
+/// year-volume report, a court its neutral citation, and a law its kind's, Commonwealth legislation alone having one.
+fn authored_named(table: &str, row: &Value, into: &mut Vec<Value>) {
+    let jurisdiction = string(&row[if table == "courts" { "region" } else { "jurisdiction" }]);
+    if !enabled(jurisdiction) { return; }
+    let examples = row["examples"].as_array().cloned().unwrap_or_default();
+    match table {
+        "courts" => {
+            let neutral = strings(&row["neutral"]);
+            let Some((name, variations)) = neutral.split_first() else { return };
+            let templates = row.get("regexes").map_or_else(||
+                vec!["$commonwealth_neutral".into(), "$commonwealth_neutral_bracketed".into()], strings);
+            into.push(named_row(table, row.get("id"), name, "authored", jurisdiction, &Value::Null,
+                variations.to_vec(), templates, examples));
+        }
+        "reporters" => for (edition, record) in row["editions"].as_object().unwrap() {
+            // A reporter numbered by year in any period is also cited by its year alone.
+            let by_year = row["year_volume"].as_bool() == Some(true) || record["numbering"].as_array().into_iter().flatten()
+                .any(|period| period["year_volume"].as_bool() == Some(true));
+            let templates = match record.get("regexes") {
+                Some(regexes) => strings(regexes),
+                None if by_year => vec!["$full_cite".into(), "$commonwealth_report_year_volume".into()],
+                None => vec!["$full_cite".into()],
+            };
+            let mut variations: Vec<String> = row["variations"].as_object().into_iter().flatten()
+                .filter(|(_, canonical)| string(canonical) == edition).map(|(surface, _)| surface.clone()).collect();
+            variations.sort();
+            let examples = record["examples"].as_array().cloned().unwrap_or_else(|| examples.clone());
+            into.push(named_row(table, row.get("citation_id"), edition, string(&row["source"]), jurisdiction, record,
+                variations, templates, examples));
+        },
+        "series" => {
+            let templates = match row.get("regexes") {
+                Some(regexes) => strings(regexes),
+                None if jurisdiction.starts_with("us") => Vec::new(),
+                None => match string(&row["kind"]) {
+                    "revised_statutes" | "annual_statutes" => vec!["$commonwealth_statute".into()],
+                    "regulations" => vec!["$commonwealth_regulation".into()],
+                    _ => Vec::new(),
+                },
+            };
+            into.push(named_row("laws", row.get("citation_id"), string(&row["abbreviation"]), "authored", jurisdiction,
+                &Value::Null, strings(&row["variations"]), templates, examples));
+        }
+        _ => {
+            let templates = row.get("regexes").map_or_else(|| vec!["$full_cite".into()], strings);
+            into.push(named_row(table, row.get("citation_id"), string(&row["abbreviation"]), string(&row["source"]), jurisdiction,
+                &Value::Null, strings(&row["variations"]), templates, examples));
+        }
+    }
+}
+
+/// The named rows of a reporters-db record, each edition of a reporter its own, with its regexes or else the
+/// standard citation, as eyecite reads them; a law's section mark may be doubled or closed up.
+fn upstream_named(table: &str, key: &str, original: &Value, codes: &BTreeMap<String, String>, into: &mut Vec<Value>) {
+    // A reporter's place is its region; a law's is the state its jurisdiction names, as for the series index.
+    let jurisdiction = match table {
+        "reporters" => match string(&original["region"]) { "" => "us".to_owned(), region => region.to_owned() },
+        "series" => codes.get(&string(&original["jurisdiction"]).to_lowercase()).map_or_else(|| "us".into(), |code| format!("us-{code}")),
+        _ => "us".to_owned(),
+    };
+    let jurisdiction = jurisdiction.as_str();
+    if !enabled(jurisdiction) { return; }
+    let examples = original["examples"].as_array().cloned().unwrap_or_default();
+    let templates = |record: &Value| {
+        let templates = strings(&record["regexes"]);
+        let templates = if templates.is_empty() { vec!["$full_cite".to_owned()] } else { templates };
+        templates.into_iter().map(|template| if table == "series" { template.replace("§ ", "§§? ?") } else { template }).collect()
+    };
+    let named_table = if table == "series" { "laws" } else { table };
+    if table == "reporters" {
+        for (edition, record) in original["editions"].as_object().unwrap() {
+            let mut variations: Vec<String> = original["variations"].as_object().into_iter().flatten()
+                .filter(|(_, canonical)| string(canonical) == edition).map(|(surface, _)| surface.clone()).collect();
+            variations.sort();
+            into.push(named_row(named_table, original.get("citation_id"), edition, "reporters-db", jurisdiction, record,
+                variations, templates(record), examples.clone()));
+        }
+    } else {
+        into.push(named_row(named_table, original.get("citation_id"), key, "reporters-db", jurisdiction, original,
+            strings(&original["variations"]), templates(original), examples));
+    }
+}
+
+/// The named rows src/named.rs reads: each row's templates expanded and shared (`shapes`), the row naming them by
+/// position.
+fn compile_named(out: &Path, rows: Vec<Value>) {
+    let variables = template_variables();
+    let mut shapes: Vec<String> = Vec::new();
+    let mut positions: BTreeMap<String, usize> = BTreeMap::new();
+    let rows: Vec<Value> = rows.into_iter().map(|mut row| {
+        let templates = strings(&row["templates"]);
+        let indices: Vec<usize> = templates.iter().map(|template| {
+            let shape = expand(template, &variables);
+            assert!(!shape.contains('$') || shape.contains("(?P<reporter>$edition)"), "template {template} names an unknown variable: {shape}");
+            *positions.entry(shape.clone()).or_insert_with(|| { shapes.push(shape); shapes.len() - 1 })
+        }).collect();
+        let object = row.as_object_mut().unwrap();
+        object.remove("templates");
+        object.insert("shapes".into(), json!(indices));
+        row
+    }).collect();
+    let conventions = json!({"year_before": expand("$commonwealth_year_before", &variables),
+        "issue": expand("$commonwealth_issue", &variables), "volume": expand("$volume", &variables)});
+    super::compress(out.join("named.json.gz"), &json!({"shapes": shapes, "rows": rows, "conventions": conventions}));
+}
+
 pub fn compile(out: &Path) {
+    let mut named = Vec::new();
     let states = read("registry/upstream/courts-db/states.json");
     let mut codes: BTreeMap<String, String> = states.as_object().unwrap().iter()
         .filter(|(code, _)| code.len() == 2).map(|(code, name)| (string(name).to_lowercase(), code.to_lowercase())).collect();
@@ -161,6 +349,7 @@ pub fn compile(out: &Path) {
             let mut upstream = upstream.as_array().unwrap().clone();
             upstream.sort_by_key(|row| string(&row["id"]).to_owned());
             let mut all = authored.clone();
+            for court in authored { authored_named(table, court, &mut named); }
             for court in &mut all { court["hierarchy"] = json!(court_hierarchy(court)); }
             for court in upstream {
                 let id = string(&court["id"]);
@@ -203,6 +392,7 @@ pub fn compile(out: &Path) {
             // Edition years reporters-db gets wrong, each with the page that states it, by its key and edition.
             let corrected = read("registry/edition-years.json");
             let mut all = Map::new();
+            for row in authored { authored_named(table, row, &mut named); }
             for row in authored {
                 let key = string(&row["abbreviation"]);
                 all.entry(key).or_insert_with(|| json!([])).as_array_mut().unwrap().push(row.clone());
@@ -264,6 +454,7 @@ pub fn compile(out: &Path) {
                             rows.push(row);
                         }
                     }
+                    upstream_named(table, key, &original, &codes, &mut named);
                     all.entry(key).or_insert_with(|| json!([])).as_array_mut().unwrap().push(original);
                 }
             }
@@ -290,6 +481,7 @@ pub fn compile(out: &Path) {
         index[table] = json!(rows);
     }
     super::compress(out.join("registry-index.json.gz"), &index);
+    compile_named(out, named);
     for table in ["reporters", "laws", "journals"] {
         let mut positions = Map::new();
         for (key, rows) in source[table].as_object_mut().unwrap() {

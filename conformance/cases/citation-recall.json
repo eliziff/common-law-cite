@@ -106,7 +106,7 @@
               "number": "651882",
               "year": "2035"
             },
-            "key": "3:database:wl:2035:651882"
+            "key": "4:database:wl:2035:651882"
           }
         ]
       }
@@ -125,7 +125,7 @@
               "number": "416",
               "year": "2035"
             },
-            "key": "3:database:aj:2035:416"
+            "key": "4:database:aj:2035:416"
           }
         ]
       }
@@ -2494,7 +2494,7 @@
             "fields": {
               "chapter": "C-36"
             },
-            "key": "3:statute:ca:rsc:1985:c-36"
+            "key": "4:statute:ca:rsc:1985:c-36"
           }
         ]
       }
@@ -2629,7 +2629,7 @@
         "citations": [
           {
             "authority": "constitution",
-            "key": "3:statute:ca:-:1982:11",
+            "key": "4:statute:ca:-:1982:11",
             "span": {
               "text": "Canadian Charter of Rights and Freedoms"
             }
@@ -2649,7 +2649,7 @@
         "citations": [
           {
             "authority": "constitution",
-            "key": "3:statute:ca:-:1982:11"
+            "key": "4:statute:ca:-:1982:11"
           }
         ]
       }
@@ -2665,7 +2665,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:statute:ca:-:1982:11"
+            "key": "4:statute:ca:-:1982:11"
           }
         ]
       }
@@ -2681,7 +2681,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:statute:ca:-:1982:11",
+            "key": "4:statute:ca:-:1982:11",
             "span": {
               "text": "Constitution Act, 1982"
             }
@@ -2700,7 +2700,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:statute:-:-:30-31-vict:3"
+            "key": "4:statute:-:-:30-31-vict:3"
           }
         ]
       }
@@ -2717,7 +2717,7 @@
         "citations": [
           {
             "authority": "constitution",
-            "key": "3:statute:-:-:30-31-vict:3"
+            "key": "4:statute:-:-:30-31-vict:3"
           }
         ]
       }
@@ -2733,7 +2733,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:statute:-:-:30-31-vict:3"
+            "key": "4:statute:-:-:30-31-vict:3"
           }
         ]
       }
@@ -2749,13 +2749,13 @@
       "expect": {
         "citations": [
           {
-            "key": "3:statute:ca:-:1982:11",
+            "key": "4:statute:ca:-:1982:11",
             "span": {
               "text": "Canadian Charter of Rights and Freedoms"
             }
           },
           {
-            "key": "3:statute:ca:-:1982:11",
+            "key": "4:statute:ca:-:1982:11",
             "style": {
               "text": "Canadian Charter of Rights and Freedoms"
             }
@@ -2903,7 +2903,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:neutral:2031:scc:9"
+            "key": "4:neutral:2031:scc:9"
           }
         ]
       },
@@ -2920,7 +2920,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:neutral:2030:bcsc:1276"
+            "key": "4:neutral:2030:bcsc:1276"
           }
         ]
       },
@@ -2937,7 +2937,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:canlii:1965:5961"
+            "key": "4:canlii:1965:5961"
           }
         ]
       },
@@ -2954,7 +2954,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:reporter:or:or2d:71:725"
+            "key": "4:reporter:or:or2d:71:725"
           }
         ]
       },
@@ -2971,10 +2971,10 @@
       "expect": {
         "citations": [
           {
-            "key": "3:neutral:2031:scc:9"
+            "key": "4:neutral:2031:scc:9"
           },
           {
-            "key": "3:reporter:scr:scr:2031:1:303"
+            "key": "4:reporter:scr:scr:2031:1:303"
           }
         ]
       },
@@ -2991,10 +2991,10 @@
       "expect": {
         "citations": [
           {
-            "key": "3:neutral:2031:cact:3"
+            "key": "4:neutral:2031:cact:3"
           },
           {
-            "key": "3:canlii:2031:9498"
+            "key": "4:canlii:2031:9498"
           }
         ]
       },
@@ -3011,10 +3011,10 @@
       "expect": {
         "citations": [
           {
-            "key": "3:database:carswellns:2031:470"
+            "key": "4:database:carswellns:2031:470"
           },
           {
-            "key": "3:neutral:2031:nssm:64"
+            "key": "4:neutral:2031:nssm:64"
           }
         ]
       },
@@ -3073,7 +3073,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:statute:ca:-:1982:11",
+            "key": "4:statute:ca:-:1982:11",
             "fields": {
               "instrumentTitle": "Canadian Charter of Rights and Freedoms"
             }
@@ -3093,7 +3093,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:statute:ca:-:1982:11",
+            "key": "4:statute:ca:-:1982:11",
             "fields": {
               "instrumentTitle": null
             },
@@ -3159,7 +3159,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:neutral:2031:cart:18"
+            "key": "4:neutral:2031:cart:18"
           }
         ]
       },
@@ -3176,10 +3176,10 @@
       "expect": {
         "citations": [
           {
-            "key": "3:neutral:2031:cmac:5"
+            "key": "4:neutral:2031:cmac:5"
           },
           {
-            "key": "3:reporter:cmar:cmar:9:404"
+            "key": "4:reporter:cmar:cmar:9:404"
           }
         ]
       },
@@ -3196,7 +3196,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:neutral:2010:pslrb:134"
+            "key": "4:neutral:2010:pslrb:134"
           }
         ]
       },
@@ -3213,7 +3213,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:neutral:2004:pssrb:60"
+            "key": "4:neutral:2004:pssrb:60"
           }
         ]
       },
@@ -3230,7 +3230,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:neutral:2017:sst:476"
+            "key": "4:neutral:2017:sst:476"
           }
         ]
       },
@@ -3247,7 +3247,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:neutral:2011:ohstc:19"
+            "key": "4:neutral:2011:ohstc:19"
           }
         ]
       },
@@ -3290,10 +3290,10 @@
       "expect": {
         "citations": [
           {
-            "key": "3:neutral:2031:scc:9"
+            "key": "4:neutral:2031:scc:9"
           },
           {
-            "key": "3:reporter:f:f3d:334:274"
+            "key": "4:reporter:f:f3d:334:274"
           }
         ]
       },
@@ -3314,7 +3314,7 @@
       "expect": {
         "citations": [
           {
-            "key": "3:neutral:2031:scc:9"
+            "key": "4:neutral:2031:scc:9"
           }
         ]
       },
@@ -3325,7 +3325,7 @@
       "convention": "mcgill",
       "status": "pass",
       "input": "Ash v Fen, [1989] 2 S.C.R . 418.",
-      "expect": {"citations": [{"span": {"text": "[1989] 2 S.C.R . 418"}, "key": "3:reporter:scr:scr:1989:2:418"}]},
+      "expect": {"citations": [{"span": {"text": "[1989] 2 S.C.R . 418"}, "key": "4:reporter:scr:scr:1989:2:418"}]},
       "note": "OCR's space before a period inside a reporter abbreviation: the report is read whole, with its year."
     },
     {
@@ -3333,7 +3333,7 @@
       "convention": "mcgill",
       "status": "pass",
       "input": "Ash v Fen (1989), 49 N .B .R . 144.",
-      "expect": {"citations": [{"span": {"text": "(1989), 49 N .B .R . 144"}, "key": "3:reporter:nbr:nbr:49:144"}]},
+      "expect": {"citations": [{"span": {"text": "(1989), 49 N .B .R . 144"}, "key": "4:reporter:nbr:nbr:49:144"}]},
       "note": "A space before every period of the abbreviation, single letters included; the year in front is not read as a report of its own."
     },
     {
@@ -3342,15 +3342,15 @@
       "status": "pass",
       "input": "Ash v Fen, [1989] 2 S.C.R . 418.",
       "options": {"reporterNames": false},
-      "expect": {"citations": [{"span": {"text": "2 S.C.R . 418"}, "key": null}]},
-      "note": "With reporterNames off only the US grammars' whitespace-blind catalogue reads the report, without its year."
+      "expect": {"citations": [{"span": {"text": "[1989] 2 S.C.R . 418"}, "key": "4:reporter:scr:scr:1989:2:418"}]},
+      "note": "With reporterNames off the report is found only by a name reporters-db's rows give (S.C.R., a variation of South Carolina's), from the year before it like every report; the registry as a whole still identifies it."
     },
     {
       "name": "general/br-quebec-year-volume",
       "convention": "mcgill",
       "status": "pass",
       "input": "Fen v Ash, [1961] B.R. 771.",
-      "expect": {"citations": [{"key": "3:reporter:br-qc:br:1961:771"}]},
+      "expect": {"citations": [{"key": "4:reporter:br-qc:br:1961:771"}]},
       "note": "B.R. in the Canadian setting is Quebec's King's Bench reports, by year from 1942."
     },
     {
@@ -3358,7 +3358,7 @@
       "convention": "mcgill",
       "status": "pass",
       "input": "Fen v Ash (1929), 47 B.R. 286.",
-      "expect": {"citations": [{"key": "3:reporter:br-qc:br:47:286"}]},
+      "expect": {"citations": [{"key": "4:reporter:br-qc:br:47:286"}]},
       "note": "Quebec's King's Bench reports numbered their volumes to 1941."
     },
     {
@@ -3366,7 +3366,7 @@
       "convention": "mcgill",
       "status": "pass",
       "input": "In re Ash, 12 B.R. 45 (1981).",
-      "expect": {"citations": [{"key": "3:reporter:br:br:12:45"}]},
+      "expect": {"citations": [{"key": "4:reporter:br:br:12:45"}]},
       "note": "The citation's year is the text's own evidence: Quebec's reports ended in 1966, so a 1981 B.R. is the US Bankruptcy Reporter whatever the setting."
     },
     {
@@ -3375,7 +3375,7 @@
       "status": "pass",
       "input": "1 B.R. 1",
       "options": {"jurisdictionPriority": ["us"]},
-      "expect": {"citations": [{"key": "3:reporter:br:br:1:1", "fields": {"reporterCanonical": "B.R."}}]},
+      "expect": {"citations": [{"key": "4:reporter:br:br:1:1", "fields": {"reporterCanonical": "B.R."}}]},
       "note": "A US-first reading takes a bare B.R. as the Bankruptcy Reporter, as eyecite does."
     },
     {
@@ -3383,7 +3383,7 @@
       "convention": "bluebook",
       "status": "pass",
       "input": "Fen, “Moss” 19941 Wis. L.\nRev. 1425 at 1497.",
-      "expect": {"citations": [{"key": "3:journal:wislrev:19941:1425"}]},
+      "expect": {"citations": [{"key": "4:journal:wislrev:19941:1425"}]},
       "note": "A reporters-db name broken across a line is read as its whitespace-tolerant extractor read it."
     },
     {
@@ -3391,7 +3391,7 @@
       "convention": "mcgill",
       "status": "pass",
       "input": "Ash v. Fen, 556 U.S. ____ (2009); Fen v Ash, [1987] 1 S.C.R. ix.",
-      "expect": {"citations": [{"span": {"text": "556 U.S. ____"}, "key": null}, {"span": {"text": "1 S.C.R. ix"}, "key": null}]},
+      "expect": {"citations": [{"span": {"text": "556 U.S. ____"}, "key": null}, {"span": {"text": "[1987] 1 S.C.R. ix"}, "key": null}]},
       "note": "A slip opinion's blank page and a volume's front-matter page are found but name no decision's report, so they carry no key."
     },
     {
@@ -3400,7 +3400,7 @@
       "status": "pass",
       "input": "Ash v Fen, [19381 2 All E.R. 602.",
       "options": {"ocrRepairs": true},
-      "expect": {"citations": [{"span": {"text": "[19381 2 All E.R. 602"}, "key": "3:reporter:aller:aller:1938:2:602"}]},
+      "expect": {"citations": [{"span": {"text": "[19381 2 All E.R. 602"}, "key": "4:reporter:aller:aller:1938:2:602"}]},
       "note": "OCR read the year's closing bracket as a 1; the bracket is open on its line and All E.R. ran in 1938."
     },
     {
@@ -3417,7 +3417,7 @@
       "status": "pass",
       "input": "Ash v Fen (l915), 52 R.C.S. 294.",
       "options": {"ocrRepairs": true},
-      "expect": {"citations": [{"span": {"text": "(l915), 52 R.C.S. 294"}, "key": "3:reporter:scr:scr:52:294"}]},
+      "expect": {"citations": [{"span": {"text": "(l915), 52 R.C.S. 294"}, "key": "4:reporter:scr:scr:52:294"}]},
       "note": "OCR read the year's leading 1 as a letter l."
     },
     {
@@ -3425,7 +3425,7 @@
       "convention": "mcgill",
       "status": "pass",
       "input": "Fen v Ash, 2006 B.C.S.C. 503, at para 4.",
-      "expect": {"citations": [{"span": {"text": "2006 B.C.S.C. 503"}, "key": "3:neutral:2006:bcsc:503"}]},
+      "expect": {"citations": [{"span": {"text": "2006 B.C.S.C. 503"}, "key": "4:neutral:2006:bcsc:503"}]},
       "note": "A neutral citation's court code written with periods is the court's, not an unknown reporter's."
     },
     {
@@ -3433,7 +3433,7 @@
       "convention": "mcgill",
       "status": "pass",
       "input": "Fen c Ash, 2001 C.A.F. 254.",
-      "expect": {"citations": [{"key": "3:neutral:2001:fca:254", "language": "fr"}]},
+      "expect": {"citations": [{"key": "4:neutral:2001:fca:254", "language": "fr"}]},
       "note": "The French code with periods reads as its court, in French."
     },
     {
@@ -3460,7 +3460,7 @@
       "status": "pass",
       "input": "Ash v Fen (1990), 54 OR 768.",
       "options": {"jurisdictions": ["us"]},
-      "expect": {"citations": [{"key": "3:reporter:or-us:or:54:768"}]},
+      "expect": {"citations": [{"key": "4:reporter:or-us:or:54:768"}]},
       "note": "A name two jurisdictions share reads as the one listed: the Oregon Reports, not the Ontario Reports."
     },
     {
@@ -3477,7 +3477,7 @@
       "convention": "bluebook",
       "status": "pass",
       "input": "Smith v. Jones, 12 F. 190 (1950).",
-      "expect": {"citations": [{"span": {"text": "12 F. 190"}, "key": "3:reporter:f:f:12:190"}]},
+      "expect": {"citations": [{"span": {"text": "12 F. 190"}, "key": "4:reporter:f:f:12:190"}]},
       "note": "Without yearRuns the year rules nothing out."
     },
     {
@@ -3485,7 +3485,7 @@
       "convention": "bluebook",
       "status": "pass",
       "input": "Smith v. Jones, 49 La. Ann. 656, 21 So, 723 (1897).",
-      "expect": {"citations": [{"span": {"text": "49 La. Ann. 656"}}, {"span": {"text": "21 So, 723"}, "key": "3:reporter:so:so:21:723"}]},
+      "expect": {"citations": [{"span": {"text": "49 La. Ann. 656"}}, {"span": {"text": "21 So, 723"}, "key": "4:reporter:so:so:21:723"}]},
       "note": "A reporter name may end in a comma (reporters-db's \"So,\" for the Southern Reporter): the walk reads past a shorter run that is no name."
     }
   ]

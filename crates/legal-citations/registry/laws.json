@@ -44,6 +44,13 @@
   "variations": [
    "DORS"
   ],
+  "regexes": [
+   "$commonwealth_instrument"
+  ],
+  "examples": [
+   "SOR/98-106",
+   "DORS/2002-227"
+  ],
   "forms": [
    "instrument"
   ],
@@ -65,6 +72,12 @@
   "variations": [
    "TR"
   ],
+  "regexes": [
+   "$commonwealth_instrument"
+  ],
+  "examples": [
+   "SI/2000-12"
+  ],
   "forms": [
    "instrument"
   ],
@@ -83,6 +96,13 @@
   "kind": "regulations",
   "jurisdiction": "ca",
   "abbreviation": "CRC",
+  "regexes": [
+   "$commonwealth_consolidated"
+  ],
+  "examples": [
+   "CRC, c 870",
+   "C.R.C., c. 368"
+  ],
   "forms": [
    "consolidated"
   ],
@@ -153,6 +173,12 @@
   "kind": "regulations",
   "jurisdiction": "ca-on",
   "abbreviation": "RRO",
+  "regexes": [
+   "$commonwealth_revised_regulation"
+  ],
+  "examples": [
+   "RRO 1990, Reg 194"
+  ],
   "forms": [
    "revised_regulation"
   ],
@@ -270,6 +296,12 @@
   "kind": "regulations",
   "jurisdiction": "ca-sk",
   "abbreviation": "RRS",
+  "regexes": [
+   "$commonwealth_compiled"
+  ],
+  "examples": [
+   "RRS c A-18.1 Reg 1"
+  ],
   "forms": [
    "compiled"
   ],
@@ -319,6 +351,13 @@
   "abbreviation": "CCSM",
   "variations": [
    "CPLM"
+  ],
+  "regexes": [
+   "$commonwealth_statute",
+   "$commonwealth_compiled"
+  ],
+  "examples": [
+   "CCSM c C80"
   ],
   "forms": [
    "statute",
@@ -439,6 +478,12 @@
   "kind": "revised_statutes",
   "jurisdiction": "ca-ns",
   "abbreviation": "RS Third Series",
+  "regexes": [
+   "$commonwealth_compiled"
+  ],
+  "examples": [
+   "RS Third Series c 1"
+  ],
   "forms": [
    "compiled"
   ],
@@ -782,6 +827,13 @@
   "kind": "regulations",
   "jurisdiction": "ca-nt",
   "abbreviation": "RRNWT",
+  "regexes": [
+   "$commonwealth_statute",
+   "$commonwealth_compiled"
+  ],
+  "examples": [
+   "RRNWT 1990, c E-27"
+  ],
   "forms": [
    "statute",
    "compiled"
@@ -830,6 +882,13 @@
   "kind": "regulations",
   "jurisdiction": "ca-nu",
   "abbreviation": "RRNWT (Nu)",
+  "regexes": [
+   "$commonwealth_statute",
+   "$commonwealth_compiled"
+  ],
+  "examples": [
+   "RRNWT (Nu) 1990, c E-27"
+  ],
   "forms": [
    "statute",
    "compiled"
@@ -857,6 +916,12 @@
   "kind": "revised_statutes",
   "jurisdiction": "ca-nu",
   "abbreviation": "CSNu",
+  "regexes": [
+   "$commonwealth_compiled"
+  ],
+  "examples": [
+   "CSNu c S-90"
+  ],
   "forms": [
    "compiled"
   ],
@@ -886,6 +951,12 @@
   "kind": "regulations",
   "jurisdiction": "ca-nu",
   "abbreviation": "CR Nu",
+  "regexes": [
+   "$commonwealth_numbered_regulation"
+  ],
+  "examples": [
+   "CR Nu R-012-2004"
+  ],
   "canlii": {
    "jurisdiction": "nu",
    "database": "nur"
@@ -912,6 +983,13 @@
   "variations": [
    "RLRQ"
   ],
+  "regexes": [
+   "$commonwealth_compiled"
+  ],
+  "examples": [
+   "CQLR c C-12",
+   "RLRQ c C-12"
+  ],
   "forms": [
    "statute",
    "compiled"
@@ -934,6 +1012,13 @@
   "abbreviation": "RSQ",
   "variations": [
    "LRQ"
+  ],
+  "regexes": [
+   "$commonwealth_statute",
+   "$commonwealth_compiled"
+  ],
+  "examples": [
+   "RSQ c C-12"
   ],
   "forms": [
    "statute",
@@ -973,6 +1058,13 @@
   "kind": "regulations",
   "jurisdiction": "ca-qc",
   "abbreviation": "RRQ",
+  "regexes": [
+   "$commonwealth_statute",
+   "$commonwealth_compiled"
+  ],
+  "examples": [
+   "RRQ, c C-12, r 1"
+  ],
   "forms": [
    "statute",
    "compiled"
@@ -989,6 +1081,12 @@
   "kind": "regulations",
   "jurisdiction": "ca-qc",
   "abbreviation": "RQ",
+  "regexes": [
+   "$commonwealth_compiled"
+  ],
+  "examples": [
+   "RQ c C-12"
+  ],
   "forms": [
    "compiled"
   ],
@@ -1003,6 +1101,8 @@
   "kind": "regulations",
   "jurisdiction": "ca-qc",
   "abbreviation": "GOQ",
+  "regexes": [],
+  "examples": [],
   "canlii": {
    "jurisdiction": "qc",
    "database": "qcr"
@@ -1042,5 +1142,24 @@
   ],
   "evidence": "https://dcregs.dc.gov/",
   "citation_id": "dcmr"
+ },
+ {
+  "name": "United States Code",
+  "kind": "code",
+  "jurisdiction": "us",
+  "abbreviation": "U.S.C.",
+  "variations": [
+   "USC"
+  ],
+  "regexes": [
+   "(?P<title>\\d+) $reporter(?: ?§+ ?| )(?P<section>\\d(?:[A-Za-z0-9().-]*[A-Za-z0-9)])?)"
+  ],
+  "examples": [
+   "42 U.S.C. § 1983",
+   "18 USC 1833(b)",
+   "19 USC § 2703a(e)(4)(B)(ii)"
+  ],
+  "upstream_key": "U.S.C.",
+  "citation_id": "usc"
  }
 ]
