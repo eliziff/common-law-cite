@@ -207,6 +207,10 @@ pub struct Options {
     /// ([`named`]), and read one written with a space before a period from its text closed up. Off, that scan reads
     /// only reporters-db's rows, those the US forms (eyecite's) read.
     pub reporter_names: bool,
+    /// Key each citation by its decision's identity where the alias table knows one ("69 C.R. (3d) 97" is
+    /// "[1989] 1 SCR 1296"'s key), its `alias` naming that identity. Off, each is keyed as written, by its own
+    /// reporter, volume and page, as a reader of a report's pages needs.
+    pub alias_keys: bool,
     /// Rule out a reporter or journal the citation's year contradicts: a reporter edition that had ended by that year
     /// (or had not begun, where the year is the volume, "[1932] AC 562"), or a journal outside its run or the years its
     /// volumes around the cited one appeared. Only years a source states for the registry rule anything out; what it
@@ -415,6 +419,7 @@ impl Default for Options {
             authorities: None,
             forms: None,
             reporter_names: true,
+            alias_keys: true,
             year_runs: false,
             ocr_repairs: false,
             supra_hint_mode: SupraMode::Aggressive,
@@ -532,7 +537,7 @@ fn read_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
     }
     for citation in &mut citations {
         citation.alias = aliases::resolve(citation);
-        citation.key = citation.alias.as_ref().map(|target| target.key.clone())
+        citation.key = citation.alias.as_ref().filter(|_| options.alias_keys).map(|target| target.key.clone())
             .or_else(|| key::key_in(citation, registry::registry()));
     }
     stage("titles_finish_group_alias");
