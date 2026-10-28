@@ -592,9 +592,14 @@ impl<'a> Resolver<'a> {
         let range = &self.notes.expect("owned note")[note];
         let fields = crate::source::extract_fields(part, part.us_forms());
         let _ = self.source_kinds[part_index].set(fields.kind);
-        let mut positions = self.citations.iter().enumerate().filter(|(position, citation)|
-            !seen[*position] && self.note_of[*position] == Some(note)
-                && part.start <= citation.span.start && citation.span.end <= part.end)
+        // A bare locator is no citation of the part's: it is resolved after them, and changes none of their readings.
+        let in_part = |position: usize, citation: &Citation| !seen[position] && self.note_of[position] == Some(note)
+            && part.start <= citation.span.start && citation.span.end <= part.end;
+        let bare = self.citations.iter().enumerate()
+            .filter(|&(position, citation)| in_part(position, citation) && is_bare_locator(citation))
+            .map(|(position, _)| position).collect::<Vec<_>>();
+        let mut positions = self.citations.iter().enumerate()
+            .filter(|&(position, citation)| in_part(position, citation) && !is_bare_locator(citation))
             .map(|(position, citation)| (citation.span.start, position)).collect::<Vec<_>>();
         positions.sort_unstable();
         let reference = short_forms::reference_info(&part.text);
@@ -623,7 +628,8 @@ impl<'a> Resolver<'a> {
         // "Schedule B to the Canada Act 1982 (UK), 1982, c 11 [Charter]") is that citation's, which
         // records itself: it is no source of its own.
         let straddled = positions.is_empty() && self.citations.iter().enumerate().any(|(position, citation)|
-            self.note_of[position] == Some(note) && citation.span.start < part.end && part.start < citation.span.end);
+            self.note_of[position] == Some(note) && !is_bare_locator(citation)
+                && citation.span.start < part.end && part.start < citation.span.end);
         if straddled { return; }
         // A part that writes its work's authors and title before all it reads as references, with words between, is
         // that work's ("Roderick J. Wood, “The Reform of Judgement Enforcement Law in Alberta” (1995) 25 CBLJ at 110";
@@ -761,6 +767,10 @@ impl<'a> Resolver<'a> {
                 .map(|(target, reason)| (target, reason, Some(part_index)));
             let record = several_full && citation.form == Form::Full;
             self.process_citation(position, history, previous, output, override_result, record);
+            seen[position] = true;
+        }
+        for position in bare {
+            self.process_citation(position, history, previous, output, None, false);
             seen[position] = true;
         }
         let part_target = part_result.filter(|_| !passing).map_or_else(|| own_target.or_else(||
@@ -1002,7 +1012,21 @@ impl<'a> Resolver<'a> {
         let case = citation.authority == A::Case;
         let article = citation.authority == A::Journal;
         match pin.kind {
-            K::Section | K::Subsection | K::Article | K::Schedule | K::Clause | K::Rule => !case && (strict || !article),
+            // A section of a statute or regulation whose numbered sections are known lies within them ("s 719" is no
+            // section of a forty-section Act). An annual statute's chapter can enact other Acts numbered by their own
+            // sections ("Canadian Energy Regulator Act, SC 2019, c 28, s 10"), so its range rules out nothing.
+            K::Section | K::Subsection => !case && (strict || !article) && {
+                const ANNUAL: &[&str] = &["sc", "sa", "sbc", "sm", "snb", "snl", "sns", "so", "spei", "sq", "ss", "snwt",
+                    "snu", "sy", "lc", "lq", "lo", "lnb", "lm", "lnwt", "ltn-o"];
+                let number = pin.first.split(|c: char| !c.is_ascii_digit()).next().and_then(|digits| digits.parse::<u64>().ok());
+                let sections = number.and_then(|_| self.extent(citation)).filter(|extent| extent.key.split(':').nth(3)
+                    .is_some_and(|series| !ANNUAL.contains(&series))).and_then(|extent| extent.sections);
+                match (number, sections) {
+                    (Some(number), Some([low, high])) => low <= number && number <= high,
+                    _ => true,
+                }
+            },
+            K::Article | K::Schedule | K::Clause | K::Rule => !case && (strict || !article),
             K::Paragraph => {
                 if article && !strict { return false; }
                 match (number, self.extent(citation).and_then(|extent| extent.paragraphs)) {
@@ -1066,6 +1090,58 @@ impl<'a> Resolver<'a> {
             (Some(written), identity) => Some(crate::Extent {
                 paragraphs: written.paragraphs.or(identity.and_then(|identity| identity.paragraphs)), ..written }),
             (None, identity) => identity.map(|identity| crate::Extent { last_page: None, ..identity }),
+        }
+    }
+
+    /// The work a bare locator refers to ([`crate::Linking::bare_locators`]), only where the evidence is one work its
+    /// locator fits: the work it names; else the work an implied ibid continues ([`crate::Linking::implied_ibid`]) and
+    /// the one the text before its note's marker names ([`crate::Linking::body_names`]), where they do not disagree.
+    /// A section or article is only a statute's, within the sections it is known to number.
+    fn bare_locator_target(&self, position: usize, history: &History) -> (Option<Target>, &'static str) {
+        let citation = &self.citations[position];
+        let statute = |target: &Target| match target {
+            Target::Authority(index) => self.citations.iter().find(|other| other.index == *index)
+                .is_some_and(|other| other.authority.is_legislation()) && self.locator_fits(&citation.pinpoints, target, true),
+            Target::Source(_) => false,
+        };
+        let unique = |targets: Vec<Target>| {
+            let mut ids = targets.iter().map(Target::registry_id).collect::<Vec<_>>();
+            ids.sort_unstable();
+            ids.dedup();
+            (ids.len() == 1).then(|| targets.into_iter().next()).flatten()
+        };
+        if let Some(name) = citation.short_name.as_deref() {
+            let target = short_forms::resolve_named(name, &history.records).and_then(|resource| Target::from_registry(&resource))
+                .filter(|target| statute(target));
+            let reason = if target.is_some() { "bare_locator_named" } else { "bare_locator_unmatched" };
+            return (target, reason);
+        }
+        // An implied ibid: the work the note cites just before it, or, where it opens its note, the one work the note
+        // before ends on.
+        let implied = self.linking.implied_ibid.then(|| {
+            let start = citation.span.start;
+            let before = (0..self.citations.len()).filter(|&other| other != position && self.done[other]
+                && self.note_of[other].is_some() && self.note_of[other] == self.note_of[position]
+                && !is_bare_locator(&self.citations[other]) && self.citations[other].span.end <= start)
+                .max_by_key(|&other| self.citations[other].span.start);
+            match before {
+                Some(other) => self.resolved[other].clone(),
+                None => history.previous_note_sources.iter().rev().find_map(Clone::clone),
+            }
+        }).flatten().filter(|target| statute(target));
+        // The work the text before the note's marker names.
+        let named = self.linking.body_names.then(|| self.body_clause(position)).flatten().and_then(|clause| {
+            unique(history.records.iter().filter(|record| record.short_form.iter().chain(&record.names)
+                .map(|name| name.split(',').next().unwrap_or("").trim())
+                .filter(|name| name.chars().filter(|c| c.is_alphabetic()).count() >= 4)
+                .any(|name| has_words(clause, name)))
+                .filter_map(|record| Target::from_registry(record.target())).filter(|target| statute(target)).collect())
+        });
+        match (implied, named) {
+            (Some(implied), Some(named)) if implied.registry_id() != named.registry_id() => (None, "bare_locator_conflict"),
+            (Some(implied), _) => (Some(implied), "implied_ibid"),
+            (None, Some(named)) => (Some(named), "bare_locator_body"),
+            (None, None) => (None, "bare_locator_unresolved"),
         }
     }
 
@@ -1155,6 +1231,10 @@ impl<'a> Resolver<'a> {
                     let reason = if target.is_some() { "short_form" } else { "short_form_unmatched" };
                     (target, reason, None)
                 }
+                Form::Reference if is_bare_locator(citation) => {
+                    let (target, reason) = self.bare_locator_target(position, history);
+                    (target, reason, None)
+                }
                 Form::Reference => {
                     let (authority, reason) = self.by_name(position, reference_name(citation),
                         &history.records);
@@ -1182,7 +1262,8 @@ impl<'a> Resolver<'a> {
         }
         self.resolved[position] = target.clone();
         self.done[position] = true;
-        *previous = Some(position);
+        // An ibid never continues a bare locator: it continues the work the locator's own note cites.
+        if !is_bare_locator(&self.citations[position]) { *previous = Some(position); }
         let source_part = target.as_ref().and_then(|target| self.source_origins.get(target).copied());
         let url = target.as_ref().and_then(|target| self.source_urls.get(target))
             .map(|url| short_forms::reanchor_reference(url, &citation.full_span.text));
@@ -1644,6 +1725,20 @@ pub(crate) fn candidate_names(citation: &Citation) -> Vec<String> {
         names.push(citation.full_span.text.clone());
     }
     names
+}
+
+/// Whether the text writes the phrase as whole words, in its own case.
+fn has_words(text: &str, phrase: &str) -> bool {
+    text.match_indices(phrase).any(|(at, _)| {
+        let before = text[..at].chars().next_back();
+        let after = text[at + phrase.len()..].chars().next();
+        !before.is_some_and(char::is_alphanumeric) && !after.is_some_and(char::is_alphanumeric)
+    })
+}
+
+/// Whether the citation is a locator a note writes outside every citation ([`crate::Linking::bare_locators`]).
+fn is_bare_locator(citation: &Citation) -> bool {
+    citation.reasons.iter().any(|reason| reason == "bare_locator")
 }
 
 /// The name a supra, reference or short form uses: its short name, explicit

@@ -2222,6 +2222,22 @@ pub(crate) fn short_form_references(text: &str, citations: &[Citation], defined:
     found
 }
 
+/// A locator a note writes outside every citation ([`crate::short_forms::provision_mentions`]) as a reference: its
+/// pinpoint the first section or article it writes, its short name the work it names (if any).
+pub(crate) fn bare_locator_reference(text: &str, written: Hit, name: Option<String>) -> Citation {
+    let mut citation = blank_citation(text, Form::Reference, Authority::Unknown, written.clone(), "bare_locator");
+    let words = &text[written.clone()];
+    let digits = words.find(|c: char| c.is_ascii_digit()).unwrap_or(0);
+    let first_len = words[digits..].find(|c: char| !(c.is_alphanumeric() || matches!(c, '.' | '(' | ')')))
+        .unwrap_or(words.len() - digits);
+    let first = words[digits..digits + first_len].trim_end_matches('.');
+    let kind = if words.trim_start().starts_with(['A', 'a']) { crate::PinpointKind::Article } else { crate::PinpointKind::Section };
+    citation.pinpoints = vec![crate::Pinpoint { kind, span: span(text, written.start + digits..written.start + digits + first.len()),
+        first: first.to_owned(), last: None }];
+    citation.short_name = name;
+    citation
+}
+
 /// Every citation in document order, numbered by position.
 pub fn find(text: &str, options: &Options) -> Vec<Citation> {
     find_styled(text, options, None)
