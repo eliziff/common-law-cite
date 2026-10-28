@@ -6607,6 +6607,31 @@
           ]
         },
         {
+          "id": "ref.provision.bare",
+          "pattern": "\\b(?P<pin>(?:[Ss]s?\\.?|[Ss]ections?|[Aa]rts?\\.?|[Aa]rticles?)\\s*\\d[0-9A-Za-z.]*(?:\\([0-9A-Za-z.]+\\))*(?:\\s*(?:,|and|to|&|–|-)\\s*\\d[0-9A-Za-z.]*(?:\\([0-9A-Za-z.]+\\))*)*)(?:\\s+of\\s+(?:the\\s+)?(?P<name>[A-Z][\\w’'-]*(?:,?\\s+(?:[A-Z][\\w’'-]*|of|and|for|the|\\d{4}\\b))*))?",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Authored: a provision a note writes outside every citation ('s. 503', 'ss 31, 31.1 and 213', 'section 12 of the Charter', '(see s 33(5))'), the statute named after 'of' where the note names it; else its statute is the one the note cites before it, or the text the note hangs from names. Paragraph pinpoints ('para 60 of SCR') are a decision's and not read here.",
+          "vectors": [
+            {
+              "input": "s. 503",
+              "groups": {}
+            },
+            {
+              "input": "ss 31, 31.1 and 213",
+              "groups": {}
+            },
+            {
+              "input": "section 12 of the Charter",
+              "groups": {}
+            },
+            {
+              "input": "See s 24(1).",
+              "groups": {}
+            }
+          ]
+        },
+        {
           "id": "ref.source.year",
           "pattern": "(?:^|[^\\d])(?:1[6-9]\\d\\d|20\\d\\d)(?:[^\\d]|$)",
           "flags": "",

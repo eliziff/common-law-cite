@@ -311,25 +311,33 @@ pub struct Linking {
     /// A named supra whose note cites one work, and that without a name of its own (its style of cause given in the
     /// text before the marker), names that work.
     pub nameless_notes: bool,
+    /// A locator a note writes outside every citation, with no work of its own ("s. 503", "ss 31, 31.1 and 213",
+    /// "(see s 33(5))"), is a reference: to the work it names ("section 12 of the Charter"), else to the work the other
+    /// mechanisms find (an implied ibid, the text before the note's marker), within the works its locator fits.
+    pub bare_locators: bool,
+    /// A reference that names no work continues the work the note cites just before it ("Ibid, s 33(4). … (see s
+    /// 33(5))"), or, opening its note, the work the note before ends on: an ibid it does not write.
+    pub implied_ibid: bool,
 }
 
 impl Linking {
     /// The mechanisms a split tier links with where the host names none: each tier's composition as its promise
     /// sets it. A mechanism joins a tier when it buys enough right links for each wrong one it adds (safest 20,
     /// safe 10, moderate 3, aggressive 1.5) on the reference gold's build documents, read with their body text, and
-    /// costs nothing on its evaluation documents. Measured 2026-10-27 (right / wrong links, build; evaluation):
-    /// safest 13,275 / 184, 3,106 / 74; safe 13,534 / 201, 3,133 / 77; moderate 13,858 / 287, 3,286 / 89;
-    /// aggressive 13,944 / 293, 3,293 / 105. The locator veto pays in the safe tiers only, a body's names and bare
-    /// mentions in the others; first-of-note costs too many wrong links in every tier.
+    /// costs nothing on its evaluation documents. Measured 2026-10-28 (right / wrong links, build; evaluation):
+    /// safest 13,341 / 181, 3,109 / 74; safe 13,600 / 198, 3,136 / 77; moderate 13,960 / 301, 3,296 / 91;
+    /// aggressive 14,046 / 307, 3,303 / 107. The locator veto pays in the safe tiers only, a body's names, bare
+    /// mentions and implied ibids in the others, bare locators in every tier; first-of-note costs too many wrong
+    /// links in every tier.
     pub fn for_tier(tier: SplitTier) -> Self {
         let safe = Self {
             name_reading: true, distinguishing_words: true, short_form_references: true, ibid_locators: true,
-            named_override: true, near_names: true,
+            named_override: true, near_names: true, bare_locators: true,
             ..Self::default()
         };
         let moderate = Self {
             name_matching: true, short_forms: true, descriptive_names: true, body_names: true, body_citation_names: true,
-            bare_mentions: true,
+            bare_mentions: true, implied_ibid: true,
             ..safe.clone()
         };
         match tier {
@@ -343,7 +351,7 @@ impl Linking {
 
 /// A work's extent as the host knows it, by the work's citation key ([`crate::key`]): a report's or article's last
 /// page (an article's own; a report's the page before the next report its volume prints), a decision's last
-/// paragraph.
+/// paragraph, a statute's first and last numbered sections.
 #[derive(Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
 #[serde(default, rename_all = "camelCase", deny_unknown_fields)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
@@ -351,6 +359,7 @@ pub struct Extent {
     pub key: String,
     pub last_page: Option<u64>,
     pub paragraphs: Option<u64>,
+    pub sections: Option<[u64; 2]>,
 }
 
 /// `read` of each item, in the items' order, read on the engine's reading threads, each taking the next unread item.
@@ -558,6 +567,33 @@ fn read_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
             (!short.is_empty() && part.text.contains(short.as_str())).then_some((short, part.end))
         }).collect::<Vec<_>>();
         for mut reference in find::short_form_references(text, &citations, &defined, linking.bare_mentions) {
+            reference.index = citations.len();
+            citations.push(reference);
+        }
+    }
+    // A locator a note writes outside every citation ([`Linking::bare_locators`]).
+    if linking.as_ref().is_some_and(|linking| linking.bare_locators) {
+        let provisions = notes.iter().filter_map(|note| text.get(note.start..note.end).map(|written| (note.start, written)))
+            .flat_map(|(offset, written)| short_forms::provision_mentions(written).into_iter()
+                .map(move |(range, name)| (offset + range.start..offset + range.end, name)))
+            .filter(|(range, _)| !citations.iter()
+                .any(|citation| citation.full_span.start < range.end && range.start < citation.full_span.end))
+            // One written right after a citation, punctuation or "at" between them, or right before one, is that
+            // citation's pinpoint ("Hogg, supra note 5, s 33"; "Section 33.1(4) Criminal Code, supra note 6"), not a
+            // locator of its own.
+            .filter(|(range, _)| {
+                let joined = |gap: &str| matches!(gap.trim_matches(|c: char| c.is_whitespace() || ",;:.".contains(c)), "" | "at");
+                let after = citations.iter().filter(|citation| citation.full_span.end <= range.start)
+                    .max_by_key(|citation| citation.full_span.end)
+                    .and_then(|citation| text.get(citation.full_span.end..range.start)).is_some_and(joined);
+                let before = citations.iter().filter(|citation| citation.full_span.start >= range.end)
+                    .min_by_key(|citation| citation.full_span.start)
+                    .and_then(|citation| text.get(range.end..citation.full_span.start)).is_some_and(joined);
+                !after && !before
+            })
+            .map(|(range, name)| find::bare_locator_reference(text, range, name))
+            .collect::<Vec<_>>();
+        for mut reference in provisions {
             reference.index = citations.len();
             citations.push(reference);
         }

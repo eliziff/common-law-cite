@@ -56,6 +56,14 @@ versioned separately and noted here when they change.
     the Supreme Court's), unless it names the history's court ("[Hak QCCA]");
   - a reference naming a court of that chain in parentheses is that court's decision ("Hansman at para 13 (BCCA)",
     then "Ibid at para 3 (SCC)").
+- New linking mechanism `bareLocators` (every tier): a locator a note writes outside every citation ("s. 503",
+  "ss 31, 31.1 and 213", "(see s 33(5))", "section 12 of the Charter") is a reference, to the work it names, else to
+  the work an implied ibid or the text before the note's marker finds, among the works its locator fits. New grammar
+  entry `ref.provision.bare`.
+- New linking mechanism `impliedIbid` (`moderate`, `aggressive`): a reference naming no work continues the work its
+  note cites just before it, or, opening its note, the work the note before ends on.
+- `Extent` gains `sections`, a statute's first and last numbered sections; a section pinpoint outside them does not
+  fit (annual statute series excepted, whose chapters a key does not tell apart).
 - A pinpoint refuses a numbered supra only when the reference's name is a work of that note: "Johnson, supra note 243"
   written for note 242 is still read by its name.
 - Three duplicate entries from McGill's abbreviation list (ILR, LR Eq, LR Ex) are

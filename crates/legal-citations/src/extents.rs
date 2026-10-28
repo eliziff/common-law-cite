@@ -20,6 +20,8 @@ struct Table {
     rows: Vec<[u32; 4]>,
     /// Extents whose numbers do not fit a row.
     other: HashMap<String, (Option<u64>, Option<u64>)>,
+    /// Statutes' first and last numbered sections, by key.
+    sections: HashMap<String, [u64; 2]>,
 }
 
 static REGISTERED: RwLock<Option<Arc<Table>>> = RwLock::new(None);
@@ -48,9 +50,11 @@ impl Table {
 /// replacing what was registered before. "N" lines give a court year's decisions' last paragraphs, by
 /// neutral citation: court, year, then each number's gap from the last and paragraph count. "V" lines give
 /// a reporter volume's works by first page: each page's gap from the last, how many pages more the work
-/// runs, and its paragraph count. A later line's extent for a key replaces an earlier one's.
+/// runs, and its paragraph count. "S" lines give a statute's first and last numbered sections by its key
+/// ("statute:ca:rsc:1985:c-46", "1:849"). A later line's extent for a key replaces an earlier one's.
 pub(crate) fn register(pack: &str) {
     let number = |value: Option<&str>| value.and_then(|value| value.parse::<u64>().ok());
+    let mut sections = HashMap::new();
     let mut prefixes: HashMap<String, u32> = HashMap::new();
     // Rows in the pack's order, by each prefix's first appearance; a row whose page or paragraph
     // count does not fit holds OVERFLOW and the extent's place in `overflow`.
@@ -59,6 +63,12 @@ pub(crate) fn register(pack: &str) {
     let mut other = HashMap::new();
     for line in pack.split('\n') {
         let fields = line.split('\t').collect::<Vec<_>>();
+        if let ["S", key, range, ..] = fields.as_slice() {
+            if let Some((low, high)) = range.split_once(':').and_then(|(low, high)| Some((number(Some(low))?, number(Some(high))?))) {
+                sections.insert(format!("{}:{key}", crate::key::KEY_VERSION), [low, high]);
+            }
+            continue;
+        }
         let (prefix, list) = match fields.as_slice() {
             ["N", court, year, list, ..] => (format!("{}:neutral:{year}:{court}", crate::key::KEY_VERSION), list),
             ["V", volume, list, ..] => (format!("{}:{volume}", crate::key::KEY_VERSION), list),
@@ -118,11 +128,12 @@ pub(crate) fn register(pack: &str) {
     }
     rows.truncate(kept);
     rows.shrink_to_fit();
-    *REGISTERED.write().expect("extents lock") = Some(Arc::new(Table { prefixes: spans, arena, rows, other }));
+    *REGISTERED.write().expect("extents lock") = Some(Arc::new(Table { prefixes: spans, arena, rows, other, sections }));
 }
 
 pub(crate) fn registered(key: &str) -> Option<Extent> {
     let table = REGISTERED.read().expect("extents lock").clone()?;
-    let (last_page, paragraphs) = table.get(key)?;
-    Some(Extent { key: key.to_owned(), last_page, paragraphs })
+    let sections = table.sections.get(key).copied();
+    let (last_page, paragraphs) = table.get(key).or(sections.map(|_| (None, None)))?;
+    Some(Extent { key: key.to_owned(), last_page, paragraphs, sections })
 }

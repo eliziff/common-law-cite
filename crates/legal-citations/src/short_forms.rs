@@ -44,6 +44,7 @@ pattern!(SUPRA_HINT_SIGNAL, "ref.registry.hint-signal");
 pattern!(SUPRA_HINT_START, "ref.registry.hint-start");
 pattern!(SUPRA_HINT_ANY, "ref.registry.hint-any");
 pattern!(IBID_HINT, "ref.registry.ibid-hint");
+pattern!(BARE_PROVISION, "ref.provision.bare");
 pattern!(SOURCE_YEAR, "ref.source.year");
 pattern!(HEREINAFTER, "ref.registry.hereinafter");
 pattern!(ANCHOR_PARAGRAPH, "ref.anchor.paragraph");
@@ -254,6 +255,19 @@ pub(crate) fn ibid_hint(text: &str) -> String {
     let cleaned = SUPRA_HINT_SIGNAL.replace(text, "");
     IBID_HINT.captures(&cleaned).map(|found| found[1].split_whitespace().collect::<Vec<_>>().join(" "))
         .unwrap_or_default()
+}
+
+/// The provisions of statutes a text writes ("s. 503", "ss 31, 31.1 and 213", "section 12 of the Charter", "(see
+/// s 33(5))"): each one's span and the statute it names, if it names one. A letter or apostrophe before the "s" makes
+/// it a word's ending ("Canada’s 2020"), no provision.
+pub(crate) fn provision_mentions(text: &str) -> Vec<(std::ops::Range<usize>, Option<String>)> {
+    BARE_PROVISION.captures_iter(text).filter_map(|found| {
+        let whole = found.get(0)?;
+        let before = text[..whole.start()].chars().next_back();
+        if before.is_some_and(|c| c.is_alphanumeric() || matches!(c, '’' | '\'' | '‘')) { return None; }
+        let name = found.name("name").map(|name| name.as_str().trim().trim_end_matches([',', ';']).to_owned());
+        Some((whole.range(), name.filter(|name| !name.is_empty())))
+    }).collect()
 }
 
 /// Whether a part names a year, as a cited work does and plain prose seldom does.
@@ -833,7 +847,7 @@ pub(crate) fn warm() {
         SIGNAL, EXPLICIT_SKIP, EXPLICIT, CASE_CITE, ACT, PARTIES, CROWN, REFERENCE, AUTHORS,
         AUTHOR_TOKEN, HINT, HINT_SIGNAL, NOTE, REGISTRY_NOTE, REGISTRY_N, REGISTRY_NN,
         REGISTRY_SIGNAL, BRACKET_SKIP, SUPRA, SUPRA_HINT_SIGNAL, SUPRA_HINT_START, SUPRA_HINT_ANY,
-        IBID_HINT, SOURCE_YEAR, HEREINAFTER, ANCHOR_PARAGRAPH, ANCHOR_PROVISION, ANCHOR_SCOPE,
+        IBID_HINT, BARE_PROVISION, SOURCE_YEAR, HEREINAFTER, ANCHOR_PARAGRAPH, ANCHOR_PROVISION, ANCHOR_SCOPE,
         IBID, WORD, READING_SIGNAL, PUBLICATION_FACTS, SHORT_FORM_WORDING
     );
 }
