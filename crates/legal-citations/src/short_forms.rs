@@ -753,18 +753,10 @@ fn tail_name(hint: &str) -> Option<String> {
         .filter(|tail| !tail.is_empty() && tail.as_str() != hint)
 }
 
-/// A supra's names as a reader reads them ([`crate::Linking::name_reading`]): the words of its own clause
-/// before it, without the signals that open it and the quotation marks around it, and the name that ends
-/// them where they lead in to one. None where the supra opens its own sentence ("… flawed.” Supra note 58").
-pub(crate) fn reading_hints(text: &str) -> Vec<String> {
-    let Some(found) = SUPRA.find(text) else { return Vec::new(); };
-    let prior = text[..found.start()].trim_end();
-    let opens = text[found.start()..].starts_with(|c: char| c.is_uppercase());
-    if prior.is_empty() || (opens && prior.ends_with(['.', '!', '?', '”', '"', ')', ']', '’', '»'])) {
-        return Vec::new();
-    }
-    // The reference's own clause: after the last semicolon, or within a parenthesis still open before it
-    // ("R v Hoy, 2010 ABQB 575 (citing M(A), supra …"); "Brown (SCC), supra" keeps its closed one.
+/// The words of a reference's own clause before it: after the last semicolon, or within a parenthesis still open
+/// before it ("R v Hoy, 2010 ABQB 575 (citing M(A), supra …"; "Brown (SCC), supra" keeps its closed one), without the
+/// signals that open it and the quotation marks around it.
+fn clause_name(prior: &str) -> String {
     let (mut start, mut open) = (0, Vec::new());
     for (at, c) in prior.char_indices() {
         match c {
@@ -779,8 +771,32 @@ pub(crate) fn reading_hints(text: &str) -> Vec<String> {
     while let Some(signal) = READING_SIGNAL.find(rest).filter(|signal| signal.start() == 0 && signal.end() > 0) {
         rest = &rest[signal.end()..];
     }
-    let hint = rest.trim_matches(|c: char| c.is_whitespace() || ",;:.[{]}\"'“”«»‹›".contains(c))
-        .split_whitespace().collect::<Vec<_>>().join(" ");
+    rest.trim_matches(|c: char| c.is_whitespace() || ",;:.[{]}\"'“”«»‹›".contains(c))
+        .split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
+/// The names an ibid written after another citation in its note is given ("…; Tham, “Anti-Assignment Clauses”, ibid
+/// at 290", "noted in J.J., ibid"): its clause's words and the name a lead-in ends with, where they run up to it or to
+/// a comma before it. None where a colon or a parenthesis leads into the ibid (": ibid at para 44", "(ibid at 40)").
+pub(crate) fn ibid_names(prior: &str) -> Vec<String> {
+    let prior = prior.trim_end();
+    if prior.is_empty() || prior.ends_with([':', '(', '[', '.', ';']) { return Vec::new(); }
+    let hint = clause_name(prior);
+    [Some(hint.clone()), tail_name(&hint)].into_iter().flatten().filter(|name| !name.is_empty())
+        .fold(Vec::new(), |mut names, name| { if !names.contains(&name) { names.push(name); } names })
+}
+
+/// A supra's names as a reader reads them ([`crate::Linking::name_reading`]): the words of its own clause
+/// before it, without the signals that open it and the quotation marks around it, and the name that ends
+/// them where they lead in to one. None where the supra opens its own sentence ("… flawed.” Supra note 58").
+pub(crate) fn reading_hints(text: &str) -> Vec<String> {
+    let Some(found) = SUPRA.find(text) else { return Vec::new(); };
+    let prior = text[..found.start()].trim_end();
+    let opens = text[found.start()..].starts_with(|c: char| c.is_uppercase());
+    if prior.is_empty() || (opens && prior.ends_with(['.', '!', '?', '”', '"', ')', ']', '’', '»'])) {
+        return Vec::new();
+    }
+    let hint = clause_name(prior);
     // Then the name as the supra-hint reader reads it, and the name a lead-in ends with.
     let reader_hint = supra_hint(text, true);
     let reader_hint = if reader_hint.is_empty() { fallback_hint(text) } else { reader_hint };

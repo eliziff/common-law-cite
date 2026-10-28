@@ -2,8 +2,8 @@
 
 /**
  * How far a note splitter's references are linked where the evidence is incomplete
- * ([`Options::split_tier`]): `safe` links what a reference's own note and words support, `moderate`
- * also reads a supra by its name where the note it numbers cites another work, and `aggressive` also
- * continues an ibid from the last source of a note that names several.
+ * ([`Options::split_tier`]): `safest` links the fewest references wrongly, `safe` links what a reference's own note and
+ * words support, `moderate` also reads a supra by its name where the note it numbers cites another work, and
+ * `aggressive` also continues an ibid from the last source of a note that names several.
  */
-export type SplitTier = "safe" | "moderate" | "aggressive";
+export type SplitTier = "safest" | "safe" | "moderate" | "aggressive";

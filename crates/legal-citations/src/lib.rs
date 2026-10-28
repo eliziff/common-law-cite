@@ -137,15 +137,16 @@ pub enum SupraMode {
 }
 
 /// How far a note splitter's references are linked where the evidence is incomplete
-/// ([`Options::split_tier`]): `safe` links what a reference's own note and words support, `moderate`
-/// also reads a supra by its name where the note it numbers cites another work, and `aggressive` also
-/// continues an ibid from the last source of a note that names several. Every tier also splits notes
+/// ([`Options::split_tier`]): `safest` links the fewest references wrongly, `safe` links what a reference's own note and
+/// words support, `moderate` also reads a supra by its name where the note it numbers cites another work, and
+/// `aggressive` also continues an ibid from the last source of a note that names several. Every tier also splits notes
 /// into source rows ([`source::split_notes`]): a semicolon inside brackets or quotes,
 /// a sentence that cites nothing with the source after it, a supra with its name, a citation whole.
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub enum SplitTier {
+    Safest,
     Safe,
     Moderate,
     Aggressive,
@@ -155,7 +156,7 @@ impl SplitTier {
     /// The supra linking each tier resolves with.
     pub(crate) fn supra_mode(self) -> SupraMode {
         match self {
-            Self::Safe => SupraMode::Safe,
+            Self::Safest | Self::Safe => SupraMode::Safe,
             Self::Moderate => SupraMode::Named,
             Self::Aggressive => SupraMode::Aggressive,
         }
@@ -313,34 +314,30 @@ pub struct Linking {
 }
 
 impl Linking {
-    /// The mechanisms a split tier links with where the host names none: each tier's composition as its
-    /// measured precision and coverage set it.
-    /// Measured 2026-10-10 on the DOCX supra gold (right / wrong links, against the build before them): safe
-    /// 9,341 / 195 from 8,512 / 231; moderate 9,399 / 225 from 8,948 / 244; aggressive 9,456 / 229 from 8,658 / 363.
-    /// The locator veto pays in safe only; first-of-note and bare mentions cost too many wrong links.
+    /// The mechanisms a split tier links with where the host names none: each tier's composition as its promise
+    /// sets it. A mechanism joins a tier when it buys enough right links for each wrong one it adds (safest 20,
+    /// safe 10, moderate 3, aggressive 1.5) on the reference gold's build documents, read with their body text, and
+    /// costs nothing on its evaluation documents. Measured 2026-10-27 (right / wrong links, build; evaluation):
+    /// safest 13,275 / 184, 3,106 / 74; safe 13,534 / 201, 3,133 / 77; moderate 13,858 / 287, 3,286 / 89;
+    /// aggressive 13,944 / 293, 3,293 / 105. The locator veto pays in the safe tiers only, a body's names and bare
+    /// mentions in the others; first-of-note costs too many wrong links in every tier.
     pub fn for_tier(tier: SplitTier) -> Self {
         let safe = Self {
             name_reading: true, distinguishing_words: true, short_form_references: true, ibid_locators: true,
-            named_override: true, near_names: true, body_names: true,
+            named_override: true, near_names: true,
             ..Self::default()
         };
         let moderate = Self {
-            name_matching: true, short_forms: true, descriptive_names: true, body_citation_names: true,
+            name_matching: true, short_forms: true, descriptive_names: true, body_names: true, body_citation_names: true,
+            bare_mentions: true,
             ..safe.clone()
         };
         match tier {
+            SplitTier::Safest => Self { locators: true, confirmed_drift: true, ..safe },
             SplitTier::Safe => Self { locators: true, ..safe },
             SplitTier::Moderate => moderate,
             SplitTier::Aggressive => Self { party_names: true, no_ibid_last_part: true, ..moderate },
         }
-    }
-
-    /// Safer than the safe tier's mechanisms: those, and a supra whose name is found only past the note it writes
-    /// links there only where the document's supras drift by that distance ([`Linking::confirmed_drift`]).
-    /// Measured 2026-10-17 against the safe tier (right / wrong links, build partition): DOCX 9,146 / 171 from
-    /// 9,385 / 177; journals 4,621 / 72 from 4,726 / 90 (evaluation partition: journals 1,119 / 30 from 1,142 / 39).
-    pub fn safer() -> Self {
-        Self { confirmed_drift: true, ..Self::for_tier(SplitTier::Safe) }
     }
 }
 
