@@ -741,6 +741,33 @@ pub fn attach(text: &str, citations: &mut [Citation]) {
             citations[index].history.push(entry);
         }
     }
+    // A short form bracketed after a decision's subsequent history is the decision's ("2023 SCC 14, rev'g 2021 BCCA 222
+    // [Hansman]"), unless it names a word of the history's citation ("2019 QCCA 123 [Hak QCCA]"); the history's citation
+    // then ends before it. Taken from the last citation back, a chain of history hands it to the decision that heads it.
+    let words = |text: &str| text.split(|c: char| !c.is_alphanumeric()).filter(|word| word.len() >= 2)
+        .map(str::to_lowercase).collect::<Vec<_>>();
+    for position in (0..citations.len()).rev() {
+        let index = citations[position].index;
+        let Some(principal) = citations.iter().position(|other| other.history.iter().any(|item| item.target == Some(index)))
+            else { continue };
+        let Some(short) = citations[position].explicit_short_name.as_deref() else { continue };
+        let written = words(&citations[position].span.text);
+        if citations[principal].explicit_short_name.is_some() || words(short).iter().any(|word| written.contains(word)) {
+            continue;
+        }
+        let full = &citations[position].full_span;
+        let before = full.text.rfind('[').map(|bracket|
+            full.start..full.start + full.text[..bracket].trim_end_matches(javascript_whitespace).len());
+        if let Some(before) = before { citations[position].full_span = span(text, before); }
+        // A history citation written without a name was known by the bracket alone.
+        if citations[position].short_name == citations[position].explicit_short_name {
+            let name = citations[position].short_name.take();
+            citations[principal].short_name = citations[principal].short_name.take().or(name);
+        }
+        citations[principal].explicit_short_name = citations[position].explicit_short_name.take();
+        citations[position].reasons.retain(|reason| reason != "short_form_suffix");
+        citations[principal].reasons.push("short_form_suffix".to_owned());
+    }
 }
 
 /// Build this module's lazily built statics now ([`crate::warm`]).

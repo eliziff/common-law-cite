@@ -713,6 +713,12 @@ impl<'a> Resolver<'a> {
             }
             _ => None,
         };
+        // A reference naming a court of its decision's chain of history continues from that decision.
+        let part_result = part_result.map(|(target, reason)|
+            match target.as_ref().and_then(|target| self.history_named(target, &part.text)) {
+                Some(named) => (Some(named), "history_court"),
+                None => (target, reason),
+            });
         for &(_, position) in &positions {
             let citation = &self.citations[position];
             let own = (several && citation.form == Form::Supra).then(|| self.resolve_supra_text(
@@ -1145,6 +1151,10 @@ impl<'a> Resolver<'a> {
             target = None;
             reason = "ambiguous_authority";
         }
+        if let Some(named) = target.as_ref().and_then(|target| self.history_named(target, &citation.full_span.text)) {
+            target = Some(named);
+            reason = "history_court";
+        }
         self.resolved[position] = target.clone();
         self.done[position] = true;
         *previous = Some(position);
@@ -1174,6 +1184,28 @@ impl<'a> Resolver<'a> {
         if record_full && self.source_parts.is_empty() {
             history.last_part_target = Some(self.resolved[position].clone());
         }
+    }
+
+    /// The decision of the target's chain of history (the decision and its subsequent history) whose court a reference
+    /// names in parentheses: after "2023 SCC 14, rev'g 2021 BCCA 222 [Hansman]", "Hansman at para 13 (BCCA)" is the
+    /// Court of Appeal's and a later "Ibid at para 3 (SCC)" the Supreme Court's again.
+    fn history_named(&self, target: &Target, text: &str) -> Option<Target> {
+        let Target::Authority(authority) = target else { return None };
+        let position_of = |index: usize| self.citations.iter().position(|citation| citation.index == index);
+        let histories = |position: usize| self.citations[position].history.iter()
+            .filter_map(|item| item.target).filter_map(position_of).collect::<Vec<_>>();
+        let own = (0..self.citations.len()).filter(|&position| self.full_authority[position] == *authority).collect::<Vec<_>>();
+        let heads = (0..self.citations.len())
+            .filter(|&position| histories(position).iter().any(|other| own.contains(other))).collect::<Vec<_>>();
+        let chain = own.iter().chain(&heads).flat_map(|&position| std::iter::once(position).chain(histories(position)));
+        let named = |citation: &Citation| citation.court.iter()
+            .flat_map(|court| [court.id.to_uppercase(), court.text.clone()])
+            .any(|court| !court.is_empty() && text.contains(&format!("({court})")));
+        let mut found = chain.filter(|&position| named(&self.citations[position]))
+            .map(|position| self.full_authority[position]).collect::<Vec<_>>();
+        found.sort_unstable();
+        found.dedup();
+        match found.as_slice() { [one] if one != authority => Some(Target::Authority(*one)), _ => None }
     }
 
     fn previous_citation(&self, position: usize, previous: Option<usize>) -> (Option<Target>, &'static str) {

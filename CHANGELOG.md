@@ -41,6 +41,13 @@ versioned separately and noted here when they change.
   - "Can. S.C.R." for the Supreme Court Reports;
   - a name closed by its period that runs into its page ("[1974] 1 W.W.R.481");
   - a year followed by a period for its comma ("(1957). 21 W.W.R. 134").
+- References follow a decision through its subsequent history:
+  - a short form bracketed after the history names the decision ("2023 SCC 14, rev'g 2021 BCCA 222 [Hansman]" is
+    the Supreme Court's), unless it names the history's court ("[Hak QCCA]");
+  - a reference naming a court of that chain in parentheses is that court's decision ("Hansman at para 13 (BCCA)",
+    then "Ibid at para 3 (SCC)").
+- A pinpoint refuses a numbered supra only when the reference's name is a work of that note: "Johnson, supra note 243"
+  written for note 242 is still read by its name.
 - Three duplicate entries from McGill's abbreviation list (ILR, LR Eq, LR Ex) are
   removed; the registry's own entries for them stand.
 - The alias evidence and the pinned US reporter extractors compile at build time
