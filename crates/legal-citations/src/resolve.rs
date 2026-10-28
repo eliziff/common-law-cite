@@ -602,7 +602,14 @@ impl<'a> Resolver<'a> {
             .filter(|&(position, citation)| in_part(position, citation) && !is_bare_locator(citation))
             .map(|(position, citation)| (citation.span.start, position)).collect::<Vec<_>>();
         positions.sort_unstable();
-        let reference = short_forms::reference_info(&part.text);
+        let mut reference = short_forms::reference_info(&part.text);
+        // A part opening with an ibid the finder reads in another spelling (Bluebook "Id. at 9", "See id.") is an ibid.
+        let signal = |words: &str| words.split_whitespace().all(|word| matches!(
+            word.trim_end_matches([',', '.']).to_ascii_lowercase().as_str(), "see" | "also" | "but" | "cf" | "accord" | "compare" | "generally" | "e.g"));
+        if reference.kind.is_empty() && positions.first().is_some_and(|&(_, position)| self.citations[position].form == Form::Ibid
+            && part.text.get(..self.citations[position].span.start.saturating_sub(part.start)).is_some_and(signal)) {
+            reference.kind = "ibid";
+        }
         let full = positions.iter().map(|&(_, position)| &self.citations[position])
             .filter(|citation| citation.form == Form::Full && !cites_record(citation)).collect::<Vec<_>>();
         #[cfg(feature = "canada")]

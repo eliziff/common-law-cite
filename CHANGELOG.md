@@ -62,6 +62,8 @@ versioned separately and noted here when they change.
   entry `ref.provision.bare`.
 - New linking mechanism `impliedIbid` (`moderate`, `aggressive`): a reference naming no work continues the work its
   note cites just before it, or, opening its note, the work the note before ends on.
+- A note part opening with a Bluebook "Id." ("Id. at 9", "See id.") is an ibid part: it continues the note before,
+  not the last citation the finder read ("Id." after a note whose source the finder does not read as a citation).
 - `Extent` gains `sections`, a statute's first and last numbered sections; a section pinpoint outside them does not
   fit (annual statute series excepted, whose chapters a key does not tell apart).
 - A pinpoint refuses a numbered supra only when the reference's name is a work of that note: "Johnson, supra note 243"
