@@ -363,8 +363,12 @@ fn resolve_hint<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[
                 && local.is_none_or(|sequence| entry.sequence == Some(sequence));
             let mut note_sources = entries(registry).filter(in_note).collect::<Vec<_>>();
             if note_sources.is_empty() { return (String::new(), "note_without_authority"); }
-            // A work the reference's pinpoint cannot be in is no work it names.
-            if let Some(fits) = rules.fits {
+            // A work the reference's pinpoint cannot be in is no work it names. A name none of the note's works bears
+            // says the note is not the one it means ("Johnson, supra note 243" written for note 242), and the pinpoint
+            // then settles nothing.
+            let unnamed = normalized.is_empty() && tokens.is_empty();
+            let named_here = || note_sources.iter().any(|entry| matches_entry(entry) || short_of(entry) == wanted);
+            if let Some(fits) = rules.fits.filter(|_| unnamed || named_here()) {
                 let fitting = note_sources.iter().copied().filter(|entry| entry.target().is_empty() || fits(entry))
                     .collect::<Vec<_>>();
                 if fitting.iter().all(|entry| entry.target().is_empty()) && !note_sources.iter().all(|entry| entry.target().is_empty()) {
