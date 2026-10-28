@@ -665,6 +665,18 @@ impl<'a> Resolver<'a> {
         let several = positions.len() > 1 || positions.iter().any(|&(_, position)|
             self.citations[position].form == Form::Supra && self.citations[position].style.is_some());
         let several_full = several && positions.iter().any(|&(_, position)| self.citations[position].form == Form::Full);
+        // The work of the note before that an ibid opening its part names ("Tham, “Anti-Assignment Clauses”, ibid at
+        // 290", "See also Ktunaxa ibid at para 79"), which the plain "Name, ibid" form does not read. Words that name
+        // no work there leave the ibid to the rules below: they are as often a lead-in as a name.
+        let part_named = positions.first().map(|&(_, position)| &self.citations[position])
+            .filter(|citation| citation.form == Form::Ibid && self.split && self.linking.name_reading)
+            .and_then(|citation| part.text.get(..citation.span.start.saturating_sub(part.start)))
+            .and_then(|prior| {
+                let (start, end) = history.previous_note_records;
+                short_forms::ibid_names(prior).iter()
+                    .find_map(|name| short_forms::resolve_named(name, &history.records[start..end]))
+                    .and_then(|resource| Target::from_registry(&resource))
+            });
         // Each whole part is resolved once.
         let part_result = match reference.kind {
             "supra" if several => None,
@@ -678,6 +690,7 @@ impl<'a> Resolver<'a> {
                 let reason = if target.is_some() { "ibid_named" } else { "ibid_named_unmatched" };
                 Some((target, reason))
             }
+            "ibid" if part_named.is_some() => Some((part_named.clone(), "ibid_named")),
             "ibid" if self.split && history.passed_history.as_ref().is_some_and(|(_, courts)|
                 courts.iter().any(|court| part.text.contains(&format!("({court})")))) =>
                 Some((history.passed_history.clone().and_then(|(target, _)| target), "ibid_history")),
@@ -727,6 +740,18 @@ impl<'a> Resolver<'a> {
             // An ibid after another citation in its own part continues that citation, the nearest before it
             // ("Mikisew, supra note 10 applies this test (ibid at para 31)").
             let before = positions.iter().map(|&(_, other)| other).take_while(|&other| other != position).last();
+            // One written with a name of its own ("Delgamuukw, ibid at para 165, Tsilhqot’in, ibid at paras 83–84")
+            // is the work that name names, and none where no work bears it.
+            let names = before.filter(|_| citation.form == Form::Ibid && self.linking.name_reading)
+                .and_then(|other| part.text.get(self.citations[other].full_span.end.saturating_sub(part.start)
+                    ..citation.span.start.saturating_sub(part.start)))
+                .map(short_forms::ibid_names).unwrap_or_default();
+            let own = own.or_else(|| (!names.is_empty()).then(|| {
+                let target = names.iter().find_map(|name| short_forms::resolve_named(name, &history.records))
+                    .and_then(|resource| Target::from_registry(&resource));
+                let reason = if target.is_some() { "ibid_named" } else { "ibid_named_unmatched" };
+                (target, reason)
+            }));
             let own = own.or_else(|| before.filter(|_| citation.form == Form::Ibid).map(|other| match self.resolved[other].clone() {
                 Some(target) => (Some(target), "ibid_previous"),
                 None => (None, "ibid_after_unresolved"),

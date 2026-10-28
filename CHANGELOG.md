@@ -41,6 +41,16 @@ versioned separately and noted here when they change.
   - "Can. S.C.R." for the Supreme Court Reports;
   - a name closed by its period that runs into its page ("[1974] 1 W.W.R.481");
   - a year followed by a period for its comma ("(1957). 21 W.W.R. 134").
+- New split tier `safest`, the tier that links the fewest references wrongly (the safe tier, and a supra whose name
+  is found past the note it writes linked only where the document's supras drift by that distance); `Linking::safer`
+  is gone. Each tier's mechanisms are now set by what it promises, measured on the reference gold with each
+  document's body text: a mechanism joins a tier when it buys enough right links per wrong one (safest 20, safe 10,
+  moderate 3, aggressive 1.5) and costs nothing on the held-out documents. `safe` no longer reads a name from the
+  text before a note's marker (`bodyNames`); `moderate` and `aggressive` link a work's short form written alone
+  (`bareMentions`).
+- An ibid written with a name of its own is the work that name names, not the citation before it ("Delgamuukw, ibid
+  at para 165, Tsilhqot’in, ibid at paras 83–84"; "…; Tham, “Anti-Assignment Clauses”, ibid at 290"; "See also
+  Ktunaxa ibid"), and links nothing where no work bears it.
 - References follow a decision through its subsequent history:
   - a short form bracketed after the history names the decision ("2023 SCC 14, rev'g 2021 BCCA 222 [Hansman]" is
     the Supreme Court's), unless it names the history's court ("[Hak QCCA]");
