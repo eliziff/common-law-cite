@@ -10,8 +10,13 @@ versioned separately and noted here when they change.
 
 ## [Unreleased]
 
-- The alias table binds 85,454 decisions' 143,726 citations (from 80,903 and 130,248). On A2AJ's held-out second
-  citations it binds as before (99.94%).
+- The alias table binds 85,411 decisions' 143,445 citations (from 80,903 and 130,248). False aliases are cut by
+  new gates and a review: an identity no longer holds a Supreme Court citation beside a province's Quicklaw number
+  (the decision appealed from), nor neutral citations, CanLII identifiers and database numbers more than a year
+  apart; keys misread from their citation (a database number equal to its year, a five-digit volume, a C.L.L.C.
+  paragraph read as its series "210") bind nothing; `registry/alias-apart.tsv` keeps apart the pairs a review found
+  are two decisions. Each key is shown by the form its sources write most. On A2AJ's held-out second citations it
+  binds as before (99.94%).
 - Identity keys are now **v4**. A report's page in Roman numerals (a volume's
   front matter, "[1987] 1 S.C.R. ix") gives no key, and the Victorian Reports
   from 2000 and the Exchequer Court Reports to 1922 are keyed by volume

@@ -217,6 +217,9 @@ the canonical citation and evidence-record ids from
 [`registry/aliases.json`](crates/legal-citations/registry/aliases.json), which
 preserves every original A2AJ alias record and the source-backed corrections.
 Unresolved records remain available for inspection and do not create links.
+Pairs a review found are two
+decisions are kept apart in
+[`registry/alias-apart.tsv`](crates/legal-citations/registry/alias-apart.tsv), each with its reason.
 
 Applications with installed source indexes can pass their complete alias
 closures to `resolve` as `aliasGroups: [{index, keys}]`. The engine checks that
