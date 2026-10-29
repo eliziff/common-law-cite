@@ -10,6 +10,13 @@ versioned separately and noted here when they change.
 
 ## [Unreleased]
 
+- The alias table binds 85,454 decisions' 143,726 citations (from 80,903 and 130,248). Its evidence adds the
+  citation lines Westlaw and Lexis print in a decision's header (`alias-evidence --sources reporter_recovery`, read
+  from the reporter recovery's research store; a header binds a pair as one A2AJ decision does,
+  `--header-agreement` asks for two) and the corpus's books of authorities, factums, working papers and theses. On
+  A2AJ's held-out second citations it binds as before (99.94%); on decisions a provider prints, 3,340 CanLII pages
+  link (from 2,743, 7 wrongly, from 2) and 758 Westlaw pages (from 643, 10 wrongly, from 19). `alias-evidence` runs
+  resume: started again on its store with the same arguments, it goes on from its last commit.
 - Identity keys are now **v4**. A report's page in Roman numerals (a volume's
   front matter, "[1987] 1 S.C.R. ix") gives no key, and the Victorian Reports
   from 2000 and the Exchequer Court Reports to 1922 are keyed by volume

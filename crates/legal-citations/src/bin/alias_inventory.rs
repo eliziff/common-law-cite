@@ -6,11 +6,12 @@
 //!
 //! Several evidence stores (`alias-evidence` runs over different sources) are read as one.
 //!
-//! Gates (all but `--decision-agreement` on by default):
+//! Gates (all but the agreement of decisions, headers and digital texts on by default):
 //!   --no-journal-agreement  a pair only text extracted from PDFs writes (a PDF-text journal article, a corpus
 //!                           document read as OCR or unclassified) binds on one such text, not two; a digital-native
 //!                           journal article or digital-born corpus document binds on one, as A2AJ's text does
 //!   --decision-agreement    a pair only A2AJ decisions write binds on two decisions, not one
+//!   --header-agreement      a pair only providers' headers write (`provider_header`) binds on two headers, not one
 //!   --digital-agreement     a pair only digital-born texts write binds on two of them, or one and a PDF text, not one
 //!   --no-anchor             a pair may join two decisions A2AJ's records hold apart
 //!   --no-distinct           a pair may join citations the engine reads as two decisions (`parallel::distinct`)
@@ -36,24 +37,30 @@ use std::collections::{BTreeMap, HashMap, HashSet};
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
 
 #[derive(Clone, Copy, PartialEq)]
-enum Kind { Record, Decision, Digital, Article, Corpus, CorpusDigital }
+enum Kind { Record, Decision, Header, Digital, Article, Corpus, CorpusDigital }
 
 #[derive(Clone, Copy)]
 struct Gates {
-    journal_agreement: bool, decision_agreement: bool, digital_agreement: bool, anchor: bool, distinct: bool, order: bool,
+    journal_agreement: bool, decision_agreement: bool, header_agreement: bool, digital_agreement: bool, anchor: bool, distinct: bool,
+    order: bool,
     /// The most years two identities' decisions may lie apart and join ([`years`]).
     years: Option<i32>,
 }
 
 impl Default for Gates {
     fn default() -> Self {
-        Self { journal_agreement: true, decision_agreement: false, digital_agreement: false, anchor: true, distinct: true, order: true,
-            years: None }
+        Self { journal_agreement: true, decision_agreement: false, header_agreement: false, digital_agreement: false, anchor: true,
+            distinct: true, order: true, years: None }
     }
 }
 
 #[derive(Default, Clone, Copy)]
-struct Support { records: u32, decisions: u32, digital: u32, articles: u32, files: u32, digital_files: u32 }
+struct Support { records: u32, decisions: u32, headers: u32, digital: u32, articles: u32, files: u32, digital_files: u32 }
+
+impl Support {
+    /// The texts that write a pair, records apart.
+    fn texts(&self) -> u32 { self.decisions + self.headers + self.digital + self.digital_files + self.articles + self.files }
+}
 
 struct Evidence {
     keys: Vec<String>,
@@ -95,6 +102,7 @@ fn load(paths: &[String], half: Half) -> Result<Evidence> {
                     let entry = support.entry(pair).or_default();
                     match kind {
                         Kind::Decision => entry.decisions += 1,
+                        Kind::Header => entry.headers += 1,
                         Kind::Digital => entry.digital += 1,
                         Kind::Corpus => entry.files += 1,
                         Kind::CorpusDigital => entry.digital_files += 1,
@@ -123,6 +131,7 @@ fn load(paths: &[String], half: Half) -> Result<Evidence> {
         kind = match kind_name.as_str() {
             "a2aj_record" => Kind::Record,
             "a2aj_decision" => Kind::Decision,
+            "provider_header" => Kind::Header,
             "journal_article_digital" => Kind::Digital,
             "corpus_document_digital" => Kind::CorpusDigital,
             "corpus_document" | "corpus_document_ocr" => Kind::Corpus,
@@ -175,8 +184,7 @@ fn years(keys: &[String], pairs: &[((u32, u32), Support)]) -> Vec<Option<(i32, i
     let dated: Vec<Dated> = keys.iter().map(|key| dated(key)).collect();
     let mut seen: HashMap<(&str, u32), Vec<i32>> = HashMap::new();
     for ((left, right), support) in pairs {
-        let weight = (support.records + support.decisions + support.digital + support.digital_files + support.articles
-            + support.files).min(10);
+        let weight = (support.records + support.texts()).min(10);
         for (a, b) in [(left, right), (right, left)] {
             if let (Dated::Year(year), Dated::Volume(edition, volume)) = (&dated[*a as usize], &dated[*b as usize]) {
                 seen.entry((edition.as_str(), *volume)).or_default().extend(std::iter::repeat_n(*year, weight as usize));
@@ -231,12 +239,10 @@ fn bind(evidence: &Evidence, gates: Gates, hold_out: bool, readings: &mut HashMa
     let mut anchor: Vec<Option<u32>> = (0..count as u32).map(|id| filed.get(&id).filter(|set| set.len() == 1)
         .and_then(|set| set.iter().next().copied())).collect();
     let mut order: Vec<&((u32, u32), Support)> = evidence.pairs.iter()
-        .filter(|(_, support)| !(hold_out && support.decisions + support.digital + support.digital_files + support.articles
-            + support.files == 0)).collect();
+        .filter(|(_, support)| !(hold_out && support.texts() == 0)).collect();
     if gates.order {
-        order.sort_by_key(|(_, support)| std::cmp::Reverse((support.records,
-            support.decisions + support.digital + support.digital_files + support.articles + support.files,
-            support.decisions + support.digital + support.digital_files)));
+        order.sort_by_key(|(_, support)| std::cmp::Reverse((support.records, support.texts(),
+            support.decisions + support.headers + support.digital + support.digital_files)));
     }
     let mut refused = Vec::new();
     // Each identity's years, at its root.
@@ -246,6 +252,7 @@ fn bind(evidence: &Evidence, gates: Gates, hold_out: bool, readings: &mut HashMa
         let digital = support.digital + support.digital_files;
         let binds = records > 0
             || support.decisions >= if gates.decision_agreement { 2 } else { 1 }
+            || support.headers >= if gates.header_agreement { 2 } else { 1 }
             || if gates.digital_agreement { digital >= 2 || digital >= 1 && support.articles + support.files >= 1 } else { digital >= 1 }
             || support.articles + support.files >= if gates.journal_agreement { 2 } else { 1 };
         if !binds { continue; }
@@ -301,7 +308,7 @@ fn score(evidence: &Evidence, binding: &Binding) -> Score {
     let mut decisions: HashMap<u32, HashSet<u32>> = HashMap::new();
     for (first, _) in &evidence.records { decisions.entry(binding.root[*first as usize]).or_default().insert(*first); }
     score.merged = decisions.values().filter(|held| held.len() > 1).count() as u64;
-    let written: HashSet<u32> = evidence.pairs.iter().filter(|(_, support)| support.decisions + support.digital + support.digital_files + support.articles + support.files > 0)
+    let written: HashSet<u32> = evidence.pairs.iter().filter(|(_, support)| support.texts() > 0)
         .flat_map(|((left, right), _)| [*left, *right]).collect();
     for (first, others) in &evidence.records {
         for &other in others {
@@ -502,7 +509,7 @@ fn write(evidence: &Evidence, binding: &Binding, from: &str, out: &str, paths: &
         "inventory": {
             "engine": env!("CARGO_PKG_VERSION"), "evidence": evidence_files,
             "gates": {"journalAgreement": gates.journal_agreement, "decisionAgreement": gates.decision_agreement,
-                "digitalAgreement": gates.digital_agreement, "yearsApart": gates.years,
+                "headerAgreement": gates.header_agreement, "digitalAgreement": gates.digital_agreement, "yearsApart": gates.years,
                 "anchor": gates.anchor, "distinct": gates.distinct, "order": gates.order},
             "identities": heads.len(), "targets": targets.len(),
         },
@@ -543,6 +550,7 @@ fn main() -> Result<()> {
             ("all gates on", on),
             ("journal agreement off", Gates { journal_agreement: false, ..on }),
             ("decision agreement on", Gates { decision_agreement: true, ..on }),
+            ("header agreement on", Gates { header_agreement: true, ..on }),
             ("digital agreement on", Gates { digital_agreement: true, ..on }),
             ("decision and digital agreement on", Gates { decision_agreement: true, digital_agreement: true, ..on }),
             ("years over 2 apart refused", Gates { years: Some(2), ..on }),
@@ -550,13 +558,13 @@ fn main() -> Result<()> {
             ("anchor off", Gates { anchor: false, ..on }),
             ("distinct off", Gates { distinct: false, ..on }),
             ("order off", Gates { order: false, ..on }),
-            ("all gates off", Gates { journal_agreement: false, decision_agreement: false, digital_agreement: false, anchor: false,
-                distinct: false, order: false, years: None }),
+            ("all gates off", Gates { journal_agreement: false, decision_agreement: false, header_agreement: false,
+                digital_agreement: false, anchor: false, distinct: false, order: false, years: None }),
         ]
     } else {
         vec![("chosen gates", Gates {
             journal_agreement: !flag("--no-journal-agreement"), decision_agreement: flag("--decision-agreement"),
-            digital_agreement: flag("--digital-agreement"),
+            header_agreement: flag("--header-agreement"), digital_agreement: flag("--digital-agreement"),
             anchor: !flag("--no-anchor"), distinct: !flag("--no-distinct"), order: !flag("--no-order"),
             years: value("--years").and_then(|apart| apart.parse().ok()),
         })]
@@ -608,8 +616,8 @@ fn split(paths: &[String]) -> Result<()> {
     let mut readings = HashMap::new();
     let configurations = [("all gates on", Gates::default()), ("journal agreement off", Gates { journal_agreement: false, ..Gates::default() }),
         ("distinct off", Gates { distinct: false, ..Gates::default() }),
-        ("all gates off", Gates { journal_agreement: false, decision_agreement: false, digital_agreement: false, anchor: false,
-            distinct: false, order: false, years: None })];
+        ("all gates off", Gates { journal_agreement: false, decision_agreement: false, header_agreement: false,
+            digital_agreement: false, anchor: false, distinct: false, order: false, years: None })];
     println!("| configuration | odd half written by | agrees | contradicts | agreement |");
     println!("|---|---|---|---|---|");
     let id_of: HashMap<&str, u32> = even.keys.iter().enumerate().map(|(id, key)| (key.as_str(), id as u32)).collect();
@@ -618,10 +626,10 @@ fn split(paths: &[String]) -> Result<()> {
         let mut size: HashMap<u32, u32> = HashMap::new();
         for &root in &binding.root { *size.entry(root).or_default() += 1; }
         for (label, written) in [("A2AJ decisions", 0usize), ("digital-native articles", 1), ("PDF-text articles", 2),
-            ("OCR or unclassified corpus documents", 3), ("digital-born corpus documents", 4)] {
+            ("OCR or unclassified corpus documents", 3), ("digital-born corpus documents", 4), ("providers' headers", 5)] {
             let (mut agrees, mut contradicts) = (0u64, 0u64);
             for ((left, right), support) in &odd.pairs {
-                let by = [support.decisions, support.digital, support.articles, support.files, support.digital_files];
+                let by = [support.decisions, support.digital, support.articles, support.files, support.digital_files, support.headers];
                 if by[written] == 0 { continue; }
                 let (Some(&a), Some(&b)) = (id_of.get(odd.keys[*left as usize].as_str()), id_of.get(odd.keys[*right as usize].as_str()))
                     else { continue };
@@ -642,7 +650,7 @@ fn split(paths: &[String]) -> Result<()> {
     let mut examples = Vec::new();
     for ((left, right), support) in &even.pairs {
         let alone = if from_corpus { support.files == 1 && support.articles == 0 } else { support.articles == 1 && support.files == 0 };
-        if !(alone && support.records + support.decisions + support.digital + support.digital_files == 0) { continue; }
+        if !(alone && support.records + support.decisions + support.headers + support.digital + support.digital_files == 0) { continue; }
         let (Some(&a), Some(&b)) = (odd_id.get(even.keys[*left as usize].as_str()), odd_id.get(even.keys[*right as usize].as_str()))
             else { silent += 1; continue };
         let (a, b) = (odd_binding.root[a as usize], odd_binding.root[b as usize]);
