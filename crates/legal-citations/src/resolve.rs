@@ -602,6 +602,16 @@ impl<'a> Resolver<'a> {
             .filter(|&(position, citation)| in_part(position, citation) && !is_bare_locator(citation))
             .map(|(position, citation)| (citation.span.start, position)).collect::<Vec<_>>();
         positions.sort_unstable();
+        // A web address a part cites beside another of its citations is where that work is read, no work of its own.
+        let web = |position: usize| self.citations[position].authority == crate::Authority::Webpage;
+        if self.linking.web_addresses && positions.iter().any(|&(_, position)|
+            self.citations[position].form == Form::Full && !web(position)) {
+            positions.retain(|&(_, position)| {
+                let kept = self.citations[position].form != Form::Full || !web(position);
+                if !kept { seen[position] = true; }
+                kept
+            });
+        }
         let mut reference = short_forms::reference_info(&part.text);
         // A part opening with an ibid the finder reads in another spelling (Bluebook "Id. at 9", "See id.") is an ibid.
         let signal = |words: &str| words.split_whitespace().all(|word| matches!(
@@ -935,7 +945,7 @@ impl<'a> Resolver<'a> {
             distinguishing: linking.distinguishing_words, near: linking.near_names, descriptive: linking.descriptive_names,
             first_of_note: linking.first_of_note, short_forms: linking.short_forms, fits, prefers,
             body: at.filter(|_| linking.body_names).and_then(|position| self.body_clause(position)),
-            nameless: linking.nameless_notes };
+            nameless: linking.nameless_notes, best_fit: linking.note_best_fit };
         // A name found past the note the supra writes is taken only from the note its document's drift points to
         // ("Legal Profession Act, supra note 5" for the Act in note 6, where its supras run one short): `None` where
         // the target is the written note's or the rule is off, else whether the drift confirms it.
@@ -1148,7 +1158,43 @@ impl<'a> Resolver<'a> {
             (Some(implied), Some(named)) if implied.registry_id() != named.registry_id() => (None, "bare_locator_conflict"),
             (Some(implied), _) => (Some(implied), "implied_ibid"),
             (None, Some(named)) => (Some(named), "bare_locator_body"),
-            (None, None) => (None, "bare_locator_unresolved"),
+            (None, None) => match self.principal_statute(position).filter(|_| self.linking.principal_statute && self.stands_alone(position)) {
+                Some(target) if statute(&target) => (Some(target), "principal_statute"),
+                _ => (None, "bare_locator_unresolved"),
+            },
+        }
+    }
+
+    /// Whether a locator stands alone in its clause, no name written before it ("s. 503", "See section 469"), unlike
+    /// one whose work its words name though the finder read none ("Competition Act at s. 52", "Ibid, c 37, s 37(1)").
+    fn stands_alone(&self, position: usize) -> bool {
+        let Some(text) = self.text else { return false };
+        let start = self.citations[position].span.start;
+        let mut floor = start.saturating_sub(120);
+        while !text.is_char_boundary(floor) { floor += 1; }
+        let Some(before) = text.get(floor..start) else { return false };
+        let clause = before.rsplit(['.', ';', ':', '(', ')', '\n']).next().unwrap_or("");
+        clause.split(|c: char| !c.is_alphanumeric()).filter(|word| !word.is_empty()).all(|word|
+            matches!(word.to_lowercase().as_str(), "see" | "also" | "cf" | "and" | "or" | "under" | "at" | "in" | "of" | "to")
+                || !word.chars().next().is_some_and(char::is_uppercase) && word.to_lowercase() != "ibid")
+    }
+
+    /// The statute a document cites far more than any other before a reference ([`crate::Linking::principal_statute`]):
+    /// cited at least three times, and at least twice as often as the next.
+    fn principal_statute(&self, position: usize) -> Option<Target> {
+        let legislation = self.citations.iter().filter(|citation| citation.authority.is_legislation())
+            .map(|citation| citation.index).collect::<std::collections::HashSet<_>>();
+        let mut counts = HashMap::<Target, usize>::new();
+        for other in (0..self.citations.len()).filter(|&other| self.done[other] && other != position
+            && !is_bare_locator(&self.citations[other]) && self.citations[other].span.start < self.citations[position].span.start) {
+            let Some(target @ Target::Authority(index)) = &self.resolved[other] else { continue };
+            if legislation.contains(index) { *counts.entry(target.clone()).or_default() += 1; }
+        }
+        let mut ranked = counts.into_iter().collect::<Vec<_>>();
+        ranked.sort_by(|left, right| right.1.cmp(&left.1));
+        match ranked.as_slice() {
+            [(target, count), rest @ ..] if *count >= 3 && rest.first().is_none_or(|(_, next)| *count >= 2 * next) => Some(target.clone()),
+            _ => None,
         }
     }
 

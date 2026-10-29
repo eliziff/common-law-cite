@@ -64,6 +64,14 @@ versioned separately and noted here when they change.
   note cites just before it, or, opening its note, the work the note before ends on.
 - A note part opening with a Bluebook "Id." ("Id. at 9", "See id.") is an ibid part: it continues the note before,
   not the last citation the finder read ("Id." after a note whose source the finder does not read as a citation).
+- New linking mechanism `webAddresses` (every tier): a web address a note part cites beside another of its citations
+  is where that work is read, not a second work, so an ibid after the note continues the work.
+- New linking mechanism `noteBestFit` (`moderate`, `aggressive`): a numbered supra whose name no work of its note
+  bears whole ("Lekcey & Mendelsohn, supra note 3", "Hyrniak, supra note 7") names the work of that note holding the
+  most of its words, a word one slip off counting, where no work elsewhere holds them all.
+- New linking mechanism `principalStatute` (`moderate`, `aggressive`): a bare locator standing alone in its clause
+  that no other mechanism links ("s. 503") is the statute's the document cites at least three times and twice as
+  often as any other before it, where the locator fits it.
 - `Extent` gains `sections`, a statute's first and last numbered sections; a section pinpoint outside them does not
   fit (annual statute series excepted, whose chapters a key does not tell apart).
 - A pinpoint refuses a numbered supra only when the reference's name is a work of that note: "Johnson, supra note 243"

@@ -395,7 +395,7 @@ fn resolve_hint<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[
                 let preferred = || rules.prefers.and_then(|prefers|
                     unique_identified(note_sources.iter().copied().filter(|entry| prefers(entry))));
                 let spoken = || rules.body.and_then(|body| body_named(body, &note_sources));
-                return match pick(rules.matching, note_sources.clone()) {
+                return match pick(rules.matching,note_sources.clone()) {
                     Some(target) => (target.to_owned(), "note_only"),
                     None if spoken().is_some() => spoken().map(|(target, reason)| (target.to_owned(), reason)).unwrap(),
                     None if preferred().is_some() => (preferred().unwrap().to_owned(), "locator_preferred"),
@@ -416,7 +416,7 @@ fn resolve_hint<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[
             }
             let matching = note_sources.iter().copied()
                 .filter(|entry| matches_entry(entry)).collect::<Vec<_>>();
-            if let Some(target) = pick(rules.matching, matching.clone()) {
+            if let Some(target) = pick(rules.matching,matching.clone()) {
                 return (target.to_owned(), "note_number");
             }
             // Where the name's words fit several works, the one that holds the most of them, its
@@ -441,7 +441,7 @@ fn resolve_hint<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[
                 }
             }
             // A supra names the work its note cites, not a reference in that note to another work.
-            if let Some(target) = pick(rules.matching, matching.iter().copied().filter(|entry|
+            if let Some(target) = pick(rules.matching,matching.iter().copied().filter(|entry|
                 !REFERENCE.is_match(entry.verbatim.as_deref().unwrap_or(""))).collect()) {
                 return (target.to_owned(), "note_number");
             }
@@ -492,6 +492,31 @@ fn resolve_hint<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[
                     }
                 }
             }
+            // A name half-written ("Lekcey & Mendelsohn", "Ashley noted that …") names the work of its note that holds
+            // the most of its words, unless a work elsewhere holds them all: then the number is the slip.
+            if rules.best_fit {
+                let words = word_tokens(hint, 4);
+                // The words a work holds as written and those it holds one slip off.
+                let held = |entry: &ReferenceSource| {
+                    let held = work_words(entry);
+                    let exact = words.iter().filter(|word| held.contains(*word)).count();
+                    let near = words.iter().filter(|word| !held.contains(*word) && word.chars().count() >= 5
+                        && held.iter().any(|other| near_word(word, other))).count();
+                    (exact, near)
+                };
+                let elsewhere = || entries(registry).any(|entry| !entry.note_is(&number) && !entry.target().is_empty()
+                    && !note_sources.iter().any(|own| own.target() == entry.target()) && held(entry).0 == words.len());
+                let scored = note_sources.iter().filter(|entry| !entry.target().is_empty())
+                    .map(|entry| (held(entry), entry.target())).collect::<Vec<_>>();
+                let best = scored.iter().map(|((exact, near), _)| exact + near).max().unwrap_or(0);
+                let leaders = scored.iter().filter(|((exact, near), _)| exact + near == best).collect::<Vec<_>>();
+                // One word held as written is what the stricter rules above already read: a slip or a second word says more.
+                let telling = leaders.iter().all(|((exact, near), _)| *near > 0 || *exact >= 2);
+                let targets = leaders.iter().map(|(_, target)| *target).collect::<HashSet<_>>();
+                if !words.is_empty() && best > 0 && targets.len() == 1 && telling && !elsewhere() {
+                    return ((*targets.iter().next().unwrap()).to_owned(), "note_best_fit");
+                }
+            }
             (String::new(), "note_name_conflict")
     })());
     let numbered = match numbered {
@@ -518,7 +543,7 @@ fn resolve_hint<R: Borrow<ReferenceSource>>(text: &str, hint: &str, registry: &[
             _ => !tokens.is_empty() && matches_entry(entry),
         }).collect::<Vec<_>>();
         if pool.is_empty() { continue; }
-        if let Some(target) = pick(rules.matching, pool) { return (target.to_owned(), method); }
+        if let Some(target) = pick(rules.matching,pool) { return (target.to_owned(), method); }
         abstain = ambiguous;
         break;
     }
@@ -640,6 +665,8 @@ pub(crate) struct Matching<'a> {
     pub body: Option<&'a str>,
     /// [`crate::Linking::nameless_notes`].
     pub nameless: bool,
+    /// [`crate::Linking::note_best_fit`].
+    pub best_fit: bool,
 }
 
 /// A short form without the McGill wording its brackets hold around it ("hereinafter “Caron, SCC”",
@@ -730,6 +757,14 @@ fn one_letter_apart(left: &str, right: &str) -> bool {
         }
     }
     edits + (left.len() - i) + (right.len() - j) <= 1
+}
+
+/// Whether two words are one letter apart or the same with two neighbouring letters swapped ("Hyrniak", "Hryniak").
+fn near_word(left: &str, right: &str) -> bool {
+    if one_letter_apart(left, right) { return true; }
+    let (left, right) = (left.chars().collect::<Vec<_>>(), right.chars().collect::<Vec<_>>());
+    let differ = (0..left.len().min(right.len())).filter(|&at| left[at] != right[at]).collect::<Vec<_>>();
+    left.len() == right.len() && matches!(differ.as_slice(), [a, b] if *b == a + 1 && left[*a] == right[*b] && left[*b] == right[*a])
 }
 
 /// The words a lead-in writes before a name, which are no part of it ("In Lewis v. Bankole",
