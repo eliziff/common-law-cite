@@ -318,26 +318,38 @@ pub struct Linking {
     /// A reference that names no work continues the work the note cites just before it ("Ibid, s 33(4). … (see s
     /// 33(5))"), or, opening its note, the work the note before ends on: an ibid it does not write.
     pub implied_ibid: bool,
+    /// A numbered supra whose name no work of its note bears whole ("Lekcey & Mendelsohn" for Leckey & Mendelsohn,
+    /// "Ashley noted that …, supra note 4") names the work of that note holding the most of its words, a word one
+    /// letter off or with two letters swapped counting, where no other work holds as many and no work elsewhere
+    /// holds them all.
+    pub note_best_fit: bool,
+    /// A web address a note part cites beside another of its citations ("Robyn Doolittle & Tom Cardoso, “…” (2023),
+    /// online: <https://www.theglobeandmail.com/…>") is where that work is read, not a second work, so that an ibid
+    /// after the note continues the work.
+    pub web_addresses: bool,
+    /// A bare locator no other mechanism links ("s. 503") is the statute's the document cites far more than any other
+    /// before it, where the locator fits it: a criminal law paper's sections are the Criminal Code's.
+    pub principal_statute: bool,
 }
 
 impl Linking {
     /// The mechanisms a split tier links with where the host names none: each tier's composition as its promise
     /// sets it. A mechanism joins a tier when it buys enough right links for each wrong one it adds (safest 20,
     /// safe 10, moderate 3, aggressive 1.5) on the reference gold's build documents, read with their body text, and
-    /// costs nothing on its evaluation documents. Measured 2026-10-28 (right / wrong links, build; evaluation):
-    /// safest 13,341 / 181, 3,109 / 74; safe 13,600 / 198, 3,136 / 77; moderate 13,960 / 301, 3,296 / 91;
-    /// aggressive 14,046 / 307, 3,303 / 107. The locator veto pays in the safe tiers only, a body's names, bare
-    /// mentions and implied ibids in the others, bare locators in every tier; first-of-note costs too many wrong
-    /// links in every tier.
+    /// costs nothing on its evaluation documents. Measured 2026-10-28 on every reference set, terra-fill's among
+    /// them (right / wrong links, build; evaluation): safest 15,053 / 198, 3,668 / 78; safe 15,345 / 216, 3,704 / 82;
+    /// moderate 15,825 / 357, 3,884 / 96; aggressive 15,910 / 363, 3,892 / 112. The locator veto pays in the safe
+    /// tiers only, a body's names, bare mentions, implied ibids, a note's best fit and the principal statute in the
+    /// others, bare locators and web addresses in every tier; first-of-note costs too many wrong links in every tier.
     pub fn for_tier(tier: SplitTier) -> Self {
         let safe = Self {
             name_reading: true, distinguishing_words: true, short_form_references: true, ibid_locators: true,
-            named_override: true, near_names: true, bare_locators: true,
+            named_override: true, near_names: true, bare_locators: true, web_addresses: true,
             ..Self::default()
         };
         let moderate = Self {
             name_matching: true, short_forms: true, descriptive_names: true, body_names: true, body_citation_names: true,
-            bare_mentions: true, implied_ibid: true,
+            bare_mentions: true, implied_ibid: true, note_best_fit: true, principal_statute: true,
             ..safe.clone()
         };
         match tier {
