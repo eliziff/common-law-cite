@@ -10,13 +10,20 @@ versioned separately and noted here when they change.
 
 ## [Unreleased]
 
-- The alias table binds 85,454 decisions' 143,726 citations (from 80,903 and 130,248). Its evidence adds the
+- The alias table binds 85,411 decisions' 143,445 citations (from 80,903 and 130,248). Its evidence adds the
   citation lines Westlaw and Lexis print in a decision's header (`alias-evidence --sources reporter_recovery`, read
   from the reporter recovery's research store; a header binds a pair as one A2AJ decision does,
-  `--header-agreement` asks for two) and the corpus's books of authorities, factums, working papers and theses. On
-  A2AJ's held-out second citations it binds as before (99.94%); on decisions a provider prints, 3,340 CanLII pages
-  link (from 2,743, 7 wrongly, from 2) and 758 Westlaw pages (from 643, 10 wrongly, from 19). `alias-evidence` runs
-  resume: started again on its store with the same arguments, it goes on from its last commit.
+  `--header-agreement` asks for two) and the corpus's books of authorities, factums, working papers and theses.
+  False aliases are cut by new gates and a review: an identity no longer holds a Supreme Court citation beside a
+  province's Quicklaw number (the decision appealed from), nor neutral citations, CanLII identifiers and database
+  numbers more than a year apart; keys misread from their citation (a database number equal to its year, a
+  five-digit volume, a C.L.L.C. paragraph read as its series "210") bind nothing; `registry/alias-apart.tsv` keeps
+  apart the pairs a review found are two decisions (`--apart`, applied to the ALR records too), and
+  `tools/alias-audit.py` lists identities that name two decisions, span years or join provinces. Each key is shown by
+  the form its sources write most. On A2AJ's held-out second citations it binds as before (99.94%); on decisions a
+  provider prints, 3,340 CanLII pages link (from 2,743; 5 wrongly, all from CanLII's page for Thibaudeau v Canada,
+  which lists Miron v Trudel's 10 M.V.R. (3d) 151) and 765 Westlaw pages (from 643; none wrongly, from 19).
+  `alias-evidence` runs resume: started again on its store with the same arguments, it goes on from its last commit.
 - Identity keys are now **v4**. A report's page in Roman numerals (a volume's
   front matter, "[1987] 1 S.C.R. ix") gives no key, and the Victorian Reports
   from 2000 and the Exchequer Court Reports to 1922 are keyed by volume

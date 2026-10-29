@@ -16,6 +16,14 @@
 //!   --no-anchor             a pair may join two decisions A2AJ's records hold apart
 //!   --no-distinct           a pair may join citations the engine reads as two decisions (`parallel::distinct`)
 //!   --no-order              pairs bind in the store's order, not the most written first
+//!   --provinces             an identity may not hold two provinces' citations (off: a wrong member already joined
+//!                           keeps a decision's right ones out, and the reviewed pages lose links)
+//!   --no-supreme            an identity may hold a Supreme Court citation beside a province's Quicklaw number
+//!   --no-dated              an identity's neutral citations, CanLII identifiers and database numbers may give years
+//!                           more than one apart
+//!
+//! `--apart registry/alias-apart.tsv` keeps the pairs a review found are two decisions apart (`key <TAB> key <TAB> why`
+//! a line), whatever evidence joins them.
 //!
 //! `--hold-out` seeds each A2AJ decision by its first citation alone and scores its other citations (A2AJ's second
 //! citations) against the binding: bound to its decision, bound elsewhere, or unbound. `--ablate` scores every gate
@@ -43,6 +51,13 @@ enum Kind { Record, Decision, Header, Digital, Article, Corpus, CorpusDigital }
 struct Gates {
     journal_agreement: bool, decision_agreement: bool, header_agreement: bool, digital_agreement: bool, anchor: bool, distinct: bool,
     order: bool,
+    /// An identity is in one province, or two that share reports ([`Place`]).
+    provinces: bool,
+    /// An identity is not both the Supreme Court's and numbered by a province's Quicklaw, which numbers the decision
+    /// appealed from ([`Place`]).
+    supreme: bool,
+    /// Its neutral citations, CanLII identifiers and database numbers give years at most one apart ([`Place`]).
+    dated: bool,
     /// The most years two identities' decisions may lie apart and join ([`years`]).
     years: Option<i32>,
 }
@@ -50,7 +65,7 @@ struct Gates {
 impl Default for Gates {
     fn default() -> Self {
         Self { journal_agreement: true, decision_agreement: false, header_agreement: false, digital_agreement: false, anchor: true,
-            distinct: true, order: true, years: None }
+            distinct: true, order: true, provinces: false, supreme: true, dated: true, years: None }
     }
 }
 
@@ -73,6 +88,25 @@ struct Evidence {
     records: Vec<(u32, Vec<u32>)>,
     /// Text pairs, by how many sources of each kind write them (records' own pairs apart).
     pairs: Vec<((u32, u32), Support)>,
+    /// Keys a review found are two decisions (`--apart`): never one identity, whatever joins them.
+    apart: Vec<(u32, u32)>,
+}
+
+/// A key the grammar read from a misprinted or misrecognized citation, which would join every decision misread the same
+/// way: a database number that is its year ("EYB 2009-163012" read as 2009, "(2016), 2016 ABQB 577" as a Carswell
+/// number), a report volume of five digits or more ("[1948]1 S.C.R. 226" read as volume 19481), or a Canadian Labour Law
+/// Cases paragraph read as its series alone ("99 C.L.L.C. 210-001" as page 210, which every decision of that series
+/// shares).
+fn misread(key: &str) -> bool {
+    let parts: Vec<&str> = key.split(':').collect();
+    let number = |at: usize| parts.get(at).and_then(|part| part.parse::<u32>().ok());
+    match parts.get(1).copied() {
+        Some("database") => parts.len() > 4 && parts[3] == parts[4],
+        Some("reporter") if parts.get(2) == Some(&"cllc") => number(parts.len() - 1).is_some_and(|page| page < 1000),
+        Some("reporter") => parts.len() >= 6
+            && parts[parts.len() - 2].len() >= 5 && parts[parts.len() - 2].bytes().all(|byte| byte.is_ascii_digit()),
+        _ => false,
+    }
 }
 
 /// The text sources a load keeps: all, or those of one half by their id's parity (A2AJ's records always).
@@ -138,13 +172,32 @@ fn load(paths: &[String], half: Half) -> Result<Evidence> {
             _ => Kind::Article,
         };
         let kept = match half { Half::All => true, Half::Even => source_id % 2 == 0, Half::Odd => source_id % 2 == 1 };
-        if kind != Kind::Record && !kept { continue; }
+        if kind != Kind::Record && !kept || misread(&key) { continue; }
         let id = *ids.entry(key.clone()).or_insert_with(|| { keys.push(key); forms.push(form); ranks.push(rank); keys.len() as u32 - 1 });
         ranks[id as usize] = ranks[id as usize].min(rank);
         members.push(id);
     }
     }
     flush(kind, &mut members, &mut seen);
+    // Each key's form is the one its sources write most, not the first read, which can be a misrecognized one
+    // ("192212 A.C . 128"); of forms written as often, the first in sort order.
+    let mut written: HashMap<(u32, String), u64> = HashMap::new();
+    for path in paths {
+        let connection = Connection::open_with_flags(path, OpenFlags::SQLITE_OPEN_READ_ONLY)?;
+        let mut statement = connection.prepare("SELECT key, form, count(*) FROM member GROUP BY key, form")?;
+        let mut rows = statement.query([])?;
+        while let Some(row) = rows.next()? {
+            if let Some(&id) = ids.get(&row.get::<_, String>(0)?) {
+                *written.entry((id, row.get(1)?)).or_default() += row.get::<_, i64>(2)? as u64;
+            }
+        }
+    }
+    let mut best: HashMap<u32, (u64, String)> = HashMap::new();
+    for ((id, form), count) in written {
+        let entry = best.entry(id).or_insert((0, String::new()));
+        if count > entry.0 || count == entry.0 && form < entry.1 { *entry = (count, form); }
+    }
+    for (id, (_, form)) in best { forms[id as usize] = form; }
     // A record's own citations are a pair A2AJ writes.
     for (first, others) in &records {
         for &other in others {
@@ -154,7 +207,7 @@ fn load(paths: &[String], half: Half) -> Result<Evidence> {
     let mut pairs: Vec<((u32, u32), Support)> = support.into_iter().collect();
     pairs.sort_by_key(|(pair, _)| *pair);
     let years = years(&keys, &pairs);
-    Ok(Evidence { keys, forms, ranks, years, records, pairs })
+    Ok(Evidence { keys, forms, ranks, years, records, pairs, apart: Vec::new() })
 }
 
 /// What a key says of its decision's year: the year it writes (a neutral, CanLII or database citation's, a report's
@@ -220,15 +273,115 @@ fn find(root: &mut [u32], mut node: u32) -> u32 {
     node
 }
 
+/// A node's root, leaving the paths as they are.
+fn root_of(root: &[u32], mut node: u32) -> u32 {
+    while root[node as usize] != node { node = root[node as usize]; }
+    node
+}
+
 /// The engine's reading of a key's written form, read from the grammar alone.
 fn reading(key: &str, form: &str) -> Option<Citation> {
     extract(form, &Options { resolve: false, parallel: false, ..Options::default() }).into_iter()
         .find(|citation| key::key_in(citation, registry::registry()).as_deref() == Some(key))
 }
 
+/// Carswell's and Quicklaw's numbers file a decision under its province or territory ("2013 CarswellAlta 1490",
+/// "[2013] A.J. No. 854"), the Supreme Court's under S.C.J. and Carswell's of the province it came from.
+const DATABASE_PLACES: [(&str, &str); 26] = [
+    ("carswellont", "ca-on"), ("carswellbc", "ca-bc"), ("carswellalta", "ca-ab"), ("carswellsask", "ca-sk"),
+    ("carswellman", "ca-mb"), ("carswellns", "ca-ns"), ("carswellnb", "ca-nb"), ("carswellnfld", "ca-nl"),
+    ("carswellpei", "ca-pe"), ("carswellque", "ca-qc"), ("carswellyukon", "ca-yt"), ("carswellnwt", "ca-nt"),
+    ("carswellnun", "ca-nu"), ("oj", "ca-on"), ("bcj", "ca-bc"), ("aj", "ca-ab"), ("sj", "ca-sk"), ("mj", "ca-mb"),
+    ("nsj", "ca-ns"), ("nbj", "ca-nb"), ("nj", "ca-nl"), ("peij", "ca-pe"), ("qj", "ca-qc"), ("yj", "ca-yt"),
+    ("nwtj", "ca-nt"), ("nuj", "ca-nu"),
+];
+
+/// Provinces and territories whose decisions one province's reports carry: the Yukon's in British Columbia's, the
+/// Northwest Territories' and Nunavut's in Alberta's, Prince Edward Island's with Newfoundland's.
+const SHARED_PLACES: [[&str; 3]; 3] = [["ca-bc", "ca-yt", "ca-bc"], ["ca-ab", "ca-nt", "ca-nu"], ["ca-nl", "ca-pe", "ca-nl"]];
+
+/// What a key says of where and when its decision was given, for the places and dated gates.
+#[derive(Clone, Default)]
+struct Place {
+    /// The provinces and territories its citations place it in ([`DATABASE_PLACES`], a neutral court's, a report's).
+    places: Vec<&'static str>,
+    /// A Supreme Court citation (its neutral citation, the S.C.R., an S.C.J. number), and a province's Quicklaw number,
+    /// which Quicklaw never gives a Supreme Court decision.
+    supreme: bool,
+    provincial_database: bool,
+    /// The first and last years its neutral citations, CanLII identifiers and database numbers give: each is the
+    /// decision's own year (a report's volume can be a year or two later).
+    dated: Option<(i32, i32)>,
+}
+
+impl Place {
+    fn of(key: &str) -> Place {
+        let parts: Vec<&str> = key.split(':').collect();
+        let registry = registry::registry();
+        let provincial = |place: &str| place.starts_with("ca-");
+        let year = |at: usize| parts.get(at).and_then(|part| part.parse::<i32>().ok()).filter(|year| (1700..=2100).contains(year));
+        let mut place = Place::default();
+        match parts.get(1).copied() {
+            Some("neutral") => {
+                let court = parts.get(3).and_then(|court| registry.court(court));
+                place.places.extend(court.map(|court| court.jurisdiction.as_str()).filter(|place| provincial(place)));
+                place.supreme = parts.get(3) == Some(&"scc");
+                place.dated = year(2).map(|year| (year, year));
+            }
+            Some("canlii") => place.dated = year(2).map(|year| (year, year)),
+            Some("database") => {
+                let series = parts.get(2).copied().unwrap_or_default();
+                if let Some((_, at)) = DATABASE_PLACES.iter().find(|(name, _)| *name == series) {
+                    place.places.push(at);
+                    place.provincial_database = !series.starts_with("carswell");
+                }
+                place.supreme = series == "scj";
+                place.dated = year(3).map(|year| (year, year));
+            }
+            Some("reporter") => {
+                let reporter = parts.get(2).and_then(|id| registry.reporters.iter().find(|reporter| reporter.id == *id));
+                place.places.extend(reporter.and_then(|reporter| reporter.jurisdiction.as_deref()).filter(|place| provincial(place)));
+                place.supreme = parts.get(2) == Some(&"scr");
+            }
+            _ => {}
+        }
+        place
+    }
+
+    /// Whether one decision can be all that `self` and `other` say: in one province (or two that share reports), not
+    /// both the Supreme Court's and numbered by a province's Quicklaw, and (with `dated`) its own years at most one
+    /// apart.
+    fn agrees(&self, other: &Place, gates: Gates) -> bool {
+        let shared = |a: &str, b: &str| a == b || SHARED_PLACES.iter().any(|group| group.contains(&a) && group.contains(&b));
+        if gates.provinces && self.places.iter().any(|a| other.places.iter().any(|b| !shared(a, b))) { return false; }
+        if gates.supreme && (self.supreme && other.provincial_database || other.supreme && self.provincial_database) { return false; }
+        !gates.dated || match (self.dated, other.dated) {
+            (Some((a_first, a_last)), Some((b_first, b_last))) => a_first.max(b_first) - a_last.min(b_last) <= 1,
+            _ => true,
+        }
+    }
+
+    fn join(&mut self, other: &Place) {
+        for place in &other.places { if !self.places.contains(place) { self.places.push(place); } }
+        self.supreme |= other.supreme;
+        self.provincial_database |= other.provincial_database;
+        self.dated = match (self.dated, other.dated) {
+            (Some((a, b)), Some((c, d))) => Some((a.min(c), b.max(d))),
+            (one, other) => one.or(other),
+        };
+    }
+}
+
 fn bind(evidence: &Evidence, gates: Gates, hold_out: bool, readings: &mut HashMap<u32, Option<Citation>>) -> Binding {
     let count = evidence.keys.len();
     let mut root: Vec<u32> = (0..count as u32).collect();
+    // Each identity's place, at its root.
+    let placed = gates.provinces || gates.supreme || gates.dated;
+    let mut places: Vec<Place> = if placed { evidence.keys.iter().map(|key| Place::of(key)).collect() }
+        else { Vec::new() };
+    // The pairs kept apart by review, by each of their keys.
+    let mut apart: HashMap<u32, Vec<u32>> = HashMap::new();
+    for &(a, b) in &evidence.apart { apart.entry(a).or_default().push(b); apart.entry(b).or_default().push(a); }
     let mut members: Vec<Vec<u32>> = (0..count as u32).map(|id| vec![id]).collect();
     // Each key A2AJ files under exactly one decision is that decision's (by the decision's first key).
     let mut filed: HashMap<u32, HashSet<u32>> = HashMap::new();
@@ -268,7 +421,16 @@ fn bind(evidence: &Evidence, gates: Gates, hold_out: bool, readings: &mut HashMa
                 continue;
             }
         }
+        if placed && !places[a as usize].agrees(&places[b as usize], gates) {
+            refused.push((left, right, "places"));
+            continue;
+        }
         let (small, large) = if members[a as usize].len() < members[b as usize].len() { (a, b) } else { (b, a) };
+        if members[small as usize].iter().any(|id| apart.get(id).is_some_and(|others|
+            others.iter().any(|&other| root_of(&root, other) == large))) {
+            refused.push((left, right, "review"));
+            continue;
+        }
         if gates.distinct {
             for &id in members[small as usize].iter().chain(&members[large as usize]) {
                 readings.entry(id).or_insert_with(|| reading(&evidence.keys[id as usize], &evidence.forms[id as usize]));
@@ -283,6 +445,10 @@ fn bind(evidence: &Evidence, gates: Gates, hold_out: bool, readings: &mut HashMa
         members[large as usize].extend(moved);
         root[small as usize] = large;
         anchor[large as usize] = anchor[large as usize].or(anchor[small as usize]);
+        if !places.is_empty() {
+            let moved = std::mem::take(&mut places[small as usize]);
+            places[large as usize].join(&moved);
+        }
         span[large as usize] = match (span[large as usize], span[small as usize]) {
             (Some((a, b)), Some((c, d))) => Some((a.min(c), b.max(d))),
             (one, other) => one.or(other),
@@ -377,6 +543,11 @@ struct Identities {
     /// At an identity's root, the neutral citation and the CanLII identifier it holds: a decision has one of each.
     named: Vec<[Option<u32>; 2]>,
     rank: Vec<u8>,
+    /// The pairs a review keeps apart ([`Evidence::apart`]).
+    apart: Vec<(u32, u32)>,
+    /// At an identity's root, its place ([`Place`]), which an ALR record must agree with as a text's pair must.
+    places: Vec<Place>,
+    gates: Gates,
 }
 
 /// Which of [`Identities::named`] a key is: its neutral citation (0) or its CanLII identifier (1).
@@ -396,18 +567,28 @@ impl Identities {
         if let Some(slot) = named_slot(key) { named[slot] = Some(id); }
         self.named.push(named);
         self.rank.push(u8::MAX);
+        self.places.push(Place::of(key));
         id
     }
 
     /// Joins the identities of `a` and `b`, unless they hold two different decisions: two of A2AJ's, or two neutral
     /// citations or CanLII identifiers ("181 D.L.R. (4th) 522", an ALR record of "[1999] 1 SCR 420", is 1999 CanLII
-    /// 5311's, not 1999 CanLII 715's).
+    /// 5311's, not 1999 CanLII 715's), a pair a review keeps apart, or places and years the gates refuse.
     fn join(&mut self, a: u32, b: u32) -> bool {
         let (a, b) = (find(&mut self.root, a), find(&mut self.root, b));
         if a == b { return true; }
         if matches!((self.decision[a as usize], self.decision[b as usize]), (Some(x), Some(y)) if x != y) { return false; }
         let (left, right) = (self.named[a as usize], self.named[b as usize]);
         if left.iter().zip(&right).any(|pair| matches!(pair, (Some(x), Some(y)) if x != y)) { return false; }
+        let apart = std::mem::take(&mut self.apart);
+        let parted = apart.iter().any(|&(x, y)| {
+            let (x, y) = (find(&mut self.root, x), find(&mut self.root, y));
+            x == a && y == b || x == b && y == a
+        });
+        self.apart = apart;
+        if parted || !self.places[a as usize].agrees(&self.places[b as usize], self.gates) { return false; }
+        let moved = std::mem::take(&mut self.places[a as usize]);
+        self.places[b as usize].join(&moved);
         self.root[a as usize] = b;
         self.decision[b as usize] = self.decision[b as usize].or(self.decision[a as usize]);
         self.named[b as usize] = [right[0].or(left[0]), right[1].or(left[1])];
@@ -430,8 +611,13 @@ fn write(evidence: &Evidence, binding: &Binding, from: &str, out: &str, paths: &
     let mut identities = Identities {
         ids: evidence.keys.iter().enumerate().map(|(id, key)| (key.clone(), id as u32)).collect(),
         keys: evidence.keys.clone(), root: binding.root.clone(), decision: vec![None; evidence.keys.len()],
-        named: vec![[None; 2]; evidence.keys.len()], rank: evidence.ranks.clone(),
+        named: vec![[None; 2]; evidence.keys.len()], rank: evidence.ranks.clone(), apart: evidence.apart.clone(),
+        places: vec![Place::default(); evidence.keys.len()], gates,
     };
+    for (id, key) in evidence.keys.iter().enumerate() {
+        let root = find(&mut identities.root, id as u32);
+        identities.places[root as usize].join(&Place::of(key));
+    }
     for (first, _) in &evidence.records {
         let root = find(&mut identities.root, *first);
         identities.decision[root as usize].get_or_insert(*first);
@@ -510,7 +696,8 @@ fn write(evidence: &Evidence, binding: &Binding, from: &str, out: &str, paths: &
             "engine": env!("CARGO_PKG_VERSION"), "evidence": evidence_files,
             "gates": {"journalAgreement": gates.journal_agreement, "decisionAgreement": gates.decision_agreement,
                 "headerAgreement": gates.header_agreement, "digitalAgreement": gates.digital_agreement, "yearsApart": gates.years,
-                "anchor": gates.anchor, "distinct": gates.distinct, "order": gates.order},
+                "anchor": gates.anchor, "distinct": gates.distinct, "order": gates.order, "provinces": gates.provinces, "supreme": gates.supreme,
+                "dated": gates.dated, "keptApart": evidence.apart.len()},
             "identities": heads.len(), "targets": targets.len(),
         },
         "aliases": previous["aliases"], "reviews": previous["reviews"],
@@ -530,7 +717,7 @@ fn write(evidence: &Evidence, binding: &Binding, from: &str, out: &str, paths: &
 
 fn main() -> Result<()> {
     let args: Vec<String> = std::env::args().skip(1).collect();
-    let valued = ["--write", "--from", "--judge", "--years"];
+    let valued = ["--write", "--from", "--judge", "--years", "--apart", "--refused"];
     let value = |name: &str| args.iter().position(|arg| arg == name).and_then(|at| args.get(at + 1)).cloned();
     let paths: Vec<String> = args.iter().enumerate()
         .filter(|(at, arg)| !arg.starts_with("--") && !(*at > 0 && valued.contains(&args[at - 1].as_str())))
@@ -540,9 +727,16 @@ fn main() -> Result<()> {
     aliases::use_evidence(false);
     let started = std::time::Instant::now();
     if flag("--split") { return split(&paths); }
-    let evidence = load(&paths, Half::All)?;
-    eprintln!("{} keys, {} pairs, {} records in {:.0} s", evidence.keys.len(), evidence.pairs.len(), evidence.records.len(),
-        started.elapsed().as_secs_f64());
+    let mut evidence = load(&paths, Half::All)?;
+    if let Some(path) = value("--apart") {
+        let ids: HashMap<&str, u32> = evidence.keys.iter().enumerate().map(|(id, key)| (key.as_str(), id as u32)).collect();
+        evidence.apart = std::fs::read_to_string(path)?.lines()
+            .filter(|line| !line.starts_with('#') && !line.trim().is_empty())
+            .filter_map(|line| { let mut fields = line.split('\t'); Some((*ids.get(fields.next()?)?, *ids.get(fields.next()?)?)) })
+            .collect();
+    }
+    eprintln!("{} keys, {} pairs, {} records, {} kept apart in {:.0} s", evidence.keys.len(), evidence.pairs.len(),
+        evidence.records.len(), evidence.apart.len(), started.elapsed().as_secs_f64());
     let mut readings = HashMap::new();
     let configurations: Vec<(&str, Gates)> = if flag("--ablate") {
         let on = Gates::default();
@@ -555,17 +749,22 @@ fn main() -> Result<()> {
             ("decision and digital agreement on", Gates { decision_agreement: true, digital_agreement: true, ..on }),
             ("years over 2 apart refused", Gates { years: Some(2), ..on }),
             ("years over 1 apart refused", Gates { years: Some(1), ..on }),
+            ("provinces on", Gates { provinces: true, ..on }),
+            ("supreme off", Gates { supreme: false, ..on }),
+            ("dated off", Gates { dated: false, ..on }),
             ("anchor off", Gates { anchor: false, ..on }),
             ("distinct off", Gates { distinct: false, ..on }),
             ("order off", Gates { order: false, ..on }),
             ("all gates off", Gates { journal_agreement: false, decision_agreement: false, header_agreement: false,
-                digital_agreement: false, anchor: false, distinct: false, order: false, years: None }),
+                digital_agreement: false, anchor: false, distinct: false, order: false, provinces: false, supreme: false,
+                dated: false, years: None }),
         ]
     } else {
         vec![("chosen gates", Gates {
             journal_agreement: !flag("--no-journal-agreement"), decision_agreement: flag("--decision-agreement"),
             header_agreement: flag("--header-agreement"), digital_agreement: flag("--digital-agreement"),
             anchor: !flag("--no-anchor"), distinct: !flag("--no-distinct"), order: !flag("--no-order"),
+            provinces: flag("--provinces"), supreme: !flag("--no-supreme"), dated: !flag("--no-dated"),
             years: value("--years").and_then(|apart| apart.parse().ok()),
         })]
     };
@@ -585,6 +784,13 @@ fn main() -> Result<()> {
     if let Some(out) = value("--write") {
         let gates = configurations[0].1;
         let binding = bind(&evidence, gates, false, &mut readings);
+        // Every pair a gate kept apart, for review: `gate <TAB> form <TAB> form <TAB> key <TAB> key`.
+        if let Some(path) = value("--refused") {
+            let lines: String = binding.refused.iter().map(|&(left, right, gate)| format!("{gate}\t{}\t{}\t{}\t{}\n",
+                evidence.forms[left as usize], evidence.forms[right as usize], evidence.keys[left as usize],
+                evidence.keys[right as usize])).collect();
+            std::fs::write(path, lines)?;
+        }
         return write(&evidence, &binding, &value("--from").unwrap_or_else(|| out.clone()), &out, &paths, gates);
     }
     let hold_out = flag("--hold-out") || flag("--ablate");
@@ -617,7 +823,8 @@ fn split(paths: &[String]) -> Result<()> {
     let configurations = [("all gates on", Gates::default()), ("journal agreement off", Gates { journal_agreement: false, ..Gates::default() }),
         ("distinct off", Gates { distinct: false, ..Gates::default() }),
         ("all gates off", Gates { journal_agreement: false, decision_agreement: false, header_agreement: false,
-            digital_agreement: false, anchor: false, distinct: false, order: false, years: None })];
+            digital_agreement: false, anchor: false, distinct: false, order: false, provinces: false, supreme: false,
+            dated: false, years: None })];
     println!("| configuration | odd half written by | agrees | contradicts | agreement |");
     println!("|---|---|---|---|---|");
     let id_of: HashMap<&str, u32> = even.keys.iter().enumerate().map(|(id, key)| (key.as_str(), id as u32)).collect();

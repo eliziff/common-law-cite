@@ -217,6 +217,12 @@ the canonical citation and evidence-record ids from
 [`registry/aliases.json`](crates/legal-citations/registry/aliases.json), which
 preserves every original A2AJ alias record and the source-backed corrections.
 Unresolved records remain available for inspection and do not create links.
+The table is built by `alias-evidence` (the parallels written in A2AJ's records and decisions, open journals, a
+local corpus of filings and providers' headers) and `alias-inventory` (which binds them under gates it can ablate,
+and judges the result against decisions whose own citations a provider prints). Pairs a review found are two
+decisions are kept apart in
+[`registry/alias-apart.tsv`](crates/legal-citations/registry/alias-apart.tsv), each with its reason;
+`tools/alias-audit.py` lists the identities left to review.
 
 Applications with installed source indexes can pass their complete alias
 closures to `resolve` as `aliasGroups: [{index, keys}]`. The engine checks that

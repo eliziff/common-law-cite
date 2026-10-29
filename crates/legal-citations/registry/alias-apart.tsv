@@ -1,0 +1,32 @@
+# Citations a review found are two decisions, whatever evidence joins them: alias-inventory --apart keeps each pair out
+# of one identity. key <TAB> key <TAB> why. Reviewed 2026-10-29 from the decisions whose own citations CanLII or Westlaw
+# print, where the table had bound one of them to another decision.
+4:reporter:bclr:bclr2d:74:2	4:reporter:scr:scr:1992:2:226	CanLII prints 74 B.C.L.R. (2d) 2 for Norberg v Wynrib, [1992] 2 S.C.R. 318 (September), not the June decision at [1992] 2 S.C.R. 226
+4:reporter:wwr:wwr:1992:6:673	4:reporter:scr:scr:1992:2:226	CanLII prints [1992] 6 W.W.R. 673 for Norberg v Wynrib, [1992] 2 S.C.R. 318 (September), not the June decision at [1992] 2 S.C.R. 226
+4:reporter:rfl:rfl4th:12:201	4:reporter:scr:scr:1995:2:929	CanLII prints 12 R.F.L. (4th) 201 for Egan v Canada, [1995] 2 S.C.R. 513, not Weber v Ontario Hydro
+4:reporter:mvr:mvr3d:10:151	4:reporter:scr:scr:1995:2:627	10 M.V.R. (3d) 151 is Miron v Trudel's, [1995] 2 S.C.R. 418 (with its 124 D.L.R. (4th) 693 and 13 R.F.L. (4th) 1); CanLII's page for Thibaudeau v Canada lists it in error
+4:database:scj:1998:61	4:reporter:scr:scr:1997:2:217	CanLII prints [1998] S.C.J. No. 61 for Reference re Secession of Quebec, [1998] 2 S.C.R. 217
+4:reporter:dlr:dlr4th:441:1	4:neutral:2019:scc:15	CanLII prints 441 D.L.R. (4th) 1 for Vavilov, 2019 SCC 65
+4:reporter:ccli:ccli5th:84:1	4:reporter:scr:scr:1992:2:445	CanLII prints 84 C.C.L.I. (5th) 1 for 2018 SCC 52
+4:reporter:dlr:dlr4th:430:315	4:reporter:scr:scr:1992:2:445	CanLII prints 430 D.L.R. (4th) 315 for 2018 SCC 52
+4:reporter:ccc:ccc3d:55:97	4:reporter:scr:scr:1996:3:458	Westlaw prints 55 C.C.C. (3d) 97 for the 1990 decision at [1990] 1 S.C.R. 852
+4:reporter:cr:cr3d:76:329	4:reporter:scr:scr:1996:3:458	Westlaw prints 76 C.R. (3d) 329 for the 1990 decision at [1990] 1 S.C.R. 852
+4:reporter:manr:manr2d:67:1	4:reporter:scr:scr:1996:3:458	Westlaw prints 67 Man. R. (2d) 1 for the 1990 decision at [1990] 1 S.C.R. 852
+4:reporter:wac:wac:132:243	4:reporter:scr:scr:1996:3:458	Westlaw prints 132 W.A.C. 243 for the 1990 decision at [1990] 1 S.C.R. 852
+4:reporter:ccc:ccc3d:338:183	4:neutral:2016:cmac:3	Westlaw prints 338 C.C.C. (3d) 183 for 2016 CMAC 1
+4:reporter:nr:nr:34:1	4:neutral:2005:fca:139	Westlaw prints 34 N.R. 1 for the 1980 decision at [1980] 2 S.C.R. 694
+4:canlii:1952:328	4:reporter:scr:scr:1952:2:359	CanLII titles 1952 CanLII 328 Walker v Brownlee and Harmon; [1952] 2 S.C.R. 359 is Workmen's Compensation Board v C.P.R. (A2AJ)
+4:canlii:1993:130	4:reporter:scr:scr:1993:1:1134	CanLII titles 1993 CanLII 130 R v Koruz; [1993] 1 S.C.R. 1134 is R v Schiewe (A2AJ)
+4:canlii:2000:16275	4:neutral:2001:fca:342	CanLII titles 2000 CanLII 16275 VIA Rail Canada v National Transportation Agency; 2001 FCA 342 is Starlight v Canada (A2AJ)
+4:canlii:2001:28294	4:neutral:2001:scc:44	CanLII titles 2001 CanLII 28294 Zesta Engineering v Cloutier; 2001 SCC 44 is Danyluk v Ainsworth Technologies (A2AJ)
+4:canlii:2006:3560	4:neutral:2014:onca:2	CanLII titles 2006 CanLII 3560 R v Chenier; 2014 ONCA 2 is R v Carroll (A2AJ)
+4:canlii:2008:33	4:neutral:2008:onca:33	CanLII titles 2008 CanLII 33 Plaza Pontiac Buick GMC v D'Ambrosio; 2008 ONCA 33 is Ontario Provincial Police v Cornwall Public Inquiry (A2AJ)
+4:canlii:1939:270	4:reporter:scr:scr:1938:278	CanLII titles 1939 CanLII 270 (UKPC) Ladore v Bennett; [1938] S.C.R. 278 is Hudson's Bay Co v Wyrzykowski (A2AJ)
+4:canlii:1998:6489	4:neutral:2000:bcca:638	CanLII titles 1998 CanLII 6489 (BCCA) Endean v Canadian Red Cross Society; 2000 BCCA 638 is Endean v British Columbia (A2AJ), a later decision in the litigation
+4:reporter:nsr:nsr:96:321	4:reporter:scr:scr:1989:1:1469	United States v Cotroni is a Quebec appeal reported at 96 N.R. 321; 96 N.S.R. 321 is that page misread as the Nova Scotia Reports
+4:database:sj:2011:228	4:neutral:2011:abca:77	[2011] S.J. No. 228 is a Saskatchewan number; 2011 ABCA 77 is [2011] A.J. No. 228, misread
+4:database:qj:2002:5271	4:neutral:2003:bcca:66	a Quebec Quicklaw number beside R v Muir, 2003 BCCA 66 ([2003] B.C.J. No. 221)
+4:database:oj:2015:8142	4:neutral:2015:qcca:1391	an Ontario Quicklaw number beside 2015 QCCA 1391
+4:database:carswellns:2010:70	4:neutral:2010:nbqb:51	a Nova Scotia Carswell number beside 2010 NBQB 51
+4:database:oj:1994:25	4:reporter:bclr:bclr2d:11:266	an Ontario Quicklaw number beside a British Columbia report
+4:database:oj:1999:1360	4:reporter:bclr:bclr3d:68:293	an Ontario Quicklaw number beside a British Columbia report
