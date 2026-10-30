@@ -532,6 +532,18 @@ fn citation_alias_target_info(citation: &Citation, language: Language) -> Option
     })
 }
 
+/// The CanLII document of each decision a citation key names (`4:reporter:scr:scr:1986:1:103` ->
+/// `ca/scc/1986canlii46`, or a neutral citation), from Legal Pinpointer's tools/build-canlii-case-aliases.py over
+/// the alias table, A2AJ's metadata and CanLII's case list: the page of a decision reported before neutral citations.
+static CANLII_IDS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
+    use std::io::Read;
+    let mut text = String::new();
+    flate2::read::GzDecoder::new(&include_bytes!("../../registry/canlii-case-ids.tsv.gz")[..])
+        .read_to_string(&mut text).expect("CanLII case ids");
+    text.lines().filter(|line| !line.starts_with('#'))
+        .filter_map(|line| line.split_once('\t')).map(|(key, target)| (key.to_owned(), target.to_owned())).collect()
+});
+
 pub fn canlii_alias_target_info(target: &str, language: Language) -> Option<AliasTargetInfo> {
     static PATH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(?:([a-z]{2})/)?([A-Za-z0-9-]+)/((\d{4})[a-z0-9]+)$").unwrap());
     let value = target.split_whitespace().collect::<Vec<_>>().join(" ");
@@ -541,13 +553,19 @@ pub fn canlii_alias_target_info(target: &str, language: Language) -> Option<Alia
         let options = crate::Options { resolve: false, parallel: false,
             jurisdiction_priority: vec!["ca".to_owned()], ..Default::default() };
         return crate::extract(&value, &options).iter().find_map(|citation| {
-            if let Some(target) = crate::aliases::resolve(citation) {
+            let alias = crate::aliases::resolve(citation);
+            if let Some(target) = &alias {
                 let canonical = crate::extract(&target.citation, &options);
                 if let [only] = canonical.as_slice() {
                     if let Some(info) = citation_alias_target_info(only, language) { return Some(info); }
                 }
             }
-            citation_alias_target_info(citation, language)
+            citation_alias_target_info(citation, language).or_else(|| {
+                // A decision with no route of its own (a report before neutral citations): its CanLII document by key.
+                let key = alias.map(|target| target.key).or_else(|| key::key_in(citation, registry::registry()))?;
+                CANLII_IDS.get(&key).filter(|target| PATH.is_match(target))
+                    .and_then(|target| canlii_alias_target_info(target, language))
+            })
         });
     };
     let jurisdiction = path.get(1).map_or("", |part| part.as_str());
