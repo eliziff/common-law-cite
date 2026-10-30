@@ -90,6 +90,7 @@ pub const METHODS: &[&str] = &[
     "canliiAliasTargetInfo",
     "sourceAnchor",
     "sourceUrl",
+    "pinpointLinks",
     "canliiPinpointUrl",
     "passageLocator",
     "canliiPdfPage",
@@ -326,6 +327,13 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             struct Request { url: String, anchor: Option<String> }
             let request: Request = parse(method, request)?;
             to_value(url_stage::source_url(&request.url, request.anchor.as_deref()))
+        },
+        "pinpointLinks" => {
+            #[derive(Deserialize)]
+            #[serde(deny_unknown_fields)]
+            struct Request { pinpoints: Vec<crate::model::Pinpoint>, url: String }
+            let request: Request = parse(method, request)?;
+            to_value(url_stage::pinpoint_links(&request.pinpoints, &request.url))
         },
         "canliiPinpointUrl" | "passageLocator" => {
             #[derive(Deserialize)]
