@@ -621,46 +621,22 @@ pub fn canlii_noteup(citation: &Citation, query: &str) -> Option<String> {
     ))
 }
 
-/// The fragment that opens a pinpoint on a CanLII page: `#par12` for paragraphs, a text fragment for
-/// `[page 5]` markers, `#sec7`, `#sec7subsec2`, `#art1457`, `#rule3` for
-/// provisions, and LégisQuébec's `#se:18_1` on Quebec statutes. Deeper
-/// provisions (`7(2)(a)`) have no stable id.
-pub fn canlii_anchor(kind: PinpointKind, locator: &str, page_url: &str) -> Option<String> {
-    let value = crate::text::normalize_javascript_whitespace(locator);
-    match kind {
-        PinpointKind::Page => Some(format!("#:~:text={}", encode_component(&format!("[page {value}]")))),
-        PinpointKind::Paragraph => Some(paragraph_anchor(&value)),
-        PinpointKind::Section | PinpointKind::Subsection | PinpointKind::Rule | PinpointKind::Article => {
-            static QUEBEC: LazyLock<Regex> =
-                LazyLock::new(|| Regex::new(r"//[^/]+/(?:en|fr)/qc/laws/").unwrap());
-            let parsed = crate::format::parse_locator(&value)?;
-            let (root, suffixes) = (&parsed.root, &parsed.suffixes);
-            if QUEBEC.is_match(page_url) {
-                return Some(format!("#se:{}", root.replace('.', "_")));
-            }
-            if suffixes.len() > 1 {
-                return None;
-            }
-            let prefix = match kind {
-                PinpointKind::Article => "art",
-                PinpointKind::Rule => "rule",
-                _ => "sec",
-            };
-            let tail = suffixes.first().map(|suffix| format!("subsec{suffix}")).unwrap_or_default();
-            Some(format!("#{prefix}{root}{tail}"))
-        }
-        _ => None,
-    }
-}
-
-/// `page_url` with the anchor for `citation`'s first pinpoint, when there is
-/// exactly one pinpoint and it has an anchor.
+/// `page_url` with the anchor for `citation`'s first pinpoint, when there is exactly one pinpoint and
+/// it has an anchor ([`super::source_anchor`]; a page as a text fragment for its `[page 5]` marker).
 pub fn with_pinpoint(page_url: &str, citation: &Citation) -> String {
     match citation.pinpoints.as_slice() {
-        [only] if only.last.is_none() => match canlii_anchor(only.kind, &only.first, page_url) {
-            Some(anchor) if !page_url.contains('#') => format!("{page_url}{anchor}"),
-            _ => page_url.to_owned(),
-        },
+        [only] if only.last.is_none() && !page_url.contains('#') => {
+            let value = crate::text::normalize_javascript_whitespace(&only.first);
+            let anchor = match only.kind {
+                PinpointKind::Page => Some(format!(":~:text={}", encode_component(&format!("[page {value}]")))),
+                PinpointKind::Paragraph => super::source_anchor(page_url, "paragraph", &format!("par{value}")),
+                PinpointKind::Section | PinpointKind::Subsection => super::source_anchor_within(page_url, "section", &value, Some(1)),
+                PinpointKind::Article => super::source_anchor_within(page_url, "article", &value, Some(1)),
+                PinpointKind::Rule => super::source_anchor_within(page_url, "rule", &value, Some(1)),
+                _ => None,
+            };
+            anchor.map_or_else(|| page_url.to_owned(), |anchor| format!("{page_url}#{anchor}"))
+        }
         _ => page_url.to_owned(),
     }
 }

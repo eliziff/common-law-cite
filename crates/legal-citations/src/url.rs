@@ -17,7 +17,7 @@
 //!   code and database (`SCC`→`csc`, `FCA`→`caf`, `FC`→`cf`, `TCC`→`cci`,
 //!   `CMAC`→`cacm`); any other French page keeps
 //!   the English route and slug.
-//! * CanLII search and noteup ([`canlii_search`]), anchors ([`canlii_anchor`]),
+//! * CanLII search and noteup ([`canlii_search`]), anchors ([`source_anchor`]),
 //!   [`is_canlii_url`] and [`canlii_pdf_url`].
 //! * CanLII legislation ([`canlii_legislation`]) for series the registry
 //!   routes to CanLII, with CanLII's id scheme (`rsc-1985-c-c-46`,
@@ -82,11 +82,6 @@ fn four_digit_year(value: &str) -> Option<String> {
     (digits.len() == 4).then_some(digits)
 }
 
-/// `#par12`.
-pub fn paragraph_anchor(paragraph: &str) -> String {
-    format!("#par{}", encode_component(paragraph.trim()))
-}
-
 // ---------------------------------------------------------------------------
 // A source's page at a pinpoint: the anchor each publisher's page has for it
 
@@ -98,15 +93,25 @@ fn plain_number(digits: &str) -> &str {
 
 /// The anchor a source's page has for a locator its reading labels (`par12`, `page 3`, `2(1)`,
 /// `sec2subsec1`): `par12` on a CanLII decision or a Decisia decision, `page=3` on a PDF, and on a
-/// CanLII statute `sec2` or `sec2subsec1`; on a statute page of Justice Laws, BC Laws, Manitoba,
-/// New Brunswick or Newfoundland and Labrador, the id that publisher prints for the provision
-/// ([`canada::statute_anchor`]). None where the page has no such anchor.
+/// CanLII statute `sec2` or `sec2subsec1` (`art1457` for an article, `rule3` for a rule), on a
+/// Quebec one its article's LégisQuébec id (`se:18_1`); on a statute page of Justice Laws, BC Laws,
+/// Manitoba, New Brunswick or Newfoundland and Labrador, the id that publisher prints for the
+/// provision ([`canada::statute_anchor`]). None where the page has no such anchor.
 pub fn source_anchor(page_url: &str, kind: &str, label: &str) -> Option<String> {
+    source_anchor_within(page_url, kind, label, None)
+}
+
+/// [`source_anchor`] with a CanLII statute's anchor only for a locator at most `depth` levels below its section (`7` is
+/// 0, `7(2)` 1, `7(2)(a)` 2); a Quebec statute's names only the article, at any depth.
+pub fn source_anchor_within(page_url: &str, kind: &str, label: &str, depth: Option<usize>) -> Option<String> {
+    let number = label.get(..3).filter(|prefix| prefix.eq_ignore_ascii_case("sec")).map_or(label, |_| &label[3..]);
+    let too_deep = depth.is_some_and(|depth| crate::format::parse_locator(number).is_some_and(|parsed| parsed.suffixes.len() > depth));
     static PARAGRAPH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^par([0-9]+)").unwrap());
     static PAGE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^(?:page=?)?([0-9]+)").unwrap());
     static NUMBERED: LazyLock<Regex> =
-        LazyLock::new(|| Regex::new(r"^([0-9]+(?:\.[0-9]+)*)(?:\s*\(([0-9]+)\))?").unwrap());
+        LazyLock::new(|| Regex::new(r"^([0-9]+(?:\.[0-9]+)*)(?:\s*\(([^()]+)\))?").unwrap());
     static SECTION: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)^sec[A-Za-z0-9_.-]+").unwrap());
+    static QUEBEC: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^/(?:en|fr)/qc/laws/").unwrap());
     let url = url::Url::parse(page_url).ok()?;
     let (canlii, decisia) = canadian_page(&url);
     match kind {
@@ -126,13 +131,16 @@ pub fn source_anchor(page_url: &str, kind: &str, label: &str) -> Option<String> 
             #[cfg(not(feature = "canada"))]
             None
         }
-        _ => {
-            let section = SECTION.find(label).map(|found| found.as_str().to_owned()).or_else(|| {
-                NUMBERED.captures(label).map(|numbered| format!("sec{}{}", &numbered[1],
-                    numbered.get(2).map(|subsection| format!("subsec{}", subsection.as_str())).unwrap_or_default()))
-            })?;
-            (canlii && url.path().contains("/laws/")).then_some(section)
+        _ if !url.path().contains("/laws/") => None,
+        _ if QUEBEC.is_match(url.path()) => {
+            NUMBERED.captures(number).map(|numbered| format!("se:{}", numbered[1].replace('.', "_")))
         }
+        _ if too_deep => None,
+        _ => SECTION.find(label).map(|found| found.as_str().to_owned()).or_else(|| {
+            let prefix = match kind { "article" => "art", "rule" => "rule", _ => "sec" };
+            NUMBERED.captures(label).map(|numbered| format!("{prefix}{}{}", &numbered[1],
+                numbered.get(2).map(|subsection| format!("subsec{}", subsection.as_str())).unwrap_or_default()))
+        }),
     }
 }
 

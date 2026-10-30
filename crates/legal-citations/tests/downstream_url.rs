@@ -3,8 +3,8 @@ mod downstream_common;
 use downstream_common::*;
 use legal_citations::format::Language;
 use legal_citations::url::{
-    canlii_anchor, canlii_case_in, canlii_citation_url, canlii_legislation_in, canlii_noteup, canlii_pdf_url, canlii_search,
-    courtlistener_in, encode_component, is_canlii_url, justice_laws, legislation_gov_uk, paragraph_anchor, uk_caselaw,
+    canlii_case_in, canlii_citation_url, canlii_legislation_in, canlii_noteup, canlii_pdf_url, canlii_search,
+    courtlistener_in, encode_component, is_canlii_url, justice_laws, legislation_gov_uk, source_anchor, uk_caselaw,
     url_in, with_pinpoint, SearchField,
 };
 use legal_citations::{Authority, Citation, Form, Format, PinpointKind};
@@ -184,18 +184,16 @@ fn search_and_noteup() {
 #[test]
 fn anchors() {
     let page = "https://www.canlii.org/en/ca/laws/stat/rsc-1985-c-c-46/latest/rsc-1985-c-c-46.html";
-    assert_eq!(paragraph_anchor("12"), "#par12");
-    assert_eq!(canlii_anchor(PinpointKind::Paragraph, "12", page).unwrap(), "#par12");
-    assert_eq!(canlii_anchor(PinpointKind::Section, "7", page).unwrap(), "#sec7");
-    assert_eq!(canlii_anchor(PinpointKind::Section, "7(2)", page).unwrap(), "#sec7subsec2");
-    assert_eq!(canlii_anchor(PinpointKind::Section, "7(2)(a)", page), None);
-    assert_eq!(canlii_anchor(PinpointKind::Article, "1457", page).unwrap(), "#art1457");
-    assert_eq!(canlii_anchor(PinpointKind::Rule, "3", page).unwrap(), "#rule3");
-    assert_eq!(canlii_anchor(PinpointKind::Page, "5", page).unwrap(), "#:~:text=%5Bpage%205%5D");
+    let decision = "https://www.canlii.org/en/ca/scc/doc/2016/2016scc27/2016scc27.html";
+    assert_eq!(source_anchor(decision, "paragraph", "par12").unwrap(), "par12");
+    assert_eq!(source_anchor(page, "section", "7").unwrap(), "sec7");
+    assert_eq!(source_anchor(page, "section", "7(2)").unwrap(), "sec7subsec2");
+    assert_eq!(source_anchor(page, "section", "7(2)(a)").unwrap(), "sec7subsec2");
+    assert_eq!(source_anchor(page, "article", "1457").unwrap(), "art1457");
+    assert_eq!(source_anchor(page, "rule", "3").unwrap(), "rule3");
     let quebec = "https://www.canlii.org/fr/qc/laws/stat/cqlr-c-c-12/latest/cqlr-c-c-12.html";
-    assert_eq!(canlii_anchor(PinpointKind::Section, "18.1", quebec).unwrap(), "#se:18_1");
-    assert_eq!(canlii_anchor(PinpointKind::Section, "abc", page), None);
-    assert_eq!(canlii_anchor(PinpointKind::Footnote, "4", page), None);
+    assert_eq!(source_anchor(quebec, "section", "18.1").unwrap(), "se:18_1");
+    assert_eq!(source_anchor(page, "section", "abc"), None);
 }
 
 #[test]

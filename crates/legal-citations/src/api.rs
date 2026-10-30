@@ -317,9 +317,10 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         "sourceAnchor" => {
             #[derive(Deserialize)]
             #[serde(deny_unknown_fields)]
-            struct Request { url: String, kind: String, label: String }
+            struct Request { url: String, kind: String, labels: Vec<String>, depth: Option<usize> }
             let request: Request = parse(method, request)?;
-            to_value(url_stage::source_anchor(&request.url, &request.kind, &request.label))
+            to_value(request.labels.iter().map(|label| url_stage::source_anchor_within(&request.url, &request.kind, label, request.depth))
+                .collect::<Vec<_>>())
         },
         "sourceUrl" => {
             #[derive(Deserialize)]
