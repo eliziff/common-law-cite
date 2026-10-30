@@ -1064,9 +1064,6 @@ pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
             reading.fields.year = Some("1982".to_owned());
             reading.fields.chapter = Some("11".to_owned());
             reading.jurisdiction = Some("ca".to_owned());
-            if style.starts_with("Charte") {
-                reading.language = Some("fr");
-            }
             return Some(reading);
         }
         "book_grammar" => return book(core, style),
@@ -1358,13 +1355,16 @@ pub(crate) fn apply(citation: &mut Citation, mut reading: Reading, options: &cra
     if reading.authority == Some(Authority::Book) && BOOK_CHAPTER.is_match(&style).unwrap_or(false) {
         reading.authority = Some(Authority::BookChapter);
     }
+    // The Charter's title styles its citation, so its language is read here, where the style is known.
+    if reading.reason == "charter_grammar" && style.starts_with("Charte") {
+        reading.language = Some("fr");
+    }
     if matches!(
         reading.authority,
         Some(Authority::Statute | Authority::Regulation)
     ) {
         let title = if style.is_empty() { citation.span.text.as_str() } else { style.as_str() };
-        instrument_kind(title, &mut reading);
-    }
+        instrument_kind(title, &mut reading);    }
     // A chapter-numbered Quebec regulation carries its number as a rule
     // (`RLRQ, c C-25.01, r 0.1`; `RRQ 1981, c M-20, r 1`): part of its identity, not a pinpoint.
     if reading.format == Some(Format::StatuteVolume)

@@ -99,7 +99,7 @@ fn citation_occurrences_keep_repeated_matches_distinct_and_short_forms_local() {
     assert_eq!(citations.len(), 2);
     assert_eq!(citations[0].short_name.as_deref(), Some("Hansman v Neufeld"));
     assert_eq!(citations[0].explicit_short_name.as_deref(), Some("Hansman"));
-    assert_eq!(citations[0].full_span.text, "Hansman v Neufeld, 2023 SCC 14 [Hansman].");
+    assert_eq!(citations[0].full_span.text, "Hansman v Neufeld, 2023 SCC 14 [Hansman]");
     assert_eq!(citations[1].span.text, "2023 SCC 14");
     assert_eq!(citations[1].pinpoints[0].first, "9");
     assert!(citations[0].full_span.end <= citations[1].full_span.start);
@@ -180,8 +180,8 @@ fn citation_expands_parenthesized_left_party() {
     assert_eq!(citation.short_name.as_deref(), Some("Quebec (Attorney General) v. Blaikie"));
     assert!(citation.reasons.iter().any(|reason| reason == "same_text_style"));
     let parties = citation.parties.unwrap();
-    assert_eq!(parties.plaintiff, "Quebec (Attorney General)");
-    assert_eq!(parties.defendant, "Blaikie");
+    assert_eq!(parties.plaintiff.as_deref(), Some("Quebec (Attorney General)"));
+    assert_eq!(parties.defendant.as_deref(), Some("Blaikie"));
 }
 
 #[test]
@@ -235,7 +235,7 @@ fn french_neutral_citations_map_to_the_english_court() {
     assert_eq!(citation.signal.as_ref().unwrap().text, "voir");
     assert_eq!(citation.style.as_ref().unwrap().text, "R c Jordan");
     let parties = citation.parties.as_ref().unwrap();
-    assert_eq!((parties.plaintiff.as_str(), parties.defendant.as_str()), ("R", "Jordan"));
+    assert_eq!((parties.plaintiff.as_deref(), parties.defendant.as_deref()), (Some("R"), Some("Jordan")));
     assert_eq!(pins(&citation), [pin(PinpointKind::Paragraph, "12")]);
 }
 
@@ -309,7 +309,8 @@ fn year_as_volume_reports_are_cases_with_canonical_reporters() {
     let mabo = one("Mabo v Queensland (No 2) (1992) 175 CLR 1 at 42.");
     assert_eq!(mabo.authority, Authority::Case);
     assert_eq!(mabo.format, Some(Format::Reporter));
-    assert_eq!(mabo.jurisdiction.as_deref(), Some("au"));
+    // Canadian-first (jurisdictionPriority defaults to ["ca"]): the setting ranks before the year's form.
+    assert_eq!(mabo.jurisdiction.as_deref(), Some("ca"));
     assert_eq!(mabo.style.as_ref().unwrap().text, "Mabo v Queensland (No 2)");
 }
 
@@ -329,7 +330,8 @@ fn report_start_pages_for_scr_headers() {
 #[test]
 fn colliding_report_series_are_told_apart_by_year_style() {
     let citations = cite("Smith v Jones (2001) 110 FCR 1; Doe v Canada, [2005] 1 FCR 123.");
-    assert_eq!(citations[0].jurisdiction.as_deref(), Some("au"));
+    // Canadian-first (jurisdictionPriority defaults to ["ca"]): the setting ranks before the year's form.
+    assert_eq!(citations[0].jurisdiction.as_deref(), Some("ca"));
     assert_eq!(citations[1].jurisdiction.as_deref(), Some("ca"));
 }
 
@@ -385,7 +387,9 @@ fn us_journals_are_journals_not_cases() {
     assert_eq!(citation.fields.volume.as_deref(), Some("100"));
     assert_eq!(citation.fields.page.as_deref(), Some("1234"));
     assert_eq!(pins(&citation), [pin(PinpointKind::Page, "1240")]);
-    assert_eq!(citation.style.as_ref().unwrap().text, "Richard Posner, The Problems");
+    // As eyecite reads a journal citation (the conformance case "Originalism without Foundations, 65 N.Y.U. L. Rev.
+    // 1373 (1990)"): its author and title stay out of it.
+    assert!(citation.style.is_none());
 }
 
 #[test]
@@ -556,7 +560,8 @@ fn books_and_book_chapters() {
 #[test]
 fn webpages() {
     let citation = cite("Supreme Court Act, online: <https://laws-lois.justice.gc.ca/eng/acts/S-26/>.").pop().unwrap();
-    assert_eq!(citation.authority, Authority::Webpage);
+    // A link whose title names an enactment cites that enactment.
+    assert_eq!(citation.authority, Authority::Statute);
     assert_eq!(citation.format, Some(Format::Url));
     assert_eq!(
         citation.fields.url.as_deref(),
@@ -736,8 +741,8 @@ fn corporate_names_keep_their_periods_and_versus() {
     assert_eq!(citation.full_span.text, text);
     assert_eq!(citation.format, Some(Format::Database));
     let parties = citation.parties.as_ref().unwrap();
-    assert_eq!(parties.plaintiff, "1068490 Ontario Ltd.");
-    assert_eq!(parties.defendant, "Marlin Center Mobile Homes Inc. and Howard Geisler");
+    assert_eq!(parties.plaintiff.as_deref(), Some("1068490 Ontario Ltd."));
+    assert_eq!(parties.defendant.as_deref(), Some("Marlin Center Mobile Homes Inc. and Howard Geisler"));
     assert_eq!(pins(&citation), [pin(PinpointKind::Paragraph, "21")]);
     assert_eq!(citation.parentheticals[0].kind, ParentheticalKind::Explanatory);
 }
@@ -750,7 +755,7 @@ fn versus_variants_split_parties() {
         ("Québec (Procureur général) c. Blaikie, [1979] 2 RCS 1016", "Québec (Procureur général)", "Blaikie"),
     ] {
         let parties = one(text).parties.expect(text);
-        assert_eq!((parties.plaintiff.as_str(), parties.defendant.as_str()), (plaintiff, defendant));
+        assert_eq!((parties.plaintiff.as_deref(), parties.defendant.as_deref()), (Some(plaintiff), Some(defendant)));
     }
 }
 

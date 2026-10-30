@@ -31,7 +31,7 @@ fn oakes_reporter_pair_groups_and_shares_style() {
     assert_eq!(citations[1].parallel_group, Some(0));
     assert_eq!(citations[1].short_name.as_deref(), Some("R v Oakes"));
     assert_eq!(citations[1].style.as_ref().map(|s| s.text.as_str()), Some("R v Oakes"));
-    assert_eq!(citations[1].parties.as_ref().map(|p| p.defendant.as_str()), Some("Oakes"));
+    assert_eq!(citations[1].parties.as_ref().and_then(|p| p.defendant.as_deref()), Some("Oakes"));
     assert_eq!(citations[1].fields.year.as_deref(), Some("1986"));
     assert_eq!(members(&citations, 0), vec![0, 1]);
 }
@@ -105,11 +105,11 @@ fn database_beats_digest_when_both_are_all_there_is() {
 
 #[test]
 fn three_member_group_chains_to_first_index() {
-    let text = "R v Smith, [1990] 1 SCR 5, 26 DLR (4th) 200, 55 CCC (3d) 1";
+    let text = "R v Oakes, [1986] 1 SCR 103, 26 DLR (4th) 200, 24 CCC (3d) 321";
     let mut citations = vec![
-        scr(0, text, 0, "1990", "1", "5").style("R v Smith").build(),
+        scr(0, text, 0, "1986", "1", "103").style("R v Oakes").build(),
         dlr(1, text, "26", "200").build(),
-        case(2, "55 CCC (3d) 1", at(text, "55 CCC", 0)).reporter(None, Some("55"), "CCC (3d)", "1").build(),
+        case(2, "24 CCC (3d) 321", at(text, "24 CCC", 0)).reporter(None, Some("24"), "CCC (3d)", "321").build(),
     ];
     group(text, &mut citations);
     assert!(citations.iter().all(|c| c.parallel_group == Some(0)));

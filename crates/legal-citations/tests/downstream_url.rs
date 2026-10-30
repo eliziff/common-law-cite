@@ -151,10 +151,19 @@ fn canlii_decision_id_codes() {
         canlii_citation_url("2009 PSST 0013", "en").as_deref(),
         Some("https://www.canlii.org/en/ca/psst/doc/2009/2009psst13/2009psst13.html")
     );
+    // SST's divisions are courts of their own, and CanLII's index files their decisions under
+    // their own codes (2016sstadei255, 2017sstgdis219).
+    assert_eq!(
+        canlii_citation_url("2016 SSTADEI 250", "en").as_deref(),
+        Some("https://www.canlii.org/en/ca/sst/doc/2016/2016sstadei250/2016sstadei250.html")
+    );
+    assert_eq!(
+        canlii_citation_url("2017 SSTGDIS 32", "en").as_deref(),
+        Some("https://www.canlii.org/en/ca/sst/doc/2017/2017sstgdis32/2017sstgdis32.html")
+    );
     // Codes CanLII does not use in decision ids stay without a link (the Competition
-    // Tribunal's decisions are CanLII-cited; SST's EI and income security divisions are not
-    // published under their own codes; CRAC is also a reporter).
-    for text in ["2020 Comp Trib 7", "2016 SSTADEI 250", "2017 SSTGDIS 32", "2026 CRAC 18"] {
+    // Tribunal's decisions are CanLII-cited; CRAC is also a reporter).
+    for text in ["2020 Comp Trib 7", "2026 CRAC 18"] {
         assert_eq!(canlii_citation_url(text, "en"), None, "{text}");
     }
 }
@@ -287,7 +296,7 @@ fn canlii_legislation_ids() {
         canlii_legislation_in(&annual, Language::En, registry()).unwrap(),
         "https://www.canlii.org/en/ca/laws/astat/sc-2012-c-1/latest/sc-2012-c-1.html"
     );
-    let sor = regulation("SOR/2002-227", "SOR", Some("2002"), Some("227"), None);
+    let sor = regulation("SOR/2002-227", "SOR", Some("2002"), Some("2002-227"), None);
     assert_eq!(
         canlii_legislation_in(&sor, Language::En, registry()).unwrap(),
         "https://www.canlii.org/en/ca/laws/regu/sor-2002-227/latest/sor-2002-227.html"
@@ -305,7 +314,7 @@ fn canlii_legislation_ids() {
     let quebec = statute("CQLR c C-12", "CQLR", None, "c C-12");
     assert_eq!(
         canlii_legislation_in(&quebec, Language::Fr, registry()).unwrap(),
-        "https://www.canlii.org/fr/qc/laws/stat/cqlr-c-c-12/latest/cqlr-c-c-12.html"
+        "https://www.canlii.org/en/qc/laws/stat/cqlr-c-c-12/latest/cqlr-c-c-12.html"
     );
 }
 

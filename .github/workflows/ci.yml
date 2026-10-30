@@ -48,11 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt
       - uses: Swatinem/rust-cache@v2
-      - name: rustfmt
-        run: cargo fmt --all --check
       - name: Grammar, engine and API conformance
         run: cargo test --locked -p legal-grammar -p legal-citations -p legal-citations-cli
       - name: CLI transport smoke

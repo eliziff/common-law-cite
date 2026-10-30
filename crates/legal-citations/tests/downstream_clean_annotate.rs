@@ -217,6 +217,8 @@ fn citation(start: usize, end: usize, text: &str, full_start: usize) -> Citation
         parallel_group: None,
         antecedent: None,
         key: None,
+        alias: None,
+        interpretations: Vec::new(),
         reasons: Vec::new(),
     }
 }

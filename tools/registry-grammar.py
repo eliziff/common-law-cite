@@ -92,7 +92,7 @@ def main():
     parser.add_argument("--check", action="store_true", help="exit 1 if the corpus is stale")
     args = parser.parse_args()
     rows = json.loads(LAWS.read_text(encoding="utf-8"))
-    current = CORPUS.read_bytes().decode("utf-8")
+    current = CORPUS.read_bytes().decode("utf-8").replace("\r\n", "\n")
     corpus = written(current, defs(rows))
     files = [(CORPUS, current, corpus), (MANIFEST, MANIFEST.read_text(encoding="utf-8"), manifest(corpus))]
     stale = [path for path, before, after in files if before.replace("\r\n", "\n") != after.replace("\r\n", "\n")]

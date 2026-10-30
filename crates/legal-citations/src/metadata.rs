@@ -304,8 +304,9 @@ fn parenthetical(text: &str, range: Range<usize>) -> Parenthetical {
         ParentheticalKind::Source
     } else if RECORD.is_match(&content) {
         ParentheticalKind::Record
-    } else if !content.is_empty() && content.bytes().all(|byte| byte.is_ascii_digit()) {
-        // A bare numbered subdivision after a pinpoint is not a court.
+    } else if !content.is_empty() && content.bytes().all(|byte| byte.is_ascii_digit())
+        && read_court(&content).is_none_or(|reading| reading.year.is_none()) {
+        // A bare numbered subdivision after a pinpoint is not a court; a bare year is the decision's date.
         ParentheticalKind::Explanatory
     } else if let Some(reading) = read_court(&content) {
         if reading.court.is_some() {

@@ -1170,7 +1170,13 @@
   "jurisdiction": "us",
   "abbreviation": "U.S.C.",
   "variations": [
-   "USC"
+   "USC",
+   "U. S. C.",
+   "U.S. Code",
+   "U.S.C.A.",
+   "U.S.C.S.",
+   "U.S.C.U.",
+   "United States Code"
   ],
   "regexes": [
    "(?P<title>\\d+) $reporter(?: ?§+ ?| )(?P<section>\\d(?:[A-Za-z0-9().-]*[A-Za-z0-9)])?)"

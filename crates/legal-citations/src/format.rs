@@ -527,12 +527,15 @@ static ET_AL: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i),?\s+et al\.?$
 static AG_BARE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?i)\((?:the )?Attorney General(?: of)?\)").unwrap());
 static AG_OF: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"(?i)\((?:the )?Attorney General of ([^)]+)\)").unwrap());
+    LazyLock::new(|| Regex::new(r"(?i)\((?:the )?Attorney General (?:of|for) ([^)]+)\)").unwrap());
 static AG_LEAD: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?i)^(?:The )?Attorney General of ([A-Z][A-Za-z ]*?)(\s*\(.*)?$").unwrap()
+    Regex::new(r"(?i)^(?:The )?Attorney General (?:of|for) ((?:the )?[A-Z][A-Za-z ]*?)(\s*\(.*)?$").unwrap()
 });
 static PG_PAREN: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r"(?i)\(Procureur(?:e)? g\u{e9}n\u{e9}ral(?:e)?(?: du ([^)]+))?\)").unwrap()
+    Regex::new(r"(?i)\(Procureur(?:e)? g\u{e9}n\u{e9}ral(?:e)?(?: (du|de la|de l'|des|de) ([^)]+))?\)").unwrap()
+});
+static PG_LEAD: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"(?i)^(?:(?:Le|La) )?Procureur(?:e)? g\u{e9}n\u{e9}ral(?:e)? (?:du |de la |de l'|des |de )(.+?)(\s*\(.*)?$").unwrap()
 });
 static UPPER_INITIALS: LazyLock<legal_grammar::CompiledGrammar> =
     LazyLock::new(|| format_pattern("format.upper-initials"));
@@ -544,9 +547,11 @@ static ABBREVIATION: LazyLock<Regex> = LazyLock::new(|| {
 static LOWER_INITIALS: LazyLock<legal_grammar::CompiledGrammar> =
     LazyLock::new(|| format_pattern("format.lower-initials"));
 static VERSUS: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"\s+(?:v|c)\.?\s+").unwrap());
+    LazyLock::new(|| Regex::new(r"\s+(?:v|vs|c|versus)\.?\s+").unwrap());
 static MATTER_SUFFIX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?i)^(.+?)(?:,\s*Re|\s+\(Re\))$").unwrap());
+static MATTER_PREFIX: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(?i)^(?:In\s+re|In\s+the\s+matter\s+of|Re:?)\s+(.+)$").unwrap());
 static COURT_SUFFIX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?i)\s+\((?:S\.?C\.?C\.?|C\.?S\.?C\.?)\)\s*$").unwrap());
 
@@ -572,9 +577,18 @@ pub fn party(value: &str, language: Language) -> String {
         })
         .into_owned();
     party = PG_PAREN
-        .replace_all(&party, |captures: &regex::Captures| match captures.get(1) {
-            Some(place) => format!("(PG du {})", place.as_str()),
-            None => "(PG)".into(),
+        .replace_all(&party, |captures: &regex::Captures| match (captures.get(1), captures.get(2)) {
+            (Some(article), Some(place)) => format!("(PG {} {})", article.as_str(), place.as_str()),
+            _ => "(PG)".into(),
+        })
+        .into_owned();
+    party = PG_LEAD
+        .replace(&party, |captures: &regex::Captures| {
+            format!(
+                "{} (PG){}",
+                captures[1].trim(),
+                captures.get(2).map_or("", |rest| rest.as_str())
+            )
         })
         .into_owned();
     party = UPPER_INITIALS
@@ -598,11 +612,14 @@ pub fn case_name(style: &str, language: Language) -> String {
 }
 
 fn case_name_language(style: &str, language: Option<Language>) -> String {
-    let name = normalize_space(style);
+    let name = normalize_space(style.trim().trim_end_matches([',', ';']));
     let name = COURT_SUFFIX.replace(&name, "").into_owned();
     let has_versus = VERSUS.is_match(&name);
     if !has_versus {
         if let Some(captures) = MATTER_SUFFIX.captures(&name) {
+            return format!("Re {}", party(&captures[1], language.unwrap_or_default()));
+        }
+        if let Some(captures) = MATTER_PREFIX.captures(&name) {
             return format!("Re {}", party(&captures[1], language.unwrap_or_default()));
         }
         return party(&name, language.unwrap_or_default());
