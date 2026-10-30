@@ -74,7 +74,9 @@ pub(crate) fn source_links(citations: &mut [Citation], evidence: &[SourceAliasGr
     links
 }
 
-pub const DATA: &str = include_str!("../registry/aliases.json");
+/// The alias table as build.rs compiles it from registry/aliases.json: what the engine binds with, so a store keyed by
+/// it can tell when it changed by these bytes (the JSON itself is not carried in the engine).
+pub static COMPILED: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/aliases.bin"));
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
@@ -99,7 +101,7 @@ struct Table {
 const NO_COURT: u32 = u32::MAX;
 
 static TABLE: LazyLock<Table> = LazyLock::new(|| {
-    let blob = Blob::new(include_bytes!(concat!(env!("OUT_DIR"), "/aliases.bin")));
+    let blob = Blob::new(COMPILED);
     let strings = blob.strings(0);
     assert_eq!(strings.get(blob.words(2).get(0)), key::KEY_VERSION, "alias keys must match this engine");
     Table { strings, targets: blob.rows(3, 6), observed: blob.rows(4, 6), records: blob.words(5), blocked: blob.rows(6, 1) }
@@ -198,6 +200,8 @@ pub fn resolve(citation: &Citation) -> Option<AliasTarget> {
 mod tests {
     use super::*;
     use serde_json::Value;
+
+    const DATA: &str = include_str!("../registry/aliases.json");
 
     #[test]
     fn every_source_record_is_preserved_and_accounted_for() {
