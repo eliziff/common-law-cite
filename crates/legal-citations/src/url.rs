@@ -195,6 +195,55 @@ pub fn source_url(address: &str, anchor: Option<&str>) -> Option<String> {
     Some(url.into())
 }
 
+/// One number a citation's pinpoint writes: where it is written (UTF-16 offsets into the citation's text) and the
+/// source's page at it.
+#[derive(Clone, Debug, serde::Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct PinpointLink {
+    pub pinpoint: usize,
+    pub start: usize,
+    pub end: usize,
+    pub text: String,
+    pub url: String,
+}
+
+/// Each number the pinpoints write (their `span.text`, as [`crate::extract`] reads them), linked on its own to the place
+/// the page at `page_url` has for it ([`source_anchor`], [`source_url`]): `paras 30–32` links 30 to paragraph 30 and 32
+/// to paragraph 32; the words around them (`paras`) are not linked, and a number the page has no place for is left out.
+/// Each link's `start` and `end` are UTF-16 offsets in its pinpoint's words, `pinpoint` the pinpoint's index.
+pub fn pinpoint_links(pinpoints: &[crate::model::Pinpoint], page_url: &str) -> Vec<PinpointLink> {
+    use crate::model::PinpointKind;
+    static NUMBER: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"(?i)(?:[0-9]+(?:\.[0-9]+)*|\([0-9a-z]+\))(?:\s?\([0-9a-z]+\))*|\b[ivxlc]+\b").unwrap());
+    let mut links = Vec::new();
+    for (index, pinpoint) in pinpoints.iter().enumerate() {
+        let kind = match pinpoint.kind {
+            PinpointKind::Paragraph => "paragraph",
+            PinpointKind::Page => "page",
+            PinpointKind::Section | PinpointKind::Subsection | PinpointKind::Rule | PinpointKind::Article
+                | PinpointKind::Clause => "section",
+            _ => continue,
+        };
+        let written = pinpoint.span.text.as_str();
+        let utf16 = |byte: usize| written[..byte].encode_utf16().count();
+        let numbers = NUMBER.find_iter(written).collect::<Vec<_>>();
+        let plain = |found: &regex::Match| found.as_str().replace(char::is_whitespace, "");
+        // The range's first number where its first locator starts ("132(m)" of 132(m)(i.1)), its last where its last
+        // locator ends (the "6" of paras 105–6, the "(e)" of 63(1)(d)–(e)).
+        let first = numbers.iter().find(|found| pinpoint.first.starts_with(&plain(found))).map(|found| (found, &pinpoint.first));
+        let after = first.map_or(0, |(found, _)| found.end());
+        let last = pinpoint.last.as_ref().and_then(|last| numbers.iter().rev()
+            .find(|found| found.start() >= after && last.ends_with(&plain(found))).map(|found| (found, last)));
+        for (found, locator) in first.into_iter().chain(last) {
+            let label = if kind == "paragraph" { format!("par{locator}") } else { locator.clone() };
+            let Some(url) = source_anchor(page_url, kind, &label).and_then(|anchor| source_url(page_url, Some(&anchor))) else { continue };
+            links.push(PinpointLink { pinpoint: index, start: utf16(found.start()), end: utf16(found.end()),
+                text: found.as_str().to_owned(), url });
+        }
+    }
+    links
+}
+
 /// The paragraph or provision a link's anchor opens (`par12`; `sec2subsec1` is provision `2(1)`),
 /// and for a provision the part of it the citation pinpoints (`sec2(1)(a)` gives `2(1)(a)`).
 #[derive(Clone, Debug, serde::Serialize)]
