@@ -20,8 +20,9 @@ fn oakes_parallel_group_prefers_the_official_report() {
     assert!(citations.iter().all(|citation| citation.parallel_group == Some(0)));
     assert_eq!(citations[1].short_name.as_deref(), Some("R v Oakes"));
     assert_eq!(parallel::preferred(&citations, 0), 0);
-    assert_eq!(citations[0].key.as_deref(), Some("2:reporter:scr:1986:1:103"));
-    assert_eq!(citations[1].key.as_deref(), Some("2:reporter:dlr4th:26:200"));
+    assert_eq!(citations[0].key.as_deref(), Some("4:reporter:scr:scr:1986:1:103"));
+    // The alias table keys a parallel report by its decision's identity (Options::alias_keys).
+    assert_eq!(citations[1].key.as_deref(), Some("4:reporter:scr:scr:1986:1:103"));
 }
 
 #[test]
@@ -115,17 +116,17 @@ fn references_to_a_record_document_do_not_resolve_to_the_decision() {
 
 #[test]
 fn keys_for_text() {
-    assert_eq!(key_for_text("R v Jordan, 2016 SCC 27 at para 5").unwrap(), "2:neutral:2016:scc:27");
-    assert_eq!(key_for_text("2016 CSC 27").unwrap(), "2:neutral:2016:scc:27");
+    assert_eq!(key_for_text("R v Jordan, 2016 SCC 27 at para 5").unwrap(), "4:neutral:2016:scc:27");
+    assert_eq!(key_for_text("2016 CSC 27").unwrap(), "4:neutral:2016:scc:27");
     assert_eq!(
         key_for_text("Criminal Code, RSC 1985, c C-46, s 7").unwrap(),
         key_for_text("Code criminel, LRC 1985, ch C-46").unwrap()
     );
-    assert_eq!(key_for_text("SOR/2002-227").unwrap(), "2:regulation:ca:sor:2002:227");
-    assert_eq!(key_for_text("O Reg 191/11").unwrap(), "2:regulation:ca-on:oreg:2011:191");
-    assert_eq!(key_for_text("42 U.S.C. § 1983").unwrap(), "2:code:usc:42:1983");
-    assert_eq!(key_for_text("Roe v. Wade, 410 U.S. 113 (1973)").unwrap(), "2:reporter:us:410:113");
-    assert_eq!(key_for_text("Smith v Jones, 2004 CanLII 12345 (ON CA)").unwrap(), "2:canlii:2004:12345");
+    assert_eq!(key_for_text("SOR/2002-227").unwrap(), "4:regulation:ca:sor:2002:227");
+    assert_eq!(key_for_text("O Reg 191/11").unwrap(), "4:regulation:ca-on:oreg:2011:191");
+    assert_eq!(key_for_text("42 U.S.C. § 1983").unwrap(), "4:code:usc:42:1983");
+    assert_eq!(key_for_text("Roe v. Wade, 410 U.S. 113 (1973)").unwrap(), "4:reporter:us:us:410:113");
+    assert_eq!(key_for_text("Smith v Jones, 2004 CanLII 12345 (ON CA)").unwrap(), "4:canlii:2004:12345");
     assert_eq!(key_for_text("no citation here"), Err(KeyError::NoCitation));
     assert_eq!(key_for_text("2015 SCC 5, [2015] 1 SCR 331"), Err(KeyError::Multiple(2)));
 }

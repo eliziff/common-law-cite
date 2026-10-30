@@ -106,6 +106,8 @@ static SIGNAL_PREFIX: LazyLock<Screened<CompiledEcmascriptGrammar>> =
     LazyLock::new(|| Screened::linear("signal.prefix.toa"));
 static INTRODUCTORY_SIGNAL: LazyLock<Screened<CompiledEcmascriptGrammar>> =
     LazyLock::new(|| Screened::linear("signal.introductory"));
+static INTRODUCTORY_PREFIX: LazyLock<Screened<CompiledEcmascriptGrammar>> =
+    LazyLock::new(|| Screened::linear("signal.introductory.prefix"));
 // Précité ends in a non-ASCII letter, so its word boundary needs the Unicode
 // (backtracking) dialect.
 static BACK_REFERENCE: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("ref.back"));
@@ -258,7 +260,8 @@ static ACCESS_DATE: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Scree
 static SUPRA_AFTER: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("ref.supra-follows"));
 static GOVERNMENT_AUTHOR: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("style.government-author"));
 static LEGISLATIVE_TITLE: LazyLock<Screened<CompiledGrammar>> = LazyLock::new(|| Screened::backtracking("style.legislative-title"));
-static CASE_VERSUS: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.case-versus"));
+// The parties' own versus grammar (metadata splits a style on it): "v", "v.", "c.", "vs." and "versus".
+static CASE_VERSUS: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("party.versus"));
 // A balanced, uppercase-first parenthetical ("Quebec (Attorney General)")
 // counts as one party token; "(1998)", "(2d)" and "(see below)" do not.
 // Its automaton's states outgrow the default room, and rebuilding them on every name costs about
@@ -409,6 +412,11 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
                 && statute_style_start_above(value, start, floors.paragraph_floor(start)) == start {
                 continue;
             }
+            // A command paper's number and year ("(Cm 3782, 1997)") are its parliamentary series, not an imprint.
+            if *reason == "book_grammar" && PARLIAMENTARY_COMMONWEALTH.captures(matched.as_str()).is_some_and(|captures|
+                captures.name("command_series").is_some() && captures.get(0).is_some_and(|whole| whole.as_str().len() == matched.as_str().len())) {
+                continue;
+            }
             if *reason == "book_grammar" && pattern.captures(matched.as_str()).is_some_and(|capture|
                 ["publisher_imprint", "oscola_imprint", "aglc_imprint"].iter().any(|group| capture.name(group).is_some())) {
                 let authored = matched_style(&AUTHORED_WORK, "work", value, start, 0);
@@ -482,6 +490,12 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
     found.retain(|anchor| anchor.family.is_some_and(|(_, reason)|
             reason == "article_grammar" || reason == "treaty_grammar" || reason == "securities_grammar")
         || !primary.iter().any(|core| core.start <= anchor.span.start && anchor.span.start < core.end
+            && occurrence_family(&value[core.clone()]).0 == "case"));
+    // A year in parentheses right after a report and closing its sentence is that report's date ("410 U.S. 113
+    // (1973). Roe at 240"), no article's.
+    found.retain(|anchor| !anchor.family.is_some_and(|(_, reason)| reason == "article_grammar")
+        || !value[anchor.span.clone()].split_once(')').is_some_and(|(_, after)| after.starts_with('.'))
+        || !primary.iter().any(|core| core.end <= anchor.span.start && value[core.end..anchor.span.start].trim().is_empty()
             && occurrence_family(&value[core.clone()]).0 == "case"));
     // An enactment the reproduced text of another names in its own history ("3 [Repealed, SOR/2009-223,
     // s. 4]", "(e) repealed AR 143/2011 s2 (4)") is that text's note, not a citation.
@@ -1027,7 +1041,8 @@ fn style_span_start(text: &str, mut start: usize, core_start: usize) -> Option<u
         }
     }
     for _ in 0..4 {
-        let Some(signal) = SIGNAL_PREFIX.find_screened(&text[start..core_start]) else {
+        let window = &text[start..core_start];
+        let Some(signal) = SIGNAL_PREFIX.find_screened(window).or_else(|| INTRODUCTORY_PREFIX.find_screened(window)) else {
             break;
         };
         start += signal.end();
@@ -1275,10 +1290,12 @@ fn case_style_start(text: &str, core_start: usize, floor: usize) -> usize {
 /// [`case_style_start`] above a paragraph floor already found.
 fn case_style_start_above(text: &str, core_start: usize, floor: usize) -> usize {
     // A style of cause opens after a sentence that ends before its signal ("… on the Crown. See
-    // R v Oakes"); an abbreviation's period ("Mar. Overseas Corp.") is no sentence's end.
+    // R v Oakes"); an abbreviation's period ("Mar. Overseas Corp.") is no sentence's end, nor is one before a
+    // lowercase word ("Mobile Homes Inc. and Howard Geisler").
     // No style of cause runs back over a semicolon, which parts one citation from the next.
     let floor = STYLED_FLOOR.find_all(&text[floor..core_start])
         .filter(|matched| matched.as_str().starts_with(';') || matched.as_str().trim_end().ends_with('.')
+            && !text[floor + matched.end()..core_start].starts_with(char::is_lowercase)
             && SIGNAL_PREFIX.find_screened(&text[floor + matched.end()..core_start]).is_some())
         .last().map_or(floor, |matched| floor + matched.end());
     let prefix = text[floor..core_start]
@@ -1553,7 +1570,7 @@ fn full_citation(
     source_name: Option<&crate::SourceCaseName>,
     options: Option<&Options>,
 ) -> Citation {
-    let core = anchor.span.clone();
+    let mut core = anchor.span.clone();
     let source_core = anchor.source_span.as_ref().unwrap_or(&anchor.span);
     let (kind, kind_reason) = anchor.family.unwrap_or(("other", "citation_grammar"));
     // A treaty series the in-text grammar found first is still styled by the treaty's title.
@@ -1572,14 +1589,16 @@ fn full_citation(
     let kind = if reported.is_some() { "case" } else { kind };
     let has_section = anchor.reading.as_ref().is_some_and(|reading| reading.has_section());
     // Parentheses inside a section identifier (1.401(a)-1) are not a
-    // subdivision. Retain the section suffix in fields without widening the
-    // original native occurrence.
+    // subdivision: the section's suffix is part of its core and its section.
     // A next citation that begins before this one's core ends leaves nothing to read after it.
     let section_suffix = if has_section {
         LAW_SUBDIVISION.captures_screened(text.get(source_core.end..limit).unwrap_or_default())
             .and_then(|captures| captures.name("section_suffix"))
             .map(|suffix| source_core.end..source_core.end + suffix.end())
     } else { None };
+    if let Some(suffix) = &section_suffix {
+        core.end = core.end.max(suffix.end);
+    }
     // Read actual subdivisions here so `(a)` is never a parenthetical.
     let subdivision_start = section_suffix.as_ref().map_or(source_core.end, |suffix| suffix.end);
     let subdivision = has_section
@@ -1682,7 +1701,9 @@ fn full_citation(
         let start = pin.end - written.len();
         let first = written.trim_start_matches(|character: char| !character.is_ascii_digit());
         let first = first.split(|character: char| !(character.is_ascii_alphanumeric() || character == '.')).next().unwrap_or("");
-        tail.pinpoints.insert(0, Pinpoint { kind: PinpointKind::Section, first: first.to_owned(),
+        // The French Charter numbers its articles ("art 7").
+        let kind = if written.starts_with("art") { PinpointKind::Article } else { PinpointKind::Section };
+        tail.pinpoints.insert(0, Pinpoint { kind, first: first.to_owned(),
             span: span(text, start..pin.end), last: None });
     }
     if let Some(range) = subdivision {
@@ -1760,6 +1781,14 @@ fn full_citation(
     }
     citation.short_name = short_name;
     let mut full_start = styled_start;
+    // A short form's case name written in front of it ("Roe, 410 U.S. at 160").
+    if short_form && styled_start == core.start {
+        if let Some(name) = antecedent_name(text, core.start, previous_end) {
+            citation.short_name = Some(text[name.clone()].to_owned());
+            citation.style = Some(span(text, name.clone()));
+            full_start = name.start;
+        }
+    }
     if kind_reason == "online_grammar" {
         tail.end = tail.end.max(online_extent(text, &core, limit));
         // An unstyled link keeps the bracket that encloses it whole.
@@ -2693,7 +2722,12 @@ fn join_legislation(text: &str, citations: Vec<Citation>) -> Vec<Citation> {
         }
         if title_only && citation.style.is_none() && citation.fields.chapter.is_some()
             && gap.trim_matches(javascript_whitespace) == "," {
-            citation.style = Some(previous.style.clone().unwrap_or_else(|| previous.span.clone()));
+            // The title as written, with the jurisdiction it names ("Constitution Act, 1867 (UK)").
+            citation.style = Some(previous.full_span.clone());
+            // The title names the instrument's kind ("Constitution Act, 1867" is a constitution).
+            if citation.authority == Authority::Statute {
+                citation.authority = previous.authority;
+            }
             citation.full_span = span(text, previous.full_span.start..citation.full_span.end);
             citation.signal = citation.signal.take().or_else(|| previous.signal.take());
             let mut parentheticals = std::mem::take(&mut previous.parentheticals);
@@ -2838,7 +2872,7 @@ pub(crate) fn warm() {
         SOURCE_REFERENCE, SOURCE_REFERENCE_PARTS, SOURCE_NAME_EXCLUDED;
         screened
         CITATION_PATTERN, REPORTER_MONTH, REPORTER_WORD, CASE_NAME, SIGNAL_PREFIX,
-        INTRODUCTORY_SIGNAL, BACK_REFERENCE, INLINE_REFERENCE, INLINE_NOTE,
+        INTRODUCTORY_SIGNAL, INTRODUCTORY_PREFIX, BACK_REFERENCE, INLINE_REFERENCE, INLINE_NOTE,
         NOTE_CROSS_REFERENCE, ANTECEDENT_NAME, SECTION_SYMBOL, REPORTER_PATTERN,
         JOURNAL_PATTERN, LAW_SUBDIVISION, JOURNAL_ARTICLE, ONLINE_SOURCE, CHARTER, CASE_FLOOR,
         AUTHORITY_LIST, AUTHORITY_LIST_END, MATTER_STYLE, ORDER_OF, ACCESS_DATE, SUPRA_AFTER,
