@@ -455,7 +455,9 @@ impl Registry {
 
     /// CanLII writes the court of a CanLII-number citation as its database id split at the
     /// jurisdiction: "(ON LTB)" is onltb, "(BC WCAT)" bcwcat, "(CA VRAB)" vrab, "(CA CITT)"
-    /// citt-tcce. The surface read that way names the court whose CanLII database it is.
+    /// citt-tcce. The surface read that way names the court whose CanLII database it is; where
+    /// several courts share the database (the Social Security Tribunal's divisions share sst),
+    /// the court named for it.
     pub fn courts_by_canlii_parenthetical(&self, surface: &str) -> Vec<&Court> {
         let tokens: Vec<String> = surface.split(|c: char| !c.is_ascii_alphanumeric()).filter(|t| !t.is_empty())
             .map(|t| t.to_ascii_lowercase()).collect();
@@ -471,7 +473,9 @@ impl Registry {
                 candidates.iter().any(|c| database == *c || database.split('-').next() == Some(c.as_str()))
             })
         };
-        self.courts.iter().filter(|court| matches(court)).collect()
+        let courts: Vec<&Court> = self.courts.iter().filter(|court| matches(court)).collect();
+        let named: Vec<&Court> = courts.iter().copied().filter(|court| candidates.contains(&court.id)).collect();
+        if courts.len() > 1 && !named.is_empty() { named } else { courts }
     }
 
     /// The reporter and canonical edition abbreviation a surface form names.
