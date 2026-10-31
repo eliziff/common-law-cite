@@ -1,5 +1,5 @@
 use flate2::{write::GzEncoder, Compression};
-use legal_grammar::table::{blob, words, StringsWriter};
+use legal_grammar::table::{blob, rows, words, StringsWriter};
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
 use std::{env, fs, path::PathBuf};
@@ -30,8 +30,13 @@ fn compile_aliases(out: &std::path::Path) {
         }
     }
     let mut strings = StringsWriter::default();
+    // Each table's keys first, in row order, so its first column counts up.
+    for table in [&source["targets"], &source["observed"]] {
+        let keys: std::collections::BTreeSet<&String> = table.as_object().unwrap().keys().collect();
+        keys.into_iter().for_each(|key| { strings.id(key); });
+    }
     let mut pool = Vec::new();
-    let mut rows = |table: &serde_json::Value, court: &dyn Fn(&serde_json::Value) -> Option<String>| {
+    let mut table_rows = |table: &serde_json::Value, court: &dyn Fn(&serde_json::Value) -> Option<String>| {
         let table: BTreeMap<&String, &serde_json::Value> = table.as_object().unwrap().iter().collect();
         let mut rows = Vec::new();
         for (key, target) in table {
@@ -43,20 +48,20 @@ fn compile_aliases(out: &std::path::Path) {
         }
         rows
     };
-    let targets = rows(&source["targets"], &|target| {
+    let targets = table_rows(&source["targets"], &|target| {
         let courts: Option<std::collections::HashSet<&String>> = target["records"].as_array().unwrap().iter()
             .map(|record| record_courts.get(record.as_str().unwrap())).collect();
         courts.filter(|courts| courts.len() == 1).map(|courts| courts.into_iter().next().unwrap().clone())
     });
-    let observed = rows(&source["observed"], &|evidence| Some(text(&evidence["court"])));
+    let observed = table_rows(&source["observed"], &|evidence| Some(text(&evidence["court"])));
     let mut blocked: Vec<String> = source["blockedForms"].as_array().unwrap().iter().map(text).collect();
     blocked.sort();
     blocked.dedup();
     let blocked: Vec<u32> = blocked.iter().map(|form| strings.id(form)).collect();
     let version = strings.id(&text(&source["keyVersion"]));
     let [offsets, arena] = strings.sections();
-    fs::write(out.join("aliases.bin"), blob(&[offsets, arena, words([version]), words(targets), words(observed),
-        words(pool), words(blocked)])).expect("compiled alias mappings");
+    fs::write(out.join("aliases.bin"), blob(&[offsets, arena, words([version]), rows(&targets, 6), rows(&observed, 6),
+        words(pool), rows(&blocked, 1)])).expect("compiled alias mappings");
 }
 
 /// The statute titles src/reference_names.rs reads (registry/statute-titles.txt, tools/statute-titles.py), compressed.

@@ -56,6 +56,6 @@ fn us_extractors(output: &std::path::Path) {
     }
     let [offsets, arena] = strings.sections();
     fs::write(output.join("us-extractors.bin"),
-        table::blob(&[offsets, arena, table::words(extractors), table::words(pool), table::words(editions)]))
+        table::blob(&[offsets, arena, table::rows(&extractors, 8), table::words(pool), table::rows(&editions, 7)]))
         .expect("compiled US extractors");
 }

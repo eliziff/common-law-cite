@@ -1,10 +1,12 @@
 //! Compact read-only tables that build scripts compile from the JSON data: a blob of sections, each a
-//! run of little-endian `u32` words or a UTF-8 string arena, read in place from the binary's static
-//! data. Nothing is parsed or copied at run time; a lookup is a binary search over sorted rows.
+//! run of `u32` words or a UTF-8 string arena, read in place from the binary's static data. Nothing is
+//! parsed or copied at run time; a lookup is a binary search over sorted rows. Words are stored as byte
+//! planes (every word's low byte, then every word's second byte, and so on) and rows column by column,
+//! so that counting and slowly changing columns compress to little where the binary is compressed.
 
 use std::collections::HashMap;
 
-/// Little-endian `u32` words.
+/// `u32` words in four byte planes, low byte first.
 #[derive(Clone, Copy)]
 pub struct Words(&'static [u8]);
 
@@ -14,7 +16,8 @@ impl Words {
     }
 
     pub fn get(self, index: usize) -> u32 {
-        u32::from_le_bytes(self.0[index * 4..index * 4 + 4].try_into().unwrap())
+        let len = self.len();
+        u32::from_le_bytes([0, 1, 2, 3].map(|plane| self.0[plane * len + index]))
     }
 
     /// `len` words from `start`.
@@ -36,7 +39,7 @@ impl Strings {
     }
 }
 
-/// Rows of `width` words.
+/// Rows of `width` words, stored column by column.
 #[derive(Clone, Copy)]
 pub struct Rows {
     words: Words,
@@ -49,7 +52,7 @@ impl Rows {
     }
 
     pub fn get(self, row: usize, column: usize) -> u32 {
-        self.words.get(row * self.width + column)
+        self.words.get(column * self.len() + row)
     }
 
     /// The row whose `column` names `key`, the rows being sorted by that string.
@@ -74,11 +77,11 @@ pub struct Blob(Vec<&'static [u8]>);
 
 impl Blob {
     pub fn new(bytes: &'static [u8]) -> Self {
-        let header = Words(bytes);
-        let count = header.get(0) as usize;
+        let header = |index: usize| u32::from_le_bytes(bytes[index * 4..index * 4 + 4].try_into().unwrap()) as usize;
+        let count = header(0);
         let mut at = 4 * (count + 1);
         Self((1..=count).map(|index| {
-            let section = &bytes[at..at + header.get(index) as usize];
+            let section = &bytes[at..at + header(index)];
             at += section.len();
             section
         }).collect())
@@ -101,9 +104,10 @@ impl Blob {
     }
 }
 
-/// A blob of `sections` (build scripts): their count and lengths, then each in turn.
+/// A blob of `sections` (build scripts): their count and lengths (little-endian), then each in turn.
 pub fn blob(sections: &[Vec<u8>]) -> Vec<u8> {
-    let mut bytes = words([sections.len() as u32].into_iter().chain(sections.iter().map(|section| section.len() as u32)));
+    let mut bytes: Vec<u8> = [sections.len() as u32].into_iter().chain(sections.iter().map(|section| section.len() as u32))
+        .flat_map(u32::to_le_bytes).collect();
     for section in sections {
         bytes.extend_from_slice(section);
     }
@@ -112,7 +116,15 @@ pub fn blob(sections: &[Vec<u8>]) -> Vec<u8> {
 
 /// A section of words (build scripts).
 pub fn words(values: impl IntoIterator<Item = u32>) -> Vec<u8> {
-    values.into_iter().flat_map(u32::to_le_bytes).collect()
+    let values: Vec<[u8; 4]> = values.into_iter().map(u32::to_le_bytes).collect();
+    (0..4).flat_map(|plane| values.iter().map(move |bytes| bytes[plane])).collect()
+}
+
+/// A section of rows of `width` words, given row by row (build scripts).
+pub fn rows(values: &[u32], width: usize) -> Vec<u8> {
+    assert_eq!(values.len() % width, 0, "whole rows");
+    let len = values.len() / width;
+    words((0..width).flat_map(|column| (0..len).map(move |row| values[row * width + column])))
 }
 
 /// Interns strings for a blob (build scripts).
