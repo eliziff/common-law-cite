@@ -937,7 +937,8 @@ fn legislation(core: &str) -> Option<Reading> {
                     .unwrap_or_else(|| {
                         // Else at the space before the number (`CR Nu R-011-2005`), or its first digit (`NLR54/02`).
                         let digit = regulation.find(|character: char| character.is_ascii_digit()).unwrap_or(0);
-                        regulation[..digit].rfind(char::is_whitespace).filter(|_| digit > 0).map_or(digit, |at| at + 1)
+                        regulation[..digit].char_indices().rev().find(|(_, character)| character.is_whitespace())
+                            .filter(|_| digit > 0).map_or(digit, |(at, space)| at + space.len_utf8())
                     });
                 fields.series = Some(regulation[..split].trim().trim_end_matches('.').to_owned());
                 fields.regulation = Some(regulation[split..].trim().to_owned());
@@ -1006,6 +1007,9 @@ pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
     };
     if verified {
         if let Some(reading) = neutral(core) { return Some(neutral_with_publication(reading)); }
+        // A database's identifier its own grammar reads whole is no report of the registered name: "EYB 2008-151766"
+        // is La Référence's document 151766 of 2008, not pages 2008 to 151766.
+        if let Some(reading) = database(core) { return Some(reading); }
         if let Some(reading) = publication(reason == "journal_grammar") { return Some(reading); }
     }
     // A notice or regulation by its gazette, part and page: `(1991) A Gaz I, 1609`, `1991 GOQ 2, 1447 [2]`.

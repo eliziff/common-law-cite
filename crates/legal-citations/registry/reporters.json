@@ -2306,7 +2306,7 @@
     "end": null
    }
   },
-  "year_volume": false,
+  "year_volume": true,
   "source": "authored",
   "citation_id": "awld",
   "abbreviation": "AWLD",
@@ -2324,7 +2324,7 @@
     "end": null
    }
   },
-  "year_volume": false,
+  "year_volume": true,
   "source": "authored",
   "citation_id": "bcwld",
   "abbreviation": "BCWLD",
@@ -2342,7 +2342,7 @@
     "end": null
    }
   },
-  "year_volume": false,
+  "year_volume": true,
   "source": "authored",
   "citation_id": "wdfl",
   "abbreviation": "WDFL",
