@@ -3,8 +3,8 @@
 //!     cargo run --release --example canlii_index_check -- CASES.tsv [REPORT.tsv]
 //!
 //! CASES.tsv: `databaseId<TAB>caseId` per line (from canlii.db's cases table). The citation CanLII
-//! prints is rebuilt from the id ("2025onsc1050" -> "2025 ONSC 1050", "2012canlii345" -> "2012 CanLII
-//! 345"), read by the grammar, and the link the builder makes is compared with the id: its slug must
+//! prints is rebuilt from the id and its database ("2025onsc1050" -> "2025 ONSC 1050", "2012canlii345"
+//! in onsc -> "2012 CanLII 345 (ON SC)"), read by the grammar, and the link the builder makes is compared with the id: its slug must
 //! be the case id. Prints totals and, per database, how many ids read, resolve to a court, link, and
 //! link to the right slug; REPORT.tsv gets one line per (database, designator) with those counts.
 use legal_citations::format::Language;
@@ -20,6 +20,17 @@ struct Tally {
     court: u64,
     linked: u64,
     slug_ok: u64,
+}
+
+/// The court CanLII prints after a CanLII number: its database id split at the jurisdiction, the
+/// federal ones under CA ("onltb" is "ON LTB", "vrab" "CA VRAB", the API's "cci-tcc" "CA CCI").
+fn parenthetical(database: &str) -> String {
+    const PROVINCES: [&str; 13] = ["ab", "bc", "mb", "nb", "nl", "ns", "nt", "nu", "on", "pe", "qc", "sk", "yk"];
+    let database = database.split('-').next().unwrap_or(database);
+    match PROVINCES.iter().find(|province| database.len() > 2 && database.starts_with(*province)) {
+        Some(province) => format!("{} {}", province.to_uppercase(), database[2..].to_uppercase()),
+        None => format!("CA {}", database.to_uppercase()),
+    }
 }
 
 fn split_id(id: &str) -> Option<(&str, &str, &str)> {
@@ -63,7 +74,7 @@ fn main() {
                             t.ids += 1;
                             continue;
                         };
-                        let printed = if code == "canlii" { format!("{year} CanLII {number}") } else { format!("{year} {} {number}", code.to_uppercase()) };
+                        let printed = if code == "canlii" { format!("{year} CanLII {number} ({})", parenthetical(database)) } else { format!("{year} {} {number}", code.to_uppercase()) };
                         let t = tallies.entry((database.to_owned(), code.to_owned())).or_default();
                         t.ids += 1;
                         t.parsed += 1;
