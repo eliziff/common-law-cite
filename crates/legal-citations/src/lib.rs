@@ -75,21 +75,28 @@ Roach, supra note 5 at 241; Hogg, ibid at 36-14; Re Residential Tenancies Act, 1
 /// afterwards costs about what any other does. The US reporter extractors are the exception: only
 /// those whose reporter a text names are compiled, as before.
 pub fn warm() {
-    find::warm();
-    classify::warm();
-    metadata::warm();
-    aliases::warm();
-    key::warm();
-    named::warm();
-    registry::warm();
-    resolve::warm();
-    short_forms::warm();
-    source::warm();
+    for step in warm_steps() { step(); }
+}
+
+/// [`warm`]'s steps in order, each a module's statics, the last reading the short document.
+fn warm_steps() -> Vec<fn()> {
+    let mut steps: Vec<fn()> = vec![find::warm, classify::warm, metadata::warm, aliases::warm, key::warm, named::warm,
+        registry::warm, resolve::warm, short_forms::warm, source::warm];
     #[cfg(feature = "us")]
-    us::warm();
-    text::warm();
-    clean::warm();
-    url::warm();
+    steps.push(us::warm);
+    steps.extend([text::warm as fn(), clean::warm, url::warm, warm_sample]);
+    steps
+}
+
+/// One of [`warm`]'s steps, by its place, and how many there are: a host warming while it waits for its first
+/// document runs them one at a time and stops when a document arrives, which builds what it needs itself.
+pub fn warm_step(step: usize) -> usize {
+    let steps = warm_steps();
+    if let Some(run) = steps.get(step) { run(); }
+    steps.len()
+}
+
+fn warm_sample() {
     let mut notes = Vec::new();
     let mut start = WARM_SAMPLE.find('\n').map_or(WARM_SAMPLE.len(), |end| end + 1);
     for (number, line) in WARM_SAMPLE[start..].split('\n').enumerate() {
@@ -629,9 +636,12 @@ fn read_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
         let resolutions = resolve::resolve_with_sources(&citations, options.notes.as_deref(), &[], None,
             &parts, options.supra_hint_mode, options.supra_linking_mode, options.split_tier,
             options.linking.as_ref(), &options.extents, Some(text));
+        // Each citation by its index, the first that holds it as a search from the start finds it.
+        let mut positions = std::collections::HashMap::with_capacity(citations.len());
+        for (position, citation) in citations.iter().enumerate() { positions.entry(citation.index).or_insert(position); }
         for resolution in &resolutions {
-            if let Some(citation) = citations.iter_mut().find(|citation| citation.index == resolution.index) {
-                citation.antecedent = resolution.antecedent;
+            if let Some(&position) = positions.get(&resolution.index) {
+                citations[position].antecedent = resolution.antecedent;
             }
         }
         resolutions

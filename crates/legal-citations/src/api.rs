@@ -412,11 +412,16 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         }
         "warm" => {
             // `part: "layout"` builds only the cues a document's layout reads (a PDF parser's first
-            // derivation); none builds everything.
+            // derivation); none builds everything. `step: N` builds only the warm-up's Nth step and answers how
+            // many steps there are (`{"steps": …}`), for a host that stops warming when a document arrives.
             #[derive(Deserialize)]
             #[serde(deny_unknown_fields)]
-            struct Warm { #[serde(default)] part: Option<String> }
-            match parse::<Warm>(method, request)?.part.as_deref() {
+            struct Warm { #[serde(default)] part: Option<String>, #[serde(default)] step: Option<usize> }
+            let warm = parse::<Warm>(method, request)?;
+            if let Some(step) = warm.step {
+                return Ok(serde_json::json!({ "steps": crate::warm_step(step) }));
+            }
+            match warm.part.as_deref() {
                 None => crate::warm(),
                 Some("layout") => crate::cues::warm_layout(),
                 Some(other) => return Err(ApiError::new(ErrorCode::InvalidRequest,

@@ -1,23 +1,32 @@
 //! Compact read-only tables that build scripts compile from the JSON data: a blob of sections, each a
-//! run of `u32` words or a UTF-8 string arena, read in place from the binary's static data. Nothing is
-//! parsed or copied at run time; a lookup is a binary search over sorted rows. Words are stored as byte
-//! planes (every word's low byte, then every word's second byte, and so on) and rows column by column,
-//! so that counting and slowly changing columns compress to little where the binary is compressed.
+//! run of `u32` words or a UTF-8 string arena, read from the binary's static data. Words are stored as
+//! byte planes (every word's low byte, then every word's second byte, and so on) and rows column by
+//! column, so that counting and slowly changing columns compress to little where the binary is
+//! compressed; a section of words is read back into words once, when the table is first used, and a
+//! lookup is a binary search over sorted rows. String arenas are read in place.
 
 use std::collections::HashMap;
 
-/// `u32` words in four byte planes, low byte first.
+/// `u32` words, read once from their four byte planes (low byte first).
 #[derive(Clone, Copy)]
-pub struct Words(&'static [u8]);
+pub struct Words(&'static [u32]);
 
 impl Words {
+    /// The words of a section written by [`words`].
+    fn read(planes: &'static [u8]) -> Self {
+        let len = planes.len() / 4;
+        let words: Vec<u32> = (0..len)
+            .map(|index| u32::from_le_bytes([0, 1, 2, 3].map(|plane| planes[plane * len + index])))
+            .collect();
+        Self(Box::leak(words.into_boxed_slice()))
+    }
+
     pub fn len(self) -> usize {
-        self.0.len() / 4
+        self.0.len()
     }
 
     pub fn get(self, index: usize) -> u32 {
-        let len = self.len();
-        u32::from_le_bytes([0, 1, 2, 3].map(|plane| self.0[plane * len + index]))
+        self.0[index]
     }
 
     /// `len` words from `start`.
@@ -88,7 +97,7 @@ impl Blob {
     }
 
     pub fn words(&self, section: usize) -> Words {
-        Words(self.0[section])
+        Words::read(self.0[section])
     }
 
     pub fn rows(&self, section: usize, width: usize) -> Rows {
@@ -97,9 +106,13 @@ impl Blob {
 
     /// The strings [`StringsWriter::sections`] wrote at `section` and the one after it.
     pub fn strings(&self, section: usize) -> Strings {
+        let arena = self.0[section + 1];
+        // A debug build checks what a release build relies on (reading it all would page in the whole arena).
+        debug_assert!(std::str::from_utf8(arena).is_ok(), "compiled string arena");
         Strings {
             offsets: self.words(section),
-            arena: std::str::from_utf8(self.0[section + 1]).expect("compiled string arena"),
+            // SAFETY: the arena is [`StringsWriter::sections`]' bytes, a `String`'s, compiled into the binary as written.
+            arena: unsafe { std::str::from_utf8_unchecked(arena) },
         }
     }
 }

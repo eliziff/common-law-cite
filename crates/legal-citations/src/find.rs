@@ -388,14 +388,39 @@ fn resolve(mut found: Vec<Anchor>) -> Vec<Anchor> {
 /// parliamentary papers, treaties, database identifiers and online-only sources.
 fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>) -> Vec<Anchor> {
     let mut found = Vec::new();
+    // Each grammar's time where phases are timed (LEGALPDF_PHASE_TIMING), written once at the end.
+    let mut stage = std::env::var_os("LEGALPDF_PHASE_TIMING").map(|_| (std::time::Instant::now(), String::new()));
+    let mut lap = |name: &str| if let Some((started, laps)) = &mut stage {
+        laps.push_str(&format!("phase\tfind.secondary.{name}\t{}\n", started.elapsed().as_micros()));
+        *started = std::time::Instant::now();
+    };
     let floors = CaseFloors::new(value);
+    let styled = StyledFloors::new(value);
+    // A secondary form that begins inside a report or neutral citation misreads that citation and is dropped below
+    // (an article, a treaty series block and a gazette page aside); its filters being pure, it is passed over where
+    // it is found. The case citations the primary grammars read, by start, with the furthest end one up to each reaches.
+    let cases = std::cell::OnceCell::new();
+    let in_case = |at: usize| {
+        let (starts, reach) = cases.get_or_init(|| {
+            let mut cases: Vec<&Hit> = primary.iter().filter(|core| occurrence_family(&value[(*core).clone()]).0 == "case").collect();
+            cases.sort_by_key(|core| core.start);
+            let mut furthest = 0;
+            let reach: Vec<usize> = cases.iter().map(|core| { furthest = furthest.max(core.end); furthest }).collect();
+            (cases.iter().map(|core| core.start).collect::<Vec<_>>(), reach)
+        });
+        let before = starts.partition_point(|&start| start <= at);
+        before > 0 && reach[before - 1] > at
+    };
+    let holds_case = |reason: &str| matches!(reason, "article_grammar" | "treaty_grammar" | "securities_grammar");
     let present = SECONDARY_SCREEN.present(value);
+    lap("screen");
     let first_source = SECONDARY_LINEAR.len();
     let sources = SECONDARY_SOURCES.len();
     for (slot, (kind, reason, id)) in SECONDARY_LINEAR.iter().enumerate().filter(|(slot, _)| present[*slot]) {
         let pattern = SECONDARY_ECMASCRIPT[slot].get_or_init(|| linear(id));
         for matched in pattern.find_iter(value) {
             let start = matched.start();
+            if !holds_case(reason) && in_case(start) { continue; }
             if *reason == "unreported_grammar" && case_style_start_above(value, start, floors.paragraph_floor(start)) == start {
                 continue;
             }
@@ -419,7 +444,7 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             }
             if *reason == "book_grammar" && pattern.captures(matched.as_str()).is_some_and(|capture|
                 ["publisher_imprint", "oscola_imprint", "aglc_imprint"].iter().any(|group| capture.name(group).is_some())) {
-                let authored = matched_style(&AUTHORED_WORK, "work", value, start, 0);
+                let authored = matched_style_above(&AUTHORED_WORK, "work", value, start, styled.floor(start));
                 // A court/date tail is not a publisher imprint. An authored
                 // work cannot claim a recognised case core as its title.
                 if authored == start || primary.iter().any(|core|
@@ -430,6 +455,7 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             }
             found.push(Anchor::new(start..matched.end(), (*kind, *reason)));
         }
+        lap(id);
     }
     for (_, (kind, reason, id, compiled, guides)) in SECONDARY_SOURCES.iter().enumerate().filter(|(slot, _)| present[first_source + slot]) {
         if guides.is_empty() || styles.is_none_or(|styles| styles.iter().any(|style| guides.contains(style))) {
@@ -437,6 +463,7 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             // A file number in parentheses identifies the proceeding a sentence speaks of
             // ("the class proceeding (Court File No. T-402-19) was filed"); it cites no decision.
             found.extend(pattern.find_iter(value).flatten()
+            .filter(|matched| holds_case(reason) || !in_case(matched.start()))
             // The Charter's name before its enacting instrument styles that citation; it is no other.
             .filter(|matched| *reason != "constitution_name_grammar" || !CHARTER.captures_all(&value[matched.start()..])
                 .flatten().next().is_some_and(|captures| captures.name("title").is_some_and(|title| title.start() == 0)
@@ -455,9 +482,11 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             // An edition and year in parentheses cite a book only after its author and title
             // ("Hill, Remedies § 3.1 (2d ed. 1977)").
             .filter(|matched| *reason != "book_edition_grammar"
-                || value[work_style_start(value, matched.start(), 0)..matched.start()].chars().any(char::is_alphabetic))
+                || value[work_style_start_above(value, matched.start(), styled.floor(matched.start()))..matched.start()]
+                    .chars().any(char::is_alphabetic))
             .map(|matched| Anchor::new(matched.start()..matched.end(), (*kind, *reason))));
         }
+        lap(id);
     }
     // The Charter's enacting instrument is its core; the title before it styles it. Without its title or "Part I of",
     // the instrument is the Constitution Act, 1982 or the Canada Act 1982 itself, not the Charter.
@@ -466,6 +495,7 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
             .filter(|captures| captures.name("title").is_some()
                 || captures.name("source").is_some_and(|source| source.as_str().starts_with("Part") || source.as_str().starts_with("partie")))
             .filter_map(|captures| captures.name("source"))
+            .filter(|source| !in_case(source.start()))
             .map(|source| Anchor::new(source.start()..source.end(), ("statute", "charter_grammar"))));
     }
     if present[first_source + sources + 1] {
@@ -480,17 +510,14 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
         // that source's, not a source of its own.
         let alternate = link_end.is_some_and(|end| alternate_link(value, end, link.start));
         link_end = Some(link_end_with_closer(value, &link));
-        if !alternate {
+        if !alternate && !in_case(link.start) {
             found.push(Anchor::new(link, ("other", "online_grammar")));
         }
     }
     // A secondary form that begins inside a report or neutral citation misreads that citation
     // and its date ("2030 BCCA 431 (2032)" is no news item); an article that holds one starts
     // before it ("(2023) 57:3 RJT 487"), and a gazette page holds the year and capitals it opens with ("1991 GOQ 2, 1447").
-    found.retain(|anchor| anchor.family.is_some_and(|(_, reason)|
-            reason == "article_grammar" || reason == "treaty_grammar" || reason == "securities_grammar")
-        || !primary.iter().any(|core| core.start <= anchor.span.start && anchor.span.start < core.end
-            && occurrence_family(&value[core.clone()]).0 == "case"));
+    found.retain(|anchor| anchor.family.is_some_and(|(_, reason)| holds_case(reason)) || !in_case(anchor.span.start));
     // A year in parentheses right after a report and closing its sentence is that report's date ("410 U.S. 113
     // (1973). Roe at 240"), no article's.
     found.retain(|anchor| !anchor.family.is_some_and(|(_, reason)| reason == "article_grammar")
@@ -507,7 +534,11 @@ fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>
         let before = before[tail..].to_lowercase();
         before.ends_with("repealed") && !before.ends_with(" not repealed")
     });
-    resolve(found)
+    lap("rest");
+    let found = resolve(found);
+    lap("resolve");
+    if let Some((_, laps)) = &stage { eprint!("{laps}"); }
+    found
 }
 
 /// A link without the sentence punctuation after it, or a closing bracket
@@ -572,12 +603,17 @@ fn online_extent(text: &str, link: &Hit, limit: usize) -> usize {
     metadata::citation_parenthetical(text, end, limit.max(end)).map_or(end, |range| range.end)
 }
 
+/// Whether the journal grammar reads all of a core: the one family [`occurrence_family`] names "journal".
+fn journal_core(core: &str) -> bool {
+    JOURNAL_PATTERN.find_screened(core).is_some_and(|hit| hit.start() == 0 && hit.end() == core.len())
+}
+
 /// A core's occurrence family, not its registry identity.
 fn occurrence_family(core: &str) -> (&'static str, &'static str) {
-    let whole = |span: Hit| span.start == 0 && span.end == core.len();
-    if JOURNAL_PATTERN.find_screened(core).is_some_and(|hit| whole(hit.range())) {
+    if journal_core(core) {
         return ("journal", "journal_grammar");
     }
+    let whole = |span: Hit| span.start == 0 && span.end == core.len();
     #[cfg(feature = "us")]
     if crate::us::is_law(core) { return ("statute", "statute_grammar"); }
     if let Some(captures) = crate::classify::ROUTING.captures(core) {
@@ -596,7 +632,15 @@ fn occurrence_family(core: &str) -> (&'static str, &'static str) {
 #[cfg_attr(not(feature = "us"), allow(unused_variables))]
 fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationStyle]>, scopes: &[usize], enrich: bool,
     reads_us: bool, jurisdictions: Option<&[String]>, reports: bool, names: bool, ocr: bool) -> Vec<Anchor> {
+    // Each stage's time where phases are timed (LEGALPDF_PHASE_TIMING), written once at the end; the clock is read
+    // only then.
+    let mut stage = std::env::var_os("LEGALPDF_PHASE_TIMING").map(|_| (std::time::Instant::now(), String::new()));
+    let mut lap = |name: &str| if let Some((started, laps)) = &mut stage {
+        laps.push_str(&format!("phase\tfind.cores.{name}\t{}\n", started.elapsed().as_micros()));
+        *started = std::time::Instant::now();
+    };
     let (mut found, reporters) = primary_ranges(value);
+    lap("primary");
     // A report whose year OCR garbled, read repaired, replaces what the grammars read of it unrepaired.
     let mut repaired = if ocr { repaired_reports(value) } else { Vec::new() };
     if !repaired.is_empty() {
@@ -611,6 +655,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     let mut readings: Vec<(Hit, crate::classify::Reading)> = named.iter()
         .filter_map(|named| named_reading(value, named).map(|reading| (named.span.clone(), reading))).collect();
     found.extend(named.iter().map(|named| named.span.clone()));
+    lap("named");
     #[cfg_attr(not(feature = "us"), allow(unused_mut))]
     let mut us_hits: Vec<Hit> = Vec::new();
     // The US forms read their own forms (laws, custom reporters, short forms) and give the reports the named rows read
@@ -625,6 +670,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
         Vec::new()
     };
     found.extend(us_hits);
+    lap("us");
     found.retain(|hit| !numbered_on(&value[hit.end..]) && !no_report(value, hit.clone()));
     #[cfg(feature = "us")]
     captured.retain(|matched| !numbered_on(&value[matched.span.end..]) && !no_report(value, matched.span.clone()));
@@ -634,6 +680,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     // The block keeps the family its publication names ("(1879), 5 Ex D 264"
     // is a case).
     let mut secondary = secondary_hits(value, &found, styles);
+    lap("secondary");
     let mut primary = Vec::new();
     for anchor in resolve(found.into_iter().map(|span| Anchor { span, ..Anchor::default() }).collect()) {
         let hit = &anchor.span;
@@ -716,6 +763,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
         .collect::<Vec<_>>();
     anchors.extend(primary);
     anchors.sort_by_key(|anchor| anchor.span.start);
+    lap("select");
     // These are the complete native anchors. Added source discoveries
     // must not truncate their occurrence pinpoints or suppress their references.
     if !enrich { return anchors; }
@@ -755,6 +803,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     // Eyecite's captured fields already supply their reading. Parse only the
     // remaining native families, instead of parsing then replacing those fields.
     for anchor in anchors.iter_mut().filter(|anchor| anchor.reading.is_none()) { anchor.read(value); }
+    lap("read");
     // Carry the splitter grammar's recognized reporter fields without replacing native extents
     // or pinned Eyecite readings. Its permissive boundary pattern alone does
     // not establish a citation; the registry or direct alias evidence does.
@@ -781,6 +830,7 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
     }
     anchors.extend(additional);
     anchors.sort_by_key(|anchor| anchor.span.start);
+    lap("reporters");
     // A (year) volume publication page block keeps the family its publication
     // names, as one holding a citation core does above, so it is styled as that
     // family is: a law report or a court's identifier by the parties ("Lark v
@@ -799,6 +849,8 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
             anchor.family = family;
         }
     }
+    lap("families");
+    if let Some((_, laps)) = &stage { eprint!("{laps}"); }
     anchors
 }
 
@@ -846,7 +898,7 @@ fn named_reading(value: &str, named: &crate::named::Named) -> Option<crate::clas
     // rows alone name is a journal's where it is written as one ("(1989) 14 C.L.A.S. 63", not "(1988), 10 C.L.A.S. 97").
     let rows = || named.rows.iter().chain(&named.variations);
     let journal = rows().all(|row| row.table == crate::named::Table::Journals)
-        && (rows().any(|row| row.source != "mcgill") || occurrence_family(core).0 == "journal");
+        && (rows().any(|row| row.source != "mcgill") || journal_core(core));
     Some(crate::classify::reported_fields(fields, journal, group("issue").is_some(), open, named.short_at))
 }
 
@@ -862,17 +914,18 @@ pub(crate) fn named_reports(value: &str, selection: &crate::named::Selection, re
     crate::named::find(value, selection).into_iter().filter(|named| {
         let head = value[named.span.start..named.name.start].trim_end();
         let core = named.span.start + head.trim_end_matches(|character: char| character.is_ascii_digit()).len();
+        // Whether the US forms read it, asked last: the checks are pure, so their order changes nothing.
         #[cfg(feature = "us")]
-        let us = reads_us && crate::us::named_match(value, named).is_some();
+        let us = || reads_us && crate::us::named_match(value, named).is_some();
         #[cfg(not(feature = "us"))]
-        let us = false;
+        let us = || false;
         // A shape that writes words of the name before its volume ("L.R. 1 Ex. 265") is no volume, word and page.
         let framed = head[..core - named.span.start].chars().any(char::is_alphabetic);
         !value[core..named.name.start].contains('\n')
             && named.groups.iter().any(|(group, _)| matches!(group.as_str(), "volume" | "year" | "year_parenthesized"))
             && !value[named.span.end..].strip_prefix('/').is_some_and(|rest| rest.starts_with(|character: char| character.is_ascii_digit()))
             && !chapter_after(&value[named.span.end..])
-            && (us || framed || !month_reporter(&value[core..named.span.end]) && !word_reporter(&value[core..named.span.end]))
+            && (framed || !month_reporter(&value[core..named.span.end]) && !word_reporter(&value[core..named.span.end]) || us())
     }).collect()
 }
 
@@ -1146,6 +1199,43 @@ fn scope_floor(scopes: &[usize], at: usize) -> usize {
         .unwrap_or(0)
 }
 
+/// A text's `style.floor` matches and the quotations it holds whole, found once for the many styles read back to its
+/// start ([`styled_floor`] from 0). The grammar reads nothing past a match's end, so each whole-text match that ends
+/// before a core is one `&text[..core]` holds; only the text after the last of them is read again. Quotation marks are
+/// read left to right, so the quotations closed before a core are the ones `&text[..core]` holds.
+struct StyledFloors<'t> {
+    text: &'t str,
+    found: OnceLock<(Vec<Hit>, Vec<Hit>)>,
+}
+
+impl<'t> StyledFloors<'t> {
+    fn new(text: &'t str) -> Self {
+        Self { text, found: OnceLock::new() }
+    }
+
+    /// [`styled_floor`] from the text's start.
+    fn floor(&self, core_start: usize) -> usize {
+        let (found, quotes) = self.found.get_or_init(||
+            (STYLED_FLOOR.find_all(self.text).map(|found| found.range()).collect(), quotations(self.text)));
+        let window = &self.text[..core_start];
+        let kept = found.partition_point(|hit| hit.end < core_start);
+        let mut matches = found[..kept].to_vec();
+        let mut at = matches.last().map_or(0, |hit| hit.end);
+        // The grammar matches no empty text (it ends on a space), so each search starts where the last match ended.
+        while let Some(next) = STYLED_FLOOR.find_at(window, at) {
+            at = next.end();
+            matches.push(next.range());
+        }
+        // Quotations close in order, so those `window` holds are a prefix.
+        let quoted = &quotes[..quotes.partition_point(|quote| quote.end < core_start)];
+        matches.iter().rev()
+            .find(|matched| !quoted.iter().any(|quote| quote.start < matched.start && matched.end <= quote.end)
+                && !(window[matched.start..matched.end].trim_end().ends_with('.')
+                    && window[matched.end..].starts_with(|character: char| character == '(' || character.is_lowercase())))
+            .map_or(0, |matched| matched.end)
+    }
+}
+
 fn matched_style(
     pattern: &Screened<Regex>,
     group: &str,
@@ -1153,7 +1243,11 @@ fn matched_style(
     core_start: usize,
     floor: usize,
 ) -> usize {
-    let floor = styled_floor(text, floor, core_start);
+    matched_style_above(pattern, group, text, core_start, styled_floor(text, floor, core_start))
+}
+
+/// [`matched_style`] above a styled floor already found ([`styled_floor`]).
+fn matched_style_above(pattern: &Screened<Regex>, group: &str, text: &str, core_start: usize, floor: usize) -> usize {
     pattern
         .group_start(group, &text[floor..core_start])
         .and_then(|start| style_span_start(text, floor + start, core_start))
@@ -1189,24 +1283,31 @@ fn treaty_style_start(text: &str, core_start: usize, floor: usize) -> usize {
 
 /// The author and work title a secondary source is styled with.
 fn work_style_start(text: &str, core_start: usize, floor: usize) -> usize {
-    let quoted = matched_style(&QUOTED_WORK, "work", text, core_start, floor);
+    work_style_start_above(text, core_start, styled_floor(text, floor, core_start))
+}
+
+/// [`work_style_start`] above a styled floor already found ([`styled_floor`]).
+fn work_style_start_above(text: &str, core_start: usize, floor: usize) -> usize {
+    let quoted = matched_style_above(&QUOTED_WORK, "work", text, core_start, floor);
     if quoted < core_start {
         return quoted;
     }
     // An unsigned work opens with its quoted title where the work begins: past
     // the floor, a note number and any signal, never in running text.
-    let floor = styled_floor(text, floor, core_start);
     let blank = text[floor..core_start].len() - text[floor..core_start].trim_start_matches(javascript_whitespace).len();
     if let Some(opening) = style_span_start(text, floor + blank, core_start) {
         if let Some(work) = QUOTED_TITLE.captures_screened(&text[opening..core_start]).and_then(|captures| captures.name("work")) {
             return opening + work.start();
         }
     }
-    let authored = matched_style(&AUTHORED_WORK, "work", text, core_start, floor);
+    // The author's and the plain title's styles are read above the floor found again from this one, whose window
+    // reads its quotations from here.
+    let floor = styled_floor(text, floor, core_start);
+    let authored = matched_style_above(&AUTHORED_WORK, "work", text, core_start, floor);
     if authored < core_start {
         return authored;
     }
-    matched_style(&PLAIN_WORK, "work", text, core_start, floor)
+    matched_style_above(&PLAIN_WORK, "work", text, core_start, floor)
 }
 
 /// Past the label of a numbered paragraph and a leading "In" that open the
@@ -1972,15 +2073,23 @@ fn cores_in(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Ve
         })
         .collect::<Vec<_>>();
     if !enrich { return cores; }
+    let mut stage = std::env::var_os("LEGALPDF_PHASE_TIMING").map(|_| (std::time::Instant::now(), String::new()));
+    let mut lap = |name: &str| if let Some((started, laps)) = &mut stage {
+        laps.push_str(&format!("phase\tfind.cores.{name}\t{}\n", started.elapsed().as_micros()));
+        *started = std::time::Instant::now();
+    };
     let taken = cores
         .iter()
         .map(|core| core.span.clone())
         .collect::<Vec<_>>();
     cores.extend(back_reference_cores(text, &taken));
     cores.sort_by_key(|core| core.span.start);
+    lap("back_references");
     let unknown = unknown_cores(text, &cores);
     cores.extend(unknown);
     cores.sort_by_key(|core| core.span.start);
+    lap("unknown");
+    if let Some((_, laps)) = &stage { eprint!("{laps}"); }
     cores
 }
 
@@ -2327,6 +2436,10 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
     let mut citations = Vec::with_capacity(cores.len());
     let mut floors = Vec::with_capacity(cores.len());
     let mut previous_end = 0;
+    // Whether the text between each core and the next is a parallel's gap, read once whatever core reaches past it.
+    let gaps: Vec<std::cell::OnceCell<bool>> = (1..cores.len()).map(|_| std::cell::OnceCell::new()).collect();
+    let gap = |at: usize| *gaps[at].get_or_init(|| metadata::parallel_gap(text,
+        cores[at].span.end.min(cores[at + 1].span.start), cores[at + 1].span.start));
     for (index, core) in cores.iter().enumerate() {
         let scope_end = if options.notes.is_some() {
             scopes.get(scopes.partition_point(|at| *at <= core.span.start)).copied().unwrap_or(text.len())
@@ -2344,10 +2457,9 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
         // Fontaine's, not Stone's).
         let paragraph_end = paragraphs.get(paragraphs.partition_point(|at| *at < core.span.end)).copied()
             .unwrap_or(text.len()).min(scope_end);
-        let reach = cores[index + 1..].iter().zip(&cores[index..])
-            .find(|(next, previous)| next.span.start >= paragraph_end || !metadata::parallel_gap(text,
-                previous.span.end.min(next.span.start), next.span.start))
-            .map_or(paragraph_end, |(next, _)| next.span.start.min(paragraph_end));
+        let reach = (index..cores.len() - 1)
+            .find(|&at| cores[at + 1].span.start >= paragraph_end || !gap(at))
+            .map_or(paragraph_end, |at| cores[at + 1].span.start.min(paragraph_end));
         let mut citation = match &core.kind {
             CoreKind::Full(anchor) => full_citation(text, anchor, floor, limit, reach,
                 source_name, enrich.then_some(options)),
@@ -2384,9 +2496,10 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
     // Eyecite's IdToken/SupraToken discovery is independent of the longer native
     // note-reference core: a source token can survive an overlapping native
     // reporter extent (for example, a note number read as reporter volume).
+    let core_starts: std::collections::HashSet<usize> = cores.iter().map(|core| core.span.start).collect();
     for (&start, source) in &source_names {
         let Some(form) = source.reference_form else { continue; };
-        if cores.iter().any(|core| core.span.start == start) { continue; }
+        if core_starts.contains(&start) { continue; }
         let token = source.token_span.as_ref().expect("source reference token");
         let floor = scope_floor(&scopes, start);
         let limit = scopes.get(scopes.partition_point(|at| *at <= start)).copied().unwrap_or(text.len());

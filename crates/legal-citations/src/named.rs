@@ -158,8 +158,37 @@ pub struct Named {
 
 /// One shape compiled for a reading: around a name, or whole.
 enum Shape {
-    Slot { head: Option<Regex>, tail: Regex, short: Option<Regex> },
+    Slot { head: Option<Head>, tail: Regex, short: Option<Regex> },
     Whole { pattern: Regex, literals: Option<AhoCorasick> },
+}
+
+/// What a shape reads before a name: `(?:^|[^A-Za-z0-9]|(?=[\[(]))(?P<__head>H)$` over the window before it. A head
+/// without lookarounds of its own is searched without the bracket's lookahead (`boundary`), which leaves the whole
+/// pattern to the linear engine, and the lookahead's place is tried after: it decides a match only at a bracket that a
+/// letter or digit precedes (elsewhere a start, or the boundary character, reads the same head first), and wins only
+/// where it starts before the boundary's match, as the alternation tries the boundary first at each start.
+enum Head {
+    Split { boundary: Regex, anchored: Regex },
+    Whole(Regex),
+}
+
+impl Head {
+    /// The leftmost match in `window` as the whole pattern reads it: its captures and where they are counted from.
+    fn captures<'t>(&'t self, window: &'t str) -> Option<(&'t Regex, fancy_regex::Captures<'t, str>, usize)> {
+        match self {
+            Head::Whole(pattern) => pattern.captures(window).ok().flatten().map(|captures| (pattern, captures, 0)),
+            Head::Split { boundary, anchored } => {
+                let main = boundary.captures(window).ok().flatten();
+                let main_start = main.as_ref().map(|captures| captures.get(0).unwrap().start());
+                for (at, character) in window.char_indices() {
+                    if main_start.is_some_and(|start| at >= start) { break; }
+                    if at == 0 || !matches!(character, '[' | '(') || !window.as_bytes()[at - 1].is_ascii_alphanumeric() { continue; }
+                    if let Some(captures) = anchored.captures(&window[at..]).ok().flatten() { return Some((anchored, captures, at)); }
+                }
+                main.map(|captures| (boundary, captures, 0))
+            }
+        }
+    }
 }
 
 /// A selection's rows, ready to scan for.
@@ -173,8 +202,9 @@ struct Index {
     /// PEIR"): no name is read across another's comma, nor across another mark in another case ("Act, SC" and "Act
     /// (S.C." are no ACTSC).
     marks: Vec<String>,
-    /// For each name: the rows it names, and whether by a name of theirs rather than a variation.
-    rows: Vec<Vec<(usize, bool)>>,
+    /// For each name, the rows it names by the shapes they use, in the order the rows give them: each shape with the
+    /// rows naming it by a name of theirs, then by a variation.
+    by_shape: Vec<Vec<(usize, Vec<&'static Row>, Vec<&'static Row>)>>,
     /// The shapes the selected rows use, by position in [`shapes`].
     shapes: HashMap<usize, Shape>,
     /// For each whole shape, the rows giving it.
@@ -226,11 +256,28 @@ impl Index {
                 }
             }
         }
+        // A DFA: the same overlapping matches as the default NFA, found without following its failure links.
         let automaton = (!names.is_empty()).then(|| AhoCorasick::builder().match_kind(MatchKind::Standard)
+            .kind(Some(aho_corasick::AhoCorasickKind::DFA))
             .ascii_case_insensitive(selection.case).build(&names).expect("named row names"));
         let mut whole: Vec<_> = whole.into_iter().collect();
         whole.sort();
-        Self { names, automaton, endings, marks, rows, shapes, whole }
+        let by_shape = rows.iter().map(|named| {
+            let mut by_shape: Vec<(usize, Vec<&'static Row>, Vec<&'static Row>)> = Vec::new();
+            for &(at, exact) in named {
+                let row = &DATA.rows[at];
+                for &shape in &row.shapes {
+                    let position = by_shape.iter().position(|(other, _, _)| *other == shape).unwrap_or_else(|| {
+                        by_shape.push((shape, Vec::new(), Vec::new()));
+                        by_shape.len() - 1
+                    });
+                    let (_, rows, variations) = &mut by_shape[position];
+                    if exact { rows.push(row) } else { variations.push(row) }
+                }
+            }
+            by_shape
+        }).collect();
+        Self { names, automaton, endings, marks, by_shape, shapes, whole }
     }
 }
 
@@ -282,16 +329,22 @@ fn compile(shape: &str, selection: &Selection) -> Shape {
     let tail_of = |tail: &str| python(&format!(r"^(?P<__tail>{tail})(?:[^A-Za-z0-9]|$)"));
     Shape::Slot {
         // A head that opens with a bracket opens at it whatever precedes it ("1[1942] 1 D.L.R. 81", a note's number).
-        head: (!head.is_empty()).then(|| python(&format!(r"(?:^|[^A-Za-z0-9]|(?=[\[(]))(?P<__head>{head})$"))),
+        head: (!head.is_empty()).then(|| if ["(?=", "(?!", "(?<=", "(?<!"].iter().any(|around| head.contains(around)) {
+            Head::Whole(python(&format!(r"(?:^|[^A-Za-z0-9]|(?=[\[(]))(?P<__head>{head})$")))
+        } else {
+            Head::Split { boundary: python(&format!(r"(?:^|[^A-Za-z0-9])(?P<__head>{head})$")),
+                anchored: python(&format!(r"^(?P<__head>{head})$")) }
+        }),
         short: (short && short_tail != tail).then(|| tail_of(&short_tail)),
         tail: tail_of(&tail),
     }
 }
 
 /// The text a name is matched in: its letters and digits, as the registry folds a surface, and without `spacing` one
-/// space for whitespace between two of them. With it, where each of its bytes' characters starts and ends in `text`.
-fn compact(text: &str, spacing: bool) -> (String, Vec<usize>, Vec<usize>) {
-    let (mut compacted, mut starts, mut ends) = (String::with_capacity(text.len()), Vec::new(), Vec::new());
+/// space for whitespace between two of them. With it, where each of its bytes' characters starts in `text` (each
+/// ends where that character does).
+fn compact(text: &str, spacing: bool) -> (String, Vec<usize>) {
+    let (mut compacted, mut starts) = (String::with_capacity(text.len()), Vec::with_capacity(text.len()));
     let mut characters = text.char_indices().peekable();
     let mut previous: Option<char> = None;
     while let Some((at, character)) = characters.next() {
@@ -301,15 +354,14 @@ fn compact(text: &str, spacing: bool) -> (String, Vec<usize>, Vec<usize>) {
             if !spacing && between {
                 compacted.push(' ');
                 starts.push(at);
-                ends.push(at + character.len_utf8());
             }
         } else if character.is_alphanumeric() {
-            for _ in 0..character.len_utf8() { starts.push(at); ends.push(at + character.len_utf8()); }
+            starts.extend(std::iter::repeat_n(at, character.len_utf8()));
             compacted.push(character);
         }
         previous = Some(character);
     }
-    (compacted, starts, ends)
+    (compacted, starts)
 }
 
 /// Where a name a scan found ends: after its last letter or digit, and the periods that close it ("S.C.R.", with
@@ -343,7 +395,9 @@ pub fn find(text: &str, selection: &Selection) -> Vec<Named> {
     let index = index(selection);
     let mut found = Vec::new();
     if let Some(automaton) = &index.automaton {
-        let (compacted, starts, ends) = compact(text, selection.spacing);
+        let (compacted, starts) = compact(text, selection.spacing);
+        // Where the character a compacted byte comes from ends in `text`.
+        let ends = |at: usize| starts[at] + text[starts[at]..].chars().next().map_or(0, char::len_utf8);
         for hit in automaton.find_overlapping_iter(&compacted) {
             let name = &index.names[hit.pattern().as_usize()];
             // Only a name of more than three letters and digits may differ in case, and only after its first: "FCJ no",
@@ -353,14 +407,14 @@ pub fn find(text: &str, selection: &Selection) -> Vec<Named> {
             let start = starts[hit.start()];
             // A comma or semicolon parts two names; any other mark does too where the name is read in another case.
             let (marks, cased) = (&index.marks[hit.pattern().as_usize()], compacted[hit.start()..hit.end()] == *name);
-            if text[start..ends[hit.end() - 1]].chars().any(|character| !character.is_alphanumeric() && !character.is_whitespace()
+            if text[start..ends(hit.end() - 1)].chars().any(|character| !character.is_alphanumeric() && !character.is_whitespace()
                 && character != '.' && !marks.contains(character) && (!cased || matches!(character, ',' | ';'))) { continue; }
-            let end = name_end(text, start, ends[hit.end() - 1], selection.spacing);
-            let rows = &index.rows[hit.pattern().as_usize()];
-            read_name(text, start..end, rows, &index, selection, &mut found);
+            let end = name_end(text, start, ends(hit.end() - 1), selection.spacing);
+            let shapes = &index.by_shape[hit.pattern().as_usize()];
+            read_name(text, start..end, shapes, &index, selection, &mut found);
             for ending in &index.endings[hit.pattern().as_usize()] {
                 if text[end..].starts_with(ending.as_str()) {
-                    read_name(text, start..end + ending.len(), rows, &index, selection, &mut found);
+                    read_name(text, start..end + ending.len(), shapes, &index, selection, &mut found);
                 }
             }
         }
@@ -382,21 +436,12 @@ pub fn find(text: &str, selection: &Selection) -> Vec<Named> {
 }
 
 /// The citations each shape of a name's rows reads around it.
-fn read_name(text: &str, name: Range<usize>, named: &[(usize, bool)], index: &Index, selection: &Selection, found: &mut Vec<Named>) {
-    let mut by_shape: Vec<(usize, Vec<&'static Row>, Vec<&'static Row>)> = Vec::new();
-    for &(at, exact) in named {
-        let row = &DATA.rows[at];
-        for &shape in &row.shapes {
-            let position = by_shape.iter().position(|(other, _, _)| *other == shape).unwrap_or_else(|| {
-                by_shape.push((shape, Vec::new(), Vec::new()));
-                by_shape.len() - 1
-            });
-            let (_, rows, variations) = &mut by_shape[position];
-            if exact { rows.push(row) } else { variations.push(row) }
-        }
-    }
+fn read_name(text: &str, name: Range<usize>, by_shape: &[(usize, Vec<&'static Row>, Vec<&'static Row>)], index: &Index,
+    selection: &Selection, found: &mut Vec<Named>) {
     for (shape, rows, variations) in by_shape {
-        let Some(Shape::Slot { head, tail, short }) = index.shapes.get(&shape) else { continue };
+        let Some(Shape::Slot { head, tail, short }) = index.shapes.get(shape) else { continue };
+        // A citation that opens with its name opens at a boundary, as a head does.
+        if head.is_none() && text[..name.start].ends_with(|character: char| character.is_ascii_alphanumeric()) { continue; }
         // With `spacing`, a name of two letters or more its period closes may run into a page of two digits or more
         // ("[1974] 1 W.W.R.481"), read as if spaced; less is too little to tell from garbled text or a chapter ("65 L.7 .
         // Ch . 521", "R.S.O. 1990 C. F.3").
@@ -414,18 +459,16 @@ fn read_name(text: &str, name: Range<usize>, named: &[(usize, bool)], index: &In
         };
         let mut read = Vec::new();
         let start = match head {
-            // A citation that opens with its name opens at a boundary, as a head does.
-            None if text[..name.start].ends_with(|character: char| character.is_ascii_alphanumeric()) => continue,
             None => name.start,
             Some(head) => {
                 let mut window = name.start.saturating_sub(HEAD_WINDOW);
                 while !text.is_char_boundary(window) { window += 1; }
-                let Some(captures) = head.captures(&text[window..name.start]).ok().flatten() else { continue };
-                let matched = captures.name("__head").unwrap();
+                let Some((pattern, captures, from)) = head.captures(&text[window..name.start]) else { continue };
+                let matched = from + captures.name("__head").unwrap().start();
                 // A head the window's edge, not a boundary, opens.
-                if matched.start() == 0 && text[..window].ends_with(|character: char| character.is_ascii_alphanumeric()) { continue; }
-                groups(&captures, head.capture_names(), &mut read);
-                window + matched.start()
+                if matched == 0 && text[..window].ends_with(|character: char| character.is_ascii_alphanumeric()) { continue; }
+                groups(&captures, pattern.capture_names(), &mut read);
+                window + matched
             }
         };
         read.push(("reporter".to_owned(), text[name.clone()].to_owned()));
@@ -433,7 +476,7 @@ fn read_name(text: &str, name: Range<usize>, named: &[(usize, bool)], index: &In
         if !selection.roman_pages && !arabic(&read) { continue; }
         let end = name.end + tail_captures.name("__tail").unwrap().end() - shift;
         let short_at = tail_captures.name("__short_at").map(|at| name.end + at.start() - shift - start);
-        found.push(Named { span: start..end, name: name.clone(), rows, variations, groups: read, short_at });
+        found.push(Named { span: start..end, name: name.clone(), rows: rows.clone(), variations: variations.clone(), groups: read, short_at });
     }
 }
 
