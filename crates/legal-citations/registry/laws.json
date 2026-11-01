@@ -1188,5 +1188,53 @@
   ],
   "upstream_key": "U.S.C.",
   "citation_id": "usc"
+ },
+ {
+  "name": "United Nations Treaty Series",
+  "kind": "treaties",
+  "jurisdiction": "int",
+  "abbreviation": "UNTS",
+  "variations": [
+   "RTNU"
+  ],
+  "examples": [
+   "1155 UNTS 331",
+   "1155 RTNU 331"
+  ],
+  "french": [
+   "RTNU"
+  ],
+  "name_fr": "Recueil des traités des Nations Unies",
+  "citation_id": "unts"
+ },
+ {
+  "name": "League of Nations Treaty Series",
+  "kind": "treaties",
+  "jurisdiction": "int",
+  "abbreviation": "LNTS",
+  "examples": [
+   "108 LNTS 3"
+  ],
+  "citation_id": "lnts"
+ },
+ {
+  "name": "Canada Treaty Series",
+  "kind": "treaties",
+  "jurisdiction": "ca",
+  "abbreviation": "CTS",
+  "examples": [
+   "1990 CTS 3"
+  ],
+  "citation_id": "cts"
+ },
+ {
+  "name": "United States Treaties and Other International Agreements",
+  "kind": "treaties",
+  "jurisdiction": "us",
+  "abbreviation": "UST",
+  "examples": [
+   "21 UST 77"
+  ],
+  "citation_id": "ust"
  }
 ]

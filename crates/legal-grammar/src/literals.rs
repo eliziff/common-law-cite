@@ -176,6 +176,89 @@ pub(crate) fn linear(source: &str, case_insensitive: bool, multi_line: bool, dot
     finish(hir(&parse_linear(source, case_insensitive, multi_line, dot_matches_new_line)?))
 }
 
+/// The most names one group's spelled-out reading may hold.
+const NAMES_LIMIT: usize = 200_000;
+
+/// Every string a part matches, whitespace read as one space, or none when the part is open (a
+/// large class, an unbounded repetition of anything but whitespace) or holds too many.
+fn spelled(hir: &Hir) -> Option<Vec<String>> {
+    let product = |left: Vec<String>, right: Vec<String>| -> Option<Vec<String>> {
+        (left.len() * right.len() <= NAMES_LIMIT)
+            .then(|| left.iter().flat_map(|left| right.iter().map(move |right| format!("{left}{right}"))).collect())
+    };
+    Some(match hir.kind() {
+        HirKind::Empty | HirKind::Look(_) => vec![String::new()],
+        HirKind::Literal(literal) => vec![std::str::from_utf8(&literal.0).ok()?.to_owned()],
+        HirKind::Class(Class::Unicode(class)) => {
+            let holds = |wanted: char| class.ranges().iter().any(|range| range.start() <= wanted && wanted <= range.end());
+            if holds(' ') && holds('\t') && holds('\n') { return Some(vec![" ".into()]); }
+            let count = class.ranges().iter().map(|range| range.end() as u32 - range.start() as u32 + 1).sum::<u32>();
+            if count == 0 || count > CLASS_LIMIT { return None; }
+            class.ranges().iter().flat_map(|range| (range.start()..=range.end()).map(String::from)).collect()
+        }
+        HirKind::Class(Class::Bytes(_)) => return None,
+        HirKind::Repetition(repeat) => {
+            let child = spelled(&repeat.sub)?;
+            // Spacing never tells two names apart (the registry folds it away), so any run of it is one space.
+            if child == [" "] { return Some(vec![" ".into()]); }
+            let mut out = if repeat.min == 0 { vec![String::new()] } else { Vec::new() };
+            let max = repeat.max.filter(|max| *max <= 3)?;
+            let mut run = vec![String::new()];
+            for count in 1..=max {
+                run = product(run, child.clone())?;
+                if count >= repeat.min { out.extend(run.iter().cloned()); }
+            }
+            out
+        }
+        HirKind::Capture(capture) => spelled(&capture.sub)?,
+        HirKind::Concat(parts) => {
+            let mut out = vec![String::new()];
+            for part in parts { out = product(out, spelled(part)?)?; }
+            out
+        }
+        HirKind::Alternation(parts) => {
+            let mut out = Vec::new();
+            for part in parts { out.extend(spelled(part)?); }
+            if out.len() > NAMES_LIMIT { return None; }
+            out
+        }
+    })
+}
+
+/// Each group of `source` named one of `groups`, with the names it spells out (whitespace as one
+/// space, case as written), or none when it is open.
+pub(crate) fn named_groups(source: &str, groups: &[&str]) -> Vec<(String, Option<Vec<String>>)> {
+    let mut found = Vec::new();
+    let bytes = source.as_bytes();
+    for opening in ["(?<", "(?P<"] {
+        let mut from = 0;
+        while let Some(at) = source[from..].find(opening).map(|at| at + from) {
+            from = at + opening.len();
+            if at > 0 && bytes[at - 1] == b'\\' { continue; }
+            let Some(close) = source[from..].find('>') else { break };
+            let name = &source[from..from + close];
+            if !groups.contains(&name) { continue; }
+            let start = from + close + 1;
+            let (mut depth, mut end) = (1, start);
+            while end < bytes.len() && depth > 0 {
+                match bytes[end] {
+                    b'\\' => end += 1,
+                    b'(' => depth += 1,
+                    b')' => depth -= 1,
+                    _ => {}
+                }
+                end += 1;
+            }
+            let body = &source[start..end.saturating_sub(1)];
+            let parsed = regex_syntax::ParserBuilder::new().build().parse(body).ok();
+            let names = parsed.as_ref().and_then(spelled).map(|names| dedup(names.into_iter()
+                .map(|name| name.split_whitespace().collect::<Vec<_>>().join(" ")).filter(|name| !name.is_empty()).collect()));
+            found.push((name.to_owned(), names));
+        }
+    }
+    found
+}
+
 /// The named group a linear grammar's every match opens with, so that the group starts where the
 /// match does.
 pub(crate) fn leading_group(source: &str, case_insensitive: bool, multi_line: bool, dot_matches_new_line: bool) -> Option<String> {

@@ -162,10 +162,13 @@ fn canlii_decision_id_codes() {
         Some("https://www.canlii.org/en/ca/sst/doc/2017/2017sstgdis32/2017sstgdis32.html")
     );
     // Codes CanLII does not use in decision ids stay without a link (the Competition
-    // Tribunal's decisions are CanLII-cited; CRAC is also a reporter).
-    for text in ["2020 Comp Trib 7", "2026 CRAC 18"] {
-        assert_eq!(canlii_citation_url(text, "en"), None, "{text}");
-    }
+    // Tribunal's decisions are CanLII-cited).
+    assert_eq!(canlii_citation_url("2020 Comp Trib 7", "en"), None);
+    // A French neutral code of a court CanLII ids by its English code: CART's decisions are 2025cart28, never crac.
+    assert_eq!(
+        canlii_citation_url("2026 CRAC 18", "en").as_deref(),
+        Some("https://www.canlii.org/en/ca/cart/doc/2026/2026cart18/2026cart18.html")
+    );
 }
 
 #[test]

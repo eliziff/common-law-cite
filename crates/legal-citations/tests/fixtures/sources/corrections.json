@@ -26,5 +26,11 @@
  {"field": "canlii", "key": "YTPSLRB", "source": "yt/ytpslrb", "registry": "yk/ytpslrb", "evidence": "CanLII serves Yukon under yk, not yt."},
  {"field": "canlii", "key": "YTRTO", "source": "yt/ytrto", "registry": "yk/ytrto", "evidence": "CanLII serves Yukon under yk, not yt."},
  {"field": "canlii", "key": "YTTLRB", "source": "yt/yttlrb", "registry": "yk/yttlrb", "evidence": "CanLII serves Yukon under yk, not yt."},
- {"field": "canlii_jurisdiction", "key": "YT", "source": "yt", "registry": "yk", "evidence": "CanLII serves Yukon's laws and courts under yk, not yt."}
+ {"field": "canlii_jurisdiction", "key": "YT", "source": "yt", "registry": "yk", "evidence": "CanLII serves Yukon's laws and courts under yk, not yt."},
+ {"field": "absent", "key": "FedCFamC2A", "source": "grammar--cite-neutral-bracketed-courts", "registry": "", "evidence": "The grammar lists it as a rejected example ({\"input\": \"[2021] FedCFamC2A 1\", \"groups\": null}), not a court; the Federal Circuit and Family Court of Australia's medium neutral codes are FedCFamC1A, FedCFamC1F, FedCFamC2F and FedCFamC2G."},
+ {"field": "absent", "key": "Carswell", "source": "pinpointer--core-not-reporter", "registry": "", "evidence": "Pinpointer's pattern is Carswell[A-Za-z]*, a family of database codes; the registry's reporter carswell holds them (CarswellNat, CarswellOnt, CarswellBC, ...), read as 4:database:carswellont:2005:1234."},
+ {"field": "absent", "key": "CanLII", "source": "pinpointer--core-not-reporter", "registry": "", "evidence": "A CanLII number is its own citation form (2010 CanLII 1234 reads as 4:canlii:2010:1234), not a reporter or court name."},
+ {"field": "absent", "key": "OWLD", "source": "pinpointer--core-not-reporter", "registry": "", "evidence": "No digest of that name: absent from the McGill inventory and from all 144,728 aliases; the Westlaw digests the list names beside it (ACWS, AWLD, BCWLD, WDFL, WCB) are registry reporters."},
+ {"field": "absent", "key": "OIC", "source": "beaver--citator-graph-statute-series", "registry": "", "evidence": "The citator lists OIC with BC Reg and Alta Reg as a regulation prefix of no jurisdiction; orders in council are written OIC by more than one jurisdiction (Yukon's are the series YOIC), so no one series is OIC. It reads as 4:regulation:-:oic:2019:123."},
+ {"field": "absent", "key": "OIC", "source": "grammar--cite-statute-toa-series", "registry": "", "evidence": "As in the citator: an order-in-council prefix of no jurisdiction, read as 4:regulation:-:oic:2019:123; Yukon's are the series YOIC."}
 ]}

@@ -10,6 +10,11 @@ commit e27f683932be9f67c67635474c780f901206f168.
 Copyright 2026 Alberta Law Review. The original work is licensed under
 Apache License 2.0; its license terms are reproduced below.
 
+The alias table (crates/legal-citations/registry/aliases.json) and the CanLII case ids
+(crates/legal-citations/registry/canlii-case-ids.tsv.gz) contain citation keys and citations derived in part
+from the A2AJ open Canadian case-law metadata (Access to Algorithmic Justice, https://a2aj.ca/), joined to
+CanLII case identifiers. They contain no decision text; the decisions remain on CanLII and the courts' own sites.
+
 This product includes data and patterns derived from the following Free Law
 Project software, each distributed under the BSD 2-Clause License reproduced
 below.

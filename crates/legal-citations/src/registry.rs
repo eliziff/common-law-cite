@@ -139,6 +139,10 @@ pub struct Court {
     /// there is one (`2010 CRTFP 14` is `fr/ca/pslrb/doc/2010/2010crtfp14`).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub canlii_codes_fr: Vec<String>,
+    /// The one code CanLII uses in every decision id of this court, whichever of its neutral codes a citation writes
+    /// (`2026 CRAC 18` is `ca/cart/doc/2026/2026cart18`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub canlii_id_code: Option<String>,
     /// First and last year the court issued decisions under this identity.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub start: Option<u16>,
@@ -241,6 +245,12 @@ pub enum SeriesKind {
     AnnualStatutes,
     Regulations,
     Code,
+    /// An agency's numbered dockets (`ASBCA No. 61234`, `CFPB No. 2019-3`).
+    Dockets,
+    /// Numbered filings with an agency (`U.S. Patent No. 5,000,000`, a securities registration).
+    Filings,
+    /// A treaty series (`UNTS`, `CTS`).
+    Treaties,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]

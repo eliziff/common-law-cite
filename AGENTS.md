@@ -38,7 +38,16 @@ every binding through `registry`. No court, reporter or series tables in Rust
 source, and no per-binding copies. The statute grammar's series names are the
 registry's too: each law row's `forms` (the citation forms it is cited in) and
 `french` (its French names) decide the defs `tools/registry-grammar.py` writes
-into the corpus; run it after editing `laws.json` (`--check` in CI).
+into the corpus; run it after editing `laws.json` (`--check` in CI). The build
+holds the corpus to this: every court, reporter, series or code a corpus group
+or name def spells out must be a registry surface, or the build fails naming
+it; and an upstream record of a kind the registry cannot hold fails the build
+rather than being dropped. Add the row; never let the grammar keep a name the
+registry lacks.
+
+**No release on a red commit.** A tag, release candidate or hand-uploaded
+asset goes out only from a commit whose CI is green; `release.yml` runs the
+tests for every tag, candidates included.
 
 **Years rule readings out, so every year carries its source.** A reporter
 edition's `start`/`end` (with `evidence`), `edition-years.json` (corrections to

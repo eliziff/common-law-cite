@@ -32,14 +32,16 @@ env:
 
 jobs:
   check:
+    # A release candidate (v1.2.3-rc.N) publishes nothing here, but its tests run all the same: no candidate goes
+    # out on a commit whose tests fail.
     name: Tag matches the workspace version; tests pass
-    if: ${{ !contains(github.ref_name, '-rc.') }}
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
       - id: version
+        if: ${{ !contains(github.ref_name, '-rc.') }}
         run: |
           version=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
           echo "version=$version" >> "$GITHUB_OUTPUT"
@@ -55,6 +57,7 @@ jobs:
   crates:
     name: crates.io
     needs: check
+    if: ${{ !contains(github.ref_name, '-rc.') }}
     runs-on: ubuntu-latest
     environment: crates-io
     permissions:
@@ -80,6 +83,7 @@ jobs:
   wheels:
     name: wheel ${{ matrix.platform.name }}
     needs: check
+    if: ${{ !contains(github.ref_name, '-rc.') }}
     runs-on: ${{ matrix.platform.runner }}
     strategy:
       fail-fast: false
@@ -109,6 +113,7 @@ jobs:
 
   sdist:
     needs: check
+    if: ${{ !contains(github.ref_name, '-rc.') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -143,6 +148,7 @@ jobs:
   npm:
     name: npm
     needs: check
+    if: ${{ !contains(github.ref_name, '-rc.') }}
     runs-on: ubuntu-latest
     environment: npm
     permissions:
@@ -178,6 +184,7 @@ jobs:
   cli-binaries:
     name: CLI ${{ matrix.target }}
     needs: check
+    if: ${{ !contains(github.ref_name, '-rc.') }}
     runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false

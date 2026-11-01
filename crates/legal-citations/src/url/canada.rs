@@ -198,6 +198,8 @@ pub fn source_canlii_routes() -> &'static HashMap<String, String> {
 struct SourceRoutes {
     routes: HashMap<String, String>,
     french_routes: HashMap<String, String>,
+    /// Each neutral code of a court CanLII ids by one code whatever the citation writes ([`registry::Court::canlii_id_code`]).
+    id_codes: HashMap<String, String>,
 }
 
 static SOURCE_ROUTES: LazyLock<SourceRoutes> = LazyLock::new(|| {
@@ -214,6 +216,9 @@ static SOURCE_ROUTES: LazyLock<SourceRoutes> = LazyLock::new(|| {
                 result.french_routes.entry(code.to_ascii_uppercase()).or_insert_with(|| path.clone());
             }
             result.routes.entry(code.to_ascii_uppercase()).or_insert(path);
+            if let Some(id_code) = &court.canlii_id_code {
+                result.id_codes.entry(code.to_ascii_uppercase()).or_insert_with(|| id_code.to_ascii_lowercase());
+            }
         }
         // Codes CanLII uses in decision ids, which link but do not identify the court.
         for code in &court.canlii_codes {
@@ -227,6 +232,12 @@ static SOURCE_ROUTES: LazyLock<SourceRoutes> = LazyLock::new(|| {
     }
     result
 });
+
+/// The code a neutral citation's code puts in CanLII's decision id: the court's one id code where it has one
+/// ([`registry::Court::canlii_id_code`]), else the code as written, lowercased.
+fn id_code(written: &str) -> String {
+    SOURCE_ROUTES.id_codes.get(&written.to_ascii_uppercase()).cloned().unwrap_or_else(|| written.to_ascii_lowercase())
+}
 
 /// A decision number as CanLII writes it in decision ids: without leading zeros
 /// (`2009 PSST 0013` is `2009psst13`).
@@ -270,7 +281,7 @@ pub fn canlii_citation_url(text: &str, language: &str) -> Option<String> {
     let route = SOURCE_ROUTES.french_routes.get(&code).or_else(|| SOURCE_ROUTES.routes.get(&code))?;
     let (jurisdiction, database) = route.split_once('/')?;
     let slug = if is_canlii { format!("{year}canlii{second}") }
-        else { format!("{year}{code}{}", id_number(third)).to_lowercase().chars().filter(char::is_ascii_alphanumeric).collect() };
+        else { format!("{year}{}{}", id_code(&code), id_number(third)).to_lowercase().chars().filter(char::is_ascii_alphanumeric).collect() };
     Some(page_url(jurisdiction, database, year, &slug, if french { Language::Fr } else { Language::En }))
 }
 
@@ -398,7 +409,7 @@ fn source_canlii_case(citation: &Citation, language: Language) -> Option<String>
     if written.is_empty() || written.contains(char::is_whitespace) { return None; }
     let route = source_canlii_routes().get(&written.to_ascii_uppercase())?;
     let (jurisdiction, database) = route.split_once('/').unwrap_or(("", route));
-    let code = if citation.format == Some(Format::CanLii) { "canlii".to_owned() } else { written.to_ascii_lowercase() };
+    let code = if citation.format == Some(Format::CanLii) { "canlii".to_owned() } else { id_code(written) };
     let slug = format!("{year}{code}{}", id_number(number));
     Some(page_url(jurisdiction, database, &year, &slug, language))
 }
@@ -477,6 +488,7 @@ pub fn canlii_case_in(citation: &Citation, language: Language, registry: &Regist
                 }
             }
             let route = court.canlii.as_ref()?;
+            let code = court.canlii_id_code.as_deref().map_or(code, str::to_ascii_lowercase);
             if language == Language::Fr {
                 if let Some((_, french_code, french_database)) =
                     FRENCH_CODES.iter().find(|(english, _, _)| *english == code)
@@ -930,7 +942,7 @@ fn canlii_legislation_id(citation: &Citation, registry: &Registry, french: bool)
             SeriesKind::RevisedStatutes => "stat",
             SeriesKind::AnnualStatutes => "astat",
             SeriesKind::Regulations => "regu",
-            SeriesKind::Code => return None,
+            SeriesKind::Code | SeriesKind::Dockets | SeriesKind::Filings | SeriesKind::Treaties => return None,
         },
     } };
     let year = fields.year.as_deref().unwrap_or("");

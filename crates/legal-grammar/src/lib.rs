@@ -2,7 +2,7 @@ use fancy_regex::{Match as FancyMatch, Regex as FancyRegex, RegexBuilder, RegexI
 use regex::{Regex, RegexBuilder as LinearRegexBuilder};
 use serde::Deserialize;
 use serde_json::Value;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::io::Read;
 use std::ops::Range;
 use std::sync::{Arc, OnceLock};
@@ -688,6 +688,28 @@ pub fn ecmascript_backtracking_pattern_literals(pattern: &str, flags: &str) -> R
 
 /// Literal strings one of which every match of `source`, compiled as a [`regex::Regex`] with its
 /// default options, contains, when they can be read from it.
+/// Every name the grammar spells out: for each entry's group named one of `groups`, and each def
+/// named one of `defs`, the strings it lists (whitespace as one space), or none when it is open.
+/// The registry must hold each one; the build checks it.
+pub fn spelled_names(groups: &[&str], defs: &[&str]) -> Result<Vec<(String, Option<Vec<String>>)>> {
+    let mut found = Vec::new();
+    let mut seen_defs = BTreeSet::new();
+    for (id, value) in load_tables()? {
+        let source = expanded_entry(&value.entry, &value.defs)?;
+        for (group, names) in literals::named_groups(&source, groups) {
+            found.push((format!("{id}<{group}>"), names));
+        }
+        for name in defs {
+            let Some(pattern) = value.defs.get(*name) else { continue };
+            if seen_defs.insert(*name) {
+                let wrapped = format!("(?<{name}>{})", expand_pattern(pattern, &value.defs)?);
+                found.extend(literals::named_groups(&wrapped, &[name]).into_iter().map(|(_, names)| (format!("def {name}"), names)));
+            }
+        }
+    }
+    Ok(found)
+}
+
 pub fn linear_pattern_literals(source: &str) -> Option<Vec<String>> {
     literals::linear(source, false, false, false)
 }

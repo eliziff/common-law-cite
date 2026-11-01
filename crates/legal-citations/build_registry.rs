@@ -325,6 +325,40 @@ fn compile_named(out: &Path, rows: Vec<Value>) {
     super::compress(out.join("named.json.gz"), &json!({"shapes": shapes, "rows": rows, "conventions": conventions}));
 }
 
+/// The lookup form of a surface, as the registry's `fold`: its letters and digits, lower-cased.
+fn fold(surface: &str) -> String {
+    surface.chars().filter(|character| character.is_alphanumeric()).flat_map(char::to_lowercase).collect()
+}
+
+/// Every surface an index row answers to: a court's id, neutral codes, aliases and citation string; a reporter's
+/// editions and variations; a series' or journal's abbreviation and variations.
+fn surfaces(row: &Value) -> Vec<String> {
+    let mut found: Vec<String> = ["id", "abbreviation", "citation_string"].iter().map(|field| string(&row[*field]).to_owned()).collect();
+    for field in ["neutral", "aliases", "variations"] {
+        match &row[field] {
+            Value::Array(values) => found.extend(values.iter().map(|value| string(value).to_owned())),
+            Value::Object(values) => found.extend(values.keys().cloned()),
+            _ => {}
+        }
+    }
+    found.extend(row["editions"].as_array().into_iter().flatten().map(|edition| string(&edition["abbreviation"]).to_owned()));
+    found.retain(|surface| !surface.is_empty());
+    found
+}
+
+/// The registry is the one table of names: a court, reporter, series or journal the grammar spells out that no
+/// registry row answers to fails the build, for the grammar would read a citation the registry cannot name.
+fn grammar_names_held(held: &BTreeSet<String>) {
+    const GROUPS: &[&str] = &["court", "reporter", "series", "code"];
+    const DEFS: &[&str] = &["cue_court_codes", "cue_statute_sources", "ca_statute_series", "fr_statute_series",
+        "ca_revised_regulation_series", "ca_consolidated_series", "fr_instrument_series", "ca_instrument_series", "ca_compiled_series"];
+    let spelled = legal_grammar::spelled_names(GROUPS, DEFS).expect("grammar corpus");    let missing: BTreeSet<String> = spelled.iter()
+        .flat_map(|(place, names)| names.iter().flatten().filter(|name| !held.contains(&fold(name))).map(move |name| format!("{place}: {name}")))
+        .collect();
+    assert!(missing.is_empty(), "the grammar spells out {} names the registry does not hold; add each to registry/*.json:\n{}",
+        missing.len(), missing.into_iter().collect::<Vec<_>>().join("\n"));
+}
+
 pub fn compile(out: &Path) {
     let mut named = Vec::new();
     let states = read("registry/upstream/courts-db/states.json");
@@ -338,6 +372,7 @@ pub fn compile(out: &Path) {
     let mut source = json!({"jurisdictions": jurisdictions, "states": states,
         "regexes": read("registry/upstream/reporters-db/regexes.json")});
     let mut source_positions = json!({});
+    let mut held = BTreeSet::new();
     for (table, file) in [("courts", "courts"), ("reporters", "reporters"), ("series", "laws"), ("journals", "journals")] {
         let authored = read(&format!("registry/{file}.json"));
         let authored = authored.as_array().unwrap();
@@ -435,8 +470,12 @@ pub fn compile(out: &Path) {
                         rows.push(row);
                     } else {
                         let kind = match string(&original["cite_type"]) {
-                            "leg_statute" => Some("code"), "leg_session" => Some("annual_statutes"),
-                            "admin_compilation" | "admin_register" => Some("regulations"), _ => None,
+                            "leg_statute" => Some("code"), "leg_session" | "leg_act" => Some("annual_statutes"),
+                            "admin_compilation" | "admin_register" | "municipal" => Some("regulations"),
+                            "admin_docket" => Some("dockets"), "admin_filing" => Some("filings"),
+                            _ if table == "journals" => None,
+                            // A law the registry cannot hold would still be read by its named row, with no series behind it.
+                            other => panic!("reporters-db law {key} has cite_type {other:?}, which no series kind holds"),
                         };
                         if table == "journals" || kind.is_some() {
                             let id = unique(&slug(key), &mut taken, "us");
@@ -469,17 +508,19 @@ pub fn compile(out: &Path) {
             source[file] = Value::Object(all);
         }
         let fields: &[&str] = match table {
-            "courts" => &["id", "name", "jurisdiction", "level", "neutral", "aliases", "citation_string", "source_dates", "canlii", "canlii_fr", "canlii_french", "canlii_codes", "canlii_codes_fr", "start", "end", "parent"],
+            "courts" => &["id", "name", "jurisdiction", "level", "neutral", "aliases", "citation_string", "source_dates", "canlii", "canlii_fr", "canlii_french", "canlii_codes", "canlii_codes_fr", "canlii_id_code", "start", "end", "parent"],
             "reporters" => &["id", "name", "kind", "jurisdiction", "courts", "default_court", "editions", "variations", "year_volume", "source", "verified"],
             "series" => &["id", "name", "kind", "jurisdiction", "abbreviation", "variations", "language", "canlii"],
             "journals" => &["id", "name", "abbreviation", "variations", "jurisdiction", "source", "verified", "start", "end", "anchors"],
             _ => unreachable!(),
         };
+        for row in &rows { held.extend(surfaces(row).iter().map(|surface| fold(surface))); }
         rows.retain(|row| enabled(row_jurisdiction(row)));
         if table == "journals" { journal_years(&mut rows); }
         for row in &mut rows { row.as_object_mut().unwrap().retain(|key, _| fields.contains(&key.as_str())); }
         index[table] = json!(rows);
     }
+    grammar_names_held(&held);
     super::compress(out.join("registry-index.json.gz"), &index);
     compile_named(out, named);
     for table in ["reporters", "laws", "journals"] {

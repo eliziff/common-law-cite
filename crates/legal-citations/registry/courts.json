@@ -1193,6 +1193,7 @@
    "jurisdiction": "ca",
    "database": "cart"
   },
+  "canlii_id_code": "CART",
   "name_fr": "Commission de révision agricole du Canada",
   "region": "ca",
   "level": "tribunal",
@@ -7118,6 +7119,16 @@
   "name": "County Court of England and Wales",
   "neutral": [
    "EWCC"
+  ],
+  "region": "uk-ew",
+  "level": "ljc",
+  "type": "trial"
+ },
+ {
+  "id": "ewmc",
+  "name": "Magistrates' Courts of England and Wales",
+  "neutral": [
+   "EWMC"
   ],
   "region": "uk-ew",
   "level": "ljc",

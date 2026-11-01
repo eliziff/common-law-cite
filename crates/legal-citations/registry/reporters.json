@@ -7079,8 +7079,18 @@
   "editions": {
    "LRHL": {
     "start": null,
-    "end": null
+    "end": null,
+    "regexes": [
+     "$full_cite",
+     "$commonwealth_report_law_reports"
+    ],
+    "examples": [
+     "L.R. 3 H.L. 330"
+    ]
    }
+  },
+  "variations": {
+   "HL": "LRHL"
   },
   "year_volume": false,
   "source": "mcgill",

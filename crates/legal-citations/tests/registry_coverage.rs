@@ -230,6 +230,10 @@ impl Checker<'_> {
 
     fn resolves(&mut self, fixture: &Fixture, entry: &Value) -> bool {
         let key = entry["key"].as_str().unwrap_or_else(|| panic!("{}: entry without key: {entry}", fixture.name));
+        // A key the extraction took from a source that names no such thing: `field` "absent", `source` the fixture.
+        if self.corrected("absent", key, &fixture.name, &[String::new()]) {
+            return true;
+        }
         let registry = self.registry;
         let reporter = || !registry.reporters_by_surface(key).is_empty();
         let journal = || registry.journal_by_surface(key).is_some();
