@@ -533,8 +533,8 @@ fn citation_alias_target_info(citation: &Citation, language: Language) -> Option
 }
 
 /// The CanLII document of each decision a citation key names (`4:reporter:scr:scr:1986:1:103` ->
-/// `ca/scc/1986canlii46`, or a neutral citation), by its alias table identity: the page of a
-/// decision reported before neutral citations.
+/// `ca/scc/1986canlii46`, or a neutral citation) by its alias table identity: the page of a decision reported before
+/// neutral citations.
 static CANLII_IDS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
     use std::io::Read;
     let mut text = String::new();
