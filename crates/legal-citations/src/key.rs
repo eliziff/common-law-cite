@@ -41,7 +41,7 @@
 //! | `reporter` | `3:reporter:{reporter-id}:{rep}:{num volume}:{num page}` | `26 DLR (4th) 200` → `3:reporter:dlr:dlr4th:26:200`; `410 U.S. 113` → `3:reporter:us:us:410:113` |
 //! | `reporter` (year as volume) | `3:reporter:{reporter-id}:{rep}:{year}[:{num volume}]:{num page}` | `[2015] 1 SCR 331`, `[2015] 1 R.C.S. 331` → `3:reporter:scr:scr:2015:1:331`; `[1932] AC 562` → `3:reporter:ac:ac:1932:562` |
 //! | `canlii` | `3:canlii:{year}:{num}` | `2004 CanLII 12345 (ON CA)` → `3:canlii:2004:12345` |
-//! | `database` | `3:database:{db}:{year}:{num}` | `2019 CarswellOnt 123` → `3:database:carswellont:2019:123`; `[2019] OJ No 45` → `3:database:oj:2019:45` |
+//! | `database` | `3:database:{db}:{year}:{num}` | `2019 CarswellOnt 123` → `3:database:carswellont:2019:123`; `[2019] OJ No 45` → `3:database:oj:2019:45`; `EYB 2008-151766` → `3:database:eyb:2008:151766` |
 //! | `docket` | `3:docket:{court}:{ident docket}` | needs a registry court |
 //! | `statute` | `3:statute:{jur}:{series}:{ident year}:{ident chapter}` | `RSC 1985, c C-46`, `LRC 1985, ch C-46` → `3:statute:ca:rsc:1985:c-46` |
 //! | `regulation` | `3:regulation:{jur}:{series}:{year}:{ident number}` | `SOR/2002-227` → `3:regulation:ca:sor:2002:227`; `O Reg 191/11` → `3:regulation:ca-on:oreg:2011:191`; `CRC, c 870` → `3:regulation:ca:crc:-:870` |
@@ -360,14 +360,13 @@ fn database(citation: &Citation, registry: &Registry) -> Option<Vec<String>> {
         .or_else(|| trimmed.strip_suffix(" no"))
         .or_else(|| trimmed.strip_suffix(" NO"))
         .unwrap_or(trimmed);
-    Some(vec![
-        "database".into(),
-        nonempty(fold(trimmed))?,
-        // Source reporter grammars capture a database's citation year as
-        // its volume. A parenthetical decision date is separate metadata.
-        year(fields.volume.as_deref().or(fields.year.as_deref())?)?,
-        num(fields.number.as_deref().or(fields.page.as_deref())?)?,
-    ])
+    // Source reporter grammars capture a database's citation year as
+    // its volume. A parenthetical decision date is separate metadata.
+    let year = year(fields.volume.as_deref().or(fields.year.as_deref())?)?;
+    // A SOQUIJ number begins with its year ("EYB 2008-151766"): the number is what follows it.
+    let number = fields.number.as_deref().or(fields.page.as_deref())?;
+    let number = number.strip_prefix(&format!("{year}-")).unwrap_or(number);
+    Some(vec!["database".into(), nonempty(fold(trimmed))?, year, num(number)?])
 }
 
 fn docket(citation: &Citation, registry: &Registry) -> Option<Vec<String>> {
