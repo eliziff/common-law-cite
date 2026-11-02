@@ -299,7 +299,7 @@
   {
    "name": "ModelsTest.test_page_correction#1",
    "input": "2024 N.Y. Slip Op. 51192(U)",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -349,7 +349,7 @@
   {
    "name": "ModelsTest.test_page_correction#2",
    "input": "2024 NYSlipOp 51192[U]",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
