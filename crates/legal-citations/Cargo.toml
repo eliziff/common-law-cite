@@ -48,7 +48,7 @@ hong-kong = []
 singapore = []
 south-africa = []
 # US reporters, journals and laws (legal-grammar's eyecite/reporters-db extractors) and CourtListener.
-us = ["legal-grammar/us"]
+us = []
 binding-types = ["dep:ts-rs"]
 
 [[bin]]

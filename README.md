@@ -247,9 +247,9 @@ is `pass` or `pending`; CI fails on a `pass` case that regresses and on a
 
 ## Staying current with upstream
 
-`tools/sync-upstream.py` also generates `crates/legal-grammar/data/us-extractors.json`
-from the pinned reporters-db templates using Eyecite's extractor construction.
-It retains named captures, exact and variant edition candidates, original dates,
+The build compiles the US extractors from the registry's pinned reporters-db
+tables (`registry/upstream/reporters-db`) using Eyecite's extractor construction,
+so a sync updates them with nothing else to regenerate. They retain named captures, exact and variant edition candidates, original dates,
 and prefilter strings. Runtime discovery compiles only the extractors selected
 by the shared whitespace-insensitive prefilter. Citation fields expose these
 source records separately from registry corrections.

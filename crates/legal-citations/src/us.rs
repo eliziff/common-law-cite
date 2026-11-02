@@ -3,7 +3,7 @@ use crate::model::{Fields, SourceEdition, SourceReporter};
 use aho_corasick::AhoCorasick;
 use chrono::Datelike;
 use legal_grammar::CompiledGrammar;
-use legal_grammar::us_extractors::extractors;
+use crate::us_extractors::extractors;
 use std::collections::{BTreeMap, BTreeSet};
 use std::ops::Range;
 use crate::screen::Screened;
@@ -366,20 +366,68 @@ fn compact(text: &str) -> String {
     text.chars().filter(|c| !crate::text::python_whitespace(*c)).collect()
 }
 
-static FILTER: LazyLock<(AhoCorasick, Vec<Vec<usize>>, Vec<usize>)> = LazyLock::new(|| {
-    let mut strings: BTreeMap<String, Vec<usize>> = BTreeMap::new();
-    let mut unfiltered = Vec::new();
-    for index in 0..extractors().len() {
-        let extractor = extractors().get(index);
-        // The standard extractors are read by the one standard scan.
-        if extractor.standard() && !extractor.ecmascript() { continue; }
-        if extractor.strings().next().is_none() { unfiltered.push(index); }
-        for string in extractor.strings() {
-            strings.entry(compact(string)).or_default().push(index);
+/// The extractors of one kind, found by the reporter names a text writes (read without whitespace): an automaton of
+/// their names, the extractors each name selects, and those that need no name.
+struct Filter {
+    automaton: AhoCorasick,
+    indices: Vec<Vec<usize>>,
+    unfiltered: Vec<usize>,
+}
+
+impl Filter {
+    fn new(kind: impl Fn(usize) -> bool) -> Self {
+        let mut strings: BTreeMap<String, Vec<usize>> = BTreeMap::new();
+        let mut unfiltered = Vec::new();
+        for index in (0..extractors().len()).filter(|&index| kind(index)) {
+            let extractor = extractors().get(index);
+            if extractor.strings().next().is_none() { unfiltered.push(index); }
+            for string in extractor.strings() {
+                strings.entry(compact(string)).or_default().push(index);
+            }
         }
+        let automaton = AhoCorasick::new(strings.keys()).expect("reporter prefilter");
+        Filter { automaton, indices: strings.into_values().collect(), unfiltered }
     }
-    let automaton = AhoCorasick::new(strings.keys()).expect("reporter prefilter");
-    (automaton, strings.into_values().collect(), unfiltered)
+
+    /// The extractors a text may match, each once however often the text writes its name.
+    fn selected(&self, text: &str) -> BTreeSet<usize> {
+        let mut selected: BTreeSet<usize> = self.unfiltered.iter().copied().collect();
+        let mut seen = BTreeSet::new();
+        for matched in self.automaton.find_overlapping_iter(&compact(text)) {
+            if seen.insert(matched.pattern().as_usize()) {
+                selected.extend(self.indices[matched.pattern().as_usize()].iter().copied());
+            }
+        }
+        selected
+    }
+}
+
+// The standard extractors are read by the one standard scan.
+static FILTER: LazyLock<Filter> = LazyLock::new(|| Filter::new(|index| {
+    let extractor = extractors().get(index);
+    !extractor.standard() || extractor.ecmascript()
+}));
+static EXTENDED: LazyLock<Filter> = LazyLock::new(|| Filter::new(extended_form));
+/// Every law extractor's citation, whole: a text one of them reads from its first character to its last.
+static LAWS: LazyLock<regex::RegexSet> = LazyLock::new(|| {
+    let whole: Vec<String> = (0..extractors().len()).filter(|&index| extended_form(index) && source(index) == "laws")
+        .map(|index| {
+            let pattern = extractors().get(index).pattern();
+            let core = pattern.strip_prefix("(?:^|[^a-zA-Z0-9])").and_then(|rest| rest.strip_suffix("(?:[^a-zA-Z0-9]|$)"))
+                .unwrap_or_else(|| panic!("law extractor {index} is not boundary-wrapped"));
+            format!(r"\A{core}\z")
+        })
+        .collect();
+    legal_grammar::compile_python_pattern_set(whole.iter().map(String::as_str)).expect("law extractors")
+});
+/// The literals one of which every law extractor's citation holds: a text holding none is no law's citation. None
+/// when an extractor has none to give.
+static LAW_LITERALS: LazyLock<Option<AhoCorasick>> = LazyLock::new(|| {
+    let mut literals = Vec::new();
+    for index in (0..extractors().len()).filter(|&index| extended_form(index) && source(index) == "laws") {
+        literals.extend(crate::grammar_literals::extractor(index)?.iter().cloned());
+    }
+    Some(AhoCorasick::new(literals).expect("law literals"))
 });
 
 pub(crate) struct Match {
@@ -418,17 +466,22 @@ impl Match {
     }
 }
 
-static SURFACES: LazyLock<[regex::Regex; 2]> = LazyLock::new(|| {
-    let tables = legal_grammar::load_tables().unwrap();
-    let defs = &tables["cite.us.reporter.standard.full"].defs;
-    ["us_reporters", "us_journals"].map(|name| regex::Regex::new(
-        &format!("^(?:{})$", defs[name]).replace(r"\s*", "").replace(' ', "")).unwrap())
+/// reporters-db's reporter and journal names as the registry holds them, folded.
+static STANDARD_NAMES: LazyLock<[std::collections::HashSet<String>; 2]> = LazyLock::new(|| {
+    let registry = crate::registry::registry();
+    let reporters = registry.reporters.iter().filter(|reporter| reporter.source == "reporters-db")
+        .flat_map(|reporter| reporter.editions.iter().map(|edition| edition.abbreviation.as_str()).chain(reporter.variations.keys().map(String::as_str)))
+        .map(crate::registry::fold).collect();
+    let journals = registry.journals.iter().filter(|journal| journal.source == "reporters-db")
+        .flat_map(|journal| std::iter::once(&journal.abbreviation).chain(&journal.variations))
+        .map(|name| crate::registry::fold(name)).collect();
+    [reporters, journals]
 });
-// One catalogue lookup for discovery and classification. A shared
+// One catalogue lookup for discovery and classification: reporters-db's reporters and journals. A shared
 // reporter/journal spelling goes to reporters first.
 fn standard_source(surface: &str) -> Option<&'static str> {
-    ["reporters", "journals"].into_iter().zip(SURFACES.iter())
-        .find_map(|(source, pattern)| pattern.is_match(surface).then_some(source))
+    let folded = crate::registry::fold(surface);
+    ["reporters", "journals"].into_iter().zip(STANDARD_NAMES.iter()).find_map(|(source, names)| names.contains(&folded).then_some(source))
 }
 
 static CANDIDATE: LazyLock<regex::Regex> = LazyLock::new(||
@@ -496,23 +549,56 @@ fn fallback_ranges(text: &str) -> BTreeSet<(usize, usize)> {
 
 static COMMON: LazyLock<Screened<legal_grammar::AsciiBoundedGrammar>> = LazyLock::new(|| Screened::new(
         || legal_grammar::compile_ascii_bounded_table_entry("cite.us.law.common").unwrap(),
-        legal_grammar::ascii_bounded_table_entry_literals("cite.us.law.common").unwrap()));
-// The custom reporters are read only for extended US citations; a statute is read as one by the
-// laws whatever the reader asks for.
-// Each compiled the first time a text holding one of its literals is read.
-fn ascii_bounded(ids: [&'static str; 2]) -> [(&'static str, Screened<legal_grammar::AsciiBoundedGrammar>); 2] {
-    ids.map(|id| (id, Screened::new(move || legal_grammar::compile_ascii_bounded_table_entry(id).unwrap(),
-        legal_grammar::ascii_bounded_table_entry_literals(id).unwrap())))
+        crate::grammar_literals::entry("cite.us.law.common").ascii.clone()));
+
+/// An extractor compiled the first time a text holds its literals, or none when the text holds none of them.
+fn compiled(index: usize, text: &str) -> Option<&'static CompiledGrammar> {
+    let extractor = extractors().get(index);
+    let compiled = &COMPILED[index];
+    let literals = compiled.literals.get_or_init(|| crate::grammar_literals::extractor(index)
+        .map(|literals| AhoCorasick::new(literals).expect("reporter extractor literals")));
+    if literals.as_ref().is_some_and(|literals| !literals.is_match(text)) { return None; }
+    Some(compiled.pattern.get_or_init(|| {
+        let compiled = if extractor.ecmascript() {
+            legal_grammar::compile_ecmascript_backtracking_pattern("source extractor", extractor.pattern(), "")
+        } else {
+            legal_grammar::compile_python_pattern(extractor.pattern(), "")
+        };
+        Box::new(compiled.unwrap_or_else(|error| panic!("reporter extractor {index}: {error}")))
+    }))
 }
-static CUSTOM: LazyLock<[(&str, Screened<legal_grammar::AsciiBoundedGrammar>); 2]> =
-    LazyLock::new(|| ascii_bounded(["cite.us.reporter.custom.full", "cite.us.reporter.custom.short"]));
-static LAWS: LazyLock<[(&str, Screened<legal_grammar::AsciiBoundedGrammar>); 2]> =
-    LazyLock::new(|| ascii_bounded(["cite.us.law.full", "cite.us.law.short"]));
+
+/// The reporters-db table (`reporters`, `laws` or `journals`) an extractor's editions come from.
+fn source(index: usize) -> &'static str {
+    let extractor = extractors().get(index);
+    extractor.exact().chain(extractor.variations()).next().map_or("", |edition| extractors().edition(edition).source)
+}
+
+/// A law's or custom reporter's extractor: one reading a citation by a form of its own, not the standard one.
+fn extended_form(index: usize) -> bool {
+    let extractor = extractors().get(index);
+    !extractor.ecmascript() && !extractor.standard() && source(index) != "journals"
+}
+
+/// Each citation an extractor reads in a text, every one from where the one before it ends, so that one boundary
+/// character between two is read as both's.
+fn extractor_spans(index: usize, text: &str) -> Vec<Range<usize>> {
+    let Some(pattern) = compiled(index, text) else { return Vec::new() };
+    let mut spans = Vec::new();
+    let mut from = 0;
+    while let Ok(Some(captures)) = pattern.captures_from_pos(text, from) {
+        let core = captures.name("__citation").expect("source citation span");
+        spans.push(core.start()..core.end());
+        from = if core.end() > from { core.end() } else { from + text[from..].chars().next().map_or(1, char::len_utf8) };
+        if from > text.len() { break; }
+    }
+    spans
+}
 
 pub(crate) fn is_law(core: &str) -> bool {
     let whole = |span: &Range<usize>| span.start == 0 && span.end == core.len();
-    COMMON.find_spans(core).iter().any(whole) || LAWS.iter().any(|(_, grammar)|
-        grammar.may_match(core) && grammar.find_spans(core).iter().any(whole))
+    COMMON.find_spans(core).iter().any(whole)
+        || LAW_LITERALS.as_ref().is_none_or(|literals| literals.is_match(core)) && LAWS.is_match(core)
 }
 
 pub(crate) fn common_law_spans(text: &str) -> Vec<Range<usize>> {
@@ -533,10 +619,9 @@ fn extend_native_spans(text: &str, extended: bool, spans: &mut Vec<Range<usize>>
     if extended {
         for (start, end) in fallback_ranges(text) {
             let candidate = &text[start..end];
-            for (id, grammar) in CUSTOM.iter().chain(LAWS.iter()) {
-                if id.ends_with(".short") && !candidate.contains(" at") || !grammar.may_match(candidate) { continue; }
-                spans.extend(grammar.find_spans(candidate).into_iter()
-                    .map(|hit| start + hit.start..start + hit.end));
+            for index in EXTENDED.selected(candidate) {
+                if extractors().get(index).short() && !candidate.contains(" at") { continue; }
+                spans.extend(extractor_spans(index, candidate).into_iter().map(|hit| start + hit.start..start + hit.end));
             }
         }
     }
@@ -545,38 +630,13 @@ fn extend_native_spans(text: &str, extended: bool, spans: &mut Vec<Range<usize>>
 /// `reports`: the reports the named rows read in `text` ([`crate::find::named_reports`]), which the standard extractors'
 /// readings ([`named_match`]) join.
 pub(crate) fn find(text: &str, extended: bool, reports: &[crate::named::Named], native: Option<&mut Vec<Range<usize>>>) -> Vec<Match> {
-    let (automaton, indices, unfiltered) = &*FILTER;
-    let mut selected: BTreeSet<usize> = unfiltered.iter().copied().collect();
-    // Each reporter name selects its extractors once, however often the text writes it.
-    let mut named = vec![false; indices.len()];
-    for matched in automaton.find_overlapping_iter(&compact(text)) {
-        named[matched.pattern().as_usize()] = true;
-    }
-    for (name, _) in named.iter().enumerate().filter(|(_, named)| **named) {
-        selected.extend(indices[name].iter().copied());
-    }
     let mut found = Vec::new();
-    for index in selected {
+    // Each reporter name selects its extractors once, however often the text writes it; one whose pattern's literals
+    // the text does not hold cannot match it.
+    for index in FILTER.selected(text) {
         let extractor = extractors().get(index);
         if !extended && !extractor.standard() { continue; }
-        // The reporter's name read without spaces selects an extractor; one whose pattern's literals
-        // the text does not hold cannot match it.
-        let compiled = &COMPILED[index];
-        let literals = compiled.literals.get_or_init(|| if extractor.ecmascript() {
-            legal_grammar::ecmascript_backtracking_pattern_literals(extractor.pattern(), "")
-        } else {
-            legal_grammar::python_pattern_literals(extractor.pattern(), "")
-        }.unwrap_or_else(|error| panic!("reporter extractor {index}: {error}"))
-            .map(|literals| AhoCorasick::new(literals).expect("reporter extractor literals")));
-        if literals.as_ref().is_some_and(|literals| !literals.is_match(text)) { continue; }
-        let pattern = compiled.pattern.get_or_init(|| {
-            let compiled = if extractor.ecmascript() {
-                legal_grammar::compile_ecmascript_backtracking_pattern("source extractor", extractor.pattern(), "")
-            } else {
-                legal_grammar::compile_python_pattern(extractor.pattern(), "")
-            };
-            Box::new(compiled.unwrap_or_else(|error| panic!("reporter extractor {index}: {error}")))
-        });
+        let Some(pattern) = compiled(index, text) else { continue };
         for captures in pattern.captures_iter(text).flatten() {
             if !extended && captures.name("page").is_some_and(|page|
                 !page.as_str().chars().all(|c| c.is_ascii_digit() || c == '_')) { continue; }
@@ -687,6 +747,5 @@ pub(crate) fn finish(citation: &mut crate::Citation) {
 /// Build this module's lazily built statics now ([`crate::warm`]).
 pub(crate) fn warm() {
     names::warm();
-    crate::warm_statics!(COMPILED, FILTER, CUSTOM, LAWS, SURFACES, CANDIDATE, EDITIONS, STANDARD_SURFACES; screened COMMON, CUE);
-    for (_, grammar) in CUSTOM.iter().chain(LAWS.iter()) { grammar.warm(); }
+    crate::warm_statics!(COMPILED, FILTER, EXTENDED, LAWS, LAW_LITERALS, STANDARD_NAMES, CANDIDATE, EDITIONS, STANDARD_SURFACES; screened COMMON, CUE);
 }

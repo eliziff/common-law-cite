@@ -35,15 +35,15 @@ compiling under both the Rust (`fancy-regex`/`regex`) and ECMAScript dialects.
 **Registry data is JSON, not code.** Courts, reporters, series, journals and
 jurisdictions are rows in `crates/legal-citations/registry/*.json`, read by
 every binding through `registry`. No court, reporter or series tables in Rust
-source, and no per-binding copies. The statute grammar's series names are the
-registry's too: each law row's `forms` (the citation forms it is cited in) and
-`french` (its French names) decide the defs `tools/registry-grammar.py` writes
-into the corpus; run it after editing `laws.json` (`--check` in CI). The build
-holds the corpus to this: every court, reporter, series or code a corpus group
-or name def spells out must be a registry surface, or the build fails naming
-it; and an upstream record of a kind the registry cannot hold fails the build
-rather than being dropped. Add the row; never let the grammar keep a name the
-registry lacks.
+source, and no per-binding copies. The grammar spells out no names of its own:
+`tools/registry-grammar.py` writes every name list the corpus reads from the
+registry (a law row's `forms` and `french` for the statute and treaty series, a
+court row's `bracketed` and `multiword` for the neutral citations), checks that
+the curated cue defs list only registry names, and runs `--check` in CI; run it
+after editing the registry. The US extractors are built from
+`registry/upstream/reporters-db` when the crate builds, and an upstream record
+of a kind the registry cannot hold fails the build rather than being dropped.
+Add the row; never put a name in the grammar.
 
 **No release on a red commit.** A tag, release candidate or hand-uploaded
 asset goes out only from a commit whose CI is green; `release.yml` runs the

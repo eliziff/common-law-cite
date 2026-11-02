@@ -2,7 +2,7 @@ use fancy_regex::{Match as FancyMatch, Regex as FancyRegex, RegexBuilder, RegexI
 use regex::{Regex, RegexBuilder as LinearRegexBuilder};
 use serde::Deserialize;
 use serde_json::Value;
-use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::collections::{BTreeMap, HashMap};
 use std::io::Read;
 use std::ops::Range;
 use std::sync::{Arc, OnceLock};
@@ -10,8 +10,6 @@ use std::sync::{Arc, OnceLock};
 mod grammar_word;
 mod literals;
 pub mod table;
-#[cfg(feature = "us")]
-pub mod us_extractors;
 
 use grammar_word::SOURCE_WORD;
 
@@ -626,6 +624,14 @@ pub fn compile_python_pattern(source: &str, flags: &str) -> Result<FancyRegex> {
         .map_err(|error| Error::Message(format!("Python source grammar does not compile in Rust: {error}")))
 }
 
+/// Python source patterns compiled together as one linear set: which of them match a text, in one pass. Python's
+/// `{,n}` (none to n) is written `{0,n}`.
+pub fn compile_python_pattern_set<'a>(sources: impl IntoIterator<Item = &'a str>) -> Result<regex::RegexSet> {
+    let sources = sources.into_iter().map(|source| python_source(&source.replace("{,", "{0,"))).collect::<Result<Vec<_>>>()?;
+    regex::RegexSetBuilder::new(sources).size_limit(64 << 20).dfa_size_limit(16 << 20).build()
+        .map_err(|error| Error::Message(format!("Python source grammars do not compile as a linear set: {error}")))
+}
+
 /// ECMAScript word/whitespace rules for source patterns that require lookarounds.
 pub fn compile_ecmascript_backtracking_table_entry(entry_id: &str) -> Result<FancyRegex> {
     let tables = load_tables()?;
@@ -688,26 +694,25 @@ pub fn ecmascript_backtracking_pattern_literals(pattern: &str, flags: &str) -> R
 
 /// Literal strings one of which every match of `source`, compiled as a [`regex::Regex`] with its
 /// default options, contains, when they can be read from it.
-/// Every name the grammar spells out: for each entry's group named one of `groups`, and each def
-/// named one of `defs`, the strings it lists (whitespace as one space), or none when it is open.
-/// The registry must hold each one; the build checks it.
-pub fn spelled_names(groups: &[&str], defs: &[&str]) -> Result<Vec<(String, Option<Vec<String>>)>> {
-    let mut found = Vec::new();
-    let mut seen_defs = BTreeSet::new();
-    for (id, value) in load_tables()? {
-        let source = expanded_entry(&value.entry, &value.defs)?;
-        for (group, names) in literals::named_groups(&source, groups) {
-            found.push((format!("{id}<{group}>"), names));
-        }
-        for name in defs {
-            let Some(pattern) = value.defs.get(*name) else { continue };
-            if seen_defs.insert(*name) {
-                let wrapped = format!("(?<{name}>{})", expand_pattern(pattern, &value.defs)?);
-                found.extend(literals::named_groups(&wrapped, &[name]).into_iter().map(|(_, names)| (format!("def {name}"), names)));
-            }
+/// A pattern in reporters-db's dialect read with its spacing loose: each space outside a character class is
+/// whitespace, a run of it where the space is not itself quantified (`" ?"` is any whitespace or none).
+pub fn spaced(pattern: &str) -> String {
+    let mut output = String::with_capacity(pattern.len());
+    let (mut class, mut characters) = (false, pattern.chars().peekable());
+    while let Some(character) = characters.next() {
+        match character {
+            '\\' => { output.push(character); output.extend(characters.next()); }
+            '[' if !class => { class = true; output.push(character); }
+            ']' if class => { class = false; output.push(character); }
+            ' ' if !class => match characters.peek() {
+                Some('?' | '*') => { characters.next(); output.push_str(r"\s*"); }
+                Some('+' | '{') => output.push_str(r"\s"),
+                _ => output.push_str(r"\s+"),
+            },
+            _ => output.push(character),
         }
     }
-    Ok(found)
+    output
 }
 
 pub fn linear_pattern_literals(source: &str) -> Option<Vec<String>> {
@@ -769,9 +774,6 @@ fn compile_ascii_bounded_source(entry_id: &str, source: &str, flags: &str) -> Re
         .case_insensitive(flags.contains('i'))
         .multi_line(flags.contains('m'))
         .dot_matches_new_line(flags.contains('s'));
-    if entry_id == "cite.us.reporter.custom.short" {
-        builder.dfa_size_limit(8 << 20);
-    }
     builder.build().map_err(|error| {
         Error::Message(format!(
             "{entry_id}: does not compile as an ASCII-bounded linear grammar: {error}"

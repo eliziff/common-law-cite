@@ -30,6 +30,10 @@ opt-level = 3
 [profile.dev.build-override]
 opt-level = 3
 
+# The build script works out the grammar's literal screens and the US extractors; it runs optimized in release too.
+[profile.release.build-override]
+opt-level = 3
+
 [profile.release]
 codegen-units = 16
 strip = true

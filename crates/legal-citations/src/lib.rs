@@ -36,12 +36,15 @@ pub mod reference_names;
 pub mod registry;
 pub mod resolve;
 mod screen;
+mod grammar_literals;
 pub mod short_forms;
 pub mod source;
 pub mod text;
 pub mod url;
 #[cfg(feature = "us")]
 mod us;
+#[cfg(feature = "us")]
+mod us_extractors;
 
 pub use legal_grammar as grammar;
 
@@ -80,7 +83,7 @@ pub fn warm() {
 
 /// [`warm`]'s steps in order, each a module's statics, the last reading the short document.
 fn warm_steps() -> Vec<fn()> {
-    let mut steps: Vec<fn()> = vec![find::warm, classify::warm, metadata::warm, aliases::warm, key::warm, named::warm,
+    let mut steps: Vec<fn()> = vec![grammar_literals::warm, find::warm, classify::warm, metadata::warm, aliases::warm, key::warm, named::warm,
         registry::warm, resolve::warm, short_forms::warm, source::warm];
     #[cfg(feature = "us")]
     steps.push(us::warm);

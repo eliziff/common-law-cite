@@ -155,7 +155,7 @@ fn template_variables() -> BTreeMap<String, String> {
     }
     let mut upstream = read("registry/upstream/reporters-db/regexes.json");
     let tables = legal_grammar::load_tables().expect("grammar corpus");
-    upstream["page"][""] = json!(format!("(?P<page>{})", tables["cite.us.reporter.full"].defs["us_page"]));
+    upstream["page"][""] = json!(format!("(?P<page>{})", tables["cite.us.reporter.candidate.extended"].defs["us_page"]));
     let mut variables = BTreeMap::new();
     flatten(&upstream, "", &mut variables);
     let mut authored = BTreeMap::new();
@@ -173,35 +173,217 @@ fn template_variables() -> BTreeMap<String, String> {
     variables
 }
 
-/// Python's `string.Template(value).safe_substitute(variables)`, repeated until nothing changes: `$name` (the
-/// longest run of letters, digits and underscores, not starting with a digit) becomes its value when it has one.
+/// Python's `string.Template(value).safe_substitute(variables)`: `$name` (the longest run of letters, digits and
+/// underscores, not starting with a digit) becomes its value when it has one, and `$$` one `$`.
+fn substitute(value: &str, variables: &BTreeMap<String, String>) -> String {
+    let mut expanded = String::with_capacity(value.len());
+    let mut rest = value;
+    while let Some(at) = rest.find('$') {
+        expanded.push_str(&rest[..at]);
+        let after = &rest[at + 1..];
+        if let Some(after) = after.strip_prefix('$') {
+            expanded.push('$');
+            rest = after;
+            continue;
+        }
+        let length = after.bytes().enumerate()
+            .take_while(|&(index, byte)| byte == b'_' || byte.is_ascii_alphabetic() || index > 0 && byte.is_ascii_digit())
+            .count();
+        match variables.get(&after[..length]).filter(|_| length > 0) {
+            Some(variable) => expanded.push_str(variable),
+            None => { expanded.push('$'); expanded.push_str(&after[..length]); }
+        }
+        rest = &after[length..];
+    }
+    expanded.push_str(rest);
+    expanded
+}
+
+/// [`substitute`] repeated until nothing changes, as reporters_db.utils.recursive_substitute.
 fn expand(value: &str, variables: &BTreeMap<String, String>) -> String {
     let mut value = value.to_owned();
     for _ in 0..100 {
-        let mut expanded = String::with_capacity(value.len());
-        let mut rest = value.as_str();
-        while let Some(at) = rest.find('$') {
-            expanded.push_str(&rest[..at]);
-            let after = &rest[at + 1..];
-            if let Some(after) = after.strip_prefix('$') {
-                expanded.push('$');
-                rest = after;
-                continue;
-            }
-            let length = after.bytes().enumerate()
-                .take_while(|&(index, byte)| byte == b'_' || byte.is_ascii_alphabetic() || index > 0 && byte.is_ascii_digit())
-                .count();
-            match variables.get(&after[..length]).filter(|_| length > 0) {
-                Some(variable) => expanded.push_str(variable),
-                None => { expanded.push('$'); expanded.push_str(&after[..length]); }
-            }
-            rest = &after[length..];
-        }
-        expanded.push_str(rest);
+        let expanded = substitute(&value, variables);
         if expanded == value { return value; }
         value = expanded;
     }
     panic!("template exceeds reporters-db's recursion depth: {value}")
+}
+
+/// Python's `re.escape`: each character of its special set behind a backslash.
+fn escape(name: &str) -> String {
+    name.chars().fold(String::new(), |mut escaped, character| {
+        if "()[]{}?*+-|^$\\.&~# \t\n\r\x0b\x0c".contains(character) { escaped.push('\\'); }
+        escaped.push(character);
+        escaped
+    })
+}
+
+/// eyecite's `_relax_ws(re.escape(name))`: a period may be followed by whitespace, and a run of spaces is any.
+fn relaxed(name: &str) -> String {
+    let escaped = escape(name).replace(r"\.", r"\.\s*");
+    let space = |rest: &str| rest.strip_prefix("\\ ").or_else(|| rest.strip_prefix(' ')).map(str::len);
+    let mut relaxed = String::with_capacity(escaped.len());
+    let mut rest = escaped.as_str();
+    while let Some(character) = rest.chars().next() {
+        if space(rest).is_some() {
+            while let Some(left) = space(rest) { rest = &rest[rest.len() - left..]; }
+            relaxed.push_str(r"\s*");
+        } else {
+            relaxed.push(character);
+            rest = &rest[character.len_utf8()..];
+        }
+    }
+    relaxed
+}
+
+/// eyecite's citation extractors (tokenizers._populate_reporter_extractors at its pinned commit) over the registry's
+/// reporters-db tables: each edition's templates (the standard citation when it has none; a law's section sign may be
+/// doubled or closed up), its name and its variations each filled in as eyecite spells them, one extractor per
+/// pattern with its short form beside it, each holding the editions it reads exactly and by variation and the names a
+/// text must write for it to run; and the always-on U.S.C. form the grammar reads. src/us_extractors.rs reads them.
+fn us_extractors(variables: &BTreeMap<String, String>) -> Value {
+    let tables = legal_grammar::load_tables().expect("grammar corpus");
+    let mut editions: Vec<Value> = Vec::new();
+    let mut extractors: Vec<(String, Value)> = Vec::new();
+    let mut add = |template: &str, names: &[String], edition: usize, kind: &str, standard: bool| {
+        let filled = names.iter().map(|name| relaxed(name)).collect::<Vec<_>>().join("|");
+        let pattern = substitute(&expand(template, &variables), &BTreeMap::from([("edition".to_owned(), filled)]));
+        let strings: &[String] = if pattern.contains(&relaxed(&names[0])) { names } else { &[] };
+        let short = pattern.replace("(?P<page>", r"at\s?(p(\.|age)?)? (?P<page>");
+        let forms = std::iter::once((pattern.clone(), false)).chain((short != pattern).then_some((short, true)));
+        for (expression, is_short) in forms {
+            let at = match extractors.iter().position(|(seen, _)| *seen == expression) {
+                Some(at) => at,
+                None => {
+                    extractors.push((expression, json!({"exact": [], "variations": [], "strings": [], "short": is_short, "standard": standard})));
+                    extractors.len() - 1
+                }
+            };
+            let cluster = &mut extractors[at].1;
+            cluster[kind].as_array_mut().unwrap().push(json!(edition));
+            cluster["strings"].as_array_mut().unwrap().extend(strings.iter().map(|name| json!(name)));
+        }
+    };
+    for source_name in ["reporters", "laws", "journals"] {
+        let sources = read(&format!("registry/upstream/reporters-db/{source_name}.json"));
+        for (source_key, cluster) in sources.as_object().unwrap() {
+            for source in cluster.as_array().unwrap() {
+                let reporter = json!({"short_name": source_key, "name": source["name"], "cite_type": source["cite_type"], "source": source_name});
+                let rows: Vec<(String, &Value)> = if source_name == "reporters" {
+                    source["editions"].as_object().unwrap().iter().map(|(name, row)| (name.clone(), row)).collect()
+                } else {
+                    vec![(source_key.clone(), source)]
+                };
+                for (name, row) in rows {
+                    let edition = editions.len();
+                    editions.push(json!({"short_name": name, "reporter": reporter, "start": row["start"], "end": row["end"]}));
+                    let variations: Vec<String> = if source_name == "reporters" {
+                        source["variations"].as_object().unwrap().iter().filter(|(_, value)| string(value) == name)
+                            .map(|(key, _)| key.clone()).collect()
+                    } else {
+                        strings(&source["variations"])
+                    };
+                    let templates = row.get("regexes").map(strings).filter(|templates| !templates.is_empty())
+                        .unwrap_or_else(|| vec!["$full_cite".into()]);
+                    for template in templates {
+                        let template = if source_name == "laws" { template.replace("§ ", "§§? ?") } else { template };
+                        let standard = template == "$full_cite" && source_name != "laws";
+                        add(&template, std::slice::from_ref(&name), edition, "exact", standard);
+                        if !variations.is_empty() { add(&template, &variations, edition, "variations", standard); }
+                    }
+                }
+            }
+        }
+    }
+    let mut rows: Vec<Value> = extractors.into_iter().map(|(pattern, mut cluster)| {
+        let pattern = if cluster["short"] == json!(true) {
+            pattern.replace(r"at\s?(p(\.|age)?)? (?P<page>", r"(?P<__short_at>at)\s?(p(\.|age)?)? (?P<page>")
+        } else { pattern };
+        let pattern = format!("(?:^|[^a-zA-Z0-9])(?<__citation>{})(?:[^a-zA-Z0-9]|$)", pattern.replace("(?P<", "(?<"));
+        let mut names: Vec<String> = strings(&cluster["strings"]);
+        names.sort();
+        names.dedup();
+        let mut row = json!({"pattern": pattern});
+        for field in ["exact", "variations"] { row[field] = cluster[field].take(); }
+        row["strings"] = json!(names);
+        for field in ["short", "standard"] { row[field] = cluster[field].take(); }
+        row
+    }).collect();
+    let common = &tables["cite.us.law.common"].entry.pattern;
+    let common = common.strip_prefix("(?<![A-Za-z0-9])").unwrap_or(common);
+    let common = common.strip_suffix("(?![A-Za-z0-9])").unwrap_or(common);
+    let usc: Vec<usize> = editions.iter().enumerate()
+        .filter(|(_, edition)| edition["short_name"] == json!("U.S.C.") && edition["reporter"]["source"] == json!("laws"))
+        .map(|(at, _)| at).collect();
+    rows.push(json!({"pattern": format!("(?<![A-Za-z0-9])(?<__citation>{common})(?![A-Za-z0-9])"), "exact": usc,
+        "variations": [], "strings": [], "short": false, "standard": true, "ecmascript": true}));
+    json!({"editions": editions, "extractors": rows})
+}
+
+/// The literal screens src/grammar_literals.rs reads, worked out here once instead of at every start: for each grammar
+/// entry, the literals one of which its every match holds as each compiler reads it (linear, backtracking, Python,
+/// ASCII-bounded) and the group its every match opens with; for each US extractor, its pattern's. `null` where there
+/// are none or the entry does not compile that way.
+fn compile_grammar_literals(out: &Path, extractors: Option<&Value>) {
+    let ok = |value: legal_grammar::Result<Option<Vec<String>>>| value.ok().flatten();
+    let mut entries = Map::new();
+    for id in legal_grammar::load_tables().expect("grammar corpus").keys() {
+        entries.insert(id.clone(), json!({
+            "linear": ok(legal_grammar::ecmascript_table_entry_literals(id)),
+            "backtracking": ok(legal_grammar::table_entry_literals(id)),
+            "python": ok(legal_grammar::python_table_entry_literals(id)),
+            "ascii": ok(legal_grammar::ascii_bounded_table_entry_literals(id)),
+            "leading": legal_grammar::ecmascript_table_entry_leading_group(id).ok().flatten(),
+        }));
+    }
+    let extractors: Vec<Value> = extractors.into_iter().flat_map(|data| data["extractors"].as_array().unwrap()).map(|extractor| {
+        let pattern = string(&extractor["pattern"]);
+        json!(if extractor["ecmascript"] == json!(true) {
+            ok(legal_grammar::ecmascript_backtracking_pattern_literals(pattern, ""))
+        } else {
+            ok(legal_grammar::python_pattern_literals(pattern, ""))
+        })
+    }).collect();
+    super::compress(out.join("grammar-literals.json.gz"), &json!({"entries": entries, "extractors": extractors}));
+}
+
+/// The extractors as the blob src/us_extractors.rs reads: strings (sections 0 and 1); extractor rows (2) of pattern,
+/// exact editions, variation editions and names (each a run in the pool, 3: start and length) and flags; edition rows
+/// (4) of short name, reporter short name, name, cite type and source, start and end.
+fn compile_us_extractors(out: &Path, data: &Value) {
+    use legal_grammar::table::{blob, rows, words, StringsWriter};
+    let mut text = StringsWriter::default();
+    let (mut extractors, mut pool, mut editions) = (Vec::new(), Vec::new(), Vec::new());
+    let run = |values: Vec<u32>, pool: &mut Vec<u32>| {
+        let start = pool.len() as u32;
+        let len = values.len() as u32;
+        pool.extend(values);
+        [start, len]
+    };
+    for extractor in data["extractors"].as_array().unwrap() {
+        let indices = |field: &str| extractor[field].as_array().unwrap().iter()
+            .map(|index| u32::try_from(index.as_u64().unwrap()).unwrap()).collect::<Vec<_>>();
+        let flag = |field: &str, bit: u32| if extractor.get(field).and_then(Value::as_bool).unwrap_or(false) { bit } else { 0 };
+        extractors.push(text.id(string(&extractor["pattern"])));
+        extractors.extend(run(indices("exact"), &mut pool));
+        extractors.extend(run(indices("variations"), &mut pool));
+        let names = extractor["strings"].as_array().unwrap().iter().map(|name| text.id(string(name))).collect();
+        extractors.extend(run(names, &mut pool));
+        extractors.push(flag("short", 1) | flag("standard", 2) | flag("ecmascript", 4));
+    }
+    for edition in data["editions"].as_array().unwrap() {
+        let reporter = &edition["reporter"];
+        for value in [&edition["short_name"], &reporter["short_name"], &reporter["name"], &reporter["cite_type"], &reporter["source"]] {
+            editions.push(text.id(string(value)));
+        }
+        for date in [&edition["start"], &edition["end"]] {
+            editions.push(date.as_str().map_or(u32::MAX, |date| text.id(date)));
+        }
+    }
+    let [offsets, arena] = text.sections();
+    std::fs::write(out.join("us-extractors.bin"),
+        blob(&[offsets, arena, rows(&extractors, 8), words(pool), rows(&editions, 7)])).expect("compiled US extractors");
 }
 
 /// One named row: a registry row a citation names, its names (`exact`) and variations, and its templates.
@@ -322,41 +504,13 @@ fn compile_named(out: &Path, rows: Vec<Value>) {
     }).collect();
     let conventions = json!({"year_before": expand("$commonwealth_year_before", &variables),
         "issue": expand("$commonwealth_issue", &variables), "volume": expand("$volume", &variables)});
-    super::compress(out.join("named.json.gz"), &json!({"shapes": shapes, "rows": rows, "conventions": conventions}));
-}
-
-/// The lookup form of a surface, as the registry's `fold`: its letters and digits, lower-cased.
-fn fold(surface: &str) -> String {
-    surface.chars().filter(|character| character.is_alphanumeric()).flat_map(char::to_lowercase).collect()
-}
-
-/// Every surface an index row answers to: a court's id, neutral codes, aliases and citation string; a reporter's
-/// editions and variations; a series' or journal's abbreviation and variations.
-fn surfaces(row: &Value) -> Vec<String> {
-    let mut found: Vec<String> = ["id", "abbreviation", "citation_string"].iter().map(|field| string(&row[*field]).to_owned()).collect();
-    for field in ["neutral", "aliases", "variations"] {
-        match &row[field] {
-            Value::Array(values) => found.extend(values.iter().map(|value| string(value).to_owned())),
-            Value::Object(values) => found.extend(values.keys().cloned()),
-            _ => {}
-        }
-    }
-    found.extend(row["editions"].as_array().into_iter().flatten().map(|edition| string(&edition["abbreviation"]).to_owned()));
-    found.retain(|surface| !surface.is_empty());
-    found
-}
-
-/// The registry is the one table of names: a court, reporter, series or journal the grammar spells out that no
-/// registry row answers to fails the build, for the grammar would read a citation the registry cannot name.
-fn grammar_names_held(held: &BTreeSet<String>) {
-    const GROUPS: &[&str] = &["court", "reporter", "series", "code"];
-    const DEFS: &[&str] = &["cue_court_codes", "cue_statute_sources", "ca_statute_series", "fr_statute_series",
-        "ca_revised_regulation_series", "ca_consolidated_series", "fr_instrument_series", "ca_instrument_series", "ca_compiled_series"];
-    let spelled = legal_grammar::spelled_names(GROUPS, DEFS).expect("grammar corpus");    let missing: BTreeSet<String> = spelled.iter()
-        .flat_map(|(place, names)| names.iter().flatten().filter(|name| !held.contains(&fold(name))).map(move |name| format!("{place}: {name}")))
-        .collect();
-    assert!(missing.is_empty(), "the grammar spells out {} names the registry does not hold; add each to registry/*.json:\n{}",
-        missing.len(), missing.into_iter().collect::<Vec<_>>().join("\n"));
+    // A whole shape's literals, tightly and loosely spaced, as src/named.rs screens with them.
+    let whole_literals: Vec<Value> = shapes.iter().map(|shape| {
+        if shape.contains("(?P<reporter>$edition)") { return Value::Null; }
+        json!([shape.clone(), legal_grammar::spaced(shape)].map(|pattern| legal_grammar::python_pattern_literals(&pattern, "").ok().flatten()))
+    }).collect();
+    super::compress(out.join("named.json.gz"),
+        &json!({"shapes": shapes, "rows": rows, "conventions": conventions, "whole_literals": whole_literals}));
 }
 
 pub fn compile(out: &Path) {
@@ -372,7 +526,6 @@ pub fn compile(out: &Path) {
     let mut source = json!({"jurisdictions": jurisdictions, "states": states,
         "regexes": read("registry/upstream/reporters-db/regexes.json")});
     let mut source_positions = json!({});
-    let mut held = BTreeSet::new();
     for (table, file) in [("courts", "courts"), ("reporters", "reporters"), ("series", "laws"), ("journals", "journals")] {
         let authored = read(&format!("registry/{file}.json"));
         let authored = authored.as_array().unwrap();
@@ -514,15 +667,16 @@ pub fn compile(out: &Path) {
             "journals" => &["id", "name", "abbreviation", "variations", "jurisdiction", "source", "verified", "start", "end", "anchors"],
             _ => unreachable!(),
         };
-        for row in &rows { held.extend(surfaces(row).iter().map(|surface| fold(surface))); }
         rows.retain(|row| enabled(row_jurisdiction(row)));
         if table == "journals" { journal_years(&mut rows); }
         for row in &mut rows { row.as_object_mut().unwrap().retain(|key, _| fields.contains(&key.as_str())); }
         index[table] = json!(rows);
     }
-    grammar_names_held(&held);
     super::compress(out.join("registry-index.json.gz"), &index);
     compile_named(out, named);
+    let extractors = std::env::var_os("CARGO_FEATURE_US").is_some().then(|| us_extractors(&template_variables()));
+    if let Some(extractors) = &extractors { compile_us_extractors(out, extractors); }
+    compile_grammar_literals(out, extractors.as_ref());
     for table in ["reporters", "laws", "journals"] {
         let mut positions = Map::new();
         for (key, rows) in source[table].as_object_mut().unwrap() {

@@ -1,7 +1,7 @@
-//! Pinned reporters-db extractors, retaining Eyecite's captures and editions: `data/us-extractors.json`,
-//! compiled by the build script into a [`crate::table`] blob read in place.
+//! eyecite's citation extractors over the registry's reporters-db tables, with their captures and editions, built by
+//! the build script (build_registry.rs) into a [`legal_grammar::table`] blob read in place.
 
-use crate::table::{Blob, Rows, Strings, Words};
+use legal_grammar::table::{Blob, Rows, Strings, Words};
 use std::sync::LazyLock;
 
 // The layout build.rs writes: strings (sections 0 and 1); extractor rows (2) of pattern, exact

@@ -18,10 +18,11 @@ pub(crate) enum Dialect {
 
 impl Dialect {
     fn literals(self, id: &str) -> Option<Vec<String>> {
+        let entry = crate::grammar_literals::entry(id);
         match self {
-            Self::Linear => legal_grammar::ecmascript_table_entry_literals(id),
-            Self::Backtracking => legal_grammar::table_entry_literals(id),
-        }.unwrap_or_else(|error| panic!("{error}"))
+            Self::Linear => entry.linear.clone(),
+            Self::Backtracking => entry.backtracking.clone(),
+        }
     }
 }
 
@@ -73,8 +74,7 @@ impl Screened<CompiledGrammar> {
 
     /// [`legal_grammar::compile_python_table_entry`] with its literals.
     pub(crate) fn python(id: &'static str) -> Self {
-        Self::new(move || or_panic(legal_grammar::compile_python_table_entry(id)),
-            or_panic(legal_grammar::python_table_entry_literals(id)))
+        Self::new(move || or_panic(legal_grammar::compile_python_table_entry(id)), crate::grammar_literals::entry(id).python.clone())
     }
 
     /// Every match in `text`, as [`fancy_regex::Regex::find_iter`] finds them.
@@ -100,7 +100,7 @@ impl Screened<CompiledEcmascriptGrammar> {
     pub(crate) fn linear(id: &'static str) -> Self {
         let mut screened = Self::new(move || or_panic(legal_grammar::compile_ecmascript_table_entry(id)),
             Dialect::Linear.literals(id));
-        screened.leading = or_panic(legal_grammar::ecmascript_table_entry_leading_group(id));
+        screened.leading = crate::grammar_literals::entry(id).leading.clone();
         screened
     }
 

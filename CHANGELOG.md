@@ -10,6 +10,19 @@ versioned separately and noted here when they change.
 
 ## [Unreleased]
 
+- The registry is the one place a court, reporter or law is named. The US extractors are built with eyecite's
+  construction from the registry's pinned reporters-db tables when the crate builds, so a sync updates them with nothing
+  else to regenerate; `legal-grammar` no longer carries a copy of them (`data/us-extractors.json`, 2.9 MB) or of
+  reporters-db's names (its `us_*` defs and the entries only they fed), and loses its `us` feature. The bracketed and
+  multi-word neutral courts and the treaty series are written into the grammar from registry rows (a court's
+  `bracketed` and `multiword` names, a series' `treaty`, `treaty_year` and `treaty_number` forms). Reporters-db laws of
+  every kind are series (dockets, filings and municipal registers were dropped before), and EWMC, UNTS, LNTS, CTS,
+  UST, UKTS, ATS, TIAS, NZTS and ETS are registry rows. On 21,111 documents extraction is unchanged but for 14 treaty
+  citations now read ("CTS 1942 No. 20", "E.T.S. No. 108", "U.K.T.S. 1910 No. 23").
+- A first reading costs a fraction of what it did: the literals that screen each grammar entry, US extractor and named
+  shape are worked out when the crate builds, not at every start. Native release: first `extract` 0.24–0.26 s where it
+  took 1.6–4.2 s, `warm` about 1.0 s where it took 3.4–4.4 s. WebAssembly in Node: first `extract` 0.39–0.41 s where it
+  took 0.53–0.54 s.
 - The alias table binds 85,411 decisions' 143,445 citations (from 80,903 and 130,248). False aliases are cut by
   new gates and a review: an identity no longer holds a Supreme Court citation beside a province's Quicklaw number
   (the decision appealed from), nor neutral citations, CanLII identifiers and database numbers more than a year

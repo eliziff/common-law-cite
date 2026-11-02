@@ -1197,6 +1197,9 @@
   "variations": [
    "RTNU"
   ],
+  "forms": [
+   "treaty"
+  ],
   "examples": [
    "1155 UNTS 331",
    "1155 RTNU 331"
@@ -1212,6 +1215,9 @@
   "kind": "treaties",
   "jurisdiction": "int",
   "abbreviation": "LNTS",
+  "forms": [
+   "treaty"
+  ],
   "examples": [
    "108 LNTS 3"
   ],
@@ -1222,9 +1228,22 @@
   "kind": "treaties",
   "jurisdiction": "ca",
   "abbreviation": "CTS",
-  "examples": [
-   "1990 CTS 3"
+  "variations": [
+   "Can TS",
+   "RT Can"
   ],
+  "forms": [
+   "treaty",
+   "treaty_year"
+  ],
+  "examples": [
+   "1990 CTS 3",
+   "Can TS 1990 No 3"
+  ],
+  "french": [
+   "RT Can"
+  ],
+  "name_fr": "Recueil des traités du Canada",
   "citation_id": "cts"
  },
  {
@@ -1232,9 +1251,88 @@
   "kind": "treaties",
   "jurisdiction": "us",
   "abbreviation": "UST",
+  "forms": [
+   "treaty"
+  ],
   "examples": [
    "21 UST 77"
   ],
   "citation_id": "ust"
+ },
+ {
+  "name": "United Kingdom Treaty Series",
+  "kind": "treaties",
+  "jurisdiction": "uk",
+  "abbreviation": "UKTS",
+  "forms": [
+   "treaty_year"
+  ],
+  "examples": [
+   "UKTS 1965 No 1"
+  ],
+  "citation_id": "ukts"
+ },
+ {
+  "name": "Australian Treaty Series",
+  "kind": "treaties",
+  "jurisdiction": "au",
+  "abbreviation": "ATS",
+  "forms": [
+   "treaty_year"
+  ],
+  "examples": [
+   "ATS 1990 No 2"
+  ],
+  "citation_id": "ats"
+ },
+ {
+  "name": "Treaties and Other International Acts Series",
+  "kind": "treaties",
+  "jurisdiction": "us",
+  "abbreviation": "TIAS",
+  "forms": [
+   "treaty_year"
+  ],
+  "examples": [
+   "TIAS 1970 No 6820"
+  ],
+  "citation_id": "tias"
+ },
+ {
+  "name": "New Zealand Treaty Series",
+  "kind": "treaties",
+  "jurisdiction": "nz",
+  "abbreviation": "NZTS",
+  "forms": [
+   "treaty_year"
+  ],
+  "examples": [
+   "NZTS 1990 No 5"
+  ],
+  "citation_id": "nzts"
+ },
+ {
+  "name": "European Treaty Series",
+  "kind": "treaties",
+  "jurisdiction": "int",
+  "abbreviation": "ETS",
+  "variations": [
+   "CETS",
+   "STE",
+   "STCE"
+  ],
+  "forms": [
+   "treaty_number"
+  ],
+  "examples": [
+   "ETS No 5",
+   "CETS No 210"
+  ],
+  "french": [
+   "STE",
+   "STCE"
+  ],
+  "name_fr": "Série des traités européens",
+  "citation_id": "ets"
  }
 ]

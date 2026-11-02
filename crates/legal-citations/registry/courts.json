@@ -1135,6 +1135,17 @@
    "Comp Trib",
    "Trib conc"
   ],
+  "multiword": [
+   "Comp Trib",
+   "Comp Trib.",
+   "Comp trib",
+   "Comp. Trib.",
+   "TRIB COMP",
+   "Trib Comp",
+   "Trib Conc",
+   "Trib conc",
+   "Trib. conc."
+  ],
   "aliases": [
    "CACT",
    "CT",
@@ -1304,6 +1315,10 @@
   "neutral": [
    "CIRB",
    "CCRI",
+   "CIRB LD",
+   "CCRI LD"
+  ],
+  "multiword": [
    "CIRB LD",
    "CCRI LD"
   ],
@@ -6845,6 +6860,10 @@
    "TCRPAP LD",
    "TCRPAP"
   ],
+  "multiword": [
+   "CAPPRT LD",
+   "TCRPAP LD"
+  ],
   "name_fr": "Tribunal canadien des relations professionnelles artistes-producteurs",
   "region": "ca",
   "level": "tribunal",
@@ -6883,6 +6902,9 @@
   "neutral": [
    "UKHL"
   ],
+  "bracketed": [
+   "UKHL"
+  ],
   "aliases": [
    "HL"
   ],
@@ -6897,6 +6919,9 @@
   "neutral": [
    "UKSC"
   ],
+  "bracketed": [
+   "UKSC"
+  ],
   "start": 2009,
   "parent": "ukhl",
   "region": "uk",
@@ -6908,6 +6933,10 @@
   "name": "Judicial Committee of the Privy Council",
   "neutral": [
    "UKPC"
+  ],
+  "bracketed": [
+   "UKPC",
+   "JCPC"
   ],
   "aliases": [
    "PC",
@@ -6932,6 +6961,9 @@
   "neutral": [
    "EWCA Civ"
   ],
+  "bracketed": [
+   "EWCA Civ"
+  ],
   "start": 2001,
   "region": "uk-ew",
   "level": "iac",
@@ -6943,6 +6975,9 @@
   "neutral": [
    "EWCA Crim"
   ],
+  "bracketed": [
+   "EWCA Crim"
+  ],
   "start": 2001,
   "region": "uk-ew",
   "level": "iac",
@@ -6952,6 +6987,9 @@
   "id": "ewhc",
   "name": "High Court of Justice of England and Wales",
   "neutral": [
+   "EWHC"
+  ],
+  "bracketed": [
    "EWHC"
   ],
   "start": 2001,
@@ -7099,6 +7137,9 @@
   "neutral": [
    "EWFC"
   ],
+  "bracketed": [
+   "EWFC"
+  ],
   "start": 2014,
   "region": "uk-ew",
   "level": "ljc",
@@ -7108,6 +7149,9 @@
   "id": "ewcop",
   "name": "Court of Protection",
   "neutral": [
+   "EWCOP"
+  ],
+  "bracketed": [
    "EWCOP"
   ],
   "region": "uk-ew",
@@ -7120,6 +7164,9 @@
   "neutral": [
    "EWCC"
   ],
+  "bracketed": [
+   "EWCC"
+  ],
   "region": "uk-ew",
   "level": "ljc",
   "type": "trial"
@@ -7128,6 +7175,9 @@
   "id": "ewmc",
   "name": "Magistrates' Courts of England and Wales",
   "neutral": [
+   "EWMC"
+  ],
+  "bracketed": [
    "EWMC"
   ],
   "region": "uk-ew",
@@ -7148,6 +7198,9 @@
   "id": "ukut",
   "name": "Upper Tribunal",
   "neutral": [
+   "UKUT"
+  ],
+  "bracketed": [
    "UKUT"
   ],
   "start": 2008,
@@ -7209,6 +7262,9 @@
   "neutral": [
    "UKFTT"
   ],
+  "bracketed": [
+   "UKFTT"
+  ],
   "start": 2008,
   "region": "uk",
   "level": "tribunal",
@@ -7245,6 +7301,9 @@
    "EAT",
    "UKEAT"
   ],
+  "bracketed": [
+   "UKEAT"
+  ],
   "region": "uk",
   "level": "tribunal",
   "type": "tribunal"
@@ -7253,6 +7312,9 @@
   "id": "csih",
   "name": "Court of Session (Inner House)",
   "neutral": [
+   "CSIH"
+  ],
+  "bracketed": [
    "CSIH"
   ],
   "region": "uk-sc",
@@ -7265,6 +7327,9 @@
   "neutral": [
    "CSOH"
   ],
+  "bracketed": [
+   "CSOH"
+  ],
   "region": "uk-sc",
   "level": "gjc",
   "type": "trial"
@@ -7273,6 +7338,9 @@
   "id": "hcjac",
   "name": "High Court of Justiciary (Appeal Court)",
   "neutral": [
+   "HCJAC"
+  ],
+  "bracketed": [
    "HCJAC"
   ],
   "region": "uk-sc",
@@ -7295,6 +7363,9 @@
   "neutral": [
    "NICA"
   ],
+  "bracketed": [
+   "NICA"
+  ],
   "region": "uk-ni",
   "level": "iac",
   "type": "appellate"
@@ -7303,6 +7374,9 @@
   "id": "niqb",
   "name": "High Court of Justice in Northern Ireland (Queen's Bench Division)",
   "neutral": [
+   "NIQB"
+  ],
+  "bracketed": [
    "NIQB"
   ],
   "end": 2022,
@@ -7327,6 +7401,9 @@
   "neutral": [
    "NICh"
   ],
+  "bracketed": [
+   "NICh"
+  ],
   "region": "uk-ni",
   "level": "gjc",
   "type": "trial"
@@ -7337,6 +7414,9 @@
   "neutral": [
    "NIFam"
   ],
+  "bracketed": [
+   "NIFam"
+  ],
   "region": "uk-ni",
   "level": "gjc",
   "type": "trial"
@@ -7345,6 +7425,9 @@
   "id": "hca",
   "name": "High Court of Australia",
   "neutral": [
+   "HCA"
+  ],
+  "bracketed": [
    "HCA"
   ],
   "start": 1903,
@@ -7358,6 +7441,9 @@
   "neutral": [
    "FCA"
   ],
+  "bracketed": [
+   "FCA"
+  ],
   "start": 1977,
   "region": "au",
   "level": "gjc",
@@ -7367,6 +7453,9 @@
   "id": "fcafc",
   "name": "Federal Court of Australia (Full Court)",
   "neutral": [
+   "FCAFC"
+  ],
+  "bracketed": [
    "FCAFC"
   ],
   "parent": "fca-au",
@@ -7380,6 +7469,9 @@
   "neutral": [
    "FamCA"
   ],
+  "bracketed": [
+   "FamCA"
+  ],
   "end": 2021,
   "region": "au",
   "level": "gjc",
@@ -7389,6 +7481,9 @@
   "id": "fcca",
   "name": "Federal Circuit Court of Australia",
   "neutral": [
+   "FCCA"
+  ],
+  "bracketed": [
    "FCCA"
   ],
   "start": 2013,
@@ -7403,6 +7498,9 @@
   "neutral": [
    "AATA"
   ],
+  "bracketed": [
+   "AATA"
+  ],
   "end": 2024,
   "region": "au",
   "level": "tribunal",
@@ -7412,6 +7510,9 @@
   "id": "nswca",
   "name": "New South Wales Court of Appeal",
   "neutral": [
+   "NSWCA"
+  ],
+  "bracketed": [
    "NSWCA"
   ],
   "region": "au-nsw",
@@ -7424,6 +7525,9 @@
   "neutral": [
    "NSWCCA"
   ],
+  "bracketed": [
+   "NSWCCA"
+  ],
   "region": "au-nsw",
   "level": "iac",
   "type": "appellate"
@@ -7432,6 +7536,9 @@
   "id": "nswsc",
   "name": "Supreme Court of New South Wales",
   "neutral": [
+   "NSWSC"
+  ],
+  "bracketed": [
    "NSWSC"
   ],
   "region": "au-nsw",
@@ -7444,6 +7551,9 @@
   "neutral": [
    "VSCA"
   ],
+  "bracketed": [
+   "VSCA"
+  ],
   "region": "au-vic",
   "level": "iac",
   "type": "appellate"
@@ -7452,6 +7562,9 @@
   "id": "vsc",
   "name": "Supreme Court of Victoria",
   "neutral": [
+   "VSC"
+  ],
+  "bracketed": [
    "VSC"
   ],
   "region": "au-vic",
@@ -7464,6 +7577,9 @@
   "neutral": [
    "QCA"
   ],
+  "bracketed": [
+   "QCA"
+  ],
   "region": "au-qld",
   "level": "iac",
   "type": "appellate"
@@ -7472,6 +7588,9 @@
   "id": "qsc",
   "name": "Supreme Court of Queensland",
   "neutral": [
+   "QSC"
+  ],
+  "bracketed": [
    "QSC"
   ],
   "region": "au-qld",
@@ -7484,6 +7603,9 @@
   "neutral": [
    "WASCA"
   ],
+  "bracketed": [
+   "WASCA"
+  ],
   "region": "au-wa",
   "level": "iac",
   "type": "appellate"
@@ -7492,6 +7614,9 @@
   "id": "wasc",
   "name": "Supreme Court of Western Australia",
   "neutral": [
+   "WASC"
+  ],
+  "bracketed": [
    "WASC"
   ],
   "region": "au-wa",
@@ -7515,6 +7640,9 @@
   "neutral": [
    "SASC"
   ],
+  "bracketed": [
+   "SASC"
+  ],
   "region": "au-sa",
   "level": "gjc",
   "type": "trial"
@@ -7523,6 +7651,9 @@
   "id": "tassc",
   "name": "Supreme Court of Tasmania",
   "neutral": [
+   "TASSC"
+  ],
+  "bracketed": [
    "TASSC"
   ],
   "region": "au-tas",
@@ -7535,6 +7666,9 @@
   "neutral": [
    "TASCCA"
   ],
+  "bracketed": [
+   "TASCCA"
+  ],
   "region": "au-tas",
   "level": "iac",
   "type": "appellate"
@@ -7543,6 +7677,9 @@
   "id": "actca",
   "name": "Court of Appeal of the Australian Capital Territory",
   "neutral": [
+   "ACTCA"
+  ],
+  "bracketed": [
    "ACTCA"
   ],
   "region": "au-act",
@@ -7555,6 +7692,9 @@
   "neutral": [
    "ACTSC"
   ],
+  "bracketed": [
+   "ACTSC"
+  ],
   "region": "au-act",
   "level": "gjc",
   "type": "trial"
@@ -7563,6 +7703,9 @@
   "id": "ntca-au",
   "name": "Court of Appeal of the Northern Territory",
   "neutral": [
+   "NTCA"
+  ],
+  "bracketed": [
    "NTCA"
   ],
   "region": "au-nt",
@@ -7575,6 +7718,9 @@
   "neutral": [
    "NTSC"
   ],
+  "bracketed": [
+   "NTSC"
+  ],
   "region": "au-nt",
   "level": "gjc",
   "type": "trial"
@@ -7583,6 +7729,9 @@
   "id": "nzsc",
   "name": "Supreme Court of New Zealand",
   "neutral": [
+   "NZSC"
+  ],
+  "bracketed": [
    "NZSC"
   ],
   "start": 2004,
@@ -7596,6 +7745,9 @@
   "neutral": [
    "NZCA"
   ],
+  "bracketed": [
+   "NZCA"
+  ],
   "region": "nz",
   "level": "iac",
   "type": "appellate"
@@ -7604,6 +7756,9 @@
   "id": "nzhc",
   "name": "High Court of New Zealand",
   "neutral": [
+   "NZHC"
+  ],
+  "bracketed": [
    "NZHC"
   ],
   "region": "nz",
@@ -7616,6 +7771,9 @@
   "neutral": [
    "NZDC"
   ],
+  "bracketed": [
+   "NZDC"
+  ],
   "region": "nz",
   "level": "ljc",
   "type": "trial"
@@ -7624,6 +7782,9 @@
   "id": "nzfc",
   "name": "Family Court of New Zealand",
   "neutral": [
+   "NZFC"
+  ],
+  "bracketed": [
    "NZFC"
   ],
   "region": "nz",
@@ -7661,6 +7822,9 @@
   "neutral": [
    "UKIPTrib"
   ],
+  "bracketed": [
+   "UKIPTrib"
+  ],
   "evidence": "https://caselaw.nationalarchives.gov.uk/courts-and-tribunals/ukiptrib",
   "region": "uk",
   "level": "tribunal",
@@ -7670,6 +7834,9 @@
   "id": "nicc",
   "name": "Crown Court of Northern Ireland",
   "neutral": [
+   "NICC"
+  ],
+  "bracketed": [
    "NICC"
   ],
   "evidence": "https://www.judiciaryni.uk/files/judiciaryni/decisions/Queen%20v%20Jason%20Peter%20Balandowitz.pdf",
@@ -7683,6 +7850,9 @@
   "neutral": [
    "IESC"
   ],
+  "bracketed": [
+   "IESC"
+  ],
   "evidence": "https://ww2.courts.ie/view/Judgments/8b1bbc92-ca23-4802-b4aa-d27862502153/c876911d-4596-464e-a051-09dff8f52139/IESC%2030.2026%20BOI%20v%20Murray%20%26%20anor.pdf",
   "region": "ie",
   "level": "colr",
@@ -7692,6 +7862,9 @@
   "id": "ieca",
   "name": "Court of Appeal of Ireland",
   "neutral": [
+   "IECA"
+  ],
+  "bracketed": [
    "IECA"
   ],
   "evidence": "https://ww2.courts.ie/view/Judgments/8b1bbc92-ca23-4802-b4aa-d27862502153/c876911d-4596-464e-a051-09dff8f52139/IESC%2030.2026%20BOI%20v%20Murray%20%26%20anor.pdf",
@@ -7705,6 +7878,9 @@
   "neutral": [
    "IEHC"
   ],
+  "bracketed": [
+   "IEHC"
+  ],
   "evidence": "https://ww2.courts.ie/view/Judgments/8b1bbc92-ca23-4802-b4aa-d27862502153/c876911d-4596-464e-a051-09dff8f52139/IESC%2030.2026%20BOI%20v%20Murray%20%26%20anor.pdf",
   "region": "ie",
   "level": "gjc",
@@ -7714,6 +7890,9 @@
   "id": "nzempc",
   "name": "Employment Court of New Zealand",
   "neutral": [
+   "NZEmpC"
+  ],
+  "bracketed": [
    "NZEmpC"
   ],
   "evidence": "https://employmentcourt.govt.nz/judgments/decisions/",
@@ -7727,6 +7906,9 @@
   "neutral": [
    "NZEnvC"
   ],
+  "bracketed": [
+   "NZEnvC"
+  ],
   "evidence": "https://www.environmentcourt.govt.nz/cases-online/",
   "region": "nz",
   "level": "ljc",
@@ -7736,6 +7918,9 @@
   "id": "nzera",
   "name": "Employment Relations Authority",
   "neutral": [
+   "NZERA"
+  ],
+  "bracketed": [
    "NZERA"
   ],
   "evidence": "https://determinations.era.govt.nz/determination/view/21245",
@@ -7749,6 +7934,9 @@
   "neutral": [
    "SGCA"
   ],
+  "bracketed": [
+   "SGCA"
+  ],
   "evidence": "https://www.judiciary.gov.sg/docs/default-source/amendments-docs/2012/supreme_court_amendment_no-_3_of_2012.pdf",
   "region": "sg",
   "level": "colr",
@@ -7758,6 +7946,9 @@
   "id": "sghc",
   "name": "High Court of Singapore",
   "neutral": [
+   "SGHC"
+  ],
+  "bracketed": [
    "SGHC"
   ],
   "evidence": "https://www.judiciary.gov.sg/docs/default-source/amendments-docs/2012/supreme_court_amendment_no-_3_of_2012.pdf",
@@ -7771,6 +7962,9 @@
   "neutral": [
    "HKCFA"
   ],
+  "bracketed": [
+   "HKCFA"
+  ],
   "evidence": "https://www.judiciary.hk/en/court_services_facilities/cfa.html",
   "region": "hk",
   "level": "colr",
@@ -7780,6 +7974,9 @@
   "id": "hkca",
   "name": "Court of Appeal of the High Court of Hong Kong",
   "neutral": [
+   "HKCA"
+  ],
+  "bracketed": [
    "HKCA"
   ],
   "evidence": "https://www.hkcfa.hk/data.json?file=CACV000355B_2021_signed.pdf&folder=20240110_facv_8_2023&src=loadfile",
@@ -7793,6 +7990,9 @@
   "neutral": [
    "HKCFI"
   ],
+  "bracketed": [
+   "HKCFI"
+  ],
   "evidence": "https://www.judiciary.hk/en/about_us/complaints_responses/responses_flcc5275.html",
   "region": "hk",
   "level": "gjc",
@@ -7802,6 +8002,9 @@
   "id": "zacc",
   "name": "Constitutional Court of South Africa",
   "neutral": [
+   "ZACC"
+  ],
+  "bracketed": [
    "ZACC"
   ],
   "evidence": "https://collections.concourt.org.za/items/f64c1b6d-bade-43e2-b344-ef06e4dcee0e/full",
@@ -7815,6 +8018,9 @@
   "neutral": [
    "ZASCA"
   ],
+  "bracketed": [
+   "ZASCA"
+  ],
   "evidence": "https://www.supremecourtofappeal.org.za/index.php/component/jdownloads/category/98-judgements-2025?start=120",
   "region": "za",
   "level": "iac",
@@ -7824,6 +8030,9 @@
   "id": "famcafc",
   "name": "Full Court of the Family Court of Australia",
   "neutral": [
+   "FamCAFC"
+  ],
+  "bracketed": [
    "FamCAFC"
   ],
   "evidence": "https://www.hcourt.gov.au/cases-and-judgments/cases/decided/case-s1792021",
@@ -7839,6 +8048,9 @@
   "neutral": [
    "FedCFamC1A"
   ],
+  "bracketed": [
+   "FedCFamC1A"
+  ],
   "evidence": "https://www.fcfcoa.gov.au/judgments",
   "start": 2021,
   "region": "au",
@@ -7849,6 +8061,9 @@
   "id": "fedcfamc1f",
   "name": "Federal Circuit and Family Court of Australia, Division 1, Family Law",
   "neutral": [
+   "FedCFamC1F"
+  ],
+  "bracketed": [
    "FedCFamC1F"
   ],
   "evidence": "https://www.fcfcoa.gov.au/judgments",
@@ -7863,6 +8078,9 @@
   "neutral": [
    "FedCFamC2F"
   ],
+  "bracketed": [
+   "FedCFamC2F"
+  ],
   "evidence": "https://www.fcfcoa.gov.au/judgments",
   "start": 2021,
   "region": "au",
@@ -7873,6 +8091,9 @@
   "id": "fedcfamc2g",
   "name": "Federal Circuit and Family Court of Australia, Division 2, General Federal Law",
   "neutral": [
+   "FedCFamC2G"
+  ],
+  "bracketed": [
    "FedCFamC2G"
   ],
   "evidence": "https://www.fcfcoa.gov.au/judgments",
@@ -7887,6 +8108,9 @@
   "neutral": [
    "FMCA"
   ],
+  "bracketed": [
+   "FMCA"
+  ],
   "evidence": "https://www.hcourt.gov.au/assets/cases/B682012/Li_App.pdf",
   "end": 2013,
   "region": "au",
@@ -7897,6 +8121,9 @@
   "id": "arta",
   "name": "Administrative Review Tribunal",
   "neutral": [
+   "ARTA"
+  ],
+  "bracketed": [
    "ARTA"
   ],
   "evidence": "https://www.art.gov.au/sites/default/files/2025-10/Administrative%20Review%20Tribunal%20Annual%20Report%202024-25.pdf",
@@ -7911,6 +8138,9 @@
   "neutral": [
    "NSWLEC"
   ],
+  "bracketed": [
+   "NSWLEC"
+  ],
   "evidence": "https://www.caselaw.nsw.gov.au/about",
   "region": "au-nsw",
   "level": "gjc",
@@ -7920,6 +8150,9 @@
   "id": "nswdc",
   "name": "District Court of New South Wales",
   "neutral": [
+   "NSWDC"
+  ],
+  "bracketed": [
    "NSWDC"
   ],
   "evidence": "https://www.caselaw.nsw.gov.au/about",
@@ -7933,6 +8166,9 @@
   "neutral": [
    "NSWCATAP"
   ],
+  "bracketed": [
+   "NSWCATAP"
+  ],
   "evidence": "https://www.caselaw.nsw.gov.au/about",
   "region": "au-nsw",
   "level": "tribunal",
@@ -7942,6 +8178,9 @@
   "id": "vcc",
   "name": "County Court of Victoria",
   "neutral": [
+   "VCC"
+  ],
+  "bracketed": [
    "VCC"
   ],
   "evidence": "https://www.countycourt.vic.gov.au/files/documents/2024-09/judgment-smit-v-state-victoria.pdf",
@@ -7955,6 +8194,9 @@
   "neutral": [
    "VCAT"
   ],
+  "bracketed": [
+   "VCAT"
+  ],
   "evidence": "https://www.vcat.vic.gov.au/media/195/download",
   "region": "au-vic",
   "level": "tribunal",
@@ -7964,6 +8206,9 @@
   "id": "qdc",
   "name": "District Court of Queensland",
   "neutral": [
+   "QDC"
+  ],
+  "bracketed": [
    "QDC"
   ],
   "evidence": "https://www.queenslandjudgments.com.au/caselaw/qdc",
@@ -7977,6 +8222,9 @@
   "neutral": [
    "QCAT"
   ],
+  "bracketed": [
+   "QCAT"
+  ],
   "evidence": "https://www.queenslandjudgments.com.au/caselaw/qcat",
   "region": "au-qld",
   "level": "tribunal",
@@ -7988,6 +8236,9 @@
   "neutral": [
    "WADC"
   ],
+  "bracketed": [
+   "WADC"
+  ],
   "evidence": "https://www.legalaid.wa.gov.au/sites/default/files/inline-files/What%27s%20New%20Weekly%20Alert%2001%20November%202024.pdf",
   "region": "au-wa",
   "level": "ljc",
@@ -7997,6 +8248,9 @@
   "id": "sascfc",
   "name": "Full Court of the Supreme Court of South Australia",
   "neutral": [
+   "SASCFC"
+  ],
+  "bracketed": [
    "SASCFC"
   ],
   "evidence": "https://www.courts.sa.gov.au/going-to-court/court-locations/supreme-court/court-of-appeal/",
@@ -8011,6 +8265,9 @@
   "neutral": [
    "SADC"
   ],
+  "bracketed": [
+   "SADC"
+  ],
   "evidence": "https://www.courts.sa.gov.au/wp-content/uploads/wp-download-manager-files/documents/bench%20books/South%20Australian%20Criminal%20Trials%20Bench%20Book.pdf",
   "region": "au-sa",
   "level": "ljc",
@@ -8020,6 +8277,9 @@
   "id": "tasfc",
   "name": "Full Court of the Supreme Court of Tasmania",
   "neutral": [
+   "TASFC"
+  ],
+  "bracketed": [
    "TASFC"
   ],
   "evidence": "https://www.supremecourt.tas.gov.au/publications/decisions-of-the-court/judgments/",
@@ -8032,6 +8292,9 @@
   "id": "ewfc-b",
   "name": "Family Court of England and Wales, district and circuit judges",
   "neutral": [
+   "EWFC B"
+  ],
+  "bracketed": [
    "EWFC B"
   ],
   "parent": "ewfc",

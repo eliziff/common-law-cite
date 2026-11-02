@@ -65,6 +65,9 @@ struct Data {
     shapes: Vec<String>,
     rows: Vec<Row>,
     conventions: Conventions,
+    /// For each whole shape (one with no slot for a name), the literals one of which its every match holds, read
+    /// tightly and loosely spaced; worked out when the crate builds.
+    whole_literals: Vec<Option<[Option<Vec<String>>; 2]>>,
 }
 
 /// What a writer adds around a volume, expanded: the year before it (`commonwealth_year_before`) and the issue after
@@ -230,7 +233,7 @@ impl Index {
         for (at, row) in DATA.rows.iter().enumerate().filter(|(_, row)| selection.selects(row)) {
             for &shape in &row.shapes {
                 if !DATA.shapes[shape].contains(SLOT) { whole.entry(shape).or_default().push(at); }
-                shapes.entry(shape).or_insert_with(|| compile(&DATA.shapes[shape], selection));
+                shapes.entry(shape).or_insert_with(|| compile(shape, selection));
             }
             if row.shapes.iter().all(|&shape| !DATA.shapes[shape].contains(SLOT)) { continue; }
             for (surface, exact) in std::iter::once((&row.edition, true)).chain(row.variations.iter().map(|variation| (variation, false))) {
@@ -281,37 +284,21 @@ impl Index {
     }
 }
 
-/// A shape in reporters-db's dialect as this reading reads it: with `spacing`, each space outside a character class
-/// is whitespace, a run of it where the space is not itself quantified (`" ?"` is any whitespace or none).
+/// A shape in reporters-db's dialect as this reading reads it: with `spacing`, loosely spaced ([`legal_grammar::spaced`]).
 fn spaced(pattern: &str, spacing: bool) -> String {
-    if !spacing { return pattern.to_owned(); }
-    let mut output = String::with_capacity(pattern.len());
-    let (mut class, mut characters) = (false, pattern.chars().peekable());
-    while let Some(character) = characters.next() {
-        match character {
-            '\\' => { output.push(character); output.extend(characters.next()); }
-            '[' if !class => { class = true; output.push(character); }
-            ']' if class => { class = false; output.push(character); }
-            ' ' if !class => match characters.peek() {
-                Some('?' | '*') => { characters.next(); output.push_str(r"\s*"); }
-                Some('+' | '{') => output.push_str(r"\s"),
-                _ => output.push_str(r"\s+"),
-            },
-            _ => output.push(character),
-        }
-    }
-    output
+    if spacing { legal_grammar::spaced(pattern) } else { pattern.to_owned() }
 }
 
 fn python(pattern: &str) -> Regex {
     legal_grammar::compile_python_pattern(pattern, "").unwrap_or_else(|error| panic!("named shape {pattern}: {error}"))
 }
 
-fn compile(shape: &str, selection: &Selection) -> Shape {
+fn compile(index: usize, selection: &Selection) -> Shape {
     let (spacing, short) = (selection.spacing, selection.short);
+    let shape = DATA.shapes[index].as_str();
     let Some((head, tail)) = shape.split_once(SLOT) else {
         let pattern = spaced(shape, spacing);
-        let literals = legal_grammar::python_pattern_literals(&pattern, "").ok().flatten()
+        let literals = DATA.whole_literals[index].as_ref().and_then(|literals| literals[usize::from(spacing)].as_ref())
             .map(|literals| AhoCorasick::new(literals).expect("named shape literals"));
         return Shape::Whole { pattern: python(&format!(r"(?:^|[^A-Za-z0-9])(?P<__core>{pattern})(?:[^A-Za-z0-9]|$)")), literals };
     };

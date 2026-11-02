@@ -27,13 +27,11 @@ import sys
 import tomllib
 import urllib.request
 from pathlib import Path
-from string import Template
 
 ROOT = Path(__file__).resolve().parent.parent
 LOCK = ROOT / "upstream.lock"
 REGISTRY = ROOT / "crates" / "legal-citations" / "registry"
 OUT = REGISTRY / "upstream"
-GRAMMAR = ROOT / "crates" / "legal-grammar" / "data"
 
 FILES = {
     "reporters-db": ["reporters_db/data/reporters.json", "reporters_db/data/laws.json",
@@ -115,100 +113,6 @@ def update_lock(lock):
     write_lock(lock)
 
 
-def citation_extractors(data):
-    """Port eyecite tokenizers._populate_reporter_extractors at eyecite.lock.
-
-    Keep captures, exact/variant edition candidates and prefilter strings.
-    Edition dates remain the original source values, not inferred year bounds.
-    """
-    raw = json.loads(data["reporters_db/data/regexes.json"])
-    corpus = json.loads((GRAMMAR / "grammar-corpus.json").read_text(encoding="utf-8"))
-    raw["full_cite"][""] = "$volume $reporter,? $page"
-    raw["page"][""] = "(?P<page>" + corpus["tables"]["citations"]["defs"]["us_page"] + ")"
-
-    # reporters_db.utils.process_variables / recursive_substitute.
-    def flatten(values, prefix=""):
-        result = {}
-        for key, value in values.items():
-            if key.endswith("#"):
-                continue
-            name = "_".join(part for part in (prefix, key) if part)
-            result.update(flatten(value, name) if isinstance(value, dict) else {name: value})
-        return result
-
-    variables = flatten(raw)
-    variables.update({key + "_optional": f"(?:{value} ?)?" for key, value in list(variables.items())})
-
-    def expand(value):
-        for _ in range(100):
-            expanded = Template(value).safe_substitute(variables)
-            if expanded == value:
-                return value
-            value = expanded
-        raise ValueError("recursive reporter template exceeds source maximum depth")
-
-    variables = {key: expand(value) for key, value in variables.items()}
-
-    def relaxed(name):
-        return re.sub(r"(?:\\?\ )+", r"\\s*", re.escape(name).replace(r"\.", r"\.\s*"))
-
-    editions, extractors = [], {}
-
-    def add(template, names, edition, kind, standard):
-        pattern = Template(expand(template)).safe_substitute(edition="|".join(map(relaxed, names)))
-        strings = names if relaxed(names[0]) in pattern else []
-        short = pattern.replace(r"(?P<page>", r"at\s?(p(\.|age)?)? (?P<page>")
-        for expression, is_short in [(pattern, False)] + ([(short, True)] if short != pattern else []):
-            cluster = extractors.setdefault(expression, {
-                "exact": [], "variations": [], "strings": [], "short": is_short,
-                "standard": standard,
-            })
-            cluster[kind].append(edition)
-            cluster["strings"].extend(strings)
-
-    for source_name in ("reporters", "laws", "journals"):
-        sources = json.loads(data[f"reporters_db/data/{source_name}.json"])
-        for source_key, cluster in sources.items():
-            for source in cluster:
-                reporter = {"short_name": source_key, "name": source["name"],
-                            "cite_type": source["cite_type"], "source": source_name}
-                rows = source["editions"] if source_name == "reporters" else {source_key: source}
-                for name, row in rows.items():
-                    edition = len(editions)
-                    editions.append({"short_name": name, "reporter": reporter,
-                                     "start": row["start"], "end": row["end"]})
-                    variations = ([key for key, value in source["variations"].items() if value == name]
-                                  if source_name == "reporters" else source.get("variations", []))
-                    for template in row.get("regexes") or ["$full_cite"]:
-                        if source_name == "laws":
-                            template = template.replace("§ ", "§§? ?")
-                        standard = template == "$full_cite" and source_name != "laws"
-                        add(template, [name], edition, "exact", standard)
-                        if variations:
-                            add(template, variations, edition, "variations", standard)
-
-    rows = []
-    for pattern, cluster in extractors.items():
-        if cluster["short"]:
-            pattern = pattern.replace(r"at\s?(p(\.|age)?)? (?P<page>",
-                                      r"(?P<__short_at>at)\s?(p(\.|age)?)? (?P<page>")
-        # JS-style names are the corpus representation; the expression is unchanged.
-        pattern = pattern.replace("(?P<", "(?<")
-        pattern = rf"(?:^|[^a-zA-Z0-9])(?<__citation>{pattern})(?:[^a-zA-Z0-9]|$)"
-        rows.append({"pattern": pattern, **cluster, "strings": sorted(set(cluster["strings"]))})
-    # Retain Beaver's always-on USC form (including unmarked sections) in the
-    # same capture-bearing pipeline, with the original source edition records.
-    common = next(entry["pattern"] for entry in corpus["tables"]["citations"]["entries"]
-                  if entry["id"] == "cite.us.law.common")
-    common = common.removeprefix("(?<![A-Za-z0-9])").removesuffix("(?![A-Za-z0-9])")
-    rows.append({"pattern": rf"(?<![A-Za-z0-9])(?<__citation>{common})(?![A-Za-z0-9])",
-                 "exact": [i for i, edition in enumerate(editions)
-                           if edition["short_name"] == "U.S.C." and edition["reporter"]["source"] == "laws"],
-                 "variations": [], "strings": [], "short": False, "standard": True, "ecmascript": True})
-    return json.dumps({"editions": editions, "extractors": rows}, ensure_ascii=False,
-                      separators=(",", ":")) + "\n"
-
-
 def generate(data):
     return {f"{project}/{Path(path).name}": blob
             for project, files in data.items() for path, blob in files.items()}
@@ -231,7 +135,6 @@ def main():
     outputs["pins.json"] = (json.dumps(pins, indent=2, sort_keys=True) + "\n").encode()
     stale = []
     files = [(OUT / name, text) for name, text in outputs.items()]
-    files.append((GRAMMAR / "us-extractors.json", citation_extractors(data["reporters-db"]).encode()))
     for path, text in files:
         if not path.exists() or path.read_bytes() != text:
             stale.append(str(path.relative_to(ROOT)))
