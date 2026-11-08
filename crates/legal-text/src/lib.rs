@@ -137,19 +137,20 @@ impl<'a> ScalarText<'a> {
         self.lines.get_or_init(|| self.line_map())
     }
 
+    /// Each line's `[byte start, byte end, UTF-16 start]`, its end before a CR that ends it.
     #[inline]
     pub fn line_map(&self) -> Vec<[usize; 3]> {
         let mut lines = Vec::new();
-        let (mut byte_start, mut scalar_start) = (0, 0);
+        let (mut byte_start, mut utf16_start) = (0, 0);
         for raw in self.value.split('\n') {
             let text = raw.strip_suffix('\r').unwrap_or(raw);
-            lines.push([byte_start, byte_start + text.len(), scalar_start]);
+            lines.push([byte_start, byte_start + text.len(), utf16_start]);
             let newline = usize::from(byte_start + raw.len() < self.value.len());
             byte_start += raw.len() + newline;
             if self.offsets.is_empty() {
-                scalar_start = byte_start;
+                utf16_start = byte_start;
             } else {
-                scalar_start += raw.chars().count() + newline;
+                utf16_start += utf16_len(raw) + newline;
             }
         }
         lines
@@ -240,6 +241,18 @@ impl<'a> ScalarText<'a> {
         }
         let offset = self.checkpoint(byte, 1);
         Some(offset[2] + self.value[offset[1]..byte].encode_utf16().count())
+    }
+
+    #[inline]
+    pub fn utf16_of_byte(&self, byte: usize) -> usize {
+        self.utf16_at_byte(byte)
+            .expect("byte offset must be an in-bounds UTF-8 boundary")
+    }
+
+    #[inline]
+    pub fn byte_of_utf16(&self, utf16: usize) -> usize {
+        self.byte_at_utf16(utf16)
+            .expect("UTF-16 offset must be an in-bounds scalar boundary")
     }
 
     #[inline]
@@ -430,7 +443,7 @@ mod tests {
 
         assert!(matches!(&recovered.offsets, Cow::Borrowed(_)));
         assert_eq!(recovered.utf16_at_byte(5), original.utf16_at_byte(5));
-        assert_eq!(recovered.lines(), &[[0, 4, 0], [5, 6, 2]]);
+        assert_eq!(recovered.lines(), &[[0, 4, 0], [5, 6, 3]]);
         assert_eq!(original.lines(), &[[0, 6, 0]]);
     }
 
