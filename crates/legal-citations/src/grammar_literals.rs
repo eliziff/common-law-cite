@@ -23,7 +23,7 @@ struct Literals {
 
 static LITERALS: LazyLock<Literals> = LazyLock::new(|| {
     let compressed = include_bytes!(concat!(env!("OUT_DIR"), "/grammar-literals.json.gz"));
-    serde_json::from_reader(flate2::read::GzDecoder::new(compressed.as_slice())).expect("compiled grammar literals")
+    crate::embedded_json(compressed, "compiled grammar literals")
 });
 
 /// A grammar entry's screens.

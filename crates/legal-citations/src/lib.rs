@@ -58,6 +58,14 @@ macro_rules! warm_statics {
 }
 pub(crate) use warm_statics;
 
+/// Decode embedded data in bulk: serde's reader otherwise asks the gzip decoder for individual bytes.
+pub(crate) fn embedded_json<T: serde::de::DeserializeOwned>(compressed: &[u8], context: &str) -> T {
+    use std::io::Read;
+    let mut bytes = Vec::new();
+    flate2::read::GzDecoder::new(compressed).read_to_end(&mut bytes).expect(context);
+    serde_json::from_slice(&bytes).expect(context)
+}
+
 /// A short document with notes that cite the common kinds of authority, read by [`warm`]: its
 /// first line is the text the notes annotate, each later line one note.
 const WARM_SAMPLE: &str = "As the Court held in Oakes and the Act provides, the limit is justified.

@@ -12,7 +12,7 @@ use fancy_regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::ops::Range;
-use std::sync::{Arc, LazyLock, Mutex};
+use std::sync::{Arc, LazyLock, Mutex, OnceLock};
 
 /// Where the row's names go in an expanded shape: reporters-db's `$reporter`, whose `$edition` is left for them.
 const SLOT: &str = "(?P<reporter>$edition)";
@@ -81,7 +81,7 @@ struct Conventions {
 
 static DATA: LazyLock<Data> = LazyLock::new(|| {
     let compressed = include_bytes!(concat!(env!("OUT_DIR"), "/named.json.gz"));
-    serde_json::from_reader(flate2::read::GzDecoder::new(compressed.as_slice())).expect("compiled named rows")
+    crate::embedded_json(compressed, "compiled named rows")
 });
 
 /// Every named row.
@@ -162,7 +162,7 @@ pub struct Named {
 /// One shape compiled for a reading: around a name, or whole.
 enum Shape {
     Slot { head: Option<Head>, tail: Regex, short: Option<Regex> },
-    Whole { pattern: Regex, literals: Option<AhoCorasick> },
+    Whole { source: String, pattern: OnceLock<Regex>, literals: Option<AhoCorasick> },
 }
 
 /// What a shape reads before a name: `(?:^|[^A-Za-z0-9]|(?=[\[(]))(?P<__head>H)$` over the window before it. A head
@@ -209,7 +209,7 @@ struct Index {
     /// rows naming it by a name of theirs, then by a variation.
     by_shape: Vec<Vec<(usize, Vec<&'static Row>, Vec<&'static Row>)>>,
     /// The shapes the selected rows use, by position in [`shapes`].
-    shapes: HashMap<usize, Shape>,
+    shapes: HashMap<usize, OnceLock<Shape>>,
     /// For each whole shape, the rows giving it.
     whole: Vec<(usize, Vec<usize>)>,
 }
@@ -233,7 +233,7 @@ impl Index {
         for (at, row) in DATA.rows.iter().enumerate().filter(|(_, row)| selection.selects(row)) {
             for &shape in &row.shapes {
                 if !DATA.shapes[shape].contains(SLOT) { whole.entry(shape).or_default().push(at); }
-                shapes.entry(shape).or_insert_with(|| compile(shape, selection));
+                shapes.entry(shape).or_insert_with(OnceLock::new);
             }
             if row.shapes.iter().all(|&shape| !DATA.shapes[shape].contains(SLOT)) { continue; }
             for (surface, exact) in std::iter::once((&row.edition, true)).chain(row.variations.iter().map(|variation| (variation, false))) {
@@ -300,7 +300,8 @@ fn compile(index: usize, selection: &Selection) -> Shape {
         let pattern = spaced(shape, spacing);
         let literals = DATA.whole_literals[index].as_ref().and_then(|literals| literals[usize::from(spacing)].as_ref())
             .map(|literals| AhoCorasick::new(literals).expect("named shape literals"));
-        return Shape::Whole { pattern: python(&format!(r"(?:^|[^A-Za-z0-9])(?P<__core>{pattern})(?:[^A-Za-z0-9]|$)")), literals };
+        return Shape::Whole { source: format!(r"(?:^|[^A-Za-z0-9])(?P<__core>{pattern})(?:[^A-Za-z0-9]|$)"),
+            pattern: OnceLock::new(), literals };
     };
     // A citation by volume that states no year of its own may follow the year its writer gives, and its volume may
     // carry an issue.
@@ -407,8 +408,10 @@ pub fn find(text: &str, selection: &Selection) -> Vec<Named> {
         }
     }
     for (shape, rows) in &index.whole {
-        let Some(Shape::Whole { pattern, literals }) = index.shapes.get(shape) else { continue };
+        let Some(Shape::Whole { source, pattern, literals }) = index.shapes.get(shape)
+            .map(|held| held.get_or_init(|| compile(*shape, selection))) else { continue };
         if literals.as_ref().is_some_and(|literals| !literals.is_match(text)) { continue; }
+        let pattern = pattern.get_or_init(|| python(source));
         for captures in pattern.captures_iter(text).flatten() {
             let core = captures.name("__core").unwrap();
             let mut read = Vec::new();
@@ -426,7 +429,8 @@ pub fn find(text: &str, selection: &Selection) -> Vec<Named> {
 fn read_name(text: &str, name: Range<usize>, by_shape: &[(usize, Vec<&'static Row>, Vec<&'static Row>)], index: &Index,
     selection: &Selection, found: &mut Vec<Named>) {
     for (shape, rows, variations) in by_shape {
-        let Some(Shape::Slot { head, tail, short }) = index.shapes.get(shape) else { continue };
+        let Some(Shape::Slot { head, tail, short }) = index.shapes.get(shape)
+            .map(|held| held.get_or_init(|| compile(*shape, selection))) else { continue };
         // A citation that opens with its name opens at a boundary, as a head does.
         if head.is_none() && text[..name.start].ends_with(|character: char| character.is_ascii_alphanumeric()) { continue; }
         // With `spacing`, a name of two letters or more its period closes may run into a page of two digits or more
@@ -504,6 +508,11 @@ fn resolve(mut found: Vec<Named>, text: &str) -> Vec<Named> {
 
 /// Build this module's lazily built statics now ([`crate::warm`]).
 pub(crate) fn warm() {
-    let _ = &*DATA;
-    index(&Selection::default());
+    let selection = Selection::default();
+    let index = index(&selection);
+    for (&shape, held) in &index.shapes {
+        if let Shape::Whole { source, pattern, .. } = held.get_or_init(|| compile(shape, &selection)) {
+            pattern.get_or_init(|| python(source));
+        }
+    }
 }

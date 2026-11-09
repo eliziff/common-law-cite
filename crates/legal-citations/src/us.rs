@@ -338,6 +338,7 @@ pub(crate) fn case_names(text: &str, citations: &[(Range<usize>, Option<&str>, O
 struct Compiled {
     literals: OnceLock<Option<AhoCorasick>>,
     pattern: OnceLock<Box<CompiledGrammar>>,
+    law: OnceLock<regex::RegexSet>,
 }
 
 static COMPILED: LazyLock<Box<[Compiled]>> = LazyLock::new(||
@@ -408,27 +409,22 @@ static FILTER: LazyLock<Filter> = LazyLock::new(|| Filter::new(|index| {
     !extractor.standard() || extractor.ecmascript()
 }));
 static EXTENDED: LazyLock<Filter> = LazyLock::new(|| Filter::new(extended_form));
-/// Every law extractor's citation, whole: a text one of them reads from its first character to its last.
-static LAWS: LazyLock<regex::RegexSet> = LazyLock::new(|| {
-    let whole: Vec<String> = (0..extractors().len()).filter(|&index| extended_form(index) && source(index) == "laws")
-        .map(|index| {
-            let pattern = extractors().get(index).pattern();
-            let core = pattern.strip_prefix("(?:^|[^a-zA-Z0-9])").and_then(|rest| rest.strip_suffix("(?:[^a-zA-Z0-9]|$)"))
-                .unwrap_or_else(|| panic!("law extractor {index} is not boundary-wrapped"));
-            format!(r"\A{core}\z")
-        })
-        .collect();
-    legal_grammar::compile_python_pattern_set(whole.iter().map(String::as_str)).expect("law extractors")
-});
-/// The literals one of which every law extractor's citation holds: a text holding none is no law's citation. None
-/// when an extractor has none to give.
-static LAW_LITERALS: LazyLock<Option<AhoCorasick>> = LazyLock::new(|| {
-    let mut literals = Vec::new();
-    for index in (0..extractors().len()).filter(|&index| extended_form(index) && source(index) == "laws") {
-        literals.extend(crate::grammar_literals::extractor(index)?.iter().cloned());
-    }
-    Some(AhoCorasick::new(literals).expect("law literals"))
-});
+static LAWS: LazyLock<Filter> = LazyLock::new(|| Filter::new(law_extractor));
+
+fn law_extractor(index: usize) -> bool {
+    extended_form(index) && source(index) == "laws"
+}
+
+/// A whole law citation, compiled only when a text names that extractor's series.
+fn law_pattern(index: usize) -> &'static regex::RegexSet {
+    COMPILED[index].law.get_or_init(|| {
+        let pattern = extractors().get(index).pattern();
+        let core = pattern.strip_prefix("(?:^|[^a-zA-Z0-9])").and_then(|rest| rest.strip_suffix("(?:[^a-zA-Z0-9]|$)"))
+            .unwrap_or_else(|| panic!("law extractor {index} is not boundary-wrapped"));
+        let whole = format!(r"\A{core}\z");
+        legal_grammar::compile_python_pattern_set([whole.as_str()]).expect("law extractor")
+    })
+}
 
 pub(crate) struct Match {
     pub span: Range<usize>,
@@ -597,8 +593,8 @@ fn extractor_spans(index: usize, text: &str) -> Vec<Range<usize>> {
 
 pub(crate) fn is_law(core: &str) -> bool {
     let whole = |span: &Range<usize>| span.start == 0 && span.end == core.len();
-    COMMON.find_spans(core).iter().any(whole)
-        || LAW_LITERALS.as_ref().is_none_or(|literals| literals.is_match(core)) && LAWS.is_match(core)
+    common_law_spans(core).iter().any(whole)
+        || LAWS.selected(core).into_iter().any(|index| law_pattern(index).is_match(core))
 }
 
 pub(crate) fn common_law_spans(text: &str) -> Vec<Range<usize>> {
@@ -747,5 +743,6 @@ pub(crate) fn finish(citation: &mut crate::Citation) {
 /// Build this module's lazily built statics now ([`crate::warm`]).
 pub(crate) fn warm() {
     names::warm();
-    crate::warm_statics!(COMPILED, FILTER, EXTENDED, LAWS, LAW_LITERALS, STANDARD_NAMES, CANDIDATE, EDITIONS, STANDARD_SURFACES; screened COMMON, CUE);
+    crate::warm_statics!(COMPILED, FILTER, EXTENDED, LAWS, STANDARD_NAMES, CANDIDATE, EDITIONS, STANDARD_SURFACES; screened COMMON, CUE);
+    for index in (0..extractors().len()).filter(|&index| law_extractor(index)) { law_pattern(index); }
 }

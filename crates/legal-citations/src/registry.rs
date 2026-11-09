@@ -545,19 +545,15 @@ impl Registry {
 }
 
 fn load() -> Registry {
-    use std::io::Read;
     let compressed = include_bytes!(concat!(env!("OUT_DIR"), "/registry-index.json.gz"));
-    let mut data = Vec::new();
-    flate2::read::GzDecoder::new(compressed.as_slice()).read_to_end(&mut data).expect("compiled citation index");
-    serde_json::from_slice::<Registry>(&data).expect("compiled citation index").indexed()
+    crate::embedded_json::<Registry>(compressed, "compiled citation index").indexed()
 }
 
 /// Original upstream records and authored extensions, loaded only for registry inspection.
 fn source_blob() -> &'static serde_json::Value {
     static SOURCE: LazyLock<serde_json::Value> = LazyLock::new(|| {
         let compressed = include_bytes!(concat!(env!("OUT_DIR"), "/registry-source.json.gz"));
-        serde_json::from_reader(flate2::read::GzDecoder::new(compressed.as_slice()))
-            .expect("compiled source registry")
+        crate::embedded_json(compressed, "compiled source registry")
     });
     &SOURCE
 }
