@@ -1,11 +1,11 @@
 {
   "courts-db": {
-    "commit": "c22604dff8b6819d022cc5ddfd6d9080101149e3",
+    "commit": "bb42bf8e4d4c18a55c218b4d4b9a4cab1c404373",
     "repository": "freelawproject/courts-db",
     "version": "0.10.27"
   },
   "reporters-db": {
-    "commit": "faddc86aad58ebde19d81b6f1ba64d229a801092",
+    "commit": "c612f62958798e5e745b371b3a47a58cd7bf0fdc",
     "repository": "freelawproject/reporters-db",
     "version": "3.2.67"
   }
