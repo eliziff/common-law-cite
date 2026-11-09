@@ -259,9 +259,9 @@ impl Index {
                 }
             }
         }
-        // A DFA: the same overlapping matches as the default NFA, found without following its failure links.
+        // The contiguous NFA finds the same overlapping matches without building a large DFA on a cold reading.
         let automaton = (!names.is_empty()).then(|| AhoCorasick::builder().match_kind(MatchKind::Standard)
-            .kind(Some(aho_corasick::AhoCorasickKind::DFA))
+            .kind(Some(aho_corasick::AhoCorasickKind::ContiguousNFA))
             .ascii_case_insensitive(selection.case).build(&names).expect("named row names"));
         let mut whole: Vec<_> = whole.into_iter().collect();
         whole.sort();
