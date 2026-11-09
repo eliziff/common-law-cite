@@ -115,7 +115,7 @@ pub fn caption_style_of_cause(request: &CaptionRequest) -> Option<String> {
         let style = citation.style.as_ref()?;
         let key = crate::key::key_for_text(&citation.span.text).ok().or(citation.key.clone())?;
         (citation.authority == crate::model::Authority::Case && request.keys.contains(&key)).then(|| {
-            let written = text.get(style.start..citation.span.start).unwrap_or(&style.text);
+            let written = text.get(style.start..style.end).unwrap_or(&style.text);
             // PDF reading order can put the adjacent date column between a caption and its citation.
             let written = &written[..written.to_ascii_lowercase().find(" date:").unwrap_or(written.len())];
             written.trim_end_matches(|character: char| character.is_whitespace() || character == ',').to_owned()

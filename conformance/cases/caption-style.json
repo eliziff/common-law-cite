@@ -1,0 +1,37 @@
+{
+  "format": "legal-citations-conformance:v1",
+  "source": "Independently invented captions; no private document or report data.",
+  "description": "A caption's authored name remains separate from its parallel citations.",
+  "cases": [
+    {
+      "name": "caption-style/neutral-and-reporter",
+      "method": "captionStyleOfCause",
+      "request": {
+        "text": "SUPREME COURT OF CANADA\nCitation: R. v. Lake, 2030 SCC 12, [2030] 1 S.C.R. 40\nDate: 20300301\n",
+        "keys": ["4:neutral:2030:scc:12"]
+      },
+      "status": "pass",
+      "expect": "R. v. Lake"
+    },
+    {
+      "name": "caption-style/unicode-name",
+      "method": "captionStyleOfCause",
+      "request": {
+        "text": "Citation: Rivière v. Harbour Board, 2030 SCC 12, [2030] 1 S.C.R. 40\n",
+        "keys": ["4:neutral:2030:scc:12"]
+      },
+      "status": "pass",
+      "expect": "Rivière v. Harbour Board"
+    },
+    {
+      "name": "caption-style/identity-mismatch",
+      "method": "captionStyleOfCause",
+      "request": {
+        "text": "Citation: R. v. Lake, 2030 SCC 12\n",
+        "keys": ["4:neutral:2030:scc:13"]
+      },
+      "status": "pass",
+      "expect": null
+    }
+  ]
+}
