@@ -398,6 +398,26 @@ pub fn normalize_javascript_whitespace(value: &str) -> String {
     normalized
 }
 
+/// JavaScript's `value.trim().replace(/[ \t\r\n\f\v]+/g, " ")`: ECMAScript
+/// whitespace trimmed at both ends, each run of ASCII blanks within one space;
+/// other whitespace within, NBSP among it, is kept as written.
+pub fn normalize_blank_whitespace(value: &str) -> String {
+    let mut normalized = String::with_capacity(value.len());
+    let mut separating = false;
+    for character in trim_javascript_whitespace(value).chars() {
+        if matches!(character, ' ' | '\t' | '\r' | '\n' | '\u{000c}' | '\u{000b}') {
+            separating = !normalized.is_empty();
+        } else {
+            if separating {
+                normalized.push(' ');
+            }
+            normalized.push(character);
+            separating = false;
+        }
+    }
+    normalized
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
