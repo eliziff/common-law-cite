@@ -47,6 +47,7 @@ mod us;
 mod us_extractors;
 
 pub use legal_grammar as grammar;
+pub use extents::register as register_extents;
 
 /// Build the named lazily built statics now ([`warm`]): `warm_statics!(A, B; screened C, D)` also compiles
 /// each screened grammar.

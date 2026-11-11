@@ -13,6 +13,8 @@ pub struct AuthoritiesRequest {
 }
 
 #[derive(Clone, Debug, Default, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+#[cfg_attr(feature = "binding-types", ts(optional_fields, rename = "CitedAuthorityReading"))]
 #[serde(rename_all = "camelCase")]
 pub struct AuthorityReading {
     /// The full citation that represents the authority; none where it is cited only by reference.
@@ -135,6 +137,7 @@ pub struct PinpointsRequest {
 }
 
 #[derive(Clone, Debug, Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct PinpointValue {
     pub kind: crate::model::PinpointKind,
@@ -142,6 +145,7 @@ pub struct PinpointValue {
     pub text: String,
     pub first: String,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "binding-types", ts(optional))]
     pub last: Option<String>,
     /// In UTF-16 units.
     pub start: usize,

@@ -52,7 +52,7 @@ impl Table {
 /// a reporter volume's works by first page: each page's gap from the last, how many pages more the work
 /// runs, and its paragraph count. "S" lines give a statute's first and last numbered sections by its key
 /// ("statute:ca:rsc:1985:c-46", "1:849"). A later line's extent for a key replaces an earlier one's.
-pub(crate) fn register(pack: &str) {
+pub fn register(pack: &str) {
     let number = |value: Option<&str>| value.and_then(|value| value.parse::<u64>().ok());
     let mut sections = HashMap::new();
     let mut prefixes: HashMap<String, u32> = HashMap::new();

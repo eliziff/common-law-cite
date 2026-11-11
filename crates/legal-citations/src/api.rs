@@ -253,7 +253,7 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         }
         "quoteCitationUnits" => {
             let request: QuoteCitationUnitsRequest = parse(method, request)?;
-            to_value(crate::read_each(request.texts, |text| quote_citation_unit(text)))
+            to_value(quote_citation_units(request.texts))
         }
         "splitNotes" => to_value(split_notes(&parse(method, request)?)?),
         "quotedTitles" => {
@@ -586,21 +586,28 @@ struct QuoteCitationUnitsRequest {
 /// A note's parts as the note splitter gives them (UTF-16 offsets), each with the first authority it refers to and
 /// its citation fields: what a quotation's check reads of the note that cites its sources.
 #[derive(Serialize)]
-struct QuoteCitationUnit {
-    status: &'static str,
-    reasons: Vec<&'static str>,
-    parts: Vec<QuoteCitationPart>,
-    delimiters: Vec<(usize, usize, String)>,
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct QuoteCitationUnit {
+    pub status: &'static str,
+    pub reasons: Vec<&'static str>,
+    pub parts: Vec<QuoteCitationPart>,
+    pub delimiters: Vec<(usize, usize, String)>,
 }
 
 #[derive(Serialize)]
-struct QuoteCitationPart {
-    start: usize,
-    end: usize,
-    text: String,
-    anchors: Vec<String>,
-    reference: String,
-    fields: crate::source::SourceFields,
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+pub struct QuoteCitationPart {
+    pub start: usize,
+    pub end: usize,
+    pub text: String,
+    pub anchors: Vec<String>,
+    pub reference: String,
+    pub fields: crate::source::SourceFields,
+}
+
+/// Each note's [`QuoteCitationUnit`], the notes read on the engine's reading threads.
+pub fn quote_citation_units(texts: Vec<String>) -> Vec<QuoteCitationUnit> {
+    crate::read_each(texts, |text| quote_citation_unit(text))
 }
 
 fn quote_citation_unit(text: &str) -> QuoteCitationUnit {
@@ -742,6 +749,7 @@ pub struct ExtractResponse {
     /// How each reference resolved (with `options.resolve`), its source part indexed into
     /// `source_parts`: the antecedent of a reference to a book, report or page no citation names.
     #[serde(skip_serializing_if = "Vec::is_empty")]
+    #[cfg_attr(feature = "binding-types", ts(optional = nullable))]
     pub resolutions: Vec<crate::resolve::Resolution>,
 }
 
@@ -1187,9 +1195,11 @@ pub struct PinpointRequest {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+#[cfg_attr(feature = "binding-types", ts(rename = "PinpointLocator"))]
 pub struct Locator {
     pub first: String,
     #[serde(default)]
+    #[cfg_attr(feature = "binding-types", ts(optional))]
     pub last: Option<String>,
 }
 

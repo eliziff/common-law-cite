@@ -3,4 +3,4 @@
 /**
  * A range of the source text.
  */
-export type Span = { start: number, end: number, text: string, };
+export type CitationSpan = { start: number, end: number, text: string, };

@@ -121,6 +121,7 @@ pub enum Format {
 /// A range of the source text.
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+#[cfg_attr(feature = "binding-types", ts(rename = "CitationSpan"))]
 pub struct Span {
     pub start: usize,
     pub end: usize,

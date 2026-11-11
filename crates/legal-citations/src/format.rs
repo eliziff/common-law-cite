@@ -741,6 +741,7 @@ pub struct CaseNamesRequest {
 }
 
 #[derive(Clone, Debug, serde::Serialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 pub struct CaseNamesAgreement {
     pub agrees: bool,
     /// The distinctive words of the names written, folded.
@@ -1012,6 +1013,7 @@ pub fn choose_case_citation(request: &CaseCitationRequest) -> String {
 #[derive(Clone, Debug, Default, Eq, PartialEq, serde::Deserialize, serde::Serialize)]
 #[serde(rename_all = "camelCase", default, deny_unknown_fields)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+#[cfg_attr(feature = "binding-types", ts(optional_fields = nullable))]
 pub struct Article {
     pub authors: Vec<String>,
     pub title: String,

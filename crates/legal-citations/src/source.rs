@@ -246,7 +246,8 @@ pub(crate) fn us_jurisdiction(priority: &[String]) -> bool {
 }
 
 impl SourcePart {
-    pub(crate) fn us_forms(&self) -> bool { us_jurisdiction(&self.jurisdiction_priority) }
+    /// Whether the part is read with the US forms: its jurisdiction priority names the US.
+    pub fn us_forms(&self) -> bool { us_jurisdiction(&self.jurisdiction_priority) }
 }
 
 fn source_priority(us: bool) -> Vec<String> {
@@ -1074,8 +1075,10 @@ pub struct Reference {
     pub form: &'static str,
     pub authority: crate::Authority,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "binding-types", ts(optional))]
     pub link: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "binding-types", ts(optional))]
     pub citation: Option<usize>,
 }
 
