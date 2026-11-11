@@ -210,7 +210,7 @@ mod tests {
         let aliases = data["aliases"].as_object().unwrap();
         assert_eq!(aliases.len(), 26_546);
         assert_eq!(data["source"]["sha256"], "d5c65c1d481e8439d6f4508b3ba62199b06fb6d9c6702b4feb83081d8ddcaf29");
-        assert_eq!(format!("{:x}", Sha256::digest(data["aliases"].to_string().as_bytes())),
+        assert_eq!(Sha256::digest(data["aliases"].to_string().as_bytes()).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),
             "239e47e1d23c6383c141a47fb36d4f7ea4e913100b5153cfc457c28f5ce6b3d7");
         let mut accounted: HashSet<&str> = HashSet::new();
         for section in ["reviews", "unresolved"] {
