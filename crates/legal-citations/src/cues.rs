@@ -380,10 +380,21 @@ fn protected_spans_in(text: &str, expanded: bool) -> Vec<Range<usize>> {
         }
         let regex = if expanded { &PROTECTED[index] } else { &LAYOUT_PROTECTED[index] };
         let mut offset = 0;
-        while let Some(captures) = regex.captures_at(text, offset) {
-            let found = captures.name("span").expect("protected span capture");
-            spans.push(found.start()..found.end());
-            offset = found.end();
+        // The span is found without the capture engine where the match tells it: the match itself where the grammar is its
+        // span alone (the neutral, statute, journal and code citations); a report's, the match but the one character after
+        // its page (its span ends on a digit, `\d` as the grammar reads one, and what follows it is none or the text's end).
+        // A pinpoint's is read from its capture.
+        static DIGIT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^\d$").expect("a digit"));
+        while let Some(span) = if index == 4 {
+            regex.captures_at(text, offset).map(|captures| captures.name("span").expect("protected span capture").range())
+        } else {
+            regex.find_at(text, offset).map(|found| {
+                let after = found.as_str().chars().next_back().filter(|last| index == 0 && !DIGIT.is_match(last.encode_utf8(&mut [0; 4])));
+                found.start()..found.end() - after.map_or(0, char::len_utf8)
+            })
+        } {
+            offset = span.end;
+            spans.push(span);
         }
     }
     spans

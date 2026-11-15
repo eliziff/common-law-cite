@@ -118,14 +118,19 @@ fn warm_sample() {
     let call = |method: &str, request: serde_json::Value| api::call_value(method, request).expect("warm-up call");
     let extracted = call("extract", serde_json::json!({"text": WARM_SAMPLE,
         "options": {"notes": notes, "splitTier": "safe"}}));
-    for part in extracted["sourceParts"].as_array().into_iter().flatten() {
-        call("sourceFields", serde_json::json!({"part": part}));
-    }
     call("noteReferences", serde_json::json!({"parts": extracted["sourceParts"], "citations": extracted["citations"]}));
     call("authorities", serde_json::json!({"citations": extracted["citations"], "authorities": extracted["authorities"]}));
     call("quotedTitles", serde_json::json!({"text": WARM_SAMPLE}));
 }
 pub use model::*;
+
+/// Whether extraction times its stages (LEGAL_CITATIONS_PHASE_TIMING), read once: a reading per stage and note cost more
+/// than the stages of a short note. Its own switch: a caller timing its own stages (LEGALPDF_PHASE_TIMING) times this
+/// crate's calls whole, not each call's few dozen lines on stderr.
+pub(crate) fn phase_timing() -> bool {
+    static TIMING: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var_os("LEGAL_CITATIONS_PHASE_TIMING").is_some());
+    *TIMING
+}
 
 use serde::{Deserialize, Serialize};
 
@@ -540,7 +545,7 @@ pub(crate) fn extract_markup_with_parts(text: &str, markup: Option<&str>, option
 fn read_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
     -> (Vec<Citation>, Vec<source::SourcePart>, Vec<resolve::Resolution>) {
     // The clock is read only when timing: WebAssembly without a host clock has none.
-    let mut stage_started = std::env::var_os("LEGALPDF_PHASE_TIMING").map(|_| std::time::Instant::now());
+    let mut stage_started = crate::phase_timing().then(|| std::time::Instant::now());
     let mut stage = |name: &str| {
         if let Some(started) = stage_started.as_mut() {
             eprintln!("phase	citations.{name}	{}", started.elapsed().as_micros());
@@ -586,15 +591,13 @@ fn read_markup_with_parts(text: &str, markup: Option<&str>, options: &Options)
     let priority: Vec<String> = options.jurisdiction_priority.iter()
         .filter(|place| options.reads_jurisdiction(Some(place.split(':').next().unwrap_or(place)))).cloned().collect();
     let mut parts = source::split_notes(text, notes, options.split_tier, &citations, &priority);
-    if options.split_tier.is_some() { source::merge_split_citations(text, notes, &mut parts, &citations); }
     // A work's own short form written after it refers to it ([`Linking::short_form_references`],
     // [`Linking::bare_mentions`]).
     // The mechanisms the host names, else its split tier's.
     let linking = options.linking.clone().or_else(|| options.split_tier.map(Linking::for_tier));
     if let Some(linking) = linking.as_ref().filter(|linking| linking.short_form_references || linking.bare_mentions) {
         let defined = parts.iter().filter(|part| part.text.contains('[')).filter_map(|part| {
-            let short = source::extract_fields(part, part.us_forms()).short_form;
-            let short = short_forms::clean_short_form(&short);
+            let short = short_forms::clean_short_form(&part.fields.short_form);
             (!short.is_empty() && part.text.contains(short.as_str())).then_some((short, part.end))
         }).collect::<Vec<_>>();
         for mut reference in find::short_form_references(text, &citations, &defined, linking.bare_mentions) {

@@ -375,7 +375,7 @@ pub(crate) fn source_fallback(citations: &[&Citation], source: &crate::source::S
             if let Some(url) = source_canlii_case(citation, Language::En) { return Some((citation.index, url)); }
         }
     }
-    if matches!(source.kind, "statute" | "gazette") {
+    if matches!(source.kind.as_str(), "statute" | "gazette") {
         if let Some(citation) = citations.iter().find(|citation| citation.format == Some(Format::StatuteVolume)
             && citation.fields.series.as_deref().is_some_and(|series| fold(series) == "rsc")) {
             let year = citation.fields.year.as_deref()?;
@@ -751,11 +751,39 @@ pub(super) fn on_canlii_org(url: &url::Url) -> bool {
 /// decisia.lexum.com's tenants, `…/item/N/index.do`. Its plain address is an iframe shell with no
 /// text and no anchors; `iframe=true` serves the decision inline with `parN` anchors (live-verified
 /// on 14 hosts, 2026-07-27). Known by host and path alone: some older decisions have no anchors.
-pub(super) fn is_decisia_document(url: &url::Url) -> bool {
+pub fn is_decisia_document(url: &url::Url) -> bool {
     static HOST: LazyLock<Regex> = LazyLock::new(|| Regex::new(
         r"(?i)^(?:decisions?\.[A-Za-z0-9_-]+\.(?:gc\.)?ca|decisia\.lexum\.com|coadecisions\.ontariocourts\.ca)$").unwrap());
     static ITEM: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)/item/[0-9]+/index\.do$").unwrap());
     url.host_str().is_some_and(|host| HOST.is_match(host)) && ITEM.is_match(url.path())
+}
+
+/// A Decisia decision's page as its index (https on its default port), its query and fragment dropped; none for any
+/// other address.
+pub fn decisia_index(address: &str) -> Option<String> {
+    let mut url = url::Url::parse(address.trim()).ok()?;
+    if url.scheme() != "https" || url.port().is_some() || !url.username().is_empty() || !is_decisia_document(&url) {
+        return None;
+    }
+    url.set_query(None);
+    url.set_fragment(None);
+    Some(url.into())
+}
+
+/// The PDF a Decisia decision's index page offers in its own controls, never a link in the judgment's body: a
+/// PDF-only decision's (`true`), else its documents list's; a `document.do` on the page's own host.
+pub fn decisia_pdf(markup: &str, index: &str) -> Option<(String, bool)> {
+    let base = url::Url::parse(index).ok()?;
+    let page = scraper::Html::parse_document(markup);
+    let link = |selector: &str| {
+        let selector = scraper::Selector::parse(selector).ok()?;
+        page.select(&selector).find_map(|link| {
+            let url = base.join(link.value().attr("href")?.trim()).ok()?;
+            (url.origin() == base.origin() && url.path().to_ascii_lowercase().ends_with("/document.do")).then(|| url.to_string())
+        })
+    };
+    link("#decisia-decision-pdf-only a[href], .decisia-decision-pdf-only a[href]").map(|url| (url, true))
+        .or_else(|| link("li.documents a[href], div.documents a[href]").map(|url| (url, false)))
 }
 
 /// A statute's page where its address is the publisher's machine-readable copy (BC Laws `…/xml`, Justice Laws
@@ -873,6 +901,39 @@ pub fn canlii_pdf_page(link: &str) -> String {
         return link.to_owned();
     }
     format!("{}.html{}", &base[..base.len() - ".pdf".len()], anchor.map(|anchor| format!("#{anchor}")).unwrap_or_default())
+}
+
+/// The paragraph or section anchor a link opens at ("par12" of `…#par12`, "sec6subsec1" of `…#sec6subsec1:~:text=…`):
+/// the anchor's text up to a text fragment, a query or another anchor. None for a link without one.
+pub fn passage_anchor(link: &str) -> Option<String> {
+    static ANCHOR: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"#((?:par|sec)[^:&#?]*)").unwrap());
+    ANCHOR.captures(link).map(|found| found[1].to_owned())
+}
+
+/// A link without its text fragment (`:~:text=…`, with the `#` before it); its paragraph, section or page anchor stays.
+pub fn without_text_fragment(link: &str) -> String {
+    static FRAGMENT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"#?:~:text=[^\n\r\u{2028}\u{2029}]*$").unwrap());
+    FRAGMENT.replace(link, "").into_owned()
+}
+
+/// Whether two links open one page, whatever their anchors: one site (its host, with or without "www.") and one document
+/// page there, whatever the scheme, query or fragment; a CanLII statute's or regulation's page by its jurisdiction and
+/// id, at any version and as consolidated or annual; a CanLII PDF as its page. A link that is no address is its page.
+pub fn same_page(left: &str, right: &str) -> bool {
+    let identity = |link: &str| {
+        let link = canlii_pdf_page(link);
+        match url::Url::parse(&link) {
+            Ok(url) => {
+                let site = url.host_str().unwrap_or("").to_lowercase();
+                let site = site.strip_prefix("www.").unwrap_or(&site).to_owned();
+                let page = canlii_law_page(&link).map_or_else(|| url.path().to_owned(),
+                    |law| format!("{}/laws/{}", law.jurisdiction, law.id));
+                (site, page)
+            }
+            Err(_) => (String::new(), link),
+        }
+    };
+    identity(left) == identity(right)
 }
 
 /// The statute or regulation a CanLII legislation page is of, at any version
@@ -1175,11 +1236,43 @@ fn canlii_law_address(jurisdiction: &str, id: &str, path: &str, french: bool, _l
     }
 }
 
-/// Justice Laws for RSC 1985 acts (`/eng/acts/C-46/`) and SOR, SI and CRC
-/// regulations (`/eng/regulations/SOR-2002-227/`, `/eng/regulations/C.R.C.,_c._870/`).
+/// A law Justice Laws publishes that no consolidated act holds, as its key ([`crate::key`]) names it: a Constitution Act
+/// (`constitution`, its title) or an annual statute of Canada (`citation`, `SC 2021, c 2`); its page and official PDF.
+pub struct JusticeLawsLaw {
+    pub constitution: Option<&'static str>,
+    pub citation: String,
+    pub url: String,
+    pub pdf_url: String,
+}
+
+pub fn justice_laws_unconsolidated(key: &str, language: Language) -> Option<JusticeLawsLaw> {
+    const BASE: &str = "https://laws-lois.justice.gc.ca";
+    let french = language == Language::Fr;
+    let key = key.split_once(':').filter(|(version, _)| version.bytes().all(|b| b.is_ascii_digit())).map_or(key, |(_, key)| key);
+    let constitution = match key {
+        crate::key::CHARTER_KEY => Some("Constitution Act, 1982"),
+        crate::key::CONSTITUTION_1867_KEY => Some("Constitution Act, 1867"),
+        _ => None,
+    };
+    if let Some(title) = constitution {
+        return Some(JusticeLawsLaw { constitution, citation: title.to_owned(), url: format!("{BASE}/{}/Const/", if french { "fra" } else { "eng" }),
+            pdf_url: format!("{BASE}/PDF/Const_TRD.pdf") });
+    }
+    let ["statute", "ca", "sc", year, chapter] = key.split(':').collect::<Vec<_>>()[..] else { return None };
+    let digits = |value: &str, lengths: std::ops::RangeInclusive<usize>| lengths.contains(&value.len()) && value.bytes().all(|b| b.is_ascii_digit());
+    (digits(year, 4..=4) && digits(chapter, 1..=3)).then(|| JusticeLawsLaw { constitution: None, citation: format!("SC {year}, c {chapter}"),
+        url: if french { format!("{BASE}/fra/LoisAnnuelles/{year}_{chapter}/") } else { format!("{BASE}/eng/AnnualStatutes/{year}_{chapter}/") },
+        pdf_url: format!("{BASE}/PDF/{year}_{chapter}.pdf") })
+}
+
+/// Justice Laws for RSC 1985 acts (`/eng/acts/C-46/`), SOR, SI and CRC regulations (`/eng/regulations/SOR-2002-227/`,
+/// `/eng/regulations/C.R.C.,_c._870/`), and the laws no consolidated act holds ([`justice_laws_unconsolidated`]).
 pub fn justice_laws(citation: &Citation, language: Language) -> Option<String> {
     if citation.form != Form::Full {
         return None;
+    }
+    if let Some(law) = citation.key.as_deref().and_then(|key| justice_laws_unconsolidated(key, language)) {
+        return Some(law.url);
     }
     static ACT_CHAPTER: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[A-Za-z]-\d+(?:\.\d+)?$").unwrap());
     let fields = &citation.fields;
@@ -1241,4 +1334,81 @@ pub fn justice_laws(citation: &Citation, language: Language) -> Option<String> {
 /// Build this module's lazily built statics now ([`crate::warm`]).
 pub(super) fn warm() {
     crate::warm_statics!(SOURCE_ROUTES, SCR, URL, PARAGRAPH, CANLII);
+}
+
+/// The CanLII pages a full citation names, read once where the citation is read: a decision's by its neutral or CanLII
+/// citation (`court`, the court it is written with, "SCC"), a statute's, regulation's or constitution's as cited and,
+/// for a statute in force as consolidated (an A2AJ legislation record), its consolidation. None for another citation.
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase")]
+pub struct CanliiPage {
+    pub court: Option<String>,
+    pub legislation: bool,
+    pub en: Option<String>,
+    pub fr: Option<String>,
+    pub consolidated_en: Option<String>,
+    pub consolidated_fr: Option<String>,
+}
+
+impl CanliiPage {
+    /// The page in `language` ("en", "fr"); with `consolidated`, a statute's consolidation.
+    pub fn page(&self, language: &str, consolidated: bool) -> Option<&str> {
+        let french = language.starts_with("fr");
+        match (consolidated, french) {
+            (false, false) => self.en.as_deref(),
+            (false, true) => self.fr.as_deref(),
+            (true, false) => self.consolidated_en.as_deref(),
+            (true, true) => self.consolidated_fr.as_deref(),
+        }
+    }
+}
+
+pub fn canlii_page(citation: &Citation) -> Option<CanliiPage> {
+    use crate::model::Authority;
+    if citation.form != Form::Full { return None; }
+    let canlii = |language| url(citation, language).filter(|page| is_canlii_url(page));
+    let legislation = matches!(citation.authority, Authority::Statute | Authority::Regulation | Authority::Constitution);
+    let page = if legislation {
+        CanliiPage { court: None, legislation, en: canlii(Language::En), fr: canlii(Language::Fr),
+            consolidated_en: canlii_consolidated_legislation(citation, Language::En),
+            consolidated_fr: canlii_consolidated_legislation(citation, Language::Fr) }
+    } else if matches!(citation.format, Some(Format::Neutral | Format::CanLii)) {
+        CanliiPage { court: citation.court.as_ref().map(|written| written.text.to_uppercase()), legislation,
+            en: canlii(Language::En), fr: canlii(Language::Fr), consolidated_en: None, consolidated_fr: None }
+    } else {
+        return None;
+    };
+    (page.en.is_some() || page.fr.is_some() || page.consolidated_en.is_some() || page.consolidated_fr.is_some()).then_some(page)
+}
+
+/// The first of `pages` that is a decision's of `court` (any where none is given, none where the court is not routed
+/// to CanLII), in `language`.
+pub fn decision_canlii_page<'a>(pages: impl IntoIterator<Item = &'a CanliiPage>, language: &str, court: Option<&str>) -> Option<String> {
+    let court = court.map(|court| court.trim().to_uppercase());
+    if court.as_deref().is_some_and(|court| !source_canlii_routes().contains_key(court)) { return None; }
+    pages.into_iter().filter(|page| !page.legislation && (court.is_none() || page.court == court))
+        .find_map(|page| page.page(language, false).map(str::to_owned))
+}
+
+/// The first of `pages` that is a statute's or regulation's, in `language`, as consolidated where `consolidated`.
+pub fn legislation_canlii_page<'a>(pages: impl IntoIterator<Item = &'a CanliiPage>, language: &str, consolidated: bool) -> Option<String> {
+    pages.into_iter().filter(|page| page.legislation).find_map(|page| page.page(language, consolidated).map(str::to_owned))
+}
+/// The CanLII pages of the full citations `text` holds, in order ([`canlii_page`]).
+pub fn canlii_pages(text: &str) -> Vec<CanliiPage> {
+    let pages = crate::extract(text, &crate::Options { resolve: false, parallel: false, ..Default::default() }).iter()
+        .filter_map(canlii_page).collect::<Vec<_>>();
+    if !pages.is_empty() { return pages; }
+    // A Constitution Act named by its title alone ("the Canadian Charter of Rights and Freedoms"), as its key reads it.
+    let key = crate::key::key_for_text(text).unwrap_or_default();
+    let document = match key.split_once(':').map_or(key.as_str(), |(_, key)| key) {
+        crate::key::CHARTER_KEY => "Canada Act 1982 (UK), 1982, c 11",
+        crate::key::CONSTITUTION_1867_KEY => "30 & 31 Vict, c 3",
+        _ => return pages,
+    };
+    let Some(id) = LOOKUP_RULES.constitutional_documents.get(document) else { return pages };
+    let page = |language| Some(canlii_law_address("ca", id, "stat", false, language));
+    vec![CanliiPage { court: None, legislation: true, en: page(Language::En), fr: page(Language::Fr),
+        consolidated_en: page(Language::En), consolidated_fr: page(Language::Fr) }]
 }

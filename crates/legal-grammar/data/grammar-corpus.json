@@ -3472,6 +3472,27 @@
           "vectors": []
         },
         {
+          "id": "cite.uk.employment-tribunal",
+          "pattern": "\\b(?<docket>(?:[A-Z]/)?\\d{6,8}/(?:19|20)\\d{2})\\b",
+          "flags": "",
+          "canonical": {},
+          "provenance": "Authored from GOV.UK's Employment Tribunal decisions: a decision is cited by its case number, the claim's number and year ('2412345/2020', 'S/4100123/2019' in Scotland).",
+          "vectors": [
+            {
+              "input": "Smith v Jones Ltd (ET, 2412345/2020)",
+              "groups": {
+                "docket": "2412345/2020"
+              }
+            },
+            {
+              "input": "Case No S/4100123/2019",
+              "groups": {
+                "docket": "S/4100123/2019"
+              }
+            }
+          ]
+        },
+        {
           "id": "cite.ca.court-file",
           "pattern": "\\bCourt\\s+File\\s+(?:No\\.?|Number|#)\\s*:?\\s*(?<docket>(?:[A-Z]{1,3}-)?\\d{2,4}(?:[- ]\\d{2,10}){1,3}(?:-\\d{2}[A-Z]{2})?)\\b|\\b(?<commercial_docket>CV-\\d{2}-\\d{5,10}-\\d{2}CL)\\b|\\bOrder\\s+of\\s+(?:the\\s+Honourable\\s+)?(?:(?:Mr|Mme|Madam|Madame|Associate\\s+Chief|Chief)\\.?\\s+)?Justice\\s+[A-Z][A-Za-z'’-]+\\s+(?:dated|granted|made|pronounced)\\s+[A-Z][a-z]+\\.?\\s+\\d{1,2},?\\s+(?:19|20)\\d{2},\\s+(?:Court\\s+File\\s+)?(?:No\\.?|Number|#|[A-Za-z]{1,3}[.,])\\s*(?<order_docket>(?:[A-Z]{1,3}-?)?\\d{4,10}(?:-\\d{1,10}){0,2})\\b|\\bDecision\\s+No\\.?\\s*(?<decision>\\d{1,4}(?:-[A-Z]{1,3})+-(?:19|20)\\d{2})\\b",
           "flags": "",
@@ -4212,13 +4233,6 @@
           "pattern": "\\b\\d+\\b$",
           "flags": "",
           "provenance": "Pinned Eyecite regexes and helpers.find_case_name/strip_stop_words; source pattern unchanged. Python Unicode semantics.",
-          "vectors": []
-        },
-        {
-          "id": "pinpoint.token",
-          "pattern": "\\d+(?:\\.\\d+)*(?:\\([A-Za-z0-9]+\\))*",
-          "flags": "",
-          "provenance": "Verbatim Legal Structure Parser src/citator.rs PINPOINT_ITEM; numeric locator tokens for its occurrence output shape. Rust Unicode regex semantics.",
           "vectors": []
         },
         {

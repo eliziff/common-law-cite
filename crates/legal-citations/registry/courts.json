@@ -7309,6 +7309,16 @@
   "type": "tribunal"
  },
  {
+  "id": "et",
+  "name": "Employment Tribunal",
+  "aliases": [
+   "ET"
+  ],
+  "region": "uk",
+  "level": "tribunal",
+  "type": "tribunal"
+ },
+ {
   "id": "csih",
   "name": "Court of Session (Inner House)",
   "neutral": [

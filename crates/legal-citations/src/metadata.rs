@@ -27,42 +27,37 @@ fn linear(id: &str) -> CompiledEcmascriptGrammar {
 // first letter of a following word, which is the backtracking dialect.
 static LOCATOR: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("pinpoint.locator"));
 static ITEM: LazyLock<CompiledGrammar> = LazyLock::new(|| backtracking("pinpoint.item"));
-static TOKEN: LazyLock<regex::Regex> = LazyLock::new(|| {
-    let tables = legal_grammar::load_tables().unwrap();
-    regex::Regex::new(&tables["pinpoint.token"].entry.pattern).unwrap()
-});
+/// Each phrase matched only where the text it is given begins ([`pinpoint_phrase`]).
 static PINPOINT_PHRASES: LazyLock<[(PinpointKind, CompiledEcmascriptGrammar); 3]> = LazyLock::new(|| [
-    (PinpointKind::Paragraph, linear("pinpoint.para.toa")),
-    (PinpointKind::Section, linear("pinpoint.section.toa")),
-    (PinpointKind::Page, linear("pinpoint.page.toa")),
+    (PinpointKind::Paragraph, anchored("pinpoint.para.toa")),
+    (PinpointKind::Section, anchored("pinpoint.section.toa")),
+    (PinpointKind::Page, anchored("pinpoint.page.toa")),
 ]);
-static PINPOINT_BRIDGE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("pinpoint.bridge"));
 
-/// The first eligible pinpoint group, with its original tie ordering.
+fn anchored(id: &str) -> CompiledEcmascriptGrammar {
+    legal_grammar::compile_ecmascript_table_entry_anchored(id).unwrap_or_else(|error| panic!("{error}"))
+}
+
+/// The first eligible pinpoint group, with its original tie ordering: each phrase's first match after the citation,
+/// where only commas, spaces and "at" come before it (`pinpoint.bridge`). A phrase opens on a word (`\b` and its
+/// keyword), so such a match starts at the first word after the commas and spaces, or at the word after "at": each
+/// phrase is read there alone, never searched for through the text after.
 fn pinpoint_phrase(text: &str, start: usize, limit: usize) -> Option<(PinpointKind, crate::Span)> {
     let tail = &text[start..limit];
+    let first = tail.len() - tail.trim_start_matches(|character: char| character.is_whitespace() || character == ',').len();
+    let after_at = tail[first..].get(..2).filter(|word| word.eq_ignore_ascii_case("at"))
+        .map(|_| first + 2).filter(|&at| tail[at..].starts_with(char::is_whitespace))
+        .map(|at| tail.len() - tail[at..].trim_start().len());
     let mut selected = None;
     for (kind, pattern) in PINPOINT_PHRASES.iter() {
-        let Some(captures) = pattern.captures(tail) else { continue };
-        let matched = captures.get(0).unwrap();
-        if !PINPOINT_BRIDGE.is_match(&tail[..matched.start()]) { continue; }
-        if selected.is_none_or(|(_, at, _)| matched.start() < at) {
-            selected = Some((*kind, matched.start(), matched.end()));
+        let Some((from, to)) = [Some(first), after_at].into_iter().flatten()
+            .find_map(|at| pattern.find(&tail[at..]).map(|matched| (at, at + matched.end()))) else { continue };
+        if selected.is_none_or(|(_, at, _)| from < at) {
+            selected = Some((*kind, from, to));
         }
     }
     let (kind, _, end) = selected?;
     Some((kind, clean_pin_cite(text, start..start + end)?))
-}
-
-/// Legal Structure Parser's numeric-token projection of a parsed locator.
-/// Keep the full range in `Pinpoint`; callers needing individual source tokens
-/// receive their original text and byte offsets here.
-pub fn pinpoint_tokens(span: &crate::Span) -> impl Iterator<Item = crate::Span> + '_ {
-    TOKEN.find_iter(&span.text).map(|matched| crate::Span {
-        text: matched.as_str().to_owned(),
-        start: span.start + matched.start(),
-        end: span.start + matched.end(),
-    })
 }
 
 /// Eyecite helpers.clean_pin_cite, retaining the cleaned text's source offsets.
@@ -774,7 +769,7 @@ pub fn attach(text: &str, citations: &mut [Citation]) {
 /// Build this module's lazily built statics now ([`crate::warm`]).
 pub(crate) fn warm() {
     crate::warm_statics!(
-        LOCATOR, ITEM, TOKEN, PINPOINT_PHRASES, PINPOINT_BRIDGE, SHORT_FORM_SUFFIX, DEFINED_TERM,
+        LOCATOR, ITEM, PINPOINT_PHRASES, SHORT_FORM_SUFFIX, DEFINED_TERM,
         SOURCE, REMARK, RECORD, COURT, LAW_PUBLICATION, POST_CITATION, SOURCE_YEAR, HISTORY,
         VERSUS, BRACKETED_PARAGRAPH, EDITORIAL
     );

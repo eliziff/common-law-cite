@@ -42,6 +42,13 @@ impl<G> Screened<G> {
             literals: literals.map(|literals| AhoCorasick::new(literals).expect("grammar literals")), leading: None }
     }
 
+    /// The grammar read without its screen: one anchored at the text's start fails within the first words, and its
+    /// screen would read the whole text for its literals first.
+    pub(crate) fn unscreened(mut self) -> Self {
+        self.literals = None;
+        self
+    }
+
     /// Whether the grammar can match `text`: false when `text` holds none of its literals.
     pub(crate) fn may_match(&self, text: &str) -> bool {
         self.literals.as_ref().is_none_or(|literals| literals.is_match(text))

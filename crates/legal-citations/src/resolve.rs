@@ -248,7 +248,6 @@ pub(crate) fn resolve_with_sources(
     let linking_mode = split_tier.map_or(linking_mode, SplitTier::supra_mode);
     resolver.reading_order = order;
     resolver.source_parts = parts;
-    resolver.source_kinds = parts.iter().map(|_| OnceCell::new()).collect();
     resolver.supra_hint_mode = hint_mode;
     resolver.supra_linking_mode = linking_mode;
     resolver.split = split_tier.is_some();
@@ -283,7 +282,6 @@ struct Resolver<'a> {
     authority_members: HashMap<usize, Vec<usize>>,
     reading_order: Option<Vec<usize>>,
     source_parts: &'a [SourcePart],
-    source_kinds: Vec<OnceCell<&'static str>>,
     supra_hint_mode: SupraMode,
     supra_linking_mode: SupraMode,
     source_urls: HashMap<Target, String>,
@@ -402,7 +400,6 @@ impl<'a> Resolver<'a> {
             authority_members,
             reading_order: None,
             source_parts: &[],
-            source_kinds: Vec::new(),
             supra_hint_mode: SupraMode::Aggressive,
             supra_linking_mode: SupraMode::Safe,
             source_urls: HashMap::new(),
@@ -590,8 +587,7 @@ impl<'a> Resolver<'a> {
         seen: &mut [bool], output: &mut Vec<Resolution>, sibling: &mut Option<Option<Target>>) {
         let part = &self.source_parts[part_index];
         let range = &self.notes.expect("owned note")[note];
-        let fields = crate::source::extract_fields(part, part.us_forms());
-        let _ = self.source_kinds[part_index].set(fields.kind);
+        let fields = &part.fields;
         // A bare locator is no citation of the part's: it is resolved after them, and changes none of their readings.
         let in_part = |position: usize, citation: &Citation| !seen[position] && self.note_of[position] == Some(note)
             && part.start <= citation.span.start && citation.span.end <= part.end;
@@ -631,7 +627,7 @@ impl<'a> Resolver<'a> {
         // link is resolved.
         let explicit = reference.kind.is_empty() && !fields.link_candidate.is_empty()
             && fields.link_candidate.to_lowercase() != "other"
-            && !(fallback.is_some() && prefers_fallback(fields.kind, &part.text));
+            && !(fallback.is_some() && prefers_fallback(&fields.kind, &part.text));
         #[cfg_attr(not(feature = "canada"), allow(unused_mut))]
         let mut own_url = part.resolved_url.clone().or_else(|| if explicit { Some(fields.link_candidate.clone()) }
             else { fallback.as_ref().map(|(_, url)| url.clone()) });
@@ -666,7 +662,7 @@ impl<'a> Resolver<'a> {
                 // An opaque source can be associated without inventing a
                 // citation identity. A record citation remains a barrier.
                 ((positions.is_empty() || passing)
-                    && !fields.reasons.contains(&"embedded_second_source"))
+                    && !fields.reasons.iter().any(|reason| reason == "embedded_second_source"))
                     .then_some(Target::Source(part_index))
             } else {
                 unique_resource(positions.iter().filter(|&&(_, position)| self.citations[position].form == Form::Full)
@@ -804,7 +800,7 @@ impl<'a> Resolver<'a> {
         if self.linking.short_forms {
             short_form = short_form.map(|short| short_forms::clean_short_form(&short)).filter(|short| !short.is_empty());
         }
-        let kind = full.first().map_or(fields.kind, |citation| inference_kind(citation));
+        let kind = full.first().map_or(fields.kind.as_str(), |citation| inference_kind(citation));
         // Split rows: prose, a part inside another part's parentheses ("Criminal Code, …, s 241.2(2) (" |
         // "As amended by …") and a decision's subsequent history ("rev'g 2022 ONSC 5886") are no source an
         // ibid continues from; the history stays at hand for an ibid that names its court.
@@ -1010,8 +1006,7 @@ impl<'a> Resolver<'a> {
             }
             Target::Source(index) => {
                 if strict { return true; }
-                let part = &self.source_parts[*index];
-                let kind = *self.source_kinds[*index].get_or_init(|| crate::source::extract_fields(part, part.us_forms()).kind);
+                let kind = self.source_parts[*index].fields.kind.as_str();
                 use crate::PinpointKind as K;
                 match pin.kind {
                     K::Section | K::Subsection | K::Article | K::Schedule | K::Clause | K::Rule => !matches!(kind, "case" | "journal"),

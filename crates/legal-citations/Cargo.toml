@@ -34,7 +34,6 @@ diff-match-patch-rs = { path = "vendor/diff-match-patch-rs", version = "0.5.1" }
 roxmltree = "0.21"
 ts-rs = { version = "12", optional = true, features = ["serde-json-impl"] }
 scraper = { version = "0.27", default-features = false }
-rusqlite = { version = "0.40.2", features = ["bundled"], optional = true }
 
 [features]
 default =["canada", "uk", "us", "australia", "new-zealand", "ireland", "hong-kong", "singapore", "south-africa"]

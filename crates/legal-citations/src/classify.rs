@@ -42,6 +42,7 @@ static BOOK: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite
 static UNREPORTED: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.case.unreported"));
 static NUMBERLESS: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.neutral.numberless"));
 static COURT_FILE: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.ca.court-file"));
+static EMPLOYMENT_TRIBUNAL: LazyLock<CompiledEcmascriptGrammar> = LazyLock::new(|| linear("cite.uk.employment-tribunal"));
 static PARLIAMENTARY: LazyLock<CompiledEcmascriptGrammar> =
     LazyLock::new(|| linear("cite.parliamentary.paper"));
 static FRENCH_REPORTER: LazyLock<CompiledEcmascriptGrammar> =
@@ -1063,6 +1064,15 @@ pub(crate) fn read(core: &str, reason: &str, style: &str) -> Option<Reading> {
             reading.jurisdiction = Some("ca".to_owned());
             return Some(reading);
         }
+        "employment_tribunal_grammar" => {
+            // An Employment Tribunal decision, known by its case number.
+            let captures = whole(&EMPLOYMENT_TRIBUNAL, core)?;
+            let mut reading = Reading::new(Authority::Case, Some(Format::Docket), "employment_tribunal_grammar");
+            reading.fields.docket = group(&captures, "docket").map(|docket| docket.to_uppercase());
+            reading.court = Some("ET".to_owned());
+            reading.jurisdiction = Some("uk".to_owned());
+            return Some(reading);
+        }
         "charter_grammar" => {
             let mut reading = Reading::new(Authority::Constitution, Some(Format::StatuteVolume), "charter_grammar");
             reading.fields.year = Some("1982".to_owned());
@@ -1414,7 +1424,7 @@ pub(crate) fn apply(citation: &mut Citation, mut reading: Reading, options: &cra
 pub(crate) fn warm() {
     crate::warm_statics!(
         NEUTRAL, TRIBUNAL, BRACKETED, PARENTHESIZED, DATED, CANLII, STATUTE, STATUTE_TITLED, ROUTING,
-        BOOK, UNREPORTED, COURT_FILE, PARLIAMENTARY, FRENCH_REPORTER,
+        BOOK, UNREPORTED, COURT_FILE, EMPLOYMENT_TRIBUNAL, PARLIAMENTARY, FRENCH_REPORTER,
         INSTRUMENT_KIND, BOOK_CHAPTER, FRENCH_SERIES, GAZETTE
     );
 }

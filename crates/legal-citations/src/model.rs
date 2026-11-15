@@ -74,20 +74,6 @@ impl Authority {
                 | Self::Bill
         )
     }
-
-    /// Commentary and other secondary material.
-    pub fn is_secondary(self) -> bool {
-        matches!(
-            self,
-            Self::Journal
-                | Self::Book
-                | Self::BookChapter
-                | Self::Webpage
-                | Self::Debate
-                | Self::ParliamentaryPaper
-                | Self::GovernmentDocument
-        )
-    }
 }
 
 /// The surface shape of a case citation or legislative citation.

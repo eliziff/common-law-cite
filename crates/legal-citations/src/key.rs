@@ -185,8 +185,8 @@ pub fn key_for_text(text: &str) -> Result<String, KeyError> {
     }
 }
 
-const CHARTER_KEY: &str = "statute:ca:-:1982:11";
-const CONSTITUTION_1867_KEY: &str = "statute:-:-:30-31-vict:3";
+pub(crate) const CHARTER_KEY: &str = "statute:ca:-:1982:11";
+pub(crate) const CONSTITUTION_1867_KEY: &str = "statute:-:-:30-31-vict:3";
 
 /// The key of a constitutional instrument named by its title, English or French: the Charter and the
 /// Constitution Act, 1982 are chapter 11 of the Canada Act 1982; the Constitution Act, 1867 (the British

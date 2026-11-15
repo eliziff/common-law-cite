@@ -18,72 +18,6 @@ use regex::Regex;
 use std::ops::Range;
 use std::sync::{LazyLock, OnceLock};
 
-#[derive(serde::Serialize)]
-pub struct ProviderCitationMatch<'a> {
-    pub text: &'a str,
-    pub start: usize,
-    pub end: usize,
-    pub family: &'static str,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub jurisdiction: Option<&'a str>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub year: Option<&'a str>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub court: Option<&'a str>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub number: Option<&'a str>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub volume: Option<&'a str>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub reporter: Option<&'a str>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub page: Option<&'a str>,
-}
-
-/// Provider routing for each citation; byte offsets are converted by the host adapter.
-pub fn provider_citations(text: &str) -> Vec<ProviderCitationMatch<'_>> {
-    crate::classify::ROUTING
-        .captures_iter(text)
-        .map(|captures| {
-            let matched = captures.get(0).unwrap();
-            let has = |name| captures.name(name).is_some();
-            let (family, jurisdiction) = if has("uk_neutral") {
-                ("neutral", Some("uk"))
-            } else if has("ca_statute") {
-                ("statute", Some("ca"))
-            } else if has("ca_reporter") {
-                ("reporter", Some("ca"))
-            } else if has("ca_neutral") {
-                ("neutral", Some("ca"))
-            } else if has("us_reporter") {
-                ("reporter", Some("us"))
-            } else if has("neutral") {
-                ("neutral", None)
-            } else {
-                ("reporter", None)
-            };
-            let group = |names: &[&str]| {
-                names
-                    .iter()
-                    .find_map(|name| captures.name(name).map(|capture| capture.as_str()))
-            };
-            ProviderCitationMatch {
-                text: matched.as_str(),
-                start: matched.start(),
-                end: matched.end(),
-                family,
-                jurisdiction,
-                year: group(&["uk_year", "ca_year", "year"]),
-                court: group(&["uk_court", "ca_court", "court"]),
-                number: group(&["uk_num", "ca_num", "num"]),
-                volume: group(&["us_volume", "volume"]),
-                reporter: group(&["us_reporter_name", "reporter"]),
-                page: group(&["us_page", "page"]),
-            }
-        })
-        .collect()
-}
-
 pub(crate) type Hit = Range<usize>;
 
 fn linear(id: &str) -> CompiledEcmascriptGrammar {
@@ -103,7 +37,7 @@ static REPORTER_WORD: LazyLock<Screened<CompiledEcmascriptGrammar>> =
 // These styles use native Unicode regex semantics.
 static CASE_NAME: LazyLock<Screened<Regex>> = LazyLock::new(|| Screened::linear("style.case-name"));
 static SIGNAL_PREFIX: LazyLock<Screened<CompiledEcmascriptGrammar>> =
-    LazyLock::new(|| Screened::linear("signal.prefix.toa"));
+    LazyLock::new(|| Screened::linear("signal.prefix.toa").unscreened());
 static INTRODUCTORY_SIGNAL: LazyLock<Screened<CompiledEcmascriptGrammar>> =
     LazyLock::new(|| Screened::linear("signal.introductory"));
 static INTRODUCTORY_PREFIX: LazyLock<Screened<CompiledEcmascriptGrammar>> =
@@ -202,6 +136,7 @@ static SECONDARY_SOURCES: LazyLock<Vec<SecondarySource>> = LazyLock::new(|| [
     ("book", "coursepack_grammar", "cite.secondary.coursepack", EVERY),
     ("government", "intellectual_property_grammar", "cite.secondary.intellectual-property", EVERY),
     ("case", "court_file_grammar", "cite.ca.court-file", CANADA),
+    ("case", "employment_tribunal_grammar", "cite.uk.employment-tribunal", EVERY),
     ("statute", "code_grammar", "cite.ca.code", CANADA),
     ("constitution", "constitution_name_grammar", "cite.ca.constitution-name", CANADA),
     ("statute", "bylaw_grammar", "cite.ca.bylaw", CANADA),
@@ -388,8 +323,8 @@ fn resolve(mut found: Vec<Anchor>) -> Vec<Anchor> {
 /// parliamentary papers, treaties, database identifiers and online-only sources.
 fn secondary_hits(value: &str, primary: &[Hit], styles: Option<&[CitationStyle]>) -> Vec<Anchor> {
     let mut found = Vec::new();
-    // Each grammar's time where phases are timed (LEGALPDF_PHASE_TIMING), written once at the end.
-    let mut stage = std::env::var_os("LEGALPDF_PHASE_TIMING").map(|_| (std::time::Instant::now(), String::new()));
+    // Each grammar's time where phases are timed (LEGAL_CITATIONS_PHASE_TIMING), written once at the end.
+    let mut stage = crate::phase_timing().then(|| (std::time::Instant::now(), String::new()));
     let mut lap = |name: &str| if let Some((started, laps)) = &mut stage {
         laps.push_str(&format!("phase\tfind.secondary.{name}\t{}\n", started.elapsed().as_micros()));
         *started = std::time::Instant::now();
@@ -632,12 +567,16 @@ fn occurrence_family(core: &str) -> (&'static str, &'static str) {
 #[cfg_attr(not(feature = "us"), allow(unused_variables))]
 fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationStyle]>, scopes: &[usize], enrich: bool,
     reads_us: bool, jurisdictions: Option<&[String]>, reports: bool, names: bool, ocr: bool) -> Vec<Anchor> {
-    // Each stage's time where phases are timed (LEGALPDF_PHASE_TIMING), written once at the end; the clock is read
+    // Each stage's time where phases are timed (LEGAL_CITATIONS_PHASE_TIMING), written once at the end; the clock is read
     // only then.
-    let mut stage = std::env::var_os("LEGALPDF_PHASE_TIMING").map(|_| (std::time::Instant::now(), String::new()));
+    let mut stage = crate::phase_timing().then(|| (std::time::Instant::now(), String::new()));
+    // (The stages' times written at the last stage this reading takes: "select" unenriched, "families" enriched.)
     let mut lap = |name: &str| if let Some((started, laps)) = &mut stage {
         laps.push_str(&format!("phase\tfind.cores.{name}\t{}\n", started.elapsed().as_micros()));
         *started = std::time::Instant::now();
+        if name == "families" || !enrich && name == "select" {
+            eprint!("{laps}");
+        }
     };
     let (mut found, reporters) = primary_ranges(value);
     lap("primary");
@@ -850,7 +789,6 @@ fn citation_anchors(value: &str, extended_us: bool, styles: Option<&[CitationSty
         }
     }
     lap("families");
-    if let Some((_, laps)) = &stage { eprint!("{laps}"); }
     anchors
 }
 
@@ -1394,11 +1332,14 @@ fn case_style_start_above(text: &str, core_start: usize, floor: usize) -> usize 
     // R v Oakes"); an abbreviation's period ("Mar. Overseas Corp.") is no sentence's end, nor is one before a
     // lowercase word ("Mobile Homes Inc. and Howard Geisler").
     // No style of cause runs back over a semicolon, which parts one citation from the next.
-    let floor = STYLED_FLOOR.find_all(&text[floor..core_start])
-        .filter(|matched| matched.as_str().starts_with(';') || matched.as_str().trim_end().ends_with('.')
+    // (The last that does, read from the citation back: each is read to the citation, so reading every one is
+    // quadratic in the text before it.)
+    let ends: Vec<_> = STYLED_FLOOR.find_all(&text[floor..core_start]).collect();
+    let floor = ends.into_iter().rev()
+        .find(|matched| matched.as_str().starts_with(';') || matched.as_str().trim_end().ends_with('.')
             && !text[floor + matched.end()..core_start].starts_with(char::is_lowercase)
             && SIGNAL_PREFIX.find_screened(&text[floor + matched.end()..core_start]).is_some())
-        .last().map_or(floor, |matched| floor + matched.end());
+        .map_or(floor, |matched| floor + matched.end());
     let prefix = text[floor..core_start]
         .trim_end_matches(|character: char| javascript_whitespace(character) || character == ',');
     let Some(versus) = CASE_VERSUS.find_all(prefix).last() else {
@@ -2073,7 +2014,7 @@ fn cores_in(text: &str, options: &Options, scopes: &[usize], enrich: bool) -> Ve
         })
         .collect::<Vec<_>>();
     if !enrich { return cores; }
-    let mut stage = std::env::var_os("LEGALPDF_PHASE_TIMING").map(|_| (std::time::Instant::now(), String::new()));
+    let mut stage = crate::phase_timing().then(|| (std::time::Instant::now(), String::new()));
     let mut lap = |name: &str| if let Some((started, laps)) = &mut stage {
         laps.push_str(&format!("phase\tfind.cores.{name}\t{}\n", started.elapsed().as_micros()));
         *started = std::time::Instant::now();
@@ -2403,7 +2344,7 @@ fn discover(text: &str, options: &Options, markup: Option<&crate::clean::Markup<
         .flat_map(|note| [note.start, note.end]).collect::<Vec<_>>();
     scopes.sort_unstable();
     // The clock is read only when timing: WebAssembly without a host clock has none.
-    let timing = std::env::var_os("LEGALPDF_PHASE_TIMING").is_some();
+    let timing = crate::phase_timing();
     let cores_started = timing.then(std::time::Instant::now);
     let cores = cores(text, options, &scopes, enrich);
     if let Some(started) = cores_started {

@@ -136,7 +136,9 @@ pub struct PinpointsRequest {
     pub strict: bool,
 }
 
-#[derive(Clone, Debug, Serialize)]
+/// A pinpoint as a draft holds it: a range as parsed ("62-64"), never inferred from the gaps between its locators; a
+/// single pinpoint names its locator as the engine reads it ("110ff" locates para 110).
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct PinpointValue {
@@ -150,6 +152,15 @@ pub struct PinpointValue {
     /// In UTF-16 units.
     pub start: usize,
     pub end: usize,
+}
+
+impl PinpointValue {
+    /// A parsed pinpoint, written at `start..end`.
+    pub fn read(pinpoint: &crate::model::Pinpoint, start: usize, end: usize) -> Self {
+        let last = pinpoint.last.clone().filter(|last| !last.is_empty());
+        Self { kind: pinpoint.kind, text: last.as_ref().map_or_else(|| pinpoint.first.clone(), |last| format!("{}-{last}", pinpoint.first)),
+            first: pinpoint.first.clone(), last, start, end }
+    }
 }
 
 /// The pinpoints written in a selection of a text, each with its kind and place, read as an ibid's are:
@@ -176,12 +187,8 @@ pub fn pinpoints_at(request: &PinpointsRequest) -> Vec<PinpointValue> {
             let found = crate::find::find_references(&read).into_iter().flat_map(|citation| citation.pinpoints)
                 .filter(|pinpoint| from + pinpoint.span.end > start + lead.len()).collect::<Vec<_>>();
             if !found.is_empty() {
-                return found.into_iter().map(|pinpoint| {
-                    let (at, to) = (from + pinpoint.span.start - lead.len(), from + pinpoint.span.end - lead.len());
-                    PinpointValue { kind: pinpoint.kind, text: pinpoint.last.as_ref()
-                        .map_or_else(|| pinpoint.first.clone(), |last| format!("{}-{last}", pinpoint.first)),
-                        first: pinpoint.first, last: pinpoint.last, start: utf16(at), end: utf16(to) }
-                }).collect();
+                return found.iter().map(|pinpoint| PinpointValue::read(pinpoint,
+                    utf16(from + pinpoint.span.start - lead.len()), utf16(from + pinpoint.span.end - lead.len()))).collect();
             }
         }
         if from == 0 { break; }

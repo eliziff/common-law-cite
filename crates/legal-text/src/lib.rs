@@ -273,20 +273,25 @@ impl<'a> ScalarText<'a> {
         if offset[2] == utf16 {
             return Some((offset[1], offset[1], Some(offset[0])));
         }
-        let mut used = offset[2];
-        for (scalar, (relative, character)) in self.value[offset[1]..].char_indices().enumerate() {
-            let byte = offset[1] + relative;
+        let [mut scalar, mut byte, mut used] = offset;
+        let bytes = self.value.as_bytes();
+        loop {
+            // A run of ASCII advances all three axes together.
+            let run = bytes[byte..].iter().take(utf16 - used).take_while(|value| value.is_ascii()).count();
+            (scalar, byte, used) = (scalar + run, byte + run, used + run);
+            if used == utf16 {
+                return Some((byte, byte, Some(scalar)));
+            }
+            let character = self.value[byte..].chars().next()?;
             let next = used + character.len_utf16();
             if utf16 < next {
                 return Some((byte, byte + character.len_utf8(), None));
             }
-            if utf16 == next {
-                let byte = byte + character.len_utf8();
-                return Some((byte, byte, Some(offset[0] + scalar + 1)));
+            (scalar, byte, used) = (scalar + 1, byte + character.len_utf8(), next);
+            if used == utf16 {
+                return Some((byte, byte, Some(scalar)));
             }
-            used = next;
         }
-        None
     }
 
     #[inline]

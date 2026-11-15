@@ -533,15 +533,17 @@ pub fn compile_ecmascript_entry(
     entry: &GrammarEntry,
     defs: &HashMap<String, String>,
 ) -> Result<CompiledEcmascriptGrammar> {
-    compile_ecmascript_entry_with(entry, defs, None)
+    compile_ecmascript_entry_with(entry, defs, None, false)
 }
 
 fn compile_ecmascript_entry_with(
     entry: &GrammarEntry,
     defs: &HashMap<String, String>,
     dfa_size_limit: Option<usize>,
+    anchored: bool,
 ) -> Result<CompiledEcmascriptGrammar> {
     let portable = ecmascript_source(entry, defs)?;
+    let portable = if anchored { format!(r"\A(?:{portable})") } else { portable };
     let mut builder = LinearRegexBuilder::new(&portable);
     builder
         .case_insensitive(entry.flags.contains('i'))
@@ -715,10 +717,6 @@ pub fn spaced(pattern: &str) -> String {
     output
 }
 
-pub fn linear_pattern_literals(source: &str) -> Option<Vec<String>> {
-    literals::linear(source, false, false, false)
-}
-
 /// Literal strings one of which every match of [`compile_ecmascript_table_entry`]'s grammar
 /// contains, when they can be read from it.
 pub fn ecmascript_table_entry_literals(entry_id: &str) -> Result<Option<Vec<String>>> {
@@ -733,7 +731,14 @@ pub fn ecmascript_table_entry_literals(entry_id: &str) -> Result<Option<Vec<Stri
 /// runs out. What the grammar matches is the same.
 pub fn compile_ecmascript_table_entry_with_dfa_size(entry_id: &str, bytes: usize) -> Result<CompiledEcmascriptGrammar> {
     let value = table_entry(entry_id)?;
-    compile_ecmascript_entry_with(&value.entry, &value.defs, Some(bytes))
+    compile_ecmascript_entry_with(&value.entry, &value.defs, Some(bytes), false)
+}
+
+/// [`compile_ecmascript_table_entry`]'s grammar matched only where the haystack begins: a search that fails there
+/// reads no further.
+pub fn compile_ecmascript_table_entry_anchored(entry_id: &str) -> Result<CompiledEcmascriptGrammar> {
+    let value = table_entry(entry_id)?;
+    compile_ecmascript_entry_with(&value.entry, &value.defs, None, true)
 }
 
 pub fn compile_ecmascript_table_entry(entry_id: &str) -> Result<CompiledEcmascriptGrammar> {

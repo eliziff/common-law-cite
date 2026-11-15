@@ -265,7 +265,8 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
             to_value(crate::source::pure_reference_clauses(&request.text))
         }
         "noteReferences" => {
-            let request: NoteReferencesRequest = parse(method, request)?;
+            let mut request: NoteReferencesRequest = parse(method, request)?;
+            crate::source::read_host_fields(&mut request.parts);
             to_value(crate::source::references(&request.parts, request.citations.as_deref(),
                 request.kinds.as_deref(), request.styles.as_deref(), |prefix| match request.offset_unit {
                     OffsetUnit::Byte => prefix.len(),
@@ -275,11 +276,7 @@ pub fn call_value(method: &str, request: Value) -> Result<Value, ApiError> {
         }
         "sourceFields" => {
             let request: SourceFieldsRequest = parse(method, request)?;
-            match (&request.text, &request.part) {
-                (Some(text), None) => to_value(crate::source::extract_text_fields(text, request.jurisdiction_priority.as_deref().is_some_and(crate::source::us_jurisdiction))),
-                (None, Some(part)) => to_value(crate::source::extract_fields(part, request.jurisdiction_priority.as_deref().map_or_else(|| part.us_forms(), crate::source::us_jurisdiction))),
-                _ => Err(ApiError::invalid("sourceFields: pass exactly one of text or part")),
-            }
+            to_value(crate::source::extract_text_fields(&request.text, request.jurisdiction_priority.as_deref().is_some_and(crate::source::us_jurisdiction)))
         }
         "key" => to_value(key(&parse(method, request)?)),
         "matchesReporterHeader" => {
@@ -570,9 +567,9 @@ impl Default for SplitSourcesRequest {
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+/// The fields of a source written as `text` (a split part carries its own, [`crate::source::SourcePart::fields`]).
 pub struct SourceFieldsRequest {
-    pub text: Option<String>,
-    pub part: Option<crate::source::SourcePart>,
+    pub text: String,
     #[serde(default)]
     pub jurisdiction_priority: Option<Vec<String>>,
 }
@@ -594,15 +591,18 @@ pub struct QuoteCitationUnit {
     pub delimiters: Vec<(usize, usize, String)>,
 }
 
-#[derive(Serialize)]
+/// A note's part and the first authority it refers to, as written; a draft's note part also keeps the page its first
+/// full citation of a report starts at.
+#[derive(Clone, Debug, Serialize, Deserialize)]
 #[cfg_attr(feature = "binding-types", derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase")]
 pub struct QuoteCitationPart {
-    pub start: usize,
-    pub end: usize,
-    pub text: String,
-    pub anchors: Vec<String>,
+    #[serde(flatten)]
+    pub source: crate::source::SourcePart,
     pub reference: String,
-    pub fields: crate::source::SourceFields,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "binding-types", ts(optional))]
+    pub first_page: Option<String>,
 }
 
 /// Each note's [`QuoteCitationUnit`], the notes read on the engine's reading threads.
@@ -614,14 +614,10 @@ fn quote_citation_unit(text: &str) -> QuoteCitationUnit {
     let split = split_sources(&SplitSourcesRequest { text: text.to_owned(), recall_first: true, jurisdiction_priority: crate::source::default_jurisdiction_priority(),
         offset_unit: OffsetUnit::Utf16 });
     let cited = crate::source::references(&split.parts, None, None, None, |prefix| prefix.encode_utf16().count());
-    let parts = split.parts.iter().map(|part| QuoteCitationPart {
-        start: part.start,
-        end: part.end,
-        text: part.text.clone(),
-        anchors: part.anchors.clone(),
-        reference: cited.iter().find(|item| part.start <= item.part.start && item.part.end <= part.end)
+    let parts = split.parts.into_iter().map(|source| QuoteCitationPart {
+        reference: cited.iter().find(|item| source.start <= item.part.start && item.part.end <= source.end)
             .and_then(|item| item.references.first()).map(|reference| reference.text.clone()).unwrap_or_default(),
-        fields: crate::source::extract_fields(part, part.us_forms()),
+        source, first_page: None,
     }).collect();
     QuoteCitationUnit { status: split.status, reasons: split.reasons, parts, delimiters: split.delimiters }
 }
@@ -957,6 +953,7 @@ pub fn resolve(request: &ResolveRequest) -> Result<ResolveResponse, ApiError> {
     let mut citations = request.citations.clone();
     let mut notes = request.notes.clone();
     let mut source_parts = request.source_parts.clone();
+    crate::source::read_host_fields(&mut source_parts);
     if unit != OffsetUnit::Byte {
         let Some(document) = document.as_ref() else {
             return Err(ApiError::invalid("resolve: an offsetUnit other than byte needs the text"));

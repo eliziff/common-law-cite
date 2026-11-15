@@ -6,18 +6,7 @@ use crate::{key, registry, Citation, Form, Format};
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use legal_grammar::table::{Blob, Rows, Strings, Words};
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::LazyLock;
-
-static IN_USE: AtomicBool = AtomicBool::new(true);
-
-/// Whether citations are read with this table's evidence (the default) or from the grammar alone, for the whole
-/// process.
-pub fn use_evidence(in_use: bool) {
-    IN_USE.store(in_use, Ordering::Relaxed);
-}
-
-fn in_use() -> bool { IN_USE.load(Ordering::Relaxed) }
 
 /// One citation's complete alias closure from an installed source index.
 /// An ambiguous index supplies only the citation's own key.
@@ -130,7 +119,7 @@ impl Table {
 /// An observed spelling is source evidence,
 /// including misspellings that have no structural reporter interpretation.
 pub(crate) fn observed_form(text: &str) -> bool {
-    in_use() && TABLE.observed.find(TABLE.strings, 0, &registry::fold(text)).is_some()
+    TABLE.observed.find(TABLE.strings, 0, &registry::fold(text)).is_some()
 }
 
 fn supports_court(citation: &Citation, court: &str) -> bool {
@@ -145,7 +134,7 @@ fn supports_court(citation: &Citation, court: &str) -> bool {
 }
 
 pub(crate) fn for_key(citation: &Citation, structural_key: &str) -> Option<AliasTarget> {
-    if !in_use() || citation.is_ambiguous() || TABLE.blocked(&registry::fold(&citation.span.text)) {
+    if citation.is_ambiguous() || TABLE.blocked(&registry::fold(&citation.span.text)) {
         return None;
     }
     let row = TABLE.targets.find(TABLE.strings, 0, structural_key)?;
@@ -157,7 +146,6 @@ pub(crate) fn for_key(citation: &Citation, structural_key: &str) -> Option<Alias
 
 /// The observed row of the citation's written form, when that form identifies its record and court.
 fn observed(citation: &Citation) -> Option<usize> {
-    if !in_use() { return None; }
     let form = registry::fold(&citation.span.text);
     if TABLE.blocked(&form) { return None; }
     let evidence = TABLE.observed.find(TABLE.strings, 0, &form)?;
