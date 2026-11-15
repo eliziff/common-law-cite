@@ -730,7 +730,8 @@
         "text",
         "anchors",
         "jurisdictionPriority",
-        "anchorSpans"
+        "anchorSpans",
+        "fields"
       ],
       "additionalProperties": false,
       "properties": {
@@ -768,6 +769,23 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        },
+        "fields": {
+          "description": "The part's fields; empty strings and arrays where the split did not read them.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "status": { "type": "string" },
+            "corrected": { "type": "string" },
+            "kind": { "type": "string" },
+            "link_candidate": { "type": "string" },
+            "pinpoint_fragments": { "type": "array", "items": { "type": "string" } },
+            "page_pinpoints": { "type": "array", "items": { "type": "string" } },
+            "bare_citation": { "type": "string" },
+            "citation_with_style": { "type": "string" },
+            "short_form": { "type": "string" },
+            "reasons": { "type": "array", "items": { "type": "string" } }
           }
         }
       }
