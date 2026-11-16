@@ -7124,7 +7124,7 @@
   {
    "name": "FindTest.test_find_citations#95",
    "input": "Failed to recognize 1993 Conn. Super. Ct. 5243-P",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
@@ -7969,7 +7969,7 @@
   {
    "name": "FindTest.test_find_citations#113",
    "input": " 576 U.S. ___, 13",
-   "status": "pending",
+   "status": "pass",
    "expect": {
     "citations": [
      {
